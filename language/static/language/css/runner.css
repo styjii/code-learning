@@ -1,0 +1,106 @@
+/* Blocs de code exécutables : bouton, éditeur intégré, résultat. */
+
+.code-actions { display: flex; align-items: center; gap: 0.25rem; }
+
+.run-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.28rem 0.75rem;
+    border: 0;
+    border-radius: var(--radius-sm);
+    background: var(--accent);
+    color: var(--accent-contrast);
+    font-size: 0.78rem;
+    font-weight: 600;
+    transition: background-color 0.15s, transform 0.15s var(--ease);
+}
+
+.run-button svg { width: 12px; height: 12px; }
+.run-button:hover { background: var(--accent-hover); transform: translateY(-1px); }
+.run-button.is-running { background: #e5484d; color: #fff; }
+
+.reset-button {
+    padding: 0.3rem 0.6rem;
+    border: 0;
+    border-radius: var(--radius-sm);
+    background: transparent;
+    color: var(--muted);
+    font-size: 0.78rem;
+}
+
+.reset-button:hover { background: var(--surface-3); color: var(--text-strong); }
+
+.code-block.is-runnable.is-busy { border-color: var(--accent); }
+
+.run-editor {
+    width: 100%;
+    min-height: 80px;
+    padding-top: 0.2rem;
+    color: var(--muted);
+    font-size: 0.85rem;
+}
+
+/* Le texte « Chargement… » ne doit pas hériter du style de l'éditeur une fois monté */
+.run-editor .monaco-editor { text-align: left; }
+
+.run-stdin {
+    border-top: 1px solid var(--border);
+    background: var(--code-header-bg);
+    font-size: 0.82rem;
+}
+
+.run-stdin summary { padding: 0.4rem 1rem; color: var(--muted); cursor: pointer; font-weight: 600; user-select: none; }
+
+.run-stdin textarea {
+    display: block;
+    width: calc(100% - 2rem);
+    margin: 0 1rem 0.7rem;
+    padding: 0.5rem 0.7rem;
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-sm);
+    background: var(--code-bg);
+    color: var(--code-fg);
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    resize: vertical;
+}
+
+.run-output { border-top: 1px solid var(--border); background: var(--surface); }
+
+.run-output-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.35rem 1rem;
+    background: var(--code-header-bg);
+    color: var(--muted);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+.run-status { font-weight: 500; letter-spacing: 0; text-transform: none; }
+
+.run-lines {
+    max-height: 320px;
+    padding: 0.6rem 1rem 0.7rem;
+    overflow: auto;
+    font-family: var(--font-mono);
+    font-size: 0.83rem;
+    line-height: 1.6;
+}
+
+.run-line { white-space: pre-wrap; overflow-wrap: anywhere; color: var(--text); }
+.run-line.is-err { color: #cf222e; }
+.run-line.is-warn { color: #9a6700; }
+.run-line.is-info { color: var(--muted); font-style: italic; font-family: var(--font-sans); }
+
+[data-theme="dark"] .run-line.is-err { color: #ff8e8a; }
+[data-theme="dark"] .run-line.is-warn { color: #e3b341; }
+
+/* La zone de saisie ne doit pas hériter du style des <details> du cours */
+.markdown-body .code-block details.run-stdin { margin: 0; border: 0; border-top: 1px solid var(--border); border-radius: 0; }
+.markdown-body .code-block details.run-stdin summary { border: 0; border-radius: 0; }
+.markdown-body .code-block details.run-stdin > :not(summary) { margin-left: 1rem; margin-right: 1rem; }

@@ -44,7 +44,7 @@ class HighlightedCodePreprocessor(Preprocessor):
     fenced_block_regex: re.Pattern = re.compile(
         r'(?P<indent>[ \t]*)'
         r'(?P<fence>`{3,}|~{3,})[ \t]*'
-        r'(?P<lang>\w+)?[ \t]*\n'
+        r'(?P<lang>\w+)?(?P<opts>[^\n]*?)[ \t]*\n'
         r'(?P<code>.*?)(?=\n(?P=indent)(?P=fence)[ \t]*$)\n(?P=indent)(?P=fence)[ \t]*$',
         re.MULTILINE | re.DOTALL
     )
@@ -72,10 +72,13 @@ class HighlightedCodePreprocessor(Preprocessor):
             )
             highlighted = highlighter.hilite()
 
+            # « ```python norun » : bloc non exécutable dans les cours
+            run_attr = ' data-run="false"' if 'norun' in (match.group('opts') or '') else ''
+
             if language:
                 highlighted = re.sub(
                     r'<code(.*?)>',
-                    f'<code\\1 class="language-{language}">',
+                    f'<code\\1 class="language-{language}"{run_attr}>',
                     highlighted
                 )
 

@@ -4,11 +4,13 @@
 {% block title %}{{ page_title }} · Langage Learning{% endblock %}
 {% block description %}{{ page.description }}{% endblock %}
 {% block favicon %}{{ page.icon }}{% endblock %}
-{% block body_attrs %}data-app="language" data-lang="{{ page.key }}" style="--lang: {{ page.color }}"{% endblock %}
+{% block body_attrs %}data-app="language" data-lang="{{ page.key }}"
+    data-monaco="{% static 'editor/monaco-editor/min/vs' %}" data-pyodide="{% static 'vendor/pyodide/' %}" style="--lang: {{ page.color }}"{% endblock %}
 
 {% block styles %}
 <link rel="stylesheet" href="{% static 'language/css/highlight.css' %}">
 <link rel="stylesheet" href="{% static 'language/css/style.css' %}">
+<link rel="stylesheet" href="{% static 'language/css/runner.css' %}">
 {% endblock %}
 
 {% block body %}

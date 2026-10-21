@@ -61,7 +61,7 @@ export class CodeBlockUtils {
             button.className = "copy-button";
             button.innerHTML = `${COPY_ICON}<span>Copier</span>`;
             button.addEventListener("click", async () => {
-                await CodeBlockUtils.copy(code.textContent.replace(/\n$/, ""));
+                await CodeBlockUtils.copy(host.runApi?.getValue() ?? code.textContent.replace(/\n$/, ""));
                 button.classList.add("is-done");
                 button.innerHTML = `${DONE_ICON}<span>Copié !</span>`;
                 setTimeout(() => {
@@ -70,7 +70,10 @@ export class CodeBlockUtils {
                 }, 1800);
             });
 
-            header.append(label, button);
+            const actions = document.createElement("div");
+            actions.className = "code-actions";
+            actions.append(button);
+            header.append(label, actions);
             host.insertBefore(header, pre);
         });
     }

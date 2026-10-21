@@ -22,7 +22,7 @@ SECRET_KEY = os.environ.get(
 if not DEBUG and SECRET_KEY.startswith("django-insecure"):
     raise RuntimeError("Définissez DJANGO_SECRET_KEY lorsque DJANGO_DEBUG=0.")
 
-ALLOWED_HOSTS = ["localhost", "127.0.0.1", "192.168.1.2", "192.168.43.1"] + [
+ALLOWED_HOSTS = ["localhost", "127.0.0.1", "192.168.1.2", "192.168.43.1", "192.168.43.45"] + [
     host.strip() for host in os.environ.get("DJANGO_ALLOWED_HOSTS", "").split(",") if host.strip()
 ]
 
