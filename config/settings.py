@@ -1,30 +1,79 @@
 """
 Réglages Django du projet.
 
-Les valeurs sensibles se configurent par variables d'environnement :
-
-    DJANGO_SECRET_KEY    clé secrète (obligatoire en production)
-    DJANGO_DEBUG         "1" (défaut) ou "0"
-    DJANGO_ALLOWED_HOSTS hôtes supplémentaires, séparés par des virgules
+Toutes les valeurs sensibles ou propres à l'environnement viennent du fichier ``.env``
+(voir ``.env.example``) ou des variables d'environnement.
 """
 
 import os
 from pathlib import Path
 
+from django.core.exceptions import ImproperlyConfigured
+from dotenv import load_dotenv
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-DEBUG = os.environ.get("DJANGO_DEBUG", "1") == "1"
+# Les variables déjà présentes dans l'environnement restent prioritaires sur le fichier.
+load_dotenv(BASE_DIR / ".env")
 
-SECRET_KEY = os.environ.get(
-    "DJANGO_SECRET_KEY",
-    "django-insecure-dev-only-change-me",
-)
-if not DEBUG and SECRET_KEY.startswith("django-insecure"):
-    raise RuntimeError("Définissez DJANGO_SECRET_KEY lorsque DJANGO_DEBUG=0.")
 
-ALLOWED_HOSTS = ["localhost", "127.0.0.1", "192.168.1.2", "192.168.43.1", "192.168.43.45"] + [
-    host.strip() for host in os.environ.get("DJANGO_ALLOWED_HOSTS", "").split(",") if host.strip()
-]
+def env_bool(name: str, default: bool = False) -> bool:
+    value = os.environ.get(name, "").strip().lower()
+    return default if value == "" else value in {"1", "true", "yes", "on"}
+
+
+def env_list(name: str) -> list:
+    return [item.strip() for item in os.environ.get(name, "").split(",") if item.strip()]
+
+
+def env_int(name: str, default: int) -> int:
+    try:
+        return int(os.environ.get(name, "").strip() or default)
+    except ValueError:
+        raise ImproperlyConfigured(f"{name} doit être un nombre entier.")
+
+
+# ---------------------------------------------------------------------------
+# Sécurité
+# ---------------------------------------------------------------------------
+SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", "").strip()
+if not SECRET_KEY:
+    raise ImproperlyConfigured(
+        "DJANGO_SECRET_KEY est absent. Copiez .env.example vers .env et renseignez la clé secrète."
+    )
+
+DEBUG = env_bool("DJANGO_DEBUG", False)
+
+ALLOWED_HOSTS = env_list("DJANGO_ALLOWED_HOSTS")
+if not DEBUG and not ALLOWED_HOSTS:
+    raise ImproperlyConfigured("DJANGO_ALLOWED_HOSTS est obligatoire lorsque DJANGO_DEBUG=0.")
+
+CSRF_TRUSTED_ORIGINS = env_list("DJANGO_CSRF_TRUSTED_ORIGINS")
+
+# HTTPS : actif par défaut en production
+HTTPS = env_bool("DJANGO_HTTPS", not DEBUG)
+SESSION_COOKIE_SECURE = HTTPS
+CSRF_COOKIE_SECURE = HTTPS
+SECURE_SSL_REDIRECT = HTTPS
+SECURE_HSTS_SECONDS = env_int("DJANGO_HSTS_SECONDS", 0) if HTTPS else 0
+SECURE_HSTS_INCLUDE_SUBDOMAINS = SECURE_HSTS_SECONDS > 0
+if env_bool("DJANGO_BEHIND_PROXY", False):
+    SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+
+SESSION_COOKIE_HTTPONLY = True
+SESSION_COOKIE_SAMESITE = "Lax"
+SESSION_COOKIE_AGE = env_int("DJANGO_SESSION_HOURS", 168) * 3600
+CSRF_COOKIE_SAMESITE = "Lax"  # lisible par le JavaScript de l'éditeur (CSRF_COOKIE_HTTPONLY=False)
+X_FRAME_OPTIONS = "DENY"
+
+# ---------------------------------------------------------------------------
+# Authentification : toute page exige une connexion (LoginRequiredMiddleware)
+# ---------------------------------------------------------------------------
+LOGIN_URL = "login"
+LOGIN_REDIRECT_URL = "index"
+LOGOUT_REDIRECT_URL = "login"
+LOGIN_MAX_ATTEMPTS = env_int("DJANGO_LOGIN_MAX_ATTEMPTS", 5)
+LOGIN_LOCKOUT_SECONDS = env_int("DJANGO_LOGIN_LOCKOUT_SECONDS", 900)
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -35,6 +84,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "rest_framework",
     "webapp",
+    "accounts",
     "language",
     "editor",
 ]
@@ -45,6 +95,7 @@ MIDDLEWARE = [
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "django.contrib.auth.middleware.LoginRequiredMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
@@ -98,3 +149,12 @@ STATICFILES_DIRS = [
 ]
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+# ---------------------------------------------------------------------------
+# API REST : réservée aux utilisateurs connectés, JSON uniquement
+# ---------------------------------------------------------------------------
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": ["rest_framework.authentication.SessionAuthentication"],
+    "DEFAULT_PERMISSION_CLASSES": ["rest_framework.permissions.IsAuthenticated"],
+    "DEFAULT_RENDERER_CLASSES": ["rest_framework.renderers.JSONRenderer"],
+}

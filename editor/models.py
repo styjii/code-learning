@@ -1,21 +1,32 @@
+from django.conf import settings
 from django.db import models
+
 
 class Project(models.Model):
     """
-    Django model representing a front-end project.
+    Projet front-end (HTML/CSS/JS) appartenant à un utilisateur.
 
     Fields:
-        - name: Unique name of the project.
-        - html: HTML source code.
-        - css: CSS source code.
-        - js: JavaScript source code.
-
-    The __str__ method returns the project's name.
+        - owner: utilisateur propriétaire (chacun ne voit que ses projets).
+        - name: nom du projet, unique par utilisateur.
+        - html, css, js: code source.
     """
-    name = models.CharField(max_length=100, unique=True)
+    owner = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        null=True,
+        blank=True,
+        on_delete=models.CASCADE,
+        related_name="editor_projects",
+    )
+    name = models.CharField(max_length=100)
     html = models.TextField(blank=True)
     css = models.TextField(blank=True)
     js = models.TextField(blank=True)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=["owner", "name"], name="unique_project_name_per_owner"),
+        ]
 
     def __str__(self):
         return self.name

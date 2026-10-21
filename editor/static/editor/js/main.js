@@ -1,3 +1,4 @@
+import "./utils/csrf.js"; // doit être chargé en premier (jeton CSRF sur les fetch)
 import { EditorConfigManager } from "./editors/EditorConfigManager.js";
 import { MonacoEditorManager } from "./editors/MonacoEditorManager.js";
 import { patchPassiveTouchStart } from "./editors/utils.js";

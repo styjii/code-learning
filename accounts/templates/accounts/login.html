@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Connexion · Langage Learning{% endblock %}
+{% block description %}Connexion à Langage Learning.{% endblock %}
+{% block styles %}<link rel="stylesheet" href="{% static 'accounts/css/login.css' %}">{% endblock %}
+
+{% block body %}
+<main class="auth">
+    <div class="auth-theme">{% include "partials/theme_toggle.html" %}</div>
+
+    <section class="auth-card" aria-labelledby="auth-title">
+        <div class="brand">
+            {% include "partials/logo.html" with logo_id="login" %}
+            <span>Langage Learning</span>
+        </div>
+
+        <h1 id="auth-title">Connexion</h1>
+        <p class="auth-lead">Cet espace est privé : connectez-vous pour accéder aux cours et à l'éditeur.</p>
+
+        {% if form.non_field_errors %}
+        <div class="auth-error" role="alert">
+            {% for error in form.non_field_errors %}<p>{{ error }}</p>{% endfor %}
+        </div>
+        {% endif %}
+
+        <form method="post" novalidate>
+            {% csrf_token %}
+            <input type="hidden" name="next" value="{{ next }}">
+
+            <div class="field">
+                <label for="{{ form.username.id_for_label }}">Nom d'utilisateur</label>
+                {{ form.username }}
+            </div>
+
+            <div class="field">
+                <label for="{{ form.password.id_for_label }}">Mot de passe</label>
+                <div class="password-row">
+                    {{ form.password }}
+                    <button type="button" class="toggle-password" aria-label="Afficher le mot de passe" aria-pressed="false">Afficher</button>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary auth-submit">Se connecter</button>
+        </form>
+    </section>
+</main>
+{% endblock %}
+
+{% block scripts %}<script type="module" src="{% static 'accounts/js/login.js' %}"></script>{% endblock %}

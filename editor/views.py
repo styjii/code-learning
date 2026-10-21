@@ -29,8 +29,14 @@ class ProjectViewSet(viewsets.ModelViewSet):
     This viewset provides `list`, `create`, `retrieve`, `update`, and `destroy` actions
     for Project model objects using Django REST Framework.
     """
-    queryset = Project.objects.all()
     serializer_class = ProjectSerializer
+
+    def get_queryset(self):
+        # Chaque utilisateur ne voit et ne modifie que ses propres projets.
+        return Project.objects.filter(owner=self.request.user).order_by("id")
+
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
 
 class SaveMonacoConfigView(APIView):
     """
@@ -41,6 +47,8 @@ class SaveMonacoConfigView(APIView):
     def post(self, request):
         try:
             config_data = request.data
+            if not isinstance(config_data, dict):
+                return Response({'error': 'Objet JSON attendu'}, status=status.HTTP_400_BAD_REQUEST)
             static_config_path = os.path.join(settings.BASE_DIR, 'editor', 'config')
             os.makedirs(static_config_path, exist_ok=True)
 
@@ -222,4 +230,8 @@ class PreviewDisplayView(View):
         content = request.session.get(f"preview_{preview_id}")
         if not content:
             return HttpResponseNotFound("Preview not found or expired.")
-        return HttpResponse(content)
+        response = HttpResponse(content)
+        # Même ouvert directement dans un onglet, l'aperçu s'exécute dans un bac à sable
+        # (origine opaque) : le code de l'utilisateur ne peut pas utiliser sa session.
+        response["Content-Security-Policy"] = "sandbox allow-scripts allow-modals"
+        return response

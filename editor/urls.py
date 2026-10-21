@@ -1,5 +1,6 @@
 from rest_framework.routers import DefaultRouter
 from django.urls import path, include
+from django.views.decorators.csrf import ensure_csrf_cookie
 from django.views.generic import TemplateView
 from .views import (
     ProjectViewSet,
@@ -16,7 +17,7 @@ router = DefaultRouter()
 router.register(r'projects', ProjectViewSet, basename='project')
 
 urlpatterns = [
-    path('', TemplateView.as_view(template_name='editor/index.html'), name='editor-index'),
+    path('', ensure_csrf_cookie(TemplateView.as_view(template_name='editor/index.html')), name='editor-index'),
     path('api/', include(router.urls)),
     path('api/load-monaco-config/', LoadMonacoConfigView.as_view(), name='load-monaco-config'),
     path('api/save-monaco-config/', SaveMonacoConfigView.as_view(), name='save-monaco-config'),

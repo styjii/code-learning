@@ -255,3 +255,6 @@ button {
         transition-duration: 0.01ms !important;
     }
 }
+
+/* Formulaire de déconnexion (bouton dans les barres du haut) */
+.logout-form { display: inline-flex; margin: 0; }

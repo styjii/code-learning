@@ -1,0 +1,81 @@
+/* Page de connexion */
+
+.auth {
+    position: relative;
+    display: grid;
+    min-height: 100vh;
+    place-items: center;
+    padding: 1.5rem 1rem;
+    background:
+        radial-gradient(45% 50% at 15% 10%, color-mix(in srgb, var(--accent) 20%, transparent), transparent 70%),
+        radial-gradient(40% 45% at 90% 85%, color-mix(in srgb, #a855f7 16%, transparent), transparent 70%),
+        var(--bg);
+}
+
+.auth-theme { position: absolute; top: 0.75rem; right: 0.75rem; }
+
+.auth-card {
+    width: min(420px, 100%);
+    padding: 2rem 1.75rem 1.75rem;
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    background: var(--surface);
+    box-shadow: var(--shadow-lg);
+    animation: rise 0.5s var(--ease) both;
+}
+
+@keyframes rise { from { opacity: 0; transform: translateY(12px); } }
+
+.auth-card .brand { margin-bottom: 1.4rem; }
+.auth-card h1 { margin: 0 0 0.35rem; color: var(--text-strong); font-size: 1.6rem; letter-spacing: -0.02em; }
+.auth-lead { margin: 0 0 1.4rem; color: var(--muted); font-size: 0.95rem; }
+
+.auth-error {
+    margin-bottom: 1rem;
+    padding: 0.65rem 0.9rem;
+    border: 1px solid color-mix(in srgb, #e5484d 50%, var(--border));
+    border-radius: var(--radius);
+    background: color-mix(in srgb, #e5484d 10%, var(--surface));
+    color: #c4282d;
+    font-size: 0.9rem;
+}
+
+[data-theme="dark"] .auth-error { color: #ff9a96; }
+.auth-error p { margin: 0; }
+
+.field { margin-bottom: 1rem; }
+.field label { display: block; margin-bottom: 0.35rem; color: var(--text-strong); font-size: 0.88rem; font-weight: 600; }
+
+.field input {
+    width: 100%;
+    padding: 0.7rem 0.85rem;
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius);
+    background: var(--surface-2);
+    transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.field input:focus {
+    border-color: var(--accent);
+    outline: none;
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 25%, transparent);
+}
+
+.password-row { position: relative; }
+.password-row input { padding-right: 5.2rem; }
+
+.toggle-password {
+    position: absolute;
+    top: 50%;
+    right: 0.4rem;
+    padding: 0.25rem 0.6rem;
+    border: 0;
+    border-radius: var(--radius-sm);
+    background: transparent;
+    color: var(--muted);
+    font-size: 0.8rem;
+    transform: translateY(-50%);
+}
+
+.toggle-password:hover { background: var(--surface-3); color: var(--text-strong); }
+.auth-submit { width: 100%; margin-top: 0.4rem; padding: 0.75rem 1rem; }
