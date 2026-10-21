@@ -1,0 +1,926 @@
+{
+    "Console Log": {
+        "prefix": "cl",
+        "body": ["console.log(${1:obj});"],
+        "description": "console.log shortcut"
+    },
+    "Console Error": {
+        "prefix": "ce",
+        "body": ["console.error(${1:err});"],
+        "description": "console.error shortcut"
+    },
+    "Console Warn": {
+        "prefix": "cw",
+        "body": ["console.warn(${1:msg});"],
+        "description": "console.warn shortcut"
+    },
+    "Debugger Statement": {
+        "prefix": "de",
+        "body": ["debugger;"],
+        "description": "debugger"
+    },
+    "Function Declaration": {
+        "prefix": "func",
+        "body": ["function ${1:name}(${2:params}) {", "\t$0", "}"],
+        "description": "function declaration"
+    },
+    "Arrow Function": {
+        "prefix": "af",
+        "body": ["const ${1:name} = (${2:params}) => {", "\t$0", "};"],
+        "description": "arrow function"
+    },
+    "If Statement": {
+        "prefix": "if",
+        "body": ["if (${1:condition}) {", "\t$0", "}"],
+        "description": "if statement"
+    },
+    "If-Else Statement": {
+        "prefix": "ife",
+        "body": ["if (${1:cond}) {", "\t$2", "} else {", "\t$0", "}"],
+        "description": "if‑else"
+    },
+    "For Loop": {
+        "prefix": "for",
+        "body": [
+            "for (let ${1:i} = 0; ${1} < ${2:array}.length; ${1}++) {",
+            "\t$0",
+            "}"
+        ],
+        "description": "for loop"
+    },
+    "ForEach Loop": {
+        "prefix": "foreach",
+        "body": ["${1:array}.forEach((${2:item}) => {", "\t$0", "});"],
+        "description": "array forEach"
+    },
+    "While Loop": {
+        "prefix": "while",
+        "body": ["while (${1:condition}) {", "\t$0", "}"],
+        "description": "while loop"
+    },
+    "Try-Catch": {
+        "prefix": "try",
+        "body": [
+            "try {",
+            "\t$0",
+            "} catch (${1:error}) {",
+            "\tconsole.error(${1});",
+            "}"
+        ],
+        "description": "try/catch"
+    },
+    "Math Random": {
+        "prefix": "rand",
+        "body": [
+            "const ${1:r} = Math.random() * (${2:max} - ${3:min}) + ${3:min};"
+        ],
+        "description": "random between min & max"
+    },
+    "Check Integer": {
+        "prefix": "isint",
+        "body": ["const isInteger = (n) => Number.isInteger(n);"],
+        "description": "is integer"
+    },
+    "Is Nil": {
+        "prefix": "isnil",
+        "body": ["const isNil = (v) => v == null;"],
+        "description": "null or undefined"
+    },
+    "Remove Duplicates": {
+        "prefix": "uniq",
+        "body": ["const unique = [...new Set(${1:array})];"],
+        "description": "remove duplicates from array"
+    },
+    "Fetch Request": {
+        "prefix": "fetchreq",
+        "body": [
+            "fetch('${1:url}')",
+            "  .then(res => res.json())",
+            "  .then(data => console.log(data))",
+            "  .catch(err => console.error(err));"
+        ],
+        "description": "fetch promise"
+    },
+    "Async/Await Fetch": {
+        "prefix": "asfetch",
+        "body": [
+            "async function ${1:fn}() {",
+            "  try {",
+            "    const res = await fetch('${2:url}');",
+            "    const data = await res.json();",
+            "    console.log(data);",
+            "  } catch (err) {",
+            "    console.error(err);",
+            "  }",
+            "}"
+        ],
+        "description": "async/await fetch"
+    },
+    "Promise": {
+        "prefix": "prom",
+        "body": [
+            "const ${1:promise} = new Promise((resolve, reject) => {",
+            "  $0",
+            "});"
+        ],
+        "description": "promise constructor"
+    },
+    "Array Map": {
+        "prefix": "map",
+        "body": ["${1:array}.map((${2:item}) => {", "\t$0", "});"],
+        "description": "Array map"
+    },
+    "Array Filter": {
+        "prefix": "filter",
+        "body": ["${1:array}.filter((${2:item}) => ${3:condition});"],
+        "description": "Array filter"
+    },
+    "Array Reduce": {
+        "prefix": "reduce",
+        "body": [
+            "${1:array}.reduce((${2:acc}, ${3:curr}) => {",
+            "\t$0",
+            "}, ${4:init});"
+        ],
+        "description": "Array reduce"
+    },
+    "Array Find": {
+        "prefix": "find",
+        "body": ["${1:array}.find((${2:item}) => ${3:condition});"],
+        "description": "Array find"
+    },
+    "Array Some": {
+        "prefix": "some",
+        "body": ["${1:array}.some((${2:item}) => ${3:condition});"],
+        "description": "Array some"
+    },
+    "Object Destructure": {
+        "prefix": "destruct",
+        "body": ["const { ${1:key} } = ${2:object};"],
+        "description": "Destructuring object"
+    },
+    "Array Destructure": {
+        "prefix": "adestruct",
+        "body": ["const [${1:first}, ${2:second}] = ${3:array};"],
+        "description": "Destructuring array"
+    },
+    "Class Constructor": {
+        "prefix": "class",
+        "body": [
+            "class ${1:ClassName} {",
+            "\tconstructor(${2:props}) {",
+            "\t\t$0",
+            "\t}",
+            "}"
+        ],
+        "description": "Class with constructor"
+    },
+    "Class Method": {
+        "prefix": "cmethod",
+        "body": ["${1:methodName}(${2:args}) {", "\t$0", "}"],
+        "description": "Class method"
+    },
+    "Sleep (setTimeout async)": {
+        "prefix": "sleep",
+        "body": [
+            "const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));"
+        ],
+        "description": "Sleep helper async"
+    },
+    "Deep Clone JSON": {
+        "prefix": "clone",
+        "body": ["const clone = JSON.parse(JSON.stringify(${1:obj}));"],
+        "description": "Deep clone object"
+    },
+    "Throttle Function": {
+        "prefix": "throttle",
+        "body": [
+            "function throttle(func, limit) {",
+            "\tlet inThrottle;",
+            "\treturn function() {",
+            "\t\tconst args = arguments;",
+            "\t\tconst context = this;",
+            "\t\tif (!inThrottle) {",
+            "\t\t\tfunc.apply(context, args);",
+            "\t\t\tinThrottle = true;",
+            "\t\t\tsetTimeout(() => inThrottle = false, limit);",
+            "\t\t}",
+            "\t};",
+            "}"
+        ],
+        "description": "Throttle function"
+    },
+    "Debounce Function": {
+        "prefix": "debounce",
+        "body": [
+            "function debounce(func, delay) {",
+            "\tlet timeoutId;",
+            "\treturn function() {",
+            "\t\tclearTimeout(timeoutId);",
+            "\t\ttimeoutId = setTimeout(() => func.apply(this, arguments), delay);",
+            "\t};",
+            "}"
+        ],
+        "description": "Debounce function"
+    },
+    "Random ID": {
+        "prefix": "rid",
+        "body": ["const id = Math.random().toString(36).substr(2, 9);"],
+        "description": "Random ID string"
+    },
+    "Check Empty Object": {
+        "prefix": "isEmpty",
+        "body": ["const isEmpty = obj => Object.keys(obj).length === 0;"],
+        "description": "Check if object is empty"
+    },
+    "Capitalize First Letter": {
+        "prefix": "cap",
+        "body": [
+            "const cap = str => str.charAt(0).toUpperCase() + str.slice(1);"
+        ],
+        "description": "Capitalize first letter"
+    },
+    "Optional Chaining": {
+        "prefix": "opt",
+        "body": ["${1:obj}?.${2:prop};"],
+        "description": "Optional chaining"
+    },
+    "Nullish Coalescing": {
+        "prefix": "nullco",
+        "body": ["${1:val} ?? ${2:defaultVal};"],
+        "description": "Nullish coalescing operator"
+    },
+    "Rest Params": {
+        "prefix": "rest",
+        "body": ["function ${1:name}(...${2:args}) {", "\t$0", "}"],
+        "description": "Rest parameters"
+    },
+    "Spread Object": {
+        "prefix": "spread",
+        "body": ["const ${1:newObj} = { ...${2:oldObj} };"],
+        "description": "Spread an object"
+    },
+    "String Template": {
+        "prefix": "tpl",
+        "body": ["`${1:Hello}, ${2:name}!`"],
+        "description": "Template literal string"
+    },
+    "Promise All": {
+        "prefix": "pall",
+        "body": [
+            "Promise.all([${1:promise1}, ${2:promise2}])",
+            "  .then(([${1:res1}, ${2:res2}]) => {",
+            "    $0",
+            "  });"
+        ],
+        "description": "Promise.all"
+    },
+    "Set Timeout": {
+        "prefix": "sto",
+        "body": ["setTimeout(() => {", "\t$0", "}, ${1:1000});"],
+        "description": "setTimeout"
+    },
+    "Set Interval": {
+        "prefix": "sint",
+        "body": ["setInterval(() => {", "\t$0", "}, ${1:1000});"],
+        "description": "setInterval"
+    },
+    "Clear Timeout": {
+        "prefix": "cto",
+        "body": ["clearTimeout(${1:timer});"],
+        "description": "clearTimeout"
+    },
+    "Clear Interval": {
+        "prefix": "cint",
+        "body": ["clearInterval(${1:interval});"],
+        "description": "clearInterval"
+    },
+    "LocalStorage Get": {
+        "prefix": "lsget",
+        "body": ["localStorage.getItem('${1:key}');"],
+        "description": "Get from localStorage"
+    },
+    "LocalStorage Set": {
+        "prefix": "lsset",
+        "body": ["localStorage.setItem('${1:key}', ${2:value});"],
+        "description": "Set to localStorage"
+    },
+    "LocalStorage Remove": {
+        "prefix": "lsrem",
+        "body": ["localStorage.removeItem('${1:key}');"],
+        "description": "Remove from localStorage"
+    },
+    "SessionStorage Get": {
+        "prefix": "ssget",
+        "body": ["sessionStorage.getItem('${1:key}');"],
+        "description": "Get from sessionStorage"
+    },
+    "Parse JSON": {
+        "prefix": "jsonp",
+        "body": ["const ${1:data} = JSON.parse(${2:string});"],
+        "description": "Parse JSON string"
+    },
+    "Stringify JSON": {
+        "prefix": "jsons",
+        "body": ["JSON.stringify(${1:object}, null, 2);"],
+        "description": "Stringify JSON"
+    },
+    "Date Now": {
+        "prefix": "datenow",
+        "body": ["const now = Date.now();"],
+        "description": "Current timestamp"
+    },
+    "New Date": {
+        "prefix": "newdate",
+        "body": ["const d = new Date(${1:});"],
+        "description": "New Date"
+    },
+    "To Fixed": {
+        "prefix": "tofix",
+        "body": ["${1:number}.toFixed(${2:2});"],
+        "description": "Number toFixed"
+    },
+    "To Upper Case": {
+        "prefix": "tuc",
+        "body": ["${1:string}.toUpperCase();"],
+        "description": "toUpperCase string"
+    },
+    "To Lower Case": {
+        "prefix": "tlc",
+        "body": ["${1:string}.toLowerCase();"],
+        "description": "toLowerCase string"
+    },
+    "Trim String": {
+        "prefix": "trim",
+        "body": ["${1:string}.trim();"],
+        "description": "Trim whitespace"
+    },
+    "Char At": {
+        "prefix": "char",
+        "body": ["${1:string}.charAt(${2:index});"],
+        "description": "charAt"
+    },
+    "Includes String": {
+        "prefix": "includes",
+        "body": ["${1:string}.includes(${2:substr});"],
+        "description": "includes"
+    },
+    "Replace All": {
+        "prefix": "replaceall",
+        "body": ["${1:string}.replaceAll('${2:search}', '${3:replace}');"],
+        "description": "replaceAll string"
+    },
+    "Window Reload": {
+        "prefix": "wreload",
+        "body": ["window.location.reload();"],
+        "description": "Reload the window"
+    },
+    "Window Redirect": {
+        "prefix": "wredir",
+        "body": ["window.location.href = '${1:url}';"],
+        "description": "Redirect window"
+    },
+    "Navigator Online": {
+        "prefix": "netcheck",
+        "body": ["const isOnline = navigator.onLine;"],
+        "description": "Check network status"
+    },
+    "Generate UUID": {
+        "prefix": "uuid",
+        "body": [
+            "const uuid = URL.createObjectURL(new Blob()).split('/').pop();"
+        ],
+        "description": "Generate UUID (quick)"
+    },
+    "Get Element By ID": {
+        "prefix": "getid",
+        "body": ["const ${1:elem} = document.getElementById('${2:id}');"],
+        "description": "Get element by ID"
+    },
+    "Get Elements By Class": {
+        "prefix": "getclass",
+        "body": [
+            "const ${1:elems} = document.getElementsByClassName('${2:className}');"
+        ],
+        "description": "Get elements by class name"
+    },
+    "Get Elements By Tag": {
+        "prefix": "gettag",
+        "body": [
+            "const ${1:elems} = document.getElementsByTagName('${2:tag}');"
+        ],
+        "description": "Get elements by tag name"
+    },
+    "Set Text Content": {
+        "prefix": "settext",
+        "body": ["${1:elem}.textContent = '${2:text}';"],
+        "description": "Set element text content"
+    },
+    "Set Inner HTML": {
+        "prefix": "sethtml",
+        "body": ["${1:elem}.innerHTML = '${2:html}';"],
+        "description": "Set element innerHTML"
+    },
+    "Add Class": {
+        "prefix": "addclass",
+        "body": ["${1:elem}.classList.add('${2:className}');"],
+        "description": "Add class to element"
+    },
+    "Remove Class": {
+        "prefix": "removeclass",
+        "body": ["${1:elem}.classList.remove('${2:className}');"],
+        "description": "Remove class from element"
+    },
+    "Has Class": {
+        "prefix": "hasclass",
+        "body": [
+            "const hasClass = ${1:elem}.classList.contains('${2:className}');"
+        ],
+        "description": "Check if element has class"
+    },
+    "Create Element": {
+        "prefix": "createel",
+        "body": ["const ${1:el} = document.createElement('${2:tag}');"],
+        "description": "Create new element"
+    },
+    "Append Child": {
+        "prefix": "appendchild",
+        "body": ["${1:parent}.appendChild(${2:child});"],
+        "description": "Append child element"
+    },
+    "Remove Child": {
+        "prefix": "removechild",
+        "body": ["${1:parent}.removeChild(${2:child});"],
+        "description": "Remove child element"
+    },
+    "Replace Child": {
+        "prefix": "replacechild",
+        "body": ["${1:parent}.replaceChild(${2:newChild}, ${3:oldChild});"],
+        "description": "Replace child element"
+    },
+    "Set Attribute": {
+        "prefix": "setattr",
+        "body": ["${1:elem}.setAttribute('${2:attr}', '${3:value}');"],
+        "description": "Set attribute on element"
+    },
+    "Get Attribute": {
+        "prefix": "getattr",
+        "body": ["const attr = ${1:elem}.getAttribute('${2:attr}');"],
+        "description": "Get attribute value"
+    },
+    "Remove Attribute": {
+        "prefix": "removeattr",
+        "body": ["${1:elem}.removeAttribute('${2:attr}');"],
+        "description": "Remove attribute from element"
+    },
+    "Query Selector": {
+        "prefix": "qs",
+        "body": ["const ${1:elem} = document.querySelector('${2:selector}');"],
+        "description": "Query selector"
+    },
+    "Query Selector All": {
+        "prefix": "qsa",
+        "body": [
+            "const ${1:elems} = document.querySelectorAll('${2:selector}');"
+        ],
+        "description": "Query selector all"
+    },
+    "Add Event Listener": {
+        "prefix": "addevent",
+        "body": [
+            "${1:elem}.addEventListener('${2:event}', (event) => {",
+            "\t$0",
+            "});"
+        ],
+        "description": "Add event listener"
+    },
+    "Remove Event Listener": {
+        "prefix": "removeevent",
+        "body": [
+            "function handler(event) {",
+            "\t$0",
+            "}",
+            "${1:elem}.addEventListener('${2:event}', handler);",
+            "${1:elem}.removeEventListener('${2:event}', handler);"
+        ],
+        "description": "Add and remove event listener"
+    },
+    "Stop Event Propagation": {
+        "prefix": "stopprop",
+        "body": ["event.stopPropagation();"],
+        "description": "Stop event propagation"
+    },
+    "Prevent Default": {
+        "prefix": "preventdefault",
+        "body": ["event.preventDefault();"],
+        "description": "Prevent default event behavior"
+    },
+    "Set Style": {
+        "prefix": "setstyle",
+        "body": ["${1:elem}.style.${2:property} = '${3:value}';"],
+        "description": "Set inline style property"
+    },
+    "Get Style": {
+        "prefix": "getstyle",
+        "body": ["const style = window.getComputedStyle(${1:elem});"],
+        "description": "Get computed style"
+    },
+    "Insert Before": {
+        "prefix": "insertbefore",
+        "body": ["${1:parent}.insertBefore(${2:newNode}, ${3:referenceNode});"],
+        "description": "Insert node before another"
+    },
+    "Replace With": {
+        "prefix": "replacewith",
+        "body": ["${1:elem}.replaceWith(${2:newElem});"],
+        "description": "Replace element with another"
+    },
+    "Clone Node": {
+        "prefix": "clonenode",
+        "body": ["const clone = ${1:elem}.cloneNode(${2:true});"],
+        "description": "Clone node (deep or shallow)"
+    },
+    "Focus Element": {
+        "prefix": "focus",
+        "body": ["${1:elem}.focus();"],
+        "description": "Set focus on element"
+    },
+    "Blur Element": {
+        "prefix": "blur",
+        "body": ["${1:elem}.blur();"],
+        "description": "Remove focus from element"
+    },
+    "Get Parent Element": {
+        "prefix": "parentel",
+        "body": ["const parent = ${1:elem}.parentElement;"],
+        "description": "Get parent element"
+    },
+    "Get Next Sibling": {
+        "prefix": "nextsibling",
+        "body": ["const next = ${1:elem}.nextElementSibling;"],
+        "description": "Get next sibling element"
+    },
+    "Get Previous Sibling": {
+        "prefix": "prevsibling",
+        "body": ["const prev = ${1:elem}.previousElementSibling;"],
+        "description": "Get previous sibling element"
+    },
+    "Fetch POST Request": {
+        "prefix": "fetchpost",
+        "body": [
+            "fetch('${1:url}', {",
+            "  method: 'POST',",
+            "  headers: {",
+            "    'Content-Type': 'application/json'",
+            "  },",
+            "  body: JSON.stringify(${2:data})",
+            "})",
+            "  .then(res => res.json())",
+            "  .then(data => console.log(data))",
+            "  .catch(err => console.error(err));"
+        ],
+        "description": "fetch POST request"
+    },
+    "Async Await POST": {
+        "prefix": "asfetchpost",
+        "body": [
+            "async function ${1:postData}() {",
+            "  try {",
+            "    const res = await fetch('${2:url}', {",
+            "      method: 'POST',",
+            "      headers: {",
+            "        'Content-Type': 'application/json'",
+            "      },",
+            "      body: JSON.stringify(${3:data})",
+            "    });",
+            "    const result = await res.json();",
+            "    console.log(result);",
+            "  } catch (err) {",
+            "    console.error(err);",
+            "  }",
+            "}"
+        ],
+        "description": "async/await fetch POST"
+    },
+    "Debounce Arrow Function": {
+        "prefix": "debounceaf",
+        "body": [
+            "const debounce = (func, delay) => {",
+            "  let timeoutId;",
+            "  return (...args) => {",
+            "    clearTimeout(timeoutId);",
+            "    timeoutId = setTimeout(() => func.apply(this, args), delay);",
+            "  };",
+            "};"
+        ],
+        "description": "Debounce arrow function"
+    },
+    "Throttle Arrow Function": {
+        "prefix": "throttleaf",
+        "body": [
+            "const throttle = (func, limit) => {",
+            "  let inThrottle;",
+            "  return (...args) => {",
+            "    if (!inThrottle) {",
+            "      func.apply(this, args);",
+            "      inThrottle = true;",
+            "      setTimeout(() => inThrottle = false, limit);",
+            "    }",
+            "  };",
+            "};"
+        ],
+        "description": "Throttle arrow function"
+    },
+    "Clone Object Shallow": {
+        "prefix": "cloneShallow",
+        "body": ["const clone = Object.assign({}, ${1:obj});"],
+        "description": "Shallow clone object"
+    },
+    "Check Array": {
+        "prefix": "isArray",
+        "body": ["const isArray = Array.isArray(${1:val});"],
+        "description": "Check if value is array"
+    },
+    "Merge Arrays": {
+        "prefix": "mergeArr",
+        "body": ["const merged = [...${1:arr1}, ...${2:arr2}];"],
+        "description": "Merge two arrays"
+    },
+    "Get URL Params": {
+        "prefix": "urlparams",
+        "body": [
+            "const params = new URLSearchParams(window.location.search);",
+            "const ${1:param} = params.get('${1:param}');"
+        ],
+        "description": "Get URL query parameters"
+    },
+    "Set Timeout Cancel": {
+        "prefix": "stoClear",
+        "body": [
+            "const timer = setTimeout(() => {",
+            "  $0",
+            "}, ${1:1000});",
+            "clearTimeout(timer);"
+        ],
+        "description": "Set timeout with cancel"
+    },
+    "LocalStorage JSON Set": {
+        "prefix": "lssetjson",
+        "body": ["localStorage.setItem('${1:key}', JSON.stringify(${2:obj}));"],
+        "description": "Store JSON in localStorage"
+    },
+    "LocalStorage JSON Get": {
+        "prefix": "lsgetjson",
+        "body": [
+            "const ${1:data} = JSON.parse(localStorage.getItem('${2:key}') || '{}');"
+        ],
+        "description": "Get JSON from localStorage"
+    },
+    "Event Delegation": {
+        "prefix": "edeleg",
+        "body": [
+            "document.addEventListener('${1:event}', (e) => {",
+            "  if (e.target.matches('${2:selector}')) {",
+            "    $0",
+            "  }",
+            "});"
+        ],
+        "description": "Event delegation"
+    },
+    "Clone Array": {
+        "prefix": "cloneArr",
+        "body": ["const clone = [...${1:array}];"],
+        "description": "Clone array"
+    },
+    "Find Index": {
+        "prefix": "findIndex",
+        "body": [
+            "const index = ${1:array}.findIndex((${2:item}) => ${3:condition});"
+        ],
+        "description": "Array findIndex"
+    },
+    "Clear All Children": {
+        "prefix": "clearChild",
+        "body": [
+            "while (${1:parent}.firstChild) {",
+            "  ${1:parent}.removeChild(${1:parent}.firstChild);",
+            "}"
+        ],
+        "description": "Remove all children of element"
+    },
+    "Create and Append Text": {
+        "prefix": "createText",
+        "body": [
+            "const textNode = document.createTextNode('${1:text}');",
+            "${2:parent}.appendChild(textNode);"
+        ],
+        "description": "Create and append text node"
+    },
+    "Toggle Class": {
+        "prefix": "toggleClass",
+        "body": ["${1:element}.classList.toggle('${2:className}');"],
+        "description": "Toggle class on element"
+    },
+    "Get Computed Style": {
+        "prefix": "getStyle",
+        "body": ["const style = window.getComputedStyle(${1:element});"],
+        "description": "Get computed style"
+    },
+    "Check Promise": {
+        "prefix": "isPromise",
+        "body": [
+            "const isPromise = val => val && typeof val.then === 'function';"
+        ],
+        "description": "Check if value is a promise"
+    },
+    "Clamp Number": {
+        "prefix": "clamp",
+        "body": [
+            "const clamp = (num, min, max) => Math.min(Math.max(num, min), max);"
+        ],
+        "description": "Clamp number between min and max"
+    },
+    "Deep Freeze": {
+        "prefix": "deepFreeze",
+        "body": [
+            "function deepFreeze(obj) {",
+            "  Object.freeze(obj);",
+            "  Object.getOwnPropertyNames(obj).forEach(prop => {",
+            "    if (obj[prop] !== null && (typeof obj[prop] === 'object' || typeof obj[prop] === 'function') && !Object.isFrozen(obj[prop])) {",
+            "      deepFreeze(obj[prop]);",
+            "    }",
+            "  });",
+            "  return obj;",
+            "}"
+        ],
+        "description": "Deep freeze object"
+    },
+    "Sleep Async": {
+        "prefix": "sleepAsync",
+        "body": [
+            "function sleep(ms) {",
+            "  return new Promise(resolve => setTimeout(resolve, ms));",
+            "}"
+        ],
+        "description": "Sleep/delay with Promise"
+    },
+    "Memoize Function": {
+        "prefix": "memoize",
+        "body": [
+            "function memoize(fn) {",
+            "  const cache = new Map();",
+            "  return function(...args) {",
+            "    const key = JSON.stringify(args);",
+            "    if (cache.has(key)) return cache.get(key);",
+            "    const result = fn.apply(this, args);",
+            "    cache.set(key, result);",
+            "    return result;",
+            "  };",
+            "}"
+        ],
+        "description": "Memoization helper function"
+    },
+    "Flatten Array": {
+        "prefix": "flattenArr",
+        "body": ["const flattened = ${1:array}.flat(${2:depth});"],
+        "description": "Flatten nested array"
+    },
+    "Get Unique By Key": {
+        "prefix": "uniqBy",
+        "body": [
+            "const uniqueBy = (arr, key) => {",
+            "  const seen = new Set();",
+            "  return arr.filter(item => {",
+            "    const k = item[key];",
+            "    return seen.has(k) ? false : seen.add(k);",
+            "  });",
+            "};"
+        ],
+        "description": "Get unique objects by key"
+    },
+    "Capitalize Words": {
+        "prefix": "capitalizeWords",
+        "body": [
+            "const capitalizeWords = str =>",
+            "  str.replace(/\\b\\w/g, char => char.toUpperCase());"
+        ],
+        "description": "Capitalize first letter of each word"
+    },
+    "Debounce Classic": {
+        "prefix": "debounceClassic",
+        "body": [
+            "function debounce(func, delay) {",
+            "  let timeoutId;",
+            "  return function() {",
+            "    const context = this;",
+            "    const args = arguments;",
+            "    clearTimeout(timeoutId);",
+            "    timeoutId = setTimeout(() => func.apply(context, args), delay);",
+            "  };",
+            "}"
+        ],
+        "description": "Debounce function classic syntax"
+    },
+    "Throttle Classic": {
+        "prefix": "throttleClassic",
+        "body": [
+            "function throttle(func, limit) {",
+            "  let lastFunc;",
+            "  let lastRan;",
+            "  return function() {",
+            "    const context = this;",
+            "    const args = arguments;",
+            "    if (!lastRan) {",
+            "      func.apply(context, args);",
+            "      lastRan = Date.now();",
+            "    } else {",
+            "      clearTimeout(lastFunc);",
+            "      lastFunc = setTimeout(function() {",
+            "        if ((Date.now() - lastRan) >= limit) {",
+            "          func.apply(context, args);",
+            "          lastRan = Date.now();",
+            "        }",
+            "      }, limit - (Date.now() - lastRan));",
+            "    }",
+            "  };",
+            "}"
+        ],
+        "description": "Throttle function classic syntax"
+    },
+    "Check Empty String": {
+        "prefix": "isEmptyStr",
+        "body": [
+            "const isEmptyString = str => typeof str === 'string' && str.trim().length === 0;"
+        ],
+        "description": "Check if string is empty or whitespace"
+    },
+    "Sleep Await": {
+        "prefix": "awaitSleep",
+        "body": ["await new Promise(resolve => setTimeout(resolve, ${1:ms}));"],
+        "description": "Await sleep inline"
+    },
+    "Is Even Number": {
+        "prefix": "isEven",
+        "body": ["const isEven = n => n % 2 === 0;"],
+        "description": "Check if number is even"
+    },
+    "Is Odd Number": {
+        "prefix": "isOdd",
+        "body": ["const isOdd = n => n % 2 !== 0;"],
+        "description": "Check if number is odd"
+    },
+    "Random Int": {
+        "prefix": "randInt",
+        "body": [
+            "const randomInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;"
+        ],
+        "description": "Random integer between min and max (inclusive)"
+    },
+    "Generate Range Array": {
+        "prefix": "rangeArr",
+        "body": [
+            "const range = (start, end) => Array.from({ length: (end - start + 1) }, (_, i) => i + start);"
+        ],
+        "description": "Generate array with range of numbers"
+    },
+    "Remove Item From Array": {
+        "prefix": "removeItem",
+        "body": [
+            "const removeItem = (arr, item) => arr.filter(i => i !== item);"
+        ],
+        "description": "Remove item from array"
+    },
+    "Toggle Boolean": {
+        "prefix": "toggleBool",
+        "body": ["let ${1:flag} = ${2:true};", "${1:flag} = !${1:flag};"],
+        "description": "Toggle boolean variable"
+    },
+    "Object Keys Array": {
+        "prefix": "objKeys",
+        "body": ["const keys = Object.keys(${1:obj});"],
+        "description": "Get array of object keys"
+    },
+    "Object Values Array": {
+        "prefix": "objValues",
+        "body": ["const values = Object.values(${1:obj});"],
+        "description": "Get array of object values"
+    },
+    "Object Entries Array": {
+        "prefix": "objEntries",
+        "body": ["const entries = Object.entries(${1:obj});"],
+        "description": "Get array of [key, value] pairs"
+    },
+    "JSON Try Parse": {
+        "prefix": "jsonTryParse",
+        "body": [
+            "function tryParseJSON(json) {",
+            "  try {",
+            "    return JSON.parse(json);",
+            "  } catch {",
+            "    return null;",
+            "  }",
+            "}"
+        ],
+        "description": "Try parse JSON safely"
+    }
+}

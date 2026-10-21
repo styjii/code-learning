@@ -1,0 +1,108 @@
+/* Éditeur : barre latérale, menus déroulants. */
+
+.nav-bar { display: flex; align-items: center; margin: 0; padding: 0; list-style: none; }
+.nav-bar .drop { position: relative; border: 0; }
+
+.nav-bar .navlink {
+    padding: 0.3rem 0.7rem;
+    border: 0;
+    border-radius: var(--radius-sm);
+    background: transparent;
+    color: var(--muted);
+    font-size: 0.9rem;
+}
+
+.nav-bar .navlink:hover { background: var(--surface-2); color: var(--text-strong); }
+
+/* Barre latérale */
+.nav-sidebar {
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    width: 56px;
+    border-right: 1px solid var(--border);
+    background: var(--surface);
+}
+
+.nav-navbar { display: flex; flex-direction: column; margin: 0 0 auto; padding: 0.4rem 0; list-style: none; gap: 2px; }
+
+.navlink {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: 100%;
+    padding: 0.8rem 0;
+    border: 0;
+    background: transparent;
+    color: var(--muted);
+    cursor: pointer;
+    transition: background-color 0.15s, color 0.15s;
+}
+
+.nav-sidebar .navlink:hover { background: var(--surface-2); color: var(--text-strong); }
+.nav-sidebar .navlink.active { background: var(--accent-soft); color: var(--accent); }
+
+.nav-sidebar .navlink.active::before {
+    content: "";
+    position: absolute;
+    inset: 8px auto 8px 0;
+    width: 3px;
+    border-radius: 0 3px 3px 0;
+    background: var(--accent);
+}
+
+.icon { fill: currentColor; pointer-events: none; vertical-align: -0.125em; }
+
+/* Menus */
+.drop { position: relative; }
+.nav-sidebar > .drop { border-top: 1px solid var(--border); }
+
+.drop-menu {
+    display: none;
+    position: absolute;
+    z-index: 1000;
+    min-width: 15rem;
+    margin: 0;
+    padding: 0.35rem;
+    list-style: none;
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius);
+    background: var(--surface);
+    box-shadow: var(--shadow-lg);
+}
+
+.nav-bar .drop-menu { top: calc(100% + 6px); left: 0; }
+.drop-menu.side { left: calc(100% + 6px); bottom: 6px; }
+.drop-menu.show { display: block; }
+
+.drop-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    width: 100%;
+    padding: 0.45rem 0.7rem;
+    border: 0;
+    border-radius: var(--radius-sm);
+    background: transparent;
+    color: var(--text);
+    font-size: 0.9rem;
+    text-align: left;
+    white-space: nowrap;
+}
+
+.drop-item:hover { background: var(--surface-2); }
+.drop-item:active { background: var(--accent); color: var(--accent-contrast); }
+.drop-item kbd { font-size: 0.7rem; }
+
+/* Petits écrans : barre latérale horizontale en bas */
+@media (max-width: 767.98px) {
+    .workspace { flex-direction: column-reverse; }
+    .nav-sidebar { flex-direction: row; width: 100%; height: 52px; border-right: 0; border-top: 1px solid var(--border); }
+    .nav-navbar { flex-direction: row; flex: 1; padding: 0; }
+    .nav-navbar li { flex: 1; }
+    .navlink { height: 100%; padding: 0; }
+    .nav-sidebar > .drop { width: 56px; border-top: 0; border-left: 1px solid var(--border); }
+    .nav-sidebar .navlink.active::before { inset: 0 8px auto; width: auto; height: 3px; border-radius: 0 0 3px 3px; }
+    .drop-menu.side { left: auto; right: 6px; bottom: calc(100% + 6px); }
+}

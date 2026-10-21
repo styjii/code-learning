@@ -1,0 +1,20 @@
+{
+    "value": "",
+    "automaticLayout": true,
+    "theme": "vs-dark",
+    "contextmenu": false,
+    "lineNumbers": "on",
+    "minimap": {
+        "enabled": true
+    },
+    "wordWrap": "on",
+    "tabSize": 4,
+    "insertSpaces": true,
+    "formatOnType": true,
+    "formatOnPaste": true,
+    "scrollBeyondLastLine": false,
+    "scrollbar": {
+        "verticalScrollbarSize": 8,
+        "horizontalScrollbarSize": 8
+    }
+}

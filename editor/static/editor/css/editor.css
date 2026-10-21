@@ -1,0 +1,51 @@
+/* Éditeur : zone de code et zone de résultat. */
+
+#main-editor { display: flex; flex: 1; flex-direction: column; min-width: 0; min-height: 0; }
+
+#editor-container, #output-container { position: relative; display: flex; flex-direction: column; flex: 1; min-width: 0; min-height: 0; }
+#editor-container { background: var(--surface); border-bottom: 1px solid var(--border); }
+#output-container { background: var(--surface); }
+
+.editor-block { display: none; width: 100%; height: 100%; }
+
+#control-button {
+    display: flex;
+    gap: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    flex-shrink: 0;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+}
+
+#control-button button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.3rem 0.8rem;
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-sm);
+    background: transparent;
+    color: var(--text);
+    font-size: 0.88rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.15s, color 0.15s, border-color 0.15s;
+}
+
+#control-button button .icon { fill: currentColor; }
+#control-button button:hover { background: var(--surface-2); }
+
+#run-code { border-color: var(--accent) !important; background: var(--accent) !important; color: var(--accent-contrast) !important; }
+#run-code:hover { background: var(--accent-hover) !important; }
+#display-console[aria-pressed="true"] { border-color: var(--accent); background: var(--accent-soft); color: var(--accent); }
+
+#output { flex: 1; width: 100%; border: 0; background: #fff; }
+#console { flex: 1; padding: 0.5rem; overflow: auto; background: var(--theme-bg); color: var(--theme-text); }
+
+/* Monaco */
+.monaco-editor { outline: none !important; }
+
+@media (min-width: 1024px) {
+    #main-editor { flex-direction: row; }
+    #editor-container { border-bottom: 0; border-right: 1px solid var(--border); }
+}

@@ -1,0 +1,36 @@
+{% load static %}<!DOCTYPE html>
+<html lang="fr" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}Langage Learning{% endblock %}</title>
+    <meta name="description" content="{% block description %}Guides complets pour apprendre à programmer, et un éditeur de code en ligne.{% endblock %}">
+    <meta name="color-scheme" content="dark light">
+
+    {# Applique le thème avant le premier affichage (évite le flash). #}
+    <script>
+        (function () {
+            var root = document.documentElement, theme = "dark";
+            try {
+                theme = localStorage.getItem("theme") ||
+                    (matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark");
+            } catch (e) {}
+            root.setAttribute("data-theme", theme === "light" ? "light" : "dark");
+            root.classList.add("js");
+        })();
+    </script>
+
+    <link rel="preload" href="{% static 'font/NotoSans.woff2' %}" as="font" type="font/woff2" crossorigin>
+    <link rel="stylesheet" href="{% static 'css/theme.css' %}">
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    {% block styles %}{% endblock %}
+
+    <link rel="icon" href="{% block favicon %}{% static 'icons/code.svg' %}{% endblock %}" type="image/svg+xml">
+</head>
+<body {% block body_attrs %}{% endblock %}>
+    {% block body %}{% endblock %}
+
+    <script type="module" src="{% static 'js/main.js' %}"></script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

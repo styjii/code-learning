@@ -1,0 +1,40 @@
+/* Coloration syntaxique (Pygments) : les couleurs viennent des variables --tok-* du thème. */
+
+.codehilite { color: var(--code-fg); }
+.codehilite .hll { background: var(--tok-hl); display: block; }
+
+/* Commentaires */
+.codehilite :is(.c, .ch, .cm, .c1, .cs, .cpf) { color: var(--tok-comment); font-style: italic; }
+.codehilite .cp { color: var(--tok-keyword); }
+
+/* Mots-clés */
+.codehilite :is(.k, .kc, .kd, .kn, .kp, .kr, .ow) { color: var(--tok-keyword); }
+.codehilite .kt { color: var(--tok-class); }
+
+/* Opérateurs */
+.codehilite .o { color: var(--tok-op); }
+
+/* Noms */
+.codehilite :is(.nf, .fm) { color: var(--tok-function); }
+.codehilite :is(.nc, .nn, .ne, .nl) { color: var(--tok-class); }
+.codehilite :is(.nb, .bp, .no) { color: var(--tok-builtin); }
+.codehilite :is(.nd) { color: var(--tok-function); }
+.codehilite :is(.nv, .vc, .vg, .vi, .vm) { color: var(--tok-var); }
+.codehilite .nt { color: var(--tok-tag); }
+.codehilite .na { color: var(--tok-attr); }
+
+/* Chaînes */
+.codehilite :is(.s, .sa, .sb, .sc, .dl, .sd, .s2, .sh, .sx, .sr, .s1, .ss) { color: var(--tok-string); }
+.codehilite :is(.se, .si) { color: var(--tok-number); }
+
+/* Nombres */
+.codehilite :is(.m, .mb, .mf, .mh, .mi, .mo, .il) { color: var(--tok-number); }
+
+/* Diff et divers */
+.codehilite .gi { color: var(--tok-inserted); }
+.codehilite .gd { color: var(--tok-deleted); }
+.codehilite :is(.gh, .gu, .gs) { font-weight: 700; }
+.codehilite .ge { font-style: italic; }
+.codehilite :is(.err, .gr, .gt) { color: var(--tok-error); }
+.codehilite .go { color: var(--tok-comment); }
+.codehilite .gp { color: var(--tok-comment); user-select: none; }

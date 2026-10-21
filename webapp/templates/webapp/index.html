@@ -1,0 +1,134 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Langage Learning · Apprendre à programmer en français{% endblock %}
+{% block styles %}<link rel="stylesheet" href="{% static 'webapp/css/style.css' %}">{% endblock %}
+
+{% block body %}
+<a class="skip-link" href="#courses">Aller aux cours</a>
+
+<header class="topbar">
+    <a class="brand" href="{% url 'index' %}">
+        {% include "partials/logo.html" with logo_id="home" %}
+        <span>Langage Learning</span>
+    </a>
+    <nav class="topnav" aria-label="Navigation principale">
+        <a href="#courses">Cours</a>
+        <a href="{% url 'editor-index' %}">Éditeur</a>
+    </nav>
+    <div class="topbar-actions">
+        {% include "partials/theme_toggle.html" %}
+    </div>
+</header>
+
+<main>
+    <section class="hero">
+        <div class="hero-text">
+            <p class="eyebrow">Apprendre à coder, en français</p>
+            <h1>Des guides complets pour <span class="gradient-text">maîtriser la programmation</span></h1>
+            <p class="lead">
+                {{ total_pages }} cours, exercices et projets, du premier « Hello World » aux notions avancées,
+                avec des exemples de code à copier et un éditeur en ligne pour les essayer.
+            </p>
+            <div class="hero-actions">
+                <a class="btn btn-primary" href="#courses">Explorer les cours</a>
+                <a class="btn btn-ghost" href="{% url 'editor-index' %}">Ouvrir l'éditeur</a>
+            </div>
+        </div>
+
+        <div class="hero-visual" aria-hidden="true">
+            <div class="code-window">
+                <div class="code-window-bar"><i></i><i></i><i></i><span>bonjour.py</span></div>
+<pre><span class="c"># Votre première fonction</span>
+<span class="k">def</span> <span class="f">bonjour</span>(nom):
+    <span class="k">return</span> <span class="s">f"Bonjour </span>{nom}<span class="s"> !"</span>
+
+<span class="b">print</span>(<span class="f">bonjour</span>(<span class="s">"monde"</span>))</pre>
+            </div>
+            <ul class="floating-icons">
+                <li style="--i:0"><img src="{% static 'icons/python.svg' %}" alt=""></li>
+                <li style="--i:1"><img src="{% static 'icons/javascript.svg' %}" alt=""></li>
+                <li style="--i:2"><img src="{% static 'icons/typescript.svg' %}" alt=""></li>
+                <li style="--i:3"><img src="{% static 'icons/css.svg' %}" alt=""></li>
+            </ul>
+        </div>
+    </section>
+
+    <section id="courses" class="catalog" aria-labelledby="catalog-title">
+        <div class="section-head">
+            <h2 id="catalog-title">Tous les cours</h2>
+            <p>Choisissez un langage, un framework, des exercices ou un projet.</p>
+        </div>
+
+        <div class="catalog-tools">
+            <label class="search">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+                <input type="search" id="course-search" placeholder="Rechercher un cours…" autocomplete="off" aria-label="Rechercher un cours">
+            </label>
+            <div class="chips" role="group" aria-label="Filtrer par catégorie">
+                <button type="button" class="chip is-active" data-filter="all">Tous</button>
+                {% for group in catalog %}
+                <button type="button" class="chip" data-filter="{{ group.key }}">{{ group.title }}</button>
+                {% endfor %}
+            </div>
+        </div>
+
+        {% for group in catalog %}
+        <div class="catalog-group" data-category="{{ group.key }}">
+            <h3>{{ group.title }} <small>{{ group.description }}</small></h3>
+            <div class="cards">
+                {% for page in group.pages %}
+                <a class="card" href="{{ page.url }}" style="--lang: {{ page.color }}"
+                   data-search="{{ page.title|lower }} {{ page.description|lower }}">
+                    <span class="card-icon"><img src="{{ page.icon }}" alt="" width="28" height="28" loading="lazy"></span>
+                    <span class="card-title">{{ page.title }}</span>
+                    <span class="card-desc">{{ page.description }}</span>
+                    <span class="card-cta">Ouvrir
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                    </span>
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+        {% endfor %}
+
+        <p id="no-results" class="empty" hidden>Aucun cours ne correspond à votre recherche.</p>
+    </section>
+
+    <section class="editor-promo">
+        <div class="promo-text">
+            <p class="eyebrow">Éditeur en ligne</p>
+            <h2>Écrivez, prévisualisez, expérimentez</h2>
+            <p>
+                Un éditeur HTML, CSS et JavaScript avec aperçu en direct, console intégrée,
+                projets sauvegardés et export en .zip. Idéal pour tester les exemples des cours.
+            </p>
+            <a class="btn btn-primary" href="{% url 'editor-index' %}">Lancer l'éditeur</a>
+        </div>
+        <div class="promo-image">
+            <div class="browser-frame">
+                <div class="browser-bar"><i></i><i></i><i></i></div>
+                <img src="{% static 'images/editor.png' %}" alt="Aperçu de l'éditeur de code" loading="lazy">
+            </div>
+        </div>
+    </section>
+</main>
+
+<footer class="site-footer">
+    <p>Langage Learning · Cours, exercices et projets de programmation</p>
+</footer>
+
+{% if is_populating %}
+<div id="progress-container" class="toast" role="status" aria-live="polite"
+     data-total="{{ total_pages }}" data-endpoint="{% url 'populate_step' %}">
+    <div class="progress-header">
+        <div class="spinner" aria-hidden="true"></div>
+        <div class="progress-status">Préparation des cours…</div>
+        <button type="button" id="cancel-btn">Annuler</button>
+    </div>
+    <div class="progress-bar-wrapper"><div id="progress-bar"></div></div>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block scripts %}<script type="module" src="{% static 'webapp/js/main.js' %}"></script>{% endblock %}

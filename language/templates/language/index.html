@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{ page_title }} · Langage Learning{% endblock %}
+{% block description %}{{ page.description }}{% endblock %}
+{% block favicon %}{{ page.icon }}{% endblock %}
+{% block body_attrs %}data-app="language" data-lang="{{ page.key }}" style="--lang: {{ page.color }}"{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="{% static 'language/css/highlight.css' %}">
+<link rel="stylesheet" href="{% static 'language/css/style.css' %}">
+{% endblock %}
+
+{% block body %}
+<a class="skip-link" href="#content">Aller au contenu</a>
+<div class="reading-progress" aria-hidden="true"><span id="reading-bar"></span></div>
+
+<header class="topbar">
+    <button type="button" class="icon-btn menu-btn" id="menu-toggle" aria-label="Afficher les sections" aria-controls="sidebar" aria-expanded="false">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h10"/></svg>
+    </button>
+
+    <a class="brand" href="{% url 'index' %}" title="Retour à l'accueil">
+        {% include "partials/logo.html" with logo_id="lang" %}
+        <span class="brand-name">Langage Learning</span>
+    </a>
+
+    <div class="switcher" id="switcher">
+        <button type="button" class="switcher-btn" id="switcher-btn" aria-haspopup="true" aria-expanded="false" aria-controls="switcher-panel">
+            <img src="{{ page.icon }}" alt="" width="20" height="20">
+            <span class="switcher-current">{{ page.title }}</span>
+            <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+        </button>
+        <div class="switcher-panel" id="switcher-panel" hidden>
+            {% for group in catalog %}
+            <p class="switcher-group">{{ group.title }}</p>
+            {% for item in group.pages %}
+            <a class="switcher-item{% if item.key == page.key %} is-current{% endif %}" href="{{ item.url }}"
+               style="--lang: {{ item.color }}"{% if item.key == page.key %} aria-current="page"{% endif %}>
+                <img src="{{ item.icon }}" alt="" width="20" height="20">
+                <span>{{ item.title }}</span>
+            </a>
+            {% endfor %}
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="topbar-actions">
+        <button type="button" class="search-btn" id="search-open" aria-label="Rechercher dans ce cours" aria-keyshortcuts="Control+K /">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+            <span class="search-label">Rechercher</span>
+            <kbd>/</kbd>
+        </button>
+        <a class="icon-btn" href="{% url 'editor-index' %}" title="Ouvrir l'éditeur" aria-label="Ouvrir l'éditeur">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m8 7-5 5 5 5M16 7l5 5-5 5M14 4l-4 16"/></svg>
+        </a>
+        {% include "partials/theme_toggle.html" %}
+    </div>
+</header>
+
+<div class="shell">
+    <aside class="sidebar" id="sidebar" aria-label="Sections du cours">
+        <div class="sidebar-head">
+            <span class="lang-badge"><img src="{{ page.icon }}" alt="" width="26" height="26"></span>
+            <div>
+                <p class="sidebar-eyebrow">{{ category_title }}</p>
+                <h2 class="sidebar-title">{{ page.title }}</h2>
+            </div>
+        </div>
+
+        <label class="filter">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M3 5h18M6 12h12M10 19h4"/></svg>
+            <input type="search" id="section-filter" placeholder="Filtrer les sections" autocomplete="off" aria-label="Filtrer les sections">
+        </label>
+
+        <nav class="section-nav" id="section-nav" aria-label="Liste des sections"></nav>
+        <p class="nav-empty" id="nav-empty" hidden>Aucune section trouvée.</p>
+
+        <div class="sidebar-foot" id="sidebar-foot" hidden>
+            <span id="section-count"></span>
+            <div class="mini-bar"><span id="section-bar"></span></div>
+        </div>
+    </aside>
+    <div class="backdrop" id="backdrop" hidden></div>
+
+    <main class="doc-main" id="content" tabindex="-1">
+        {% if notice %}
+        <div class="notice" role="alert">
+            <h1>Oups, ce cours n'est pas disponible</h1>
+            <p>{{ notice }}</p>
+            <p><a class="btn btn-primary" href="">Réessayer</a> <a class="btn btn-ghost" href="{% url 'index' %}">Retour à l'accueil</a></p>
+        </div>
+        {% else %}
+        <article class="markdown-body">{{ content|safe }}</article>
+        <nav class="pager" id="pager" aria-label="Sections voisines"></nav>
+        {% endif %}
+    </main>
+
+    <aside class="toc" id="toc" aria-label="Sur cette page" hidden>
+        <p class="toc-title">Sur cette page</p>
+        <ul id="toc-list"></ul>
+    </aside>
+</div>
+
+<div class="search-overlay" id="search-overlay" hidden>
+    <div class="search-dialog" role="dialog" aria-modal="true" aria-label="Rechercher dans le cours">
+        <div class="search-input-row">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+            <input type="search" id="search-input" placeholder="Rechercher dans {{ page.title }}…" autocomplete="off" aria-label="Rechercher">
+            <kbd>Échap</kbd>
+        </div>
+        <ul class="search-results" id="search-results" role="listbox"></ul>
+        <p class="search-hint" id="search-hint">Tapez au moins 2 caractères · ↑ ↓ pour naviguer · Entrée pour ouvrir</p>
+    </div>
+</div>
+
+<button type="button" id="scrollToTopBtn" class="to-top" aria-label="Retour en haut de page" hidden>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+</button>
+{% endblock %}
+
+{% block scripts %}<script type="module" src="{% static 'language/js/main.js' %}"></script>{% endblock %}

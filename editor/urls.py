@@ -1,0 +1,27 @@
+from rest_framework.routers import DefaultRouter
+from django.urls import path, include
+from django.views.generic import TemplateView
+from .views import (
+    ProjectViewSet,
+    ExportZipView,
+    ImportZipView,
+    LivePreviewView,
+    PreviewDisplayView,
+    LoadMonacoConfigView,
+    SaveMonacoConfigView
+)
+
+
+router = DefaultRouter()
+router.register(r'projects', ProjectViewSet, basename='project')
+
+urlpatterns = [
+    path('', TemplateView.as_view(template_name='editor/index.html'), name='editor-index'),
+    path('api/', include(router.urls)),
+    path('api/load-monaco-config/', LoadMonacoConfigView.as_view(), name='load-monaco-config'),
+    path('api/save-monaco-config/', SaveMonacoConfigView.as_view(), name='save-monaco-config'),
+    path('api/export-zip/', ExportZipView.as_view(), name='export_zip'),
+    path('api/import-zip/', ImportZipView.as_view(), name='import_zip'),
+    path("preview/", LivePreviewView.as_view(), name="live-preview"),
+    path("preview/<str:preview_id>/", PreviewDisplayView.as_view(), name="preview-display"),
+]
