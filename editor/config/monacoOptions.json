@@ -12,7 +12,7 @@
     "insertSpaces": true,
     "formatOnType": true,
     "formatOnPaste": true,
-    "scrollBeyondLastLine": true,
+    "scrollBeyondLastLine": false,
     "scrollbar": {
         "verticalScrollbarSize": 8,
         "horizontalScrollbarSize": 8

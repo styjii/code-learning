@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🔷 TypeScript — Guide complet
+# TypeScript — Guide complet
 
 **Du premier type aux génériques, aux frameworks et à la configuration moderne**
 
@@ -10,20 +10,20 @@
 
 ---
 
-## 🧰 Outils
+## Outils
 
 | Ressource | Lien |
 | --- | --- |
-| 📝 Exercices | [exercises](/language/exercises/typescript) |
-| ✅ Solutions | [solutions](/language/solutions/typescript) |
-| 📘 Documentation officielle | [typescriptlang.org](https://www.typescriptlang.org/docs/) |
-| 🧪 Bac à sable en ligne | [TypeScript Playground](https://www.typescriptlang.org/play) |
+| Exercices | [exercises](/language/exercises/typescript) |
+| Solutions | [solutions](/language/solutions/typescript) |
+| Documentation officielle | [typescriptlang.org](https://www.typescriptlang.org/docs/) |
+| Bac à sable en ligne | [TypeScript Playground](https://www.typescriptlang.org/play) |
 
 ---
 
-## 🗂️ Sommaire
+## Sommaire
 
-**🟢 Niveau débutant**
+**Niveau débutant**
 
 1. [Introduction à TypeScript](#1-introduction-à-typescript)
 2. [Types de base](#2-types-de-base)
@@ -33,7 +33,7 @@
 6. [Interfaces](#6-interfaces)
 7. [Alias de types, unions et types littéraux](#7-alias-de-types-unions-et-types-littéraux)
 
-**🟡 Niveau intermédiaire**
+**Niveau intermédiaire**
 
 8. [Classes et programmation orientée objet](#8-classes-et-programmation-orientée-objet)
 9. [Génériques](#9-génériques)
@@ -41,7 +41,7 @@
 11. [Types avancés](#11-types-avancés)
 12. [Fichiers de déclaration de types](#12-fichiers-de-déclaration-de-types)
 
-**🔴 Niveau avancé**
+**Niveau avancé**
 
 13. [Types utilitaires](#13-types-utilitaires)
 14. [Décorateurs](#14-décorateurs)
@@ -53,17 +53,17 @@
 20. [Configuration du projet (`tsconfig.json`)](#20-configuration-du-projet-tsconfigjson)
 21. [Linting et formatage](#21-linting-et-formatage)
 
-**⭐ Bonus**
+**Bonus**
 
 22. [TypeScript et bases de données](#22-typescript-et-bases-de-données)
 23. [TypeScript et tests](#23-typescript-et-tests)
 24. [Nouveautés par version et bonnes pratiques](#24-nouveautés-par-version-et-bonnes-pratiques)
 
-> 💡 **Légende** : *(ajout)* = notion absente du guide d'origine ; *(à jour)* = pratique moderne remplaçant une ancienne ; *(TS x.y)* = version qui introduit la fonctionnalité.
+> **Légende** : *(ajout)* = notion absente du guide d'origine ; *(à jour)* = pratique moderne remplaçant une ancienne ; *(TS x.y)* = version qui introduit la fonctionnalité.
 
 ---
 
-# 🟢 Niveau débutant
+# Niveau débutant
 
 ---
 
@@ -78,18 +78,18 @@
                 (erreurs à la compilation)                              (navigateur, Node.js…)
 ```
 
-> ℹ️ Les types **n'existent plus à l'exécution** : ils sont **effacés**. TypeScript ne remplace donc pas la validation des données externes (API, formulaires), voir [section 19](#19-typescript-côté-serveur).
+> ℹLes types **n'existent plus à l'exécution** : ils sont **effacés**. TypeScript ne remplace donc pas la validation des données externes (API, formulaires), voir [section 19](#19-typescript-côté-serveur).
 
 ## 1.2 Pourquoi l'utiliser ?
 
 | Avantage | Détail |
 | --- | --- |
-| 🐞 **Erreurs détectées tôt** | `undefined is not a function`, fautes de frappe, mauvais arguments… repérés avant l'exécution |
-| 💡 **Éditeur très puissant** | Autocomplétion, navigation, renommage sûr, documentation en ligne |
-| 📖 **Code auto-documenté** | Les types décrivent le contrat des fonctions et des données |
-| 🔧 **Refactorisation sûre** | Le compilateur liste tout ce qui casse |
-| 🏗️ **Grands projets** | Équipes nombreuses, bibliothèques, API stables |
-| 🔄 **Adoption progressive** | On peut migrer un projet JS fichier par fichier |
+| **Erreurs détectées tôt** | `undefined is not a function`, fautes de frappe, mauvais arguments… repérés avant l'exécution |
+| **Éditeur très puissant** | Autocomplétion, navigation, renommage sûr, documentation en ligne |
+| **Code auto-documenté** | Les types décrivent le contrat des fonctions et des données |
+| **Refactorisation sûre** | Le compilateur liste tout ce qui casse |
+| **Grands projets** | Équipes nombreuses, bibliothèques, API stables |
+| **Adoption progressive** | On peut migrer un projet JS fichier par fichier |
 
 ## 1.3 L'état de TypeScript en 2026 *(à jour)*
 
@@ -115,7 +115,7 @@ npm install -D typescript          # installation PAR PROJET (recommandée)
 npx tsc --version
 ```
 
-> ✅ Préférez une installation **locale au projet** (`-D`) à une installation globale : tous les développeurs et la CI utilisent ainsi la même version.
+> Préférez une installation **locale au projet** (`-D`) à une installation globale : tous les développeurs et la CI utilisent ainsi la même version.
 
 ### Compilateur natif (TypeScript 7)
 
@@ -135,12 +135,13 @@ function saluer(nom: string): string {
 }
 
 console.log(saluer("Alice"));
-// saluer(42);   // ❌ Erreur : l'argument de type 'number' n'est pas assignable au paramètre de type 'string'
+// saluer(42);
+console.error("Erreur de compilation : l'argument de type 'number' n'est pas assignable au paramètre de type 'string'");
 ```
 
 | Méthode | Commande | Usage |
 | --- | --- | --- |
-| **Compiler un fichier** | `npx tsc bonjour.ts` → `bonjour.js` *(⚠️ voir la note ci-dessous)* | Essais rapides |
+| **Compiler un fichier** | `npx tsc bonjour.ts` → `bonjour.js` *(voir la note ci-dessous)* | Essais rapides |
 | **Compiler le projet** | `npx tsc` (ou `npx tsc -p .`) selon `tsconfig.json` | Production, bibliothèques |
 | **Vérifier seulement** | `npx tsc --noEmit` | CI, éditeur (les types sont validés, rien n'est généré) |
 | **Mode surveillance** | `npx tsc --watch` | Développement |
@@ -148,9 +149,9 @@ console.log(saluer("Alice"));
 | **Exécuter avec `tsx`** | `npx tsx bonjour.ts` | Scripts, outils, développement (Node.js) |
 | **Deno / Bun** | `deno run bonjour.ts` · `bun bonjour.ts` | Exécutent TS nativement |
 
-> ⚠️ **Depuis TypeScript 6/7**, si un `tsconfig.json` existe, `tsc bonjour.ts` **échoue** avec l'erreur *TS5112* (le fichier de configuration serait ignoré en silence). Utilisez `tsc` ou `tsc -p .` pour compiler le projet, ou `tsc --ignoreConfig bonjour.ts` pour compiler un fichier isolé avec les options par défaut.
+> **Depuis TypeScript 6/7**, si un `tsconfig.json` existe, `tsc bonjour.ts` **échoue** avec l'erreur *TS5112* (le fichier de configuration serait ignoré en silence). Utilisez `tsc` ou `tsc -p .` pour compiler le projet, ou `tsc --ignoreConfig bonjour.ts` pour compiler un fichier isolé avec les options par défaut.
 
-> ⚠️ L'exécution directe (**Node.js**, `tsx`, Bun…) **supprime les types sans les vérifier** : lancez `tsc --noEmit` pour vérifier. Le **mode « effaçable »** (`--erasableSyntaxOnly`, TS 5.8) interdit les syntaxes TypeScript qui produisent du code (`enum`, `namespace`, propriétés de paramètres de constructeur) afin de rester compatible avec cet effacement simple.
+> L'exécution directe (**Node.js**, `tsx`, Bun…) **supprime les types sans les vérifier** : lancez `tsc --noEmit` pour vérifier. Le **mode « effaçable »** (`--erasableSyntaxOnly`, TS 5.8) interdit les syntaxes TypeScript qui produisent du code (`enum`, `namespace`, propriétés de paramètres de constructeur) afin de rester compatible avec cet effacement simple.
 
 ## 1.6 Démarrer un projet
 
@@ -203,9 +204,11 @@ let grand: bigint = 9007199254740993n;
 let id: symbol = Symbol("id");
 let rien: null = null;
 let indefini: undefined = undefined;
+
+console.log(nom, age, actif, grand, id.toString(), rien, indefini);
 ```
 
-> ✅ Écrivez les types en **minuscules** (`string`, `number`) et **jamais** `String`, `Number`, `Boolean`, `Object` (objets enveloppes, source d'erreurs).
+> Écrivez les types en **minuscules** (`string`, `number`) et **jamais** `String`, `Number`, `Boolean`, `Object` (objets enveloppes, source d'erreurs).
 
 ## 2.2 Inférence de types
 
@@ -217,7 +220,10 @@ const pi = 3.14;            // 3.14 (type littéral, car const)
 let nombres = [1, 2, 3];    // number[]
 const personne = { nom: "Alice", age: 30 };   // { nom: string; age: number }
 
-ville = 42;                 // ❌ 'number' n'est pas assignable à 'string'
+// ville = 42;
+console.error("Erreur de compilation : 'number' n'est pas assignable à 'string'");
+
+console.log(ville, pi, nombres, personne);
 ```
 
 | Quand annoter ? | Exemple |
@@ -236,7 +242,11 @@ Désactive la vérification : une valeur `any` accepte tout et **contamine** le 
 ```typescript
 let x: any = "texte";
 x = 42;
-x.nimporteQuoi();           // ✅ accepté par le compilateur, ❌ plantage à l'exécution
+try {
+    x.nimporteQuoi();           // accepté par le compilateur...
+} catch (e) {
+    console.error("Plantage à l'exécution :", (e as Error).message);   // ... mais plantage à l'exécution
+}
 ```
 
 ### `unknown` : la version sûre
@@ -245,12 +255,17 @@ On peut y mettre n'importe quoi, mais il faut le **vérifier** avant de l'utilis
 
 ```typescript
 function traiter(valeur: unknown) {
-    // valeur.toUpperCase();          // ❌ Erreur : valeur est de type 'unknown'
+    // valeur.toUpperCase();
+    console.error("Erreur de compilation : valeur est de type 'unknown'");
     if (typeof valeur === "string") {
-        console.log(valeur.toUpperCase());    // ✅ restreint à string
+        console.log(valeur.toUpperCase());    // restreint à string
     }
 }
 const donnees: unknown = JSON.parse('{"a": 1}');
+
+traiter("bonjour");
+traiter(42);                       // rien n'est affiché : ce n'est pas une chaîne
+console.log(donnees);
 ```
 
 ### `void`, `never`, `object`
@@ -263,34 +278,50 @@ function echouer(message: string): never { throw new Error(message); }      // n
 function infinie(): never { while (true) {} }
 
 let obj: object = { a: 1 };            // tout non-primitif (rarement utile : préférez un type précis)
-let quelconque: {} = 5;                // ⚠️ {} = tout sauf null et undefined
+let quelconque: {} = 5;                // {} = tout sauf null et undefined
+
+journaliser("Bonjour");
+try {
+    echouer("Échec volontaire");
+} catch (e) {
+    console.error((e as Error).message);
+}
+console.log(obj, quelconque);
 ```
 
 | Type | Signification |
 | --- | --- |
-| `any` | Aucune vérification ❌ |
-| `unknown` | Valeur inconnue : à **restreindre** avant usage ✅ |
+| `any` | Aucune vérification |
+| `unknown` | Valeur inconnue : à **restreindre** avant usage |
 | `void` | Une fonction qui ne renvoie rien |
 | `never` | Valeur **impossible** (erreur, boucle infinie, cas exhaustif) |
 
-> ✅ Activez **`noImplicitAny`** (inclus dans `strict`) : TypeScript refuse alors les `any` implicites. Préférez toujours **`unknown`** à `any`.
+> Activez **`noImplicitAny`** (inclus dans `strict`) : TypeScript refuse alors les `any` implicites. Préférez toujours **`unknown`** à `any`.
 
 ## 2.4 `null` et `undefined` en mode strict
 
 Avec `strictNullChecks` (inclus dans `strict`, **activé par défaut depuis TS 6.0**), `null` et `undefined` ne sont **pas** assignables aux autres types.
 
 ```typescript
-let nom: string = null;                  // ❌ Erreur
-let nomOuNull: string | null = null;     // ✅ le « peut être nul » est explicite
+// let nom: string = null;
+console.error("Erreur de compilation : le type 'null' n'est pas assignable au type 'string'");
+let nomOuNull: string | null = null;     // le « peut être nul » est explicite
 
 function longueur(s: string | null): number {
     return s?.length ?? 0;               // chaînage optionnel + fusion nulle
 }
+console.log(longueur(nomOuNull), longueur("Alice"));
 
-const element = document.querySelector("#titre");   // HTMLElement | null
-element.textContent = "Salut";                       // ❌ 'element' est peut-être 'null'
-if (element) element.textContent = "Salut";          // ✅
-element!.textContent = "Salut";                      // ⚠️ assertion non nulle : à manier avec prudence
+// Équivalent de document.querySelector("#titre") : { textContent: string } | null
+const element = null as { textContent: string } | null;
+// element.textContent = "Salut";
+console.error("Erreur de compilation : 'element' est peut-être 'null'");
+if (element) element.textContent = "Salut";
+try {
+    element!.textContent = "Salut";      // assertion non nulle : à manier avec prudence
+} catch (e) {
+    console.error("Plantage à l'exécution :", (e as Error).message);
+}
 ```
 
 ## 2.5 Assertions de type
@@ -298,12 +329,18 @@ element!.textContent = "Salut";                      // ⚠️ assertion non nul
 Dire au compilateur « je sais mieux que toi » (aucun effet à l'exécution, **aucune conversion**) :
 
 ```typescript
-const entree = document.getElementById("nom") as HTMLInputElement;
+const donnees: unknown = JSON.parse('{ "id": 7 }');
+const brut: unknown = "Alice";
+// En navigateur : const entree = document.getElementById("nom") as HTMLInputElement;
+
+const nom = brut as string;                          // assertion : aucune conversion
 const valeur = (donnees as { id: number }).id;
-const forcer = valeur as unknown as string;     // double assertion : dernier recours
+const forcer = valeur as unknown as string;          // double assertion : dernier recours
+
+console.log(nom.toUpperCase(), valeur, typeof forcer);   // typeof forcer vaut toujours "number\"
 ```
 
-> ⚠️ Une assertion **n'est pas** une vérification : si vous vous trompez, le programme plante à l'exécution. Préférez la **restriction de type** (`if`, `typeof`, `instanceof`, validation de schéma).
+> Une assertion **n'est pas** une vérification : si vous vous trompez, le programme plante à l'exécution. Préférez la **restriction de type** (`if`, `typeof`, `instanceof`, validation de schéma).
 
 ## 2.6 `as const` et `satisfies` *(ajout)*
 
@@ -323,8 +360,10 @@ const palette = {
     vert: "#00ff00",
 } satisfies Couleurs;
 
-palette.rouge.map(c => c * 2);       // ✅ reste connu comme number[]
-palette.vert.toUpperCase();          // ✅ reste connu comme string
+console.log(palette.rouge.map(c => c * 2));       // reste connu comme number[]
+console.log(palette.vert.toUpperCase());          // reste connu comme string
+
+console.log(direction, niveaux);
 ```
 
 ## 2.7 Types propres aux objets et fonctions (aperçu)
@@ -334,6 +373,8 @@ let utilisateur: { nom: string; age?: number } = { nom: "Alice" };
 let additionner: (a: number, b: number) => number = (a, b) => a + b;
 let ids: number[] = [1, 2, 3];
 let paire: [string, number] = ["Alice", 30];
+
+console.log(utilisateur, additionner(1, 2), ids, paire);
 ```
 
 Détails dans les sections suivantes.
@@ -351,6 +392,9 @@ function additionner(a: number, b: number): number {
 
 const multiplier = (a: number, b: number): number => a * b;
 const saluer = (nom: string): void => console.log(`Salut ${nom}`);
+
+console.log(additionner(2, 3), multiplier(4, 5));
+saluer("Alice");
 ```
 
 Le type de retour est **inféré** ; l'annoter explicitement sur les fonctions **publiques** documente le contrat et accélère le compilateur.
@@ -371,6 +415,10 @@ function somme(...nombres: number[]): number {
 }
 
 const [a, b] = [1, 2] as const;
+
+console.log(presenter("Alice", 30), presenter("Bob"));
+console.log(saluer("Alice"), saluer("Bob", "Salut"));
+console.log(somme(1, 2, 3), a, b);
 ```
 
 > Les paramètres **optionnels** viennent **après** les obligatoires.
@@ -386,7 +434,11 @@ interface Comparateur {                                  // interface appelable
 }
 
 function appliquer(f: (x: number) => number, valeur: number): number { return f(valeur); }
-appliquer(x => x * 2, 5);                                // callback : types inférés
+console.log(appliquer(x => x * 2, 5));                                // callback : types inférés
+
+console.log(addition(2, 3));
+const comparer: Comparateur = (a, b) => a.localeCompare(b);
+console.log(comparer("a", "b"));
 ```
 
 ## 3.4 Surcharges de fonctions
@@ -400,12 +452,13 @@ function formater(valeur: string | number, decimales?: number): string {      //
     return typeof valeur === "string" ? valeur.trim() : valeur.toFixed(decimales ?? 2);
 }
 
-formater("  x ");          // ✅
-formater(3.14159, 2);      // ✅
-// formater(3.14);         // ❌ aucune surcharge ne correspond
+console.log(formater("  x "));
+console.log(formater(3.14159, 2));
+// formater(3.14);
+console.error("Erreur de compilation : aucune surcharge ne correspond");
 ```
 
-> 💡 Si possible, préférez un **type union** ou des **génériques** aux surcharges (plus simples).
+> Si possible, préférez un **type union** ou des **génériques** aux surcharges (plus simples).
 
 ## 3.5 Le paramètre `this`
 
@@ -415,6 +468,8 @@ interface Bouton { etiquette: string; }
 function afficher(this: Bouton) {
     console.log(this.etiquette);            // `this` est typé
 }
+
+afficher.call({ etiquette: "OK" });
 ```
 
 ## 3.6 Restriction de type (*narrowing*) et gardes de type
@@ -425,15 +480,21 @@ TypeScript **affine** le type selon les tests effectués :
 function afficher(valeur: string | number | null) {
     if (valeur === null) return;                       // null éliminé
     if (typeof valeur === "string") {
-        valeur.toUpperCase();                          // string
+        console.log(valeur.toUpperCase());             // string
     } else {
-        valeur.toFixed(2);                             // number
+        console.log(valeur.toFixed(2));                // number
     }
 }
+afficher("texte");
+afficher(3.14159);
+afficher(null);
 
-if (x instanceof Date) { /* Date */ }
-if ("nom" in objet) { /* objet possède nom */ }
-if (Array.isArray(valeur)) { /* tableau */ }
+const x: unknown = new Date(0);
+if (x instanceof Date) { console.log("Date :", x.getTime()); }
+const objet = { nom: "Alice" };
+if ("nom" in objet) { console.log("objet possède nom :", objet.nom); }
+const valeur: unknown = [1, 2];
+if (Array.isArray(valeur)) { console.log("tableau de", valeur.length, "éléments"); }
 ```
 
 ### Gardes de type personnalisées (*type predicates*)
@@ -446,11 +507,16 @@ function estChat(animal: Chat | Chien): animal is Chat {
     return "miauler" in animal;
 }
 
-const animaux: (Chat | Chien)[] = [];
+const animaux: (Chat | Chien)[] = [
+    { miauler() { console.log("Miaou"); } },
+    { aboyer() { console.log("Ouaf"); } },
+];
 const chats = animaux.filter(estChat);                         // Chat[]
+chats.forEach((c) => c.miauler());
 
 // TS 5.5 : prédicats INFÉRÉS dans les cas simples
 const nombres = [1, undefined, 3].filter(x => x !== undefined);   // number[] (plus besoin d'annoter)
+console.log(nombres);
 ```
 
 ### Fonctions d'assertion
@@ -462,6 +528,15 @@ function assert(condition: unknown, message: string): asserts condition {
 function assertEstString(v: unknown): asserts v is string {
     if (typeof v !== "string") throw new TypeError("Chaîne attendue");
 }
+
+try {
+    assert(1 + 1 === 3, "Calcul faux");
+} catch (e) {
+    console.error((e as Error).message);
+}
+const valeur: unknown = "texte";
+assertEstString(valeur);
+console.log(valeur.toUpperCase());                   // valeur est maintenant de type string
 ```
 
 ## 3.7 Valeur de retour `never` et exhaustivité
@@ -479,12 +554,16 @@ function aire(f: Forme): number {
         }
     }
 }
+
+console.log(aire({ type: "cercle", rayon: 1 }).toFixed(2), aire({ type: "carre", cote: 2 }));
 ```
 
 ## 3.8 Fonctions génériques (aperçu)
 
 ```typescript
 function premier<T>(elements: T[]): T | undefined { return elements[0]; }
+
+console.log(premier([10, 20]), premier([]));
 ```
 
 Voir [section 9](#9-génériques).
@@ -500,38 +579,51 @@ let nombres: number[] = [1, 2, 3];
 let noms: Array<string> = ["Alice", "Bob"];          // syntaxe générique équivalente
 let mixte: (string | number)[] = ["a", 1];
 let matrice: number[][] = [[1, 2], [3, 4]];
-let vide: string[] = [];                              // ⚠️ sans annotation : any[] implicite ou never[]
+let vide: string[] = [];                              // sans annotation : any[] implicite ou never[]
 
 nombres.push(4);
-// nombres.push("5");       // ❌ erreur de type
+// nombres.push("5");
+console.error("Erreur de compilation : erreur de type");
+
+console.log(nombres, noms, mixte, matrice, vide);
 ```
 
 ### Méthodes typées
 
 ```typescript
+const nombres = [1, 2, 3, 4];
+
 const doubles = nombres.map(n => n * 2);              // number[]
 const pairs = nombres.filter(n => n % 2 === 0);       // number[]
 const somme = nombres.reduce((total, n) => total + n, 0);
 const premier = nombres.find(n => n > 1);             // number | undefined
+
+console.log(doubles, pairs, somme, premier);
 ```
 
 ### Tableaux en lecture seule
 
 ```typescript
 const figes: readonly number[] = [1, 2, 3];
-// figes.push(4);            // ❌ 'push' n'existe pas sur un tableau readonly
+// figes.push(4);
+console.error("Erreur de compilation : 'push' n'existe pas sur un tableau readonly");
 type Fige = ReadonlyArray<string>;
 function lire(valeurs: readonly string[]) { /* ne peut pas modifier */ }
+
+console.log(figes);
+lire(["a", "b"]);
 ```
 
-> ✅ Déclarez **`readonly`** les paramètres tableau que la fonction ne modifie pas.
+> Déclarez **`readonly`** les paramètres tableau que la fonction ne modifie pas.
 
 ### Accès sûr aux indices : `noUncheckedIndexedAccess`
 
 ```typescript
 const t: string[] = ["a"];
-const x = t[5];         // type : string (⚠️ en réalité undefined)
+const x = t[5];         // type : string (en réalité undefined)
 // Avec "noUncheckedIndexedAccess": true  →  string | undefined  (recommandé)
+
+console.log(x);                 // undefined à l'exécution
 ```
 
 ## 4.2 Tuples
@@ -541,13 +633,17 @@ Un **tuple** est un tableau de **longueur et de types fixés** par position.
 ```typescript
 let personne: [string, number] = ["Alice", 30];
 const [nom, age] = personne;                          // décomposition typée
-// personne = [30, "Alice"];                          // ❌ ordre incorrect
-// personne = ["Alice", 30, true];                    // ❌ longueur incorrecte
+// personne = [30, "Alice"];
+console.error("Erreur de compilation : ordre incorrect");
+// personne = ["Alice", 30, true];
+console.error("Erreur de compilation : longueur incorrecte");
 
 let optionnel: [string, number?] = ["Alice"];                  // élément optionnel
 let reste: [string, ...number[]] = ["notes", 12, 15, 9];       // éléments variables
 let nomme: [nom: string, age: number] = ["Alice", 30];         // étiquettes (documentation)
 let figee: readonly [number, number] = [1, 2];
+
+console.log(personne, nom, age, optionnel, reste, nomme, figee);
 ```
 
 Usages typiques : valeurs de retour multiples, paires clé/valeur, **hooks React** (`[valeur, setter]`).
@@ -557,9 +653,11 @@ function minMax(valeurs: number[]): [min: number, max: number] {
     return [Math.min(...valeurs), Math.max(...valeurs)];
 }
 const [mini, maxi] = minMax([3, 1, 4]);
+
+console.log(mini, maxi);
 ```
 
-> ⚠️ `push()` fonctionne sur un tuple (non readonly) sans vérifier la longueur : utilisez `readonly [..]` pour l'interdire.
+> `push()` fonctionne sur un tuple (non readonly) sans vérifier la longueur : utilisez `readonly [..]` pour l'interdire.
 
 ---
 
@@ -575,9 +673,11 @@ enum Direction {
     Droite       // 3
 }
 let d: Direction = Direction.Haut;
-Direction[0];                          // "Haut"  (correspondance inverse : propre aux enums NUMÉRIQUES)
+console.log(Direction[0]);                          // "Haut"  (correspondance inverse : propre aux enums NUMÉRIQUES)
 
 enum Statut { Actif = 1, Inactif, Banni = 10 }      // valeurs explicites
+
+console.log(d, Statut.Inactif, Statut.Banni);
 ```
 
 ## 5.2 Enums de chaînes
@@ -592,6 +692,8 @@ enum Role {
 function peutModifier(role: Role): boolean {
     return role === Role.Admin || role === Role.Editeur;
 }
+
+console.log(peutModifier(Role.Admin), peutModifier(Role.Lecteur));
 ```
 
 Les enums de chaînes sont **plus lisibles** à l'exécution et dans les journaux (pas de correspondance inverse).
@@ -600,9 +702,11 @@ Les enums de chaînes sont **plus lisibles** à l'exécution et dans les journau
 
 ```typescript
 const enum Couleur { Rouge = "R", Vert = "V" }       // remplacé en ligne à la compilation (pas d'objet généré)
+
+console.log(Couleur.Rouge, Couleur.Vert);
 ```
 
-> ⚠️ `const enum` pose des problèmes avec les outils qui compilent fichier par fichier (`isolatedModules`, Vite, esbuild, SWC, Babel) : **évitez-le** dans du code partagé ou publié.
+> `const enum` pose des problèmes avec les outils qui compilent fichier par fichier (`isolatedModules`, Vite, esbuild, SWC, Babel) : **évitez-le** dans du code partagé ou publié.
 
 ## 5.4 Les alternatives modernes aux enums *(à jour)*
 
@@ -613,7 +717,10 @@ Les enums génèrent du **code JavaScript** (ce n'est pas du pur « effacement d
 ```typescript
 type Role = "admin" | "editeur" | "lecteur";
 let r: Role = "admin";
-// r = "root";              // ❌
+// r = "root";
+console.error("Erreur de compilation : instruction refusée par le compilateur");
+
+console.log(r);
 ```
 
 ### Objet `as const` + type dérivé
@@ -627,14 +734,14 @@ const Role = {
 
 type Role = (typeof Role)[keyof typeof Role];       // "ADMIN" | "EDITEUR" | "LECTEUR"
 
-Object.values(Role);                                // itérable à l'exécution ✅
+console.log(Object.values(Role));                                // itérable à l'exécution 
 ```
 
 | | `enum` | Union de littéraux | Objet `as const` |
 | --- | --- | --- | --- |
-| Code généré | ✅ (objet) | ❌ | ✅ (objet) |
-| Itérable à l'exécution | ✅ | ❌ | ✅ |
-| Mode `erasableSyntaxOnly` | ❌ interdit | ✅ | ✅ |
+| Code généré | Oui (objet) | Non | Oui (objet) |
+| Itérable à l'exécution | Oui | Non | Oui |
+| Mode `erasableSyntaxOnly` | Interdit | Oui | Oui |
 | Interopérabilité JS | Moyenne | **Excellente** | **Excellente** |
 | Recommandation | Code existant | **Défaut** | Quand on a besoin des valeurs |
 
@@ -655,15 +762,21 @@ interface Utilisateur {
 }
 
 const alice: Utilisateur = { id: 1, nom: "Alice", creeLe: new Date() };
-// alice.creeLe = new Date();     // ❌ propriété en lecture seule
-// const bob: Utilisateur = { id: 2 };          // ❌ propriétés manquantes
+// alice.creeLe = new Date();
+console.error("Erreur de compilation : propriété en lecture seule");
+// const bob: Utilisateur = { id: 2 };
+console.error("Erreur de compilation : propriétés manquantes");
+
+console.log(alice);
 ```
 
-> ℹ️ Les littéraux d'objet subissent un **contrôle de propriétés excédentaires** : `{ id: 1, nom: "A", creeLe: d, extra: true }` est refusé directement (mais accepté s'il passe par une variable intermédiaire).
+> ℹLes littéraux d'objet subissent un **contrôle de propriétés excédentaires** : `{ id: 1, nom: "A", creeLe: d, extra: true }` est refusé directement (mais accepté s'il passe par une variable intermédiaire).
 
 ## 6.2 Méthodes, fonctions et signatures d'index
 
 ```typescript
+interface Utilisateur { id: number; nom: string }
+
 interface Calculatrice {
     additionner(a: number, b: number): number;       // méthode
     reset: () => void;                               // propriété de type fonction
@@ -676,14 +789,30 @@ const stock: Dictionnaire = { pommes: 10 };
 
 interface Compare { (a: string, b: string): number; }     // interface appelable
 interface Constructible { new (nom: string): Utilisateur; } // interface « constructeur »
+
+const calc: Calculatrice = { additionner: (a, b) => a + b, reset: () => console.log("reset") };
+console.log(calc.additionner(2, 3));
+calc.reset();
+console.log(stock.pommes);
+const compare: Compare = (a, b) => a.localeCompare(b);
+console.log(compare("a", "b"));
 ```
 
 ## 6.3 Héritage d'interfaces
 
 ```typescript
+interface Journalisable { journaliser(): void }
+
 interface Personne { nom: string; age: number; }
 interface Employe extends Personne { poste: string; }
 interface Manager extends Employe, Journalisable { equipe: Employe[]; }   // héritage multiple
+
+const bob: Manager = {
+    nom: "Bob", age: 40, poste: "Responsable",
+    equipe: [{ nom: "Alice", age: 30, poste: "Développeuse" }],
+    journaliser() { console.log(`${this.nom} dirige ${this.equipe.length} personne(s)`); },
+};
+bob.journaliser();
 ```
 
 ## 6.4 Implémentation par une classe
@@ -694,6 +823,8 @@ interface Imprimable { imprimer(): void; }
 class Rapport implements Imprimable {
     imprimer() { console.log("Impression…"); }
 }
+
+new Rapport().imprimer();
 ```
 
 ## 6.5 Fusion de déclarations (*declaration merging*)
@@ -704,6 +835,8 @@ Deux interfaces de même nom **fusionnent** (propre aux interfaces, pas aux alia
 interface Config { url: string; }
 interface Config { delai: number; }
 const c: Config = { url: "x", delai: 5 };      // les deux propriétés sont requises
+
+console.log(c);
 ```
 
 Utile pour **étendre des types de bibliothèques** ([section 12](#12-fichiers-de-déclaration-de-types)).
@@ -712,14 +845,14 @@ Utile pour **étendre des types de bibliothèques** ([section 12](#12-fichiers-d
 
 | | `interface` | `type` |
 | --- | --- | --- |
-| Objets | ✅ | ✅ |
-| Unions, intersections, tuples, primitives | ❌ | ✅ |
-| Types conditionnels / mappés | ❌ | ✅ |
-| Fusion de déclarations | ✅ | ❌ |
-| `extends` / `implements` | ✅ (messages d'erreur plus lisibles) | via intersections `&` |
+| Objets | Oui | Oui |
+| Unions, intersections, tuples, primitives | Non | Oui |
+| Types conditionnels / mappés | Non | Oui |
+| Fusion de déclarations | Oui | Non |
+| `extends` / `implements` | Oui (messages d'erreur plus lisibles) | via intersections `&` |
 | Performance du compilateur | Légèrement meilleure sur les grands arbres d'héritage | — |
 
-> ✅ **Règle pratique** : `interface` pour décrire des **formes d'objets** et des contrats de classes ; `type` pour **tout le reste** (unions, tuples, utilitaires). L'essentiel est la **cohérence** dans le projet.
+> **Règle pratique** : `interface` pour décrire des **formes d'objets** et des contrats de classes ; `type` pour **tout le reste** (unions, tuples, utilitaires). L'essentiel est la **cohérence** dans le projet.
 
 ---
 
@@ -734,18 +867,25 @@ type Rappel = (erreur: Error | null, donnees?: string) => void;
 type Matrice = number[][];
 
 const p: Point = { x: 1, y: 2 };
+
+console.log(p);
 ```
 
 ## 7.2 Types union (`|`) : « l'un OU l'autre »
 
 ```typescript
+type ID = number | string;
+
 type Resultat = string | number;
 function afficherId(id: ID) {
     console.log(typeof id === "string" ? id.toUpperCase() : id.toFixed(0));
 }
+
+afficherId("abc");
+afficherId(42);
 ```
 
-### Unions discriminées (*discriminated unions*) ⭐
+### Unions discriminées (*discriminated unions*) 
 
 Un champ **commun** (la « balise ») permet de restreindre précisément le type :
 
@@ -762,6 +902,10 @@ function afficher(r: Requete): string {
         case "erreur":     return r.message;                    // message disponible
     }
 }
+
+console.log(afficher({ etat: "chargement" }));
+console.log(afficher({ etat: "succes", donnees: ["a", "b"] }));
+console.log(afficher({ etat: "erreur", message: "Échec" }));
 ```
 
 C'est le moyen idiomatique de modéliser des **états** (et d'éviter les combinaisons impossibles).
@@ -772,6 +916,9 @@ C'est le moyen idiomatique de modéliser des **états** (et d'éviter les combin
 type Identifiable = { id: number };
 type Horodate = { creeLe: Date; modifieLe: Date };
 type Article = Identifiable & Horodate & { titre: string };
+
+const article: Article = { id: 1, creeLe: new Date(0), modifieLe: new Date(0), titre: "Hello" };
+console.log(article.titre);
 ```
 
 ## 7.4 Types littéraux
@@ -782,13 +929,17 @@ type De = 1 | 2 | 3 | 4 | 5 | 6;
 type Methode = "GET" | "POST" | "PUT" | "DELETE";
 
 let t: Taille = "M";
-// t = "XXL";                // ❌
+// t = "XXL";
+console.error("Erreur de compilation : instruction refusée par le compilateur");
 
 function requete(url: string, methode: Methode = "GET") {}
 
 const config = { methode: "GET" };           // methode : string (élargi !)
-requete("/x", config.methode);               // ❌ string non assignable à Methode
-const config2 = { methode: "GET" } as const; // ✅ type littéral préservé
+// requete("/x", config.methode);
+console.error("Erreur de compilation : string non assignable à Methode");
+const config2 = { methode: "GET" } as const; // type littéral préservé
+
+console.log(t, config2.methode);
 ```
 
 ## 7.5 Types littéraux de gabarit (*template literal types*)
@@ -797,7 +948,10 @@ const config2 = { methode: "GET" } as const; // ✅ type littéral préservé
 type Evenement = "clic" | "survol";
 type Gestionnaire = `on${Capitalize<Evenement>}`;       // "onClic" | "onSurvol"
 type Route = `/api/${string}`;
-let r: Route = "/api/utilisateurs";                      // ✅
+let r: Route = "/api/utilisateurs";
+
+const g: Gestionnaire = "onClic";
+console.log(g, r);
 ```
 
 ## 7.6 Restriction (*narrowing*) : récapitulatif
@@ -818,7 +972,7 @@ Voir [6.6](#66-interface-ou-type-). Les alias sont **indispensables** pour les u
 
 ---
 
-# 🟡 Niveau intermédiaire
+# Niveau intermédiaire
 
 ---
 
@@ -843,7 +997,7 @@ class Personne {
 }
 
 const alice = new Personne("Alice", 30);
-alice.saluer();
+console.log(alice.saluer());
 ```
 
 ## 8.2 Modificateurs d'accès
@@ -879,11 +1033,21 @@ class CompteBancaire {
 }
 
 const c = new CompteBancaire("Alice", "FR76", "1234");
-// c.solde;      // ❌ privé
-// c.#pin;       // ❌ erreur de syntaxe hors de la classe
+// c.solde;
+console.error("Erreur de compilation : privé");
+// c.#pin;
+console.error("Erreur de compilation : erreur de syntaxe hors de la classe");
+
+c.deposer(50);
+console.log(c.titulaire, c.soldeActuel, c.numero);
+try {
+    c.deposer(-1);
+} catch (e) {
+    console.error((e as Error).message);
+}
 ```
 
-> ✅ Pour de **vraies** données privées (sécurité, encapsulation garantie), utilisez **`#champ`**. `private` n'est qu'une contrainte de compilation (contournable avec `as any` ou `obj["solde"]`).
+> Pour de **vraies** données privées (sécurité, encapsulation garantie), utilisez **`#champ`**. `private` n'est qu'une contrainte de compilation (contournable avec `as any` ou `obj["solde"]`).
 
 ## 8.3 Propriétés de paramètres (raccourci de constructeur)
 
@@ -895,9 +1059,12 @@ class Produit {
         private prix: number,
     ) {}                                // déclare ET initialise les propriétés
 }
+
+const produit = new Produit(1, "Stylo", 2.5);
+console.log(produit.id, produit.nom);
 ```
 
-> ⚠️ Cette syntaxe génère du code : elle est **interdite avec `--erasableSyntaxOnly`**. Dans ce cas, déclarez les propriétés explicitement.
+> Cette syntaxe génère du code : elle est **interdite avec `--erasableSyntaxOnly`**. Dans ce cas, déclarez les propriétés explicitement.
 
 ## 8.4 Propriétés et méthodes statiques
 
@@ -907,7 +1074,7 @@ class Compteur {
     static incrementer(): number { return ++Compteur.total; }
     static { /* bloc d'initialisation statique */ }
 }
-Compteur.incrementer();
+console.log(Compteur.incrementer());
 ```
 
 ## 8.5 Héritage
@@ -927,9 +1094,12 @@ class Chien extends Animal {
         return `${this.nom} aboie`;
     }
 }
+
+console.log(new Animal("Rex").parler());
+console.log(new Chien("Rex", "Labrador").parler());
 ```
 
-> ✅ Activez **`noImplicitOverride`** : le mot-clé `override` devient obligatoire, ce qui évite de redéfinir une méthode par accident (ou de casser la redéfinition après un renommage).
+> Activez **`noImplicitOverride`** : le mot-clé `override` devient obligatoire, ce qui évite de redéfinir une méthode par accident (ou de casser la redéfinition après un renommage).
 
 ## 8.6 Classes abstraites
 
@@ -943,7 +1113,10 @@ class Cercle extends Forme {
     constructor(private rayon: number) { super(); }
     aire(): number { return Math.PI * this.rayon ** 2; }
 }
-// new Forme();       // ❌ impossible d'instancier une classe abstraite
+// new Forme();
+console.error("Erreur de compilation : impossible d'instancier une classe abstraite");
+
+console.log(new Cercle(2).decrire());
 ```
 
 ## 8.7 Implémenter des interfaces
@@ -956,17 +1129,29 @@ class Article implements Serialisable, Identifiable {
     constructor(public readonly id: number, public titre: string) {}
     versJson() { return JSON.stringify(this); }
 }
+
+console.log(new Article(1, "Hello").versJson());
 ```
 
 ## 8.8 Le mot-clé `accessor` et la classe comme type
 
 ```typescript
+class Personne {
+    constructor(public nom: string, public age: number) {}
+}
+
 class Etat {
     accessor compteur = 0;               // TS 4.9 / décorateurs standard : getter/setter automatiques
 }
 
 const p: Personne = new Personne("A", 1);       // le nom de la classe est AUSSI un type
 const construire: new (n: string, a: number) => Personne = Personne;    // le constructeur
+
+const etat = new Etat();
+etat.compteur++;
+console.log(etat.compteur, p.nom);
+const q = new construire("B", 2);
+console.log(q.nom, q.age);
 ```
 
 ## 8.9 Typage structurel : attention aux surprises
@@ -976,7 +1161,9 @@ Deux classes de même forme sont compatibles, **sauf** si elles ont des membres 
 ```typescript
 class A { x = 1; }
 class B { x = 1; }
-const a: A = new B();        // ✅ même structure
+const a: A = new B();        // même structure
+
+console.log(a);
 ```
 
 ## 8.10 Principes et bonnes pratiques
@@ -995,12 +1182,14 @@ const a: A = new B();        // ✅ même structure
 Écrire du code **réutilisable** pour plusieurs types **sans perdre la sécurité de typage** (`any` perd l'information).
 
 ```typescript
-function identite(x: any): any { return x; }       // ❌ le type d'entrée est perdu
-function identiteSure<T>(x: T): T { return x; }     // ✅ T est « capturé »
+function identite(x: any): any { return x; }       // le type d'entrée est perdu
+function identiteSure<T>(x: T): T { return x; }     // T est « capturé »
 
 const a = identiteSure("texte");     // T = string
 const b = identiteSure(42);          // T = number
 const c = identiteSure<boolean>(true);   // T explicite
+
+console.log(identite(1), a, b, c);
 ```
 
 ## 9.2 Fonctions génériques
@@ -1013,6 +1202,8 @@ const x = premier([1, 2, 3]);            // number | undefined
 const p = paire("a", 1);                 // [string, number]
 
 const cles = <T extends object>(o: T) => Object.keys(o) as (keyof T)[];
+
+console.log(x, p, cles({ a: 1, b: 2 }));
 ```
 
 > Dans un fichier `.tsx`, écrivez `<T,>(x: T) => …` ou `<T extends unknown>` pour éviter l'ambiguïté avec JSX.
@@ -1023,13 +1214,15 @@ const cles = <T extends object>(o: T) => Object.keys(o) as (keyof T)[];
 interface AvecLongueur { length: number }
 
 function longueur<T extends AvecLongueur>(x: T): number { return x.length; }
-longueur("texte");          // ✅
-longueur([1, 2, 3]);        // ✅
-// longueur(42);            // ❌ number n'a pas de length
+console.log(longueur("texte"));
+console.log(longueur([1, 2, 3]));
+// longueur(42);
+console.error("Erreur de compilation : number n'a pas de length");
 
 function lire<T, K extends keyof T>(objet: T, cle: K): T[K] { return objet[cle]; }
-lire({ nom: "A", age: 3 }, "age");        // number
-// lire({ nom: "A" }, "x");               // ❌ "x" n'est pas une clé
+console.log(lire({ nom: "A", age: 3 }, "age"));        // number
+// lire({ nom: "A" }, "x");
+console.error("Erreur de compilation : \"x\" n'est pas une clé");
 ```
 
 ## 9.4 Interfaces et alias génériques
@@ -1045,6 +1238,8 @@ const r: Reponse<{ id: number; nom: string }> = { donnees: { id: 1, nom: "A" }, 
 type Resultat<T, E = Error> = { ok: true; valeur: T } | { ok: false; erreur: E };
 
 type Pagine<T> = { elements: T[]; page: number; total: number };
+
+console.log(r);
 ```
 
 ## 9.5 Classes génériques
@@ -1064,6 +1259,8 @@ interface Depot<T extends { id: number }> {
     trouver(id: number): Promise<T | undefined>;
     sauvegarder(entite: T): Promise<void>;
 }
+
+console.log(pile.depiler(), pile.taille);
 ```
 
 ## 9.6 Valeurs par défaut des paramètres de type
@@ -1072,6 +1269,8 @@ interface Depot<T extends { id: number }> {
 interface Evenement<T = string> { nom: string; charge: T }
 const e: Evenement = { nom: "x", charge: "texte" };           // T = string
 const f: Evenement<number> = { nom: "y", charge: 42 };
+
+console.log(e, f);
 ```
 
 ## 9.7 Paramètres de type `const` *(TS 5.0, ajout)*
@@ -1079,6 +1278,8 @@ const f: Evenement<number> = { nom: "y", charge: 42 };
 ```typescript
 function creer<const T extends readonly unknown[]>(valeurs: T): T { return valeurs; }
 const t = creer(["a", "b"]);         // readonly ["a", "b"]  (au lieu de string[])
+
+console.log(t);
 ```
 
 ## 9.8 `NoInfer` *(TS 5.4, ajout)*
@@ -1087,7 +1288,8 @@ Empêche d'inférer `T` depuis un argument donné :
 
 ```typescript
 function creerSignal<T extends string>(valeurs: T[], defaut: NoInfer<T>) {}
-creerSignal(["rouge", "vert"], "bleu");     // ❌ "bleu" n'est pas dans les valeurs
+// creerSignal(["rouge", "vert"], "bleu");
+console.error("Erreur de compilation : \"bleu\" n'est pas dans les valeurs");
 ```
 
 ## 9.9 Variance explicite *(ajout)*
@@ -1105,14 +1307,16 @@ interface Consommateur<in T> { consommer(x: T): void }   // contravariant
 async function getJson<T>(url: string): Promise<T> {
     const reponse = await fetch(url);
     if (!reponse.ok) throw new Error(`HTTP ${reponse.status}`);
-    return (await reponse.json()) as T;          // ⚠️ T n'est PAS vérifié à l'exécution
+    return (await reponse.json()) as T;          // T n'est PAS vérifié à l'exécution
 }
 
 interface Utilisateur { id: number; nom: string }
-const utilisateur = await getJson<Utilisateur>("/api/users/1");
+// Exemple hors ligne : une URL « data: » remplace l'API réelle ("/api/users/1")
+const utilisateur = await getJson<Utilisateur>('data:application/json,{"id":1,"nom":"Alice"}');
+console.log(utilisateur);
 ```
 
-> ⚠️ Le paramètre de type est une **promesse du développeur**, pas une garantie : validez les données reçues avec un schéma (Zod, Valibot…), voir [section 19](#19-typescript-côté-serveur).
+> Le paramètre de type est une **promesse du développeur**, pas une garantie : validez les données reçues avec un schéma (Zod, Valibot…), voir [section 19](#19-typescript-côté-serveur).
 
 ---
 
@@ -1137,9 +1341,14 @@ import Calculatrice, { PI, additionner as plus } from "./mathematiques.js";
 import * as maths from "./mathematiques.js";
 import type { Point, ID } from "./mathematiques.js";      // import UNIQUEMENT de types (effacé)
 import { type Point as P, additionner } from "./mathematiques.js";
+
+console.log(PI, plus(1, 2), maths.additionner(2, 3));
+const point: Point = { x: 1, y: 2 };
+const identifiant: ID = "abc";
+console.log(point, identifiant, new Calculatrice() instanceof Calculatrice);
 ```
 
-> ⚠️ Avec les **modules ES natifs** (`"module": "nodenext"`), les imports relatifs doivent inclure l'**extension de sortie** (`./fichier.js`, même pour un fichier `.ts`). Avec un **bundler** (`"moduleResolution": "bundler"`), on peut l'omettre. TS 5.7 propose `--rewriteRelativeImportExtensions` pour écrire des imports en `.ts`.
+> Avec les **modules ES natifs** (`"module": "nodenext"`), les imports relatifs doivent inclure l'**extension de sortie** (`./fichier.js`, même pour un fichier `.ts`). Avec un **bundler** (`"moduleResolution": "bundler"`), on peut l'omettre. TS 5.7 propose `--rewriteRelativeImportExtensions` pour écrire des imports en `.ts`.
 
 ### Réexporter
 
@@ -1166,7 +1375,7 @@ Pour Node.js, utilisez `"module": "nodenext"` et `"type": "module"` dans `packag
 ## 10.3 Importer du JSON et des ressources
 
 ```typescript
-import config from "./config.json" with { type: "json" };       // attributs d'import (⚠️ plus `assert`)
+import config from "./config.json" with { type: "json" };       // attributs d'import (plus `assert`)
 // tsconfig : "resolveJsonModule": true
 ```
 
@@ -1182,10 +1391,10 @@ namespace Utilitaires {
     }
 }
 Utilitaires.journaliser("Salut");
-Utilitaires.Maths.carre(4);
+console.log(Utilitaires.Maths.carre(4));
 ```
 
-> 📌 **À jour** :
+> **À jour** :
 > - **Évitez les `namespace` dans du nouveau code** : utilisez des **modules ES**. Ils génèrent du code et sont **interdits en mode `erasableSyntaxOnly`**.
 > - TypeScript 6.0 **déprécie l'ancienne syntaxe `module Nom { }`** (utilisez le mot-clé `namespace`).
 > - Les `declare namespace` restent **légitimes** dans les fichiers `.d.ts` pour décrire des bibliothèques globales.
@@ -1195,7 +1404,7 @@ Utilitaires.Maths.carre(4);
 | Portée | Fichier | Bloc global / fusionnable |
 | Syntaxe | `import` / `export` | `namespace` + `export` |
 | Chargement | Natif, *tree-shaking* | Concaténation / balises `<script>` |
-| Usage conseillé | ✅ **Toujours** | Seulement pour du code hérité ou des `.d.ts` |
+| Usage conseillé | **Toujours** | Seulement pour du code hérité ou des `.d.ts` |
 
 ## 10.5 Imports dynamiques et chemins
 
@@ -1225,6 +1434,11 @@ const jours = ["lun", "mar"] as const;
 type Jour = (typeof jours)[number];            // "lun" | "mar"
 
 type ElementDe<T> = T extends readonly (infer E)[] ? E : never;
+
+const u: Utilisateur = { id: 1, nom: "Alice", email: "alice@exemple.com" };
+const cle: Cle = "nom";
+const tous: Tous = u[cle];
+console.log(cle, tous, config, jours);
 ```
 
 ## 11.2 Types mappés (*mapped types*)
@@ -1249,6 +1463,9 @@ type G = Getters<{ nom: string; age: number }>;
 
 // Filtrer des clés
 type SansFonctions<T> = { [K in keyof T as T[K] extends Function ? never : K]: T[K] };
+
+const g: G = { getNom: () => "Alice", getAge: () => 30 };
+console.log(g.getNom(), g.getAge());
 ```
 
 ## 11.3 Types conditionnels
@@ -1291,6 +1508,10 @@ type ParametreRoute<S extends string> =
     S extends `${string}:${infer P}/${infer Reste}` ? P | ParametreRoute<`/${Reste}`> :
     S extends `${string}:${infer P}` ? P : never;
 type Params = ParametreRoute<"/users/:id/posts/:postId">;    // "id" | "postId"
+
+const h: Handlers = { onClic: () => console.log("clic"), onSurvol: () => console.log("survol") };
+h.onClic();
+h.onSurvol();
 ```
 
 ## 11.6 Types récursifs
@@ -1301,6 +1522,9 @@ type JSONValeur = string | number | boolean | null | JSONValeur[] | { [cle: stri
 type ProfondementPartiel<T> = {
     [K in keyof T]?: T[K] extends object ? ProfondementPartiel<T[K]> : T[K];
 };
+
+const doc: JSONValeur = { a: [1, 2, { b: null }] };
+console.log(JSON.stringify(doc));
 ```
 
 ## 11.7 `satisfies`, `as const` et inférence avancée
@@ -1314,9 +1538,10 @@ type EuroMontant = number & { readonly __marque: "EUR" };
 type IdUtilisateur = string & { readonly __marque: "IdUtilisateur" };
 
 const euros = (n: number) => n as EuroMontant;
-function payer(m: EuroMontant) {}
+function payer(m: EuroMontant) { console.log(`Paiement de ${m} EUR`); }
 payer(euros(10));
-// payer(10);         // ❌ un number nu n'est pas un EuroMontant
+// payer(10);
+console.error("Erreur de compilation : un number nu n'est pas un EuroMontant");
 ```
 
 Utile pour distinguer des valeurs de même type primitif (identifiants, unités).
@@ -1337,7 +1562,7 @@ Un fichier de **déclaration** (`.d.ts`) décrit **uniquement des types** (aucun
 
 | Source des types | Où |
 | --- | --- |
-| **Inclus dans le paquet** | Champ `"types"` du `package.json` (la plupart des bibliothèques modernes) ✅ |
+| **Inclus dans le paquet** | Champ `"types"` du `package.json` (la plupart des bibliothèques modernes) |
 | **DefinitelyTyped** | Paquets `@types/xxx` |
 | **Vos propres déclarations** | Fichiers `.d.ts` du projet |
 
@@ -1355,7 +1580,7 @@ Un fichier de **déclaration** (`.d.ts`) décrit **uniquement des types** (aucun
 npm install -D @types/node @types/express @types/lodash
 ```
 
-> 📌 **À jour (TS 6.0)** : l'option **`types` vaut `[]` par défaut** : les paquets `@types/*` **ne sont plus chargés automatiquement**. Listez ceux dont vous avez besoin :
+> **À jour (TS 6.0)** : l'option **`types` vaut `[]` par défaut** : les paquets `@types/*` **ne sont plus chargés automatiquement**. Listez ceux dont vous avez besoin :
 > ```json
 > { "compilerOptions": { "types": ["node", "vitest/globals"] } }
 > ```
@@ -1412,13 +1637,16 @@ declare module "express-serve-static-core" {
 }
 ```
 
-> ⚠️ Un fichier `.d.ts` **sans** `import`/`export` est **global** ; avec `import`/`export` c'est un **module** (les déclarations n'y sont plus globales : utilisez `declare global { … }`).
+> Un fichier `.d.ts` **sans** `import`/`export` est **global** ; avec `import`/`export` c'est un **module** (les déclarations n'y sont plus globales : utilisez `declare global { … }`).
 
 ```typescript
 export {};
 declare global {
     interface Array<T> { dernier(): T | undefined }
 }
+
+Array.prototype.dernier = function () { return this[this.length - 1]; };
+console.log([1, 2, 3].dernier());
 ```
 
 ## 12.6 Configuration
@@ -1441,7 +1669,7 @@ declare global {
 
 ---
 
-# 🔴 Niveau avancé
+# Niveau avancé
 
 ---
 
@@ -1482,10 +1710,18 @@ type Resume = Pick<Utilisateur, "id" | "nom">;
 type ParId = Record<number, Utilisateur>;
 type Permissions = Record<"lire" | "ecrire" | "supprimer", boolean>;
 
-function mettreAJour(id: number, changements: Partial<Utilisateur>) { /* … */ }
+function mettreAJour(id: number, changements: Partial<Utilisateur>) { console.log(`Utilisateur ${id} modifié :`, changements); }
 
 async function charger() { return { ok: true, donnees: [1, 2] }; }
 type Charge = Awaited<ReturnType<typeof charger>>;            // { ok: boolean; donnees: number[] }
+
+const miseAJour: MiseAJour = { nom: "Alice B." };
+const publique: UtilisateurPublic = { id: 1, nom: "Alice", email: "alice@exemple.com" };
+const permissions: Permissions = { lire: true, ecrire: false, supprimer: false };
+console.log(miseAJour, publique, permissions);
+mettreAJour(1, { nom: "Bob" });
+const charge: Charge = await charger();
+console.log(charge);
 ```
 
 ## 13.2 Combiner des utilitaires
@@ -1531,11 +1767,11 @@ Un **décorateur** est une fonction qui **observe ou modifie** une classe ou un 
 | --- | --- | --- |
 | Activation | **Aucune** (TS 5.0+) | `"experimentalDecorators": true` |
 | Signature | `(valeur, contexte)` | `(cible, nomPropriete, descripteur)` |
-| Décorateurs de **paramètres** | ❌ (non standard) | ✅ |
-| Métadonnées (`emitDecoratorMetadata`) | ❌ (pour l'instant) | ✅ |
+| Décorateurs de **paramètres** | Non (non standard) | Oui |
+| Métadonnées (`emitDecoratorMetadata`) | Non (pour l'instant) | Oui |
 | Utilisés par | Nouveau code, bibliothèques récentes | **Angular, NestJS, TypeORM**… (toujours basés sur l'ancienne version) |
 
-> ⚠️ Les deux ne sont **pas compatibles**. Vérifiez ce qu'exige votre framework avant de choisir.
+> Les deux ne sont **pas compatibles**. Vérifiez ce qu'exige votre framework avant de choisir.
 
 ## 14.2 Décorateurs standard (TS 5.x)
 
@@ -1551,6 +1787,8 @@ function journalise<T extends new (...args: any[]) => object>(cible: T, contexte
 
 @journalise
 class Service {}
+
+new Service();
 ```
 
 ### Décorateur de méthode
@@ -1571,6 +1809,8 @@ class Calcul {
     @chronometre
     lourd(n: number): number { let s = 0; for (let i = 0; i < n; i++) s += i; return s; }
 }
+
+console.log(new Calcul().lourd(1_000_000));
 ```
 
 ### Décorateur de champ et `accessor`
@@ -1585,6 +1825,8 @@ function valeurParDefaut<T>(defaut: T) {                      // fabrique de dé
 class Options {
     @valeurParDefaut(8080) port?: number;
 }
+
+console.log(new Options().port);
 ```
 
 ### Contexte et initialiseurs
@@ -1595,6 +1837,14 @@ Le **contexte** (`context`) donne `kind` (`"class"`, `"method"`, `"field"`…), 
 function lie(_: unknown, contexte: ClassMethodDecoratorContext) {
     contexte.addInitializer(function (this: any) { this[contexte.name] = this[contexte.name].bind(this); });
 }
+
+class Bouton {
+    etiquette = "OK";
+    @lie
+    cliquer() { console.log(this.etiquette); }
+}
+const { cliquer } = new Bouton();
+cliquer();                              // `this` reste lié grâce au décorateur
 ```
 
 ## 14.3 Décorateurs expérimentaux (hérités)
@@ -1604,12 +1854,14 @@ function lie(_: unknown, contexte: ClassMethodDecoratorContext) {
 ```
 
 ```typescript
+import "reflect-metadata";
+
 function Controller(prefixe: string): ClassDecorator {          // fabrique + décorateur de classe
     return (cible) => { Reflect.defineMetadata("prefixe", prefixe, cible); };
 }
 
 function Get(chemin: string): MethodDecorator {
-    return (cible, cle, descripteur) => { /* enregistrer la route */ };
+    return (cible, cle, descripteur) => { console.log(`Route GET ${chemin} -> ${String(cle)}`); };
 }
 
 function Valide(cible: Object, cle: string | symbol, indice: number) { /* décorateur de paramètre */ }
@@ -1619,6 +1871,8 @@ class UsersController {
     @Get("/")
     liste() { return []; }
 }
+
+console.log(Reflect.getMetadata("prefixe", UsersController));
 ```
 
 Les bibliothèques de **métadonnées** (`reflect-metadata`) permettent de lire des informations de type à l'exécution (injection de dépendances, validation, ORM).
@@ -1673,12 +1927,15 @@ Une fonction `async` **retourne toujours une promesse** ; le type de retour s'an
 interface Utilisateur { id: number; nom: string }
 
 async function chargerUtilisateur(id: number): Promise<Utilisateur> {
-    const reponse = await fetch(`https://api.exemple.com/users/${id}`);
+    // Exemple hors ligne : une URL « data: » remplace l'API réelle (https://api.exemple.com/users/${id})
+    const reponse = await fetch(`data:application/json,{"id":${id},"nom":"Utilisateur ${id}"}`);
     if (!reponse.ok) throw new Error(`HTTP ${reponse.status}`);          // fetch ne rejette pas sur un 404
     return (await reponse.json()) as Utilisateur;
 }
 
 const u = await chargerUtilisateur(1);        // await de haut niveau dans un module ES
+
+console.log(u);
 ```
 
 ## 15.3 Gérer les erreurs : `unknown`
@@ -1686,8 +1943,14 @@ const u = await chargerUtilisateur(1);        // await de haut niveau dans un mo
 Avec `strict` (`useUnknownInCatchVariables`), la variable du `catch` est de type **`unknown`** : il faut la **restreindre**.
 
 ```typescript
+interface Utilisateur { id: number; nom: string }
+const chargerUtilisateur = async (id: number): Promise<Utilisateur> => {   // version simulée de 15.2
+    if (id < 0) throw new Error("Identifiant invalide");
+    return { id, nom: `Utilisateur ${id}` };
+};
+
 try {
-    await chargerUtilisateur(1);
+    await chargerUtilisateur(-1);
 } catch (erreur) {                                    // unknown
     if (erreur instanceof Error) {
         console.error(erreur.message);
@@ -1699,11 +1962,19 @@ try {
 function messageDErreur(e: unknown): string {
     return e instanceof Error ? e.message : String(e);
 }
+
+console.log(messageDErreur(new Error("boom")), messageDErreur("texte"));
 ```
 
 ### Le motif « résultat » plutôt que les exceptions (option)
 
 ```typescript
+interface Utilisateur { id: number; nom: string }
+const chargerUtilisateur = async (id: number): Promise<Utilisateur> => {   // version simulée de 15.2
+    if (id < 0) throw new Error("Identifiant invalide");
+    return { id, nom: `Utilisateur ${id}` };
+};
+
 type Resultat<T, E = Error> = { ok: true; valeur: T } | { ok: false; erreur: E };
 
 async function essayer<T>(promesse: Promise<T>): Promise<Resultat<T>> {
@@ -1713,19 +1984,32 @@ async function essayer<T>(promesse: Promise<T>): Promise<Resultat<T>> {
 
 const r = await essayer(chargerUtilisateur(1));
 if (r.ok) console.log(r.valeur.nom); else console.error(r.erreur.message);
+
+const echec = await essayer(chargerUtilisateur(-1));
+if (echec.ok) console.log(echec.valeur.nom); else console.error(echec.erreur.message);
 ```
 
 ## 15.4 Exécution parallèle
 
 ```typescript
-// Séquentiel (lent) : attend A avant de lancer B ❌
+interface Utilisateur { id: number; nom: string }
+const chargerUtilisateur = async (id: number): Promise<Utilisateur> => {   // version simulée de 15.2
+    if (id < 0) throw new Error("Identifiant invalide");
+    return { id, nom: `Utilisateur ${id}` };
+};
+const attendre = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
+const p1 = chargerUtilisateur(1);
+const p2 = chargerUtilisateur(2);
+
+// Séquentiel (lent) : attend A avant de lancer B 
 const a = await chargerUtilisateur(1);
 const b = await chargerUtilisateur(2);
+console.log("Séquentiel :", a.nom, b.nom);
 
-// Parallèle ✅ : les types sont conservés dans un tuple
+// Parallèle : les types sont conservés dans un tuple
 const [u1, u2] = await Promise.all([chargerUtilisateur(1), chargerUtilisateur(2)]);
 
-const resultats = await Promise.allSettled([chargerUtilisateur(1), chargerUtilisateur(2)]);
+const resultats = await Promise.allSettled([chargerUtilisateur(1), chargerUtilisateur(-1)]);
 for (const r of resultats) {
     if (r.status === "fulfilled") console.log(r.value.nom);
     else console.error(r.reason);
@@ -1733,6 +2017,9 @@ for (const r of resultats) {
 
 const premier = await Promise.race([chargerUtilisateur(1), attendre(1000).then(() => null)]);
 const nimporte = await Promise.any([p1, p2]);               // première réussite
+
+console.log("Parallèle :", u1.nom, u2.nom);
+console.log("Course :", premier?.nom, "| première réussite :", nimporte.nom);
 ```
 
 ## 15.5 Annulation et délai d'expiration
@@ -1743,14 +2030,25 @@ async function chargerAvecDelai(url: string, ms = 5000): Promise<unknown> {
     return reponse.json();
 }
 
+const url = 'data:application/json,{"ok":true}';      // hors ligne ; en pratique, une URL HTTP
+console.log(await chargerAvecDelai(url));
+
 const controleur = new AbortController();
-fetch(url, { signal: controleur.signal });
+const requete = fetch(url, { signal: controleur.signal });
 controleur.abort();
+try {
+    await requete;
+} catch (e) {
+    console.error("Requête annulée :", (e as Error).name);
+}
 ```
 
 ## 15.6 Typer les API asynchrones
 
 ```typescript
+const pages = [["a", "b"], ["c"], []];
+const chargerPage = async (page: number): Promise<string[]> => pages[page - 1] ?? [];
+
 type Asynchrone<T> = T extends (...args: infer A) => infer R ? (...args: A) => Promise<Awaited<R>> : never;
 
 interface Depot<T> {
@@ -1771,11 +2069,16 @@ for await (const lot of paginer(chargerPage)) console.log(lot.length);
 ## 15.7 Rappels (*callbacks*) et événements typés
 
 ```typescript
+import { promisify } from "node:util";
+import * as fs from "node:fs";
+
 type Rappel<T> = (erreur: Error | null, donnees?: T) => void;
 
-import { promisify } from "node:util";
 const lireFichier = promisify(fs.readFile);          // transforme un callback Node en promesse
 // ou : import { readFile } from "node:fs/promises";
+
+const contenu = await lireFichier(import.meta.filename, "utf-8");
+console.log(`Fichier lu : ${contenu.split("\n").length} lignes`);
 ```
 
 ## 15.8 Programmation réactive avec RxJS
@@ -1811,6 +2114,8 @@ Utile pour des **flux d'événements** (saisie, WebSockets) ; Angular l'utilise 
 
 La bibliothèque `lib.dom` décrit tous les éléments (`HTMLInputElement`, `HTMLButtonElement`, `HTMLCanvasElement`…). Activez-la : `"lib": ["es2023", "dom", "dom.iterable"]`.
 
+> Les exemples de cette section s'exécutent **dans un navigateur** (ils utilisent `document` et `window`) et se suivent : un bloc peut réutiliser une fonction définie dans le bloc précédent.
+
 ```typescript
 const bouton = document.getElementById("envoyer");            // HTMLElement | null
 const champ = document.querySelector("#nom");                  // Element | null
@@ -1823,15 +2128,18 @@ if (entree) console.log(entree.value);
 const lien = document.querySelector("a");                      // HTMLAnchorElement | null
 const toutes = document.querySelectorAll<HTMLLIElement>("li"); // NodeListOf<HTMLLIElement>
 const canvas = document.createElement("canvas");               // HTMLCanvasElement
+
+console.log(bouton, champ, entree?.value, lien, toutes.length, canvas.tagName);
 ```
 
 ## 16.2 Gestion de la valeur `null`
 
 ```typescript
 const titre = document.querySelector("h1");
-// titre.textContent = "x";                    // ❌ possiblement null
-if (titre) titre.textContent = "Bonjour";      // ✅ restriction
-titre?.classList.add("actif");                  // ✅ chaînage optionnel
+// titre.textContent = "x";
+console.error("Erreur de compilation : possiblement null");
+if (titre) titre.textContent = "Bonjour";      // restriction
+titre?.classList.add("actif");                  // chaînage optionnel
 
 function requis<T extends Element>(selecteur: string): T {       // utilitaire : échoue explicitement
     const el = document.querySelector<T>(selecteur);
@@ -1839,9 +2147,11 @@ function requis<T extends Element>(selecteur: string): T {       // utilitaire :
     return el;
 }
 const app = requis<HTMLDivElement>("#app");
+
+console.log(app);
 ```
 
-> ⚠️ Évitez l'assertion non nulle `!` : un utilitaire qui lève une erreur claire est plus sûr.
+> Évitez l'assertion non nulle `!` : un utilitaire qui lève une erreur claire est plus sûr.
 
 ## 16.3 Événements typés
 
@@ -1904,6 +2214,8 @@ function creer<K extends keyof HTMLElementTagNameMap>(
 
 const lien = creer("a", { href: "/accueil", textContent: "Accueil" });     // HTMLAnchorElement
 document.body.append(lien);
+
+console.log(lien.href);
 ```
 
 ## 16.6 Observateurs et API du navigateur
@@ -1918,6 +2230,9 @@ const stockage = {
     },
     ecrire<T>(cle: string, valeur: T): void { localStorage.setItem(cle, JSON.stringify(valeur)); },
 };
+
+stockage.ecrire("theme", "sombre");
+console.log(stockage.lire("theme", "clair"));
 ```
 
 ## 16.7 Bonnes pratiques
@@ -1965,12 +2280,14 @@ const UtilisateurAvance = Activable(Horodate(Utilisateur));     // composition d
 const u = new UtilisateurAvance("Alice");
 u.activer();
 u.toucher();
-console.log(u.nom, u.actif, u.creeLe);                            // types combinés ✅
+console.log(u.nom, u.actif, u.creeLe);                            // types combinés 
 ```
 
 ## 17.3 Mixins avec contraintes
 
 ```typescript
+type Constructeur<T = {}> = new (...args: any[]) => T;
+
 interface AvecNom { nom: string }
 
 function Salutation<TBase extends Constructeur<AvecNom>>(Base: TBase) {
@@ -1978,6 +2295,10 @@ function Salutation<TBase extends Constructeur<AvecNom>>(Base: TBase) {
         saluer() { return `Bonjour ${this.nom}`; }       // `nom` est garanti par la contrainte
     };
 }
+
+class Personne { constructor(public nom: string) {} }
+const PersonneAimable = Salutation(Personne);
+console.log(new PersonneAimable("Alice").saluer());
 ```
 
 ## 17.4 Composition par objets et fonctions
@@ -1992,7 +2313,7 @@ const nageant = (nom: string): PeutNager => ({ nager: () => `${nom} nage` });
 function canard(nom: string): PeutVoler & PeutNager {
     return { ...volant(nom), ...nageant(nom) };
 }
-canard("Donald").voler();
+console.log(canard("Donald").voler(), canard("Donald").nager());
 ```
 
 ### Composition par délégation (injection)
@@ -2004,6 +2325,8 @@ class Service {
     constructor(private readonly journal: Journal) {}           // on « possède » un Journal, on ne l'« est » pas
     executer() { this.journal.ecrire("Exécution"); }
 }
+
+new Service(new Journal()).executer();
 ```
 
 ## 17.5 Pièges
@@ -2030,14 +2353,14 @@ class Service {
 
 ## 18.1 Démarrer un projet : **Vite**
 
-> 📌 **À jour** : `create-react-app` est **déprécié** (plus maintenu). Utilisez **Vite** ou le méta-framework de votre choix (Next.js, Remix/React Router, Nuxt, SvelteKit, Astro, Angular CLI).
+> **À jour** : `create-react-app` est **déprécié** (plus maintenu). Utilisez **Vite** ou le méta-framework de votre choix (Next.js, Remix/React Router, Nuxt, SvelteKit, Astro, Angular CLI).
 
 ```bash
 npm create vite@latest mon-app -- --template react-ts        # ou vue-ts, svelte-ts, vanilla-ts
 cd mon-app && npm install && npm run dev
 ```
 
-> ℹ️ Vite **ne vérifie pas** les types (il les efface) : exécutez `tsc --noEmit` (ou `vue-tsc --noEmit`) dans vos scripts et la CI.
+> ℹVite **ne vérifie pas** les types (il les efface) : exécutez `tsc --noEmit` (ou `vue-tsc --noEmit`) dans vos scripts et la CI.
 
 ## 18.2 React
 
@@ -2062,7 +2385,7 @@ function Bouton({ etiquette, variante = "primaire", onClic, children }: BoutonPr
 }
 ```
 
-> ✅ **Typez les props avec une interface** et une fonction ordinaire ; `React.FC` n'est plus nécessaire (et n'apporte plus d'avantage).
+> **Typez les props avec une interface** et une fonction ordinaire ; `React.FC` n'est plus nécessaire (et n'apporte plus d'avantage).
 > Avec **React 19**, `ref` est une **prop ordinaire** (`ref?: Ref<HTMLInputElement>`) ; `forwardRef` n'est plus requis pour les nouveaux composants.
 
 ### Hooks
@@ -2267,8 +2590,8 @@ app.use((err: unknown, _req: Request, res: Response, _next: NextFunction) => {  
 app.listen(3000, () => console.log("Serveur sur http://localhost:3000"));
 ```
 
-> ℹ️ **Express 5** transmet automatiquement au gestionnaire d'erreurs les rejets des gestionnaires `async` ; avec Express 4, il fallait un enrobage ou `next(err)`.
-> 💡 `req.body` n'est **pas vérifié** à l'exécution : validez-le (section 19.5).
+> ℹ**Express 5** transmet automatiquement au gestionnaire d'erreurs les rejets des gestionnaires `async` ; avec Express 4, il fallait un enrobage ou `next(err)`.
+> `req.body` n'est **pas vérifié** à l'exécution : validez-le (section 19.5).
 
 Alternatives modernes très typées : **Fastify**, **Hono**, **Elysia**, **tRPC** (types partagés client-serveur sans génération de code).
 
@@ -2326,6 +2649,10 @@ NestJS s'appuie sur les décorateurs **expérimentaux** et `emitDecoratorMetadat
 ## 19.4 Gestion des erreurs côté serveur
 
 ```typescript
+import express, { type Request, type Response, type NextFunction } from "express";
+
+const app = express();
+
 export class ErreurHttp extends Error {
     constructor(public readonly statut: number, message: string, options?: ErrorOptions) {
         super(message, options);                // ErrorOptions : { cause } (ES2022)
@@ -2340,6 +2667,8 @@ app.use((err: unknown, _req: Request, res: Response, _next: NextFunction) => {
     console.error(err);
     res.status(500).json({ erreur: "Erreur interne" });
 });
+
+console.log(new NonTrouve("Utilisateur").message, new RequeteInvalide("Champ manquant").statut);
 ```
 
 ## 19.5 Valider les données : types **et** exécution *(ajout)*
@@ -2347,6 +2676,11 @@ app.use((err: unknown, _req: Request, res: Response, _next: NextFunction) => {
 Les types sont **effacés** : une API qui reçoit `{ "age": "abc" }` ne plante pas à la compilation. Utilisez un **schéma** qui valide à l'exécution **et** produit le type TypeScript :
 
 ```typescript
+import express from "express";
+
+const app = express();
+app.use(express.json());
+
 import { z } from "zod";                          // ou Valibot, ArkType…
 
 const CreerUtilisateur = z.object({
@@ -2354,7 +2688,7 @@ const CreerUtilisateur = z.object({
     email: z.email(),
     age: z.number().int().min(0).optional(),
 });
-type CreerUtilisateur = z.infer<typeof CreerUtilisateur>;       // type dérivé du schéma ✅
+type CreerUtilisateur = z.infer<typeof CreerUtilisateur>;       // type dérivé du schéma 
 
 app.post("/users", (req, res) => {
     const resultat = CreerUtilisateur.safeParse(req.body);
@@ -2362,6 +2696,8 @@ app.post("/users", (req, res) => {
     const donnees: CreerUtilisateur = resultat.data;           // entièrement typé ET validé
     res.status(201).json(donnees);
 });
+
+app.listen(3000, () => console.log("Serveur sur http://localhost:3000"));
 ```
 
 Valider aussi : variables d'environnement (`process.env.X` est `string | undefined`), fichiers de configuration, réponses d'API tierces.
@@ -2415,7 +2751,7 @@ Le fichier **`tsconfig.json`** indique la **racine du projet**, **quels fichiers
 | Syntaxe `module Nom {}` (namespaces) | `namespace Nom {}` |
 | `import … assert { type: "json" }` | `import … with { type: "json" }` |
 
-Pour migrer progressivement : `"ignoreDeprecations": "6.0"` (⚠️ **TypeScript 7.0 ne prend plus en charge** ces options : corrigez-les avant de passer au compilateur natif).
+Pour migrer progressivement : `"ignoreDeprecations": "6.0"` (**TypeScript 7.0 ne prend plus en charge** ces options : corrigez-les avant de passer au compilateur natif).
 
 ## 20.3 Options essentielles
 
@@ -2425,17 +2761,17 @@ Pour migrer progressivement : `"ignoreDeprecations": "6.0"` (⚠️ **TypeScript
 | | `lib` | Bibliothèques de types disponibles (`["es2023", "dom", "dom.iterable"]`) |
 | **Modules** | `module` | Système de modules : `nodenext` (Node.js), `esnext` / `preserve` (bundlers) |
 | | `moduleResolution` | `nodenext` ou `bundler` |
-| | `verbatimModuleSyntax` | `import type` obligatoire pour les types ✅ |
+| | `verbatimModuleSyntax` | `import type` obligatoire pour les types |
 | | `isolatedModules` | Garantit la compatibilité avec Vite, esbuild, SWC, Babel |
 | | `resolveJsonModule` | Importer du JSON |
 | **Sorties** | `outDir`, `rootDir` | Dossiers de sortie / source |
 | | `noEmit` | Ne génère rien (vérification seule) |
 | | `declaration`, `declarationMap`, `sourceMap` | Déclarations et cartes sources |
 | | `incremental`, `composite` | Compilation incrémentale, projets liés |
-| **Rigueur** | **`strict`** | Active l'ensemble des vérifications strictes ✅ |
-| | `noUncheckedIndexedAccess` | `t[i]` vaut `T \| undefined` ✅ |
+| **Rigueur** | **`strict`** | Active l'ensemble des vérifications strictes |
+| | `noUncheckedIndexedAccess` | `t[i]` vaut `T \| undefined` |
 | | `exactOptionalPropertyTypes` | Distingue `?:` de `\| undefined` |
-| | `noImplicitOverride` | `override` obligatoire ✅ |
+| | `noImplicitOverride` | `override` obligatoire |
 | | `noImplicitReturns`, `noFallthroughCasesInSwitch` | Retours et `switch` explicites |
 | | `noUnusedLocals`, `noUnusedParameters` | Code mort (souvent laissé à ESLint) |
 | | `erasableSyntaxOnly` | Interdit `enum`, `namespace`, propriétés de paramètres (TS 5.8) |
@@ -2466,7 +2802,7 @@ Pour migrer progressivement : `"ignoreDeprecations": "6.0"` (⚠️ **TypeScript
 import { Bouton } from "@composants/Bouton";
 ```
 
-> ⚠️ `paths` n'affecte **que la vérification des types** : le chemin doit aussi être résolu à l'**exécution** (alias de **Vite**/**webpack**, `tsx`, ou **`imports` de `package.json`**, standard Node.js). Depuis TS 6.0, `baseUrl` est **déprécié** : les chemins de `paths` sont relatifs au `tsconfig.json`.
+> `paths` n'affecte **que la vérification des types** : le chemin doit aussi être résolu à l'**exécution** (alias de **Vite**/**webpack**, `tsx`, ou **`imports` de `package.json`**, standard Node.js). Depuis TS 6.0, `baseUrl` est **déprécié** : les chemins de `paths` sont relatifs au `tsconfig.json`.
 
 ```json
 // package.json — alias natifs de Node.js, reconnus par TypeScript
@@ -2574,7 +2910,7 @@ Les **références de projets** (`"references": [{ "path": "../lib" }]`, `"compo
 | **Linter** (ESLint + typescript-eslint) | Détecte les **mauvaises pratiques** et bugs probables |
 | **Formateur** (Prettier, Biome) | Impose un **style** uniforme |
 
-> 📌 **TSLint est abandonné** depuis 2019 : utilisez **typescript-eslint**.
+> **TSLint est abandonné** depuis 2019 : utilisez **typescript-eslint**.
 
 ## 21.2 ESLint avec typescript-eslint (configuration « flat »)
 
@@ -2607,7 +2943,7 @@ export default tseslint.config(
 );
 ```
 
-> ℹ️ Les anciens fichiers `.eslintrc.*` sont **remplacés** par le format « flat » `eslint.config.*` (par défaut depuis ESLint 9).
+> ℹLes anciens fichiers `.eslintrc.*` sont **remplacés** par le format « flat » `eslint.config.*` (par défaut depuis ESLint 9).
 
 ```json
 { "scripts": { "lint": "eslint .", "lint:fix": "eslint . --fix" } }
@@ -2645,7 +2981,10 @@ Avant / après :
 // Avant
 function addition(a:number,b:number){return a+b}
 const utilisateur={nom:"Alice",age:30,email:"alice@exemple.com",roles:["admin","editeur"],actif:true}
+console.log(addition(1,2),utilisateur)
+```
 
+```typescript
 // Après
 function addition(a: number, b: number) {
     return a + b;
@@ -2657,9 +2996,10 @@ const utilisateur = {
     roles: ["admin", "editeur"],
     actif: true,
 };
+console.log(addition(1, 2), utilisateur);
 ```
 
-> ✅ **ESLint** s'occupe de la **qualité**, **Prettier** du **formatage** : ajoutez `eslint-config-prettier` pour éviter les conflits entre les deux.
+> **ESLint** s'occupe de la **qualité**, **Prettier** du **formatage** : ajoutez `eslint-config-prettier` pour éviter les conflits entre les deux.
 
 ## 21.4 Alternative tout-en-un : Biome
 
@@ -2704,7 +3044,7 @@ mon-projet/
 
 ---
 
-# ⭐ Bonus
+# Bonus
 
 ---
 
@@ -2881,11 +3221,27 @@ TypeORM exige les décorateurs **expérimentaux** (`experimentalDecorators`, `em
 ## 22.5 Motif « dépôt » (*repository*) pour découpler
 
 ```typescript
+interface Utilisateur { id: number; nom: string; email: string }
+
 interface DepotUtilisateurs {
     trouverParId(id: number): Promise<Utilisateur | undefined>;
     creer(donnees: Omit<Utilisateur, "id">): Promise<Utilisateur>;
 }
+
 // Implémentations : PostgresDepot, MemoireDepot (pour les tests)…
+class MemoireDepot implements DepotUtilisateurs {
+    private lignes: Utilisateur[] = [];
+    async trouverParId(id: number) { return this.lignes.find((u) => u.id === id); }
+    async creer(donnees: Omit<Utilisateur, "id">) {
+        const u = { id: this.lignes.length + 1, ...donnees };
+        this.lignes.push(u);
+        return u;
+    }
+}
+
+const depot: DepotUtilisateurs = new MemoireDepot();
+const cree = await depot.creer({ nom: "Alice", email: "alice@exemple.com" });
+console.log(await depot.trouverParId(cree.id));
 ```
 
 ## 22.6 Bonnes pratiques
@@ -2903,7 +3259,7 @@ interface DepotUtilisateurs {
 
 | Outil | Points forts |
 | --- | --- |
-| **Vitest** ✅ | Très rapide, TypeScript et ESM **natifs**, API compatible Jest, intégré à Vite |
+| **Vitest** | Très rapide, TypeScript et ESM **natifs**, API compatible Jest, intégré à Vite |
 | **Jest** | Très répandu ; nécessite un transformateur (`ts-jest`, `@swc/jest` ou Babel) |
 | **`node:test`** | Exécuteur **intégré à Node.js**, sans dépendance |
 | **Mocha** (+ Chai, Sinon) | Flexible, modulaire |
@@ -2986,6 +3342,10 @@ mocha --import=tsx "tests/**/*.test.ts"
 Les **types** aussi se testent :
 
 ```typescript
+import { diviser } from "./calculatrice.js";
+
+type PartielProfond<T> = { [K in keyof T]?: T[K] extends object ? PartielProfond<T[K]> : T[K] };
+
 import { expectTypeOf, test } from "vitest";
 
 test("types de l'utilitaire", () => {
@@ -3030,6 +3390,8 @@ it("envoie un e-mail de bienvenue", async () => {
 | **Fake** | Implémentation simplifiée (ex. dépôt en mémoire) |
 
 ```typescript
+import { vi } from "vitest";
+
 vi.mock("./api.js", () => ({ charger: vi.fn().mockResolvedValue({ id: 1 }) }));       // module entier
 vi.useFakeTimers();                                                                    // horloge simulée
 ```
@@ -3042,9 +3404,13 @@ Outils complémentaires : **MSW** (simuler l'API réseau), `sinon`, `ts-mockito`
 - Évitez `as any` ; préférez `Partial<T>` + une assertion limitée, ou un utilitaire de fabrique de données :
 
 ```typescript
+interface Utilisateur { id: number; nom: string; email: string }
+
 function faireUtilisateur(surcharges: Partial<Utilisateur> = {}): Utilisateur {
     return { id: 1, nom: "Alice", email: "alice@exemple.com", ...surcharges };
 }
+
+console.log(faireUtilisateur({ nom: "Bob" }));
 ```
 
 - Incluez les tests dans la vérification de types (`tsc --noEmit`) ; ajoutez `"types": ["vitest/globals"]` si vous utilisez les API globales.
@@ -3086,6 +3452,8 @@ function travailler() {
     using connexion = new Connexion();      // libérée automatiquement à la sortie du bloc
     // …
 }
+
+travailler();
 ```
 
 (Nécessite un runtime qui prend en charge `Symbol.dispose` ou un *polyfill*.)
@@ -3108,18 +3476,18 @@ function travailler() {
 
 ## 24.4 Ressources
 
-- 📘 **Documentation officielle** : <https://www.typescriptlang.org/docs/>
-- 📗 **TypeScript Handbook** et **notes de version** : <https://www.typescriptlang.org/docs/handbook/release-notes/overview.html>
-- 🧪 **Playground** : <https://www.typescriptlang.org/play>
-- 📙 **Type Challenges** (exercices de types) : <https://github.com/type-challenges/type-challenges>
-- 🧰 **DefinitelyTyped** : <https://github.com/DefinitelyTyped/DefinitelyTyped>
-- 🛠️ **typescript-eslint** : <https://typescript-eslint.io>
-- 📕 *Effective TypeScript* — Dan Vanderkam
+- **Documentation officielle** : <https://www.typescriptlang.org/docs/>
+- **TypeScript Handbook** et **notes de version** : <https://www.typescriptlang.org/docs/handbook/release-notes/overview.html>
+- **Playground** : <https://www.typescriptlang.org/play>
+- **Type Challenges** (exercices de types) : <https://github.com/type-challenges/type-challenges>
+- **DefinitelyTyped** : <https://github.com/DefinitelyTyped/DefinitelyTyped>
+- **typescript-eslint** : <https://typescript-eslint.io>
+- *Effective TypeScript* — Dan Vanderkam
 
 ---
 
 <div align="center">
 
-*Bon code, et que vos types soient toujours justes ! 🔷*
+*Bon code, et que vos types soient toujours justes ! *
 
 </div>
