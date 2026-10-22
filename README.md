@@ -68,8 +68,8 @@
 | Couche | Technologies |
 |---|---|
 | Backend | Python, Django 5.1+, Django REST framework |
-| Contenu | Markdown, Pygments, BeautifulSoup 4, cache SQLite (`languages.sqlite3`) |
-| Données | SQLite (`db.sqlite3`) : utilisateurs, projets, préférences |
+| Contenu | Markdown, Pygments, BeautifulSoup 4, cache en base (modèle `PageContent`) |
+| Données | SQLite (`db.sqlite3`) : utilisateurs, projets, préférences, contenu des cours |
 | Frontend | JavaScript natif (modules ES), CSS maison avec thème clair / sombre |
 | Éditeur | Monaco Editor 0.47, Emmet |
 | Exécution navigateur | Web Workers, TypeScript (compilateur de Monaco), Pyodide (CPython 3.14 en WebAssembly) |
@@ -160,7 +160,7 @@ code-learning/
 ├── accounts/      connexion avec limitation des tentatives, tests d'accès
 ├── webapp/        accueil : catalogue des cours, préparation du contenu
 ├── language/      pages de cours (config.py = catalogue, topics/ = Markdown)
-├── core/          conversion Markdown -> HTML à onglets, cache SQLite
+├── core/          conversion Markdown -> HTML à onglets
 ├── editor/        éditeur Monaco, projets, aperçu, import/export zip, préférences
 ├── templates/     base.html et partials partagés (thème, logo, déconnexion)
 ├── static/        CSS/JS communs, polices, icônes, Bootstrap, Pyodide
@@ -173,8 +173,8 @@ code-learning/
 
 1. `language/config.py` est la **source unique de vérité** : il alimente les routes, l'accueil, le sélecteur de cours et la conversion.
 2. À la première visite, `core/markdown_to_tabbed_html.py` convertit le `.md` en HTML structuré (un onglet par section).
-3. Le résultat est stocké dans `languages.sqlite3`, avec une **signature** (version du convertisseur + date et taille du fichier).
-4. Quand un `.md` change, ou que `CONVERTER_VERSION` est incrémenté, la page est **régénérée automatiquement** à la visite suivante.
+3. Le résultat est stocké dans `db.sqlite3` (modèle `language.models.PageContent`), avec une **signature** (version du convertisseur + date et taille du fichier).
+4. Quand un `.md` change, ou que `CONVERTER_VERSION` est incrémenté, la page est **régénérée automatiquement** à la visite suivante. Pour tout régénérer d'un coup : `python manage.py build_pages`.
 
 ### Éditeur : points d'API
 
@@ -280,13 +280,13 @@ Toutes les valeurs sensibles sont lues dans `.env` (jamais versionné, voir `.gi
 
 4. Lancez l'application avec un serveur WSGI de votre choix (gunicorn, uWSGI...) derrière nginx ou Apache.
 5. Servez `staticfiles/` avec votre serveur web (ou WhiteNoise). Le dossier est volumineux (Monaco, Pyodide) : activez la compression et le cache navigateur.
-6. Le dossier du projet doit être **inscriptible** par l'application : `db.sqlite3` et `languages.sqlite3` y sont créés.
-7. Pensez à sauvegarder `db.sqlite3` (comptes, projets). `languages.sqlite3` n'est qu'un cache, régénéré automatiquement.
+6. Le dossier du projet doit être **inscriptible** par l'application : `db.sqlite3` y est créé.
+7. Pensez à sauvegarder `db.sqlite3` (comptes, projets). Le contenu des cours (`PageContent`) n'est qu'un cache, régénéré automatiquement.
 
 ## Tests
 
 ```bash
-python manage.py test accounts editor   # authentification, isolation des projets, CSRF, config Monaco, import zip
+python manage.py test accounts editor language   # authentification, isolation des projets, CSRF, config Monaco, import zip, cache des cours
 python -m pytest core                   # conversion Markdown
 ```
 
