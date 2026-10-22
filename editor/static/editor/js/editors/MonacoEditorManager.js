@@ -62,7 +62,7 @@ export class MonacoEditorManager {
                 await this.configManager.loadConfig();
                 const baseOptions = this.configManager.getConfig();
 
-                // Le thème suit celui du site (et non celui mémorisé dans le fichier de config).
+                // Le thème suit celui du site (et n'est pas une préférence enregistrée côté serveur).
                 const commonOptions = {
                     ...baseOptions,
                     theme: document.documentElement.dataset.theme === "light" ? "vs" : "vs-dark",
@@ -71,7 +71,6 @@ export class MonacoEditorManager {
                 document.addEventListener("themechange", (event) => {
                     const monacoTheme = event.detail === "light" ? "vs" : "vs-dark";
                     monaco.editor.setTheme(monacoTheme);
-                    this.configManager.updateOption("theme", monacoTheme);
                 });
 
                 state.editors.html = monaco.editor.create(document.getElementById("html-editor"), {

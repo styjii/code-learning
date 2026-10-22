@@ -9,12 +9,15 @@ export class EditorConfigManager {
         /** @type {object} current config */
         this.editorConfig = {};
 
+        /** @type {Promise<void>} file d'attente : les enregistrements partent dans l'ordre des clics */
+        this._saving = Promise.resolve();
+
         // Patch event listeners for performance
         patchPassiveTouchStart();
     }
 
     /**
-     * Loads Monaco editor config from backend or sets defaults.
+     * Loads the current user's Monaco config from backend (defaults + saved preferences) or sets defaults.
      * @returns {Promise<object>} Loaded or default config
      */
     async loadConfig() {
@@ -36,20 +39,31 @@ export class EditorConfigManager {
     }
 
     /**
-     * Saves current config to backend (fire and forget).
+     * Saves one preference for the current user (fire and forget).
+     * Only the changed option is sent: the server accepts a whitelist of keys and merges it
+     * with the user's previous preferences. Requests are chained to keep their order.
+     * @param {string} key Option key
+     * @param {any} value Option value
      */
-    saveConfig() {
-        fetch("/editor/api/save-monaco-config/", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(this.editorConfig),
-        }).catch((err) => {
-            console.warn("Failed to save Monaco config:", err);
-        });
+    savePreference(key, value) {
+        this._saving = this._saving
+            .then(() =>
+                fetch("/editor/api/save-monaco-config/", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ [key]: value }),
+                })
+            )
+            .then((res) => {
+                if (!res.ok) console.warn("Monaco preference refused by the server:", key, res.status);
+            })
+            .catch((err) => {
+                console.warn("Failed to save Monaco preference:", err);
+            });
     }
 
     /**
-     * Updates an option in config, applies to all editors and saves.
+     * Updates a user preference: applies it to all editors and saves it for this user.
      * @param {string} key Option key
      * @param {any} value Option value
      */
@@ -60,7 +74,7 @@ export class EditorConfigManager {
             }
         });
         this.editorConfig[key] = value;
-        this.saveConfig();
+        this.savePreference(key, value);
     }
 
     /**

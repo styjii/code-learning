@@ -8,18 +8,23 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.clickjacking import xframe_options_exempt
 from django.template.loader import render_to_string
 from django.conf import settings
-from .models import Project
+from django.db import transaction
+from .models import EditorPreferences, Project
+from .monaco_config import effective_options, sanitize_preferences, validate_preferences
 from .services import id
 from .serializers import ProjectSerializer
+from .zip_import import ZipImportError, format_size, read_project_zip
 from bs4 import BeautifulSoup
 import html as html_lib
 import io
 import json
-import os
 import zipfile
 from urllib.parse import quote
 
 MAX_PREVIEWS = 5
+
+# Marge pour l'enveloppe multipart (délimiteurs, en-têtes) autour du fichier envoyé.
+UPLOAD_OVERHEAD_BYTES = 64 * 1024
 
 
 class ProjectViewSet(viewsets.ModelViewSet):
@@ -40,42 +45,36 @@ class ProjectViewSet(viewsets.ModelViewSet):
 
 class SaveMonacoConfigView(APIView):
     """
-    API endpoint to save Monaco Editor configuration (like wordWrap, scrollBeyondLastLine).
+    API endpoint pour enregistrer les préférences Monaco de l'utilisateur connecté (wordWrap, tabSize...).
 
-    Expects JSON body, saves to a file like monacoOptions.json in the static directory.
+    Le corps JSON ne peut contenir que des clés de la liste blanche (voir ``monaco_config.py``) ; sinon la
+    requête est refusée en bloc (400) et rien n'est enregistré. Les préférences sont fusionnées avec les
+    précédentes et stockées en base, par utilisateur : elles n'affectent jamais les autres comptes.
     """
+    parser_classes = [JSONParser]
+
     def post(self, request):
-        try:
-            config_data = request.data
-            if not isinstance(config_data, dict):
-                return Response({'error': 'Objet JSON attendu'}, status=status.HTTP_400_BAD_REQUEST)
-            static_config_path = os.path.join(settings.BASE_DIR, 'editor', 'config')
-            os.makedirs(static_config_path, exist_ok=True)
+        clean, errors = validate_preferences(request.data)
+        if errors:
+            return Response({'error': 'Options invalides.', 'details': errors},
+                            status=status.HTTP_400_BAD_REQUEST)
 
-            config_file = os.path.join(static_config_path, 'monacoOptions.json')
-            with open(config_file, 'w', encoding='utf-8') as f:
-                json.dump(config_data, f, indent=4)
-
-            return Response({'status': 'success'}, status=status.HTTP_200_OK)
-        except Exception as e:
-            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        with transaction.atomic():
+            prefs, _ = EditorPreferences.objects.select_for_update().get_or_create(user=request.user)
+            prefs.monaco = {**sanitize_preferences(prefs.monaco), **clean}
+            prefs.save(update_fields=['monaco', 'updated_at'])
+        return Response({'status': 'success'}, status=status.HTTP_200_OK)
 
 class LoadMonacoConfigView(APIView):
     """
-    API endpoint to load the Monaco Editor configuration.
+    API endpoint pour charger la configuration Monaco de l'utilisateur connecté.
 
-    This view reads the JSON configuration file (monacoOptions.json) from the static directory
-    and returns it as a JSON response. It allows the frontend to dynamically load editor options
-    like wordWrap, scrollBeyondLastLine, etc.
+    Retourne les options par défaut, ses préférences enregistrées (filtrées par la liste blanche) puis les
+    réglages imposés par l'application.
     """
     def get(self, request):
-        try:
-            config_path = os.path.join(settings.BASE_DIR, 'editor', 'config', 'monacoOptions.json')
-            with open(config_path, 'r', encoding='utf-8') as f:
-                data = json.load(f)
-            return Response(data, status=status.HTTP_200_OK)
-        except FileNotFoundError:
-            return Response({'error': 'Config not found'}, status=status.HTTP_404_NOT_FOUND)
+        prefs = EditorPreferences.objects.filter(user=request.user).first()
+        return Response(effective_options(prefs.monaco if prefs else {}), status=status.HTTP_200_OK)
 
 class ExportZipView(APIView):
     """
@@ -127,9 +126,27 @@ class ImportZipView(APIView):
     API endpoint for importing a ZIP file and extracting HTML, CSS, and JS content.
 
     Parses the uploaded ZIP file, extracts its contents, and returns them
-    as a JSON response suitable for restoring a project.
+    as a JSON response suitable for restoring a project. Les tailles sont plafonnées
+    (voir ``zip_import.py`` et les réglages ``EDITOR_ZIP_*``) : refus en 413 au-delà.
     """
     parser_classes = [MultiPartParser, FormParser]
+
+    def initial(self, request, *args, **kwargs):
+        # Refus avant toute lecture du corps : DRF/Django l'analysent (et l'écrivent sur disque)
+        # dès l'authentification, donc un contrôle placé dans post() arriverait trop tard.
+        try:
+            length = int(request.META.get('CONTENT_LENGTH') or 0)
+        except ValueError:
+            length = 0
+        limit = settings.EDITOR_ZIP_MAX_UPLOAD_BYTES
+        if length > limit + UPLOAD_OVERHEAD_BYTES:
+            raise ZipImportError(f"Fichier trop volumineux (maximum {format_size(limit)}).", 413)
+        super().initial(request, *args, **kwargs)
+
+    def handle_exception(self, exc):
+        if isinstance(exc, ZipImportError):
+            return Response({'error': exc.message}, status=exc.status)
+        return super().handle_exception(exc)
 
     def post(self, request):
         """
@@ -137,26 +154,18 @@ class ImportZipView(APIView):
 
         Returns:
             Response: A JSON object with 'html', 'css', 'js', and 'project' name,
-                      or an error message if the ZIP file is invalid.
+                      or an error message if the ZIP file is invalid or too large.
         """
         uploaded_file = request.FILES.get('zip_file')
         if not uploaded_file:
             return Response({'error': 'No zip file provided.'}, status=status.HTTP_400_BAD_REQUEST)
 
-        try:
-            with zipfile.ZipFile(uploaded_file) as zf:
-                name = uploaded_file.name.replace(".zip", "")
-                file_list = zf.namelist()
+        limit = settings.EDITOR_ZIP_MAX_UPLOAD_BYTES
+        if uploaded_file.size > limit:
+            raise ZipImportError(f"Fichier trop volumineux (maximum {format_size(limit)}).", 413)
 
-                def read_file(filename):
-                    return zf.read(filename).decode('utf-8') if filename in file_list else ''
-
-                index_html = read_file(f"{name}/index.html") or read_file("index.html")
-                style_css = read_file(f"{name}/style.css") or read_file("style.css")
-                script_js = read_file(f"{name}/script.js") or read_file("script.js")
-        except Exception as e:
-            return Response({'error': 'Invalid zip file or structure', 'details': str(e)},
-                            status=status.HTTP_400_BAD_REQUEST)
+        name = uploaded_file.name.replace(".zip", "")
+        index_html, style_css, script_js = read_project_zip(uploaded_file, name)
 
         soup = BeautifulSoup(index_html, 'html.parser')
         for tag in soup.find_all('script'):

@@ -158,3 +158,11 @@ REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": ["rest_framework.permissions.IsAuthenticated"],
     "DEFAULT_RENDERER_CLASSES": ["rest_framework.renderers.JSONRenderer"],
 }
+
+# ---------------------------------------------------------------------------
+# Import .zip de l'éditeur : plafonds contre les archives piégées (« zip bombs »)
+# ---------------------------------------------------------------------------
+EDITOR_ZIP_MAX_UPLOAD_BYTES = env_int("EDITOR_ZIP_MAX_UPLOAD_KB", 5 * 1024) * 1024   # fichier envoyé
+EDITOR_ZIP_MAX_ENTRIES = env_int("EDITOR_ZIP_MAX_ENTRIES", 100)                       # fichiers dans l'archive
+EDITOR_ZIP_MAX_FILE_BYTES = env_int("EDITOR_ZIP_MAX_FILE_KB", 1024) * 1024            # un fichier décompressé
+EDITOR_ZIP_MAX_TOTAL_BYTES = env_int("EDITOR_ZIP_MAX_TOTAL_KB", 5 * 1024) * 1024      # total décompressé

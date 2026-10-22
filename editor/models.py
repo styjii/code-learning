@@ -30,3 +30,22 @@ class Project(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class EditorPreferences(models.Model):
+    """
+    Préférences de l'éditeur propres à un utilisateur.
+
+    ``monaco`` ne contient que des clés de la liste blanche (voir ``monaco_config.py``) : elles sont
+    validées avant écriture et filtrées à nouveau à la lecture.
+    """
+    user = models.OneToOneField(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="editor_preferences",
+    )
+    monaco = models.JSONField(default=dict, blank=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"Préférences de {self.user}"

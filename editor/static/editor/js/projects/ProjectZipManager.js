@@ -33,7 +33,11 @@ export class ProjectZipManager {
                 body: formData,
             });
 
-            if (!res.ok) throw new Error("Failed to import project");
+            if (!res.ok) {
+                // Le serveur explique le refus (fichier trop volumineux, archive invalide...).
+                const body = await res.json().catch(() => ({}));
+                throw new Error(body.error || "Failed to import project");
+            }
 
             const data = await res.json();
 
