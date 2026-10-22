@@ -22,6 +22,7 @@ class Page:
     icon: str         # chemin statique de l'icône
     color: str        # couleur d'accent du langage
     description: str  # phrase d'accroche pour les cartes
+    runnable: bool = False  # blocs de code exécutables (bouton « Exécuter ») dans cette page
 
 
 CATEGORIES: List[Tuple[str, str, str]] = [
@@ -38,11 +39,11 @@ _PAGES: List[Page] = [
     Page("css", "css.md", "CSS", "topics", "icons/css.svg", "#26ade4",
          "Mise en page, Flexbox, Grid, animations et CSS moderne."),
     Page("javascript", "javascript.md", "JavaScript", "topics", "icons/javascript.svg", "#f7df1e",
-         "Le langage du web : de la syntaxe aux API du navigateur."),
+         "Le langage du web : de la syntaxe aux API du navigateur.", runnable=True),
     Page("typescript", "typescript.md", "TypeScript", "topics", "icons/typescript.svg", "#3178c6",
-         "JavaScript avec un système de types pour des applications fiables."),
+         "JavaScript avec un système de types pour des applications fiables.", runnable=True),
     Page("python", "python.md", "Python", "topics", "icons/python.svg", "#3776ab",
-         "Du premier print() à la programmation orientée objet moderne."),
+         "Du premier print() à la programmation orientée objet moderne.", runnable=True),
     Page("php", "php.md", "PHP", "topics", "icons/php.svg", "#777bb4",
          "Le langage côté serveur pour créer des sites dynamiques."),
     Page("c", "language-c.md", "Langage C", "topics", "icons/c.svg", "#5c6bc0",

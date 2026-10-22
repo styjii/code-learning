@@ -9,6 +9,9 @@ import { PythonRunner } from "./PythonRunner.js";
  * Un bouton « Exécuter » apparaît dans l'en-tête du bloc. Au premier clic, le bloc devient
  * un éditeur Monaco modifiable (Ctrl+Entrée pour relancer) avec sa zone de résultat.
  * Un bloc marqué « ```python norun » dans le Markdown reste en lecture seule.
+ *
+ * Seules les pages déclarées « runnable=True » dans language/config.py (Python, JavaScript,
+ * TypeScript) sont concernées : ailleurs, les blocs restent en lecture seule.
  */
 const KINDS = {
     js: "javascript", javascript: "javascript",
@@ -249,6 +252,7 @@ class RunnableBlock {
 
 export class RunnableBlocks {
     static init() {
+        if (document.body.dataset.runnable !== "true") return;
         document.querySelectorAll(".markdown-body .code-block").forEach((host) => {
             const code = host.querySelector("pre code");
             const kind = code && detectKind(code);

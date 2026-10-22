@@ -19,6 +19,7 @@ def serialize(page: Page) -> dict:
         "color": page.color,
         "icon": static(page.icon),
         "url": page_url(page),
+        "runnable": page.runnable,
     }
 
 

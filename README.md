@@ -225,7 +225,8 @@ Les blocs ` ```js `, ` ```ts ` et ` ```python ` ont un bouton **Exécuter** : le
 | TypeScript | compilateur de Monaco (erreurs de type affichées), puis exécution comme JavaScript |
 | Python | [Pyodide](https://pyodide.org) (CPython 3.14 en WebAssembly, ~13 Mo, chargé au premier clic), `input()` via la zone « Entrée standard », arrêt après 10 s |
 
-- Pour garder un bloc en lecture seule : ` ```python norun `.
+- Seules les pages **Python, JavaScript et TypeScript** (niveau `topics`) ont des blocs exécutables. Pour en activer une autre, passez `runnable=True` sur sa `Page` dans `language/config.py`.
+- Pour garder un bloc en lecture seule dans une page exécutable : ` ```python norun `.
 - Les extraits JS/TS qui utilisent `import`, `export` ou `require()` ne sont pas exécutables et n'ont pas de bouton.
 - Le C / C++ n'est pas encore pris en charge.
 - Pyodide est embarqué dans `static/vendor/pyodide/` (licence MPL-2.0).

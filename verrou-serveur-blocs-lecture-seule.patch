@@ -1,0 +1,66 @@
+--- a/language/views.py	2026-10-22 06:26:41.572671186 +0000
++++ b/language/views.py	2026-10-22 06:20:54.893958885 +0000
+@@ -1,4 +1,5 @@
+ import logging
++import re
+ 
+ from django.http import Http404
+ from django.views.generic import TemplateView
+@@ -9,6 +10,22 @@
+ 
+ logger = logging.getLogger(__name__)
+ 
++_CODE_TAG = re.compile(r"<code\b[^>]*\blanguage-[^>]*>")
++
++
++def mark_read_only(html: str) -> str:
++    """
++    Ajoute ``data-run="false"`` à chaque bloc de code du HTML.
++
++    Utilisé pour les pages non exécutables : même un ancien ``RunnableBlocks.js`` resté dans le cache
++    du navigateur ne leur ajoutera pas de bouton « Exécuter ».
++    """
++    def mark(match: re.Match) -> str:
++        tag = match.group(0)
++        return tag if "data-run=" in tag else f'{tag[:-1]} data-run="false">'
++
++    return _CODE_TAG.sub(mark, html)
++
+ 
+ class MarkdownPageView(TemplateView):
+     """
+@@ -30,6 +47,8 @@
+         content, notice = None, None
+         try:
+             content = get_page_html(self.key)
++            if content and not page.runnable:
++                content = mark_read_only(content)
+         except FileNotFoundError:
+             logger.exception("Fichier Markdown introuvable pour %s", self.key)
+             notice = "Le fichier source de ce cours est introuvable."
+--- a/language/tests.py	2026-10-22 06:26:41.566927011 +0000
++++ b/language/tests.py	2026-10-22 06:20:54.894254127 +0000
+@@ -69,3 +69,23 @@
+                 html = self.client.get(reverse(key)).content.decode()
+                 expected = "true" if key in self.EXPECTED else "false"
+                 self.assertIn(f'data-runnable="{expected}"', html, key)
++
++    def test_code_blocks_are_read_only_outside_runnable_pages(self):
++        from django.contrib.auth import get_user_model
++        from django.urls import reverse
++
++        get_user_model().objects.create_user("lecteur2", password="Mot-de-passe-solide-42")
++        self.client.login(username="lecteur2", password="Mot-de-passe-solide-42")
++        html = (
++            '<pre><code class="language-python">print(1)</code></pre>'
++            '<pre><code class="language-js" data-run="false">1</code></pre>'
++            "<p><code>inline</code></p>"
++        )
++        with mock.patch("language.views.get_page_html", return_value=html):
++            for key in ("modules/python", "exercises/algorithm", "solutions/javascript", "projects/javascript"):
++                body = self.client.get(reverse(key)).content.decode()
++                self.assertEqual(body.count('data-run="false"'), 2, key)
++                self.assertIn("<code>inline</code>", body)
++            for key in ("python", "javascript", "typescript"):
++                body = self.client.get(reverse(key)).content.decode()
++                self.assertEqual(body.count('data-run="false"'), 1, key)  # seul le bloc « norun » d'origine

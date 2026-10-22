@@ -4,7 +4,7 @@
 {% block title %}{{ page_title }} · Langage Learning{% endblock %}
 {% block description %}{{ page.description }}{% endblock %}
 {% block favicon %}{{ page.icon }}{% endblock %}
-{% block body_attrs %}data-app="language" data-lang="{{ page.key }}"
+{% block body_attrs %}data-app="language" data-lang="{{ page.key }}" data-runnable="{{ page.runnable|yesno:'true,false' }}"
     data-monaco="{% static 'editor/monaco-editor/min/vs' %}" data-pyodide="{% static 'vendor/pyodide/' %}" style="--lang: {{ page.color }}"{% endblock %}
 
 {% block styles %}

@@ -2,8 +2,9 @@
    Accueil : hero, catalogue de cours, présentation de l'éditeur.
    ===================================================================== */
 
+html,
 body {
-    overflow-x: clip; /* le halo du hero dépasse volontairement du viewport */
+    overflow-x: clip; /* filet de sécurité : jamais de défilement horizontal */
 }
 
 main {
@@ -51,7 +52,12 @@ main {
 .hero::before {
     content: "";
     position: absolute;
-    inset: -40px -20vw auto;
+    /* Largeur = celle du viewport, centrée : le halo ne crée plus de débordement horizontal
+       (sinon Chrome mobile dézoome la page et laisse une marge à droite). */
+    top: -40px;
+    left: 50%;
+    width: 100vw;
+    transform: translateX(-50%);
     height: 520px;
     z-index: -1;
     background:

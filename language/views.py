@@ -1,4 +1,5 @@
 import logging
+import re
 
 from django.http import Http404
 from django.views.generic import TemplateView
@@ -8,6 +9,22 @@ from .config import PAGES
 from .services import get_page_html
 
 logger = logging.getLogger(__name__)
+
+_CODE_TAG = re.compile(r"<code\b[^>]*\blanguage-[^>]*>")
+
+
+def mark_read_only(html: str) -> str:
+    """
+    Ajoute ``data-run="false"`` à chaque bloc de code du HTML.
+
+    Utilisé pour les pages non exécutables : même un ancien ``RunnableBlocks.js`` resté dans le cache
+    du navigateur ne leur ajoutera pas de bouton « Exécuter ».
+    """
+    def mark(match: re.Match) -> str:
+        tag = match.group(0)
+        return tag if "data-run=" in tag else f'{tag[:-1]} data-run="false">'
+
+    return _CODE_TAG.sub(mark, html)
 
 
 class MarkdownPageView(TemplateView):
@@ -30,6 +47,8 @@ class MarkdownPageView(TemplateView):
         content, notice = None, None
         try:
             content = get_page_html(self.key)
+            if content and not page.runnable:
+                content = mark_read_only(content)
         except FileNotFoundError:
             logger.exception("Fichier Markdown introuvable pour %s", self.key)
             notice = "Le fichier source de ce cours est introuvable."

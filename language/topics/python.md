@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🐍 Python — Guide complet
+# Python — Guide complet
 
 **Du premier `print()` à la programmation orientée objet moderne**
 
@@ -10,15 +10,15 @@
 
 ---
 
-## 📚 Ressources et outils
+## Ressources et outils
 
 | Ressource | Description |
 | --- | --- |
-| 📖 **Glossaire** | [Glossaire Python (docstring.fr)](https://docstring.fr/glossaire) |
-| 📘 **Documentation officielle** | [docs.python.org/fr](https://docs.python.org/fr/3/) |
-| 🧠 **Carte mentale** | Utile pour visualiser les concepts et leurs liens |
-| 🗒️ **Aide-mémoire** | Référence rapide des principaux éléments du langage |
-| 💻 **Éditeurs en ligne** | [Replit](https://replit.com), [Google Colab](https://colab.research.google.com), [python.org/shell](https://www.python.org/shell/) |
+| **Glossaire** | [Glossaire Python (docstring.fr)](https://docstring.fr/glossaire) |
+| **Documentation officielle** | [docs.python.org/fr](https://docs.python.org/fr/3/) |
+| **Carte mentale** | Utile pour visualiser les concepts et leurs liens |
+| **Aide-mémoire** | Référence rapide des principaux éléments du langage |
+| **Éditeurs en ligne** | [Replit](https://replit.com), [Google Colab](https://colab.research.google.com), [python.org/shell](https://www.python.org/shell/) |
 
 ### Modules associés
 
@@ -28,7 +28,7 @@
 
 ---
 
-## 🗂️ Sommaire
+## Sommaire
 
 1. [Introduction](#1-introduction)
 2. [Syntaxe et indentation](#2-syntaxe-et-indentation)
@@ -125,8 +125,8 @@ Python est un **langage de programmation de haut niveau, polyvalent**, réputé 
 | **3.14** | Octobre 2025 | **Template strings** (t-strings), évaluation différée des annotations, *free-threading* officiellement supporté, sous-interpréteurs (`concurrent.interpreters`) |
 | **3.15** | Octobre 2026 | Dernière version majeure (voir [python.org](https://www.python.org/downloads/) pour l'état exact de la publication) |
 
-> 📌 **Fin de vie de Python 2** : le 1ᵉʳ janvier 2020.
-> 📌 **Cycle de publication** : une version majeure chaque année en octobre (PEP 602), avec environ **5 ans de support** (2 ans de correctifs, puis 3 ans de correctifs de sécurité). Python 3.9 a atteint sa fin de vie en octobre 2025 ; 3.10 l'atteint en octobre 2026.
+> **Fin de vie de Python 2** : le 1ᵉʳ janvier 2020.
+> **Cycle de publication** : une version majeure chaque année en octobre (PEP 602), avec environ **5 ans de support** (2 ans de correctifs, puis 3 ans de correctifs de sécurité). Python 3.9 a atteint sa fin de vie en octobre 2025 ; 3.10 l'atteint en octobre 2026.
 
 ### Gouvernance et communauté
 
@@ -168,8 +168,10 @@ print("Bonjour le monde !")  # Exécuté directement par l'interpréteur
 Python utilise l'**indentation** pour délimiter les blocs (pas d'accolades `{}`).
 
 ```python
+age = 20
+
 if age >= 18:
-    print("Vous pouvez voter.")
+    print("Vous pouvez voter.")     # Vous pouvez voter.
 else:
     print("Vous êtes encore trop jeune.")
 ```
@@ -180,7 +182,10 @@ Il n'est pas nécessaire de déclarer les types ; ils sont déterminés à l'ex�
 
 ```python
 x = 10        # x est un entier
+print(type(x))   # <class 'int'>
+
 x = "Salut"   # x est maintenant une chaîne
+print(type(x))   # <class 'str'>
 ```
 
 ### 4. Portable et multiplateforme
@@ -371,7 +376,7 @@ Un **éditeur de code** est léger (coloration syntaxique, complétion simple). 
 | **Jupyter / JupyterLab** | Notebook | Science des données | Interactif, visualisations |
 | **Zed, Neovim** | Éditeurs | Avancé | Rapides, personnalisables |
 
-> ⚠️ **Atom** a été archivé par GitHub en 2022 : ne l'utilisez plus.
+> **Attention :** **Atom** a été archivé par GitHub en 2022 : ne l'utilisez plus.
 > Notepad++ convient uniquement aux modifications rapides sous Windows.
 
 ### VS Code : extensions recommandées
@@ -435,7 +440,7 @@ python bonjour.py      # ou python3 bonjour.py
 
 ### Exécuter depuis un éditeur
 
-- **VS Code** : sélectionnez l'interpréteur (`Ctrl+Shift+P` → *Python: Select Interpreter*), puis cliquez sur ▶ *Run Python File*.
+- **VS Code** : sélectionnez l'interpréteur (`Ctrl+Shift+P` → *Python: Select Interpreter*), puis cliquez sur *Run Python File*.
 - **IDLE** : *File → New File*, enregistrez, puis **F5** (*Run Module*).
 
 ### Autres façons de lancer Python
@@ -547,10 +552,13 @@ print("Bonjour le monde !")
 ### La fonction `print()` en détail
 
 ```python
+import sys
+
 print("A", "B", "C")                 # A B C
 print("A", "B", sep="-")             # A-B
 print("Chargement", end="...")       # pas de retour à la ligne
-print("Erreur", file=sys.stderr)     # sortie d'erreur (après import sys)
+print("terminé")                     # Chargement...terminé
+print("Erreur", file=sys.stderr)     # sortie d'erreur (flux stderr)
 print("Direct", flush=True)          # vide le tampon immédiatement
 ```
 
@@ -614,11 +622,14 @@ Consultez-les sur **<https://peps.python.org>**.
 ### Obtenir de l'aide
 
 ```python
-help(len)          # Documentation d'une fonction
-help("modules")    # Liste des modules disponibles
-dir(list)          # Attributs et méthodes d'un objet
-type(x)            # Type d'un objet
-print(len.__doc__) # Docstring brute
+x = 42
+
+help(len)                 # Documentation d'une fonction
+print(dir(list)[-3:])     # Attributs et méthodes d'un objet : ['remove', 'reverse', 'sort']
+print(type(x))            # Type d'un objet : <class 'int'>
+print(len.__doc__)        # Docstring brute
+
+# help("modules") affiche la liste (très longue) des modules disponibles
 ```
 
 En ligne de commande : `python -m pydoc len`. Ressources : docs.python.org, Real Python, discuss.python.org, Stack Overflow.
@@ -661,13 +672,18 @@ def saluer(nom):
 | Éditeur | Configurez-le pour insérer 4 espaces à la touche `Tab` |
 
 ```python
-# ✅ Correct
+# Correct
 if True:
-    print("Bien indenté")
+    print("Bien indenté")          # Bien indenté
 
-# ❌ Incorrect : IndentationError
-if True:
-print("Mal indenté")
+# Incorrect : IndentationError (le code erroné est compilé depuis une chaîne
+# pour pouvoir afficher l'erreur sans interrompre le programme)
+code_incorrect = 'if True:\nprint("Mal indenté")'
+try:
+    compile(code_incorrect, "<exemple>", "exec")
+except IndentationError as erreur:
+    print("IndentationError :", erreur.msg)
+    # IndentationError : expected an indented block after 'if' statement on line 1
 ```
 
 ## 2.3 Blocs de code
@@ -690,9 +706,10 @@ Une **instruction** est une commande exécutable. Une instruction par ligne est 
 ```python
 x = 5
 y = 10
-print(x + y)
+print(x + y)   # 15
 
 a = 1; b = 2   # valide, mais déconseillé (PEP 8)
+print(a, b)    # 1 2
 ```
 
 ### Instructions sur plusieurs lignes
@@ -702,6 +719,7 @@ a = 1; b = 2   # valide, mais déconseillé (PEP 8)
 ```python
 total = 1 + 2 + 3 + \
         4 + 5
+print(total)   # 15
 ```
 
 - **Parenthèses, crochets ou accolades** (méthode recommandée) :
@@ -709,12 +727,14 @@ total = 1 + 2 + 3 + \
 ```python
 total = (1 + 2 + 3 +
          4 + 5)
+print(total)   # 15
 
 liste = [
     "pomme",
     "banane",
     "cerise",
 ]
+print(liste)   # ['pomme', 'banane', 'cerise']
 ```
 
 ## 2.5 Sensibilité à la casse
@@ -734,6 +754,7 @@ print(nom, Nom)   # Alice Bob
 
 ```python
 y = (3 + 4) * 2       # instruction d'affectation contenant une expression
+print(y)              # 14
 ```
 
 Depuis Python 3.8, l'**opérateur morse** `:=` permet d'affecter *dans* une expression :
@@ -753,12 +774,19 @@ Conventions PEP 8 :
 - pas d'espace avant `(` d'un appel ni avant `:` / `,`.
 
 ```python
-# ✅
+def calculer(a, b):
+    return a + b
+
+a, b = 2, 3
+
+# Correct
 resultat = calculer(a, b)
 valeurs = [1, 2, 3]
+print(resultat, valeurs)   # 5 [1, 2, 3]
 
-# ❌
+# Incorrect (le code s'exécute, mais il ne respecte pas la PEP 8)
 resultat=calculer( a,b )
+print(resultat)            # 5
 ```
 
 ## 2.8 Le deux-points `:`
@@ -778,12 +806,15 @@ Python 3.10+ fournit des messages d'erreur très explicites (*« '(' was never c
 ## 2.10 Écrire du code propre (PEP 8)
 
 ```python
-# ❌ Peu lisible
+# Peu lisible (valide, mais contraire à la PEP 8)
 def f(x,y):return x+y
 
-# ✅ Lisible
+# Lisible
 def additionner(x, y):
     return x + y
+
+print(f(2, 3))             # 5
+print(additionner(2, 3))   # 5
 ```
 
 | Élément | Convention | Exemple |
@@ -794,16 +825,20 @@ def additionner(x, y):
 | Longueur de ligne | 79–99 caractères (88 avec *Black/Ruff*) | — |
 
 ```python
-# ❌ À éviter
+nombres = [1, 2, 3]
+
+# À éviter
 resultat = []
 for x in nombres:
     resultat.append(x * 2)
+print(resultat)   # [2, 4, 6]
 
-# ✅ Plus pythonique
+# Plus pythonique
 resultat = [x * 2 for x in nombres]
+print(resultat)   # [2, 4, 6]
 ```
 
-> 🛠️ **Outils modernes** : **Ruff** (lint + formatage), **Black** (formatage), **mypy / pyright** (typage).
+> **Outils modernes** : **Ruff** (lint + formatage), **Black** (formatage), **mypy / pyright** (typage).
 
 ---
 
@@ -820,6 +855,8 @@ age = 25
 nom = "Alice"
 taille = 1.68
 est_majeur = True
+
+print(age, nom, taille, est_majeur)   # 25 Alice 1.68 True
 ```
 
 ### Règles de nommage
@@ -830,15 +867,23 @@ est_majeur = True
 - Noms explicites, en `snake_case`
 
 ```python
-# ✅ Valides
+# Valides
 nom_utilisateur = "Alice"
 _prive = 1
 valeur2 = 2
+print(nom_utilisateur, _prive, valeur2)   # Alice 1 2
 
-# ❌ Invalides
-2valeur = 1       # commence par un chiffre
-mon-nom = 1       # tiret interdit
-class = "A"       # mot-clé réservé
+# Invalides : chaque ligne provoque une SyntaxError
+invalides = [
+    ("2valeur = 1", "commence par un chiffre"),
+    ("mon-nom = 1", "tiret interdit"),
+    ('class = "A"', "mot-clé réservé"),
+]
+for ligne, raison in invalides:
+    try:
+        compile(ligne, "<exemple>", "exec")
+    except SyntaxError:
+        print(f"{ligne}  ->  SyntaxError ({raison})")
 ```
 
 | Convention | Signification |
@@ -856,6 +901,10 @@ a = b = c = 0            # multiple, même valeur
 x, y, z = 1, 2, 3        # multiple, valeurs différentes
 a, b = b, a              # échange sans variable temporaire
 premier, *reste = [1, 2, 3, 4]   # déballage étoilé : 1, [2, 3, 4]
+
+print(x, y, z)            # 1 2 3
+print(a, b, c)            # 0 0 0 (avant l'échange, a et b valent 0)
+print(premier, reste)     # 1 [2, 3, 4]
 ```
 
 ## 3.2 Vue d'ensemble des types de base
@@ -878,6 +927,9 @@ entier = 42              # int (taille illimitée)
 grand = 10 ** 100        # pas de dépassement d'entier
 flottant = 3.14          # float (double précision IEEE 754)
 complexe = 2 + 3j        # complex
+
+print(entier, flottant, complexe)    # 42 3.14 (2+3j)
+print(len(str(grand)))               # 101 (10 ** 100 compte 101 chiffres)
 ```
 
 ```python
@@ -905,6 +957,10 @@ s2 = "double"
 s3 = """multi
 ligne"""
 brut = r"C:\nouveau\dossier"     # chaîne brute (pas d'échappement)
+
+print(s1, s2)    # simple double
+print(s3)        # multi (retour à la ligne) ligne
+print(brut)      # C:\nouveau\dossier
 ```
 
 ```python
@@ -912,7 +968,11 @@ s = "Python"
 print(s[0], s[-1])       # P n
 print(s[1:4])            # yth
 print(len(s))            # 6
-# s[0] = "J"             # ❌ TypeError : immuable
+
+try:
+    s[0] = "J"           # les chaînes sont immuables
+except TypeError as erreur:
+    print("TypeError :", erreur)   # TypeError : 'str' object does not support item assignment
 ```
 
 | Méthode | Rôle |
@@ -930,7 +990,7 @@ print(len(s))            # 6
 
 ```python
 nom, age = "Alice", 30
-print(f"{nom} a {age} ans")
+print(f"{nom} a {age} ans")      # Alice a 30 ans
 print(f"{3.14159:.2f}")           # 3.14
 print(f"{nom=}")                  # nom='Alice' (débogage)
 ```
@@ -947,8 +1007,10 @@ print(isinstance(True, int))   # True : bool hérite de int
 **Valeurs « fausses »** (*falsy*) : `False`, `None`, `0`, `0.0`, `""`, `[]`, `()`, `{}`, `set()`. Tout le reste est « vrai » (*truthy*).
 
 ```python
+liste = []
+
 if not liste:
-    print("La liste est vide")
+    print("La liste est vide")   # La liste est vide
 ```
 
 ## 3.6 `None`
@@ -958,7 +1020,7 @@ if not liste:
 ```python
 resultat = None
 if resultat is None:
-    print("Pas encore de résultat")
+    print("Pas encore de résultat")   # Pas encore de résultat
 
 def sans_return():
     pass
@@ -968,22 +1030,23 @@ print(sans_return())   # None
 ## 3.7 Conversion de types (*casting*)
 
 ```python
-int("42")          # 42
-int(3.9)           # 3 (troncature)
-float("3.14")      # 3.14
-str(100)           # "100"
-bool(0)            # False
-list("abc")        # ['a', 'b', 'c']
-tuple([1, 2])      # (1, 2)
-set([1, 1, 2])     # {1, 2}
-dict([("a", 1)])   # {'a': 1}
+print(int("42"))          # 42
+print(int(3.9))           # 3 (troncature)
+print(float("3.14"))      # 3.14
+print(str(100))           # 100 (une chaîne)
+print(bool(0))            # False
+print(list("abc"))        # ['a', 'b', 'c']
+print(tuple([1, 2]))      # (1, 2)
+print(set([1, 1, 2]))     # {1, 2}
+print(dict([("a", 1)]))   # {'a': 1}
 ```
 
 ```python
 try:
     int("abc")
-except ValueError:
-    print("Conversion impossible")
+except ValueError as erreur:
+    print("Conversion impossible :", erreur)
+    # Conversion impossible : invalid literal for int() with base 10: 'abc'
 ```
 
 > Python effectue des conversions **implicites** pour les nombres (`1 + 2.0 → 3.0`) mais jamais entre nombre et chaîne (`"1" + 2` lève `TypeError`).
@@ -1012,6 +1075,11 @@ b.append(3)
 print(a)           # [1, 2, 3]
 
 c = a.copy()       # copie indépendante
+c.append(4)
+print(a)           # [1, 2, 3]
+print(c)           # [1, 2, 3, 4]
+print(a is b)      # True
+print(a is c)      # False
 ```
 
 `id(x)` donne l'identité d'un objet ; `is` compare les identités, `==` compare les valeurs.
@@ -1025,6 +1093,8 @@ from typing import Final
 
 PI: Final = 3.14159
 MAX_ESSAIS: Final[int] = 3
+
+print(PI, MAX_ESSAIS)   # 3.14159 3
 ```
 
 Pour des ensembles de constantes liées, utilisez `enum.Enum` (voir [section 16](#16-programmation-orientée-objet)).
@@ -1050,6 +1120,10 @@ compteur = 0
 def incrementer():
     global compteur    # modifie la variable globale
     compteur += 1
+
+incrementer()
+incrementer()
+print(compteur)        # 2
 ```
 
 `nonlocal` permet de modifier une variable d'une fonction englobante (voir [section 11](#11-fonctions)).
@@ -1057,11 +1131,12 @@ def incrementer():
 ## 3.12 Bonnes pratiques
 
 ```python
-# ❌ Peu clair
+# Peu clair
 d = 86400
 
-# ✅ Explicite
+# Explicite
 SECONDES_PAR_JOUR = 86400
+print(SECONDES_PAR_JOUR * 2)   # 172800
 ```
 
 - Noms **descriptifs**, pas de mutation inutile du type d'une variable.
@@ -1099,12 +1174,19 @@ print(divmod(7, 2))   # (3, 1)
 ```python
 x = 5
 x += 2     # x = x + 2
+print(x)   # 7
 x -= 1
+print(x)   # 6
 x *= 3
+print(x)   # 18
 x /= 2
+print(x)   # 9.0
 x //= 2
+print(x)   # 4.0
 x %= 3
+print(x)   # 1.0
 x **= 2
+print(x)   # 1.0
 ```
 
 Aussi : `&=`, `|=`, `^=`, `<<=`, `>>=`, et l'opérateur morse `:=`.
@@ -1129,8 +1211,14 @@ print(1 < x < 10)    # True (équivaut à 1 < x and x < 10)
 **Évaluation paresseuse** (*short-circuit*) : `and` / `or` retournent l'un de leurs opérandes et s'arrêtent dès que le résultat est connu.
 
 ```python
+utilisateur = ""
+liste = []
+
 nom = utilisateur or "Anonyme"       # valeur par défaut
 resultat = liste and liste[0]        # évite l'IndexError
+
+print(nom)        # Anonyme
+print(resultat)   # [] (liste vide : liste[0] n'est jamais évalué)
 ```
 
 ## 4.5 Opérateurs bit à bit
@@ -1151,7 +1239,8 @@ a = [1, 2]
 b = [1, 2]
 print(a == b)        # True  : mêmes valeurs
 print(a is b)        # False : objets différents
-print(x is None)     # ✅ comparaison correcte avec None
+x = None
+print(x is None)     # True : comparaison correcte avec None
 ```
 
 ```python
@@ -1161,7 +1250,7 @@ print("clé" in {"clé": 1})      # True (teste les clés)
 print(5 not in {1, 2})          # True
 ```
 
-> 💡 `in` est **très rapide** sur un `set` ou un `dict` (O(1)), mais lent sur une `list` (O(n)).
+> `in` est **très rapide** sur un `set` ou un `dict` (O(1)), mais lent sur une `list` (O(n)).
 
 ## 4.7 Priorité et associativité
 
@@ -1196,6 +1285,7 @@ Une expression est évaluée de l'intérieur vers l'extérieur, selon la priorit
 ```python
 resultat = 3 * (4 + 2) ** 2 // 5 % 3 + 2
 # (4+2) = 6 → 6**2 = 36 → 3*36 = 108 → 108//5 = 21 → 21%3 = 0 → 0+2 = 2
+print(resultat)   # 2
 ```
 
 Les appels de fonction, compréhensions et expressions conditionnelles sont aussi des expressions.
@@ -1234,10 +1324,11 @@ print(Vecteur(1, 2) + Vecteur(3, 4))   # Vecteur(4, 6)
 # 1. Imprécision des flottants
 print(0.1 + 0.2 == 0.3)               # False
 import math
-print(math.isclose(0.1 + 0.2, 0.3))   # ✅ True
+print(math.isclose(0.1 + 0.2, 0.3))   # True
 
 # 2. is vs ==
 a = 1000; b = 1000
+print(a == b)        # True
 # Utilisez == pour les valeurs, is seulement pour None/True/False
 
 # 3. Priorité de not
@@ -1249,16 +1340,20 @@ print(not 1 == 2)    # not (1 == 2) → True
 ## 4.11 Bonnes pratiques
 
 ```python
-# ❌ Trop dense
-r = a if b else c if d else e
+a, b, c, d, e = "A", False, "C", True, "E"
 
-# ✅ Plus clair
+# Trop dense
+r = a if b else c if d else e
+print(r)   # C
+
+# Plus clair
 if b:
     r = a
 elif d:
     r = c
 else:
     r = e
+print(r)   # C
 ```
 
 - Parenthèses pour clarifier, expressions courtes.
@@ -1287,9 +1382,9 @@ Les **entrées/sorties (E/S)** permettent à un programme d'échanger des donné
 `input()` renvoie **toujours une chaîne**.
 
 ```python
-nom = input("Votre nom : ")
-age = int(input("Votre âge : "))   # conversion nécessaire
-print(f"{nom}, dans 10 ans vous aurez {age + 10} ans")
+nom = input("Votre nom : ")                # saisie de l'utilisateur : Alice
+age = int(input("Votre âge : "))           # saisie : 30 (conversion nécessaire)
+print(f"{nom}, dans 10 ans vous aurez {age + 10} ans")   # Alice, dans 10 ans vous aurez 40 ans
 ```
 
 ### Saisie robuste
@@ -1297,16 +1392,19 @@ print(f"{nom}, dans 10 ans vous aurez {age + 10} ans")
 ```python
 while True:
     try:
-        age = int(input("Âge : "))
+        age = int(input("Âge : "))     # saisies : abc, puis 25
         break
     except ValueError:
-        print("Veuillez entrer un nombre entier.")
+        print("Veuillez entrer un nombre entier.")   # affiché après la saisie « abc »
+
+print(f"Âge retenu : {age}")           # Âge retenu : 25
 ```
 
 ### Plusieurs valeurs sur une ligne
 
 ```python
-a, b = map(int, input("Deux entiers : ").split())
+a, b = map(int, input("Deux entiers : ").split())   # saisie : 3 4
+print(a + b)   # 7
 ```
 
 ### Mot de passe et arguments
@@ -1314,9 +1412,10 @@ a, b = map(int, input("Deux entiers : ").split())
 ```python
 from getpass import getpass
 mdp = getpass("Mot de passe : ")     # saisie masquée
+print(f"Mot de passe de {len(mdp)} caractères")   # on n'affiche jamais le mot de passe lui-même
 
 import sys
-print(sys.argv)                      # arguments de la ligne de commande
+print(sys.argv)                      # arguments de la ligne de commande : ['script.py']
 ```
 
 Pour des programmes en ligne de commande, préférez le module **`argparse`** (ou `typer` / `click`).
@@ -1324,9 +1423,11 @@ Pour des programmes en ligne de commande, préférez le module **`argparse`** (o
 ## 5.3 Afficher dans la console
 
 ```python
-print("Texte")
-print("A", "B", sep=" | ", end="!\n")
-print("Erreur !", file=sys.stderr)
+import sys
+
+print("Texte")                                  # Texte
+print("A", "B", sep=" | ", end="!\n")           # A | B!
+print("Erreur !", file=sys.stderr)              # Erreur ! (affiché sur stderr)
 ```
 
 Pour des structures complexes : `pprint.pprint(donnees)`.
@@ -1337,7 +1438,7 @@ Pour des structures complexes : `pprint.pprint(donnees)`.
 
 ```python
 nom, prix = "Café", 2.5
-print(f"{nom:<10} {prix:>8.2f} €")
+print(f"{nom:<10} {prix:>8.2f} €")   # Café           2.50 €
 ```
 
 ### Spécificateurs de format
@@ -1357,8 +1458,8 @@ print(f"{nom:<10} {prix:>8.2f} €")
 ### Autres méthodes
 
 ```python
-print("{} a {} ans".format("Alice", 30))        # str.format()
-print("%s a %d ans" % ("Alice", 30))            # ancien style %
+print("{} a {} ans".format("Alice", 30))        # Alice a 30 ans (str.format())
+print("%s a %d ans" % ("Alice", 30))            # Alice a 30 ans (ancien style %)
 ```
 
 ### Template strings (t-strings, Python 3.14+)
@@ -1368,6 +1469,10 @@ Les **t-strings** (PEP 750) ressemblent aux f-strings mais produisent un objet `
 ```python
 nom = "Alice"
 modele = t"Bonjour {nom}"     # objet Template, non évalué en str
+
+print(type(modele))                       # <class 'string.templatelib.Template'>
+print(modele.strings)                     # ('Bonjour ', '')
+print(modele.interpolations[0].value)     # Alice
 ```
 
 ## 5.5 Formater les dates et heures
@@ -1379,7 +1484,8 @@ maintenant = datetime.now()
 print(maintenant.strftime("%d/%m/%Y %H:%M:%S"))   # 11/10/2026 14:30:00
 
 date = datetime.strptime("25/12/2026", "%d/%m/%Y")  # chaîne → date
-print(f"{maintenant:%A %d %B %Y}")
+print(date)                                         # 2026-12-25 00:00:00
+print(f"{maintenant:%A %d %B %Y}")   # Sunday 11 October 2026 (noms en anglais selon la locale)
 ```
 
 | Code | Signification |
@@ -1427,6 +1533,7 @@ elif note >= 10:
     print("Passable")
 else:
     print("Insuffisant")
+# Affiche : Bien
 ```
 
 - Les conditions peuvent combiner `and`, `or`, `not` et des comparaisons chaînées (`10 <= note <= 20`).
@@ -1435,7 +1542,9 @@ else:
 ## 6.3 Opérateur ternaire
 
 ```python
+age = 20
 statut = "majeur" if age >= 18 else "mineur"
+print(statut)   # majeur
 ```
 
 À réserver aux cas simples ; évitez d'imbriquer plusieurs ternaires.
@@ -1455,6 +1564,11 @@ def reponse_http(code):
             return "Introuvable"
         case _:
             return "Code inconnu"
+
+print(reponse_http(200))   # OK
+print(reponse_http(302))   # Redirection
+print(reponse_http(404))   # Introuvable
+print(reponse_http(500))   # Code inconnu
 ```
 
 Décomposition de structures et gardes :
@@ -1472,6 +1586,12 @@ def decrire(point):
             return f"Séquence commençant par {premier}"
         case _:
             return "Autre"
+
+print(decrire((0, 0)))               # Origine
+print(decrire((5, 0)))               # Sur l'axe X à 5
+print(decrire({"x": 2, "y": 2}))     # Sur la diagonale
+print(decrire([1, 2, 3]))            # Séquence commençant par 1
+print(decrire(42))                   # Autre
 ```
 
 ## 6.5 L'instruction `pass`
@@ -1484,6 +1604,9 @@ def a_implementer():
 
 class Vide:
     pass
+
+print(a_implementer())       # None
+print(type(Vide()).__name__) # Vide
 ```
 
 (On peut aussi utiliser `...` — `Ellipsis` — comme corps provisoire.)
@@ -1500,23 +1623,23 @@ class Vide:
 ```python
 compteur = 0
 while compteur < 3:
-    print(compteur)
+    print(compteur)    # affiche 0, puis 1, puis 2
     compteur += 1
 ```
 
-⚠️ Veillez à ce que la condition devienne fausse, sinon la boucle est **infinie** (utile volontairement avec `while True` + `break`).
+**Attention :** Veillez à ce que la condition devienne fausse, sinon la boucle est **infinie** (utile volontairement avec `while True` + `break`).
 
 ## 6.8 La boucle `for`
 
 ```python
 for fruit in ["pomme", "banane"]:
-    print(fruit)
+    print(fruit)              # pomme, puis banane
 
 for i in range(5):            # 0 à 4
-    print(i)
+    print(i)                  # 0 1 2 3 4 (un nombre par ligne)
 
 for i in range(2, 10, 2):     # début, fin (exclue), pas
-    print(i)
+    print(i)                  # 2 4 6 8 (un nombre par ligne)
 ```
 
 ### Outils de parcours
@@ -1526,19 +1649,26 @@ noms = ["Alice", "Bob"]
 ages = [30, 25]
 
 for i, nom in enumerate(noms, start=1):   # indice + valeur
-    print(i, nom)
+    print(i, nom)                         # 1 Alice, puis 2 Bob
 
 for nom, age in zip(noms, ages):          # parcours parallèle
-    print(nom, age)
+    print(nom, age)                       # Alice 30, puis Bob 25
 
 for x in reversed(noms):                  # sens inverse
-    print(x)
+    print(x)                              # Bob, puis Alice
 
 for x in sorted(ages):                    # trié
-    print(x)
+    print(x)                              # 25, puis 30
 ```
 
-`zip(..., strict=True)` *(3.10+)* lève une erreur si les longueurs diffèrent.
+`zip(..., strict=True)` *(3.10+)* lève une erreur si les longueurs diffèrent :
+
+```python
+try:
+    list(zip([1, 2, 3], ["a", "b"], strict=True))
+except ValueError as erreur:
+    print("ValueError :", erreur)   # ValueError : zip() argument 2 is shorter than argument 1
+```
 
 ## 6.9 `break`, `continue` et `else` de boucle
 
@@ -1548,7 +1678,7 @@ for n in range(10):
         continue     # passe à l'itération suivante
     if n == 6:
         break        # quitte la boucle
-    print(n)
+    print(n)         # affiche 0, 1, 2, 4, 5 (un nombre par ligne)
 ```
 
 La clause `else` d'une boucle s'exécute **uniquement si la boucle s'est terminée sans `break`** :
@@ -1556,10 +1686,10 @@ La clause `else` d'une boucle s'exécute **uniquement si la boucle s'est termin�
 ```python
 for n in range(2, 10):
     if n == 7:
-        print("Trouvé")
+        print("Trouvé")      # Trouvé
         break
 else:
-    print("Aucun 7")
+    print("Aucun 7")       # non exécuté ici : la boucle s'est arrêtée par break
 ```
 
 ## 6.10 Boucles imbriquées et motifs
@@ -1575,22 +1705,31 @@ for i in range(1, 4):
     for j in range(1, 4):
         print(i * j, end="\t")
     print()
+# 1   2   3
+# 2   4   6
+# 3   6   9
 ```
 
 ## 6.11 Bonnes pratiques
 
 ```python
-# ❌ Imbrication excessive
+# Imbrication excessive
 def f(x):
     if x:
         if x > 0:
             return "positif"
 
-# ✅ Retour anticipé (clauses de garde)
+print(f(3))    # positif
+print(f(-1))   # None
+
+# Retour anticipé (clauses de garde)
 def f(x):
     if not x or x <= 0:
         return None
     return "positif"
+
+print(f(3))    # positif
+print(f(-1))   # None
 ```
 
 - Préférez `for` à `while` quand le nombre d'itérations est connu.
@@ -1615,6 +1754,7 @@ Un **dictionnaire** (`dict`) stocke des paires **clé → valeur**.
 
 ```python
 personne = {"nom": "Alice", "age": 25, "ville": "Paris"}
+print(personne)   # {'nom': 'Alice', 'age': 25, 'ville': 'Paris'}
 ```
 
 ## 7.2 Créer un dictionnaire
@@ -1628,6 +1768,11 @@ d3 = dict([("a", 1), ("b", 2)])              # liste de paires
 d4 = dict(zip(["a", "b"], [1, 2]))           # depuis deux listes
 d5 = dict.fromkeys(["x", "y"], 0)            # {'x': 0, 'y': 0}
 d6 = {n: n ** 2 for n in range(4)}           # compréhension
+
+print(vide, vide2)   # {} {}
+print(d1, d2, d3)    # {'a': 1, 'b': 2} {'a': 1, 'b': 2} {'a': 1, 'b': 2}
+print(d4, d5)        # {'a': 1, 'b': 2} {'x': 0, 'y': 0}
+print(d6)            # {0: 0, 1: 1, 2: 4, 3: 9}
 ```
 
 ## 7.3 Accéder aux éléments
@@ -1645,16 +1790,24 @@ Préférez `get()` quand la clé peut être absente.
 ## 7.4 Ajouter, modifier, supprimer
 
 ```python
+p = {"nom": "Alice", "age": 25}
+
 p["ville"] = "Paris"              # ajout
 p["age"] = 26                     # modification
 p.update({"age": 27, "pays": "FR"})
 p.setdefault("langue", "fr")      # ajoute seulement si absente
+print(p)   # {'nom': 'Alice', 'age': 27, 'ville': 'Paris', 'pays': 'FR', 'langue': 'fr'}
 
 del p["pays"]                     # supprime (KeyError si absente)
 age = p.pop("age")                # supprime et retourne
+print(age)                        # 27
 age = p.pop("age", None)          # sans erreur si absente
+print(age)                        # None
 dernier = p.popitem()             # retire la dernière paire (LIFO)
+print(dernier)                    # ('langue', 'fr')
+print(p)                          # {'nom': 'Alice', 'ville': 'Paris'}
 p.clear()                         # vide le dictionnaire
+print(p)                          # {}
 ```
 
 ## 7.5 Méthodes principales
@@ -1673,15 +1826,31 @@ p.clear()                         # vide le dictionnaire
 ## 7.6 Parcourir un dictionnaire
 
 ```python
+p = {"nom": "Alice", "age": 25, "ville": "Paris"}
+
 for cle in p:                       # clés
-    print(cle)
+    print(cle)                      # nom, age, ville
 for valeur in p.values():           # valeurs
-    print(valeur)
+    print(valeur)                   # Alice, 25, Paris
 for cle, valeur in p.items():       # paires
-    print(f"{cle} = {valeur}")
+    print(f"{cle} = {valeur}")      # nom = Alice, age = 25, ville = Paris
 ```
 
-⚠️ Ne modifiez pas la **taille** d'un dictionnaire pendant son parcours (`RuntimeError`) ; parcourez `list(p)` si besoin.
+**Attention :** Ne modifiez pas la **taille** d'un dictionnaire pendant son parcours (`RuntimeError`) ; parcourez `list(p)` si besoin.
+
+```python
+p = {"nom": "Alice", "age": 25}
+
+try:
+    for cle in p:
+        p["ville"] = "Paris"        # ajout pendant le parcours
+except RuntimeError as erreur:
+    print("RuntimeError :", erreur)   # RuntimeError : dictionary changed size during iteration
+
+for cle in list(p):                 # parcours d'une copie des clés : aucune erreur
+    p[cle + "_copie"] = p[cle]
+print(p)   # {'nom': 'Alice', 'age': 25, 'ville': 'Paris', 'nom_copie': 'Alice', 'age_copie': 25, 'ville_copie': 'Paris'}
+```
 
 ## 7.7 Compréhensions de dictionnaires
 
@@ -1689,13 +1858,19 @@ for cle, valeur in p.items():       # paires
 carres = {n: n ** 2 for n in range(5)}
 pairs = {k: v for k, v in carres.items() if v % 2 == 0}
 inverse = {v: k for k, v in carres.items()}
+
+print(carres)    # {0: 0, 1: 1, 2: 4, 3: 9, 4: 16}
+print(pairs)     # {0: 0, 2: 4, 4: 16}
+print(inverse)   # {0: 0, 1: 1, 4: 2, 9: 3, 16: 4}
 ```
 
 ## 7.8 Test d'appartenance
 
 ```python
-print("nom" in p)         # teste les clés
-print("Alice" in p.values())   # teste les valeurs (O(n))
+p = {"nom": "Alice", "age": 25}
+
+print("nom" in p)              # True : teste les clés
+print("Alice" in p.values())   # True : teste les valeurs (O(n))
 ```
 
 ## 7.9 Dictionnaires imbriqués
@@ -1707,6 +1882,7 @@ users = {
 }
 print(users["alice"]["langues"][0])    # fr
 users["bob"]["ville"] = "Lyon"
+print(users["bob"])                    # {'age': 30, 'langues': ['fr'], 'ville': 'Lyon'}
 ```
 
 ## 7.10 Fusionner des dictionnaires
@@ -1715,9 +1891,12 @@ users["bob"]["ville"] = "Lyon"
 a = {"x": 1, "y": 2}
 b = {"y": 3, "z": 4}
 
-c = a | b            # {'x': 1, 'y': 3, 'z': 4}  (3.9+)
+c = a | b            # (3.9+)
+print(c)             # {'x': 1, 'y': 3, 'z': 4}
 a |= b               # fusion en place
+print(a)             # {'x': 1, 'y': 3, 'z': 4}
 d = {**a, **b}       # déballage (toutes versions 3.5+)
+print(d)             # {'x': 1, 'y': 3, 'z': 4}
 ```
 
 En cas de clé commune, **la dernière valeur l'emporte**.
@@ -1728,7 +1907,12 @@ Seuls les objets **immuables et hachables** peuvent être clés : `str`, `int`, 
 
 ```python
 ok = {(1, 2): "point"}
-# {[1, 2]: "x"}    # ❌ TypeError : list non hachable
+print(ok)   # {(1, 2): 'point'}
+
+try:
+    interdit = {[1, 2]: "x"}      # une liste n'est pas hachable
+except TypeError as erreur:
+    print("TypeError :", erreur)   # TypeError : cannot use 'list' as a dict key (unhashable type: 'list')
 ```
 
 ## 7.12 Le module `collections`
@@ -1740,7 +1924,7 @@ from collections import defaultdict, Counter, OrderedDict
 groupes = defaultdict(list)
 for mot in ["chat", "chien", "souris"]:
     groupes[mot[0]].append(mot)
-# {'c': ['chat', 'chien'], 's': ['souris']}
+print(dict(groupes))        # {'c': ['chat', 'chien'], 's': ['souris']}
 
 # Counter : compter des occurrences
 c = Counter("abracadabra")
@@ -1756,6 +1940,13 @@ import json
 
 texte = json.dumps({"nom": "Alice", "age": 25}, indent=2, ensure_ascii=False)
 donnees = json.loads(texte)
+
+print(texte)
+# {
+#   "nom": "Alice",
+#   "age": 25
+# }
+print(donnees)   # {'nom': 'Alice', 'age': 25}
 ```
 
 ## 7.14 Performances
@@ -1770,19 +1961,27 @@ donnees = json.loads(texte)
 ## 7.15 Programmation fonctionnelle et idiomes
 
 ```python
+p = {"a": 3, "b": 1, "c": 2}
+scores = {"alice": 12, "bob": 17, "chloé": 9}
+ages = {"alice": 25, "bob": 15, "chloé": 31}
+
 # Tri par valeur
 tri = dict(sorted(p.items(), key=lambda kv: kv[1]))
+print(tri)        # {'b': 1, 'c': 2, 'a': 3}
 
 # Plus grande valeur
 meilleur = max(scores, key=scores.get)
+print(meilleur)   # bob
 
 # Filtrer
 adultes = {n: a for n, a in ages.items() if a >= 18}
+print(adultes)    # {'alice': 25, 'chloé': 31}
 
 # Compter avec get
 freq = {}
 for ch in "banane":
     freq[ch] = freq.get(ch, 0) + 1
+print(freq)       # {'b': 1, 'a': 2, 'n': 2, 'e': 1}
 ```
 
 Pour des données structurées à clés fixes, préférez un **`dataclass`** ou un **`TypedDict`** (voir [sections 16](#16-programmation-orientée-objet) et [17](#17-typage-statique)).
@@ -1800,6 +1999,8 @@ Une **liste** (`list`) est une collection **ordonnée, mutable** pouvant conteni
 ```python
 fruits = ["pomme", "banane", "cerise"]
 melange = [1, "deux", 3.0, [4, 5]]
+print(fruits)    # ['pomme', 'banane', 'cerise']
+print(melange)   # [1, 'deux', 3.0, [4, 5]]
 ```
 
 ## 8.2 Créer des listes
@@ -1811,6 +2012,10 @@ a = list("abc")                 # ['a', 'b', 'c']
 b = list(range(5))              # [0, 1, 2, 3, 4]
 c = [0] * 3                     # [0, 0, 0]
 d = [x ** 2 for x in range(5)]  # compréhension
+
+print(vide, vide2)   # [] []
+print(a, b, c)       # ['a', 'b', 'c'] [0, 1, 2, 3, 4] [0, 0, 0]
+print(d)             # [0, 1, 4, 9, 16]
 ```
 
 ## 8.3 Accéder aux éléments
@@ -1828,30 +2033,59 @@ Syntaxe d'une tranche : `liste[début:fin:pas]` (fin exclue).
 ## 8.4 Modifier une liste
 
 ```python
+l = [10, 20, 30, 40, 50]
+
 l[0] = 11
 l[1:3] = [21, 31]          # remplace une tranche
+print(l)                   # [11, 21, 31, 40, 50]
 ```
 
 ## 8.5 Ajouter des éléments
 
 ```python
+l = [11, 21, 31, 40, 50]
+
 l.append(60)               # ajoute à la fin
 l.insert(0, 5)             # insère à l'indice 0
 l.extend([70, 80])         # ajoute plusieurs éléments
 l += [90]                  # équivalent à extend
+print(l)                   # [5, 11, 21, 31, 40, 50, 60, 70, 80, 90]
 ```
 
-⚠️ `append([1, 2])` ajoute **une sous-liste**, `extend([1, 2])` ajoute **deux éléments**.
+**Attention :** `append([1, 2])` ajoute **une sous-liste**, `extend([1, 2])` ajoute **deux éléments**.
+
+```python
+x = [0]
+x.append([1, 2])
+print(x)    # [0, [1, 2]]
+
+y = [0]
+y.extend([1, 2])
+print(y)    # [0, 1, 2]
+```
 
 ## 8.6 Supprimer des éléments
 
 ```python
-l.remove(30)               # supprime la 1re occurrence (ValueError si absente)
+l = [10, 20, 30, 40, 50, 60, 70, 80]
+
+l.remove(30)               # supprime la 1re occurrence
+print(l)                   # [10, 20, 40, 50, 60, 70, 80]
 dernier = l.pop()          # retire et retourne le dernier
+print(dernier)             # 80
 premier = l.pop(0)         # retire par indice
+print(premier)             # 10
 del l[1]                   # supprime par indice
+print(l)                   # [20, 50, 60, 70]
 del l[1:3]                 # supprime une tranche
+print(l)                   # [20, 70]
 l.clear()                  # vide la liste
+print(l)                   # []
+
+try:
+    l.remove(99)           # ValueError si la valeur est absente
+except ValueError as erreur:
+    print("ValueError :", erreur)   # ValueError : list.remove(x): x not in list
 ```
 
 ## 8.7 Rechercher
@@ -1868,12 +2102,20 @@ Pour une recherche rapide sur liste **triée**, utilisez `bisect`.
 ## 8.8 Trier et inverser
 
 ```python
+l = ["pomme", "kiwi", "banane", "fig"]
+
 l.sort()                           # tri en place
+print(l)                           # ['banane', 'fig', 'kiwi', 'pomme']
 l.sort(reverse=True)
+print(l)                           # ['pomme', 'kiwi', 'fig', 'banane']
 l.sort(key=len)                    # selon une clé
+print(l)                           # ['fig', 'kiwi', 'pomme', 'banane']
 nouvelle = sorted(l)               # nouvelle liste triée
+print(nouvelle)                    # ['banane', 'fig', 'kiwi', 'pomme']
 l.reverse()                        # inverse en place
+print(l)                           # ['banane', 'pomme', 'kiwi', 'fig']
 inverse = l[::-1]                  # copie inversée
+print(inverse)                     # ['fig', 'kiwi', 'pomme', 'banane']
 ```
 
 `sort()` est **stable** (l'ordre relatif des égaux est conservé).
@@ -1883,6 +2125,7 @@ inverse = l[::-1]                  # copie inversée
 ```python
 personnes = [("Alice", 30), ("Bob", 25), ("Chloé", 30)]
 personnes.sort(key=lambda p: (-p[1], p[0]))   # âge décroissant, puis nom
+print(personnes)   # [('Alice', 30), ('Chloé', 30), ('Bob', 25)]
 ```
 
 ## 8.9 Fonctions et méthodes utiles
@@ -1895,6 +2138,14 @@ personnes.sort(key=lambda p: (-p[1], p[0]))   # âge décroissant, puis nom
 | `sorted(l)`, `reversed(l)` | Tri / inversion |
 | `enumerate(l)`, `zip(a, b)` | Parcours enrichis |
 
+```python
+l = [3, 1, 4, 0]
+
+print(len(l), sum(l), min(l), max(l))    # 4 8 0 4
+print(any(l), all(l))                    # True False
+print(sorted(l), list(reversed(l)))      # [0, 1, 3, 4] [0, 4, 1, 3]
+```
+
 Méthodes : `append`, `extend`, `insert`, `remove`, `pop`, `clear`, `index`, `count`, `sort`, `reverse`, `copy`.
 
 ## 8.10 Compréhensions de listes
@@ -1903,7 +2154,13 @@ Méthodes : `append`, `extend`, `insert`, `remove`, `pop`, `clear`, `index`, `co
 carres = [x ** 2 for x in range(10)]
 pairs = [x for x in range(10) if x % 2 == 0]
 etiquettes = ["pair" if x % 2 == 0 else "impair" for x in range(4)]
+matrice = [[1, 2], [3, 4]]
 aplatie = [x for ligne in matrice for x in ligne]
+
+print(carres)       # [0, 1, 4, 9, 16, 25, 36, 49, 64, 81]
+print(pairs)        # [0, 2, 4, 6, 8]
+print(etiquettes)   # ['pair', 'impair', 'pair', 'impair']
+print(aplatie)      # [1, 2, 3, 4]
 ```
 
 Si la liste est trop longue pour être lue d'un coup, utilisez une boucle classique.
@@ -1912,13 +2169,17 @@ Si la liste est trop longue pour être lue d'un coup, utilisez une boucle classi
 
 ```python
 a = [1, 2, [3, 4]]
-b = a                  # ⚠️ même objet (alias)
+b = a                  # Attention : même objet (alias)
 c = a.copy()           # copie superficielle (ou a[:] ou list(a))
 
 import copy
 d = copy.deepcopy(a)   # copie profonde (sous-listes incluses)
 
 c[2].append(5)         # modifie aussi a[2] !
+print(a)               # [1, 2, [3, 4, 5]]
+print(b is a)          # True
+print(c)               # [1, 2, [3, 4, 5]]
+print(d)               # [1, 2, [3, 4]] : la copie profonde n'est pas affectée
 ```
 
 ## 8.12 Listes imbriquées et multidimensionnelles
@@ -1930,12 +2191,15 @@ matrice = [
 ]
 print(matrice[1][2])      # 6
 
-# ✅ Création correcte d'une matrice 3x3
+# Création correcte d'une matrice 3x3
 grille = [[0] * 3 for _ in range(3)]
+grille[0][0] = 1
+print(grille)             # [[1, 0, 0], [0, 0, 0], [0, 0, 0]]
 
-# ❌ Piège : toutes les lignes sont la même liste !
+# Piège : toutes les lignes sont la même liste !
 mauvaise = [[0] * 3] * 3
 mauvaise[0][0] = 1        # modifie les 3 lignes
+print(mauvaise)           # [[1, 0, 0], [1, 0, 0], [1, 0, 0]]
 ```
 
 Pour le calcul numérique sur matrices, utilisez **NumPy**.
@@ -1944,11 +2208,13 @@ Pour le calcul numérique sur matrices, utilisez **NumPy**.
 
 ```python
 a, b, c = [1, 2, 3]
-premier, *milieu, dernier = [1, 2, 3, 4, 5]   # milieu = [2, 3, 4]
+premier, *milieu, dernier = [1, 2, 3, 4, 5]
+print(premier, milieu, dernier)                # 1 [2, 3, 4] 5
 a, b = b, a                                    # échange
+print(a, b)                                    # 2 1
 
 def somme(x, y, z): return x + y + z
-print(somme(*[1, 2, 3]))                       # déballage dans un appel
+print(somme(*[1, 2, 3]))                       # 6 (déballage dans un appel)
 ```
 
 ## 8.14 Outils fonctionnels
@@ -1959,7 +2225,11 @@ doubles = list(map(lambda x: x * 2, nombres))
 pairs = list(filter(lambda x: x % 2 == 0, nombres))
 
 from functools import reduce
-produit = reduce(lambda a, b: a * b, nombres)   # 24
+produit = reduce(lambda a, b: a * b, nombres)
+
+print(doubles)   # [2, 4, 6, 8]
+print(pairs)     # [2, 4]
+print(produit)   # 24
 ```
 
 Les compréhensions sont généralement plus lisibles que `map` / `filter`.
@@ -1967,19 +2237,22 @@ Les compréhensions sont généralement plus lisibles que `map` / `filter`.
 ## 8.15 Listes et chaînes
 
 ```python
-mots = "un deux trois".split()          # ['un', 'deux', 'trois']
-phrase = " ".join(mots)                 # 'un deux trois'
-lettres = list("abc")                   # ['a', 'b', 'c']
+mots = "un deux trois".split()
+print(mots)                             # ['un', 'deux', 'trois']
+phrase = " ".join(mots)
+print(phrase)                           # un deux trois
+lettres = list("abc")
+print(lettres)                          # ['a', 'b', 'c']
 ```
 
 ## 8.16 Listes comparées aux autres collections
 
 | Critère | `list` | `tuple` | `set` | `dict` |
 | --- | --- | --- | --- | --- |
-| Ordonné | ✅ | ✅ | ❌ | ✅ (insertion) |
-| Mutable | ✅ | ❌ | ✅ | ✅ |
-| Doublons | ✅ | ✅ | ❌ | clés uniques |
-| Accès par indice | ✅ | ✅ | ❌ | par clé |
+| Ordonné | Oui | Oui | Non | Oui (insertion) |
+| Mutable | Oui | Non | Oui | Oui |
+| Doublons | Oui | Oui | Non | clés uniques |
+| Accès par indice | Oui | Oui | Non | par clé |
 | Test `in` | O(n) | O(n) | **O(1)** | **O(1)** |
 
 > Pour une **file** (ajouts/retraits aux deux extrémités), utilisez `collections.deque` : `append()` et `popleft()` y sont en O(1), alors que `list.pop(0)` est en O(n).
@@ -1996,17 +2269,24 @@ Un **ensemble** (`set`) est une collection **non ordonnée** d'éléments **uniq
 
 ```python
 fruits = {"pomme", "banane", "pomme"}
-print(fruits)          # {'pomme', 'banane'} (doublons supprimés)
+print(fruits)          # {'pomme', 'banane'} (doublons supprimés, ordre variable)
 ```
 
 ## 9.2 Créer des ensembles
 
 ```python
 s = {1, 2, 3}
-vide = set()           # ⚠️ {} crée un dictionnaire, pas un ensemble
+vide = set()           # Attention : {} crée un dictionnaire, pas un ensemble
 a = set([1, 2, 2, 3])  # depuis une liste
-b = set("abca")        # {'a', 'b', 'c'}
+b = set("abca")
 c = {x ** 2 for x in range(5)}   # compréhension
+
+print(s)                 # {1, 2, 3}
+print(vide, type(vide))  # set() <class 'set'>
+print(type({}))          # <class 'dict'>
+print(a)                 # {1, 2, 3}
+print(sorted(b))         # ['a', 'b', 'c']
+print(sorted(c))         # [0, 1, 4, 9, 16]
 ```
 
 ## 9.3 Accéder aux éléments
@@ -2014,21 +2294,39 @@ c = {x ** 2 for x in range(5)}   # compréhension
 Pas d'indice : `s[0]` lève une `TypeError`. On parcourt ou on teste l'appartenance :
 
 ```python
+s = {1, 2, 3}
+
 for x in s:
-    print(x)
+    print(x)           # 1, 2, 3 (ordre non garanti)
 print(2 in s)          # True (O(1))
+
+try:
+    s[0]
+except TypeError as erreur:
+    print("TypeError :", erreur)   # TypeError : 'set' object is not subscriptable
 ```
 
 ## 9.4 Ajouter et supprimer
 
 ```python
+s = {1, 2, 3}
+
 s.add(4)
 s.update([5, 6])
+print(sorted(s))       # [1, 2, 3, 4, 5, 6]
 
 s.remove(4)            # KeyError si absent
 s.discard(99)          # aucune erreur si absent
+print(sorted(s))       # [1, 2, 3, 5, 6]
 x = s.pop()            # retire un élément arbitraire
+print(len(s))          # 4
 s.clear()
+print(s)               # set()
+
+try:
+    s.remove(4)        # l'ensemble est vide : 4 est absent
+except KeyError as erreur:
+    print("KeyError :", erreur)   # KeyError : 4
 ```
 
 ## 9.5 Opérations ensemblistes
@@ -2052,9 +2350,9 @@ print(a ^ b)    # {1, 2, 4}
 ## 9.6 Comparaisons et sous-ensembles
 
 ```python
-{1, 2} <= {1, 2, 3}        # True  : sous-ensemble (issubset)
-{1, 2, 3} >= {1, 2}        # True  : sur-ensemble (issuperset)
-{1, 2}.isdisjoint({3, 4})  # True  : aucun élément commun
+print({1, 2} <= {1, 2, 3})        # True : sous-ensemble (issubset)
+print({1, 2, 3} >= {1, 2})        # True : sur-ensemble (issuperset)
+print({1, 2}.isdisjoint({3, 4}))  # True : aucun élément commun
 ```
 
 ## 9.7 Ensembles figés (`frozenset`)
@@ -2063,24 +2361,38 @@ Version **immuable** et **hachable** d'un ensemble : utilisable comme clé de di
 
 ```python
 fs = frozenset([1, 2, 3])
-# fs.add(4)    # ❌ AttributeError
+print(fs)                 # frozenset({1, 2, 3})
+
+try:
+    fs.add(4)             # un frozenset est immuable
+except AttributeError as erreur:
+    print("AttributeError :", erreur)   # AttributeError : 'frozenset' object has no attribute 'add'
 ```
 
 ## 9.8 Cas d'usage
 
 ```python
+liste = [3, 1, 3, 2, 1]
+a = [1, 2, 3]
+b = [2, 3, 4]
+nom = "admin"
+
 # Supprimer les doublons (ordre non conservé)
 uniques = list(set(liste))
+print(sorted(uniques))   # [1, 2, 3]
 
 # Supprimer les doublons en conservant l'ordre
 uniques = list(dict.fromkeys(liste))
+print(uniques)           # [3, 1, 2]
 
 # Éléments communs
 communs = set(a) & set(b)
+print(communs)           # {2, 3}
 
 # Recherche rapide
 interdits = {"admin", "root"}
-if nom in interdits: ...
+if nom in interdits:
+    print("Nom interdit")   # Nom interdit
 ```
 
 ## 9.9 Pièges et bonnes pratiques
@@ -2102,6 +2414,7 @@ Un **tuple** est une séquence **ordonnée et immuable**.
 
 ```python
 point = (3, 4)
+print(point)   # (3, 4)
 ```
 
 ## 10.2 Créer des tuples
@@ -2110,9 +2423,13 @@ point = (3, 4)
 t = (1, 2, 3)
 sans_parentheses = 1, 2, 3
 vide = ()
-singleton = (5,)          # ⚠️ la virgule est obligatoire
+singleton = (5,)          # Attention : la virgule est obligatoire
 pas_un_tuple = (5)        # c'est simplement un int
 depuis_liste = tuple([1, 2, 3])
+
+print(t, sans_parentheses, vide)           # (1, 2, 3) (1, 2, 3) ()
+print(type(singleton), type(pas_un_tuple)) # <class 'tuple'> <class 'int'>
+print(depuis_liste)                        # (1, 2, 3)
 ```
 
 ## 10.3 Accéder aux éléments
@@ -2126,14 +2443,16 @@ print(t[1:3])            # ('b', 'c')
 ## 10.4 Opérations et méthodes
 
 ```python
-(1, 2) + (3,)            # (1, 2, 3)
-(0,) * 3                 # (0, 0, 0)
-2 in (1, 2, 3)           # True
-len(t)
+t = ("a", "b", "c", "d")
+
+print((1, 2) + (3,))     # (1, 2, 3)
+print((0,) * 3)          # (0, 0, 0)
+print(2 in (1, 2, 3))    # True
+print(len(t))            # 4
 
 t = (1, 2, 2, 3)
-t.count(2)               # 2
-t.index(3)               # 3
+print(t.count(2))        # 2
+print(t.index(3))        # 3
 ```
 
 Un tuple n'a que **deux méthodes** : `count()` et `index()`.
@@ -2142,12 +2461,15 @@ Un tuple n'a que **deux méthodes** : `count()` et `index()`.
 
 ```python
 x, y = (10, 20)
-a, *reste = (1, 2, 3, 4)      # a = 1, reste = [2, 3, 4]
+a, *reste = (1, 2, 3, 4)
+print(a, reste)               # 1 [2, 3, 4]
 x, y = y, x                   # échange
+print(x, y)                   # 20 10
 
 def min_max(valeurs):
     return min(valeurs), max(valeurs)    # retourne un tuple
 mini, maxi = min_max([3, 1, 4])
+print(mini, maxi)             # 1 4
 ```
 
 ## 10.6 Immuabilité
@@ -2156,14 +2478,20 @@ On ne peut pas modifier un tuple, mais un **objet mutable qu'il contient** reste
 
 ```python
 t = (1, [2, 3])
-t[1].append(4)       # ✅ autorisé : t == (1, [2, 3, 4])
-# t[0] = 9           # ❌ TypeError
+t[1].append(4)       # autorisé : l'objet mutable contenu reste modifiable
+print(t)             # (1, [2, 3, 4])
+
+try:
+    t[0] = 9         # impossible : le tuple lui-même est immuable
+except TypeError as erreur:
+    print("TypeError :", erreur)   # TypeError : 'tuple' object does not support item assignment
 ```
 
 ## 10.7 Tuples comme clés de dictionnaire
 
 ```python
 distances = {(48.85, 2.35): "Paris", (45.76, 4.84): "Lyon"}
+print(distances[(48.85, 2.35)])   # Paris
 ```
 
 Un tuple n'est hachable que si **tous** ses éléments le sont.
@@ -2172,8 +2500,8 @@ Un tuple n'est hachable que si **tous** ses éléments le sont.
 
 | Critère | Tuple | Liste |
 | --- | --- | --- |
-| Mutable | ❌ | ✅ |
-| Hachable (clé de dict) | ✅ (si contenu hachable) | ❌ |
+| Mutable | Non | Oui |
+| Hachable (clé de dict) | Oui (si contenu hachable) | Non |
 | Mémoire / vitesse | Plus léger, plus rapide | Plus lourd |
 | Usage typique | Données hétérogènes de taille fixe (coordonnées, enregistrements) | Collection homogène de taille variable |
 
@@ -2211,6 +2539,7 @@ class Point(NamedTuple):
     y: float = 0.0
 
 p = Point(3)
+print(p)             # Point(x=3, y=0.0)
 ```
 
 ## 10.11 Erreurs courantes
@@ -2238,7 +2567,7 @@ def saluer(nom):
     """Affiche un message de salutation."""
     print(f"Bonjour {nom} !")
 
-saluer("Alice")
+saluer("Alice")   # Bonjour Alice !
 ```
 
 ### Syntaxe
@@ -2256,7 +2585,10 @@ def nom_fonction(parametre1, parametre2):
 
 ```python
 def presenter(nom, age=18, *hobbies, ville="Paris", **autres):
-    ...
+    print(nom, age, hobbies, ville, autres)
+
+presenter("Alice", 30, "lecture", "vélo", ville="Lyon", pays="FR")
+# Alice 30 ('lecture', 'vélo') Lyon {'pays': 'FR'}
 ```
 
 | Type | Exemple | Remarque |
@@ -2270,39 +2602,53 @@ def presenter(nom, age=18, *hobbies, ville="Paris", **autres):
 ### Paramètres positionnels seuls et nommés seuls
 
 ```python
-def f(a, b, /, c, d, *, e, f):
-    ...
+def combiner(a, b, /, c, d, *, e, f):
+    return (a, b, c, d, e, f)
+
 # a, b : positionnels seulement (avant /)
 # c, d : positionnels ou nommés
 # e, f : nommés seulement (après *)
+print(combiner(1, 2, 3, d=4, e=5, f=6))   # (1, 2, 3, 4, 5, 6)
+
+try:
+    combiner(a=1, b=2, c=3, d=4, e=5, f=6)   # a et b ne peuvent pas être nommés
+except TypeError as erreur:
+    print("TypeError :", erreur)
+    # TypeError : combiner() got some positional-only arguments passed as keyword arguments: 'a, b'
 ```
 
 ### Ordre des paramètres
 
 `positionnels → défauts → *args → nommés seuls → **kwargs`
 
-### ⚠️ Piège : valeur par défaut mutable
+### Piège : valeur par défaut mutable
 
 ```python
-# ❌ La liste est partagée entre tous les appels
+# Piège : la liste par défaut est partagée entre tous les appels
 def ajouter(x, liste=[]):
     liste.append(x)
     return liste
 
-# ✅ Utiliser None
+print(ajouter(1))   # [1]
+print(ajouter(2))   # [1, 2] : la liste du premier appel est réutilisée
+
+# Correct : utiliser None
 def ajouter(x, liste=None):
     if liste is None:
         liste = []
     liste.append(x)
     return liste
+
+print(ajouter(1))   # [1]
+print(ajouter(2))   # [2]
 ```
 
 ### Déballage à l'appel
 
 ```python
 def somme(a, b, c): return a + b + c
-print(somme(*[1, 2, 3]))
-print(somme(**{"a": 1, "b": 2, "c": 3}))
+print(somme(*[1, 2, 3]))                      # 6
+print(somme(**{"a": 1, "b": 2, "c": 3}))      # 6
 ```
 
 ## 11.3 Valeurs de retour
@@ -2317,6 +2663,10 @@ def min_max(l):
     return min(l), max(l)    # plusieurs valeurs = un tuple
 
 mini, maxi = min_max([3, 1, 4])
+
+print(division(6, 3))   # 2.0
+print(division(1, 0))   # None
+print(mini, maxi)       # 1 4
 ```
 
 Une fonction sans `return` renvoie `None`.
@@ -2341,6 +2691,11 @@ def externe():
         n += 1
     interne()
     return n
+
+f()                        # 5
+g()
+print(x)                   # 11
+print(externe())           # 1
 ```
 
 Les variables locales **disparaissent à la fin de l'appel**.
@@ -2353,11 +2708,15 @@ print(carre(4))             # 16
 
 nombres = [1, 2, 3, 4]
 doubles = list(map(lambda x: x * 2, nombres))
+print(doubles)              # [2, 4, 6, 8]
+
+personnes = [{"nom": "Alice", "age": 30}, {"nom": "Bob", "age": 25}]
 personnes.sort(key=lambda p: p["age"])
+print(personnes)            # [{'nom': 'Bob', 'age': 25}, {'nom': 'Alice', 'age': 30}]
 ```
 
-- ✅ À utiliser pour de **petites fonctions jetables** (clés de tri, callbacks).
-- ❌ À éviter pour de la logique complexe : préférez `def`.
+- À utiliser pour de **petites fonctions jetables** (clés de tri, callbacks).
+- À éviter pour de la logique complexe : préférez `def`.
 
 ## 11.6 Fonctions d'ordre supérieur
 
@@ -2367,7 +2726,7 @@ Une fonction peut être **passée en argument**, **retournée** ou **stockée** 
 def appliquer(f, valeur):
     return f(valeur)
 
-print(appliquer(str.upper, "salut"))
+print(appliquer(str.upper, "salut"))   # SALUT
 
 def multiplicateur(n):
     def fois(x):            # fermeture (closure)
@@ -2385,10 +2744,14 @@ Une **fermeture** (*closure*) conserve l'accès aux variables de la fonction eng
 ```python
 from functools import partial, reduce, lru_cache, cache
 
-double = partial(pow, 2)          # fixe le 1er argument
+double = partial(pow, 2)          # fixe le 1er argument : double(x) = pow(2, x)
+print(double(5))                  # 32
+
 @cache                            # mémoïsation (3.9+)
 def fib(n):
     return n if n < 2 else fib(n - 1) + fib(n - 2)
+
+print(fib(30))                    # 832040
 ```
 
 ## 11.7 Décorateurs
@@ -2410,11 +2773,17 @@ def chronometre(fonction):
 @chronometre                            # équivaut à calcul = chronometre(calcul)
 def calcul():
     return sum(range(1_000_000))
+
+print(calcul())
+# calcul : 0.0213 s   (durée variable selon la machine)
+# 499999500000
 ```
 
 ### Décorateur avec paramètres
 
 ```python
+import functools
+
 def repeter(n):
     def decorateur(f):
         @functools.wraps(f)
@@ -2427,6 +2796,8 @@ def repeter(n):
 @repeter(3)
 def dire_salut():
     print("Salut")
+
+dire_salut()   # affiche « Salut » trois fois
 ```
 
 Décorateurs intégrés : `@staticmethod`, `@classmethod`, `@property`, `@functools.cache`, `@dataclass`, `@abstractmethod`.
@@ -2454,7 +2825,8 @@ print(factorielle(5))    # 120
 def saluer(nom: str, fois: int = 1) -> str:
     return (f"Bonjour {nom} ! " * fois).strip()
 
-print(saluer.__annotations__)
+print(saluer("Alice", 2))      # Bonjour Alice ! Bonjour Alice !
+print(saluer.__annotations__)  # {'nom': <class 'str'>, 'fois': <class 'int'>, 'return': <class 'str'>}
 ```
 
 Les annotations sont **informatives** : Python ne les applique pas à l'exécution, mais des outils (**mypy**, **pyright**) les vérifient. Voir [section 17](#17-typage-statique).
@@ -2481,8 +2853,15 @@ def aire_rectangle(largeur: float, hauteur: float) -> float:
         raise ValueError("Dimensions négatives")
     return largeur * hauteur
 
-help(aire_rectangle)
-print(aire_rectangle.__doc__)
+print(aire_rectangle(3, 4))     # 12
+
+try:
+    aire_rectangle(-1, 4)
+except ValueError as erreur:
+    print("ValueError :", erreur)   # ValueError : Dimensions négatives
+
+help(aire_rectangle)            # affiche la docstring mise en forme
+print(aire_rectangle.__doc__)   # affiche la docstring brute
 ```
 
 ## 11.11 Fonctions intégrées essentielles
@@ -2523,7 +2902,11 @@ print(aire_rectangle.__doc__)
 it = iter([10, 20])
 print(next(it))     # 10
 print(next(it))     # 20
-# next(it)          # StopIteration
+
+try:
+    next(it)        # plus aucune valeur à produire
+except StopIteration:
+    print("StopIteration : l'itérateur est épuisé")
 ```
 
 ## 12.2 Générateurs
@@ -2544,6 +2927,7 @@ for x in compte_a_rebours(3):
 
 ```python
 somme = sum(x ** 2 for x in range(1_000_000))   # aucune liste en mémoire
+print(somme)   # 333332833333500000
 ```
 
 ### `yield from`
@@ -2552,6 +2936,8 @@ somme = sum(x ** 2 for x in range(1_000_000))   # aucune liste en mémoire
 def aplatir(listes):
     for l in listes:
         yield from l
+
+print(list(aplatir([[1, 2], [3], [4, 5]])))   # [1, 2, 3, 4, 5]
 ```
 
 ### Lecture paresseuse d'un gros fichier
@@ -2562,6 +2948,13 @@ def lignes_non_vides(chemin):
         for ligne in f:
             if ligne.strip():
                 yield ligne
+
+# Création d'un petit fichier pour l'exemple
+with open("exemple.txt", "w", encoding="utf-8") as f:
+    f.write("première\n\ndeuxième\n")
+
+for ligne in lignes_non_vides("exemple.txt"):
+    print(ligne.strip())    # première, puis deuxième
 ```
 
 ## 12.3 Le module `itertools`
@@ -2569,9 +2962,9 @@ def lignes_non_vides(chemin):
 ```python
 from itertools import chain, count, islice, product, permutations, combinations, groupby, batched
 
-list(islice(count(1), 5))            # [1, 2, 3, 4, 5]
-list(combinations("ABC", 2))         # [('A','B'), ('A','C'), ('B','C')]
-list(batched(range(7), 3))           # [(0,1,2), (3,4,5), (6,)]  (3.12+)
+print(list(islice(count(1), 5)))       # [1, 2, 3, 4, 5]
+print(list(combinations("ABC", 2)))    # [('A', 'B'), ('A', 'C'), ('B', 'C')]
+print(list(batched(range(7), 3)))      # [(0, 1, 2), (3, 4, 5), (6,)]  (3.12+)
 ```
 
 ## 12.4 Créer son propre itérateur
@@ -2590,9 +2983,11 @@ class Compteur:
             raise StopIteration
         self.n += 1
         return self.n
+
+print(list(Compteur(3)))   # [1, 2, 3]
 ```
 
-> 💡 Dans la plupart des cas, un **générateur** est plus simple qu'une classe itérateur.
+> Dans la plupart des cas, un **générateur** est plus simple qu'une classe itérateur.
 
 ---
 
@@ -2610,18 +3005,25 @@ class Compteur:
 ## 13.2 `try` / `except`
 
 ```python
-try:
-    nombre = int(input("Nombre : "))
-    resultat = 10 / nombre
-except ValueError:
-    print("Ce n'est pas un nombre.")
-except ZeroDivisionError:
-    print("Division par zéro impossible.")
-except (TypeError, KeyError) as e:      # plusieurs types
-    print(f"Erreur : {e}")
+def inverser(texte):
+    try:
+        nombre = int(texte)
+        return 10 / nombre
+    except ValueError:
+        print("Ce n'est pas un nombre.")
+    except ZeroDivisionError:
+        print("Division par zéro impossible.")
+    except (TypeError, KeyError) as e:      # plusieurs types
+        print(f"Erreur : {e}")
+
+print(inverser("5"))   # 2.0
+inverser("abc")        # Ce n'est pas un nombre.
+inverser("0")          # Division par zéro impossible.
+inverser(None)
+# Erreur : int() argument must be a string, a bytes-like object or a real number, not 'NoneType'
 ```
 
-⚠️ **N'écrivez jamais un `except:` nu** ni `except Exception: pass` sans bonne raison : vous masqueriez des bugs.
+**Attention :** **N'écrivez jamais un `except:` nu** ni `except Exception: pass` sans bonne raison : vous masqueriez des bugs.
 
 ## 13.3 `else` et `finally`
 
@@ -2635,6 +3037,10 @@ else:
     f.close()
 finally:
     print("Toujours exécuté")    # nettoyage garanti
+
+# Sans fichier donnees.txt, l'exécution affiche :
+#   Fichier introuvable
+#   Toujours exécuté
 ```
 
 ## 13.4 Exploiter l'objet exception
@@ -2644,8 +3050,8 @@ try:
     int("abc")
 except ValueError as e:
     print(type(e).__name__)   # ValueError
-    print(e)                  # invalid literal for int()...
-    print(e.args)
+    print(e)                  # invalid literal for int() with base 10: 'abc'
+    print(e.args)             # ("invalid literal for int() with base 10: 'abc'",)
 ```
 
 ## 13.5 Lever des exceptions
@@ -2655,6 +3061,13 @@ def racine(x):
     if x < 0:
         raise ValueError("x doit être positif")
     return x ** 0.5
+
+print(racine(9))    # 3.0
+
+try:
+    racine(-4)
+except ValueError as erreur:
+    print("ValueError :", erreur)   # ValueError : x doit être positif
 ```
 
 ## 13.6 Exceptions personnalisées
@@ -2668,6 +3081,12 @@ class SoldeInsuffisant(ErreurMetier):
         super().__init__(f"Solde {solde} insuffisant pour retirer {montant}")
         self.solde = solde
         self.montant = montant
+
+try:
+    raise SoldeInsuffisant(50, 80)
+except ErreurMetier as erreur:              # la classe de base attrape aussi la sous-classe
+    print(erreur)                           # Solde 50 insuffisant pour retirer 80
+    print(erreur.solde, erreur.montant)     # 50 80
 ```
 
 Dérivez toujours de `Exception` (jamais de `BaseException`) et terminez le nom par `Error` pour les erreurs.
@@ -2676,15 +3095,23 @@ Dérivez toujours de `Exception` (jamais de `BaseException`) et terminez le nom 
 
 ```python
 try:
-    int("x")
-except ValueError as e:
-    raise RuntimeError("Lecture de configuration impossible") from e   # chaînage
+    try:
+        int("x")
+    except ValueError as e:
+        raise RuntimeError("Lecture de configuration impossible") from e   # chaînage
+except RuntimeError as erreur:
+    print("RuntimeError :", erreur)    # RuntimeError : Lecture de configuration impossible
+    print("Cause :", repr(erreur.__cause__))
+    # Cause : ValueError("invalid literal for int() with base 10: 'x'")
 
 try:
-    ...
-except Exception:
-    print("Journalisation")
-    raise                  # relance l'exception d'origine
+    try:
+        1 / 0
+    except Exception:
+        print("Journalisation")        # Journalisation
+        raise                          # relance l'exception d'origine
+except ZeroDivisionError as erreur:
+    print("Relancée :", erreur)        # Relancée : division by zero
 ```
 
 ## 13.8 Hiérarchie des exceptions
@@ -2713,12 +3140,23 @@ Utile pour la concurrence : plusieurs erreurs simultanées.
 try:
     raise ExceptionGroup("Erreurs multiples", [ValueError("a"), TypeError("b")])
 except* ValueError as eg:
-    print("ValueError traitées :", eg.exceptions)
+    print("ValueError traitées :", eg.exceptions)   # ValueError traitées : (ValueError('a'),)
 except* TypeError as eg:
-    print("TypeError traitées :", eg.exceptions)
+    print("TypeError traitées :", eg.exceptions)    # TypeError traitées : (TypeError('b'),)
 ```
 
 Python 3.11 permet aussi d'ajouter du contexte : `e.add_note("détail utile")`.
+
+```python
+try:
+    try:
+        int("abc")
+    except ValueError as e:
+        e.add_note("détail utile : la saisie est invalide")
+        raise
+except ValueError as erreur:
+    print(erreur.__notes__)   # ['détail utile : la saisie est invalide']
+```
 
 ## 13.10 Assertions
 
@@ -2726,6 +3164,13 @@ Python 3.11 permet aussi d'ajouter du contexte : `e.add_note("détail utile")`.
 def moyenne(notes):
     assert len(notes) > 0, "La liste de notes ne doit pas être vide"
     return sum(notes) / len(notes)
+
+print(moyenne([10, 14]))   # 12.0
+
+try:
+    moyenne([])
+except AssertionError as erreur:
+    print("AssertionError :", erreur)   # AssertionError : La liste de notes ne doit pas être vide
 ```
 
 Les `assert` servent à **vérifier des hypothèses de développement** ; ils sont **désactivés avec `python -O`**. Ne les utilisez pas pour valider des entrées utilisateur.
@@ -2745,6 +3190,13 @@ try:
     1 / 0
 except ZeroDivisionError:
     logging.exception("Erreur de calcul")     # inclut la trace complète
+
+with open("app.log", encoding="utf-8") as f:
+    print(f.read())
+# 2026-10-22 10:00:00,123 - ERROR - Erreur de calcul
+# Traceback (most recent call last):
+#   ...
+# ZeroDivisionError: division by zero
 ```
 
 Niveaux : `DEBUG`, `INFO`, `WARNING`, `ERROR`, `CRITICAL`.
@@ -2752,9 +3204,15 @@ Niveaux : `DEBUG`, `INFO`, `WARNING`, `ERROR`, `CRITICAL`.
 ## 13.12 Gestionnaires de contexte et nettoyage
 
 ```python
+with open("fichier.txt", "w", encoding="utf-8") as f:     # création du fichier d'exemple
+    f.write("contenu")
+
 with open("fichier.txt", encoding="utf-8") as f:
     contenu = f.read()
 # fichier fermé automatiquement, même en cas d'erreur
+
+print(contenu)    # contenu
+print(f.closed)   # True
 ```
 
 Créer son propre gestionnaire :
@@ -2772,10 +3230,11 @@ def chronometrer(nom):
         print(f"{nom} : {time.perf_counter() - debut:.3f} s")
 
 with chronometrer("calcul"):
-    sum(range(10_000_000))
+    sum(range(10_000_000))              # affiche : calcul : 0.123 s (durée variable)
 
 with suppress(FileNotFoundError):       # ignore proprement une erreur précise
-    import os; os.remove("temp.txt")
+    import os; os.remove("temp.txt")    # temp.txt n'existe pas : aucune erreur
+print("Suite du programme")             # Suite du programme
 ```
 
 ## 13.13 Cas pratiques
@@ -2790,6 +3249,8 @@ except FileNotFoundError:
     print("Fichier introuvable")
 except PermissionError:
     print("Accès refusé")
+
+# Sans fichier donnees.txt, l'exécution affiche : Fichier introuvable
 ```
 
 ### Saisie utilisateur
@@ -2803,6 +3264,11 @@ while True:
         break
     except ValueError as e:
         print(f"Entrée invalide : {e}")
+# Saisies : -5, puis abc, puis 30
+#   Entrée invalide : L'âge ne peut pas être négatif
+#   Entrée invalide : invalid literal for int() with base 10: 'abc'
+
+print(f"Âge retenu : {age}")   # Âge retenu : 30
 ```
 
 ### Requêtes web / API
@@ -2814,12 +3280,15 @@ try:
     reponse = requests.get("https://api.exemple.com/data", timeout=5)
     reponse.raise_for_status()
     donnees = reponse.json()
+    print(donnees)
 except requests.exceptions.Timeout:
     print("Délai dépassé")
 except requests.exceptions.HTTPError as e:
     print(f"Erreur HTTP : {e}")
 except requests.exceptions.RequestException as e:
     print(f"Erreur réseau : {e}")
+# Avec cette adresse fictive, le programme affiche une erreur réseau
+# (nécessite : pip install requests)
 ```
 
 (Pensez à toujours définir un `timeout`.)
@@ -2834,11 +3303,14 @@ except requests.exceptions.RequestException as e:
 - Python favorise **EAFP** (*« mieux vaut demander pardon que la permission »*) plutôt que LBYL (*« look before you leap »*).
 
 ```python
+d = {"autre": 1}
+
 # EAFP (pythonique)
 try:
     valeur = d["cle"]
 except KeyError:
     valeur = None
+print(valeur)   # None
 ```
 
 ---
@@ -2859,9 +3331,16 @@ Un programme peut **lire** et **écrire** des fichiers pour conserver des donné
 ## 14.2 Ouvrir et fermer un fichier
 
 ```python
-# ✅ Méthode recommandée : with (fermeture automatique)
+# Création d'un fichier d'exemple
+with open("notes.txt", "w", encoding="utf-8") as f:
+    f.write("Première ligne\nDeuxième ligne\nTroisième ligne\n")
+
+# Méthode recommandée : with (fermeture automatique)
 with open("notes.txt", "r", encoding="utf-8") as f:
     contenu = f.read()
+
+print(contenu)    # les trois lignes du fichier
+print(f.closed)   # True : le fichier a été fermé automatiquement
 ```
 
 | Mode | Signification |
@@ -2874,11 +3353,15 @@ with open("notes.txt", "r", encoding="utf-8") as f:
 | `"b"` | Mode binaire (`"rb"`, `"wb"`) |
 | `"t"` | Mode texte (défaut) |
 
-> ⚠️ **Précisez toujours `encoding="utf-8"`** en mode texte pour éviter les problèmes selon les systèmes. (Python 3.15 définit UTF-8 comme encodage par défaut.)
+> **Attention :** **Précisez toujours `encoding="utf-8"`** en mode texte pour éviter les problèmes selon les systèmes. (Python 3.15 définit UTF-8 comme encodage par défaut.)
 
 ## 14.3 Lire un fichier
 
 ```python
+# Création d'un fichier d'exemple
+with open("notes.txt", "w", encoding="utf-8") as f:
+    f.write("Première ligne\nDeuxième ligne\nTroisième ligne\n")
+
 with open("notes.txt", encoding="utf-8") as f:
     tout = f.read()          # tout le contenu en une chaîne
     f.seek(0)
@@ -2886,10 +3369,14 @@ with open("notes.txt", encoding="utf-8") as f:
     f.seek(0)
     lignes = f.readlines()   # liste de lignes
 
-# ✅ Le plus économe en mémoire : parcours ligne par ligne
-with open("gros.txt", encoding="utf-8") as f:
+print(repr(tout))        # 'Première ligne\nDeuxième ligne\nTroisième ligne\n'
+print(repr(une_ligne))   # 'Première ligne\n'
+print(lignes)            # ['Première ligne\n', 'Deuxième ligne\n', 'Troisième ligne\n']
+
+# Le plus économe en mémoire (surtout pour un gros fichier) : parcours ligne par ligne
+with open("notes.txt", encoding="utf-8") as f:
     for ligne in f:
-        print(ligne.rstrip("\n"))
+        print(ligne.rstrip("\n"))   # Première ligne, puis Deuxième ligne, puis Troisième ligne
 ```
 
 ## 14.4 Écrire dans un fichier
@@ -2902,6 +3389,14 @@ with open("sortie.txt", "w", encoding="utf-8") as f:
 
 with open("sortie.txt", "a", encoding="utf-8") as f:    # ajout
     f.write("Ligne ajoutée\n")
+
+with open("sortie.txt", encoding="utf-8") as f:
+    print(f.read())
+# Ligne 1
+# Ligne 2
+# Ligne 3
+# Ligne 4
+# Ligne ajoutée
 ```
 
 `write()` n'ajoute **pas** de retour à la ligne automatiquement.
@@ -2914,18 +3409,21 @@ Le module **`pathlib`** (orienté objet) est la méthode moderne, préférable �
 from pathlib import Path
 
 p = Path("donnees") / "rapport.txt"     # l'opérateur / assemble les chemins
+p.parent.mkdir(exist_ok=True)           # création du dossier d'exemple
+p.write_text("Bonjour", encoding="utf-8")
+
 print(p.name)          # rapport.txt
 print(p.stem)          # rapport
 print(p.suffix)        # .txt
 print(p.parent)        # donnees
-print(p.resolve())     # chemin absolu
-print(p.exists(), p.is_file(), p.is_dir())
+print(p.resolve())     # chemin absolu : /chemin/courant/donnees/rapport.txt
+print(p.exists(), p.is_file(), p.is_dir())   # True True False
 
 texte = p.read_text(encoding="utf-8")
-p.write_text("Bonjour", encoding="utf-8")
+print(texte)           # Bonjour
 
-Path.home()            # dossier personnel
-Path.cwd()             # dossier courant
+print(Path.home())     # dossier personnel : /home/utilisateur
+print(Path.cwd())      # dossier courant
 ```
 
 ## 14.6 Opérations sur fichiers et dossiers
@@ -2934,20 +3432,28 @@ Path.cwd()             # dossier courant
 from pathlib import Path
 import shutil
 
+# Préparation des fichiers d'exemple
+Path("a.txt").write_text("A", encoding="utf-8")
+Path("src.txt").write_text("S", encoding="utf-8")
+Path("script.py").write_text("print('salut')", encoding="utf-8")
+Path("dossier").mkdir(exist_ok=True)
+Path("dossier/lisez-moi.md").write_text("# Titre", encoding="utf-8")
+
 Path("nouveau").mkdir(parents=True, exist_ok=True)
 Path("a.txt").rename("b.txt")
 Path("b.txt").unlink(missing_ok=True)       # supprimer un fichier
 Path("nouveau").rmdir()                     # supprimer un dossier vide
 
 for f in Path(".").glob("*.py"):            # lister
-    print(f)
+    print(f)                                # script.py
 for f in Path(".").rglob("*.md"):           # récursif
-    print(f)
+    print(f)                                # dossier/lisez-moi.md
 
 shutil.copy("src.txt", "dst.txt")
 shutil.copytree("dossier", "copie")
 shutil.rmtree("copie")                      # supprime un dossier non vide
-shutil.move("a", "b")
+shutil.move("dst.txt", "dossier/dst.txt")
+print(Path("dossier/dst.txt").exists())     # True
 ```
 
 Équivalents `os` : `os.listdir()`, `os.remove()`, `os.mkdir()`, `os.path.join()`, `os.walk()`.
@@ -2955,26 +3461,44 @@ shutil.move("a", "b")
 ## 14.7 Fichiers binaires
 
 ```python
+# Création de fichiers binaires d'exemple
+with open("image.png", "wb") as f:
+    f.write(bytes(range(256)))
+with open("gros.bin", "wb") as f:
+    f.write(bytes(20000))
+
 with open("image.png", "rb") as f:
     octets = f.read()
 
 with open("copie.png", "wb") as f:
     f.write(octets)
+print(len(octets))   # 256
+
+def traiter(bloc):
+    print(f"Bloc de {len(bloc)} octets")
 
 # Lecture par blocs (gros fichiers)
 with open("gros.bin", "rb") as f:
     while bloc := f.read(8192):
         traiter(bloc)
+# Bloc de 8192 octets
+# Bloc de 8192 octets
+# Bloc de 3616 octets
 ```
 
 ## 14.8 Position dans le fichier (curseur)
 
 ```python
-with open("notes.txt", "rb") as f:
-    f.read(5)
+with open("octets.bin", "wb") as f:
+    f.write(b"Bonjour le monde")
+
+with open("octets.bin", "rb") as f:
+    print(f.read(5))      # b'Bonjo'
     print(f.tell())       # position actuelle : 5
     f.seek(0)             # retour au début
+    print(f.tell())       # 0
     f.seek(0, 2)          # tout à la fin
+    print(f.tell())       # 16
 ```
 
 ## 14.9 Fichiers CSV
@@ -2982,14 +3506,23 @@ with open("notes.txt", "rb") as f:
 ```python
 import csv
 
+# Création d'un fichier CSV d'exemple
+with open("personnes.csv", "w", newline="", encoding="utf-8") as f:
+    f.write("nom,age\nAlice,30\nBob,25\n")
+
 with open("personnes.csv", newline="", encoding="utf-8") as f:
     for ligne in csv.DictReader(f):
-        print(ligne["nom"], ligne["age"])
+        print(ligne["nom"], ligne["age"])   # Alice 30, puis Bob 25
 
 with open("sortie.csv", "w", newline="", encoding="utf-8") as f:
     writer = csv.DictWriter(f, fieldnames=["nom", "age"])
     writer.writeheader()
     writer.writerow({"nom": "Alice", "age": 30})
+
+with open("sortie.csv", encoding="utf-8") as f:
+    print(f.read())
+# nom,age
+# Alice,30
 ```
 
 Pour de gros volumes : **pandas** ou **polars**.
@@ -3006,15 +3539,22 @@ Path("data.json").write_text(
     json.dumps(donnees, indent=2, ensure_ascii=False), encoding="utf-8"
 )
 lu = json.loads(Path("data.json").read_text(encoding="utf-8"))
+print(lu)   # {'nom': 'Alice', 'langues': ['fr', 'en']}
 ```
 
 ## 14.11 Fichiers de configuration TOML *(3.11+)*
 
 ```python
 import tomllib
+from pathlib import Path
 
-with open("pyproject.toml", "rb") as f:     # ouvrir en binaire
+# Création d'un fichier TOML d'exemple
+Path("exemple.toml").write_text('[project]\nname = "demo"\nversion = "0.1.0"\n', encoding="utf-8")
+
+with open("exemple.toml", "rb") as f:       # ouvrir en binaire
     config = tomllib.load(f)
+
+print(config)   # {'project': {'name': 'demo', 'version': '0.1.0'}}
 ```
 
 ## 14.12 Sérialisation avec `pickle`
@@ -3026,24 +3566,34 @@ with open("objet.pkl", "wb") as f:
     pickle.dump({"a": [1, 2, 3]}, f)
 with open("objet.pkl", "rb") as f:
     obj = pickle.load(f)
+print(obj)   # {'a': [1, 2, 3]}
 ```
 
-> 🔒 **Sécurité** : **ne chargez jamais** un fichier pickle provenant d'une source non fiable : il peut exécuter du code arbitraire. Préférez **JSON** pour l'échange de données.
+> **Sécurité** : **ne chargez jamais** un fichier pickle provenant d'une source non fiable : il peut exécuter du code arbitraire. Préférez **JSON** pour l'échange de données.
 
 ## 14.13 Compression et archives
 
 ```python
 import zipfile, gzip, shutil
+from pathlib import Path
+
+# Préparation des fichiers d'exemple
+Path("a.txt").write_text("contenu de a", encoding="utf-8")
+Path("dossier").mkdir(exist_ok=True)
+Path("dossier/b.txt").write_text("contenu de b", encoding="utf-8")
 
 with zipfile.ZipFile("archive.zip", "w", zipfile.ZIP_DEFLATED) as z:
     z.write("a.txt")
 with zipfile.ZipFile("archive.zip") as z:
+    print(z.namelist())          # ['a.txt']
     z.extractall("sortie")
 
 with gzip.open("donnees.txt.gz", "wt", encoding="utf-8") as f:
     f.write("texte compressé")
+with gzip.open("donnees.txt.gz", "rt", encoding="utf-8") as f:
+    print(f.read())              # texte compressé
 
-shutil.make_archive("sauvegarde", "zip", "dossier")
+print(shutil.make_archive("sauvegarde", "zip", "dossier"))   # /chemin/courant/sauvegarde.zip
 ```
 
 Autres formats : `tarfile`, `bz2`, `lzma`, et `compression.zstd` (Zstandard, Python 3.14+).
@@ -3054,11 +3604,16 @@ Autres formats : `tarfile`, `bz2`, `lzma`, et `compression.zstd` (Zstandard, Pyt
 import os, stat
 from pathlib import Path
 
+# Préparation des fichiers d'exemple
+Path("a.txt").write_text("contenu de a", encoding="utf-8")
+Path("script.sh").write_text("echo salut", encoding="utf-8")
+
 info = Path("a.txt").stat()
-print(info.st_size, info.st_mtime)    # taille en octets, date de modification
+print(info.st_size, info.st_mtime)    # taille en octets (12), date de modification (variable)
 
 os.chmod("script.sh", stat.S_IRWXU)    # rwx pour le propriétaire
-os.access("a.txt", os.R_OK)            # accessible en lecture ?
+print(oct(Path("script.sh").stat().st_mode & 0o777))   # 0o700
+print(os.access("a.txt", os.R_OK))     # True : accessible en lecture
 ```
 
 ## 14.15 Exceptions courantes
@@ -3099,6 +3654,8 @@ def aire_cercle(r):
     return PI * r ** 2
 ```
 
+Le fichier `main.py` ci-dessous se trouve dans le même dossier que `maths_utils.py` :
+
 ```python
 # main.py
 import maths_utils
@@ -3106,10 +3663,12 @@ from maths_utils import aire_cercle
 from maths_utils import aire_cercle as aire        # alias
 import math as m
 
-print(maths_utils.aire_cercle(2))
+print(maths_utils.aire_cercle(2))   # 12.56636
+print(aire(1))                      # 3.14159
+print(m.sqrt(16))                   # 4.0
 ```
 
-⚠️ Évitez `from module import *` (pollution de l'espace de noms).
+**Attention :** Évitez `from module import *` (pollution de l'espace de noms).
 
 ### Le point d'entrée `__main__`
 
@@ -3118,7 +3677,7 @@ def main():
     print("Programme principal")
 
 if __name__ == "__main__":     # vrai seulement si le fichier est exécuté directement
-    main()
+    main()                     # Programme principal
 ```
 
 ## 15.2 Paquets
@@ -3139,8 +3698,21 @@ monprojet/
 ```
 
 ```python
+# src/monpaquet/outils.py
+def fonction():
+    return "résultat"
+```
+
+```python
+# src/monpaquet/sous_paquet/__init__.py
+from .. import outils           # import relatif : remonte d'un niveau
+```
+
+```python
+# main.py (placé dans le dossier src/)
 from monpaquet.outils import fonction
-from . import outils            # import relatif
+
+print(fonction())               # résultat
 ```
 
 ## 15.3 Recherche des modules
@@ -3149,7 +3721,7 @@ Python cherche dans l'ordre : modules intégrés → dossier courant → `sys.pa
 
 ```python
 import sys
-print(sys.path)
+print(sys.path)   # liste des dossiers de recherche, par exemple ['', '/usr/lib/python3.14', ...]
 ```
 
 ## 15.4 `pip` : installer des paquets
@@ -3271,8 +3843,9 @@ class Chien:
         return f"{self.nom} ({self.age} ans)"
 
 rex = Chien("Rex", 3)
-print(rex.aboyer())
-print(rex, repr(rex))
+print(rex.aboyer())        # Rex dit : Ouaf !
+print(rex, repr(rex))      # Rex (3 ans) Chien(nom='Rex', age=3)
+print(Chien.espece)        # Canis familiaris
 ```
 
 `self` désigne l'instance courante : c'est le premier paramètre de toute méthode d'instance.
@@ -3306,7 +3879,12 @@ class Compte:
 
 c = Compte(100)
 c.solde = 150
-print(c.solde)
+print(c.solde)   # 150
+
+try:
+    c.solde = -10
+except ValueError as erreur:
+    print("ValueError :", erreur)   # ValueError : Solde négatif interdit
 ```
 
 ## 16.3 Méthodes de classe et statiques
@@ -3326,7 +3904,9 @@ class Date:
         return annee % 4 == 0 and (annee % 100 != 0 or annee % 400 == 0)
 
 d = Date.depuis_texte("11/10/2026")
-print(Date.est_bissextile(2028))
+print(d.j, d.m, d.a)               # 11 10 2026
+print(Date.est_bissextile(2028))   # True
+print(Date.est_bissextile(2100))   # False
 ```
 
 ## 16.4 Héritage
@@ -3349,6 +3929,12 @@ class Chat(Animal):
 
 print(isinstance(Chat("Mimi", "noir"), Animal))   # True
 print(issubclass(Chat, Animal))                   # True
+print(Chat("Mimi", "noir").parler())              # Miaou
+
+try:
+    Animal("Inconnu").parler()                    # la méthode doit être redéfinie
+except NotImplementedError:
+    print("NotImplementedError : parler() n'est pas implémentée dans Animal")
 ```
 
 ### Héritage multiple et MRO
@@ -3360,6 +3946,7 @@ class C(A): pass
 class D(B, C): pass
 
 print(D.__mro__)    # ordre de résolution des méthodes (algorithme C3)
+# (<class '__main__.D'>, <class '__main__.B'>, <class '__main__.C'>, <class '__main__.A'>, <class 'object'>)
 ```
 
 `super()` suit le **MRO**. Préférez la **composition** (« a un ») à l'héritage (« est un ») quand c'est possible.
@@ -3375,6 +3962,8 @@ class JsonMixin:
 class Utilisateur(JsonMixin):
     def __init__(self, nom):
         self.nom = nom
+
+print(Utilisateur("Alice").en_json())   # {"nom": "Alice"}
 ```
 
 ## 16.5 Polymorphisme et *duck typing*
@@ -3389,7 +3978,7 @@ class Robot:
     def parler(self): return "Bip"
 
 for etre in (Chien(), Robot()):
-    print(etre.parler())          # aucune parenté nécessaire
+    print(etre.parler())          # Ouaf, puis Bip : aucune parenté nécessaire
 ```
 
 ## 16.6 Méthodes spéciales (« dunder »)
@@ -3420,6 +4009,13 @@ class Panier:
 
     def __contains__(self, article):
         return article in self.articles
+
+panier = Panier()
+panier.articles.extend(["pomme", "poire"])
+print(len(panier))          # 2
+print(panier[0])            # pomme
+print(list(panier))         # ['pomme', 'poire']
+print("poire" in panier)    # True
 ```
 
 ### Gestionnaire de contexte personnalisé
@@ -3432,6 +4028,21 @@ class Connexion:
     def __exit__(self, type_exc, valeur, trace):
         print("Fermeture")
         return False      # ne pas supprimer l'exception
+
+with Connexion():
+    print("Travail en cours")
+# Ouverture
+# Travail en cours
+# Fermeture
+
+try:
+    with Connexion():
+        raise ValueError("problème")
+except ValueError as erreur:
+    print("Exception propagée :", erreur)
+# Ouverture
+# Fermeture
+# Exception propagée : problème
 ```
 
 ## 16.7 Classes de données : `dataclass`
@@ -3452,6 +4063,8 @@ class Produit:
 
 p = Produit("Livre", 12.5)
 print(p)                         # Produit(nom='Livre', prix=12.5, tags=[])
+print(p.prix_ttc())              # 15.0
+print(Produit("A", 1.0) < Produit("B", 1.0))   # True (order=True)
 ```
 
 | Option | Effet |
@@ -3476,7 +4089,7 @@ class Statut(StrEnum):         # 3.11+
     ACTIF = "actif"
     INACTIF = "inactif"
 
-print(Couleur.ROUGE.name, Statut.ACTIF.value)
+print(Couleur.ROUGE.name, Statut.ACTIF.value)   # ROUGE actif
 ```
 
 ## 16.9 Classes abstraites et protocoles
@@ -3492,7 +4105,13 @@ class Carre(Forme):
     def __init__(self, c): self.c = c
     def aire(self): return self.c ** 2
 
-# Forme()   # ❌ TypeError : classe abstraite
+print(Carre(3).aire())    # 9
+
+try:
+    Forme()               # une classe abstraite ne s'instancie pas
+except TypeError as erreur:
+    print("TypeError :", erreur)
+    # TypeError : Can't instantiate abstract class Forme without an implementation for abstract method 'aire'
 ```
 
 **Protocole** (typage structurel, sans héritage) :
@@ -3505,6 +4124,12 @@ class Fermable(Protocol):
 
 def fermer(ressource: Fermable) -> None:
     ressource.close()
+
+class Fichier:                       # aucun héritage de Fermable nécessaire
+    def close(self) -> None:
+        print("Fichier fermé")
+
+fermer(Fichier())                    # Fichier fermé
 ```
 
 ## 16.10 `__slots__` et gestion de la mémoire
@@ -3514,6 +4139,15 @@ class Point:
     __slots__ = ("x", "y")      # pas de __dict__ : moins de mémoire
     def __init__(self, x, y):
         self.x, self.y = x, y
+
+p = Point(1, 2)
+print(p.x, p.y)                  # 1 2
+
+try:
+    p.z = 3                      # impossible : pas de __dict__
+except AttributeError as erreur:
+    print("AttributeError :", erreur)
+    # AttributeError : 'Point' object has no attribute 'z' and no __dict__ for setting new attributes
 ```
 
 ## 16.11 Descripteurs
@@ -3535,6 +4169,14 @@ class Article:
     prix = Positif()
     def __init__(self, prix):
         self.prix = prix
+
+a = Article(10)
+print(a.prix)                       # 10
+
+try:
+    a.prix = -5
+except ValueError as erreur:
+    print("ValueError :", erreur)   # ValueError : Doit être positif
 ```
 
 ## 16.12 Métaclasses et réflexion (avancé)
@@ -3550,7 +4192,7 @@ class MetaJournal(type):
         print(f"Création de la classe {nom}")
         return super().__new__(mcs, nom, bases, attrs)
 
-class Base(metaclass=MetaJournal):
+class Base(metaclass=MetaJournal):    # affiche à la définition : Création de la classe Base
     pass
 ```
 
@@ -3562,16 +4204,34 @@ class Plugin:
     def __init_subclass__(cls, **kwargs):
         super().__init_subclass__(**kwargs)
         Plugin.registre.append(cls)
+
+class PluginA(Plugin): pass
+class PluginB(Plugin): pass
+
+print(Plugin.registre)   # [<class '__main__.PluginA'>, <class '__main__.PluginB'>]
 ```
 
-> 🧠 Les métaclasses sont rarement nécessaires ; utilisez-les avec parcimonie.
+> Les métaclasses sont rarement nécessaires ; utilisez-les avec parcimonie.
 
 ### Introspection
 
 ```python
-type(obj)                  isinstance(obj, cls)      issubclass(a, b)
-dir(obj)                   vars(obj) / obj.__dict__  hasattr / getattr / setattr
-id(obj)                    inspect.getmembers(obj)
+import inspect
+
+class Exemple:
+    def __init__(self):
+        self.x = 1
+
+obj = Exemple()
+print(type(obj))                      # <class '__main__.Exemple'>
+print(isinstance(obj, Exemple))       # True
+print(issubclass(Exemple, object))    # True
+print(vars(obj))                      # {'x': 1}
+print(hasattr(obj, "x"))              # True
+print(getattr(obj, "x"))              # 1
+setattr(obj, "y", 2)
+print(obj.__dict__)                   # {'x': 1, 'y': 2}
+print([n for n, _ in inspect.getmembers(obj) if not n.startswith("__")])   # ['x', 'y']
 ```
 
 ## 16.13 Principes et bonnes pratiques
@@ -3603,6 +4263,8 @@ class Chat:   ...
 
 def creer_animal(type_):
     return {"chien": Chien, "chat": Chat}[type_]()
+
+print(type(creer_animal("chat")).__name__)   # Chat
 ```
 
 ### Stratégie (avec des fonctions)
@@ -3613,6 +4275,9 @@ def remise_aucune(prix):  return prix
 
 def total(prix, strategie=remise_aucune):
     return strategie(prix)
+
+print(total(100))                    # 100
+print(total(100, remise_fidelite))   # 90.0
 ```
 
 ### Observateur
@@ -3626,6 +4291,10 @@ class Evenement:
     def emettre(self, *args):
         for f in self._abonnes:
             f(*args)
+
+evenement = Evenement()
+evenement.abonner(lambda message: print("Reçu :", message))
+evenement.emettre("alerte")          # Reçu : alerte
 ```
 
 ## 16.15 Exemple complet
@@ -3657,7 +4326,12 @@ class Compte:
 c = Compte("Alice")
 c.deposer(100)
 c.retirer(30)
-print(c)
+print(c)   # Compte(titulaire='Alice', solde=70.0, historique=[('dépôt', 100), ('retrait', 30)])
+
+try:
+    c.retirer(500)
+except SoldeInsuffisant as erreur:
+    print("SoldeInsuffisant :", erreur)   # SoldeInsuffisant : Solde : 70.0
 ```
 
 ---
@@ -3678,6 +4352,11 @@ actif: bool = True
 
 def additionner(a: int, b: int) -> int:
     return a + b
+
+print(additionner(2, 3))                   # 5
+print(nom, age, prix, actif)               # Alice 30 9.99 True
+print(additionner.__annotations__)         # {'a': <class 'int'>, 'b': <class 'int'>, 'return': <class 'int'>}
+print(additionner("a", "b"))               # ab : aucune erreur à l'exécution, seul un vérificateur de types la signalerait
 ```
 
 Python **n'applique pas** ces annotations à l'exécution : elles servent aux **vérificateurs de types** (**mypy**, **pyright**, **ty**, **pyrefly**) et aux éditeurs.
@@ -3697,6 +4376,9 @@ Les anciens alias `List`, `Dict`, `Optional`, `Union` du module `typing` sont **
 ```python
 def trouver(nom: str, liste: list[str]) -> int | None:
     return liste.index(nom) if nom in liste else None
+
+print(trouver("b", ["a", "b"]))   # 1
+print(trouver("z", ["a", "b"]))   # None
 ```
 
 ## 17.3 Types courants
@@ -3713,6 +4395,12 @@ Mode = Literal["lecture", "ecriture"]
 class Utilisateur(TypedDict):
     nom: str
     age: int
+
+print(appliquer(lambda x: x * 2, [1, 2, 3]))   # [2, 4, 6]
+
+mode: Mode = "lecture"
+u: Utilisateur = {"nom": "Alice", "age": 30}
+print(mode, u)                                  # lecture {'nom': 'Alice', 'age': 30}
 ```
 
 ## 17.4 Génériques et paramètres de type *(Python 3.12+)*
@@ -3729,6 +4417,15 @@ class Pile[T]:
         self._items.append(x)
 
 type Matrice = list[list[float]]     # alias de type avec l'instruction `type`
+
+print(premier([3, 4]))               # 3
+
+pile = Pile[int]()
+pile.empiler(1)
+print(pile._items)                   # [1]
+
+m: Matrice = [[1.0, 2.0]]
+print(m, Matrice)                    # [[1.0, 2.0]] Matrice
 ```
 
 ## 17.5 Évaluation différée des annotations *(Python 3.14)*
@@ -3736,12 +4433,17 @@ type Matrice = list[list[float]]     # alias de type avec l'instruction `type`
 Depuis Python 3.14 (PEP 649/749), les annotations sont **évaluées à la demande** : on peut référencer une classe avant sa définition sans guillemets ni `from __future__ import annotations`.
 
 ```python
+from annotationlib import get_annotations
+
 class Noeud:
     def suivant(self) -> Noeud | None:    # fonctionne en 3.14+
-        ...
+        return None
+
+print(Noeud().suivant())                  # None
+print(get_annotations(Noeud.suivant))     # {'return': __main__.Noeud | None}
 ```
 
-Utilisez `annotationlib` pour les inspecter.
+Utilisez `annotationlib` pour les inspecter (voir ci-dessus).
 
 ## 17.6 Vérifier les types
 
@@ -3780,7 +4482,7 @@ async def main():
         telecharger("A", 1),
         telecharger("B", 2),
     )
-    print(resultats)
+    print(resultats)                   # ['A terminé', 'B terminé']
 
 asyncio.run(main())                    # ~2 s au lieu de 3 s
 ```
@@ -3788,23 +4490,45 @@ asyncio.run(main())                    # ~2 s au lieu de 3 s
 ### `TaskGroup` *(3.11+)*
 
 ```python
+import asyncio
+
+async def telecharger(nom, delai):
+    await asyncio.sleep(delai)
+    return f"{nom} terminé"
+
 async def main():
     async with asyncio.TaskGroup() as groupe:
         t1 = groupe.create_task(telecharger("A", 1))
         t2 = groupe.create_task(telecharger("B", 2))
-    print(t1.result(), t2.result())
+    print(t1.result(), t2.result())    # A terminé B terminé
+
+asyncio.run(main())
 ```
 
 ## 18.3 Threads et processus
 
 ```python
 from concurrent.futures import ThreadPoolExecutor, ProcessPoolExecutor
+import time
 
-with ThreadPoolExecutor(max_workers=4) as pool:
-    resultats = list(pool.map(telecharger_url, urls))
+def telecharger_url(url):
+    time.sleep(0.1)                  # simule une opération d'E/S bloquante
+    return f"{url} : OK"
 
-with ProcessPoolExecutor() as pool:
-    resultats = list(pool.map(calcul_lourd, donnees))
+def calcul_lourd(n):
+    return sum(i * i for i in range(n))
+
+urls = ["site-a.fr", "site-b.fr", "site-c.fr"]
+donnees = [10_000, 20_000, 30_000]
+
+if __name__ == "__main__":           # indispensable avec multiprocessing
+    with ThreadPoolExecutor(max_workers=4) as pool:
+        resultats = list(pool.map(telecharger_url, urls))
+    print(resultats)                 # ['site-a.fr : OK', 'site-b.fr : OK', 'site-c.fr : OK']
+
+    with ProcessPoolExecutor() as pool:
+        resultats = list(pool.map(calcul_lourd, donnees))
+    print(resultats)                 # [333283335000, 2666466670000, 8999550005000]
 ```
 
 ## 18.4 Le GIL et Python sans GIL
@@ -3853,6 +4577,16 @@ pip install pytest
 pytest -v
 ```
 
+Résultat attendu :
+
+```text
+tests/test_calcul.py::test_addition PASSED
+tests/test_calcul.py::test_cas_multiples[1-1-2] PASSED
+tests/test_calcul.py::test_cas_multiples[0-0-0] PASSED
+tests/test_calcul.py::test_cas_multiples[-1-1-0] PASSED
+tests/test_calcul.py::test_erreur PASSED
+```
+
 Le module intégré **`unittest`** et **`doctest`** sont aussi disponibles.
 
 ## 19.2 Qualité du code
@@ -3867,7 +4601,7 @@ Le module intégré **`unittest`** et **`doctest`** sont aussi disponibles.
 ## 19.3 Déboguer
 
 ```python
-breakpoint()      # lance le débogueur pdb à cet endroit
+breakpoint()      # lance le débogueur pdb à cet endroit : l'invite (Pdb) apparaît, tapez c pour continuer
 ```
 
 Commandes `pdb` : `n` (suivant), `s` (entrer), `c` (continuer), `p var` (afficher), `l` (code), `q` (quitter). Les éditeurs (VS Code, PyCharm) proposent un débogueur graphique.
@@ -3902,16 +4636,16 @@ Commandes `pdb` : `n` (suivant), `s` (entrer), `c` (continuer), `p var` (affiche
 
 ## 20.3 Ressources
 
-- 📘 Documentation : <https://docs.python.org/fr/3/>
-- 🎓 Tutoriel officiel : <https://docs.python.org/fr/3/tutorial/>
-- 📜 Guide de style PEP 8 : <https://peps.python.org/pep-0008/>
-- 💬 Forum officiel : <https://discuss.python.org>
-- 📦 Index des paquets : <https://pypi.org>
+- Documentation : <https://docs.python.org/fr/3/>
+- Tutoriel officiel : <https://docs.python.org/fr/3/tutorial/>
+- Guide de style PEP 8 : <https://peps.python.org/pep-0008/>
+- Forum officiel : <https://discuss.python.org>
+- Index des paquets : <https://pypi.org>
 
 ---
 
 <div align="center">
 
-*Bon code ! 🐍*
+*Bon code !*
 
 </div>
