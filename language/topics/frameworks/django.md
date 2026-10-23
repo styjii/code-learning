@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🎸 Django — Guide complet
+# Django — Guide complet
 
 **Des premiers pas au déploiement : ORM, API, JWT, tâches asynchrones, tests et écosystème**
 
@@ -10,9 +10,9 @@
 
 ---
 
-## 🗂️ Sommaire
+## Sommaire
 
-**🟢 Fondamentaux**
+**Fondamentaux**
 
 1. [Introduction à Django](#1-introduction-à-django)
 2. [Environnement de développement et outillage des éditeurs](#2-environnement-de-développement-et-outillage-des-éditeurs)
@@ -22,7 +22,7 @@
 6. [Vues](#6-vues)
 7. [Templates](#7-templates)
 
-**🟡 Données et interface**
+**Données et interface**
 
 8. [Modèles](#8-modèles)
 9. [ORM : requêtes et optimisation](#9-orm--requêtes-et-optimisation)
@@ -36,7 +36,7 @@
 17. [Internationalisation et localisation](#17-internationalisation-et-localisation)
 18. [Commandes de gestion personnalisées](#18-commandes-de-gestion-personnalisées)
 
-**🔴 API, asynchrone et frontend**
+**API, asynchrone et frontend**
 
 19. [API REST avec Django REST Framework](#19-api-rest-avec-django-rest-framework)
 20. [Authentification des API : JWT et alternatives](#20-authentification-des-api--jwt-et-alternatives)
@@ -45,7 +45,7 @@
 23. [Tâches en arrière-plan](#23-tâches-en-arrière-plan)
 24. [Frontend moderne avec Django](#24-frontend-moderne-avec-django)
 
-**🛡️ Qualité et production**
+**Qualité et production**
 
 25. [Tests](#25-tests)
 26. [Sécurité](#26-sécurité)
@@ -54,13 +54,13 @@
 29. [Écosystème : paquets essentiels](#29-écosystème--paquets-essentiels)
 30. [Nouveautés par version, bonnes pratiques et ressources](#30-nouveautés-par-version-bonnes-pratiques-et-ressources)
 
-> 💡 **Légende** : *(ajout)* = notion absente du guide d'origine ; *(à jour)* = pratique moderne remplaçant une ancienne ; *(5.x / 6.x)* = version de Django qui introduit la fonctionnalité.
+> **Légende** : *(ajout)* = notion absente du guide d'origine ; *(à jour)* = pratique moderne remplaçant une ancienne ; *(5.x / 6.x)* = version de Django qui introduit la fonctionnalité.
 >
-> 📌 Les exemples utilisent un projet fil rouge en français (blog et boutique). Vérifiez les détails des nouveautés récentes sur la documentation officielle : [docs.djangoproject.com](https://docs.djangoproject.com/fr/).
+> Les exemples utilisent un projet fil rouge en français (blog et boutique). Vérifiez les détails des nouveautés récentes sur la documentation officielle : [docs.djangoproject.com](https://docs.djangoproject.com/fr/).
 
 ---
 
-# 🟢 Fondamentaux
+# Fondamentaux
 
 ---
 
@@ -104,13 +104,13 @@ Django publie une version **tous les 8 mois** ; certaines sont des **LTS** (*Lon
 
 | Version | Sortie | Type | Fin du support | Python |
 | --- | --- | --- | --- | --- |
-| 4.2 | avril 2023 | LTS | ❌ terminé (avril 2026) | 3.8 – 3.12 |
+| 4.2 | avril 2023 | LTS | terminé (avril 2026) | 3.8 – 3.12 |
 | **5.2** | avril 2025 | **LTS** | **avril 2028** | 3.10 – 3.13 |
 | 6.0 | déc. 2025 | Standard | 2027 | **3.12 – 3.14** |
 | **6.1** | **5 août 2026** | Standard | fin 2027 | 3.12 – 3.14 |
 | **6.2** | avril 2027 (prévue) | **LTS** | ≥ 3 ans après sa sortie | 3.12 – 3.14 |
 
-> 📌 **Recommandations** : nouveau projet → **la dernière version stable (6.1)** ; production à long terme → **5.2 LTS** (puis 6.2 LTS). **Appliquez toujours les correctifs de sécurité** (ex. : 6.1.2 du 6 octobre 2026) : voir [section 26](#26-sécurité).
+> **Recommandations** : nouveau projet → **la dernière version stable (6.1)** ; production à long terme → **5.2 LTS** (puis 6.2 LTS). **Appliquez toujours les correctifs de sécurité** (ex. : 6.1.2 du 6 octobre 2026) : voir [section 26](#26-sécurité).
 
 ## 1.4 Le modèle MTV
 
@@ -126,11 +126,11 @@ Django suit le motif **MTV** (**M**odèle – **T**emplate – **V**ue), variant
 ```text
 Requête HTTP
    │
-   ▼
-Middleware ──▶ URLconf (urls.py) ──▶ Vue (views.py) ──▶ Modèle (ORM) ──▶ Base de données
+   v
+Middleware ──> URLconf (urls.py) ──> Vue (views.py) ──> Modèle (ORM) ──> Base de données
                                           │
-                                          ▼
-                                  Template (HTML) ──▶ Réponse HTTP ──▶ Middleware ──▶ Navigateur
+                                          v
+                                  Template (HTML) ──> Réponse HTTP ──> Middleware ──> Navigateur
 ```
 
 ## 1.5 Principes de conception
@@ -146,11 +146,11 @@ Middleware ──▶ URLconf (urls.py) ──▶ Vue (views.py) ──▶ Modèl
 | | **Django** | **Flask** | **FastAPI** | **Laravel** (PHP) | **Rails** (Ruby) |
 | --- | --- | --- | --- | --- | --- |
 | Philosophie | Tout inclus | Micro-framework | API asynchrone + types | Tout inclus | Tout inclus |
-| ORM / admin intégrés | ✅ / ✅ | ❌ (extensions) | ❌ | ✅ / ❌ | ✅ / ❌ |
+| ORM / admin intégrés | Oui / Oui | Non (extensions) | Non | Oui / Non | Oui / Non |
 | Idéal pour | Sites complets, back-offices, API (+ DRF/Ninja) | Petits services, prototypes | **API** performantes, validation de données | Sites PHP | Sites Ruby |
 | Courbe d'apprentissage | Moyenne | Faible | Faible à moyenne | Moyenne | Moyenne |
 
-> ✅ **Quand choisir Django ?** Applications avec **base de données**, **administration**, **authentification**, **contenu** ; équipes qui veulent une **structure éprouvée** et une **sécurité solide**. Utilisé par **Instagram**, **Pinterest**, **Mozilla**, **Disqus**, **NASA**, etc.
+> **Quand choisir Django ?** Applications avec **base de données**, **administration**, **authentification**, **contenu** ; équipes qui veulent une **structure éprouvée** et une **sécurité solide**. Utilisé par **Instagram**, **Pinterest**, **Mozilla**, **Disqus**, **NASA**, etc.
 
 ---
 
@@ -170,7 +170,7 @@ python --version
 
 Isolez **chaque projet** dans un environnement virtuel.
 
-### Avec `uv` (moderne, très rapide) ✅
+### Avec `uv` (moderne, très rapide)
 
 ```bash
 curl -LsSf https://astral.sh/uv/install.sh | sh        # installer uv (ou : pip install uv)
@@ -191,7 +191,7 @@ pip freeze > requirements.txt          # ou mieux : pyproject.toml + lock (uv, p
 django-admin --version
 ```
 
-> ✅ **Épinglez** vos dépendances (fichier de verrouillage `uv.lock` / `poetry.lock` / `requirements.txt` généré) et **ne versionnez jamais** `.venv/`.
+> **Épinglez** vos dépendances (fichier de verrouillage `uv.lock` / `poetry.lock` / `requirements.txt` généré) et **ne versionnez jamais** `.venv/`.
 
 ## 2.3 Créer un projet et une application
 
@@ -270,7 +270,7 @@ strict = true
 plugins = ["mypy_django_plugin.main", "mypy_drf_plugin.main"]
 
 [tool.django-stubs]
-django_settings_module = "config.settings"                 # ⚠️ obligatoire : chemin Python vers settings
+django_settings_module = "config.settings"                 # obligatoire : chemin Python vers settings
 ```
 
 ```bash
@@ -280,18 +280,21 @@ mypy .                                                      # vérification des 
 Annoter les modèles et gestionnaires :
 
 ```python
+# apps/blog/models.py
+from django.conf import settings
 from django.db import models
 from django.http import HttpRequest, HttpResponse
-from django.contrib.auth.models import AbstractUser
 
 class Article(models.Model):
     titre = models.CharField(max_length=200)
-    auteur = models.ForeignKey("auth.User", on_delete=models.CASCADE, related_name="articles")
+    auteur = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="articles")
 
     objects: models.Manager["Article"]                      # précise le gestionnaire pour certains outils
 
-def accueil(request: HttpRequest) -> HttpResponse: ...
+def accueil(request: HttpRequest) -> HttpResponse:
+    return HttpResponse("Bienvenue")
 ```
+
 
 ### Pyright / Pylance (VS Code) / LSP (Vim, Neovim)
 
@@ -339,7 +342,7 @@ vim.filetype.add({ pattern = { [".*/templates/.*%.html"] = "htmldjango" } })    
 autocmd BufRead,BufNewFile */templates/*.html set filetype=htmldjango
 ```
 
-> ⚠️ **Trois pièges fréquents** : (1) l'éditeur doit utiliser **l'interpréteur du venv** du projet (sinon les stubs sont introuvables) ; (2) `DJANGO_SETTINGS_MODULE` doit être renseigné (pour `djlsp`, `django-stubs`, `pytest-django`) ; (3) lancez le serveur LSP **depuis la racine du projet** (là où se trouvent `manage.py` et `pyproject.toml`).
+> **Trois pièges fréquents** : (1) l'éditeur doit utiliser **l'interpréteur du venv** du projet (sinon les stubs sont introuvables) ; (2) `DJANGO_SETTINGS_MODULE` doit être renseigné (pour `djlsp`, `django-stubs`, `pytest-django`) ; (3) lancez le serveur LSP **depuis la racine du projet** (là où se trouvent `manage.py` et `pyproject.toml`).
 
 ### VS Code et PyCharm
 
@@ -382,21 +385,19 @@ repos:
     hooks: [{ id: djlint-django }]
 ```
 
-> 💡 **`django-upgrade`** réécrit automatiquement votre code vers les API récentes de Django.
+> **`django-upgrade`** réécrit automatiquement votre code vers les API récentes de Django.
 
 ## 2.5 Outils de débogage
 
 ```python
-# settings.py (développement uniquement)
-INSTALLED_APPS += ["debug_toolbar", "django_extensions"]
-MIDDLEWARE.insert(0, "debug_toolbar.middleware.DebugToolbarMiddleware")
-INTERNAL_IPS = ["127.0.0.1"]
-
-# urls.py
+# config/urls.py (à la suite de urlpatterns)
 from django.conf import settings
+from django.urls import include, path
+
 if settings.DEBUG:
     urlpatterns += [path("__debug__/", include("debug_toolbar.urls"))]
 ```
+
 
 ```bash
 python manage.py shell_plus --print-sql          # shell avec tous les modèles et affichage du SQL
@@ -474,10 +475,10 @@ class BlogConfig(AppConfig):
     verbose_name = "Blog"
 
     def ready(self) -> None:                                  # exécuté au démarrage : branchement des signaux, vérifications
-        from . import signals  # noqa: F401
+        from . import signals  # noqa: F401  (le fichier signals.py est présenté en section 16)
 ```
 
-> 📌 Depuis Django **6.0**, `BigAutoField` est le type **par défaut** des clés automatiques (aucune configuration nécessaire pour les nouveaux projets).
+> Depuis Django **6.0**, `BigAutoField` est le type **par défaut** des clés automatiques (aucune configuration nécessaire pour les nouveaux projets).
 
 ## 3.5 Organisation recommandée pour un projet réel *(à jour)*
 
@@ -511,7 +512,7 @@ mon-site/
 
 ## 3.6 Un modèle utilisateur personnalisé dès le départ
 
-> 🚫 **Faites-le avant la première migration** : changer le modèle utilisateur en cours de projet est très pénible.
+> **Faites-le avant la première migration** : changer le modèle utilisateur en cours de projet est très pénible.
 
 ```python
 # apps/comptes/models.py
@@ -541,7 +542,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent.parent
 env = environ.Env(DEBUG=(bool, False))
 environ.Env.read_env(BASE_DIR / ".env")                        # django-environ : lit le fichier .env
 
-SECRET_KEY = env("SECRET_KEY")                                 # ⚠️ jamais dans le code ni dans Git
+SECRET_KEY = env("SECRET_KEY")                                 # jamais dans le code ni dans Git
 DEBUG = env("DEBUG")                                           # False en production !
 ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default=[])
 
@@ -552,7 +553,7 @@ ASGI_APPLICATION = "config.asgi.application"
 LANGUAGE_CODE = "fr"
 TIME_ZONE = "Europe/Paris"
 USE_I18N = True
-USE_TZ = True                                                  # ✅ toujours : datetimes en UTC en base, convertis à l'affichage
+USE_TZ = True                                                  # toujours : datetimes en UTC en base, convertis à l'affichage
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 ```
 
@@ -586,7 +587,6 @@ MIDDLEWARE = [
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
-    "django.contrib.auth.middleware.LoginRequiredMiddleware",  # (5.1) exige la connexion par défaut
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "django.middleware.csp.ContentSecurityPolicyMiddleware",   # (6.0) en-tête CSP
@@ -594,17 +594,21 @@ MIDDLEWARE = [
 ]
 ```
 
-> ⚠️ **L'ordre du middleware compte** (descente à la requête, remontée à la réponse). Voir [section 15](#15-middleware).
+> **L'ordre du middleware compte** (descente à la requête, remontée à la réponse). Voir [section 15](#15-middleware).
+>
+> `LoginRequiredMiddleware` (5.1) n'est pas activé dans cet exemple : il rend toutes les vues privées par défaut (voir la section 12.4).
 
 ## 4.3 Base de données
 
 ```python
+# config/settings/base.py (suite)
 import dj_database_url
 
+# Variante 1 : à partir de DATABASE_URL
 DATABASES = {
     "default": dj_database_url.config(default=env("DATABASE_URL"), conn_max_age=600, conn_health_checks=True),
 }
-# ou, explicitement :
+# Variante 2 : configuration explicite (à utiliser à la place de la variante 1)
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
@@ -618,13 +622,13 @@ DATABASES = {
 
 | Base | Moteur | Pilote |
 | --- | --- | --- |
-| **PostgreSQL** ✅ (recommandée) | `django.db.backends.postgresql` | **`psycopg[binary,pool]`** (psycopg **3**) |
+| **PostgreSQL** (recommandée) | `django.db.backends.postgresql` | **`psycopg[binary,pool]`** (psycopg **3**) |
 | MySQL / MariaDB | `django.db.backends.mysql` | `mysqlclient` |
 | SQLite | `django.db.backends.sqlite3` | intégré (développement, petits sites) |
 | Oracle | `django.db.backends.oracle` | `oracledb` |
 | SQL Server | `mssql-django` | `mssql-django` |
 
-> ✅ **PostgreSQL** pour la production (JSONB, recherche plein texte, index avancés, `django.contrib.postgres`). Installer **`psycopg`** (v3), plus récent que `psycopg2`.
+> **PostgreSQL** pour la production (JSONB, recherche plein texte, index avancés, `django.contrib.postgres`). Installer **`psycopg`** (v3), plus récent que `psycopg2`.
 
 ## 4.4 Templates, fichiers statiques, médias, stockage
 
@@ -671,7 +675,7 @@ DEFAULT_FROM_EMAIL = "Mon site <noreply@exemple.fr>"
 # En développement : EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 ```
 
-> 📌 **Django 6.1** introduit le réglage **`MAILERS`** (plusieurs « expéditeurs » nommés, chacun avec son backend et ses options) qui **remplace** `EMAIL_BACKEND`, `EMAIL_HOST`… ; les anciens réglages **fonctionnent jusqu'à Django 7.0**. Voir la page officielle « *Migrating email to mailers* ».
+> **Django 6.1** introduit le réglage **`MAILERS`** (plusieurs « expéditeurs » nommés, chacun avec son backend et ses options) qui **remplace** `EMAIL_BACKEND`, `EMAIL_HOST`… ; les anciens réglages **fonctionnent jusqu'à Django 7.0**. Voir la page officielle « *Migrating email to mailers* ».
 > Pour un service d'envoi (Mailgun, SES, Brevo…), utilisez **`django-anymail`**.
 
 ```python
@@ -684,7 +688,7 @@ LOGGING = {
 }
 ```
 
-> ✅ En conteneur / PaaS : journaliser **sur la sortie standard** (console), collectée par la plateforme.
+> En conteneur / PaaS : journaliser **sur la sortie standard** (console), collectée par la plateforme.
 
 ## 4.6 Sécurité (aperçu : détails en section 26)
 
@@ -726,7 +730,7 @@ ALLOWED_HOSTS=localhost,127.0.0.1
 DJANGO_SETTINGS_MODULE=config.settings.prod python manage.py check --deploy
 ```
 
-> 🔒 `python manage.py check --deploy` signale les réglages dangereux pour la production.
+> `python manage.py check --deploy` signale les réglages dangereux pour la production.
 
 ## 4.8 Réglages personnalisés
 
@@ -734,10 +738,12 @@ DJANGO_SETTINGS_MODULE=config.settings.prod python manage.py check --deploy
 # settings.py
 ARTICLES_PAR_PAGE = env.int("ARTICLES_PAR_PAGE", default=10)
 
-# Utilisation
+# Utilisation (par exemple dans python manage.py shell)
 from django.conf import settings
-settings.ARTICLES_PAR_PAGE
+
+print(settings.ARTICLES_PAR_PAGE)                          # 10 (valeur par défaut)
 ```
+
 
 ## 4.9 Réglages de bibliothèques tierces
 
@@ -772,11 +778,24 @@ app_name = "blog"                                    # espace de noms : blog:det
 
 urlpatterns = [
     path("", views.ListeArticles.as_view(), name="liste"),
+    path("nouveau/", views.CreerArticle.as_view(), name="creer"),
     path("<int:pk>/", views.DetailArticle.as_view(), name="detail"),
-    path("<slug:slug>/", views.detail_par_slug, name="detail-slug"),
     path("archives/<int:annee>/<int:mois>/", views.archives, name="archives"),
+    path("<slug:slug>/", views.detail_par_slug, name="detail-slug"),     # motif générique : en dernier
 ]
 ```
+
+```python
+# apps/accueil/urls.py
+from django.urls import path
+from .views import Accueil, ExportCsv
+
+urlpatterns = [
+    path("", Accueil.as_view(), name="accueil"),
+    path("export.csv", ExportCsv.as_view(), name="export-csv"),
+]
+```
+
 
 ## 5.2 Convertisseurs de chemin
 
@@ -789,9 +808,20 @@ urlpatterns = [
 | `path` | Chaîne **avec** `/` | `str` |
 
 ```python
-path("articles/<int:pk>/", vue)                  # /articles/42/ → vue(request, pk=42)
-path("fichiers/<path:chemin>", vue)              # /fichiers/a/b/c.txt
+# apps/blog/urls.py (extrait)
+from django.http import HttpResponse
+from django.urls import path
+from . import views
+
+def fichier(request, chemin: str) -> HttpResponse:
+    return HttpResponse(f"Fichier demandé : {chemin}")
+
+urlpatterns = [
+    path("articles/<int:pk>/", views.detail_article),         # /articles/42/ → detail_article(request, pk=42)
+    path("fichiers/<path:chemin>", fichier),                  # /fichiers/a/b/c.txt → "a/b/c.txt"
+]
 ```
+
 
 ### Convertisseur personnalisé
 
@@ -799,56 +829,100 @@ path("fichiers/<path:chemin>", vue)              # /fichiers/a/b/c.txt
 # apps/blog/converters.py
 class AnneeQuatreChiffres:
     regex = r"[0-9]{4}"
-    def to_python(self, valeur: str) -> int: return int(valeur)
-    def to_url(self, valeur: int) -> str: return f"{valeur:04d}"
 
-# urls.py
-from django.urls import register_converter
-register_converter(AnneeQuatreChiffres, "annee")
-path("archives/<annee:annee>/", views.archives)
+    def to_python(self, valeur: str) -> int:
+        return int(valeur)
+
+    def to_url(self, valeur: int) -> str:
+        return f"{valeur:04d}"
 ```
+
+```python
+# apps/blog/urls.py
+from django.urls import path, register_converter
+from . import views
+from .converters import AnneeQuatreChiffres
+
+register_converter(AnneeQuatreChiffres, "annee")
+
+urlpatterns = [
+    path("archives/<annee:annee>/", views.archives, name="archives-annee"),
+]
+```
+
 
 ### Expressions régulières : `re_path`
 
 ```python
+# apps/blog/urls.py
 from django.urls import re_path
-re_path(r"^articles/(?P<annee>[0-9]{4})/$", views.archives)      # pour les cas complexes seulement
+from . import views
+
+urlpatterns = [
+    re_path(r"^articles/(?P<annee>[0-9]{4})/$", views.archives),      # pour les cas complexes seulement
+]
 ```
+
 
 ## 5.3 Noms d'URL et inversion
 
 **Ne codez jamais une URL en dur** : nommez-la et **inversez-la**.
 
 ```python
+# python manage.py shell
 from django.urls import reverse
-reverse("blog:detail", kwargs={"pk": 42})                # "/blog/42/"
-reverse("blog:liste")
+
+print(reverse("blog:detail", kwargs={"pk": 42}))         # /blog/42/
+print(reverse("blog:liste"))                             # /blog/
 ```
+
 
 ```django
 <a href="{% url 'blog:detail' pk=article.pk %}">{{ article.titre }}</a>
 ```
 
 ```python
-# Dans un modèle : URL canonique
+# apps/blog/models.py : URL canonique
+from django.db import models
 from django.urls import reverse
+
 class Article(models.Model):
     def get_absolute_url(self) -> str:
         return reverse("blog:detail", kwargs={"pk": self.pk})
 ```
 
+
 ## 5.4 Redirections et raccourcis
 
 ```python
-from django.shortcuts import redirect
-redirect("blog:liste")                                     # par nom (à retourner depuis la vue : return redirect(...))
-redirect("blog:detail", pk=42)
-redirect(article)                                          # utilise get_absolute_url()
-redirect("https://exemple.com")
+# apps/blog/views.py
+from django.shortcuts import get_object_or_404, redirect
+from .models import Article
 
-from django.views.generic import RedirectView
-path("ancienne-page/", RedirectView.as_view(pattern_name="blog:liste", permanent=True))
+def vers_liste(request):
+    return redirect("blog:liste")                          # par nom d'URL
+
+def vers_detail(request):
+    return redirect("blog:detail", pk=42)                  # par nom, avec arguments
+
+def vers_article(request, pk: int):
+    article = get_object_or_404(Article, pk=pk)
+    return redirect(article)                               # utilise get_absolute_url()
+
+def vers_site_externe(request):
+    return redirect("https://exemple.com")                 # URL absolue
 ```
+
+```python
+# apps/blog/urls.py (extrait)
+from django.urls import path
+from django.views.generic import RedirectView
+
+urlpatterns = [
+    path("ancienne-page/", RedirectView.as_view(pattern_name="blog:liste", permanent=True)),
+]
+```
+
 
 ## 5.5 Pages d'erreur personnalisées
 
@@ -860,11 +934,33 @@ handler403 = "apps.accueil.views.acces_refuse"
 handler400 = "apps.accueil.views.mauvaise_requete"
 ```
 
+```python
+# apps/accueil/views.py
+from django.shortcuts import render
+
+def page_introuvable(request, exception):
+    return render(request, "404.html", status=404)
+
+def erreur_serveur(request):
+    return render(request, "500.html", status=500)
+
+def acces_refuse(request, exception):
+    return render(request, "403.html", status=403)
+
+def mauvaise_requete(request, exception):
+    return render(request, "400.html", status=400)
+
+def a_propos(request):
+    return render(request, "a_propos.html")
+```
+
+
 Ou simplement créer `templates/404.html` et `500.html`.
 
 ## 5.6 Fichiers statiques et médias en développement
 
 ```python
+# config/urls.py (à la suite de urlpatterns)
 from django.conf import settings
 from django.conf.urls.static import static
 
@@ -875,8 +971,12 @@ if settings.DEBUG:
 ## 5.7 Internationalisation des URL
 
 ```python
+# config/urls.py (à la suite de urlpatterns)
 from django.conf.urls.i18n import i18n_patterns
+from django.urls import path
 from django.utils.translation import gettext_lazy as _
+
+from apps.accueil import views
 
 urlpatterns += i18n_patterns(
     path(_("a-propos/"), views.a_propos, name="a-propos"),    # /fr/a-propos/ · /en/about/
@@ -884,15 +984,25 @@ urlpatterns += i18n_patterns(
 )
 ```
 
+
 ## 5.8 URL pour les API REST
 
 ```python
-# DRF : routeurs (section 19)
+# apps/blog/urls_api.py (détails : section 19)
 from rest_framework.routers import DefaultRouter
+from .views_api import ArticleViewSet
+
 router = DefaultRouter()
 router.register("articles", ArticleViewSet, basename="article")
-urlpatterns = [path("api/v1/", include(router.urls))]
+
+urlpatterns = router.urls
 ```
+
+```python
+# config/urls.py
+urlpatterns += [path("api/v1/", include("apps.blog.urls_api"))]
+```
+
 
 Conventions : noms de ressources **au pluriel**, **verbes HTTP** pour les actions, versionnement (`/api/v1/`).
 
@@ -920,26 +1030,42 @@ Une **vue** reçoit un objet **`HttpRequest`** et renvoie un objet **`HttpRespon
 ## 6.2 Vues basées sur des fonctions (FBV)
 
 ```python
-from django.http import HttpRequest, HttpResponse, Http404, JsonResponse
-from django.shortcuts import render, get_object_or_404, redirect
+# apps/blog/views.py
+from django.http import HttpRequest, HttpResponse, JsonResponse
+from django.shortcuts import get_object_or_404, render
 from .models import Article
 
 def liste_articles(request: HttpRequest) -> HttpResponse:
-    articles = Article.objects.filter(publie=True).select_related("auteur")
+    articles = Article.objects.publies().select_related("auteur")
     return render(request, "blog/liste.html", {"articles": articles})
 
 def detail_article(request: HttpRequest, pk: int) -> HttpResponse:
-    article = get_object_or_404(Article, pk=pk, publie=True)       # 404 automatique si absent
+    article = get_object_or_404(Article.objects.publies(), pk=pk)       # 404 automatique si absent
     return render(request, "blog/detail.html", {"article": article})
+
+def detail_par_slug(request: HttpRequest, slug: str) -> HttpResponse:
+    article = get_object_or_404(Article.objects.publies(), slug=slug)
+    return render(request, "blog/detail.html", {"article": article})
+
+def archives(request: HttpRequest, annee: int, mois: int | None = None) -> HttpResponse:
+    articles = Article.objects.publies().filter(publie_le__year=annee)
+    if mois is not None:
+        articles = articles.filter(publie_le__month=mois)
+    return render(request, "blog/liste.html", {"articles": articles})
 
 def api_articles(request: HttpRequest) -> JsonResponse:
     return JsonResponse({"articles": list(Article.objects.values("id", "titre"))})
 ```
 
+
 ### Gérer les méthodes HTTP
 
 ```python
-from django.views.decorators.http import require_http_methods, require_POST, require_GET
+# apps/blog/views.py
+from django.shortcuts import redirect, render
+from django.views.decorators.http import require_http_methods
+
+from .forms import ArticleForm
 
 @require_http_methods(["GET", "POST"])
 def creer_article(request):
@@ -949,11 +1075,13 @@ def creer_article(request):
             article = form.save(commit=False)
             article.auteur = request.user
             article.save()
+            form.save_m2m()                                         # nécessaire après commit=False (relations ManyToMany)
             return redirect(article)                                # motif Post/Redirect/Get
     else:
         form = ArticleForm()
     return render(request, "blog/formulaire.html", {"form": form})
 ```
+
 
 ### Objets `request` et réponses utiles
 
@@ -971,26 +1099,34 @@ Réponses : `HttpResponse`, `JsonResponse`, `HttpResponseRedirect`, `FileRespons
 ## 6.3 Décorateurs de vue
 
 ```python
-from django.contrib.auth.decorators import login_required, permission_required, user_passes_test
-from django.views.decorators.cache import cache_page, never_cache
-from django.views.decorators.csrf import csrf_exempt            # ⚠️ à éviter
-from django.views.decorators.http import require_POST
+from django.contrib.auth.decorators import login_required, permission_required
+from django.http import HttpResponse
+from django.views.decorators.cache import cache_page
 
 @login_required                                                  # redirige vers LOGIN_URL
 @permission_required("blog.publish_article", raise_exception=True)
 @cache_page(60 * 15)
-def tableau_de_bord(request): ...
+def tableau_de_bord(request):
+    return HttpResponse("Tableau de bord")
 ```
 
-> ✅ Avec **`LoginRequiredMiddleware`** (5.1), toutes les vues exigent la connexion **par défaut** ; exemptez les vues publiques avec `@login_not_required`.
+`csrf_exempt` (désactivation de la protection CSRF) est à éviter : voir la section 26.
+
+> Avec **`LoginRequiredMiddleware`** (5.1), toutes les vues exigent la connexion **par défaut** ; exemptez les vues publiques avec `@login_not_required`.
 
 ## 6.4 Vues basées sur des classes (CBV)
 
 Une CBV regroupe la logique par **méthode HTTP** et permet l'**héritage** et les **mixins**.
 
 ```python
+# apps/accueil/views.py
+import csv
+
+from django.http import HttpResponse
 from django.views import View
 from django.views.generic import TemplateView
+
+from apps.blog.models import Article
 
 class Accueil(TemplateView):
     template_name = "accueil.html"
@@ -1002,14 +1138,19 @@ class Accueil(TemplateView):
 
 class ExportCsv(View):
     def get(self, request, *args, **kwargs):
-        ...
+        reponse = HttpResponse(content_type="text/csv")
+        ecrivain = csv.writer(reponse)
+        ecrivain.writerow(["id", "titre"])
+        for article in Article.objects.publies():
+            ecrivain.writerow([article.pk, article.titre])
+        return reponse
+
     def post(self, request, *args, **kwargs):
-        ...
+        return HttpResponse(status=204)
 ```
 
-```python
-path("", Accueil.as_view(), name="accueil")                     # toujours as_view()
-```
+
+Dans l'URLconf (voir la section 5.1), une CBV se branche **toujours** avec `as_view()` : `path("", Accueil.as_view(), name="accueil")`.
 
 ## 6.5 Vues génériques
 
@@ -1024,9 +1165,13 @@ path("", Accueil.as_view(), name="accueil")                     # toujours as_vi
 | `ArchiveIndexView`, `YearArchiveView`, `MonthArchiveView`… | Archives par date |
 
 ```python
+# apps/blog/views.py
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.urls import reverse_lazy
-from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.views.generic import CreateView, DetailView, ListView, UpdateView
+
+from .forms import ArticleForm
+from .models import Article
 
 class ListeArticles(ListView):
     model = Article
@@ -1036,14 +1181,16 @@ class ListeArticles(ListView):
     ordering = ["-publie_le"]
 
     def get_queryset(self):
-        qs = super().get_queryset().filter(publie=True).select_related("auteur")
+        qs = super().get_queryset().publies().select_related("auteur")
         if q := self.request.GET.get("q"):
             qs = qs.filter(titre__icontains=q)
         return qs
 
 class DetailArticle(DetailView):
     model = Article                                              # template par défaut : blog/article_detail.html
-    queryset = Article.objects.filter(publie=True)
+
+    def get_queryset(self):
+        return Article.objects.publies()                         # évalué à chaque requête (et non à l'import)
 
 class CreerArticle(LoginRequiredMixin, CreateView):
     model = Article
@@ -1057,40 +1204,49 @@ class CreerArticle(LoginRequiredMixin, CreateView):
 class ModifierArticle(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Article
     fields = ["titre", "contenu"]
+
     def test_func(self) -> bool:
         return self.get_object().auteur == self.request.user     # seul l'auteur peut modifier
 ```
 
-> ⚠️ Dans les classes, **placez les mixins d'accès avant la vue générique** (`LoginRequiredMixin, CreateView`).
-> 💡 La [référence « ccbv.co.uk »](https://ccbv.co.uk) montre toutes les méthodes et attributs de chaque vue générique.
+
+> Dans les classes, **placez les mixins d'accès avant la vue générique** (`LoginRequiredMixin, CreateView`).
+> La [référence « ccbv.co.uk »](https://ccbv.co.uk) montre toutes les méthodes et attributs de chaque vue générique.
 
 ### FBV ou CBV ?
 
 | | **FBV** | **CBV** |
 | --- | --- | --- |
-| Lisibilité | ✅ Explicite, simple | Plus abstraite (héritage) |
-| Réutilisation | Décorateurs, fonctions | ✅ Mixins, héritage |
-| CRUD standard | Plus de code | ✅ Très concis |
-| Cas particuliers | ✅ Plus souple | Peut devenir complexe |
+| Lisibilité | **Explicite, simple** | Plus abstraite (héritage) |
+| Réutilisation | Décorateurs, fonctions | **Mixins, héritage** |
+| CRUD standard | Plus de code | **Très concis** |
+| Cas particuliers | **Plus souple** | Peut devenir complexe |
 
-> ✅ Règle pratique : **CBV génériques** pour le CRUD standard, **FBV** pour la logique atypique.
+> Règle pratique : **CBV génériques** pour le CRUD standard, **FBV** pour la logique atypique.
 
 ## 6.6 Vues asynchrones *(ajout)*
 
 ```python
+# apps/blog/views.py
+from django.http import JsonResponse
+from .models import Article
+
 async def statut(request):
-    articles = [a async for a in Article.objects.filter(publie=True)[:5]]       # ORM asynchrone
+    articles = [a async for a in Article.objects.publies()[:5]]                 # ORM asynchrone
     total = await Article.objects.acount()
     return JsonResponse({"total": total, "titres": [a.titre for a in articles]})
 ```
+
 
 Voir [section 22](#22-programmation-asynchrone-asgi-et-websockets).
 
 ## 6.7 Gestion des erreurs dans les vues
 
 ```python
-from django.core.exceptions import PermissionDenied, ValidationError
-from django.http import Http404
+# apps/blog/views.py
+from django.core.exceptions import PermissionDenied
+from django.http import Http404, HttpResponse
+from .models import Article
 
 def vue(request, pk):
     try:
@@ -1099,7 +1255,9 @@ def vue(request, pk):
         raise Http404("Article introuvable")
     if not request.user.has_perm("blog.view_article"):
         raise PermissionDenied                                    # → 403
+    return HttpResponse(article.titre)
 ```
+
 
 ## 6.8 Organiser les vues
 
@@ -1132,7 +1290,7 @@ Un **template** est un fichier texte (HTML) contenant des **variables** `{{ }}`,
 {% endif %}
 ```
 
-> 🔒 **Échappement automatique** : `{{ variable }}` échappe le HTML (protection XSS). N'utilisez `|safe` ou `{% autoescape off %}` que pour du contenu **de confiance**.
+> **Échappement automatique** : `{{ variable }}` échappe le HTML (protection XSS). N'utilisez `|safe` ou `{% autoescape off %}` que pour du contenu **de confiance**.
 
 ## 7.2 Héritage de templates
 
@@ -1158,7 +1316,7 @@ Un **template** est un fichier texte (HTML) contenant des **variables** `{{ }}`,
 ```
 
 ```django
-{# blog/templates/blog/liste.html #}
+{# apps/blog/templates/blog/liste.html #}
 {% extends "base.html" %}
 {% block titre %}Articles — {{ block.super }}{% endblock %}
 {% block contenu %}
@@ -1201,7 +1359,7 @@ Un **template** est un fichier texte (HTML) contenant des **variables** `{{ }}`,
 Définissez un **fragment nommé** dans un template et **rendez-le seul** : idéal avec **HTMX** (réponses partielles).
 
 ```django
-{# blog/liste.html #}
+{# apps/blog/templates/blog/liste.html #}
 {% extends "base.html" %}
 {% block contenu %}
     {% partialdef liste-articles inline %}
@@ -1211,10 +1369,15 @@ Définissez un **fragment nommé** dans un template et **rendez-le seul** : idé
 ```
 
 ```python
+# apps/blog/views.py
+from django.shortcuts import render
+from .models import Article
+
 def liste(request):
     articles = Article.objects.publies()
     return render(request, "blog/liste.html#liste-articles", {"articles": articles})       # ne rend QUE le fragment
 ```
+
 
 ```django
 {% partial liste-articles %}                                     {# réutiliser le fragment ailleurs #}
@@ -1223,8 +1386,10 @@ def liste(request):
 ## 7.5 Balises et filtres personnalisés
 
 ```python
-# blog/templatetags/blog_extras.py
+# apps/blog/templatetags/blog_extras.py
 from django import template
+from apps.blog.models import Article
+
 register = template.Library()
 
 @register.filter
@@ -1233,13 +1398,15 @@ def temps_de_lecture(texte: str) -> int:
 
 @register.simple_tag(takes_context=True)
 def url_page(context, page: int) -> str:
-    requete = context["request"].GET.copy(); requete["page"] = page
+    requete = context["request"].GET.copy()
+    requete["page"] = page
     return f"?{requete.urlencode()}"
 
 @register.inclusion_tag("blog/_derniers.html")
 def derniers_articles(n: int = 5):
     return {"articles": Article.objects.publies()[:n]}
 ```
+
 
 ```django
 {% load blog_extras %}
@@ -1254,13 +1421,16 @@ Injectent des variables dans **tous** les templates :
 
 ```python
 # apps/accueil/context_processors.py
+from django.utils import timezone
+
 def site(request):
     return {"NOM_SITE": "Mon site", "ANNEE": timezone.now().year}
 
-# settings.py → TEMPLATES[...]["OPTIONS"]["context_processors"] += ["apps.accueil.context_processors.site"]
+# settings.py → TEMPLATES[0]["OPTIONS"]["context_processors"] += ["apps.accueil.context_processors.site"]
 ```
 
-> ⚠️ Utilisez-les avec **parcimonie** : ils s'exécutent à **chaque** rendu.
+
+> Utilisez-les avec **parcimonie** : ils s'exécutent à **chaque** rendu.
 
 ## 7.7 Fichiers statiques, formulaires, internationalisation
 
@@ -1283,7 +1453,7 @@ Django peut utiliser **Jinja2** (`django.template.backends.jinja2.Jinja2`) : plu
 
 ---
 
-# 🟡 Données et interface
+# Données et interface
 
 ---
 
@@ -1320,6 +1490,7 @@ class Article(models.Model):
     class Statut(models.TextChoices):                                # énumération de choix
         BROUILLON = "brouillon", "Brouillon"
         PUBLIE = "publie", "Publié"
+        ARCHIVE = "archive", "Archivé"
 
     titre = models.CharField(max_length=200)
     slug = models.SlugField(max_length=200, unique_for_date="publie_le")
@@ -1336,6 +1507,7 @@ class Article(models.Model):
 
     class Meta:
         ordering = ["-publie_le"]
+        permissions = [("publish_article", "Peut publier un article")]
         indexes = [models.Index(fields=["statut", "-publie_le"])]
         constraints = [
             models.CheckConstraint(condition=models.Q(note__gte=0, note__lte=5), name="article_note_0_5"),
@@ -1348,14 +1520,14 @@ class Article(models.Model):
         return reverse("blog:detail", kwargs={"pk": self.pk})
 ```
 
-> 📌 Depuis Django 5.1, `CheckConstraint` utilise le paramètre **`condition=`** (l'ancien `check=` est déprécié).
+> Depuis Django 5.1, `CheckConstraint` utilise le paramètre **`condition=`** (l'ancien `check=` est déprécié).
 
 ## 8.2 Types de champs
 
 | Catégorie | Champs |
 | --- | --- |
 | **Texte** | `CharField(max_length)`, `TextField`, `SlugField`, `EmailField`, `URLField`, `UUIDField` |
-| **Nombres** | `IntegerField`, `BigIntegerField`, `SmallIntegerField`, `PositiveIntegerField`, `FloatField`, `DecimalField(max_digits, decimal_places)` (✅ pour l'argent) |
+| **Nombres** | `IntegerField`, `BigIntegerField`, `SmallIntegerField`, `PositiveIntegerField`, `FloatField`, `DecimalField(max_digits, decimal_places)` (recommandé pour l'argent) |
 | **Booléen** | `BooleanField` |
 | **Dates** | `DateField`, `DateTimeField`, `TimeField`, `DurationField` (`auto_now`, `auto_now_add`) |
 | **Fichiers** | `FileField`, `ImageField` (nécessite **Pillow**) |
@@ -1368,7 +1540,7 @@ class Article(models.Model):
 
 | Option | Rôle |
 | --- | --- |
-| `null=True` | Stocke `NULL` en base (⚠️ évitez pour `CharField`/`TextField` : préférez `""`) |
+| `null=True` | Stocke `NULL` en base (évitez pour `CharField`/`TextField` : préférez `""`) |
 | `blank=True` | Champ **facultatif dans les formulaires** (validation) |
 | `default`, `db_default` | Valeur par défaut (Python / **base**, 5.0) |
 | `unique`, `db_index` | Unicité, index |
@@ -1376,25 +1548,35 @@ class Article(models.Model):
 | `validators`, `help_text`, `verbose_name`, `editable`, `db_column` | |
 
 ```python
-from django.db.models.functions import Lower
+# apps/boutique/models.py
+from decimal import Decimal
+
+from django.db import models
 
 class Produit(models.Model):
+    nom = models.CharField(max_length=150)
     prix_ht = models.DecimalField(max_digits=10, decimal_places=2)
-    tva = models.DecimalField(max_digits=4, decimal_places=3, default=0.2)
+    tva = models.DecimalField(max_digits=4, decimal_places=3, default=Decimal("0.200"))
     prix_ttc = models.GeneratedField(                                  # colonne calculée par la base (5.0)
         expression=models.F("prix_ht") * (1 + models.F("tva")),
         output_field=models.DecimalField(max_digits=12, decimal_places=2),
         db_persist=True,
     )
+    quantite = models.PositiveIntegerField(default=0)                 # stock disponible
     metadonnees = models.JSONField(default=dict, blank=True)
 ```
+
 
 ## 8.3 Clés primaires
 
 Par défaut, Django ajoute `id` (**`BigAutoField`**). Autres choix :
 
 ```python
+# apps/boutique/models.py
 import uuid
+
+from django.db import models
+
 class Commande(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)      # ou UUID7 côté base (6.1)
 
@@ -1404,19 +1586,37 @@ class LigneCommande(models.Model):                                              
     produit = models.ForeignKey(Produit, on_delete=models.CASCADE)
 ```
 
+
 ## 8.4 Relations
 
 ```python
+# apps/blog/models.py
+from django.conf import settings
+from django.db import models
+
 class Commentaire(models.Model):
     article = models.ForeignKey(Article, on_delete=models.CASCADE, related_name="commentaires")   # plusieurs → un
     auteur = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
-
-class Profil(models.Model):
-    utilisateur = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)         # un → un
+    texte = models.TextField()
+    cree_le = models.DateTimeField(auto_now_add=True)
+    valide = models.BooleanField(default=True)
 
 class Etiquette(models.Model):
+    nom = models.CharField(max_length=50)
     articles = models.ManyToManyField(Article, through="Classement")                                # plusieurs → plusieurs
+
+class Classement(models.Model):                                                                      # table intermédiaire
+    article = models.ForeignKey(Article, on_delete=models.CASCADE)
+    etiquette = models.ForeignKey(Etiquette, on_delete=models.CASCADE)
+    rang = models.PositiveSmallIntegerField(default=0)
 ```
+
+```python
+# apps/comptes/models.py
+class Profil(models.Model):
+    utilisateur = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)         # un → un
+```
+
 
 | `on_delete` | Comportement à la suppression de l'objet référencé |
 | --- | --- |
@@ -1428,9 +1628,13 @@ class Etiquette(models.Model):
 | **`DB_CASCADE`**, **`DB_SET_NULL`**, **`DB_SET_DEFAULT`** *(6.1)* | **Délégué à la base de données** (contraintes `ON DELETE`) : plus rapide, sans charger les objets |
 
 ```python
-article.commentaires.all()          # relation inverse (related_name)
-article.categories.add(cat)         # ManyToMany
-Article.objects.filter(categories__slug="python")
+# python manage.py shell
+article = Article.objects.first()
+categorie = Categorie.objects.first()
+
+print(article.commentaires.all())                       # relation inverse (related_name)
+article.categories.add(categorie)                       # ManyToMany
+print(Article.objects.filter(categories__slug="python"))
 ```
 
 ## 8.5 Migrations
@@ -1449,40 +1653,51 @@ python manage.py squashmigrations blog 0001 0020           # condenser l'histori
 ```
 
 ```python
-# Migration de données
+# apps/blog/migrations/0004_remplir_slugs.py
 from django.db import migrations
+from django.utils.text import slugify
 
 def remplir_slugs(apps, schema_editor):
-    Article = apps.get_model("blog", "Article")           # ⚠️ modèle HISTORIQUE, jamais l'import direct
+    Article = apps.get_model("blog", "Article")           # modèle HISTORIQUE, jamais l'import direct
     for a in Article.objects.filter(slug=""):
-        a.slug = slugify(a.titre); a.save(update_fields=["slug"])
+        a.slug = slugify(a.titre)
+        a.save(update_fields=["slug"])
 
 class Migration(migrations.Migration):
     dependencies = [("blog", "0003_article_slug")]
     operations = [migrations.RunPython(remplir_slugs, migrations.RunPython.noop)]
 ```
 
-> ✅ **Versionnez les migrations** dans Git ; **ne modifiez jamais** une migration déjà appliquée en production. Ajoutez une colonne `NOT NULL` en **plusieurs étapes** (nullable → remplissage → contrainte) pour éviter de verrouiller de grosses tables.
+
+> **Versionnez les migrations** dans Git ; **ne modifiez jamais** une migration déjà appliquée en production. Ajoutez une colonne `NOT NULL` en **plusieurs étapes** (nullable → remplissage → contrainte) pour éviter de verrouiller de grosses tables.
 
 ## 8.6 Validation et nettoyage
 
 ```python
+# apps/blog/models.py : méthode à ajouter dans la classe Article
 from django.core.exceptions import ValidationError
 
 class Article(models.Model):
+    # ... champs de la section 8.1 ...
+
     def clean(self):                                               # validation globale (appelée par full_clean et les ModelForm)
         if self.statut == self.Statut.PUBLIE and len(self.contenu) < 100:
             raise ValidationError({"contenu": "Un article publié doit contenir au moins 100 caractères."})
 ```
 
-> ⚠️ `save()` n'appelle **pas** `full_clean()` automatiquement. Les **contraintes de base** (`CheckConstraint`, `UniqueConstraint`) sont plus fiables que la validation Python seule.
+
+> `save()` n'appelle **pas** `full_clean()` automatiquement. Les **contraintes de base** (`CheckConstraint`, `UniqueConstraint`) sont plus fiables que la validation Python seule.
 
 ## 8.7 Méthodes, propriétés et gestionnaires
 
 ```python
+# apps/blog/models.py : méthodes à ajouter dans la classe Article
 class Article(models.Model):
+    # ... champs de la section 8.1 ...
+
     @property
-    def temps_de_lecture(self) -> int: return max(1, len(self.contenu.split()) // 200)
+    def temps_de_lecture(self) -> int:
+        return max(1, len(self.contenu.split()) // 200)
 
     def publier(self) -> None:                                      # logique métier dans le modèle
         self.statut = self.Statut.PUBLIE
@@ -1490,27 +1705,36 @@ class Article(models.Model):
         self.save(update_fields=["statut", "publie_le"])
 ```
 
+
 ```python
 class ArticleManager(models.Manager):
-    def get_queryset(self): return super().get_queryset().select_related("auteur")
+    def get_queryset(self):
+        return super().get_queryset().select_related("auteur")
 ```
+
 
 ## 8.8 Héritage de modèles
 
 | Type | Table(s) | Usage |
 | --- | --- | --- |
-| **Classe abstraite** (`Meta: abstract = True`) | Aucune pour la base ; champs copiés dans les enfants | **Champs communs** (horodatage) ✅ |
-| **Multi-table** | Une table par modèle, liée par `OneToOne` | Hiérarchie avec requêtes sur le parent (⚠️ jointures) |
+| **Classe abstraite** (`Meta: abstract = True`) | Aucune pour la base ; champs copiés dans les enfants | **Champs communs** (horodatage) |
+| **Multi-table** | Une table par modèle, liée par `OneToOne` | Hiérarchie avec requêtes sur le parent (attention aux jointures) |
 | **Proxy** (`proxy = True`) | Aucune nouvelle | Changer le comportement (gestionnaire, méthodes) |
 
 ```python
+from django.db import models
+
 class Horodate(models.Model):
     cree_le = models.DateTimeField(auto_now_add=True)
     modifie_le = models.DateTimeField(auto_now=True)
-    class Meta: abstract = True
 
-class Article(Horodate): ...
+    class Meta:
+        abstract = True
+
+class Note(Horodate):                                              # hérite de cree_le et modifie_le
+    texte = models.TextField()
 ```
+
 
 ## 8.9 Performances (aperçu)
 
@@ -1519,13 +1743,20 @@ class Article(Horodate): ...
 ## 8.10 SQL brut
 
 ```python
-Article.objects.raw("SELECT * FROM blog_article WHERE note > %s", [3])           # paramètres : toujours liés (%s), jamais f-string
+# python manage.py shell
 from django.db import connection
-with connection.cursor() as c:
-    c.execute("SELECT COUNT(*) FROM blog_article WHERE statut = %s", ["publie"]); c.fetchone()
+
+# paramètres : toujours liés (%s), jamais de f-string
+for article in Article.objects.raw("SELECT * FROM blog_article WHERE note > %s", [3]):
+    print(article.titre)
+
+with connection.cursor() as curseur:
+    curseur.execute("SELECT COUNT(*) FROM blog_article WHERE statut = %s", ["publie"])
+    print(curseur.fetchone())                                      # (nombre,)
 ```
 
-> 🔒 **Ne construisez jamais du SQL avec des f-strings ou `%`** sur des données utilisateur (injection SQL).
+
+> **Ne construisez jamais du SQL avec des f-strings ou `%`** sur des données utilisateur (injection SQL).
 
 ---
 
@@ -1534,30 +1765,46 @@ with connection.cursor() as c:
 ## 9.1 Opérations de base
 
 ```python
+# python manage.py shell (les modèles sont importés automatiquement depuis Django 5.2)
+from datetime import timedelta
+
+from django.utils import timezone
+
+user = Utilisateur.objects.first()                       # un auteur existant
+
 # Créer
-article = Article.objects.create(titre="Bonjour", contenu="…", auteur=user)
-a = Article(titre="X"); a.save()
-Article.objects.bulk_create([Article(titre=f"T{i}", auteur=user) for i in range(100)], batch_size=500)
+article = Article.objects.create(titre="Bonjour", slug="bonjour", contenu="…", auteur=user)
+a = Article(titre="X", slug="x", contenu="…", auteur=user)
+a.save()
+Article.objects.bulk_create(
+    [Article(titre=f"T{i}", slug=f"t{i}", contenu="…", auteur=user) for i in range(100)], batch_size=500
+)
 
 # Lire
-Article.objects.all()
-Article.objects.get(pk=1)                               # DoesNotExist / MultipleObjectsReturned
-Article.objects.filter(statut="publie").exclude(auteur=user)
-Article.objects.first(); Article.objects.last(); Article.objects.exists(); Article.objects.count()
-Article.objects.get_or_create(slug="x", defaults={"titre": "X"})      # (objet, créé)
-Article.objects.update_or_create(slug="x", defaults={"titre": "Y"})
+print(Article.objects.all())
+print(Article.objects.get(pk=article.pk))                # DoesNotExist / MultipleObjectsReturned
+print(Article.objects.filter(statut="publie").exclude(auteur=user))
+print(Article.objects.first(), Article.objects.last(), Article.objects.exists(), Article.objects.count())
+print(Article.objects.get_or_create(slug="x2", defaults={"titre": "X2", "contenu": "…", "auteur": user}))   # (objet, créé)
+print(Article.objects.update_or_create(slug="x2", defaults={"titre": "Y"}))
 
 # Modifier
-article.titre = "Nouveau"; article.save(update_fields=["titre"])
-Article.objects.filter(statut="brouillon").update(statut="archive")  # UPDATE en une requête
+article.titre = "Nouveau"
+article.save(update_fields=["titre"])
+print(Article.objects.filter(statut="brouillon").update(statut="archive"))    # UPDATE en une requête : nombre de lignes modifiées
+objets = list(Article.objects.filter(titre__startswith="T"))
+for objet in objets:
+    objet.note = 3
 Article.objects.bulk_update(objets, ["note"])
 
 # Supprimer
 article.delete()
-Article.objects.filter(cree_le__lt=limite).delete()
+limite = timezone.now() - timedelta(days=365)
+print(Article.objects.filter(cree_le__lt=limite).delete())                   # (nombre total, détail par modèle)
 ```
 
-> 💡 Un **QuerySet est paresseux** : le SQL n'est exécuté qu'à l'**évaluation** (itération, `list()`, `len()`, slicing avec pas, `bool()`) ; il est **mis en cache** après évaluation.
+
+> Un **QuerySet est paresseux** : le SQL n'est exécuté qu'à l'**évaluation** (itération, `list()`, `len()`, slicing avec pas, `bool()`) ; il est **mis en cache** après évaluation.
 
 ## 9.2 Filtres et lookups
 
@@ -1576,72 +1823,93 @@ Article.objects.filter(cree_le__lt=limite).delete()
 | JSON | `__clé` | `metadonnees__couleur="rouge"` |
 
 ```python
-from django.db.models import Q, F, Count, Avg, Sum, Max, Min
+from django.db.models import F, Q
 
-Article.objects.filter(Q(titre__icontains="django") | Q(contenu__icontains="django"))      # OR
-Article.objects.filter(~Q(statut="brouillon"), note__gte=3)                                  # NOT + AND
-Article.objects.filter(modifie_le__gt=F("cree_le"))                                          # comparer deux champs
-Article.objects.update(note=F("note") + 1)                                                   # incrément atomique (évite les conflits)
+print(Article.objects.filter(Q(titre__icontains="django") | Q(contenu__icontains="django")))      # OR
+print(Article.objects.filter(~Q(statut="brouillon"), note__gte=3))                                  # NOT + AND
+print(Article.objects.filter(modifie_le__gt=F("cree_le")))                                          # comparer deux champs
+Article.objects.filter(note__lt=5).update(note=F("note") + 1)                                       # incrément atomique (respecte la contrainte note <= 5)
 ```
+
 
 ## 9.3 Tri, découpage, valeurs
 
 ```python
-Article.objects.order_by("-publie_le", "titre")
-Article.objects.order_by("?")                          # aléatoire (coûteux)
-Article.objects.all()[:10]                             # LIMIT 10 (pagination : [20:30])
-Article.objects.values("id", "titre")                  # dictionnaires
-Article.objects.values_list("titre", flat=True)        # liste de valeurs
-Article.objects.distinct(); Article.objects.in_bulk([1, 2]); Article.objects.reverse(); Article.objects.none()
+print(Article.objects.order_by("-publie_le", "titre"))
+print(Article.objects.order_by("?"))                   # aléatoire (coûteux)
+print(Article.objects.all()[:10])                      # LIMIT 10 (pagination : [20:30])
+print(Article.objects.values("id", "titre"))           # dictionnaires
+print(Article.objects.values_list("titre", flat=True)) # liste de valeurs
+print(Article.objects.in_bulk([1, 2]))                 # {id: objet}
+print(Article.objects.distinct(), Article.objects.reverse(), Article.objects.none())
 ```
+
 
 ## 9.4 Agrégation et annotation
 
 ```python
-Article.objects.aggregate(total=Count("id"), moyenne=Avg("note"), maxi=Max("publie_le"))      # un seul résultat (dict)
+from django.db.models import Avg, Count, Max
+
+print(Article.objects.aggregate(total=Count("id"), moyenne=Avg("note"), maxi=Max("publie_le")))      # un seul résultat (dict)
 
 auteurs = (Utilisateur.objects
            .annotate(nb_articles=Count("articles", distinct=True), note_moyenne=Avg("articles__note"))
            .filter(nb_articles__gte=1)
            .order_by("-nb_articles"))
-for a in auteurs: print(a.username, a.nb_articles)    # chaque objet porte l'annotation
+for a in auteurs:
+    print(a.username, a.nb_articles)                   # chaque objet porte l'annotation
 ```
+
 
 ### Expressions et fonctions
 
 ```python
-from django.db.models import Case, When, Value, CharField, Subquery, OuterRef, Exists, Window
-from django.db.models.functions import Lower, Concat, Coalesce, Now, TruncMonth, RowNumber, UUID7   # (UUID4/UUID7 : 6.1)
+from django.db.models import Case, CharField, Count, Exists, F, OuterRef, Subquery, Value, When, Window
+from django.db.models.functions import RowNumber, TruncMonth
 
-Article.objects.annotate(niveau=Case(
+niveaux = Article.objects.annotate(niveau=Case(
     When(note__gte=4, then=Value("excellent")), When(note__gte=2, then=Value("bon")),
     default=Value("faible"), output_field=CharField()))
+print([(a.titre, a.niveau) for a in niveaux])
 
 dernier = Commentaire.objects.filter(article=OuterRef("pk")).order_by("-cree_le")
-Article.objects.annotate(dernier_commentaire=Subquery(dernier.values("texte")[:1]))
-Article.objects.filter(Exists(Commentaire.objects.filter(article=OuterRef("pk"))))          # articles commentés
+avec_dernier = Article.objects.annotate(dernier_commentaire=Subquery(dernier.values("texte")[:1]))
+print([(a.titre, a.dernier_commentaire) for a in avec_dernier])
 
-Article.objects.annotate(rang=Window(expression=RowNumber(), partition_by=F("auteur"), order_by=F("note").desc()))   # fonction de fenêtrage
-Article.objects.annotate(mois=TruncMonth("publie_le")).values("mois").annotate(n=Count("id"))
+print(Article.objects.filter(Exists(Commentaire.objects.filter(article=OuterRef("pk")))))          # articles commentés
+
+classement = Article.objects.annotate(rang=Window(expression=RowNumber(), partition_by=F("auteur"), order_by=F("note").desc()))   # fonction de fenêtrage
+print([(a.titre, a.rang) for a in classement])
+
+print(Article.objects.annotate(mois=TruncMonth("publie_le")).values("mois").annotate(n=Count("id")))
 ```
+
 
 ## 9.5 Relations et jointures : éviter le problème N+1
 
 ```python
-# ❌ N+1 : 1 requête + 1 par article
+from django.db.models import Prefetch
+
+# Mauvais : N+1 (1 requête + 1 par article)
 for a in Article.objects.all():
     print(a.auteur.username)
 
-# ✅ select_related : JOIN pour les relations « vers un » (ForeignKey, OneToOne)
-Article.objects.select_related("auteur", "auteur__profil")
+# Bon : select_related : JOIN pour les relations « vers un » (ForeignKey, OneToOne)
+for a in Article.objects.select_related("auteur", "auteur__profil"):
+    print(a.auteur.username)
 
-# ✅ prefetch_related : 2e requête groupée pour « vers plusieurs » (ManyToMany, relations inverses)
-Article.objects.prefetch_related("categories", "commentaires")
+# Bon : prefetch_related : 2e requête groupée pour « vers plusieurs » (ManyToMany, relations inverses)
+for a in Article.objects.prefetch_related("categories", "commentaires"):
+    print(a.titre, a.commentaires.count())
 
 # Préchargement filtré
-from django.db.models import Prefetch
-Article.objects.prefetch_related(Prefetch("commentaires", queryset=Commentaire.objects.filter(valide=True), to_attr="commentaires_valides"))
+articles = Article.objects.prefetch_related(
+    Prefetch("commentaires", queryset=Commentaire.objects.filter(valide=True), to_attr="commentaires_valides")
+)
+for a in articles:
+    print(a.titre, len(a.commentaires_valides))
 ```
+
 
 ### Modes de chargement des champs *(6.1, ajout)*
 
@@ -1652,7 +1920,7 @@ from django.db import models
 
 articles = Article.objects.fetch_mode(models.FETCH_PEERS)        # charge la relation pour TOUS les objets « pairs » en une seule requête
 for a in articles:
-    print(a.auteur.nom)                                          # 2 requêtes au total, malgré la boucle
+    print(a.auteur.username)                                     # 2 requêtes au total, malgré la boucle
 
 # FETCH_ONE (comportement classique) · FETCH_RAISE : lève une erreur si un chargement à la demande a lieu (détecter les N+1 dans les tests)
 ```
@@ -1674,78 +1942,133 @@ for a in articles:
 | `django-debug-toolbar`, `connection.queries`, `django-silk` | Mesurer |
 
 ```python
-print(Article.objects.filter(statut="publie").explain(analyze=True))
+from django.db import connection
 from django.test.utils import CaptureQueriesContext
-with CaptureQueriesContext(connection) as ctx: ...; print(len(ctx))
+
+print(Article.objects.filter(statut="publie").explain(analyze=True))
+
+with CaptureQueriesContext(connection) as ctx:
+    print([a.auteur.username for a in Article.objects.select_related("auteur")])
+print(len(ctx), "requête(s)")                           # 1 requête
 ```
+
 
 ## 9.7 Transactions
 
 ```python
+# apps/boutique/services.py
 from django.db import transaction
+from django.db.models import F
+
+from .models import Commande, Produit
+from .tasks import envoyer_confirmation                  # tâche présentée en section 23
 
 @transaction.atomic                                           # tout ou rien
-def passer_commande(panier): ...
-
-with transaction.atomic():
-    commande = Commande.objects.create(...)
-    for ligne in lignes:
-        Stock.objects.select_for_update().filter(pk=ligne.produit_id).update(quantite=F("quantite") - ligne.quantite)
-
-transaction.on_commit(lambda: envoyer_confirmation.delay(commande.pk))      # ✅ exécuter APRÈS la validation de la transaction
+def passer_commande(lignes: list[tuple[int, int]]) -> Commande:
+    commande = Commande.objects.create()
+    for produit_id, quantite in lignes:
+        Produit.objects.select_for_update().filter(pk=produit_id).update(quantite=F("quantite") - quantite)
+    transaction.on_commit(lambda: envoyer_confirmation.delay(str(commande.pk)))      # exécuter APRÈS la validation de la transaction
+    return commande
 ```
 
-> ⚙️ `ATOMIC_REQUESTS = True` (dans `DATABASES`) enveloppe chaque requête HTTP dans une transaction.
+
+> `ATOMIC_REQUESTS = True` (dans `DATABASES`) enveloppe chaque requête HTTP dans une transaction.
 
 ## 9.8 ORM asynchrone *(ajout)*
 
 Préfixe `a` pour les opérations **terminales**, `async for` pour l'itération :
 
 ```python
-article = await Article.objects.aget(pk=1)
-nb = await Article.objects.filter(statut="publie").acount()
-await Article.objects.acreate(titre="X", auteur=user)
-async for a in Article.objects.filter(statut="publie"): ...
-existe = await Article.objects.filter(slug="x").aexists()
+import asyncio
+
+async def exemples():
+    auteur = await Utilisateur.objects.afirst()
+    article = await Article.objects.aget(pk=1)
+    nb = await Article.objects.filter(statut="publie").acount()
+    await Article.objects.acreate(titre="X", slug="x-async", contenu="…", auteur=auteur)
+    async for a in Article.objects.filter(statut="publie"):
+        print(a.titre)
+    existe = await Article.objects.filter(slug="x-async").aexists()
+    print(article.titre, nb, existe)
+
+asyncio.run(exemples())                                  # dans un script ; dans une vue asynchrone, utilisez directement await
 ```
+
 
 > Les opérations qui ne sont pas encore natives asynchrones peuvent être appelées avec `sync_to_async` (voir section 22).
 
 ## 9.9 Plusieurs bases de données
 
 ```python
-DATABASES = {"default": {...}, "lecture": {...}}
+# settings.py
+DATABASES = {
+    "default": env.db("DATABASE_URL"),
+    "lecture": env.db("DATABASE_REPLICA_URL"),
+}
 DATABASE_ROUTERS = ["config.routers.LectureEcriture"]
-
-class LectureEcriture:
-    def db_for_read(self, model, **hints): return "lecture"
-    def db_for_write(self, model, **hints): return "default"
-    def allow_relation(self, o1, o2, **hints): return True
-    def allow_migrate(self, db, app_label, model_name=None, **hints): return db == "default"
-
-Article.objects.using("lecture").all()
 ```
+
+```python
+# config/routers.py
+class LectureEcriture:
+    def db_for_read(self, model, **hints):
+        return "lecture"
+
+    def db_for_write(self, model, **hints):
+        return "default"
+
+    def allow_relation(self, o1, o2, **hints):
+        return True
+
+    def allow_migrate(self, db, app_label, model_name=None, **hints):
+        return db == "default"
+```
+
+```python
+# python manage.py shell
+print(Article.objects.using("lecture").all())            # forcer une base précise
+```
+
 
 ## 9.10 Gestionnaires et QuerySets personnalisés
 
 ```python
+# apps/blog/models.py (extrait)
+from django.db import models
+
 class ArticleQuerySet(models.QuerySet):
-    def publies(self): return self.filter(statut="publie")
-    def de(self, user): return self.filter(auteur=user)
+    def publies(self):
+        return self.filter(statut="publie")
+
+    def de(self, user):
+        return self.filter(auteur=user)
 
 class Article(models.Model):
+    # ... champs de la section 8.1 ...
     objects = ArticleQuerySet.as_manager()
-
-Article.objects.publies().de(user)                      # chaînable ✅
 ```
+
+```python
+# python manage.py shell
+user = Utilisateur.objects.first()
+print(Article.objects.publies().de(user))                # chaînable
+```
+
 
 ## 9.11 Recherche plein texte (PostgreSQL)
 
 ```python
-from django.contrib.postgres.search import SearchVector, SearchQuery, SearchRank
+from django.contrib.postgres.search import SearchQuery, SearchRank, SearchVector
+
 vecteur = SearchVector("titre", weight="A") + SearchVector("contenu", weight="B")
-Article.objects.annotate(rang=SearchRank(vecteur, SearchQuery("django orm", config="french"))).filter(rang__gt=0.1).order_by("-rang")
+resultats = (Article.objects
+             .annotate(rang=SearchRank(vecteur, SearchQuery("django orm", config="french")))
+             .filter(rang__gt=0.1)
+             .order_by("-rang"))
+print([(a.titre, a.rang) for a in resultats])
 ```
+
 
 Pour les gros besoins : **`django-haystack`**, **`django-elasticsearch-dsl`**, **Meilisearch**, **Typesense**.
 
@@ -1759,8 +2082,14 @@ L'**admin** est un back-office **généré automatiquement** à partir des modè
 
 ```python
 # config/urls.py
-path("admin/", admin.site.urls)        # ⚠️ en production, changez l'URL (« gestion-x7k2/ ») et protégez l'accès
+from django.contrib import admin
+from django.urls import path
+
+urlpatterns = [
+    path("admin/", admin.site.urls),        # en production, changez l'URL (« gestion-x7k2/ ») et protégez l'accès
+]
 ```
+
 
 ```bash
 python manage.py createsuperuser
@@ -1771,7 +2100,7 @@ python manage.py createsuperuser
 ```python
 # apps/blog/admin.py
 from django.contrib import admin
-from django.utils.html import format_html
+from django.db.models import Count
 from .models import Article, Categorie, Commentaire
 
 class CommentaireInline(admin.TabularInline):                       # modifier les commentaires dans la page de l'article
@@ -1817,6 +2146,24 @@ class ArticleAdmin(admin.ModelAdmin):
 
     def has_delete_permission(self, request, obj=None):             # contrôle d'accès fin
         return request.user.is_superuser
+
+@admin.register(Categorie)
+class CategorieAdmin(admin.ModelAdmin):
+    list_display = ["nom", "slug"]
+    prepopulated_fields = {"slug": ("nom",)}
+```
+
+Pour `autocomplete_fields`, l'administration du modèle utilisateur doit définir `search_fields` :
+
+```python
+# apps/comptes/admin.py
+from django.contrib import admin
+from django.contrib.auth.admin import UserAdmin
+from .models import Utilisateur
+
+@admin.register(Utilisateur)
+class UtilisateurAdmin(UserAdmin):
+    search_fields = ["username", "email"]
 ```
 
 | Option de `ModelAdmin` | Rôle |
@@ -1835,10 +2182,14 @@ Chaque modèle reçoit **4 permissions** (`add`, `change`, `delete`, `view`). Cr
 ## 10.4 Personnaliser l'apparence
 
 ```python
+# config/urls.py (ou admin.py)
+from django.contrib import admin
+
 admin.site.site_header = "Administration — Mon site"
 admin.site.site_title = "Mon site"
 admin.site.index_title = "Tableau de bord"
 ```
+
 
 - Surcharger les templates : `templates/admin/base_site.html` (`{% extends "admin/base.html" %}`).
 - Thèmes et interfaces modernes : voir ci-dessous.
@@ -1853,7 +2204,7 @@ admin.site.index_title = "Tableau de bord"
 | **`django-simple-history`** | **Historique** des modifications (qui, quand, quoi) |
 | **`django-reversion`** | Versions et **restauration** |
 | **`django-admin-sortable2`**, **`django-adminactions`** | Tri par glisser-déposer, actions avancées |
-| **`django-ckeditor-5`**, **`django-tinymce`** | Éditeur riche (⚠️ `django-ckeditor` v4 est **abandonné**) |
+| **`django-ckeditor-5`**, **`django-tinymce`** | Éditeur riche (`django-ckeditor` v4 est **abandonné**) |
 | **`django-otp`** / `django-two-factor-auth` | **Double authentification** pour l'admin |
 | **`django-axes`** | Blocage des tentatives de connexion répétées |
 
@@ -1870,7 +2221,7 @@ admin.site.index_title = "Tableau de bord"
 ## 11.1 Formulaires simples
 
 ```python
-# apps/blog/forms.py
+# apps/accueil/forms.py
 from django import forms
 from django.core.exceptions import ValidationError
 
@@ -1897,8 +2248,12 @@ class ContactForm(forms.Form):
 ## 11.2 Traiter un formulaire dans une vue
 
 ```python
+# apps/accueil/views.py
 from django.contrib import messages
 from django.core.mail import send_mail
+from django.shortcuts import redirect, render
+
+from .forms import ContactForm
 
 def contact(request):
     form = ContactForm(request.POST or None)
@@ -1909,15 +2264,26 @@ def contact(request):
     return render(request, "contact.html", {"form": form})
 ```
 
+```python
+# apps/accueil/urls.py (route à ajouter)
+urlpatterns += [path("contact/", views.contact, name="contact")]
+```
+
+
 ## 11.3 ModelForm
 
 Génère un formulaire **à partir d'un modèle** :
 
 ```python
+# apps/blog/forms.py
+from django import forms
+from django.core.exceptions import ValidationError
+from .models import Article
+
 class ArticleForm(forms.ModelForm):
     class Meta:
         model = Article
-        fields = ["titre", "slug", "contenu", "categories", "statut"]     # ✅ liste EXPLICITE (jamais « __all__ » sans réflexion)
+        fields = ["titre", "slug", "contenu", "categories", "statut"]     # liste EXPLICITE (jamais « __all__ » sans réflexion)
         widgets = {"contenu": forms.Textarea(attrs={"rows": 12})}
         labels = {"titre": "Titre de l'article"}
         help_texts = {"slug": "Utilisé dans l'URL."}
@@ -1927,12 +2293,28 @@ class ArticleForm(forms.ModelForm):
         if Article.objects.filter(titre__iexact=titre).exclude(pk=self.instance.pk).exists():
             raise ValidationError("Ce titre existe déjà.")
         return titre
-
-form = ArticleForm(request.POST, request.FILES, instance=article)       # instance → modification
-article = form.save(commit=False); article.auteur = request.user; article.save(); form.save_m2m()
 ```
 
-> 🔒 N'utilisez **jamais** `fields = "__all__"` ni `exclude` sur un formulaire public : un utilisateur pourrait modifier des champs sensibles (`is_staff`, `auteur`…).
+```python
+# apps/blog/views.py
+from django.shortcuts import get_object_or_404, redirect, render
+from .forms import ArticleForm
+from .models import Article
+
+def modifier_article(request, pk):
+    article = get_object_or_404(Article, pk=pk, auteur=request.user)
+    form = ArticleForm(request.POST or None, request.FILES or None, instance=article)      # instance → modification
+    if request.method == "POST" and form.is_valid():
+        article = form.save(commit=False)
+        article.auteur = request.user
+        article.save()
+        form.save_m2m()                                                                  # indispensable après commit=False
+        return redirect(article)
+    return render(request, "blog/formulaire.html", {"form": form})
+```
+
+
+> N'utilisez **jamais** `fields = "__all__"` ni `exclude` sur un formulaire public : un utilisateur pourrait modifier des champs sensibles (`is_staff`, `auteur`…).
 
 ## 11.4 Rendu dans les templates *(à jour)*
 
@@ -1969,25 +2351,46 @@ Personnalisation : **`FORM_RENDERER`**, templates `django/forms/div.html`, attri
 ## 11.6 Jeux de formulaires (*formsets*)
 
 ```python
-from django.forms import inlineformset_factory, formset_factory
+# apps/blog/views.py
+from django.forms import inlineformset_factory
+from django.shortcuts import get_object_or_404, render
+from .models import Article, Commentaire
+
 CommentaireFormSet = inlineformset_factory(Article, Commentaire, fields=["texte"], extra=2, can_delete=True)
-formset = CommentaireFormSet(request.POST or None, instance=article)
+
+def commentaires(request, pk):
+    article = get_object_or_404(Article, pk=pk)
+    formset = CommentaireFormSet(request.POST or None, instance=article)
+    if request.method == "POST" and formset.is_valid():
+        formset.save()
+    return render(request, "blog/commentaires.html", {"formset": formset})
 ```
+
 
 ## 11.7 Téléversement de fichiers
 
 ```python
+# apps/blog/forms.py
+from django import forms
+from django.core.exceptions import ValidationError
+from .models import Document
+
 class DocumentForm(forms.ModelForm):
-    class Meta: model = Document; fields = ["fichier"]
+    class Meta:
+        model = Document
+        fields = ["fichier"]
 
     def clean_fichier(self):
         f = self.cleaned_data["fichier"]
-        if f.size > 5 * 1024 * 1024: raise ValidationError("5 Mo maximum.")
-        if f.content_type not in {"application/pdf", "image/png", "image/jpeg"}: raise ValidationError("Type non autorisé.")
+        if f.size > 5 * 1024 * 1024:
+            raise ValidationError("5 Mo maximum.")
+        if f.content_type not in {"application/pdf", "image/png", "image/jpeg"}:
+            raise ValidationError("Type non autorisé.")
         return f
 ```
 
-> 🔒 Ne vous fiez pas à l'extension ni au `content_type` envoyé par le client : voir la [section 26](#26-sécurité). `enctype="multipart/form-data"` est **obligatoire** dans le `<form>`.
+
+> Ne vous fiez pas à l'extension ni au `content_type` envoyé par le client : voir la [section 26](#26-sécurité). `enctype="multipart/form-data"` est **obligatoire** dans le `<form>`.
 
 ## 11.8 CSRF
 
@@ -2009,7 +2412,7 @@ Chaque champ doit avoir un `<label>` ; les erreurs sont associées (`aria-descri
 
 `django.contrib.auth` fournit : **utilisateurs**, **groupes**, **permissions**, **sessions**, vues de **connexion / déconnexion / mots de passe**, **hachage** sécurisé (PBKDF2 par défaut, **Argon2** recommandé).
 
-## 12.2 Modèle utilisateur personnalisé ✅
+## 12.2 Modèle utilisateur personnalisé
 
 ```python
 # apps/comptes/models.py
@@ -2022,17 +2425,29 @@ class Utilisateur(AbstractUser):
 
     USERNAME_FIELD = "email"                                       # connexion par e-mail
     REQUIRED_FIELDS = ["username"]
-
-# settings.py
-AUTH_USER_MODEL = "comptes.Utilisateur"
-
-# Toujours référencer l'utilisateur ainsi
-from django.contrib.auth import get_user_model
-User = get_user_model()                                            # dans le code
-author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)    # dans les modèles
 ```
 
-> 💡 `AbstractBaseUser` + `PermissionsMixin` pour un contrôle total ; `AbstractUser` suffit dans 95 % des cas. Un **profil** séparé (`OneToOneField`) est une alternative pour des données volumineuses.
+```python
+# settings.py
+AUTH_USER_MODEL = "comptes.Utilisateur"
+```
+
+Toujours référencer l'utilisateur ainsi :
+
+```python
+# Dans le code
+from django.contrib.auth import get_user_model
+User = get_user_model()
+
+# Dans les modèles
+from django.conf import settings
+from django.db import models
+
+auteur = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+```
+
+
+> `AbstractBaseUser` + `PermissionsMixin` pour un contrôle total ; `AbstractUser` suffit dans 95 % des cas. Un **profil** séparé (`OneToOneField`) est une alternative pour des données volumineuses.
 
 ## 12.3 Vues d'authentification intégrées
 
@@ -2054,15 +2469,22 @@ LOGOUT_REDIRECT_URL = "accueil"
 <form method="post">{% csrf_token %}{{ form }}<button>Connexion</button></form>
 ```
 
-> ⚠️ Depuis Django 5.0, la déconnexion exige une requête **POST** (formulaire avec `{% csrf_token %}`), pas un simple lien.
+> Depuis Django 5.0, la déconnexion exige une requête **POST** (formulaire avec `{% csrf_token %}`), pas un simple lien.
 
 ### Inscription
 
 ```python
+# apps/comptes/views.py
 from django.contrib.auth.forms import UserCreationForm
+from django.urls import reverse_lazy
+from django.views.generic import CreateView
+
+from .models import Utilisateur
+
 class InscriptionForm(UserCreationForm):
     class Meta(UserCreationForm.Meta):
-        model = Utilisateur; fields = ("username", "email")
+        model = Utilisateur
+        fields = ("username", "email")
 
 class Inscription(CreateView):
     form_class = InscriptionForm
@@ -2070,21 +2492,36 @@ class Inscription(CreateView):
     success_url = reverse_lazy("login")
 ```
 
+
 ## 12.4 Contrôle d'accès
 
 ```python
+from django.contrib.auth.decorators import login_required, permission_required
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.http import HttpResponse
+from django.views import View
+
 # Fonctions
 @login_required
 @permission_required("blog.add_article", raise_exception=True)
-def vue(request): ...
+def vue_fonction(request):
+    return HttpResponse("Accès autorisé")
 
 # Classes
-class Vue(LoginRequiredMixin, PermissionRequiredMixin, View):
+class VueClasse(LoginRequiredMixin, PermissionRequiredMixin, View):
     permission_required = "blog.change_article"
 
-# Dans le code et les templates
-request.user.is_authenticated; request.user.has_perm("blog.add_article"); request.user.groups.filter(name="Rédacteurs").exists()
+    def get(self, request):
+        return HttpResponse("Accès autorisé")
+
+# Dans le code
+def verifier(request):
+    est_connecte = request.user.is_authenticated
+    peut_creer = request.user.has_perm("blog.add_article")
+    est_redacteur = request.user.groups.filter(name="Rédacteurs").exists()
+    return HttpResponse(f"connecté : {est_connecte} ; peut créer : {peut_creer} ; rédacteur : {est_redacteur}")
 ```
+
 
 ```django
 {% if perms.blog.add_article %}<a href="{% url 'blog:creer' %}">Nouvel article</a>{% endif %}
@@ -2094,12 +2531,18 @@ request.user.is_authenticated; request.user.has_perm("blog.add_article"); reques
 ### Authentification obligatoire par défaut *(5.1, ajout)*
 
 ```python
+# settings.py
 MIDDLEWARE += ["django.contrib.auth.middleware.LoginRequiredMiddleware"]       # toutes les vues exigent la connexion
 
+# apps/accueil/views.py
 from django.contrib.auth.decorators import login_not_required
+from django.http import HttpResponse
+
 @login_not_required
-def page_publique(request): ...
+def page_publique(request):
+    return HttpResponse("Page accessible sans connexion")
 ```
+
 
 ### Permissions d'objet
 
@@ -2120,20 +2563,34 @@ AUTH_PASSWORD_VALIDATORS = [
 ## 12.6 Backends d'authentification personnalisés
 
 ```python
+# apps/comptes/backends.py
+from django.contrib.auth import get_user_model
+from django.contrib.auth.backends import ModelBackend
+
+User = get_user_model()
+
 class EmailBackend(ModelBackend):
     def authenticate(self, request, username=None, password=None, **kwargs):
-        try: user = User.objects.get(email__iexact=username)
-        except User.DoesNotExist: return None
-        return user if user.check_password(password) and self.user_can_authenticate(user) else None
+        try:
+            user = User.objects.get(email__iexact=username)
+        except User.DoesNotExist:
+            return None
+        if user.check_password(password) and self.user_can_authenticate(user):
+            return user
+        return None
+```
 
+```python
+# settings.py
 AUTHENTICATION_BACKENDS = ["apps.comptes.backends.EmailBackend", "django.contrib.auth.backends.ModelBackend"]
 ```
+
 
 ## 12.7 Connexion sociale, SSO et 2FA *(ajout)*
 
 | Besoin | Paquet |
 | --- | --- |
-| **Inscription, e-mail vérifié, Google / GitHub / Microsoft / etc.**, 2FA, passkeys | **`django-allauth`** ✅ (le plus complet) ; mode **headless** pour les SPA / API |
+| **Inscription, e-mail vérifié, Google / GitHub / Microsoft / etc.**, 2FA, passkeys | **`django-allauth`** (le plus complet) ; mode **headless** pour les SPA / API |
 | OAuth 2 / OpenID Connect **fournisseur** | **`django-oauth-toolkit`** |
 | Connexion sociale (alternative) | **`social-auth-app-django`** |
 | **2FA** (TOTP, codes de secours) | **`django-otp`**, **`django-two-factor-auth`** |
@@ -2162,9 +2619,18 @@ SESSION_EXPIRE_AT_BROWSER_CLOSE = False
 ```
 
 ```python
-request.session["panier"] = {"1": 2}              # lecture / écriture (sérialisable en JSON)
-request.session.flush()                           # vider + régénérer la clé
+# apps/blog/views.py
+from django.http import JsonResponse
+
+def ajouter_au_panier(request):
+    request.session["panier"] = {"1": 2}              # écriture (sérialisable en JSON)
+    return JsonResponse(request.session["panier"])    # lecture
+
+def vider_session(request):
+    request.session.flush()                           # vider + régénérer la clé
+    return JsonResponse({})
 ```
+
 
 ## 12.9 Bonnes pratiques
 
@@ -2180,12 +2646,18 @@ request.session.flush()                           # vider + régénérer la clé
 ## 13.1 Framework de messages
 
 ```python
+# apps/blog/views.py
 from django.contrib import messages
-messages.success(request, "Article enregistré.")
-messages.error(request, "Une erreur est survenue.")
-messages.add_message(request, messages.WARNING, "Attention.", extra_tags="important")
-# niveaux : DEBUG, INFO, SUCCESS, WARNING, ERROR
+from django.shortcuts import redirect
+
+def enregistrer(request):
+    messages.success(request, "Article enregistré.")
+    messages.error(request, "Une erreur est survenue.")
+    messages.add_message(request, messages.WARNING, "Attention.", extra_tags="important")
+    # niveaux : DEBUG, INFO, SUCCESS, WARNING, ERROR
+    return redirect("blog:liste")
 ```
+
 
 ```django
 {% if messages %}
@@ -2196,9 +2668,13 @@ messages.add_message(request, messages.WARNING, "Attention.", extra_tags="import
 ```
 
 ```python
+# settings.py
+from django.contrib.messages import constants as niveaux_messages
+
 MESSAGE_STORAGE = "django.contrib.messages.storage.fallback.FallbackStorage"       # cookie puis session
-MESSAGE_TAGS = {messages.ERROR: "danger"}                                              # compatibilité Bootstrap
+MESSAGE_TAGS = {niveaux_messages.ERROR: "danger"}                                      # compatibilité Bootstrap
 ```
+
 
 Dans une vue de classe : `SuccessMessageMixin` (`success_message = "Créé !"`). Avec **HTMX / AJAX** : renvoyez les messages dans un fragment ou un en-tête `HX-Trigger`.
 
@@ -2213,17 +2689,31 @@ Dans une vue de classe : `SuccessMessageMixin` (`success_message = "Créé !"`).
 | **En-têtes HTTP** | `@cache_control`, `@etag`, `@last_modified`, `@condition` |
 
 ```python
+# python manage.py shell
 from django.core.cache import cache
 
-cache.set("stats", valeur, timeout=300)
-cache.get("stats", default=None)
-stats = cache.get_or_set("stats", calculer_stats, 300)           # ✅ calcule une seule fois
-cache.delete_many(["a", "b"]); cache.incr("visites")
+def calculer_stats():
+    print("calcul en cours...")
+    return {"articles": 42}
 
-from django.views.decorators.cache import cache_page
-@cache_page(60 * 15, key_prefix="accueil")
-def accueil(request): ...
+cache.set("stats", {"articles": 42}, timeout=300)
+print(cache.get("stats", default=None))                  # {'articles': 42}
+print(cache.get_or_set("stats", calculer_stats, 300))    # valeur déjà en cache : calculer_stats n'est pas appelée
+cache.set("visites", 0)
+print(cache.incr("visites"))                             # 1
+cache.delete_many(["stats", "visites"])
 ```
+
+```python
+# apps/accueil/views.py
+from django.http import HttpResponse
+from django.views.decorators.cache import cache_page
+
+@cache_page(60 * 15, key_prefix="accueil")
+def accueil(request):
+    return HttpResponse("Accueil")
+```
+
 
 ```django
 {% load cache %}
@@ -2234,13 +2724,13 @@ def accueil(request): ...
 
 | Backend | Usage |
 | --- | --- |
-| **`RedisCache`** (intégré) ✅ | Production (partagé entre processus) ; nécessite le paquet `redis` (`django-redis` pour des fonctions avancées) |
+| **`RedisCache`** (intégré) | Production (partagé entre processus) ; nécessite le paquet `redis` (`django-redis` pour des fonctions avancées) |
 | `MemcachedCache` / `PyMemcacheCache` | Alternative |
 | `DatabaseCache` | Si pas de Redis |
 | `LocMemCache` | Développement / tests (**par processus**) |
 | `FileBasedCache`, `DummyCache` | Spécifiques |
 
-> ⚠️ Invalidation : donnez toujours une **durée de vie**, incluez dans la **clé** tout ce qui fait varier le contenu (utilisateur, langue), et n'entreposez pas de données sensibles partagées.
+> Invalidation : donnez toujours une **durée de vie**, incluez dans la **clé** tout ce qui fait varier le contenu (utilisateur, langue), et n'entreposez pas de données sensibles partagées.
 
 ---
 
@@ -2279,7 +2769,7 @@ En **développement**, `runserver` les sert (si `DEBUG = True`). En **production
 
 | Solution | Quand |
 | --- | --- |
-| **WhiteNoise** ✅ | Simple : servi par l'application avec compression et empreintes |
+| **WhiteNoise** | Simple : servi par l'application avec compression et empreintes |
 | **Nginx / Caddy** | Serveur web frontal (performances maximales) |
 | **CDN** (CloudFront, Cloudflare) + stockage S3 | Trafic important |
 
@@ -2296,14 +2786,22 @@ MEDIA_ROOT = BASE_DIR / "media"
 ```
 
 ```python
-class Document(models.Model):
-    fichier = models.FileField(upload_to="documents/%Y/%m/")
-    image = models.ImageField(upload_to="images/", blank=True)       # nécessite Pillow
+# apps/blog/models.py
+import uuid
+from pathlib import Path
+
+from django.db import models
 
 # Nom de fichier sûr et unique
 def chemin_avatar(instance, nom):
     return f"avatars/{instance.pk}/{uuid.uuid4().hex}{Path(nom).suffix.lower()}"
+
+class Document(models.Model):
+    fichier = models.FileField(upload_to="documents/%Y/%m/")
+    image = models.ImageField(upload_to="images/", blank=True)       # nécessite Pillow
+    avatar = models.ImageField(upload_to=chemin_avatar, blank=True)
 ```
+
 
 ```django
 <img src="{{ document.image.url }}" alt="">
@@ -2369,7 +2867,9 @@ Réponse  ← SecurityMiddleware ← Session ← Auth ← … ←
 
 ```python
 # apps/accueil/middleware.py
-import time, logging
+import logging
+import time
+
 logger = logging.getLogger(__name__)
 
 class ChronoMiddleware:
@@ -2381,13 +2881,22 @@ class ChronoMiddleware:
         reponse = self.get_response(request)                       # appelle la suite (autres middlewares + vue)
         duree = (time.perf_counter() - debut) * 1000
         reponse["X-Temps-Ms"] = f"{duree:.1f}"
-        if duree > 500: logger.warning("Requête lente : %s %s (%.0f ms)", request.method, request.path, duree)
+        if duree > 500:
+            logger.warning("Requête lente : %s %s (%.0f ms)", request.method, request.path, duree)
         return reponse
 
-    def process_view(self, request, view_func, view_args, view_kwargs): ...        # avant la vue (facultatif)
-    def process_exception(self, request, exception): ...                           # si la vue lève une exception
-    def process_template_response(self, request, response): ...
+    def process_view(self, request, view_func, view_args, view_kwargs):
+        return None                                                # avant la vue (facultatif)
+
+    def process_exception(self, request, exception):
+        return None                                                # si la vue lève une exception
+
+    def process_template_response(self, request, response):
+        return response
+
+# settings.py : MIDDLEWARE += ["apps.accueil.middleware.ChronoMiddleware"]
 ```
+
 
 ### Middleware compatible sync / async
 
@@ -2397,15 +2906,21 @@ from asgiref.sync import iscoroutinefunction, markcoroutinefunction
 class MonMiddleware:
     sync_capable = True
     async_capable = True
+
     def __init__(self, get_response):
         self.get_response = get_response
-        if iscoroutinefunction(get_response): markcoroutinefunction(self)
+        if iscoroutinefunction(get_response):
+            markcoroutinefunction(self)
+
     def __call__(self, request):
-        if iscoroutinefunction(self): return self.__acall__(request)
+        if iscoroutinefunction(self):
+            return self.__acall__(request)
         return self.get_response(request)
+
     async def __acall__(self, request):
         return await self.get_response(request)
 ```
+
 
 ## 15.4 Ordre et bonnes pratiques
 
@@ -2435,28 +2950,49 @@ Les **signaux** permettent à du code d'être **notifié** quand une action se p
 
 ```python
 # apps/comptes/signals.py
+from django.conf import settings
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-from django.conf import settings
+
+from .models import Profil
 
 @receiver(post_save, sender=settings.AUTH_USER_MODEL)
 def creer_profil(sender, instance, created, **kwargs):
     if created:
         Profil.objects.create(utilisateur=instance)
+```
 
+```python
 # apps/comptes/apps.py
+from django.apps import AppConfig
+
 class ComptesConfig(AppConfig):
     name = "apps.comptes"
-    def ready(self): from . import signals             # ⚠️ sinon le récepteur n'est jamais branché
+
+    def ready(self):
+        from . import signals  # noqa: F401                        # sinon le récepteur n'est jamais branché
 ```
+
 
 ### Signal personnalisé
 
 ```python
-from django.dispatch import Signal
-commande_payee = Signal()                               # (plus de providing_args)
-commande_payee.send(sender=Commande, commande=commande)
+# apps/boutique/signals.py
+from django.dispatch import Signal, receiver
+
+from .models import Commande
+
+commande_payee = Signal()                                # (plus de providing_args)
+
+@receiver(commande_payee)
+def prevenir_client(sender, commande, **kwargs):
+    print(f"Commande {commande.pk} payée")
+
+# python manage.py shell
+commande = Commande.objects.create()
+commande_payee.send(sender=Commande, commande=commande)    # affiche : Commande <identifiant> payée
 ```
+
 
 ## 16.3 Précautions et alternatives
 
@@ -2468,7 +3004,7 @@ commande_payee.send(sender=Commande, commande=commande)
 | Travail lent dans le récepteur | **Tâche en arrière-plan** (section 23) avec `transaction.on_commit` |
 | Tests difficiles | Tester le récepteur comme une fonction |
 
-> ✅ **Règle** : utilisez les signaux pour **découpler des apps** (ex. : une app tierce réagit à la création d'un utilisateur) ; **sinon** préférez les **services explicites**.
+> **Règle** : utilisez les signaux pour **découpler des apps** (ex. : une app tierce réagit à la création d'un utilisateur) ; **sinon** préférez les **services explicites**.
 
 ---
 
@@ -2493,13 +3029,23 @@ USE_I18N = True
 ## 17.2 Marquer les textes
 
 ```python
-from django.utils.translation import gettext as _, gettext_lazy, ngettext, pgettext
+# apps/blog/models.py
+from django.db import models
+from django.utils.translation import gettext_lazy
 
-message = _("Bienvenue")
 class Article(models.Model):
     titre = models.CharField(gettext_lazy("titre"), max_length=200)        # gettext_lazy : traduit à l'affichage (modèles, formulaires, constantes)
-ngettext("%(n)d article", "%(n)d articles", n) % {"n": n}                   # pluriels
 ```
+
+```python
+# python manage.py shell
+from django.utils.translation import gettext as _, ngettext
+
+print(_("Bienvenue"))                                                        # traduit à l'appel (dans une vue, une fonction)
+n = 3
+print(ngettext("%(n)d article", "%(n)d articles", n) % {"n": n})          # pluriels : 3 articles
+```
+
 
 ```django
 {% load i18n %}
@@ -2515,14 +3061,19 @@ python manage.py makemessages -l en -l fr --ignore=.venv      # crée locale/<la
 python manage.py compilemessages                              # produit django.mo
 ```
 
-> 🛠️ Nécessite **GNU gettext** installé (`apt install gettext` / `brew install gettext`).
+> Nécessite **GNU gettext** installé (`apt install gettext` / `brew install gettext`).
 
 ## 17.4 URLs, sélecteur de langue, formats
 
 ```python
+# config/urls.py (à la suite de urlpatterns)
+from django.conf.urls.i18n import i18n_patterns
+from django.urls import include, path
+
 urlpatterns += i18n_patterns(path("", include("apps.blog.urls")), prefix_default_language=False)
 urlpatterns += [path("i18n/", include("django.conf.urls.i18n"))]          # vue set_language
 ```
+
 
 Formats localisés : `{{ valeur|date:"DATE_FORMAT" }}`, `{{ nombre|floatformat:2 }}` ; `localize` / `unlocalize`.
 
@@ -2538,10 +3089,14 @@ Formats localisés : `{{ valeur|date:"DATE_FORMAT" }}`, `{{ nombre|floatformat:2
 
 ```python
 from django.utils import timezone
-timezone.now()                                       # datetime « aware » en UTC
-timezone.localtime(dt)                               # converti vers le fuseau actif
-with timezone.override("Indian/Antananarivo"): ...
+
+maintenant = timezone.now()
+print(maintenant)                                    # datetime « aware » en UTC
+print(timezone.localtime(maintenant))                # converti vers le fuseau actif
+with timezone.override("Indian/Antananarivo"):
+    print(timezone.localtime(maintenant))            # converti vers un autre fuseau
 ```
+
 
 Stockez en UTC (`USE_TZ = True`) ; convertissez **à l'affichage** (selon l'utilisateur).
 
@@ -2567,10 +3122,10 @@ class Command(BaseCommand):
         parser.add_argument("--dry-run", action="store_true", help="Simuler sans modifier")
 
     def handle(self, *args, **options):
-        limite = timezone.now() - timedelta(days=options["jours"])
-        qs = Article.objects.filter(statut="publie", publie_le__lt=limite)
         if options["jours"] < 1:
             raise CommandError("Le nombre de jours doit être positif.")
+        limite = timezone.now() - timedelta(days=options["jours"])
+        qs = Article.objects.filter(statut="publie", publie_le__lt=limite)
         if options["dry_run"]:
             self.stdout.write(f"{qs.count()} article(s) seraient archivés.")
             return
@@ -2591,11 +3146,11 @@ python manage.py archiver_articles --jours 180 --dry-run
 | **Maintenance** | Réindexation, recalcul de champs |
 | **Démarrage** | Création de données initiales (`loaddata`, fixtures) |
 
-> ✅ Rendez les commandes **idempotentes** et **journalisées** ; pour des traitements longs ou répétés, préférez une **file de tâches** (section 23). Appel depuis le code : `call_command("archiver_articles", jours=30)`.
+> Rendez les commandes **idempotentes** et **journalisées** ; pour des traitements longs ou répétés, préférez une **file de tâches** (section 23). Appel depuis le code : `call_command("archiver_articles", jours=30)`.
 
 ---
 
-# 🔴 API, asynchrone et frontend
+# API, asynchrone et frontend
 
 ---
 
@@ -2659,10 +3214,12 @@ class ArticleSerializer(serializers.ModelSerializer):
 ```python
 # apps/blog/views_api.py
 from django.db.models import Count
-from rest_framework import viewsets, permissions, filters
+from rest_framework import permissions, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from django_filters.rest_framework import DjangoFilterBackend
+
+from .models import Article
+from .serializers import ArticleSerializer
 
 class EstAuteurOuLectureSeule(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
@@ -2675,7 +3232,7 @@ class ArticleViewSet(viewsets.ModelViewSet):
     search_fields = ["titre", "contenu"]
     ordering_fields = ["publie_le", "titre"]
 
-    def get_queryset(self):                                                    # ✅ optimiser ici (N+1)
+    def get_queryset(self):                                                    # optimiser ici (N+1)
         return (Article.objects.select_related("auteur").prefetch_related("categories")
                 .annotate(nb_commentaires=Count("commentaires")))
 
@@ -2693,7 +3250,7 @@ class ArticleViewSet(viewsets.ModelViewSet):
 | --- | --- |
 | Bas niveau | `APIView` (comme une CBV) |
 | Génériques | `ListAPIView`, `RetrieveUpdateDestroyAPIView`, `ListCreateAPIView`… |
-| **ViewSets** ✅ | `ModelViewSet`, `ReadOnlyModelViewSet`, `GenericViewSet` + mixins |
+| **ViewSets** | `ModelViewSet`, `ReadOnlyModelViewSet`, `GenericViewSet` + mixins |
 | Fonctions | `@api_view(["GET", "POST"])` |
 
 ## 19.4 Routeurs
@@ -2701,11 +3258,17 @@ class ArticleViewSet(viewsets.ModelViewSet):
 ```python
 # apps/blog/urls_api.py
 from rest_framework.routers import DefaultRouter
+from .views_api import ArticleViewSet
+
 router = DefaultRouter()
 router.register("articles", ArticleViewSet, basename="article")
 
+urlpatterns = router.urls
+
 # config/urls.py
-from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView, SpectacularRedocView
+from django.urls import include, path
+from drf_spectacular.views import SpectacularAPIView, SpectacularRedocView, SpectacularSwaggerView
+
 urlpatterns += [
     path("api/v1/", include("apps.blog.urls_api")),
     path("api/schema/", SpectacularAPIView.as_view(), name="schema"),
@@ -2714,53 +3277,84 @@ urlpatterns += [
 ]
 ```
 
+
 Routes générées : `GET/POST /articles/`, `GET/PUT/PATCH/DELETE /articles/{id}/`, plus les `@action`.
 
 ## 19.5 Pagination, filtrage, tri, recherche
 
 ```python
-from rest_framework.pagination import CursorPagination, LimitOffsetPagination
+# apps/blog/pagination.py
+from rest_framework.pagination import CursorPagination
 
-class PaginationCurseur(CursorPagination):                  # ✅ stable et rapide sur de gros volumes
+class PaginationCurseur(CursorPagination):                  # stable et rapide sur de gros volumes
     page_size = 20
     ordering = "-publie_le"
+```
 
-# django-filter : filtres personnalisés
+```python
+# apps/blog/filters.py (django-filter : filtres personnalisés)
 import django_filters
+from .models import Article
+
 class ArticleFilter(django_filters.FilterSet):
     depuis = django_filters.DateTimeFilter(field_name="publie_le", lookup_expr="gte")
     titre = django_filters.CharFilter(lookup_expr="icontains")
-    class Meta: model = Article; fields = ["statut", "auteur"]
+
+    class Meta:
+        model = Article
+        fields = ["statut", "auteur"]
 ```
+
+Branchement dans `ArticleViewSet` : `filterset_class = ArticleFilter` (à la place de `filterset_fields`) et `pagination_class = PaginationCurseur`.
+
 
 URL : `/api/v1/articles/?statut=publie&search=django&ordering=-publie_le&page=2`.
 
 ## 19.6 Limitation de débit, versionnement, erreurs
 
 ```python
-REST_FRAMEWORK["DEFAULT_VERSIONING_CLASS"] = "rest_framework.versioning.NamespaceVersioning"       # /api/v1/ · /api/v2/
-
+# config/api.py
 from rest_framework.views import exception_handler
+
 def gestionnaire_erreurs(exc, context):                              # format d'erreur uniforme
     reponse = exception_handler(exc, context)
     if reponse is not None:
         reponse.data = {"erreur": {"code": reponse.status_code, "details": reponse.data}}
     return reponse
+```
+
+```python
+# settings.py
+REST_FRAMEWORK["DEFAULT_VERSIONING_CLASS"] = "rest_framework.versioning.NamespaceVersioning"       # /api/v1/ · /api/v2/
 REST_FRAMEWORK["EXCEPTION_HANDLER"] = "config.api.gestionnaire_erreurs"
 ```
+
 
 Format d'erreur standard recommandé : **RFC 9457** (*Problem Details*). Réglages de débit par vue : `throttle_classes`, `throttle_scope`.
 
 ## 19.7 Documentation OpenAPI
 
 ```python
+# settings.py
 SPECTACULAR_SETTINGS = {"TITLE": "Mon API", "VERSION": "1.0.0", "SERVE_INCLUDE_SCHEMA": False}
-
-from drf_spectacular.utils import extend_schema, OpenApiParameter
-class VueX(APIView):
-    @extend_schema(parameters=[OpenApiParameter("q", str, description="Recherche")], responses=ArticleSerializer(many=True))
-    def get(self, request): ...
 ```
+
+```python
+# apps/blog/views_api.py
+from drf_spectacular.utils import OpenApiParameter, extend_schema
+from rest_framework.response import Response
+from rest_framework.views import APIView
+
+from .models import Article
+from .serializers import ArticleSerializer
+
+class ArticlesPublies(APIView):
+    @extend_schema(parameters=[OpenApiParameter("q", str, description="Recherche")], responses=ArticleSerializer(many=True))
+    def get(self, request):
+        articles = Article.objects.publies().filter(titre__icontains=request.GET.get("q", ""))
+        return Response(ArticleSerializer(articles, many=True).data)
+```
+
 
 ```bash
 python manage.py spectacular --file schema.yml            # export OpenAPI 3 ; génération de clients (openapi-generator, orval)
@@ -2769,23 +3363,29 @@ python manage.py spectacular --file schema.yml            # export OpenAPI 3 ; g
 ## 19.8 Tests d'API
 
 ```python
-from rest_framework.test import APITestCase, APIClient
+# apps/blog/tests/test_api.py
+from django.contrib.auth import get_user_model
 from rest_framework import status
+from rest_framework.test import APITestCase
+
+User = get_user_model()
 
 class ArticleAPITests(APITestCase):
     def setUp(self):
-        self.user = User.objects.create_user("alice", password="x")
+        self.user = User.objects.create_user("alice", "alice@exemple.fr", "x")
         self.client.force_authenticate(self.user)
 
     def test_creation(self):
-        r = self.client.post("/api/v1/articles/", {"titre": "Titre valide", "contenu": "…", "statut": "brouillon"}, format="json")
+        donnees = {"titre": "Titre valide", "slug": "titre-valide", "contenu": "…", "statut": "brouillon"}
+        r = self.client.post("/api/v1/articles/", donnees, format="json")
         self.assertEqual(r.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(r.data["auteur"], "alice")
+        self.assertEqual(r.data["auteur"], str(self.user))
 
     def test_anonyme_ne_peut_pas_creer(self):
         self.client.force_authenticate(None)
         self.assertEqual(self.client.post("/api/v1/articles/", {}).status_code, 401)
 ```
+
 
 ## 19.9 Bonnes pratiques DRF
 
@@ -2805,13 +3405,13 @@ class ArticleAPITests(APITestCase):
 
 | Méthode | Principe | Idéal pour | Remarques |
 | --- | --- | --- | --- |
-| **Session + cookie** (+ CSRF) | Cookie `HttpOnly` géré par Django | **SPA du même domaine** (même site), applications web | ✅ Simple et sûr ; protéger contre le CSRF |
+| **Session + cookie** (+ CSRF) | Cookie `HttpOnly` géré par Django | **SPA du même domaine** (même site), applications web | Simple et sûr ; protéger contre le CSRF |
 | **Jeton DRF (`TokenAuthentication`)** | Un jeton **opaque** stocké en base | Scripts, services internes | Pas d'expiration native, un jeton par utilisateur |
 | **JWT** (*JSON Web Token*) | Jeton **signé** et **autoporteur** (accès court + rafraîchissement) | Applications **mobiles**, **SPA** multi-domaines, microservices | **Sans état** côté serveur ; révocation à gérer (liste noire) |
 | **OAuth 2.0 / OpenID Connect** | Délégation à un fournisseur d'identité | **SSO**, API publiques, « se connecter avec… » | `django-oauth-toolkit`, `django-allauth` |
 | **Clé d'API** | Secret statique par client | Intégrations serveur-à-serveur | `djangorestframework-api-key` |
 
-## 20.2 JWT avec `djangorestframework-simplejwt` ✅
+## 20.2 JWT avec `djangorestframework-simplejwt`
 
 ```bash
 uv add djangorestframework-simplejwt
@@ -2821,9 +3421,7 @@ uv add djangorestframework-simplejwt
 # settings.py
 from datetime import timedelta
 
-REST_FRAMEWORK = {
-    "DEFAULT_AUTHENTICATION_CLASSES": ["rest_framework_simplejwt.authentication.JWTAuthentication"],
-}
+REST_FRAMEWORK["DEFAULT_AUTHENTICATION_CLASSES"] = ["rest_framework_simplejwt.authentication.JWTAuthentication"]
 
 INSTALLED_APPS += ["rest_framework_simplejwt", "rest_framework_simplejwt.token_blacklist"]      # blacklist : révocation des jetons de rafraîchissement
 
@@ -2841,7 +3439,8 @@ SIMPLE_JWT = {
 
 ```python
 # config/urls.py
-from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView, TokenVerifyView, TokenBlacklistView
+from django.urls import path
+from rest_framework_simplejwt.views import TokenBlacklistView, TokenObtainPairView, TokenRefreshView, TokenVerifyView
 
 urlpatterns += [
     path("api/auth/jeton/", TokenObtainPairView.as_view(), name="jeton"),               # POST {username, password} → {access, refresh}
@@ -2889,12 +3488,12 @@ Définissez `USERNAME_FIELD = "email"` sur le modèle utilisateur : le serialize
 
 | Stockage | Risque | Avis |
 | --- | --- | --- |
-| `localStorage` / `sessionStorage` | **Lisible par n'importe quel script** (XSS) | ⚠️ À éviter pour le refresh token |
-| **Cookie `HttpOnly` + `Secure` + `SameSite`** | Non lisible par JS ; protéger du CSRF | ✅ Recommandé pour le **refresh** (ou les deux) |
-| Mémoire JS (variable) | Perdu au rechargement | ✅ Pour l'**access token** de courte durée |
-| Mobile : Keychain / Keystore | — | ✅ |
+| `localStorage` / `sessionStorage` | **Lisible par n'importe quel script** (XSS) | À éviter pour le refresh token |
+| **Cookie `HttpOnly` + `Secure` + `SameSite`** | Non lisible par JS ; protéger du CSRF | Recommandé pour le **refresh** (ou les deux) |
+| Mémoire JS (variable) | Perdu au rechargement | Pour l'**access token** de courte durée |
+| Mobile : Keychain / Keystore | — | Recommandé |
 
-> ⚠️ `simplejwt` ne gère **pas** les cookies nativement : utilisez un paquet dédié (ex. **`dj-rest-auth`** avec `JWT_AUTH_COOKIE`, ou **`django-allauth` headless**) ou écrivez des vues qui posent le refresh en cookie `HttpOnly`.
+> `simplejwt` ne gère **pas** les cookies nativement : utilisez un paquet dédié (ex. **`dj-rest-auth`** avec `JWT_AUTH_COOKIE`, ou **`django-allauth` headless**) ou écrivez des vues qui posent le refresh en cookie `HttpOnly`.
 
 ## 20.4 Bonnes pratiques JWT
 
@@ -2930,7 +3529,7 @@ CORS_ALLOW_CREDENTIALS = True                                             # uniq
 CSRF_TRUSTED_ORIGINS = ["https://app.exemple.fr"]
 ```
 
-> 🚫 **N'utilisez jamais** `CORS_ALLOW_ALL_ORIGINS = True` en production, surtout avec `CORS_ALLOW_CREDENTIALS = True`.
+> **N'utilisez jamais** `CORS_ALLOW_ALL_ORIGINS = True` en production, surtout avec `CORS_ALLOW_CREDENTIALS = True`.
 
 ## 20.7 Sessions + CSRF pour une SPA du même site
 
@@ -2957,16 +3556,19 @@ uv add django-ninja
 
 ```python
 # apps/blog/api.py
-from ninja import NinjaAPI, Router, Schema, ModelSchema, Query, Field
-from ninja.security import HttpBearer
+from django.utils.text import slugify
+from ninja import Field, ModelSchema, NinjaAPI, Query, Schema
 from ninja.pagination import paginate
-from django.shortcuts import get_object_or_404
+from ninja.security import HttpBearer
+
+from apps.comptes.models import Utilisateur
+from .models import Article
 
 api = NinjaAPI(title="Mon API", version="1.0.0")                        # docs : /api/docs
 
 class Jeton(HttpBearer):                                                  # authentification par jeton
     def authenticate(self, request, token):
-        return Utilisateur.objects.filter(api_jeton=token).first()
+        return Utilisateur.objects.filter(api_jeton=token).first()        # suppose un champ api_jeton (CharField unique) sur Utilisateur
 
 class ArticleOut(ModelSchema):
     class Meta:
@@ -2988,14 +3590,22 @@ def lister(request, filtres: Query[Filtres]):
 
 @api.post("/articles", response={201: ArticleOut}, auth=Jeton())
 def creer(request, donnees: ArticleIn):
-    return 201, Article.objects.create(auteur=request.auth, **donnees.dict())
+    article = Article.objects.create(auteur=request.auth, slug=slugify(donnees.titre), **donnees.model_dump())
+    return 201, article
 
 @api.get("/articles/{article_id}", response=ArticleOut)
 async def detail(request, article_id: int):                              # vue asynchrone
     return await Article.objects.aget(pk=article_id)
-
-# config/urls.py : path("api/", api.urls)
 ```
+
+```python
+# config/urls.py
+from django.urls import path
+from apps.blog.api import api
+
+urlpatterns += [path("api/", api.urls)]
+```
+
 
 | | **DRF** | **Django Ninja** |
 | --- | --- | --- |
@@ -3015,27 +3625,43 @@ uv add strawberry-graphql-django
 ```
 
 ```python
-import strawberry, strawberry_django
+# apps/blog/schema.py
+import strawberry
+import strawberry_django
 from strawberry import auto
+
+from apps.comptes.models import Utilisateur
+from .models import Article
+
+@strawberry_django.type(Utilisateur)
+class UtilisateurType:
+    id: auto
+    username: auto
 
 @strawberry_django.type(Article)
 class ArticleType:
     id: auto
     titre: auto
-    auteur: "UtilisateurType"
+    auteur: UtilisateurType
 
 @strawberry.type
 class Query:
     articles: list[ArticleType] = strawberry_django.field()
 
 schema = strawberry.Schema(query=Query)
-
-# urls.py
-from strawberry.django.views import GraphQLView
-path("graphql/", GraphQLView.as_view(schema=schema))
 ```
 
-Alternatives : **Graphene-Django**, **Ariadne**. ⚠️ GraphQL expose un langage de requête : **limitez la profondeur et la complexité**, évitez le N+1 (*DataLoaders*, optimiseurs), et désactivez l'introspection en production si nécessaire.
+```python
+# config/urls.py
+from django.urls import path
+from strawberry.django.views import GraphQLView
+from apps.blog.schema import schema
+
+urlpatterns += [path("graphql/", GraphQLView.as_view(schema=schema))]
+```
+
+
+Alternatives : **Graphene-Django**, **Ariadne**. GraphQL expose un langage de requête : **limitez la profondeur et la complexité**, évitez le N+1 (*DataLoaders*, optimiseurs), et désactivez l'introspection en production si nécessaire.
 
 ## 21.3 Consommer des API externes
 
@@ -3044,19 +3670,27 @@ uv add httpx
 ```
 
 ```python
+# apps/blog/services.py
 import httpx
+from django.conf import settings
 
 def meteo(ville: str) -> dict:
-    with httpx.Client(timeout=5.0) as client:                              # ✅ TOUJOURS un délai d'expiration
-        r = client.get("https://api.exemple.com/meteo", params={"q": ville}, headers={"Authorization": f"Bearer {settings.METEO_CLE}"})
+    with httpx.Client(timeout=5.0) as client:                              # TOUJOURS un délai d'expiration
+        r = client.get(
+            "https://api.exemple.com/meteo",
+            params={"q": ville},
+            headers={"Authorization": f"Bearer {settings.METEO_CLE}"},
+        )
         r.raise_for_status()
         return r.json()
 
 async def meteo_async(ville: str) -> dict:                                  # dans une vue asynchrone
     async with httpx.AsyncClient(timeout=5.0) as client:
         r = await client.get("https://api.exemple.com/meteo", params={"q": ville})
-        r.raise_for_status(); return r.json()
+        r.raise_for_status()
+        return r.json()
 ```
+
 
 | Bonne pratique | Détail |
 | --- | --- |
@@ -3071,10 +3705,16 @@ async def meteo_async(ville: str) -> dict:                                  # da
 ## 21.4 Webhooks (recevoir des événements)
 
 ```python
-import hmac, hashlib
+# apps/boutique/views.py
+import hashlib
+import hmac
+
+from django.conf import settings
 from django.http import HttpResponse, HttpResponseBadRequest
 from django.views.decorators.csrf import csrf_exempt          # justifié ici : requête serveur-à-serveur authentifiée par signature
 from django.views.decorators.http import require_POST
+
+from apps.blog.tasks import traiter_evenement                 # tâche présentée en section 23
 
 @csrf_exempt
 @require_POST
@@ -3086,6 +3726,7 @@ def webhook_paiement(request):
     traiter_evenement.delay(request.body.decode())                           # répondre vite (2xx), traiter en arrière-plan
     return HttpResponse(status=202)
 ```
+
 
 - **Vérifiez toujours la signature**, rendez le traitement **idempotent** (identifiant d'événement), répondez **rapidement**.
 
@@ -3102,13 +3743,17 @@ def webhook_paiement(request):
 | Point d'entrée | `config/wsgi.py` | `config/asgi.py` |
 | Usage | Applications classiques | Temps réel, nombreuses E/S concurrentes |
 
-> ✅ Django s'exécute très bien en **WSGI** (Gunicorn). Passez en **ASGI** si vous avez besoin de **WebSockets**, de **SSE**, ou de nombreuses **E/S concurrentes** (appels d'API).
+> Django s'exécute très bien en **WSGI** (Gunicorn). Passez en **ASGI** si vous avez besoin de **WebSockets**, de **SSE**, ou de nombreuses **E/S concurrentes** (appels d'API).
 
 ## 22.2 Vues asynchrones
 
 ```python
-import asyncio, httpx
+import asyncio
+
+import httpx
 from django.http import JsonResponse
+
+from apps.blog.models import Article
 
 async def tableau_de_bord(request):
     async with httpx.AsyncClient(timeout=5) as client:
@@ -3118,16 +3763,32 @@ async def tableau_de_bord(request):
     return JsonResponse({"meteo": meteo.json(), "actus": actus.json(), "articles": total})
 ```
 
+
 ### Mélanger synchrone et asynchrone
 
 ```python
-from asgiref.sync import sync_to_async, async_to_sync
+import asyncio
 
-resultat = await sync_to_async(fonction_synchrone)(arg)         # appeler du code sync (ORM non async, bibliothèques bloquantes) depuis async
-valeur = async_to_sync(fonction_async)(arg)                      # l'inverse
+from asgiref.sync import async_to_sync, sync_to_async
+
+def fonction_synchrone(x: int) -> int:
+    return x * 2
+
+async def fonction_async(x: int) -> int:
+    return x + 1
+
+async def exemple():
+    resultat = await sync_to_async(fonction_synchrone)(21)   # appeler du code sync (ORM non async, bibliothèques bloquantes) depuis async
+    print(resultat)                                          # 42
+
+asyncio.run(exemple())
+
+valeur = async_to_sync(fonction_async)(41)                   # l'inverse : appeler du code async depuis du sync
+print(valeur)                                                # 42
 ```
 
-> ⚠️ **Ne bloquez jamais la boucle d'événements** (appels `requests`, `time.sleep`, calculs lourds) : utilisez `httpx.AsyncClient`, `asyncio.sleep`, ou `sync_to_async` / une tâche en arrière-plan. Les **middlewares** synchrones forcent des conversions : préférez des middlewares **compatibles async**.
+
+> **Ne bloquez jamais la boucle d'événements** (appels `requests`, `time.sleep`, calculs lourds) : utilisez `httpx.AsyncClient`, `asyncio.sleep`, ou `sync_to_async` / une tâche en arrière-plan. Les **middlewares** synchrones forcent des conversions : préférez des middlewares **compatibles async**.
 
 ## 22.3 Django Channels : WebSockets
 
@@ -3148,7 +3809,7 @@ CHANNEL_LAYERS = {"default": {"BACKEND": "channels_redis.core.RedisChannelLayer"
 import os
 from django.core.asgi import get_asgi_application
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings")
-django_asgi = get_asgi_application()                                   # ⚠️ avant d'importer le code des apps
+django_asgi = get_asgi_application()                                   # avant d'importer le code des apps
 
 from channels.routing import ProtocolTypeRouter, URLRouter
 from channels.auth import AuthMiddlewareStack
@@ -3164,13 +3825,15 @@ application = ProtocolTypeRouter({
 ```python
 # apps/chat/consumers.py
 import json
+
 from channels.generic.websocket import AsyncWebsocketConsumer
 
 class SalonConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         self.groupe = f"salon_{self.scope['url_route']['kwargs']['salon']}"
         if not self.scope["user"].is_authenticated:
-            await self.close(code=4401); return
+            await self.close(code=4401)
+            return
         await self.channel_layer.group_add(self.groupe, self.channel_name)
         await self.accept()
 
@@ -3179,30 +3842,43 @@ class SalonConsumer(AsyncWebsocketConsumer):
 
     async def receive(self, text_data):
         data = json.loads(text_data)
-        await self.channel_layer.group_send(self.groupe, {"type": "message.chat", "texte": data["texte"], "auteur": self.scope["user"].username})
+        await self.channel_layer.group_send(
+            self.groupe,
+            {"type": "message.chat", "texte": data["texte"], "auteur": self.scope["user"].username},
+        )
 
     async def message_chat(self, event):                               # type « message.chat » → méthode message_chat
         await self.send(text_data=json.dumps({"texte": event["texte"], "auteur": event["auteur"]}))
+```
 
+```python
 # apps/chat/routing.py
 from django.urls import path
+from .consumers import SalonConsumer
+
 websocket_urlpatterns = [path("ws/salon/<str:salon>/", SalonConsumer.as_asgi())]
 ```
 
-> 🔒 Authentifiez les WebSockets (cookie de session via `AuthMiddlewareStack`, ou jeton dans la chaîne de requête / premier message), validez l'**origine** et limitez les messages.
+
+> Authentifiez les WebSockets (cookie de session via `AuthMiddlewareStack`, ou jeton dans la chaîne de requête / premier message), validez l'**origine** et limitez les messages.
 
 ## 22.4 Événements envoyés par le serveur (SSE)
 
 Plus simples que les WebSockets pour du **flux unidirectionnel** (notifications, progression) :
 
 ```python
+import asyncio
+
 from django.http import StreamingHttpResponse
+
 async def flux(request):
     async def generateur():
         for i in range(10):
-            yield f"data: {i}\n\n"; await asyncio.sleep(1)
+            yield f"data: {i}\n\n"
+            await asyncio.sleep(1)
     return StreamingHttpResponse(generateur(), content_type="text/event-stream")
 ```
+
 
 ## 22.5 Déployer en ASGI
 
@@ -3222,7 +3898,7 @@ daphne -b 0.0.0.0 -p 8000 config.asgi:application
 Les opérations **lentes ou fragiles** (e-mails, PDF, appels d'API, traitements d'images, rapports) ne doivent **pas** s'exécuter dans la requête HTTP : on les **met en file d'attente** pour qu'un **worker** les traite.
 
 ```text
-Vue ──enqueue──▶ File (Redis, RabbitMQ, base) ──▶ Worker ──▶ exécute la tâche
+Vue ──enqueue──> File (Redis, RabbitMQ, base) ──> Worker ──> exécute la tâche
   ↓ réponse immédiate
 ```
 
@@ -3238,20 +3914,26 @@ TASKS = {"default": {"BACKEND": "django.tasks.backends.immediate.ImmediateBacken
 
 ```python
 # apps/blog/tasks.py
-from django.tasks import task
 from django.core.mail import send_mail
+from django.tasks import task
+
+from apps.comptes.models import Utilisateur
 
 @task
 def envoyer_bienvenue(utilisateur_id: int) -> None:
-    ...
+    utilisateur = Utilisateur.objects.get(pk=utilisateur_id)
+    send_mail("Bienvenue", "Merci de votre inscription.", None, [utilisateur.email])
 
 # Dans une vue / un modèle
-resultat = envoyer_bienvenue.enqueue(utilisateur.pk)            # met en file (et non appelle)
+def inscrire(utilisateur):
+    resultat = envoyer_bienvenue.enqueue(utilisateur.pk)            # met en file (et non appelle)
+    print(resultat.id)
 ```
 
-> ⚠️ Le framework intégré **ne fournit pas de worker de production** : vérifiez la documentation officielle (« Tasks ») et l'état des backends tiers avant de l'adopter ; **Celery** reste la solution la plus éprouvée.
 
-## 23.3 Celery ✅
+> Le framework intégré **ne fournit pas de worker de production** : vérifiez la documentation officielle (« Tasks ») et l'état des backends tiers avant de l'adopter ; **Celery** reste la solution la plus éprouvée.
+
+## 23.3 Celery
 
 **Celery** est le système de tâches distribuées de référence (files, planification, nouvelles tentatives, chaînes, résultats).
 
@@ -3286,21 +3968,39 @@ CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"   # t�
 
 ```python
 # apps/blog/tasks.py
+import json
+import logging
+
 from celery import shared_task
+from django.core.mail import send_mail
+from django.db import transaction
+
+from apps.comptes.models import Utilisateur
+
+logger = logging.getLogger(__name__)
 
 @shared_task(bind=True, autoretry_for=(ConnectionError,), retry_backoff=True, retry_kwargs={"max_retries": 5})
 def envoyer_bienvenue(self, utilisateur_id: int) -> None:
-    utilisateur = Utilisateur.objects.get(pk=utilisateur_id)                # ✅ passer des IDENTIFIANTS, pas des objets
-    send_mail("Bienvenue", "…", None, [utilisateur.email])
+    utilisateur = Utilisateur.objects.get(pk=utilisateur_id)                # passer des IDENTIFIANTS, pas des objets
+    send_mail("Bienvenue", "Merci de votre inscription.", None, [utilisateur.email])
 
-# Appel
-envoyer_bienvenue.delay(utilisateur.pk)
-envoyer_bienvenue.apply_async(args=[utilisateur.pk], countdown=60)          # dans 60 s
+@shared_task
+def envoyer_confirmation(commande_id: str) -> None:
+    logger.info("Confirmation envoyée pour la commande %s", commande_id)
 
-# ✅ Après la validation de la transaction (sinon le worker peut ne pas trouver l'objet)
-from django.db import transaction
-transaction.on_commit(lambda: envoyer_bienvenue.delay(utilisateur.pk))
+@shared_task
+def traiter_evenement(corps: str) -> None:
+    evenement = json.loads(corps)
+    logger.info("Événement reçu : %s", evenement.get("type"))
+
+# Appels (dans une vue ou un service)
+def inscrire(utilisateur):
+    envoyer_bienvenue.delay(utilisateur.pk)
+    envoyer_bienvenue.apply_async(args=[utilisateur.pk], countdown=60)          # dans 60 s
+    # Après la validation de la transaction (sinon le worker peut ne pas trouver l'objet)
+    transaction.on_commit(lambda: envoyer_bienvenue.delay(utilisateur.pk))
 ```
+
 
 ```bash
 celery -A config worker -l info                       # worker
@@ -3311,15 +4011,57 @@ celery -A config flower                               # supervision web (http://
 ### Chaînes, groupes, périodiques
 
 ```python
-from celery import chain, group, chord
-chain(telecharger.s(url), traiter.s(), notifier.s())()              # l'un après l'autre
-group(redimensionner.s(i) for i in images)()                          # en parallèle
-chord(group(...))(callback.s())                                       # parallèle + rappel final
+from celery import chain, chord, group, shared_task
+
+@shared_task
+def telecharger(url: str) -> str:
+    return f"contenu de {url}"
+
+@shared_task
+def traiter(contenu: str) -> str:
+    return contenu.upper()
+
+@shared_task
+def notifier(resultat: str) -> str:
+    return f"notifié : {resultat}"
+
+@shared_task
+def redimensionner(image_id: int) -> int:
+    return image_id
+
+@shared_task
+def callback(resultats: list[int]) -> int:
+    return sum(resultats)
+
+chain(telecharger.s("https://exemple.fr"), traiter.s(), notifier.s())()      # l'un après l'autre
+group(redimensionner.s(i) for i in [1, 2, 3])()                              # en parallèle
+chord(group(redimensionner.s(i) for i in [1, 2, 3]))(callback.s())           # parallèle + rappel final
 ```
 
+
 ```python
-CELERY_BEAT_SCHEDULE = {"nettoyage-nocturne": {"task": "apps.blog.tasks.nettoyer", "schedule": crontab(hour=3, minute=0)}}
+# apps/blog/tasks.py
+from datetime import timedelta
+
+from celery import shared_task
+from django.utils import timezone
+
+from .models import Article
+
+@shared_task
+def nettoyer() -> int:
+    limite = timezone.now() - timedelta(days=90)
+    nombre, _ = Article.objects.filter(statut="brouillon", cree_le__lt=limite).delete()
+    return nombre
+
+# settings.py
+from celery.schedules import crontab
+
+CELERY_BEAT_SCHEDULE = {
+    "nettoyage-nocturne": {"task": "apps.blog.tasks.nettoyer", "schedule": crontab(hour=3, minute=0)},
+}
 ```
+
 
 ### Bonnes pratiques Celery
 
@@ -3342,7 +4084,7 @@ CELERY_BEAT_SCHEDULE = {"nettoyage-nocturne": {"task": "apps.blog.tasks.nettoyer
 | **Django-Q2** | Tâches simples avec l'ORM comme courtier |
 | **Cron + commandes de gestion** | Tâches périodiques simples |
 
-> ✅ **Choix** : besoin simple → **Django Tasks / Huey / Procrastinate / cron** ; besoin riche (planification, flux, forte volumétrie) → **Celery**.
+> **Choix** : besoin simple → **Django Tasks / Huey / Procrastinate / cron** ; besoin riche (planification, flux, forte volumétrie) → **Celery**.
 
 ---
 
@@ -3355,7 +4097,7 @@ CELERY_BEAT_SCHEDULE = {"nettoyage-nocturne": {"task": "apps.blog.tasks.nettoyer
 | Approche | Principe | Idéal pour |
 | --- | --- | --- |
 | **Templates Django classiques** | HTML rendu côté serveur | Sites de contenu, back-offices |
-| **HTMX + Alpine.js** ✅ | Le serveur renvoie des **fragments HTML** ; interactivité sans SPA | Applications riches **sans** framework JavaScript lourd |
+| **HTMX + Alpine.js** | Le serveur renvoie des **fragments HTML** ; interactivité sans SPA | Applications riches **sans** framework JavaScript lourd |
 | **Composants de template** (`django-cotton`, `django-components`) | Composants réutilisables en HTML | Design systems côté serveur |
 | **Tailwind CSS** (+ Vite) | Utilitaires CSS | Interfaces modernes |
 | **SPA** (React, Vue, Svelte) + **DRF / Ninja** | Front séparé, API JSON | Applications très interactives, équipes front dédiées |
@@ -3378,17 +4120,23 @@ MIDDLEWARE += ["django_htmx.middleware.HtmxMiddleware"]                  # reque
 
 <input type="search" name="q" placeholder="Rechercher…"
        hx-get="{% url 'blog:liste' %}" hx-trigger="input changed delay:300ms" hx-target="#resultats" hx-push-url="true">
-<div id="resultats">{% include "blog/_liste.html" %}</div>
+<div id="resultats">{% partial liste-articles %}</div>
 ```
 
 ```python
+# apps/blog/views.py
+from django.shortcuts import render
+from .models import Article
+
 def liste(request):
-    articles = Article.objects.publies().filter(titre__icontains=request.GET.get("q", ""))
-    gabarit = "blog/liste.html#resultats" if request.htmx else "blog/liste.html"      # fragment (6.0) si requête HTMX
+    q = request.GET.get("q", "")
+    articles = Article.objects.publies().filter(titre__icontains=q)
+    gabarit = "blog/liste.html#liste-articles" if request.htmx else "blog/liste.html"      # fragment (6.0) si requête HTMX
     return render(request, gabarit, {"articles": articles})
 ```
 
-> ✅ Avec les **partiels de template** (Django 6.0), une seule page sert à la fois la **page complète** et le **fragment**.
+
+> Avec les **partiels de template** (Django 6.0), une seule page sert à la fois la **page complète** et le **fragment**.
 
 ## 24.3 Tailwind et ressources front
 
@@ -3416,7 +4164,7 @@ def liste(request):
 
 ---
 
-# 🛡️ Qualité et production
+# Qualité et production
 
 ---
 
@@ -3466,7 +4214,7 @@ class ArticleTests(TestCase):
         self.assertTrue(Article.objects.filter(titre="Nouveau", auteur=self.alice).exists())
 
     def test_nombre_de_requetes(self):
-        with self.assertNumQueries(2):                              # ✅ détecte les régressions N+1
+        with self.assertNumQueries(2):                              # détecte les régressions N+1
             self.client.get(reverse("blog:liste"))
 
     @override_settings(EMAIL_BACKEND="django.core.mail.backends.locmem.EmailBackend")
@@ -3484,13 +4232,13 @@ python manage.py test --parallel --keepdb          # en parallèle, en conservan
 | Classe | Usage |
 | --- | --- |
 | `SimpleTestCase` | Sans base de données |
-| `TestCase` | Chaque test dans une **transaction annulée** ✅ |
+| `TestCase` | Chaque test dans une **transaction annulée** |
 | `TransactionTestCase` | Teste le comportement transactionnel (plus lent) |
 | `LiveServerTestCase` / `StaticLiveServerTestCase` | Serveur réel pour Selenium / Playwright |
 
 Outils : `Client` (HTTP complet), `RequestFactory` (vue isolée), `override_settings`, `mail.outbox`, `assertContains`, `assertRedirects`, `assertFormError`, `assertNumQueries`, `skipUnless`.
 
-## 25.3 `pytest-django` ✅
+## 25.3 `pytest-django`
 
 ```bash
 uv add --dev pytest pytest-django pytest-cov pytest-xdist factory-boy faker
@@ -3528,26 +4276,41 @@ Fixtures utiles : `client`, `admin_client`, `rf`, `db`, `transactional_db`, `set
 ```python
 # apps/blog/tests/factories.py
 import factory
+from django.contrib.auth import get_user_model
 from factory.django import DjangoModelFactory
 
+from apps.blog.models import Article
+
+User = get_user_model()
+
 class UtilisateurFactory(DjangoModelFactory):
-    class Meta: model = User
+    class Meta:
+        model = User
+
     username = factory.Sequence(lambda n: f"user{n}")
     email = factory.LazyAttribute(lambda o: f"{o.username}@exemple.fr")
     password = factory.PostGenerationMethodCall("set_password", "motdepasse")
 
 class ArticleFactory(DjangoModelFactory):
-    class Meta: model = Article
+    class Meta:
+        model = Article
+
     titre = factory.Faker("sentence", locale="fr_FR")
+    slug = factory.Sequence(lambda n: f"article-{n}")
     contenu = factory.Faker("paragraph", nb_sentences=8, locale="fr_FR")
     auteur = factory.SubFactory(UtilisateurFactory)
 
 # conftest.py
 from pytest_factoryboy import register          # (paquet pytest-factoryboy) → fixtures article_factory, utilisateur_factory
-register(UtilisateurFactory); register(ArticleFactory)
+
+from apps.blog.tests.factories import ArticleFactory, UtilisateurFactory
+
+register(UtilisateurFactory)
+register(ArticleFactory)
 ```
 
-> ✅ **Factories** plutôt que fixtures JSON : plus lisibles, plus faciles à maintenir. Alternative : **`model_bakery`**.
+
+> **Factories** plutôt que fixtures JSON : plus lisibles, plus faciles à maintenir. Alternative : **`model_bakery`**.
 
 ## 25.5 Tester des API
 
@@ -3556,21 +4319,34 @@ Voir [19.8](#198-tests-dapi) (`APIClient`). Authentification : `client.force_aut
 ## 25.6 Mocks, temps et services externes
 
 ```python
+from datetime import timedelta
 from unittest import mock
+
+from django.utils import timezone
 from freezegun import freeze_time              # ou time-machine
 
+from apps.blog.models import Article
+from apps.blog.services import meteo
+from apps.blog.tasks import traiter_evenement
+
 @freeze_time("2026-10-14 12:00")
-def test_publication_planifiee(db): ...
+def test_publication_planifiee(db, django_user_model):
+    auteur = django_user_model.objects.create_user("alice", "alice@exemple.fr", "x")
+    Article.objects.create(titre="Futur", slug="futur", contenu="x", auteur=auteur, statut="publie",
+                           publie_le=timezone.now() + timedelta(days=1))
+    assert Article.objects.publies().count() == 0              # l'article planifié n'est pas encore visible
 
 @mock.patch("apps.blog.services.httpx.Client.get")
-def test_meteo(mock_get):
+def test_meteo(mock_get, settings):
+    settings.METEO_CLE = "cle-de-test"
     mock_get.return_value.json.return_value = {"temp": 20}
-    ...
+    assert meteo("Paris") == {"temp": 20}
 
-# Tâches Celery : exécuter immédiatement, ou appeler la fonction directement
-@override_settings(CELERY_TASK_ALWAYS_EAGER=True)
-def test_avec_taches_immediates(): ...
+# Tâches Celery : appeler la fonction directement (sans worker ni courtier)
+def test_tache_appelee_directement():
+    assert traiter_evenement('{"type": "paiement"}') is None
 ```
+
 
 Outils : **`respx`** (httpx), **`responses`** / `requests-mock`, **`moto`** (AWS), `pytest-mock`. **Aucun appel réseau réel** dans les tests unitaires.
 
@@ -3579,7 +4355,7 @@ Outils : **`respx`** (httpx), **`responses`** / `requests-mock`, **`moto`** (AWS
 ```python
 # config/settings/test.py
 from .base import *
-PASSWORD_HASHERS = ["django.contrib.auth.hashers.MD5PasswordHasher"]       # ⚠️ TESTS UNIQUEMENT : hachage rapide
+PASSWORD_HASHERS = ["django.contrib.auth.hashers.MD5PasswordHasher"]       # TESTS UNIQUEMENT : hachage rapide
 EMAIL_BACKEND = "django.core.mail.backends.locmem.EmailBackend"
 CACHES = {"default": {"BACKEND": "django.core.cache.backends.locmem.LocMemCache"}}
 STORAGES = {"default": {"BACKEND": "django.core.files.storage.InMemoryStorage"}, "staticfiles": {"BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage"}}
@@ -3712,7 +4488,7 @@ SECURE_CSP_REPORT_ONLY = {                               # 1) commencer en mode 
 <script nonce="{{ csp_nonce }}">/* script en ligne autorisé */</script>
 ```
 
-> ✅ Évitez `'unsafe-inline'` et `'unsafe-eval'`. Pour les versions antérieures : **`django-csp`**.
+> Évitez `'unsafe-inline'` et `'unsafe-eval'`. Pour les versions antérieures : **`django-csp`**.
 
 ## 26.4 Les vulnérabilités à connaître
 
@@ -3732,17 +4508,26 @@ SECURE_CSP_REPORT_ONLY = {                               # 1) commencer en mode 
 | **Force brute** | Connexions illimitées | `django-axes`, `django-ratelimit`, throttling DRF |
 
 ```python
+from django.http import HttpResponseRedirect
 from django.utils.http import url_has_allowed_host_and_scheme
-suivant = request.POST.get("next", "")
-if not url_has_allowed_host_and_scheme(suivant, allowed_hosts={request.get_host()}, require_https=request.is_secure()):
-    suivant = "/"
+
+def apres_connexion(request):
+    suivant = request.POST.get("next", "")
+    if not url_has_allowed_host_and_scheme(suivant, allowed_hosts={request.get_host()}, require_https=request.is_secure()):
+        suivant = "/"
+    return HttpResponseRedirect(suivant)
 ```
 
+
 ```python
-from django.views.decorators.debug import sensitive_post_parameters, sensitive_variables
+from django.http import HttpResponse
+from django.views.decorators.debug import sensitive_post_parameters
+
 @sensitive_post_parameters("motdepasse")          # masquées dans les rapports d'erreur
-def connexion(request): ...
+def connexion(request):
+    return HttpResponse("Connexion")
 ```
+
 
 ## 26.5 Secrets et configuration
 
@@ -3770,10 +4555,14 @@ AXES_FAILURE_LIMIT = 5; AXES_COOLOFF_TIME = 1                    # 5 échecs →
 ```
 
 ```python
+from django.http import HttpResponse
 from django_ratelimit.decorators import ratelimit
+
 @ratelimit(key="ip", rate="5/m", block=True)
-def connexion(request): ...
+def connexion(request):
+    return HttpResponse("Connexion")
 ```
+
 
 ## 26.8 Sécurité de l'infrastructure
 
@@ -3810,12 +4599,23 @@ def connexion(request): ...
 ## 27.3 Pagination et gros volumes
 
 ```python
+# python manage.py shell
+from django.core.paginator import Paginator
+
+qs = Article.objects.publies()
 paginator = Paginator(qs, 25)                                   # ou CursorPagination (DRF) : pagination par « curseur » stable et rapide
-for lot in qs.iterator(chunk_size=2000): ...                    # mémoire constante
+print(paginator.num_pages, len(paginator.page(1).object_list))
+
+for article in qs.iterator(chunk_size=2000):                    # mémoire constante
+    print(article.titre)
+
+auteur = Utilisateur.objects.first()
+objets = [Article(titre=f"Lot {i}", slug=f"lot-{i}", contenu="x", auteur=auteur) for i in range(5000)]
 Article.objects.bulk_create(objets, batch_size=1000)
 ```
 
-> ⚠️ `OFFSET` élevé est lent sur de très grandes tables : préférez la **pagination par curseur** (clé d'ordre).
+
+> `OFFSET` élevé est lent sur de très grandes tables : préférez la **pagination par curseur** (clé d'ordre).
 
 ## 27.4 Modèles et templates
 
@@ -3850,10 +4650,10 @@ gunicorn config.wsgi:application --workers 5 --threads 2 --worker-class gthread 
 ## 28.1 Vue d'ensemble
 
 ```text
-Internet ─▶ Proxy / CDN (Nginx, Caddy, Cloudflare)
-              ├─▶ Statiques (WhiteNoise / Nginx / CDN)
-              └─▶ Gunicorn / Uvicorn (Django) ──▶ PostgreSQL · Redis
-                                                  └─▶ Workers (Celery / Tasks) · Beat
+Internet ─> Proxy / CDN (Nginx, Caddy, Cloudflare)
+              ├─> Statiques (WhiteNoise / Nginx / CDN)
+              └─> Gunicorn / Uvicorn (Django) ──> PostgreSQL · Redis
+                                                  └─> Workers (Celery / Tasks) · Beat
 ```
 
 ## 28.2 Liste de contrôle
@@ -3921,7 +4721,7 @@ volumes:
   pgdata:
 ```
 
-> ✅ Exécutez les **migrations** dans une **étape de déploiement** (`python manage.py migrate --noinput` en *release command* / *init container*), pas dans chaque instance au démarrage.
+> Exécutez les **migrations** dans une **étape de déploiement** (`python manage.py migrate --noinput` en *release command* / *init container*), pas dans chaque instance au démarrage.
 
 ## 28.4 Nginx (proxy inverse)
 
@@ -3953,16 +4753,21 @@ server {
 ## 28.5 Vue de santé et supervision
 
 ```python
+# apps/accueil/views.py
 from django.db import connection
 from django.http import JsonResponse
 
 def sante(request):
     try:
-        with connection.cursor() as c: c.execute("SELECT 1")
+        with connection.cursor() as c:
+            c.execute("SELECT 1")
         return JsonResponse({"statut": "ok"})
     except Exception:
         return JsonResponse({"statut": "erreur"}, status=503)
+
+# apps/accueil/urls.py : urlpatterns += [path("sante/", sante, name="sante")]
 ```
+
 
 Outils : **`django-health-check`**, **Sentry** (`sentry-sdk[django]`), Prometheus (`django-prometheus`), OpenTelemetry, journaux JSON (`python-json-logger`, `structlog`).
 
@@ -4091,7 +4896,7 @@ dev = [
 | **Sécurité** | Historique de vulnérabilités, `pip-audit` |
 | **Besoin réel** | Parfois quelques lignes de Django suffisent |
 
-> ⚠️ Un paquet **abandonné** (ex. `django-ckeditor` v4, `django-grappelli` ancien, Akita…) est une **dette** : vérifiez avant d'adopter.
+> Un paquet **abandonné** (ex. `django-ckeditor` v4, `django-grappelli` ancien, Akita…) est une **dette** : vérifiez avant d'adopter.
 
 ---
 
@@ -4109,7 +4914,7 @@ dev = [
 | **6.1** | **Modes de chargement** (`fetch_mode`), `on_delete` **au niveau base** (`DB_CASCADE`…), réglage **`MAILERS`**, fonctions `UUID4` / `UUID7`, `JSONNull`, agrégats de bits |
 | **6.2 LTS** *(prévue avril 2027)* | Prochaine version à support long terme |
 
-> 📌 Pour le détail exact (et les suppressions de fonctionnalités dépréciées), lisez les **notes de version** : [docs.djangoproject.com/en/6.1/releases/](https://docs.djangoproject.com/en/6.1/releases/).
+> Pour le détail exact (et les suppressions de fonctionnalités dépréciées), lisez les **notes de version** : [docs.djangoproject.com/en/6.1/releases/](https://docs.djangoproject.com/en/6.1/releases/).
 
 ## 30.2 Mettre à jour Django *(ajout)*
 
@@ -4152,19 +4957,19 @@ Exemples de suppressions courantes lors des migrations récentes : `DEFAULT_FILE
 
 ## 30.5 Ressources
 
-- 📘 **Documentation officielle** : <https://docs.djangoproject.com/fr/>
-- 🎓 **Tutoriel officiel** (sondages) : <https://docs.djangoproject.com/fr/6.1/intro/tutorial01/>
-- 📜 **Notes de version** : <https://docs.djangoproject.com/en/6.1/releases/>
-- 📦 **Django Packages** : <https://djangopackages.org> · **PyPI** : <https://pypi.org>
-- 🔍 **Classy Class-Based Views** : <https://ccbv.co.uk> · **Classy DRF** : <https://www.cdrf.co>
-- 🌐 **DRF** : <https://www.django-rest-framework.org> · **Django Ninja** : <https://django-ninja.dev> · **Celery** : <https://docs.celeryq.dev>
-- 🔒 **Sécurité Django** : <https://docs.djangoproject.com/fr/6.1/topics/security/> · **OWASP** : <https://owasp.org>
-- 📚 *Two Scoops of Django* (Greenfeld & Roy), *Django for Professionals / APIs* (William S. Vincent), blog de **Adam Johnson**, **Simon Willison**, **Django News** (newsletter)
+- **Documentation officielle** : <https://docs.djangoproject.com/fr/>
+- **Tutoriel officiel** (sondages) : <https://docs.djangoproject.com/fr/6.1/intro/tutorial01/>
+- **Notes de version** : <https://docs.djangoproject.com/en/6.1/releases/>
+- **Django Packages** : <https://djangopackages.org> · **PyPI** : <https://pypi.org>
+- **Classy Class-Based Views** : <https://ccbv.co.uk> · **Classy DRF** : <https://www.cdrf.co>
+- **DRF** : <https://www.django-rest-framework.org> · **Django Ninja** : <https://django-ninja.dev> · **Celery** : <https://docs.celeryq.dev>
+- **Sécurité Django** : <https://docs.djangoproject.com/fr/6.1/topics/security/> · **OWASP** : <https://owasp.org>
+- *Two Scoops of Django* (Greenfeld & Roy), *Django for Professionals / APIs* (William S. Vincent), blog de **Adam Johnson**, **Simon Willison**, **Django News** (newsletter)
 
 ---
 
 <div align="center">
 
-*Bon développement avec Django ! 🎸*
+*Bon développement avec Django !*
 
 </div>
