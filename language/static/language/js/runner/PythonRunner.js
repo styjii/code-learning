@@ -6,12 +6,18 @@ let worker = null;
 let queue = Promise.resolve();
 let nextId = 1;
 
+/** JSPI : nécessaire pour suspendre Python pendant un input() (Chrome / Edge récents). */
+const canPrompt = typeof WebAssembly !== "undefined" && "Suspending" in WebAssembly;
+
 const getWorker = () => (worker ??= new Worker(new URL("./python.worker.js", import.meta.url), { type: "module" }));
 
 export const PythonRunner = {
+    /** true si input() peut être saisi pendant l'exécution (sinon : zone « Entrée standard »). */
+    canPrompt,
+
     /**
      * @param {string} code
-     * @param {{out: Function, status: Function}} hooks
+     * @param {{out: Function, status: Function, input?: (prompt: string, options: {secret: boolean}) => Promise<string|null>, mode?: Function}} hooks
      * @param {{stdin?: string, timeout?: number}} options
      */
     run(code, hooks, { stdin = "", timeout = 10000 } = {}) {
@@ -38,17 +44,28 @@ export const PythonRunner = {
                 w.terminate();
                 if (worker === w) worker = null;
             };
+            // Le délai ne court pas pendant qu'on attend la frappe de l'utilisateur.
+            const armTimeout = () => {
+                clearTimeout(timer);
+                timer = setTimeout(() => {
+                    hooks.out("warn", `Exécution interrompue après ${timeout / 1000} s (boucle infinie ?).`);
+                    kill();
+                    finish({ ok: false, reason: "timeout" });
+                }, timeout);
+            };
             const onMessage = ({ data }) => {
                 if (data.id !== id) return;
                 switch (data.type) {
                     case "status": hooks.status(data.text); break;
-                    case "started":
+                    case "mode": hooks.mode?.(data.text); break;
+                    case "started": armTimeout(); break;
+                    case "input":
                         clearTimeout(timer);
-                        timer = setTimeout(() => {
-                            hooks.out("warn", `Exécution interrompue après ${timeout / 1000} s (boucle infinie ?).`);
-                            kill();
-                            finish({ ok: false, reason: "timeout" });
-                        }, timeout);
+                        Promise.resolve(hooks.input ? hooks.input(data.text, { secret: !!data.secret }) : null).then((text) => {
+                            if (settled) return;
+                            armTimeout();
+                            w.postMessage({ type: "answer", text });
+                        });
                         break;
                     case "out": hooks.out("out", data.text); break;
                     case "err": hooks.out("err", data.text); break;
@@ -73,7 +90,7 @@ export const PythonRunner = {
                 finish({ ok: false, reason: "timeout" });
             }, 90000);
 
-            w.postMessage({ id, code, stdin, indexURL: document.body.dataset.pyodide });
+            w.postMessage({ id, code, stdin, indexURL: document.body.dataset.pyodide, interactive: canPrompt && !!hooks.input });
         });
 
         const promise = (queue = queue.then(execute, execute));

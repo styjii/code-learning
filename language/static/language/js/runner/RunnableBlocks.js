@@ -1,6 +1,7 @@
 import { loadMonaco } from "./MonacoLoader.js";
 import { runJavaScript } from "./JsRunner.js";
 import { runTypeScript } from "./TsRunner.js";
+import { runInDom, disposePreview, usesDom } from "./DomRunner.js";
 import { PythonRunner } from "./PythonRunner.js";
 
 /**
@@ -31,10 +32,13 @@ function detectKind(code) {
     return match ? KINDS[match[1].toLowerCase()] ?? null : null;
 }
 
-/** Les extraits Node/ES modules ne peuvent pas tourner dans un worker isolé. */
+/**
+ * Les extraits Node/ES modules ne peuvent pas tourner dans un worker isolé :
+ * import/export statiques, require() et import() dynamique (« await import("./module.js") »).
+ */
 function isRunnable(kind, source, code) {
     if (code.dataset.run === "false" || !source.trim()) return false;
-    if (kind !== "python" && /^\s*(import|export)\s|\brequire\s*\(/m.test(source)) return false;
+    if (kind !== "python" && /^\s*(import|export)\s|\brequire\s*\(|\bimport\s*\(/m.test(source)) return false;
     return true;
 }
 
@@ -75,6 +79,7 @@ class RunnableBlock {
         this.resetBtn.addEventListener("click", () => {
             this.editor?.setValue(this.source);
             this.clearOutput();
+            disposePreview(this.previewEl);
             this.outEl.hidden = true;
         });
 
@@ -115,6 +120,11 @@ class RunnableBlock {
         head.append(el("span", "", "Résultat"), this.statusEl);
         this.outEl.append(head, this.linesEl);
         this.editorEl.after(this.outEl);
+
+        // Aperçu du DOM : n'apparaît que pour le code qui construit une page (voir DomRunner.js).
+        this.previewEl = el("div", "run-preview");
+        this.previewEl.hidden = true;
+        this.outEl.after(this.previewEl);
 
         let monaco;
         try {
@@ -167,6 +177,7 @@ class RunnableBlock {
     /** Python : zone de saisie pour les appels à input(). */
     maybeAddStdin() {
         if (this.kind !== "python" || this.stdinEl || !/\binput\s*\(/.test(this.editor.getValue())) return;
+        if (PythonRunner.canPrompt && !this.needsStdin) return;      // input() interactif : pas besoin de saisie préalable
         const details = el("details", "run-stdin");
         details.open = true;
         details.append(el("summary", "", "Entrée standard (pour input())"));
@@ -178,8 +189,59 @@ class RunnableBlock {
         this.editorEl.after(details);
     }
 
+    /**
+     * input() interactif : affiche l'invite dans « Résultat » avec un champ de saisie (Entrée valide,
+     * Ctrl+D sur un champ vide signale la fin d'entrée -> EOFError côté Python).
+     * « secret » (getpass) : champ masqué, valeur jamais réaffichée dans la sortie.
+     * @returns {Promise<string|null>}
+     */
+    ask(prompt, { secret = false } = {}) {
+        this.cancelAsk();
+        return new Promise((resolve) => {
+            const line = el("div", "run-line is-out");
+            const field = el("input", "run-input");
+            field.type = secret ? "password" : "text";
+            field.autocomplete = secret ? "new-password" : "off";
+            field.spellcheck = false;
+            field.setAttribute("aria-label", prompt || "Saisie demandée par input()");
+            line.append(document.createTextNode(prompt), field);
+            this.linesEl.append(line);
+            this.lines++;
+            this.statusEl.textContent = "En attente de saisie…";
+            field.focus({ preventScroll: true });
+            line.scrollIntoView({ block: "nearest" });
+
+            const close = (value) => {
+                field.replaceWith(document.createTextNode(secret ? "" : field.value));
+                this.statusEl.textContent = "";
+                this.pendingAsk = null;
+                resolve(value);
+            };
+            field.addEventListener("keydown", (event) => {
+                if (event.key === "Enter") {
+                    event.preventDefault();
+                    close(field.value);
+                } else if (event.key.toLowerCase() === "d" && event.ctrlKey && !field.value) {
+                    event.preventDefault();
+                    close(null);
+                }
+            });
+            this.pendingAsk = { line, field, resolve };
+        });
+    }
+
+    /** Ferme un champ de saisie resté ouvert (exécution arrêtée, interrompue ou terminée). */
+    cancelAsk() {
+        const pending = this.pendingAsk;
+        if (!pending) return;
+        this.pendingAsk = null;
+        pending.field.replaceWith(document.createTextNode(pending.field.type === "password" ? "" : pending.field.value));
+        pending.resolve(null);
+    }
+
     /* ---------- Sortie ---------- */
     clearOutput() {
+        this.cancelAsk();
         this.linesEl?.replaceChildren();
         this.lines = 0;
         if (this.statusEl) this.statusEl.textContent = "";
@@ -197,7 +259,7 @@ class RunnableBlock {
         line.textContent = text;
         this.linesEl.append(line);
         this.lines++;
-        if (kind === "err" && /EOFError/.test(text)) {
+        if (kind === "err" && /EOFError/.test(text) && this.stdinEl) {
             this.print("info", "Ce programme attend une saisie : renseignez « Entrée standard » sous l'éditeur.");
         }
     }
@@ -212,26 +274,37 @@ class RunnableBlock {
         }
         this.maybeAddStdin();
         this.clearOutput();
+        disposePreview(this.previewEl);
         this.outEl.hidden = false;
         this.setRunning(true);
 
         const hooks = {
             out: (kind, text) => this.print(kind, text),
             status: (text) => { this.statusEl.textContent = text; },
+            input: (prompt, options) => this.ask(prompt, options),
+            // Python sans JSPI : retombe sur la zone « Entrée standard »
+            mode: (mode) => { if (mode === "batch") { this.needsStdin = true; this.maybeAddStdin(); } },
         };
         const code = this.editor.getValue();
         const started = performance.now();
 
+        // Le code qui touche au DOM (document, window, localStorage…) ne peut pas tourner dans un
+        // worker : il s'exécute dans un iframe isolé dont le résultat s'affiche sous « Résultat ».
+        const execute = usesDom(code)
+            ? (js, h) => runInDom(js, h, { container: this.previewEl })
+            : runJavaScript;
+
         if (this.kind === "python") {
             this.job = PythonRunner.run(code, hooks, { stdin: this.stdinEl?.value ?? "" });
         } else if (this.kind === "typescript") {
-            this.job = runTypeScript(this.monaco, this.model, hooks);
+            this.job = runTypeScript(this.monaco, this.model, hooks, execute);
         } else {
-            this.job = runJavaScript(code, hooks);
+            this.job = execute(code, hooks);
         }
 
         const result = await this.job.promise;
         this.job = null;
+        this.cancelAsk();
         this.setRunning(false);
 
         const elapsed = Math.round(performance.now() - started);

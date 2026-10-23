@@ -7,10 +7,18 @@ function flatten(message) {
 }
 
 /**
+ * Avec « module: ESNext », TypeScript ajoute « export {}; » à tout fichier traité comme un module.
+ * Le worker exécute le code dans une fonction asynchrone (où « await » de premier niveau est permis)
+ * et non comme un module : cette instruction y serait une SyntaxError.
+ */
+const stripSyntheticExport = (js) => js.replace(/^[ \t]*export\s*\{\s*\}\s*;?[ \t]*$/gm, "");
+
+/**
  * Vérifie les types avec le compilateur intégré à Monaco, puis exécute le JavaScript produit.
  * Si des erreurs de type existent, le code n'est pas exécuté (comme une vraie compilation).
+ * « execute(js, hooks) » choisit où tourne le JavaScript produit (worker par défaut, iframe pour le DOM).
  */
-export function runTypeScript(monaco, model, hooks) {
+export function runTypeScript(monaco, model, hooks, execute = runJavaScript) {
     let stopped = false;
     let inner = null;
 
@@ -36,11 +44,11 @@ export function runTypeScript(monaco, model, hooks) {
         }
 
         const emitted = await worker.getEmitOutput(uri);
-        const js = emitted.outputFiles.find((f) => f.name.endsWith(".js"))?.text ?? "";
+        const js = stripSyntheticExport(emitted.outputFiles.find((f) => f.name.endsWith(".js"))?.text ?? "");
         if (stopped) return { ok: false, reason: "stopped" };
 
         hooks.status("");
-        inner = runJavaScript(js, hooks);
+        inner = execute(js, hooks);
         return inner.promise;
     })().catch((error) => {
         hooks.out("err", `Erreur du compilateur : ${error.message}`);

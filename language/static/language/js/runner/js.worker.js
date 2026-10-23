@@ -54,6 +54,35 @@ console.clear = () => {};
 console.group = (...args) => { if (args.length) console.log(...args); };
 console.groupEnd = () => {};
 
+// console.time/count/assert : sans ça, leur sortie partait dans la console du worker (invisible),
+// alors que les exemples async/await s'en servent pour comparer séquentiel et parallèle.
+const chronos = new Map();
+const compteurs = new Map();
+const duree = (label) => {
+    if (!chronos.has(label)) return null;
+    const ms = performance.now() - chronos.get(label);
+    return ms >= 1000 ? `${(ms / 1000).toFixed(3)} s` : `${ms.toFixed(3)} ms`;
+};
+console.time = (label = "default") => { chronos.set(String(label), performance.now()); };
+console.timeLog = (label = "default", ...data) => {
+    const d = duree(String(label));
+    if (d === null) console.warn(`Le minuteur « ${label} » n'existe pas.`);
+    else console.log(`${label}: ${d}`, ...data);
+};
+console.timeEnd = (label = "default") => {
+    console.timeLog(label);
+    chronos.delete(String(label));
+};
+console.count = (label = "default") => {
+    const n = (compteurs.get(String(label)) ?? 0) + 1;
+    compteurs.set(String(label), n);
+    console.log(`${label}: ${n}`);
+};
+console.countReset = (label = "default") => { compteurs.delete(String(label)); };
+console.assert = (condition, ...args) => {
+    if (!condition) console.error(args.length ? `Assertion échouée : ${format(args)}` : "Assertion échouée");
+};
+
 // Fonctions du navigateur sans équivalent dans un worker
 self.alert = (message) => console.log(`[alert] ${message}`);
 self.confirm = () => false;
@@ -78,10 +107,32 @@ self.setInterval = (fn, ms, ...args) => {
 self.clearTimeout = (id) => { active.delete(id); nativeClearTimeout(id); };
 self.clearInterval = (id) => { active.delete(id); nativeClearInterval(id); };
 
+// Suivi des opérations asynchrones en cours (requêtes réseau et lecture de leur corps).
+// Sans cela, un code comme « (async () => { await fetch(url) })(); » rend la main aussitôt, les
+// minuteurs sont vides, « done » est envoyé et le worker est détruit avant la réponse : le
+// résultat n'apparaît jamais. On renvoie la promesse issue de finally() : si personne ne la gère,
+// l'erreur reste signalée comme « unhandledrejection » (et n'est pas avalée par le suivi).
+let pending = 0;
+const track = (promise) => {
+    pending++;
+    return promise.finally(() => { pending--; });
+};
+if (typeof self.fetch === "function") {
+    const nativeFetch = self.fetch.bind(self);
+    self.fetch = (...args) => track(nativeFetch(...args));
+}
+if (typeof Response === "function") {
+    for (const method of ["json", "text", "blob", "arrayBuffer", "formData"]) {
+        const native = Response.prototype[method];
+        if (typeof native !== "function") continue;
+        Response.prototype[method] = function (...args) { return track(native.apply(this, args)); };
+    }
+}
+
 function reportError(error) {
     const name = error?.name ?? "Error";
     const message = error?.message ?? String(error);
-    const needsDom = /\b(document|window|localStorage|sessionStorage|navigator)\b/.test(message);
+    const needsDom = typeof document === "undefined" && /\b(document|window|localStorage|sessionStorage|navigator)\b/.test(message);
     post({
         type: "error",
         text: `${name}: ${message}`,
@@ -97,7 +148,7 @@ self.onmessage = async ({ data: { code } }) => {
     try {
         const module = { exports: {} };
         await new AsyncFunction("exports", "module", code)(module.exports, module);
-        const waitForTimers = () => (active.size === 0 ? post({ type: "done" }) : nativeSetTimeout(waitForTimers, 30));
+        const waitForTimers = () => (active.size === 0 && pending === 0 ? post({ type: "done" }) : nativeSetTimeout(waitForTimers, 30));
         waitForTimers();
     } catch (error) {
         reportError(error);

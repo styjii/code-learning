@@ -1286,7 +1286,7 @@ console.log(t);
 
 Empêche d'inférer `T` depuis un argument donné :
 
-```typescript
+```typescript norun
 function creerSignal<T extends string>(valeurs: T[], defaut: NoInfer<T>) {}
 // creerSignal(["rouge", "vert"], "bleu");
 console.error("Erreur de compilation : \"bleu\" n'est pas dans les valeurs");
@@ -2135,6 +2135,8 @@ console.log(bouton, champ, entree?.value, lien, toutes.length, canvas.tagName);
 ## 16.2 Gestion de la valeur `null`
 
 ```typescript
+document.body.innerHTML = `<h1>Titre</h1><div id="app"></div>`;     // page de démonstration
+
 const titre = document.querySelector("h1");
 // titre.textContent = "x";
 console.error("Erreur de compilation : possiblement null");
@@ -2156,6 +2158,14 @@ console.log(app);
 ## 16.3 Événements typés
 
 ```typescript
+document.body.innerHTML = `<form><input id="nom"><button id="envoyer">Envoyer</button></form>`;
+
+function requis<T extends Element>(selecteur: string): T {         // utilitaire de la section précédente
+    const el = document.querySelector<T>(selecteur);
+    if (!el) throw new Error(`Élément introuvable : ${selecteur}`);
+    return el;
+}
+
 const bouton = requis<HTMLButtonElement>("#envoyer");
 
 bouton.addEventListener("click", (e: MouseEvent) => {              // e est inféré : MouseEvent
@@ -2178,6 +2188,11 @@ document.querySelector<HTMLFormElement>("form")?.addEventListener("submit", (e: 
     const donnees = new FormData(e.target as HTMLFormElement);
     console.log(Object.fromEntries(donnees));
 });
+
+// Simulation pour voir le résultat
+bouton.click();
+entree.value = "Alice";
+entree.dispatchEvent(new Event("input"));
 ```
 
 | Événement | Type |
@@ -2195,7 +2210,7 @@ document.querySelector<HTMLFormElement>("form")?.addEventListener("submit", (e: 
 interface EvenementsApp { "panier:ajout": CustomEvent<{ id: number }> }
 
 declare global {
-    interface HTMLElementEventMap extends EvenementsApp {}
+    interface DocumentEventMap extends EvenementsApp {}      // pour document.addEventListener (HTMLElementEventMap pour un élément)
 }
 
 document.addEventListener("panier:ajout", (e) => console.log(e.detail.id));        // typé
@@ -3443,7 +3458,7 @@ console.log(faireUtilisateur({ nom: "Bob" }));
 
 ## 24.2 Gestion de ressources : `using` *(TS 5.2, ajout)*
 
-```typescript
+```typescript norun
 class Connexion implements Disposable {
     [Symbol.dispose]() { console.log("Connexion fermée"); }
 }

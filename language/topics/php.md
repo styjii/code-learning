@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🐘 PHP — Guide complet
+# PHP — Guide complet
 
 **Des bases du langage aux API, à la sécurité et aux frameworks modernes**
 
@@ -10,7 +10,7 @@
 
 ---
 
-## 🗂️ Sommaire
+## Sommaire
 
 1. [Introduction et installation](#1-introduction-et-installation)
 2. [Syntaxe et bases](#2-syntaxe-et-bases)
@@ -35,7 +35,7 @@
 21. [Sujets avancés](#21-sujets-avancés)
 22. [Nouveautés par version et aide-mémoire](#22-nouveautés-par-version-et-aide-mémoire)
 
-> 💡 **Légende** : *(ajout)* = notion absente du guide d'origine ; *(à jour)* = pratique moderne remplaçant une ancienne ; *(8.x)* = version de PHP qui introduit la fonctionnalité.
+> **Légende** : *(ajout)* = notion absente du guide d'origine ; *(à jour)* = pratique moderne remplaçant une ancienne ; *(8.x)* = version de PHP qui introduit la fonctionnalité. Dans les exemples de code, `echo` affiche les résultats et `fwrite(STDERR, …)` affiche les erreurs.
 
 ---
 
@@ -79,7 +79,7 @@ Chaque branche est supportée **2 ans** (correctifs) puis **2 ans** (sécurité 
 | 8.4 | nov. 2024 | 31 déc. 2026 | 31 déc. 2028 |
 | **8.5** | nov. 2025 | 31 déc. 2027 | 31 déc. 2029 |
 
-> ⚠️ **PHP 8.1 et antérieures ne reçoivent plus aucun correctif de sécurité.** Pour un nouveau projet, utilisez **PHP 8.4 ou 8.5**. Consultez [php.net/supported-versions](https://www.php.net/supported-versions.php).
+> **Attention :** **PHP 8.1 et antérieures ne reçoivent plus aucun correctif de sécurité.** Pour un nouveau projet, utilisez **PHP 8.4 ou 8.5**. Consultez [php.net/supported-versions](https://www.php.net/supported-versions.php).
 
 ## 1.3 Ce que PHP sait faire
 
@@ -173,24 +173,32 @@ php index.php        # exécution en terminal
 
 ```php
 <?php
-// code PHP
+$variable = "Bonjour";
 ?>
 <p>HTML ici</p>
-<?= $variable ?>      <!-- raccourci pour <?php echo $variable; ?> -->
+<p><?= $variable ?></p>
+<p><?php echo $variable; ?></p>
 ```
 
-> ✅ Dans un fichier contenant **uniquement du PHP**, **omettez la balise fermante `?>`** : cela évite l'envoi accidentel d'espaces ou de sauts de ligne avant les en-têtes HTTP.
+`<?= $variable ?>` est le raccourci de `<?php echo $variable; ?>`.
+
+> **Bonne pratique :** Dans un fichier contenant **uniquement du PHP**, **omettez la balise fermante `?>`** : cela évite l'envoi accidentel d'espaces ou de sauts de ligne avant les en-têtes HTTP.
 
 ## 2.2 Instructions et commentaires
 
 Chaque instruction se termine par **`;`**. PHP est **insensible à la casse** pour les mots-clés et fonctions, mais **sensible à la casse pour les variables** (`$nom` ≠ `$Nom`).
 
 ```php
+<?php
 // Commentaire sur une ligne
 # Autre commentaire sur une ligne
 /* Commentaire
    sur plusieurs lignes */
 /** Commentaire de documentation (PHPDoc) */
+
+$nom = "Alice";
+$Nom = "Bob";                 // variable différente : sensibilité à la casse
+ECHO "$nom et $Nom" . PHP_EOL; // echo, ECHO ou Echo : mots-clés insensibles à la casse
 ```
 
 ## 2.3 Typage strict *(ajout, à jour)*
@@ -200,6 +208,19 @@ Placez en **première ligne** de chaque fichier :
 ```php
 <?php
 declare(strict_types=1);
+
+function addition(int $a, int $b): int
+{
+    return $a + $b;
+}
+
+echo addition(2, 3), PHP_EOL;            // affiche : 5
+
+try {
+    echo addition("5", 3);               // "5" est une chaîne : refusée en mode strict
+} catch (TypeError $e) {
+    fwrite(STDERR, "Erreur : " . $e->getMessage() . PHP_EOL);
+}
 ```
 
 Avec le typage strict, `addition("5", 3)` lève une `TypeError` au lieu de convertir silencieusement.
@@ -207,12 +228,22 @@ Avec le typage strict, `addition("5", 3)` lève une `TypeError` au lieu de conve
 ## 2.4 Afficher : `echo` et `print`
 
 ```php
-echo "Bonjour";
-echo "A", "B", "C";          // plusieurs arguments possibles
-print "Bonjour";             // renvoie toujours 1 (rarement utile)
-print_r($tableau);           // affichage lisible
-var_dump($valeur);           // type + valeur (débogage)
-var_export($valeur);         // représentation PHP valide
+<?php
+$tableau = ["a" => 1, "b" => [2, 3]];
+$valeur = 42;
+$nom = "Alice";
+$age = 30;
+
+echo "Bonjour", PHP_EOL;
+echo "A", "B", "C", PHP_EOL;              // plusieurs arguments possibles : ABC
+$retour = print "Bonjour" . PHP_EOL;      // print renvoie toujours 1 (rarement utile)
+echo $retour, PHP_EOL;
+print_r($tableau);                        // affichage lisible
+var_dump($valeur);                        // type + valeur (débogage) : int(42)
+var_export($tableau);                     // représentation PHP valide
+echo PHP_EOL;
+printf("%s a %d ans" . PHP_EOL, $nom, $age);
+echo sprintf("%s a %d ans", $nom, $age), PHP_EOL;
 ```
 
 `printf("%s a %d ans", $nom, $age)` et `sprintf()` formatent du texte.
@@ -222,19 +253,28 @@ var_export($valeur);         // représentation PHP valide
 Elles commencent par **`$`** ; aucune déclaration de type obligatoire.
 
 ```php
+<?php
 $nom = "Alice";
 $age = 30;
 $taille = 1.68;
 $actif = true;
+
+echo "$nom, $age ans, $taille m, actif : ", var_export($actif, true), PHP_EOL;
+// affiche : Alice, 30 ans, 1.68 m, actif : true
 ```
 
 Règles : lettres, chiffres, `_`, sans commencer par un chiffre. Convention : **`$camelCase`** (ou `snake_case`, mais restez cohérent ; PSR-12 conseille camelCase).
 
 ```php
+<?php
 $a = 1;
 $b = &$a;                    // référence : $b et $a désignent la même valeur
+$b = 2;
+echo "a = $a, b = $b", PHP_EOL;          // affiche : a = 2, b = 2
+
 $nomVariable = "x";
 $$nomVariable = 5;           // variable variable → $x (à éviter)
+echo $x, PHP_EOL;                         // affiche : 5
 ```
 
 ## 2.6 Types de données
@@ -252,11 +292,19 @@ $$nomVariable = 5;           // variable variable → $x (à éviter)
 | `resource` | Ressource externe (fichier…) |
 
 ```php
-gettype($x);               // "integer", "string"…
-get_debug_type($x);        // "int", "string", nom de classe (8.0)
-is_int($x); is_string($x); is_array($x); is_null($x); is_numeric("12.5");
-isset($x);                 // défini et non null ?
-empty($x);                 // vide ? ("", 0, "0", [], null, false)
+<?php
+$x = "texte";
+$y = 42;
+
+echo gettype($x), " / ", gettype($y), PHP_EOL;                 // string / integer
+echo get_debug_type($x), " / ", get_debug_type($y), PHP_EOL;   // string / int (8.0)
+
+var_dump(is_int($y), is_string($y), is_array($y), is_null($y), is_numeric("12.5"));
+// bool(true) bool(false) bool(false) bool(false) bool(true)
+
+var_dump(isset($x));        // défini et non null ? bool(true)
+var_dump(empty($x));        // vide ? bool(false)
+var_dump(empty("0"));       // vide ? ("", 0, "0", [], null, false) : bool(true)
 ```
 
 ### Valeurs « fausses » (*falsy*)
@@ -266,24 +314,29 @@ empty($x);                 // vide ? ("", 0, "0", [], null, false)
 ## 2.7 Conversion de types (*casting*)
 
 ```php
-$n = (int) "42abc";         // 42
-$f = (float) "3.14";
-$s = (string) 123;
-$b = (bool) "0";            // false
-$t = (array) "a";           // ["a"]
-intval("12"); floatval("1.5"); strval(5); boolval(1);
+<?php
+$n = (int) "42abc";         var_dump($n);       // int(42)
+$f = (float) "3.14";        var_dump($f);       // float(3.14)
+$s = (string) 123;          var_dump($s);       // string(3) "123"
+$b = (bool) "0";            var_dump($b);       // bool(false)
+$t = (array) "a";           print_r($t);        // Array ( [0] => a )
+
+var_dump(intval("12"), floatval("1.5"), strval(5), boolval(1));
 ```
 
 ## 2.8 Constantes
 
 ```php
+<?php
 define("TVA", 0.2);                  // à l'exécution
 const NOM_SITE = "MonSite";          // à la compilation (préféré)
 
-echo TVA, NOM_SITE;
+echo TVA, " ", NOM_SITE, PHP_EOL;    // affiche : 0.2 MonSite
 
 class Config { const VERSION = "1.0"; }
-echo Config::VERSION;
+echo Config::VERSION, PHP_EOL;       // affiche : 1.0
+
+echo basename(__FILE__), " ligne ", __LINE__, PHP_EOL;   // constantes magiques
 ```
 
 Constantes magiques : `__FILE__`, `__DIR__`, `__LINE__`, `__FUNCTION__`, `__CLASS__`, `__METHOD__`, `__NAMESPACE__`.
@@ -291,10 +344,13 @@ Constantes magiques : `__FILE__`, `__DIR__`, `__LINE__`, `__FUNCTION__`, `__CLAS
 ## 2.9 Interpolation de chaînes
 
 ```php
+<?php
 $nom = "Alice";
-echo "Bonjour $nom !";                       // guillemets doubles : variables interprétées
-echo "Âge : {$utilisateur['age']}";          // expressions complexes entre accolades
-echo 'Bonjour $nom';                         // guillemets simples : texte brut
+$utilisateur = ['age' => 30];
+
+echo "Bonjour $nom !", PHP_EOL;                       // guillemets doubles : variables interprétées
+echo "Âge : {$utilisateur['age']}", PHP_EOL;          // expressions complexes entre accolades
+echo 'Bonjour $nom', PHP_EOL;                         // guillemets simples : texte brut
 ```
 
 ## 2.10 Portée et superglobales
@@ -305,7 +361,7 @@ Une variable définie hors fonction n'est **pas visible** dans les fonctions (vo
 | --- | --- |
 | `$_GET` | Paramètres de l'URL |
 | `$_POST` | Données de formulaire (corps de la requête) |
-| `$_REQUEST` | GET + POST + COOKIE (⚠️ à éviter) |
+| `$_REQUEST` | GET + POST + COOKIE (à éviter) |
 | `$_SERVER` | Informations sur le serveur et la requête |
 | `$_FILES` | Fichiers téléversés |
 | `$_COOKIE` | Cookies |
@@ -344,10 +400,21 @@ echo "Prix TTC : " . number_format($prixTTC, 2, ',', ' ') . " €";   // 120,00 
 ## 3.2 Affectation
 
 ```php
+<?php
 $x = 5;
-$x += 2;  $x -= 1;  $x *= 3;  $x /= 2;  $x %= 4;  $x **= 2;
-$s .= " fin";                // concaténation
-$x ??= "défaut";             // affecte seulement si $x est null ou non défini (7.4)
+$x += 2;  echo $x, PHP_EOL;    // 7
+$x -= 1;  echo $x, PHP_EOL;    // 6
+$x *= 3;  echo $x, PHP_EOL;    // 18
+$x /= 2;  echo $x, PHP_EOL;    // 9
+$x %= 4;  echo $x, PHP_EOL;    // 1
+$x **= 2; echo $x, PHP_EOL;    // 1
+
+$s = "début";
+$s .= " fin";                  // concaténation
+echo $s, PHP_EOL;              // début fin
+
+$y ??= "défaut";               // affecte seulement si $y est null ou non défini (7.4)
+echo $y, PHP_EOL;              // défaut
 ```
 
 ## 3.3 Comparaison
@@ -355,22 +422,23 @@ $x ??= "défaut";             // affecte seulement si $x est null ou non défini
 | Opérateur | Signification |
 | --- | --- |
 | `==` | Égal (valeurs, **avec conversion**) |
-| `===` | **Identique** (valeur ET type) ✅ |
+| `===` | **Identique** (valeur ET type), recommandé |
 | `!=` `<>` | Différent |
 | `!==` | Non identique |
 | `<` `>` `<=` `>=` | Ordre |
 | `<=>` | **Vaisseau spatial** : `-1`, `0` ou `1` |
 
 ```php
-0 == "a";        // false en PHP 8 (true avant !)
-"1" == "01";     // true
-"abc" == 0;      // false en PHP 8
-null == false;   // true
-0 === "0";       // false
-1 <=> 2;         // -1
+<?php
+var_dump(0 == "a");        // bool(false) en PHP 8 (true avant !)
+var_dump("1" == "01");     // bool(true)
+var_dump("abc" == 0);      // bool(false) en PHP 8
+var_dump(null == false);   // bool(true)
+var_dump(0 === "0");       // bool(false)
+var_dump(1 <=> 2);         // int(-1)
 ```
 
-> ✅ Utilisez **`===`** par défaut. PHP 8 a rendu les comparaisons chaîne/nombre plus cohérentes, mais `==` reste source de surprises.
+> **Bonne pratique :** Utilisez **`===`** par défaut. PHP 8 a rendu les comparaisons chaîne/nombre plus cohérentes, mais `==` reste source de surprises.
 
 ## 3.4 Logiques
 
@@ -381,48 +449,74 @@ null == false;   // true
 | `!` | NON |
 | `xor` | OU exclusif |
 
-> ⚠️ `and` / `or` ont une **priorité inférieure** à `=` : préférez `&&` et `||`.
+> **Attention :** `and` / `or` ont une **priorité inférieure** à `=` : préférez `&&` et `||`.
 
 ## 3.5 Chaînes, incrément, tableaux
 
 ```php
-$s = "Bonjour" . " " . "monde";      // concaténation .
-$i++; ++$i; $i--; --$i;               // incrémentation
+<?php
+$s = "Bonjour" . " " . "monde";       // concaténation .
+echo $s, PHP_EOL;
+
+$i = 5;
+$i++; ++$i; $i--; --$i;               // incrémentation / décrémentation
+echo $i, PHP_EOL;                      // 5
 
 $a = [1, 2] + [3, 4, 5];              // union : [1, 2, 5] (les clés existantes de gauche gagnent)
-[1, 2] == [1, 2];                     // true
-[1, 2] === [2 => 1];                  // false (mêmes paires clé/valeur, même ordre ET types)
+print_r($a);
+
+var_dump([0 => "a", 1 => "b"] == [1 => "b", 0 => "a"]);    // true : mêmes paires clé/valeur
+var_dump([0 => "a", 1 => "b"] === [1 => "b", 0 => "a"]);   // false : l'ordre diffère
 ```
 
 ## 3.6 Opérateurs modernes *(à jour)*
 
 ```php
+<?php
+declare(strict_types=1);
+
 // Fusion null  ??
 $nom = $_GET['nom'] ?? "Invité";
+echo $nom, PHP_EOL;                                  // Invité (aucun paramètre dans la console)
 
 // Appel null-safe  ?->  (8.0)
-$ville = $utilisateur?->adresse?->ville;
+$utilisateur = new stdClass();
+$utilisateur->adresse = new stdClass();
+$utilisateur->adresse->ville = "Lyon";
+$inconnu = null;
+echo $utilisateur?->adresse?->ville, PHP_EOL;        // Lyon
+var_dump($inconnu?->adresse?->ville);                // NULL, sans erreur
 
 // Ternaire et ternaire court
+$age = 20;
 $statut = $age >= 18 ? "majeur" : "mineur";
-$valeur = $entree ?: "défaut";            // valeur si « vrai », sinon défaut
+$entree = "";
+$valeur = $entree ?: "défaut";                       // valeur si « vrai », sinon défaut
+echo "$statut, $valeur", PHP_EOL;                    // majeur, défaut
 
 // match (8.0) : comparaison STRICTE, retourne une valeur
+$code = 404;
 $libelle = match ($code) {
     200, 201 => "Succès",
     404      => "Introuvable",
     default  => "Erreur",
 };
+echo $libelle, PHP_EOL;                              // Introuvable
 
 // Spread  ...
+$a = [1, 2];
+$b = [3, 4];
 $tous = [...$a, ...$b];
+echo implode(", ", $tous), PHP_EOL;                  // 1, 2, 3, 4
 function somme(int ...$nombres) { return array_sum($nombres); }
+echo somme(...$tous), PHP_EOL;                       // 10
 
 // Pipe  |>  (8.5) : enchaîne les appels de gauche à droite
 $slug = "  Bonjour Le Monde  "
     |> trim(...)
     |> strtolower(...)
-    |> (fn($s) => str_replace(" ", "-", $s));      // "bonjour-le-monde"
+    |> (fn($s) => str_replace(" ", "-", $s));
+echo $slug, PHP_EOL;                                 // bonjour-le-monde
 ```
 
 ## 3.7 Priorité (extraits)
@@ -438,6 +532,9 @@ En cas de doute : **parenthèses**.
 ## 4.1 Conditions
 
 ```php
+<?php
+$note = 14;
+
 if ($note >= 16) {
     echo "Très bien";
 } elseif ($note >= 10) {
@@ -445,11 +542,15 @@ if ($note >= 16) {
 } else {
     echo "Insuffisant";
 }
+echo PHP_EOL;                      // affiche : Passable
 ```
 
 ### `switch` (comparaison souple)
 
 ```php
+<?php
+$jour = "samedi";
+
 switch ($jour) {
     case "samedi":
     case "dimanche":
@@ -458,13 +559,21 @@ switch ($jour) {
     default:
         echo "Semaine";
 }
+echo PHP_EOL;                      // affiche : Week-end
 ```
 
-> ✅ Préférez **`match`** (comparaison stricte, pas de `break`, retourne une valeur, lève `UnhandledMatchError` si aucun cas).
+> **Bonne pratique :** Préférez **`match`** (comparaison stricte, pas de `break`, retourne une valeur, lève `UnhandledMatchError` si aucun cas).
 
 ### Syntaxe alternative (dans les gabarits HTML)
 
 ```php
+<?php
+$connecte = true;
+$articles = [
+    ['titre' => 'Premier article'],
+    ['titre' => 'Deuxième article'],
+];
+?>
 <?php if ($connecte): ?>
     <p>Bienvenue !</p>
 <?php else: ?>
@@ -479,32 +588,48 @@ switch ($jour) {
 ## 4.2 Boucles
 
 ```php
+<?php
 for ($i = 0; $i < 5; $i++) { echo $i; }
+echo PHP_EOL;                                   // 01234
 
 $n = 0;
 while ($n < 3) { $n++; }
+echo $n, PHP_EOL;                               // 3
 
 do { $n--; } while ($n > 0);
+echo $n, PHP_EOL;                               // 0
 
-foreach ([10, 20, 30] as $valeur) { echo $valeur; }
+foreach ([10, 20, 30] as $valeur) { echo $valeur, " "; }
+echo PHP_EOL;                                   // 10 20 30
 foreach (["a" => 1, "b" => 2] as $cle => $valeur) { echo "$cle=$valeur "; }
+echo PHP_EOL;                                   // a=1 b=2
 
+$tableau = [1, 2, 3];
 foreach ($tableau as &$element) { $element *= 2; }   // par référence
-unset($element);                                       // ⚠️ toujours détruire la référence après la boucle
+unset($element);                                     // toujours détruire la référence après la boucle
+echo implode(", ", $tableau), PHP_EOL;               // 2, 4, 6
 ```
 
 ## 4.3 `break`, `continue`
 
 ```php
+<?php
 for ($i = 0; $i < 10; $i++) {
     if ($i === 3) continue;      // itération suivante
     if ($i === 7) break;         // sortie de la boucle
+    echo $i, " ";
 }
+echo PHP_EOL;                    // 0 1 2 4 5 6
 
-foreach ($lignes as $ligne) {
+$lignes = [[1, 2], [3, null, 5], [6, 7]];
+foreach ($lignes as $numero => $ligne) {
     foreach ($ligne as $cellule) {
-        if ($cellule === null) continue 2;   // saute à l'itération de la boucle EXTÉRIEURE
+        if ($cellule === null) {
+            echo "Ligne $numero ignorée", PHP_EOL;
+            continue 2;          // saute à l'itération de la boucle EXTÉRIEURE
+        }
     }
+    echo "Ligne $numero complète", PHP_EOL;
 }
 ```
 
@@ -513,6 +638,7 @@ foreach ($lignes as $ligne) {
 `yield` produit des valeurs **à la demande**, sans charger toute la collection en mémoire :
 
 ```php
+<?php
 function lireLignes(string $chemin): Generator {
     $f = fopen($chemin, 'r');
     while (($ligne = fgets($f)) !== false) {
@@ -521,15 +647,34 @@ function lireLignes(string $chemin): Generator {
     fclose($f);
 }
 
-foreach (lireLignes('gros-fichier.txt') as $ligne) { /* traitement */ }
+$chemin = tempnam(sys_get_temp_dir(), 'demo');
+file_put_contents($chemin, "ligne 1\nligne 2\nligne 3\n");
+
+foreach (lireLignes($chemin) as $ligne) {
+    echo $ligne, PHP_EOL;        // une seule ligne en mémoire à la fois
+}
+unlink($chemin);
 ```
 
 ## 4.5 Inclusion de fichiers
 
 ```php
-require __DIR__ . '/config.php';      // erreur fatale si absent
-require_once __DIR__ . '/outils.php'; // une seule fois
-include 'optionnel.php';              // simple avertissement si absent
+<?php
+// Préparation : deux petits fichiers dans le dossier temporaire
+$dossier = sys_get_temp_dir();
+file_put_contents($dossier . '/config.php', "<?php\nreturn ['site' => 'MonSite'];\n");
+file_put_contents($dossier . '/outils.php', "<?php\nfunction bonjour(): string { return 'Bonjour'; }\n");
+
+$config = require $dossier . '/config.php';       // erreur fatale si absent ; peut renvoyer une valeur
+require_once $dossier . '/outils.php';            // une seule fois
+require_once $dossier . '/outils.php';            // ignoré : déjà inclus
+echo bonjour(), " sur ", $config['site'], PHP_EOL;    // Bonjour sur MonSite
+
+include $dossier . '/optionnel.php';              // fichier absent : simple avertissement (Warning)
+echo "Le script continue après l'avertissement", PHP_EOL;
+
+unlink($dossier . '/config.php');
+unlink($dossier . '/outils.php');
 ```
 
 Utilisez `__DIR__` pour des chemins fiables, et **ne passez jamais une entrée utilisateur** à `include`/`require`.
@@ -541,28 +686,33 @@ Utilisez `__DIR__` pour des chemins fiables, et **ne passez jamais une entrée u
 ## 5.1 Définir et appeler
 
 ```php
+<?php
 function saluer(string $nom): string {
     return "Bonjour $nom !";
 }
-echo saluer("Alice");
+echo saluer("Alice"), PHP_EOL;       // Bonjour Alice !
 ```
 
 ## 5.2 Paramètres
 
 ```php
+<?php
 function presenter(string $nom, int $age = 18, ?string $ville = null): string {
     return "$nom, $age ans" . ($ville ? " à $ville" : "");
 }
 
-presenter("Alice");                              // valeur par défaut
-presenter("Bob", 25, "Paris");
-presenter(nom: "Chloé", ville: "Lyon");          // arguments NOMMÉS (8.0) : ordre libre
+echo presenter("Alice"), PHP_EOL;                           // Alice, 18 ans (valeurs par défaut)
+echo presenter("Bob", 25, "Paris"), PHP_EOL;                // Bob, 25 ans à Paris
+echo presenter(nom: "Chloé", ville: "Lyon"), PHP_EOL;       // arguments NOMMÉS (8.0) : Chloé, 18 ans à Lyon
 
 function total(int ...$nombres): int { return array_sum($nombres); }    // variadique
-total(1, 2, 3);
-total(...[4, 5, 6]);                                                     // déballage d'un tableau
+echo total(1, 2, 3), PHP_EOL;                                           // 6
+echo total(...[4, 5, 6]), PHP_EOL;                                      // 15 (déballage d'un tableau)
 
-function ajouter(array &$liste, $x): void { $liste[] = $x; }             // passage par référence
+function ajouter(array &$liste, $x): void { $liste[] = $x; }            // passage par référence
+$liste = [1, 2];
+ajouter($liste, 3);
+echo implode(", ", $liste), PHP_EOL;                                    // 1, 2, 3
 ```
 
 > Par défaut, les arguments sont passés **par valeur** (les objets, par « poignée » : leur contenu reste modifiable).
@@ -570,11 +720,16 @@ function ajouter(array &$liste, $x): void { $liste[] = $x; }             // pass
 ## 5.3 Valeurs de retour
 
 ```php
+<?php
 function minMax(array $t): array { return [min($t), max($t)]; }
 [$mini, $maxi] = minMax([3, 1, 4]);               // destructuration
+echo "min = $mini, max = $maxi", PHP_EOL;         // min = 1, max = 4
 
-function nePasRetourner(): void { echo "rien"; }
-function arreter(): never { exit("Fin"); }         // ne retourne jamais (8.1)
+function nePasRetourner(): void { echo "rien", PHP_EOL; }
+nePasRetourner();
+
+function arreter(): never { exit("Fin" . PHP_EOL); }   // ne retourne jamais (8.1)
+arreter();
 ```
 
 ## 5.4 Déclarations de types *(à jour)*
@@ -591,54 +746,99 @@ function arreter(): never { exit("Fin"); }         // ne retourne jamais (8.1)
 | `null`, `false`, `true` | Types autonomes (8.2) |
 
 ```php
+<?php
 function trouver(array $liste, int|string $cle): mixed { return $liste[$cle] ?? null; }
+
+var_dump(trouver(["a" => 1, 5 => "cinq"], "a"));    // int(1)
+var_dump(trouver(["a" => 1, 5 => "cinq"], 5));      // string(4) "cinq"
+var_dump(trouver(["a" => 1], "z"));                  // NULL
 ```
 
 ## 5.5 Portée des variables
 
 ```php
+<?php
 $global = "G";
 
-function test() {
-    // echo $global;            // ❌ non défini : variable hors portée
-    global $global;             // possible, mais à éviter
-    echo $GLOBALS['global'];    // idem
+function sansPortee(): void {
+    echo $global;                 // variable hors portée : non définie ici
+}
+
+function avecGlobal(): void {
+    global $global;               // possible, mais à éviter
+    echo $global, PHP_EOL;        // G
+    echo $GLOBALS['global'], PHP_EOL;   // G (idem)
 }
 
 function compteur(): int {
-    static $n = 0;              // conservée entre les appels
+    static $n = 0;                // conservée entre les appels
     return ++$n;
 }
+
+// On convertit les avertissements en exceptions pour afficher l'erreur
+set_error_handler(function (int $niveau, string $message): bool {
+    throw new ErrorException($message, 0, $niveau);
+});
+try {
+    sansPortee();
+} catch (ErrorException $e) {
+    fwrite(STDERR, "Erreur : " . $e->getMessage() . PHP_EOL);   // Undefined variable $global
+}
+restore_error_handler();
+
+avecGlobal();
+echo compteur(), compteur(), compteur(), PHP_EOL;               // 123
 ```
 
-> ✅ Préférez **passer les valeurs en paramètres**. Les variables globales rendent le code difficile à tester.
+> **Bonne pratique :** Préférez **passer les valeurs en paramètres**. Les variables globales rendent le code difficile à tester.
 
 ## 5.6 Fonctions anonymes et fléchées
 
 ```php
+<?php
 $carre = function (int $x): int { return $x * $x; };
+echo $carre(4), PHP_EOL;                                              // 16
+
 $facteur = 3;
-$multiplier = function ($x) use ($facteur) { return $x * $facteur; };   // use : capture par valeur
+$multiplier = function ($x) use ($facteur) { return $x * $facteur; }; // use : capture par valeur
+echo $multiplier(5), PHP_EOL;                                         // 15
 
-$triple = fn($x) => $x * 3;          // fonction fléchée (7.4) : capture AUTOMATIQUEMENT les variables parentes (par valeur)
+$triple = fn($x) => $x * 3;      // fonction fléchée (7.4) : capture AUTOMATIQUEMENT les variables parentes (par valeur)
+echo $triple(7), PHP_EOL;                                             // 21
 
-array_map(fn($n) => $n * 2, [1, 2, 3]);       // [2, 4, 6]
+echo implode(", ", array_map(fn($n) => $n * 2, [1, 2, 3])), PHP_EOL;  // 2, 4, 6
 ```
 
 ### Syntaxe de « callable de première classe » *(8.1)*
 
 ```php
-$longueur = strlen(...);             // crée une Closure à partir d'une fonction existante
-$methode = $objet->methode(...);
-$statique = MaClasse::fabrique(...);
+<?php
+class Outils
+{
+    public function majuscules(string $s): string { return strtoupper($s); }
+    public static function fabrique(): string { return "fabriqué"; }
+}
+
+$longueur = strlen(...);                 // crée une Closure à partir d'une fonction existante
+echo $longueur("bonjour"), PHP_EOL;      // 7
+
+$objet = new Outils();
+$methode = $objet->majuscules(...);
+echo $methode("php"), PHP_EOL;           // PHP
+
+$statique = Outils::fabrique(...);
+echo $statique(), PHP_EOL;               // fabriqué
 ```
 
 ## 5.7 Récursivité
 
 ```php
+<?php
 function factorielle(int $n): int {
     return $n <= 1 ? 1 : $n * factorielle($n - 1);
 }
+
+echo factorielle(5), PHP_EOL;            // 120
 ```
 
 ## 5.8 Fonctions utiles
@@ -661,6 +861,7 @@ function factorielle(int $n): int {
 Un **tableau** PHP est une structure ordonnée de paires clé → valeur : il sert de liste, de dictionnaire, de pile ou de file.
 
 ```php
+<?php
 // Indexé (clés 0, 1, 2…)
 $fruits = ["pomme", "banane", "cerise"];
 
@@ -673,35 +874,51 @@ $utilisateurs = [
     ["nom" => "Bob",   "age" => 25],
 ];
 
-echo $fruits[0];                        // pomme
-echo $personne["nom"];                  // Alice
-echo $utilisateurs[1]["nom"];           // Bob
+echo $fruits[0], PHP_EOL;                        // pomme
+echo $personne["nom"], PHP_EOL;                  // Alice
+echo $utilisateurs[1]["nom"], PHP_EOL;           // Bob
 ```
 
-> ✅ Utilisez la syntaxe courte `[]` plutôt que `array()`.
+> **Bonne pratique :** Utilisez la syntaxe courte `[]` plutôt que `array()`.
 
 ## 6.2 Ajouter, modifier, supprimer
 
 ```php
+<?php
+$fruits = ["pomme", "banane", "cerise"];
+$personne = ["nom" => "Alice", "age" => 30];
+
 $fruits[] = "fraise";                   // ajout à la fin
 $fruits[1] = "kiwi";                    // modification
 $personne["ville"] = "Paris";           // ajout d'une clé
 unset($personne["age"]);                // suppression
+echo implode(", ", $fruits), PHP_EOL;   // pomme, kiwi, cerise, fraise
+echo json_encode($personne), PHP_EOL;   // {"nom":"Alice","ville":"Paris"}
 
 array_push($fruits, "a", "b");          // ajoute à la fin
-array_pop($fruits);                     // retire le dernier
+echo array_pop($fruits), PHP_EOL;       // retire et renvoie le dernier : b
 array_unshift($fruits, "début");        // ajoute au début
-array_shift($fruits);                   // retire le premier
+echo array_shift($fruits), PHP_EOL;     // retire et renvoie le premier : début
+echo implode(", ", $fruits), PHP_EOL;   // pomme, kiwi, cerise, fraise, a
 ```
 
 ## 6.3 Parcourir
 
 ```php
+<?php
+$fruits = ["pomme", "banane"];
+$personne = ["nom" => "Alice", "age" => 30];
+$utilisateurs = [
+    ["nom" => "Alice", "age" => 30],
+    ["nom" => "Bob",   "age" => 25],
+];
+
 foreach ($fruits as $indice => $fruit) { echo "$indice : $fruit\n"; }
 foreach ($personne as $cle => $valeur) { echo "$cle = $valeur\n"; }
 
 // Destructuration (avec clés)
 ['nom' => $nom, 'age' => $age] = $personne;
+echo "$nom a $age ans\n";
 foreach ($utilisateurs as ['nom' => $n, 'age' => $a]) { echo "$n ($a)\n"; }
 ```
 
@@ -724,17 +941,20 @@ foreach ($utilisateurs as ['nom' => $n, 'age' => $a]) { echo "$n ($a)\n"; }
 | **Premier / dernier** | `array_key_first()`, `array_key_last()` ; `array_first()`, `array_last()` *(8.5)* |
 | **Recherche fonctionnelle** | `array_find()`, `array_find_key()`, `array_any()`, `array_all()` *(8.4)* |
 
-> ⚠️ `in_array` et `array_search` : passez **`true`** en 3ᵉ argument pour une comparaison **stricte**.
+> **Attention :** `in_array` et `array_search` : passez **`true`** en 3ᵉ argument pour une comparaison **stricte**.
 
 ## 6.5 Fonctions d'ordre supérieur
 
 ```php
+<?php
 $nombres = [1, 2, 3, 4, 5];
 
-array_map(fn($n) => $n * 2, $nombres);                          // [2, 4, 6, 8, 10]
-array_filter($nombres, fn($n) => $n % 2 === 0);                 // [1 => 2, 3 => 4] (clés conservées)
-array_reduce($nombres, fn($somme, $n) => $somme + $n, 0);       // 15
-array_walk($nombres, function (&$n) { $n *= 2; });              // modifie en place
+echo json_encode(array_map(fn($n) => $n * 2, $nombres)), PHP_EOL;                   // [2,4,6,8,10]
+echo json_encode(array_filter($nombres, fn($n) => $n % 2 === 0)), PHP_EOL;          // {"1":2,"3":4} (clés conservées)
+echo array_reduce($nombres, fn($somme, $n) => $somme + $n, 0), PHP_EOL;            // 15
+
+array_walk($nombres, function (&$n) { $n *= 2; });                                  // modifie en place
+echo json_encode($nombres), PHP_EOL;                                                // [2,4,6,8,10]
 ```
 
 ## 6.6 Trier
@@ -747,8 +967,18 @@ array_walk($nombres, function (&$n) { $n *= 2; });              // modifie en pl
 | `usort($t, fn)` / `uasort` / `uksort` | Tri **personnalisé** |
 
 ```php
-usort($utilisateurs, fn($a, $b) => $a['age'] <=> $b['age']);                 // par âge
-usort($utilisateurs, fn($a, $b) => [$a['age'], $a['nom']] <=> [$b['age'], $b['nom']]);   // critères multiples
+<?php
+$utilisateurs = [
+    ["nom" => "Chloé", "age" => 30],
+    ["nom" => "Bob",   "age" => 25],
+    ["nom" => "Alice", "age" => 30],
+];
+
+usort($utilisateurs, fn($a, $b) => $a['age'] <=> $b['age']);                                // par âge
+echo implode(", ", array_column($utilisateurs, 'nom')), PHP_EOL;                            // Bob, Chloé, Alice
+
+usort($utilisateurs, fn($a, $b) => [$a['age'], $a['nom']] <=> [$b['age'], $b['nom']]);      // critères multiples
+echo implode(", ", array_column($utilisateurs, 'nom')), PHP_EOL;                            // Bob, Alice, Chloé
 ```
 
 > Ces fonctions **modifient le tableau passé** (par référence) et renvoient un booléen ; le tri est **stable** depuis PHP 8.0.
@@ -758,14 +988,24 @@ usort($utilisateurs, fn($a, $b) => [$a['age'], $a['nom']] <=> [$b['age'], $b['no
 Les tableaux sont copiés **par valeur** (avec copie différée : *copy-on-write*), contrairement aux objets.
 
 ```php
+<?php
 $a = [1, 2];
 $b = $a;
-$b[] = 3;          // $a reste [1, 2]
+$b[] = 3;                        // $a reste [1, 2]
+
+echo implode(", ", $a), PHP_EOL;   // 1, 2
+echo implode(", ", $b), PHP_EOL;   // 1, 2, 3
 ```
 
 ## 6.8 Parcours multidimensionnel
 
 ```php
+<?php
+$utilisateurs = [
+    ["nom" => "Alice", "age" => 30],
+    ["nom" => "Bob",   "age" => 25],
+];
+
 foreach ($utilisateurs as $u) {
     echo "{$u['nom']} a {$u['age']} ans\n";
 }
@@ -782,6 +1022,9 @@ Permettent à des objets de se comporter comme des tableaux (voir [section 14](#
 ## 7.1 Créer des chaînes
 
 ```php
+<?php
+$nom = "Alice";
+
 $simple = 'Texte $brut\n';                 // aucune interprétation (sauf \\ et \')
 $double = "Bonjour $nom\n";                // variables et séquences d'échappement interprétées
 
@@ -793,6 +1036,11 @@ $heredoc = <<<TEXTE
 $nowdoc = <<<'TEXTE'
     Aucune $interpolation ici.
     TEXTE;
+
+echo $simple, PHP_EOL;
+echo $double;
+echo $heredoc, PHP_EOL;
+echo $nowdoc, PHP_EOL;
 ```
 
 Concaténation : `.` et `.=` (`$a . $b`).
@@ -814,32 +1062,44 @@ Concaténation : `.` et `.=` (`$a . $b`).
 | **HTML** | `htmlspecialchars`, `strip_tags`, `html_entity_decode` |
 
 ```php
-str_contains("Bonjour", "jour");                       // true
-substr("Bonjour", 0, 3);                               // "Bon"
-str_replace("a", "o", "banane");                       // "bonone"
-implode(", ", ["a", "b", "c"]);                        // "a, b, c"
-sprintf("%05.2f", 3.14159);                            // "03.14"
-number_format(1234567.891, 2, ',', ' ');               // "1 234 567,89"
-mb_strtoupper("élève");                                // "ÉLÈVE"
-ucfirst("alice");                                      // "Alice"
+<?php
+var_dump(str_contains("Bonjour", "jour"));                  // bool(true)
+echo substr("Bonjour", 0, 3), PHP_EOL;                      // Bon
+echo str_replace("a", "o", "banane"), PHP_EOL;              // bonone
+echo implode(", ", ["a", "b", "c"]), PHP_EOL;               // a, b, c
+echo sprintf("%05.2f", 3.14159), PHP_EOL;                   // 03.14
+echo number_format(1234567.891, 2, ',', ' '), PHP_EOL;      // 1 234 567,89
+echo mb_strtoupper("élève"), PHP_EOL;                       // ÉLÈVE
+echo ucfirst("alice"), PHP_EOL;                             // Alice
+
+echo strlen("é"), " octets, ", mb_strlen("é"), " caractère", PHP_EOL;   // 2 octets, 1 caractère
 ```
 
-> ⚠️ Avec du texte **UTF-8** (accents, emojis), utilisez les fonctions **`mb_*`** (extension `mbstring`) : `strlen("é")` vaut 2.
+> **Attention :** Avec du texte **UTF-8** (accents, emojis), utilisez les fonctions **`mb_*`** (extension `mbstring`) : `strlen("é")` vaut 2.
 
 ## 7.3 Traiter la saisie utilisateur
 
 ```php
+<?php
+// Simulation d'un envoi de formulaire (en ligne de commande, $_POST est vide)
+$_POST = ['nom' => '  Alice Dupont  '];
+$phrase = "un deux  trois";
+
 $nom = trim($_POST['nom'] ?? '');
 $nom = mb_substr($nom, 0, 50);                          // limiter la longueur
 $mots = preg_split('/\s+/', $phrase, -1, PREG_SPLIT_NO_EMPTY);
+
+echo "[$nom]", PHP_EOL;                                  // [Alice Dupont]
+echo implode("|", $mots), PHP_EOL;                       // un|deux|trois
 ```
 
 ## 7.4 Échappement
 
 ```php
-echo "Il a dit \"Salut\"";           // guillemets échappés
-echo 'L\'été';                       // apostrophe échappée
-echo "Chemin : C:\\dossier";         // antislash
+<?php
+echo "Il a dit \"Salut\"", PHP_EOL;           // guillemets échappés
+echo 'L\'été', PHP_EOL;                       // apostrophe échappée
+echo "Chemin : C:\\dossier", PHP_EOL;         // antislash
 ```
 
 ## 7.5 Échapper pour la sortie : `htmlspecialchars`
@@ -847,7 +1107,11 @@ echo "Chemin : C:\\dossier";         // antislash
 **Toute donnée affichée en HTML doit être échappée** :
 
 ```php
-echo htmlspecialchars($saisie, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+<?php
+$saisie = '<script>alert("piratage")</script>';
+
+echo htmlspecialchars($saisie, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'), PHP_EOL;
+// &lt;script&gt;alert(&quot;piratage&quot;)&lt;/script&gt;
 ```
 
 (Raccourci utile : définir `function e(string $s): string { return htmlspecialchars($s, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); }`.)
@@ -855,10 +1119,14 @@ echo htmlspecialchars($saisie, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
 ## 7.6 Comparer des chaînes
 
 ```php
-"abc" === "abc";                 // ✅
-strcmp("a", "b");                // < 0
-strcasecmp("A", "a");            // 0 (insensible à la casse)
-hash_equals($connu, $saisi);     // ✅ comparaison à temps constant (jetons, signatures)
+<?php
+$connu = hash('sha256', 'secret');
+$saisi = hash('sha256', 'secret');
+
+var_dump("abc" === "abc");                 // bool(true)
+echo strcmp("a", "b"), PHP_EOL;            // -1 (< 0)
+echo strcasecmp("A", "a"), PHP_EOL;        // 0 (insensible à la casse)
+var_dump(hash_equals($connu, $saisi));     // bool(true) : comparaison à temps constant (jetons, signatures)
 ```
 
 ## 7.7 Chaînes et encodage
@@ -876,39 +1144,54 @@ Enregistrez vos fichiers en **UTF-8**, servez `Content-Type: text/html; charset=
 Préférez les classes **`DateTimeImmutable`** (non mutable) et `DateTimeZone` aux fonctions `date()` / `strtotime()`.
 
 ```php
-$maintenant = new DateTimeImmutable('now', new DateTimeZone('Europe/Paris'));
-echo $maintenant->format('d/m/Y H:i');                       // 11/10/2026 14:30
+<?php
+// Date figée pour que le résultat soit reproductible ; utilisez 'now' pour l'heure actuelle
+$maintenant = new DateTimeImmutable('2026-10-11 14:30', new DateTimeZone('Europe/Paris'));
+echo $maintenant->format('d/m/Y H:i'), PHP_EOL;                  // 11/10/2026 14:30
 
 $dans30Jours = $maintenant->modify('+30 days');
-$date = DateTimeImmutable::createFromFormat('d/m/Y', '25/12/2026');
+echo $dans30Jours->format('d/m/Y'), PHP_EOL;                     // 10/11/2026
 
+$date = DateTimeImmutable::createFromFormat('!d/m/Y', '25/12/2026', new DateTimeZone('Europe/Paris'));
 $difference = $maintenant->diff($date);
-echo $difference->days . " jours";
+echo $difference->days . " jours", PHP_EOL;                      // 74 jours
 
 $autreFuseau = $maintenant->setTimezone(new DateTimeZone('Indian/Antananarivo'));
+echo $autreFuseau->format('d/m/Y H:i'), PHP_EOL;                 // 11/10/2026 15:30
 
-date_default_timezone_set('Europe/Paris');                   // fuseau par défaut du script
+date_default_timezone_set('Europe/Paris');                       // fuseau par défaut du script
+echo date_default_timezone_get(), PHP_EOL;                       // Europe/Paris
 ```
 
 Pour l'**affichage localisé** : `IntlDateFormatter` (extension `intl`).
 
 ```php
-$fmt = new IntlDateFormatter('fr_FR', IntlDateFormatter::FULL, IntlDateFormatter::SHORT);
-echo $fmt->format($maintenant);       // dimanche 11 octobre 2026 à 14:30
+<?php
+// Nécessite l'extension intl
+$maintenant = new DateTimeImmutable('2026-10-11 14:30', new DateTimeZone('Europe/Paris'));
+$fmt = new IntlDateFormatter('fr_FR', IntlDateFormatter::FULL, IntlDateFormatter::SHORT, 'Europe/Paris');
+echo $fmt->format($maintenant), PHP_EOL;       // dimanche 11 octobre 2026 à 14:30
 ```
 
-> 💡 Stockez les dates en **UTC** (ou `DATETIME` / `TIMESTAMP` côté base) et convertissez à l'affichage. Bibliothèque très utilisée : **Carbon**.
+> **Astuce :** Stockez les dates en **UTC** (ou `DATETIME` / `TIMESTAMP` côté base) et convertissez à l'affichage. Bibliothèque très utilisée : **Carbon**.
 
 ## 8.2 Expressions régulières (PCRE)
 
 ```php
-preg_match('/^\d{4}-\d{2}-\d{2}$/', $texte);                      // 1 si correspondance, 0 sinon
-preg_match('/(?<annee>\d{4})-(?<mois>\d{2})/', "2026-10", $m);    // $m['annee'] === "2026"
-preg_match_all('/\d+/', "a1b22c333", $tous);                       // $tous[0] = ["1", "22", "333"]
-preg_replace('/\s+/', ' ', "a   b    c");                          // "a b c"
-preg_replace_callback('/\d+/', fn($m) => $m[0] * 2, "a1 b2");      // "a2 b4"
-preg_split('/[\s,]+/', "a, b  c");                                  // ["a", "b", "c"]
-preg_quote($saisie, '/');                                           // échappe une saisie utilisateur
+<?php
+$texte = "2026-10-11";
+
+var_dump(preg_match('/^\d{4}-\d{2}-\d{2}$/', $texte));               // int(1) : correspondance
+preg_match('/(?<annee>\d{4})-(?<mois>\d{2})/', "2026-10", $m);
+echo $m['annee'], " / ", $m['mois'], PHP_EOL;                         // 2026 / 10
+preg_match_all('/\d+/', "a1b22c333", $tous);
+echo implode(", ", $tous[0]), PHP_EOL;                                // 1, 22, 333
+echo preg_replace('/\s+/', ' ', "a   b    c"), PHP_EOL;               // a b c
+echo preg_replace_callback('/\d+/', fn($m) => $m[0] * 2, "a1 b2"), PHP_EOL;   // a2 b4
+echo implode("|", preg_split('/[\s,]+/', "a, b  c")), PHP_EOL;        // a|b|c
+
+$saisie = "a.b*c";
+echo preg_quote($saisie, '/'), PHP_EOL;                               // a\.b\*c (échappe une saisie utilisateur)
 ```
 
 Drapeaux : `i` (casse), `m` (multiligne), `s` (point = saut de ligne), `u` (**Unicode**, à utiliser avec du texte UTF-8), `x` (commentaires).
@@ -929,10 +1212,14 @@ Drapeaux : `i` (casse), `m` (multiligne), `s` (point = saut de ligne), `u` (**Un
 
 ```php
 <?php
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $nom = trim($_POST['nom'] ?? '');
-    echo "Bonjour " . htmlspecialchars($nom, ENT_QUOTES, 'UTF-8');
+// traiter.php : à lancer avec « php -S localhost:8000 », puis envoyer le formulaire
+if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') {
+    http_response_code(405);
+    exit("Cette page attend une requête POST (envoyez le formulaire).");
 }
+
+$nom = trim($_POST['nom'] ?? '');
+echo "Bonjour " . htmlspecialchars($nom, ENT_QUOTES, 'UTF-8');
 ```
 
 ## 9.2 `$_GET` ou `$_POST` ?
@@ -940,7 +1227,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 | | `$_GET` | `$_POST` |
 | --- | --- | --- |
 | Transmission | Dans l'**URL** (`?q=php&page=2`) | Dans le **corps** de la requête |
-| Visible / mise en favori | ✅ | ❌ |
+| Visible / mise en favori | Oui | Non |
 | Taille | Limitée | Grande |
 | Usage | **Lecture** : recherche, filtres, pagination (opérations sans effet de bord) | **Modification** : création, connexion, envoi de fichiers |
 | Sécurité | Ne **jamais** y mettre de secrets | Pas plus sûr par nature : il faut **valider** et protéger contre le **CSRF** |
@@ -948,6 +1235,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 ## 9.3 Validation
 
 ```php
+<?php
+// Simulation d'un envoi de formulaire (en ligne de commande, $_POST est vide)
+$_POST = ['nom' => '', 'email' => 'pas-un-email', 'age' => '200'];
+
 $erreurs = [];
 
 $nom = trim($_POST['nom'] ?? '');
@@ -966,13 +1257,17 @@ if ($age === false || $age === null) {
 }
 
 if (!$erreurs) {
-    // traitement… puis redirection
+    echo "Formulaire valide : traitement, puis redirection", PHP_EOL;
+} else {
+    foreach ($erreurs as $champ => $message) {
+        fwrite(STDERR, "$champ : $message" . PHP_EOL);
+    }
 }
 ```
 
 Filtres utiles : `FILTER_VALIDATE_EMAIL`, `_INT`, `_FLOAT`, `_BOOLEAN`, `_URL`, `_IP`, `_REGEXP` ; lecture directe : `filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL)`.
 
-> ⚠️ **`FILTER_SANITIZE_STRING` est déprécié depuis PHP 8.1** (et supprimé depuis). **Ne l'utilisez plus.** Principe actuel : **valider** à l'entrée, **échapper à la sortie** (`htmlspecialchars` pour le HTML, requêtes préparées pour SQL).
+> **Attention :** **`FILTER_SANITIZE_STRING` est déprécié depuis PHP 8.1** (et supprimé depuis). **Ne l'utilisez plus.** Principe actuel : **valider** à l'entrée, **échapper à la sortie** (`htmlspecialchars` pour le HTML, requêtes préparées pour SQL).
 
 ## 9.4 Validation côté client **et** côté serveur
 
@@ -983,17 +1278,49 @@ Les attributs HTML (`required`, `type="email"`, `pattern`, `maxlength`) amélior
 Évite le double envoi du formulaire lors d'un rechargement :
 
 ```php
+<?php
+// traiter.php : à lancer avec « php -S localhost:8000 »
+declare(strict_types=1);
+session_start();
+
+function enregistrer(string $nom, string $email): void
+{
+    file_put_contents(__DIR__ . '/inscrits.csv', "$nom;$email\n", FILE_APPEND | LOCK_EX);
+}
+
+// GET : affichage du message flash laissé par la requête POST précédente
+if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+    echo $_SESSION['flash'] ?? "Aucun message.";
+    unset($_SESSION['flash']);
+    exit;
+}
+
+$erreurs = [];
+$nom = trim($_POST['nom'] ?? '');
+$email = filter_var($_POST['email'] ?? '', FILTER_VALIDATE_EMAIL);
+if ($nom === '') { $erreurs['nom'] = "Le nom est obligatoire."; }
+if ($email === false) { $erreurs['email'] = "Adresse e-mail invalide."; }
+
 if (!$erreurs) {
     enregistrer($nom, $email);
     $_SESSION['flash'] = "Enregistré !";
-    header('Location: /merci.php', true, 303);
+    header('Location: /traiter.php', true, 303);     // Post/Redirect/Get
     exit;
+}
+
+http_response_code(422);
+foreach ($erreurs as $champ => $message) {
+    echo "$champ : $message\n";
 }
 ```
 
 ## 9.6 Pré-remplir un formulaire après erreur
 
 ```php
+<?php
+$nom = 'Alice <b>';
+$erreurs = ['nom' => "Le nom est obligatoire."];
+?>
 <input type="text" name="nom" value="<?= htmlspecialchars($nom ?? '', ENT_QUOTES, 'UTF-8') ?>">
 <?php if (isset($erreurs['nom'])): ?>
     <span class="erreur"><?= htmlspecialchars($erreurs['nom']) ?></span>
@@ -1011,23 +1338,51 @@ Chaque formulaire qui modifie des données doit inclure un **jeton** : voir [sec
 ## 10.1 Lire et écrire rapidement
 
 ```php
-$contenu = file_get_contents(__DIR__ . '/notes.txt');          // false en cas d'échec
-file_put_contents(__DIR__ . '/notes.txt', "Ligne\n");          // écrase
-file_put_contents(__DIR__ . '/notes.txt', "Suite\n", FILE_APPEND | LOCK_EX);   // ajoute, avec verrou
+<?php
+$fichier = sys_get_temp_dir() . '/notes.txt';
 
-$lignes = file(__DIR__ . '/notes.txt', FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);   // tableau de lignes
+file_put_contents($fichier, "Ligne\n");                                    // écrase
+file_put_contents($fichier, "Suite\n", FILE_APPEND | LOCK_EX);             // ajoute, avec verrou
+
+$contenu = file_get_contents($fichier);                                    // false en cas d'échec
+echo $contenu;                                                             // Ligne / Suite
+
+$lignes = file($fichier, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);   // tableau de lignes
+print_r($lignes);
+
+unlink($fichier);
+
+if (!is_file($fichier)) {
+    fwrite(STDERR, "Fichier introuvable : $fichier" . PHP_EOL);            // le fichier vient d'être supprimé
+}
 ```
 
 ## 10.2 Lecture et écriture avec `fopen`
 
 ```php
-$f = fopen('donnees.txt', 'r');
+<?php
+$chemin = tempnam(sys_get_temp_dir(), 'donnees');
+file_put_contents($chemin, "première ligne\n<b>seconde</b> ligne\n");
+
+$f = fopen($chemin, 'r');
 if ($f === false) { throw new RuntimeException("Ouverture impossible"); }
 
 while (($ligne = fgets($f)) !== false) {      // ligne par ligne : économe en mémoire
     echo htmlspecialchars($ligne);
 }
 fclose($f);
+unlink($chemin);
+
+// Cas d'erreur : fichier inexistant
+$absent = sys_get_temp_dir() . '/introuvable.txt';
+try {
+    if (!is_readable($absent)) {
+        throw new RuntimeException("Ouverture impossible : $absent");
+    }
+    $f = fopen($absent, 'r');
+} catch (RuntimeException $e) {
+    fwrite(STDERR, "Erreur : " . $e->getMessage() . PHP_EOL);
+}
 ```
 
 | Mode | Signification |
@@ -1055,37 +1410,65 @@ fclose($f);
 | `tempnam()`, `sys_get_temp_dir()` | Fichiers temporaires |
 
 ```php
+<?php
 $info = pathinfo('/var/www/photo.jpg');
+print_r($info);
 // ['dirname' => '/var/www', 'basename' => 'photo.jpg', 'extension' => 'jpg', 'filename' => 'photo']
 ```
 
 ## 10.4 CSV et JSON
 
 ```php
-// CSV : lire
-if (($f = fopen('personnes.csv', 'r')) !== false) {
-    $entete = fgetcsv($f, 0, ',', '"', '\\');
-    while (($ligne = fgetcsv($f, 0, ',', '"', '\\')) !== false) {
-        $personne = array_combine($entete, $ligne);
-    }
-    fclose($f);
-}
+<?php
+$dossier = sys_get_temp_dir();
+
 // CSV : écrire
-$f = fopen('sortie.csv', 'w');
+$f = fopen($dossier . '/sortie.csv', 'w');
 fputcsv($f, ['nom', 'age'], ',', '"', '\\');
 fputcsv($f, ['Alice', 30], ',', '"', '\\');
 fclose($f);
 
+// CSV : lire
+if (($f = fopen($dossier . '/sortie.csv', 'r')) !== false) {
+    $entete = fgetcsv($f, 0, ',', '"', '\\');
+    while (($ligne = fgetcsv($f, 0, ',', '"', '\\')) !== false) {
+        $personne = array_combine($entete, $ligne);
+        print_r($personne);                              // ['nom' => 'Alice', 'age' => '30']
+    }
+    fclose($f);
+}
+
 // JSON
-file_put_contents('data.json', json_encode($donnees, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR));
-$donnees = json_decode(file_get_contents('data.json'), true, 512, JSON_THROW_ON_ERROR);
+$donnees = ['nom' => 'Alice', 'villes' => ['Paris', 'Lyon']];
+file_put_contents($dossier . '/data.json', json_encode($donnees, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR));
+$relu = json_decode(file_get_contents($dossier . '/data.json'), true, 512, JSON_THROW_ON_ERROR);
+echo $relu['villes'][1], PHP_EOL;                        // Lyon
+
+// JSON invalide : avec JSON_THROW_ON_ERROR, l'erreur devient une exception
+try {
+    json_decode('{invalide', true, 512, JSON_THROW_ON_ERROR);
+} catch (JsonException $e) {
+    fwrite(STDERR, "Erreur JSON : " . $e->getMessage() . PHP_EOL);
+}
+
+unlink($dossier . '/sortie.csv');
+unlink($dossier . '/data.json');
 ```
 
 ## 10.5 Classes SPL
 
 ```php
-$fichier = new SplFileObject('gros.txt');
-foreach ($fichier as $numero => $ligne) { /* … */ }
+<?php
+$chemin = tempnam(sys_get_temp_dir(), 'gros');
+file_put_contents($chemin, "un\ndeux\ntrois\n");
+
+$fichier = new SplFileObject($chemin);
+foreach ($fichier as $numero => $ligne) {
+    if ($ligne === '') { continue; }                     // dernière ligne vide
+    echo ($numero + 1) . " : " . rtrim($ligne) . PHP_EOL;
+}
+
+unlink($chemin);
 ```
 
 ## 10.6 Téléversement sécurisé de fichiers
@@ -1099,37 +1482,48 @@ foreach ($fichier as $numero => $ligne) { /* … */ }
 
 ```php
 <?php
+// upload.php : à lancer avec « php -S localhost:8000 » ; le formulaire ci-dessus envoie ici
 declare(strict_types=1);
 
 const DOSSIER = __DIR__ . '/../uploads';         // idéalement HORS de la racine web
 const TAILLE_MAX = 2 * 1024 * 1024;              // 2 Mo
 const TYPES_AUTORISES = ['image/jpeg' => 'jpg', 'image/png' => 'png', 'image/webp' => 'webp'];
 
+function refuser(string $message, int $statut = 400): never
+{
+    http_response_code($statut);
+    exit($message);
+}
+
+if (!is_dir(DOSSIER)) {
+    mkdir(DOSSIER, 0755, true);
+}
+
 $fichier = $_FILES['photo'] ?? null;
 
 if (!$fichier || $fichier['error'] !== UPLOAD_ERR_OK) {
-    exit("Erreur de téléversement (code " . ($fichier['error'] ?? '?') . ").");
+    refuser("Erreur de téléversement (code " . ($fichier['error'] ?? '?') . ").");
 }
 if ($fichier['size'] > TAILLE_MAX) {
-    exit("Fichier trop volumineux.");
+    refuser("Fichier trop volumineux.", 413);
 }
 if (!is_uploaded_file($fichier['tmp_name'])) {
-    exit("Fichier invalide.");
+    refuser("Fichier invalide.");
 }
 
 // Type RÉEL détecté par le contenu (et non par $_FILES['type'] ni l'extension, falsifiables)
 $mime = (new finfo(FILEINFO_MIME_TYPE))->file($fichier['tmp_name']);
 if (!isset(TYPES_AUTORISES[$mime])) {
-    exit("Type de fichier non autorisé.");
+    refuser("Type de fichier non autorisé.", 415);
 }
 
 // Nouveau nom aléatoire : on ne réutilise JAMAIS le nom d'origine
 $nom = bin2hex(random_bytes(16)) . '.' . TYPES_AUTORISES[$mime];
 
 if (!move_uploaded_file($fichier['tmp_name'], DOSSIER . '/' . $nom)) {
-    exit("Impossible d'enregistrer le fichier.");
+    refuser("Impossible d'enregistrer le fichier.", 500);
 }
-echo "Fichier enregistré.";
+echo "Fichier enregistré : $nom";
 ```
 
 Réglages `php.ini` : `file_uploads`, `upload_max_filesize`, `post_max_size`, `max_file_uploads`.
@@ -1139,8 +1533,31 @@ Réglages `php.ini` : `file_uploads`, `upload_max_filesize`, `post_max_size`, `m
 - **Traversée de répertoires** : ne construisez jamais un chemin à partir d'une saisie brute (`../../etc/passwd`). Utilisez `basename()`, une **liste blanche**, et vérifiez `realpath()` :
 
 ```php
-$chemin = realpath(DOSSIER . '/' . basename($_GET['fichier']));
-if ($chemin === false || !str_starts_with($chemin, realpath(DOSSIER) . DIRECTORY_SEPARATOR)) { http_response_code(400); exit; }
+<?php
+// Dossier d'envoi de démonstration
+$racine = sys_get_temp_dir() . '/uploads_demo';
+if (!is_dir($racine)) { mkdir($racine, 0755, true); }
+file_put_contents($racine . '/photo.jpg', 'contenu');
+
+function cheminSur(string $racine, string $demande): ?string
+{
+    $chemin = realpath($racine . '/' . basename($demande));
+    if ($chemin === false || !str_starts_with($chemin, realpath($racine) . DIRECTORY_SEPARATOR)) {
+        return null;
+    }
+    return $chemin;
+}
+
+foreach (['photo.jpg', '../../etc/passwd', 'absent.png'] as $demande) {   // en pratique : $_GET['fichier']
+    if (cheminSur($racine, $demande) === null) {
+        fwrite(STDERR, "Refusé : $demande" . PHP_EOL);
+    } else {
+        echo "Accepté : $demande", PHP_EOL;
+    }
+}
+
+unlink($racine . '/photo.jpg');
+rmdir($racine);
 ```
 
 - N'exécutez **jamais** un fichier téléversé ; interdisez l'exécution de PHP dans le dossier d'envoi.
@@ -1170,27 +1587,40 @@ HTTP est **sans état** : sessions et cookies permettent de « se souvenir » d'
 session_start();                              // AVANT toute sortie HTML
 
 $_SESSION['utilisateur'] = "Alice";
-echo $_SESSION['utilisateur'] ?? "Invité";
+echo $_SESSION['utilisateur'] ?? "Invité", PHP_EOL;      // Alice
 
 unset($_SESSION['utilisateur']);              // retirer une variable
+echo $_SESSION['utilisateur'] ?? "Invité", PHP_EOL;      // Invité
 ```
 
 ### Déconnexion complète
 
 ```php
+<?php
 session_start();
+$_SESSION['utilisateur'] = "Alice";
+
 $_SESSION = [];
 if (ini_get('session.use_cookies')) {
     $p = session_get_cookie_params();
     setcookie(session_name(), '', ['expires' => time() - 42000, 'path' => $p['path'], 'domain' => $p['domain'],
-                                   'secure' => $p['secure'], 'httponly' => $p['httponly'], 'samesite' => $p['samesite'] ?? 'Lax']);
+                                   'secure' => $p['secure'], 'httponly' => $p['httponly'], 'samesite' => $p['samesite'] ?: 'Lax']);
 }
 session_destroy();
+echo "Session détruite", PHP_EOL;
 ```
 
 ## 11.3 Cookies *(à jour : tableau d'options)*
 
 ```php
+<?php
+// cookie.php : à lancer avec « php -S localhost:8000 » ; rechargez la page pour lire le cookie
+if (isset($_COOKIE['theme'])) {
+    echo "Thème : ", htmlspecialchars($_COOKIE['theme']), PHP_EOL;     // lisible dès la REQUÊTE SUIVANTE
+    setcookie('theme', '', ['expires' => time() - 3600, 'path' => '/']);   // supprimer
+    exit;
+}
+
 setcookie('theme', 'sombre', [
     'expires'  => time() + 30 * 24 * 3600,     // 30 jours
     'path'     => '/',
@@ -1198,18 +1628,16 @@ setcookie('theme', 'sombre', [
     'httponly' => true,                        // inaccessible à JavaScript
     'samesite' => 'Lax',                       // protège du CSRF
 ]);
-
-echo $_COOKIE['theme'] ?? 'clair';             // lisible dès la REQUÊTE SUIVANTE
-
-setcookie('theme', '', ['expires' => time() - 3600, 'path' => '/']);    // supprimer
+echo "Cookie envoyé : rechargez la page.", PHP_EOL;
 ```
 
-> ⚠️ `setcookie()` doit être appelé **avant toute sortie** (sinon : *« headers already sent »*).
-> 🔒 Ne stockez jamais d'informations sensibles dans un cookie ; tout ce qu'il contient doit être considéré comme **modifiable par l'utilisateur**.
+> **Attention :** `setcookie()` doit être appelé **avant toute sortie** (sinon : *« headers already sent »*).
+> **Sécurité :** Ne stockez jamais d'informations sensibles dans un cookie ; tout ce qu'il contient doit être considéré comme **modifiable par l'utilisateur**.
 
 ## 11.4 Sécuriser les sessions
 
 ```php
+<?php
 // Réglages recommandés (php.ini ou avant session_start)
 ini_set('session.use_strict_mode', '1');
 ini_set('session.use_only_cookies', '1');
@@ -1219,13 +1647,18 @@ session_set_cookie_params([
 session_start();
 
 // À la connexion réussie : changer d'identifiant (anti fixation de session)
+$utilisateur = ['id' => 42];                       // normalement lu en base après vérification du mot de passe
 session_regenerate_id(true);
 $_SESSION['user_id'] = $utilisateur['id'];
 $_SESSION['derniere_activite'] = time();
+echo "Connecté : utilisateur ", $_SESSION['user_id'], PHP_EOL;
 
-// Expiration par inactivité
+// Expiration par inactivité (simulée : dernière activité il y a 31 minutes)
+$_SESSION['derniere_activite'] = time() - 31 * 60;
 if (isset($_SESSION['derniere_activite']) && time() - $_SESSION['derniere_activite'] > 1800) {
-    session_unset(); session_destroy();
+    session_unset();
+    session_destroy();
+    fwrite(STDERR, "Session expirée par inactivité" . PHP_EOL);
 }
 ```
 
@@ -1245,14 +1678,14 @@ if (isset($_SESSION['derniere_activite']) && time() - $_SESSION['derniere_activi
 
 ## 12.1 PDO ou MySQLi ?
 
-| | **PDO** ✅ | **MySQLi** |
+| | **PDO** (recommandé) | **MySQLi** |
 | --- | --- | --- |
 | Bases supportées | MySQL, MariaDB, PostgreSQL, SQLite, SQL Server… | MySQL / MariaDB uniquement |
 | API | Orientée objet | Objet et procédural |
-| Paramètres nommés (`:nom`) | ✅ | ❌ (uniquement `?`) |
+| Paramètres nommés (`:nom`) | Oui | Non (uniquement `?`) |
 | Recommandation | **Standard actuel** | Acceptable pour du 100 % MySQL |
 
-> 🚫 Les anciennes fonctions `mysql_*` ont été **supprimées en PHP 7**.
+> **Supprimé :** Les anciennes fonctions `mysql_*` ont été **supprimées en PHP 7**.
 
 ## 12.2 Connexion avec PDO
 
@@ -1260,39 +1693,57 @@ if (isset($_SESSION['derniere_activite']) && time() - $_SESSION['derniere_activi
 <?php
 declare(strict_types=1);
 
-$dsn = 'mysql:host=localhost;dbname=boutique;charset=utf8mb4';
+// SQLite en mémoire par défaut, pour que l'exemple tourne sans serveur de base de données.
+// Pour MySQL : DB_DSN="mysql:host=localhost;dbname=boutique;charset=utf8mb4" DB_USER=... DB_PASS=...
+$dsn = getenv('DB_DSN') ?: 'sqlite::memory:';
 
 try {
-    $pdo = new PDO($dsn, 'utilisateur', 'mot_de_passe', [
+    $pdo = new PDO($dsn, getenv('DB_USER') ?: null, getenv('DB_PASS') ?: null, [
         PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,    // erreurs → exceptions
         PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
         PDO::ATTR_EMULATE_PREPARES   => false,                     // vraies requêtes préparées
     ]);
+    echo "Connexion réussie", PHP_EOL;
 } catch (PDOException $e) {
     error_log($e->getMessage());                                   // journaliser, ne pas afficher
     exit("Service momentanément indisponible.");
 }
 ```
 
-> 🔒 Chargez les identifiants depuis des **variables d'environnement** (`getenv()`, `.env`), jamais dans le code versionné.
+> **Sécurité :** Chargez les identifiants depuis des **variables d'environnement** (`getenv()`, `.env`), jamais dans le code versionné.
 
 ## 12.3 Requêtes préparées (anti-injection SQL)
 
 **Règle absolue : n'insérez jamais une variable directement dans une requête SQL.**
 
 ```php
-// ❌ Vulnérable à l'injection SQL
-$pdo->query("SELECT * FROM users WHERE email = '$email'");
+<?php
+// Préparation : base SQLite en mémoire
+$pdo = new PDO('sqlite::memory:', null, null, [
+    PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
+    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+]);
+$pdo->exec("CREATE TABLE users (id INTEGER PRIMARY KEY, nom TEXT, email TEXT, actif INTEGER DEFAULT 1)");
+$pdo->exec("INSERT INTO users (nom, email) VALUES ('Alice', 'alice@exemple.com'), ('Bob', 'bob@exemple.com')");
 
-// ✅ Requête préparée (paramètres nommés)
+$email = "' OR '1'='1";          // saisie malveillante
+
+// Vulnérable à l'injection SQL : la condition devient toujours vraie
+$lignes = $pdo->query("SELECT * FROM users WHERE email = '$email'")->fetchAll();
+echo count($lignes), " ligne(s) renvoyée(s) : l'injection a réussi", PHP_EOL;      // 2
+
+// Requête préparée (paramètres nommés) : la saisie reste une simple valeur
 $stmt = $pdo->prepare("SELECT id, nom, email FROM users WHERE email = :email AND actif = :actif");
 $stmt->execute([':email' => $email, ':actif' => 1]);
-$utilisateur = $stmt->fetch();            // une ligne (ou false)
+var_dump($stmt->fetch());                                    // bool(false) : aucune ligne
+
+$stmt->execute([':email' => 'alice@exemple.com', ':actif' => 1]);
+print_r($stmt->fetch());                                     // une ligne (ou false)
 
 // Paramètres positionnels
 $stmt = $pdo->prepare("INSERT INTO users (nom, email) VALUES (?, ?)");
-$stmt->execute([$nom, $email]);
-$idCree = $pdo->lastInsertId();
+$stmt->execute(["Chloé", "chloe@exemple.com"]);
+echo "Identifiant créé : ", $pdo->lastInsertId(), PHP_EOL;   // 3
 ```
 
 Avec un type précis : `$stmt->bindValue(':id', $id, PDO::PARAM_INT);`.
@@ -1300,9 +1751,23 @@ Avec un type précis : `$stmt->bindValue(':id', $id, PDO::PARAM_INT);`.
 ### Clause `IN` dynamique
 
 ```php
+<?php
+// Préparation : base SQLite en mémoire
+$pdo = new PDO('sqlite::memory:', null, null, [
+    PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
+    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+]);
+$pdo->exec("CREATE TABLE produits (id INTEGER PRIMARY KEY, nom TEXT)");
+$pdo->exec("INSERT INTO produits (nom) VALUES ('Stylo'), ('Cahier'), ('Règle')");
+
+$ids = [1, 3];
+
 $marqueurs = implode(',', array_fill(0, count($ids), '?'));
 $stmt = $pdo->prepare("SELECT * FROM produits WHERE id IN ($marqueurs)");
 $stmt->execute($ids);
+foreach ($stmt->fetchAll() as $produit) {
+    echo $produit['id'], " : ", $produit['nom'], PHP_EOL;     // 1 : Stylo, 3 : Règle
+}
 ```
 
 ### Noms de tables / colonnes dynamiques
@@ -1310,34 +1775,65 @@ $stmt->execute($ids);
 Les identifiants ne se paramètrent pas : utilisez une **liste blanche**.
 
 ```php
+<?php
+// Préparation : base SQLite en mémoire
+$pdo = new PDO('sqlite::memory:', null, null, [
+    PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
+    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+]);
+$pdo->exec("CREATE TABLE produits (id INTEGER PRIMARY KEY, nom TEXT, prix REAL, date TEXT)");
+$pdo->exec("INSERT INTO produits (nom, prix, date) VALUES ('Stylo', 1.5, '2026-01-02'), ('Cahier', 3.2, '2026-01-01')");
+
+$_GET['tri'] = 'prix; DROP TABLE produits';      // saisie malveillante simulée
+
 $colonnesTriables = ['nom', 'prix', 'date'];
-$tri = in_array($_GET['tri'] ?? '', $colonnesTriables, true) ? $_GET['tri'] : 'nom';
+$tri = in_array($_GET['tri'] ?? '', $colonnesTriables, true) ? $_GET['tri'] : 'nom';   // liste blanche
+echo "Tri appliqué : $tri", PHP_EOL;                                                     // nom
+
 $stmt = $pdo->query("SELECT * FROM produits ORDER BY $tri");
+foreach ($stmt as $produit) {
+    echo $produit['nom'], PHP_EOL;                                                       // Cahier, Stylo
+}
 ```
 
 ## 12.4 Opérations CRUD
 
 ```php
+<?php
+// Préparation : base SQLite en mémoire
+$pdo = new PDO('sqlite::memory:', null, null, [
+    PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
+    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+]);
+$pdo->exec("CREATE TABLE users (id INTEGER PRIMARY KEY, nom TEXT, email TEXT, actif INTEGER DEFAULT 1)");
+$pdo->exec("INSERT INTO users (nom, email) VALUES ('Alice', 'alice@exemple.com'), ('Bob', 'bob@exemple.com')");
+
+$nom = "Chloé";
+$email = "chloe@exemple.com";
+
 // CREATE
 $stmt = $pdo->prepare("INSERT INTO users (nom, email) VALUES (:nom, :email)");
 $stmt->execute([':nom' => $nom, ':email' => $email]);
+$id = (int) $pdo->lastInsertId();
 
 // READ
 $tous = $pdo->query("SELECT id, nom FROM users ORDER BY nom")->fetchAll();
-foreach ($tous as $u) { echo htmlspecialchars($u['nom']) . "<br>"; }
+foreach ($tous as $u) { echo htmlspecialchars($u['nom']) . "<br>" . PHP_EOL; }
 
 $stmt = $pdo->prepare("SELECT * FROM users WHERE id = ?");
 $stmt->execute([$id]);
 $user = $stmt->fetch();
+echo $user['nom'], PHP_EOL;                                  // Chloé
 
 // UPDATE
 $stmt = $pdo->prepare("UPDATE users SET nom = :nom WHERE id = :id");
-$stmt->execute([':nom' => $nom, ':id' => $id]);
-echo $stmt->rowCount() . " ligne(s) modifiée(s)";
+$stmt->execute([':nom' => "Chloé Martin", ':id' => $id]);
+echo $stmt->rowCount() . " ligne(s) modifiée(s)", PHP_EOL;   // 1 ligne(s) modifiée(s)
 
 // DELETE
 $stmt = $pdo->prepare("DELETE FROM users WHERE id = ?");
 $stmt->execute([$id]);
+echo $stmt->rowCount() . " ligne(s) supprimée(s)", PHP_EOL;  // 1 ligne(s) supprimée(s)
 ```
 
 Modes de récupération : `FETCH_ASSOC` (tableau associatif), `FETCH_OBJ`, `FETCH_CLASS` (hydrate une classe), `fetchColumn()`, `FETCH_KEY_PAIR`.
@@ -1347,29 +1843,58 @@ Modes de récupération : `FETCH_ASSOC` (tableau associatif), `FETCH_OBJ`, `FETC
 Plusieurs opérations **toutes réussies ou toutes annulées** :
 
 ```php
-try {
-    $pdo->beginTransaction();
-    $pdo->prepare("UPDATE comptes SET solde = solde - ? WHERE id = ?")->execute([100, 1]);
-    $pdo->prepare("UPDATE comptes SET solde = solde + ? WHERE id = ?")->execute([100, 2]);
-    $pdo->commit();
-} catch (Throwable $e) {
-    if ($pdo->inTransaction()) { $pdo->rollBack(); }
-    throw $e;
+<?php
+// Préparation : deux comptes ; la contrainte CHECK interdit un solde négatif
+$pdo = new PDO('sqlite::memory:', null, null, [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
+$pdo->exec("CREATE TABLE comptes (id INTEGER PRIMARY KEY, solde REAL CHECK (solde >= 0))");
+$pdo->exec("INSERT INTO comptes (id, solde) VALUES (1, 50), (2, 10)");
+
+function virement(PDO $pdo, int $de, int $vers, float $montant): void
+{
+    try {
+        $pdo->beginTransaction();
+        $pdo->prepare("UPDATE comptes SET solde = solde - ? WHERE id = ?")->execute([$montant, $de]);
+        $pdo->prepare("UPDATE comptes SET solde = solde + ? WHERE id = ?")->execute([$montant, $vers]);
+        $pdo->commit();
+    } catch (Throwable $e) {
+        if ($pdo->inTransaction()) { $pdo->rollBack(); }
+        throw $e;
+    }
 }
+
+virement($pdo, 1, 2, 20);                      // réussit : 30 et 30
+echo json_encode($pdo->query("SELECT id, solde FROM comptes")->fetchAll(PDO::FETCH_ASSOC)), PHP_EOL;
+
+try {
+    virement($pdo, 1, 2, 100);                 // échoue : solde négatif, tout est annulé
+} catch (PDOException $e) {
+    fwrite(STDERR, "Virement annulé : " . $e->getMessage() . PHP_EOL);
+}
+echo json_encode($pdo->query("SELECT id, solde FROM comptes")->fetchAll(PDO::FETCH_ASSOC)), PHP_EOL;   // inchangé
 ```
 
 ## 12.6 MySQLi (rappel)
 
 ```php
+<?php
+// Nécessite l'extension mysqli et un serveur MySQL / MariaDB
 mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);          // exceptions
-$conn = new mysqli('localhost', 'user', 'mdp', 'boutique');
-$conn->set_charset('utf8mb4');
 
-$stmt = $conn->prepare("SELECT id, nom FROM users WHERE email = ?");
-$stmt->bind_param('s', $email);          // s = string, i = int, d = double, b = blob
-$stmt->execute();
-$resultat = $stmt->get_result();
-while ($ligne = $resultat->fetch_assoc()) { /* … */ }
+try {
+    $conn = new mysqli('localhost', 'user', 'mdp', 'boutique');
+    $conn->set_charset('utf8mb4');
+
+    $email = 'alice@exemple.com';
+    $stmt = $conn->prepare("SELECT id, nom FROM users WHERE email = ?");
+    $stmt->bind_param('s', $email);          // s = string, i = int, d = double, b = blob
+    $stmt->execute();
+    $resultat = $stmt->get_result();
+    while ($ligne = $resultat->fetch_assoc()) {
+        echo $ligne['id'], " : ", $ligne['nom'], PHP_EOL;
+    }
+} catch (mysqli_sql_exception $e) {
+    fwrite(STDERR, "Erreur MySQL : " . $e->getMessage() . PHP_EOL);
+}
 ```
 
 ## 12.7 Bonnes pratiques
@@ -1418,22 +1943,25 @@ Throwable
 ## 13.3 `try` / `catch` / `finally`
 
 ```php
+<?php
 try {
     $resultat = intdiv(10, 0);
+    echo $resultat;
 } catch (DivisionByZeroError $e) {
-    echo "Division par zéro : " . $e->getMessage();
+    fwrite(STDERR, "Division par zéro : " . $e->getMessage() . PHP_EOL);
 } catch (InvalidArgumentException | TypeError $e) {    // plusieurs types
-    echo "Erreur d'argument : " . $e->getMessage();
+    fwrite(STDERR, "Erreur d'argument : " . $e->getMessage() . PHP_EOL);
 } catch (Throwable $e) {                                // filet de sécurité
     error_log((string) $e);
 } finally {
-    echo "Toujours exécuté (nettoyage)";
+    echo "Toujours exécuté (nettoyage)", PHP_EOL;
 }
 ```
 
 ## 13.4 Lancer et créer des exceptions
 
 ```php
+<?php
 function diviser(float $a, float $b): float {
     if ($b === 0.0) {
         throw new InvalidArgumentException("Le diviseur ne peut pas être nul.");
@@ -1448,12 +1976,44 @@ class SoldeInsuffisantException extends RuntimeException {
     public function getManque(): float { return $this->manque; }
 }
 
-// Chaînage d'exceptions
-try { /* … */ } catch (PDOException $e) {
-    throw new RuntimeException("Impossible d'enregistrer la commande.", 0, $e);   // $e->getPrevious()
+function retirer(float $solde, float $montant): float {
+    if ($montant > $solde) {
+        throw new SoldeInsuffisantException($montant - $solde);
+    }
+    return $solde - $montant;
 }
 
-$valeur = $x ?? throw new InvalidArgumentException("x manquant");                // throw est une expression (8.0)
+try {
+    echo diviser(10, 4), PHP_EOL;                        // 2.5
+    echo diviser(1, 0), PHP_EOL;
+} catch (InvalidArgumentException $e) {
+    fwrite(STDERR, "Erreur : " . $e->getMessage() . PHP_EOL);
+}
+
+try {
+    retirer(50, 80);
+} catch (SoldeInsuffisantException $e) {
+    fwrite(STDERR, $e->getMessage() . " (manque : " . $e->getManque() . ")" . PHP_EOL);
+}
+
+// Chaînage d'exceptions
+try {
+    try {
+        json_decode('{invalide', true, 512, JSON_THROW_ON_ERROR);
+    } catch (JsonException $e) {
+        throw new RuntimeException("Impossible de lire la configuration.", 0, $e);   // $e->getPrevious()
+    }
+} catch (RuntimeException $e) {
+    fwrite(STDERR, $e->getMessage() . " Cause : " . $e->getPrevious()->getMessage() . PHP_EOL);
+}
+
+// throw est une expression (8.0)
+$x = null;
+try {
+    $valeur = $x ?? throw new InvalidArgumentException("x manquant");
+} catch (InvalidArgumentException $e) {
+    fwrite(STDERR, "Erreur : " . $e->getMessage() . PHP_EOL);
+}
 ```
 
 Méthodes utiles : `getMessage()`, `getCode()`, `getFile()`, `getLine()`, `getTraceAsString()`, `getPrevious()`.
@@ -1461,16 +2021,20 @@ Méthodes utiles : `getMessage()`, `getCode()`, `getFile()`, `getLine()`, `getTr
 ## 13.5 Configuration et journalisation
 
 ```php
+<?php
 // Développement
 error_reporting(E_ALL);
 ini_set('display_errors', '1');
 
-// ✅ Production : ne JAMAIS afficher les erreurs à l'utilisateur
+// Production : ne JAMAIS afficher les erreurs à l'utilisateur
 ini_set('display_errors', '0');
 ini_set('log_errors', '1');
-ini_set('error_log', '/var/log/php/app.log');
+$journal = sys_get_temp_dir() . '/app.log';        // en production : /var/log/php/app.log
+ini_set('error_log', $journal);
 
 error_log("Message à journaliser");
+echo file_get_contents($journal);                  // [date] Message à journaliser
+unlink($journal);
 ```
 
 Dans `php.ini` : `error_reporting = E_ALL`, `display_errors = Off` (production), `log_errors = On`.
@@ -1478,15 +2042,18 @@ Dans `php.ini` : `error_reporting = E_ALL`, `display_errors = Off` (production),
 ## 13.6 Gestionnaires globaux
 
 ```php
+<?php
 set_error_handler(function (int $niveau, string $message, string $fichier, int $ligne): bool {
     throw new ErrorException($message, 0, $niveau, $fichier, $ligne);     // convertit les erreurs en exceptions
 });
 
 set_exception_handler(function (Throwable $e): void {
-    error_log((string) $e);
+    error_log((string) $e);                        // détails dans le journal
     http_response_code(500);
-    echo "Une erreur est survenue.";
+    echo "Une erreur est survenue.", PHP_EOL;      // message générique pour l'utilisateur
 });
+
+echo $variableInconnue;                            // avertissement → ErrorException → gestionnaire d'exceptions
 ```
 
 Pour une journalisation professionnelle : **Monolog** (compatible PSR-3), et un service de suivi d'erreurs (Sentry…).
@@ -1532,7 +2099,7 @@ class Voiture
 
 $v = new Voiture("Renault");
 $v->rouler(120);
-echo $v->marque, " : ", $v->getKilometrage(), " km";
+echo $v->marque, " : ", $v->getKilometrage(), " km", PHP_EOL;     // Renault : 120 km
 ```
 
 `$this` désigne l'objet courant ; `->` accède aux membres d'une instance ; `::` aux membres statiques et constantes.
@@ -1540,6 +2107,7 @@ echo $v->marque, " : ", $v->getKilometrage(), " km";
 ## 14.2 Promotion de propriétés du constructeur *(8.0, à jour)*
 
 ```php
+<?php
 class Utilisateur
 {
     public function __construct(
@@ -1550,7 +2118,20 @@ class Utilisateur
 }
 
 $u = new Utilisateur(1, "Alice");
-// $u->id = 2;     // ❌ Error : propriété readonly
+echo $u->id, " ", $u->nom, PHP_EOL;           // 1 Alice
+
+try {
+    $u->id = 2;                               // propriété readonly : modification interdite
+} catch (Error $e) {
+    fwrite(STDERR, "Erreur : " . $e->getMessage() . PHP_EOL);
+}
+
+readonly class Point                          // classe readonly (8.2)
+{
+    public function __construct(public int $x, public int $y) {}
+}
+$p = new Point(1, 2);
+echo $p->x, ",", $p->y, PHP_EOL;              // 1,2
 ```
 
 > **Classes `readonly`** *(8.2)* : `readonly class Point { public function __construct(public int $x, public int $y) {} }`.
@@ -1566,9 +2147,20 @@ $u = new Utilisateur(1, "Alice");
 **Visibilité asymétrique** *(8.4)* : lecture publique, écriture restreinte :
 
 ```php
+<?php
 class Compte {
-    public private(set) float $solde = 0.0;     // lisible partout, modifiable seulement dans la classe
+    public private(set) float $solde = 0.0;     // lisible partout, modifiable seulement dans la classe (8.4)
     public function deposer(float $m): void { $this->solde += $m; }
+}
+
+$c = new Compte();
+$c->deposer(50);
+echo $c->solde, PHP_EOL;                         // 50
+
+try {
+    $c->solde = 1000;                            // écriture depuis l'extérieur : refusée
+} catch (Error $e) {
+    fwrite(STDERR, "Erreur : " . $e->getMessage() . PHP_EOL);
 }
 ```
 
@@ -1577,6 +2169,7 @@ class Compte {
 Remplacent la plupart des getters/setters écrits à la main :
 
 ```php
+<?php
 class Personne
 {
     public string $nomComplet {
@@ -1594,11 +2187,24 @@ class Personne
 
     public function __construct(public string $prenom, public string $nom) {}
 }
+
+$p = new Personne("Alice", "Martin");
+echo $p->nomComplet, PHP_EOL;                  // Alice Martin
+
+$p->email = "ALICE@Exemple.COM";
+echo $p->email, PHP_EOL;                       // alice@exemple.com
+
+try {
+    $p->email = "pas-un-email";
+} catch (InvalidArgumentException $e) {
+    fwrite(STDERR, "Erreur : " . $e->getMessage() . PHP_EOL);
+}
 ```
 
 ## 14.5 Héritage
 
 ```php
+<?php
 class Animal
 {
     public function __construct(protected string $nom) {}
@@ -1613,7 +2219,9 @@ class Chien extends Animal
     public function presenter(): string { return parent::parler() . " (parent)"; }   // appel du parent
 }
 
-echo (new Chien("Rex"))->parler();
+$rex = new Chien("Rex");
+echo $rex->parler(), PHP_EOL;         // Rex dit : Ouaf !
+echo $rex->presenter(), PHP_EOL;      // ... (parent)
 ```
 
 - `final class` : ne peut pas être étendue ; `final function` : ne peut pas être redéfinie.
@@ -1622,6 +2230,7 @@ echo (new Chien("Rex"))->parler();
 ## 14.6 Membres statiques et constantes
 
 ```php
+<?php
 class Compteur
 {
     public const MAX = 100;                          // constante de classe
@@ -1632,15 +2241,20 @@ class Compteur
 }
 
 Compteur::incrementer();
-echo Compteur::MAX;
+echo Compteur::incrementer(), PHP_EOL;               // 2
+echo Compteur::MAX, " ", Compteur::NOM, PHP_EOL;     // 100 Compteur
 
 // Liaison statique tardive : static:: (≠ self::)
 class Modele { public static function creer(): static { return new static(); } }
+class Article extends Modele {}
+
+echo get_class(Article::creer()), PHP_EOL;           // Article (avec self, on obtiendrait Modele)
 ```
 
 ## 14.7 Classes abstraites, interfaces et traits
 
 ```php
+<?php
 // Classe abstraite : non instanciable, impose des méthodes
 abstract class Forme
 {
@@ -1657,6 +2271,7 @@ trait Horodatage
 {
     private ?DateTimeImmutable $creeLe = null;
     public function marquerCreation(): void { $this->creeLe = new DateTimeImmutable(); }
+    public function creeLe(): ?DateTimeImmutable { return $this->creeLe; }
 }
 
 class Cercle extends Forme implements Exportable
@@ -1667,19 +2282,32 @@ class Cercle extends Forme implements Exportable
     public function aire(): float { return M_PI * $this->rayon ** 2; }
     public function exporter(): string { return json_encode(['rayon' => $this->rayon]); }
 }
+
+$c = new Cercle(2);
+$c->marquerCreation();
+echo $c->decrire(), PHP_EOL;                       // Aire : 12.57
+echo $c->exporter(), PHP_EOL;                      // {"rayon":2}
+echo $c->creeLe() instanceof DateTimeImmutable ? "créé" : "non créé", PHP_EOL;
+
+try {
+    $f = new Forme();                              // une classe abstraite ne s'instancie pas
+} catch (Error $e) {
+    fwrite(STDERR, "Erreur : " . $e->getMessage() . PHP_EOL);
+}
 ```
 
 | | Classe abstraite | Interface | Trait |
 | --- | --- | --- | --- |
-| Instanciable | ❌ | ❌ | ❌ |
+| Instanciable | Non | Non | Non |
 | Héritage / implémentation multiple | Un seul parent | **Plusieurs** | Plusieurs traits |
-| Contient du code | ✅ | ❌ (signatures) | ✅ |
-| Propriétés | ✅ | ❌ (constantes uniquement ; hooks depuis 8.4) | ✅ |
+| Contient du code | Oui | Non (signatures) | Oui |
+| Propriétés | Oui | Non (constantes uniquement ; hooks depuis 8.4) | Oui |
 | Rôle | Base commune | **Contrat** | **Réutilisation** de code |
 
 ## 14.8 Énumérations *(8.1, ajout)*
 
 ```php
+<?php
 enum Statut: string
 {
     case Brouillon = 'brouillon';
@@ -1696,8 +2324,15 @@ enum Statut: string
 
 $s = Statut::from('publie');          // lève ValueError si inconnu
 $t = Statut::tryFrom('inconnu');      // null
-echo $s->value, $s->name, $s->libelle();
-Statut::cases();                      // tous les cas
+echo $s->value, " ", $s->name, " ", $s->libelle(), PHP_EOL;     // publie Publie Publié
+var_dump($t);                                                    // NULL
+echo count(Statut::cases()), " cas", PHP_EOL;                    // 2 cas
+
+try {
+    Statut::from('inconnu');
+} catch (ValueError $e) {
+    fwrite(STDERR, "Erreur : " . $e->getMessage() . PHP_EOL);
+}
 ```
 
 ## 14.9 Méthodes magiques
@@ -1713,24 +2348,48 @@ Statut::cases();                      // tous les cas
 | `__serialize()` / `__unserialize()` | Sérialisation |
 
 ```php
+<?php
 class Prix implements Stringable
 {
     public function __construct(private float $montant) {}
     public function __toString(): string { return number_format($this->montant, 2, ',', ' ') . ' €'; }
 }
-echo new Prix(12.5);       // 12,50 €
+
+echo new Prix(12.5), PHP_EOL;       // 12,50 €
 ```
 
 ## 14.10 Objets : copie et comparaison
 
 ```php
+<?php
+class Voiture
+{
+    public function __construct(public string $marque) {}
+}
+
 $a = new Voiture("A");
 $b = $a;              // même objet (poignée copiée)
 $c = clone $a;        // copie superficielle ; __clone() permet de copier en profondeur
 
-$a == $c;             // true : mêmes propriétés et même classe
-$a === $c;            // false : instances différentes
-$a instanceof Voiture;
+$b->marque = "B";
+echo $a->marque, PHP_EOL;                 // B : $a et $b désignent le même objet
+echo $c->marque, PHP_EOL;                 // A : $c est une copie indépendante
+
+$d = clone $a;
+var_dump($a == $d);                       // true : mêmes propriétés et même classe
+var_dump($a === $d);                      // false : instances différentes
+var_dump($a === $b);                      // true : même instance
+var_dump($a instanceof Voiture);          // true
+
+// (8.5) clone peut modifier des propriétés au passage, pratique pour les objets readonly
+final class Coordonnees
+{
+    public function __construct(public readonly int $x, public readonly int $y) {}
+
+    public function avecX(int $x): static { return clone($this, ['x' => $x]); }   // la modification se fait dans la classe
+}
+$decale = (new Coordonnees(0, 0))->avecX(5);
+echo $decale->x, ",", $decale->y, PHP_EOL;     // 5,0
 ```
 
 *(8.5)* `clone` peut modifier des propriétés au passage, pratique pour les objets `readonly` : `$b = clone($a, ['marque' => 'B']);`.
@@ -1740,10 +2399,26 @@ $a instanceof Voiture;
 Métadonnées structurées, lues par réflexion, utilisées par les frameworks (routes, validation, ORM) :
 
 ```php
-#[Route('/produits', methods: ['GET'])]
-#[\Deprecated("Utiliser nouvelleMethode()")]          // 8.4
-#[\NoDiscard]                                         // 8.5 : avertit si le résultat est ignoré
-public function liste(): Response { /* … */ }
+<?php
+#[Attribute]
+class Route
+{
+    public function __construct(public string $chemin, public array $methods = ['GET']) {}
+}
+
+class Controleur
+{
+    #[Route('/produits', methods: ['GET'])]
+    #[\Deprecated("Utiliser nouvelleMethode()")]          // 8.4
+    public function liste(): string { return "liste des produits"; }
+}
+
+// Lecture des attributs par réflexion (c'est ce que font les frameworks)
+$methode = new ReflectionMethod(Controleur::class, 'liste');
+foreach ($methode->getAttributes(Route::class) as $attribut) {
+    $route = $attribut->newInstance();
+    echo $route->chemin, " ", implode(",", $route->methods), PHP_EOL;     // /produits GET
+}
 ```
 
 ## 14.12 Espaces de noms et chargement automatique
@@ -1752,22 +2427,64 @@ public function liste(): Response { /* … */ }
 <?php
 declare(strict_types=1);
 
-namespace App\Service;
+namespace App\Model {
+    final class Utilisateur
+    {
+        public function __construct(public int $id, public string $nom) {}
+    }
+}
 
-use App\Model\Utilisateur;
-use InvalidArgumentException;                    // classe globale à importer
-use function strlen;                             // facultatif
+namespace App\Service {
+    use App\Model\Utilisateur;
+    use InvalidArgumentException;                    // classe globale à importer
+    use function strlen;                             // facultatif
 
-final class UtilisateurService
-{
-    public function creer(string $nom): Utilisateur { return new Utilisateur(1, $nom); }
+    final class UtilisateurService
+    {
+        public function creer(string $nom): Utilisateur
+        {
+            if (strlen($nom) === 0) {
+                throw new InvalidArgumentException("Nom vide");
+            }
+            return new Utilisateur(1, $nom);
+        }
+    }
+}
+
+namespace {
+    use App\Service\UtilisateurService;
+
+    $u = (new UtilisateurService())->creer("Alice");
+    echo $u::class, " : ", $u->nom, PHP_EOL;         // App\Model\Utilisateur : Alice
 }
 ```
 
 **PSR-4** : le nom complet de la classe correspond au chemin du fichier (`App\Service\UtilisateurService` → `src/Service/UtilisateurService.php`). **Composer** génère l'autoloader (voir [section 17](#17-composer-et-gestion-des-dépendances)) :
 
 ```php
-require __DIR__ . '/vendor/autoload.php';
+<?php
+// Autoloader PSR-4 minimal : Composer génère l'équivalent dans vendor/autoload.php
+// (avec Composer : require __DIR__ . '/vendor/autoload.php';)
+$racine = sys_get_temp_dir() . '/psr4_demo';
+if (!is_dir($racine . '/src/Service')) { mkdir($racine . '/src/Service', 0755, true); }
+file_put_contents($racine . '/src/Service/UtilisateurService.php', <<<'CLASSE'
+    <?php
+    namespace App\Service;
+
+    final class UtilisateurService
+    {
+        public function creer(string $nom): string { return "Utilisateur $nom créé"; }
+    }
+    CLASSE);
+
+spl_autoload_register(function (string $classe) use ($racine): void {
+    $prefixe = 'App\\';
+    if (!str_starts_with($classe, $prefixe)) { return; }
+    $fichier = $racine . '/src/' . str_replace('\\', '/', substr($classe, strlen($prefixe))) . '.php';
+    if (is_file($fichier)) { require $fichier; }
+});
+
+echo (new App\Service\UtilisateurService())->creer("Alice"), PHP_EOL;     // Utilisateur Alice créé
 ```
 
 ## 14.13 Autres notions
@@ -1787,29 +2504,43 @@ require __DIR__ . '/vendor/autoload.php';
 
 ```php
 <?php
+// api.php : à lancer avec « php -S localhost:8000 » puis « curl -i http://localhost:8000/api.php »
 header('Content-Type: application/json; charset=utf-8');
 header('Cache-Control: no-store');
 http_response_code(201);                         // code de statut
 
 header_remove('X-Powered-By');                   // masquer des informations inutiles
+
+if (headers_sent($fichier, $ligne)) {
+    exit("En-têtes déjà envoyés ($fichier:$ligne)");
+}
+echo json_encode(['cree' => true]);
 ```
 
-> ⚠️ `header()` doit être appelé **avant toute sortie** (HTML, espace, BOM). Sinon : *« Cannot modify header information – headers already sent »*. Vérification : `headers_sent($fichier, $ligne)`.
+> **Attention :** `header()` doit être appelé **avant toute sortie** (HTML, espace, BOM). Sinon : *« Cannot modify header information – headers already sent »*. Vérification : `headers_sent($fichier, $ligne)`.
 
 ### Lire les en-têtes de la requête
 
 ```php
-$methode = $_SERVER['REQUEST_METHOD'];
+<?php
+// entetes.php : à lancer avec « php -S localhost:8000 »
+$methode = $_SERVER['REQUEST_METHOD'] ?? 'CLI';
 $agent   = $_SERVER['HTTP_USER_AGENT'] ?? '';
 $autorisation = $_SERVER['HTTP_AUTHORIZATION'] ?? '';
-$tousLesEntetes = getallheaders();               // selon l'environnement (PHP-FPM / Apache)
+$tousLesEntetes = function_exists('getallheaders') ? getallheaders() : [];   // selon l'environnement (PHP-FPM / Apache)
+
+echo "Méthode : $methode", PHP_EOL;
+echo "Agent : $agent", PHP_EOL;
+echo "Nombre d'en-têtes reçus : ", count($tousLesEntetes), PHP_EOL;
 ```
 
 ## 15.2 Redirections
 
 ```php
+<?php
+// redirection.php : à lancer avec « php -S localhost:8000 » puis « curl -i http://localhost:8000/redirection.php »
 header('Location: /tableau-de-bord.php', true, 302);
-exit;                                            // ⚠️ toujours arrêter le script après
+exit;                                            // toujours arrêter le script après
 ```
 
 | Code | Usage |
@@ -1818,17 +2549,24 @@ exit;                                            // ⚠️ toujours arrêter le 
 | `302` / `307` | Temporaire |
 | `303` | « Voir ailleurs » : après un POST (motif PRG) |
 
-> 🔒 **Ne redirigez jamais vers une URL provenant directement de l'utilisateur** (*open redirect*) : vérifiez-la par liste blanche ou n'acceptez que des chemins internes.
+> **Sécurité :** **Ne redirigez jamais vers une URL provenant directement de l'utilisateur** (*open redirect*) : vérifiez-la par liste blanche ou n'acceptez que des chemins internes.
 
 ## 15.3 Télécharger un fichier
 
 ```php
-$dossier = realpath(__DIR__ . '/../fichiers');
+<?php
+// telecharger.php?f=rapport.txt : à lancer avec « php -S localhost:8000 »
+$dossier = __DIR__ . '/fichiers';
+if (!is_dir($dossier)) {
+    mkdir($dossier);
+    file_put_contents($dossier . '/rapport.txt', "Contenu du rapport\n");      // fichier de démonstration
+}
+$dossier = realpath($dossier);
 $chemin  = realpath($dossier . '/' . basename($_GET['f'] ?? ''));
 
 if ($chemin === false || !str_starts_with($chemin, $dossier . DIRECTORY_SEPARATOR)) {
     http_response_code(404);
-    exit;
+    exit("Fichier introuvable.");
 }
 
 header('Content-Type: application/octet-stream');
@@ -1846,13 +2584,21 @@ Pour de gros fichiers, déléguez au serveur web (`X-Accel-Redirect` avec Nginx,
 ### La fonction `mail()` (basique)
 
 ```php
+<?php
+// Nécessite un serveur de messagerie local configuré (sendmail, msmtp…)
 $ok = mail('dest@exemple.com', 'Sujet', "Corps du message", [
     'From' => 'noreply@monsite.fr',
     'Content-Type' => 'text/plain; charset=UTF-8',
 ]);
+
+if ($ok) {
+    echo "Message remis au serveur de messagerie", PHP_EOL;
+} else {
+    fwrite(STDERR, "Échec de l'envoi : aucun serveur de messagerie configuré" . PHP_EOL);
+}
 ```
 
-⚠️ Limites : pas d'authentification SMTP, forte probabilité de classement en **spam**, peu de contrôle. 🔒 **Injection d'en-têtes** : n'insérez jamais une saisie utilisateur non nettoyée dans `From`, `To` ou `Subject` (retours à la ligne).
+Limites : pas d'authentification SMTP, forte probabilité de classement en **spam**, peu de contrôle. **Sécurité** : **Injection d'en-têtes** : n'insérez jamais une saisie utilisateur non nettoyée dans `From`, `To` ou `Subject` (retours à la ligne).
 
 ### Bibliothèques (recommandé) : PHPMailer, Symfony Mailer
 
@@ -1861,6 +2607,10 @@ composer require phpmailer/phpmailer
 ```
 
 ```php
+<?php
+// Après « composer require phpmailer/phpmailer »
+require __DIR__ . '/vendor/autoload.php';
+
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
@@ -1882,8 +2632,9 @@ try {
     $mail->Body    = '<p>Bonjour !</p>';
     $mail->AltBody = 'Bonjour !';
     $mail->send();
+    echo "Message envoyé", PHP_EOL;
 } catch (Exception $e) {
-    error_log($mail->ErrorInfo);
+    fwrite(STDERR, "Erreur d'envoi : " . $mail->ErrorInfo . PHP_EOL);
 }
 ```
 
@@ -1892,15 +2643,25 @@ try {
 ## 15.5 Requêtes HTTP sortantes
 
 ```php
-// cURL
-$ch = curl_init('https://api.exemple.com/data');
+<?php
+// Requête cURL vers une API publique (nécessite l'extension curl et l'accès au réseau)
+$jeton = getenv('API_JETON') ?: 'jeton-de-demonstration';
+
+$ch = curl_init('https://api.github.com/zen');
 curl_setopt_array($ch, [
     CURLOPT_RETURNTRANSFER => true,
     CURLOPT_TIMEOUT        => 10,
-    CURLOPT_HTTPHEADER     => ['Accept: application/json', 'Authorization: Bearer ' . $jeton],
+    CURLOPT_HTTPHEADER     => ['Accept: application/json', 'Authorization: Bearer ' . $jeton, 'User-Agent: guide-php'],
 ]);
 $reponse = curl_exec($ch);
-$code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+
+if ($reponse === false) {
+    fwrite(STDERR, "Erreur cURL : " . curl_error($ch) . PHP_EOL);
+} else {
+    $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    echo "Code HTTP : $code", PHP_EOL;
+    echo $reponse, PHP_EOL;
+}
 curl_close($ch);
 ```
 
@@ -1909,10 +2670,18 @@ Plus confortable : **Guzzle** ou **Symfony HttpClient** (`composer require guzzl
 ## 15.6 Utiliser l'URL
 
 ```php
+<?php
 $url = parse_url('https://exemple.com:8080/chemin?x=1#haut');
+print_r($url);                                              // scheme, host, port, path, query, fragment
+
 parse_str($url['query'], $parametres);
-http_build_query(['q' => 'café', 'page' => 2]);           // q=caf%C3%A9&page=2
-urlencode($texte); rawurlencode($texte);
+print_r($parametres);                                       // ['x' => '1']
+
+echo http_build_query(['q' => 'café', 'page' => 2]), PHP_EOL;   // q=caf%C3%A9&page=2
+
+$texte = "a b&c";
+echo urlencode($texte), PHP_EOL;                            // a+b%26c
+echo rawurlencode($texte), PHP_EOL;                         // a%20b%26c
 ```
 
 *(8.5)* L'extension **URI** (`Uri\Rfc3986\Uri`, `Uri\WhatWg\Url`) offre une analyse d'URL conforme aux standards.
@@ -1949,35 +2718,53 @@ urlencode($texte); rawurlencode($texte);
 ## 16.2 Validation, assainissement et échappement
 
 ```php
+<?php
+// Simulation d'un envoi de formulaire (en ligne de commande)
+$_POST = ['email' => 'alice@exemple.com'];
+$saisie = '<img src=x onerror="alert(1)">';
+$donnees = ['titre' => '</script><script>alert(1)</script>'];
+
 // Validation
 $email = filter_var($_POST['email'] ?? '', FILTER_VALIDATE_EMAIL);
+var_dump($email);                                                           // string(17) "alice@exemple.com"
 
 // Échappement à la SORTIE, selon le contexte
-echo htmlspecialchars($saisie, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');      // HTML
-echo json_encode($donnees, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT);   // JSON dans du HTML
-echo urlencode($saisie);                                                    // URL
+echo htmlspecialchars($saisie, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'), PHP_EOL;      // HTML
+echo json_encode($donnees, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT), PHP_EOL;   // JSON dans du HTML
+echo urlencode($saisie), PHP_EOL;                                                   // URL
 // SQL : requêtes préparées (jamais d'échappement manuel)
 ```
 
-> ⚠️ `FILTER_SANITIZE_STRING` est **supprimé** : n'utilisez ni lui ni `strip_tags()` comme protection XSS. `strip_tags` ne remplace pas `htmlspecialchars`.
+> **Attention :** `FILTER_SANITIZE_STRING` est **supprimé** : n'utilisez ni lui ni `strip_tags()` comme protection XSS. `strip_tags` ne remplace pas `htmlspecialchars`.
 
 ### Protection XSS supplémentaire : Content Security Policy
 
 ```php
+<?php
+// csp.php : à lancer avec « php -S localhost:8000 » puis « curl -i http://localhost:8000/csp.php »
 header("Content-Security-Policy: default-src 'self'; script-src 'self'; object-src 'none'; base-uri 'self'");
+echo "Page protégée par une politique CSP";
 ```
 
 ## 16.3 CSRF : falsification de requête inter-sites
 
 ```php
+<?php
 // Génération du jeton (une fois par session)
 session_start();
 if (empty($_SESSION['csrf'])) {
     $_SESSION['csrf'] = bin2hex(random_bytes(32));
 }
+echo "Jeton : ", $_SESSION['csrf'], PHP_EOL;
 ```
 
 ```php
+<?php
+session_start();
+if (empty($_SESSION['csrf'])) {
+    $_SESSION['csrf'] = bin2hex(random_bytes(32));
+}
+?>
 <form method="post" action="supprimer.php">
     <input type="hidden" name="csrf" value="<?= htmlspecialchars($_SESSION['csrf']) ?>">
     <button>Supprimer</button>
@@ -1985,11 +2772,16 @@ if (empty($_SESSION['csrf'])) {
 ```
 
 ```php
+<?php
+// supprimer.php : à lancer avec « php -S localhost:8000 »
+session_start();
+
 // Vérification
 if (!hash_equals($_SESSION['csrf'] ?? '', $_POST['csrf'] ?? '')) {
     http_response_code(403);
     exit("Requête refusée (jeton CSRF invalide).");
 }
+echo "Suppression effectuée";
 ```
 
 Complément : cookies `SameSite=Lax/Strict`, vérification de l'en-tête `Origin`, et **méthodes HTTP appropriées** (jamais d'action destructive sur un `GET`). Les frameworks intègrent déjà cette protection.
@@ -1999,16 +2791,25 @@ Complément : cookies `SameSite=Lax/Strict`, vérification de l'en-tête `Origin
 Ne stockez **jamais** un mot de passe en clair, ni avec `md5()` / `sha1()` (trop rapides, cassables), ni avec un sel « maison ».
 
 ```php
+<?php
+$motDePasse = "correct horse battery staple";
 $hash = password_hash($motDePasse, PASSWORD_DEFAULT);          // algorithme sûr du moment (bcrypt aujourd'hui) + sel intégré
 // Option plus robuste : PASSWORD_ARGON2ID
+echo strlen($hash), " caractères : ", substr($hash, 0, 7), "...", PHP_EOL;
 
+$saisie = "correct horse battery staple";
 if (password_verify($saisie, $hash)) {
     if (password_needs_rehash($hash, PASSWORD_DEFAULT)) {      // migrer vers un meilleur algorithme au fil des connexions
         $nouveau = password_hash($saisie, PASSWORD_DEFAULT);
         // … mise à jour en base
     }
-    session_regenerate_id(true);
-    // connecté
+    echo "Connecté", PHP_EOL;
+} else {
+    fwrite(STDERR, "Identifiants invalides" . PHP_EOL);
+}
+
+if (!password_verify("mauvais mot de passe", $hash)) {
+    fwrite(STDERR, "Identifiants invalides" . PHP_EOL);        // message identique que l'e-mail ou le mot de passe soit faux
 }
 ```
 
@@ -2019,10 +2820,11 @@ if (password_verify($saisie, $hash)) {
 ## 16.5 Aléatoire et jetons
 
 ```php
-random_bytes(32);                       // octets cryptographiquement sûrs
-bin2hex(random_bytes(16));              // jeton hexadécimal
-random_int(100000, 999999);             // entier sûr (codes à usage unique)
-// ❌ rand(), mt_rand(), uniqid() : prévisibles, pas pour la sécurité
+<?php
+echo strlen(random_bytes(32)), " octets", PHP_EOL;           // 32 : octets cryptographiquement sûrs
+echo bin2hex(random_bytes(16)), PHP_EOL;                     // jeton hexadécimal (32 caractères)
+echo random_int(100000, 999999), PHP_EOL;                    // entier sûr (codes à usage unique)
+// À éviter pour la sécurité : rand(), mt_rand(), uniqid() sont prévisibles
 ```
 
 ## 16.6 Téléversements sécurisés (rappel)
@@ -2032,9 +2834,13 @@ Taille limitée · type **réel** (`finfo`) · nom **aléatoire** · dossier **h
 ## 16.7 HTTPS et en-têtes de sécurité
 
 ```php
+<?php
+// securite.php : à lancer avec « php -S localhost:8000 » puis « curl -i http://localhost:8000/securite.php »
+const DOMAINE = 'exemple.com';        // nom de domaine fixe issu de la configuration
+
 // Forcer HTTPS (mieux vaut le faire au niveau du serveur web / proxy)
 if (empty($_SERVER['HTTPS']) || $_SERVER['HTTPS'] === 'off') {
-    header('Location: https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'], true, 301);
+    header('Location: https://' . DOMAINE . $_SERVER['REQUEST_URI'], true, 301);
     exit;
 }
 
@@ -2043,9 +2849,10 @@ header('X-Content-Type-Options: nosniff');
 header('X-Frame-Options: DENY');                                           // ou CSP : frame-ancestors 'none'
 header('Referrer-Policy: strict-origin-when-cross-origin');
 header('Permissions-Policy: camera=(), microphone=(), geolocation=()');
+echo "En-têtes de sécurité envoyés";
 ```
 
-> ⚠️ `$_SERVER['HTTP_HOST']` est fourni par le client : utilisez un **nom de domaine fixe** issu de la configuration.
+> **Attention :** `$_SERVER['HTTP_HOST']` est fourni par le client : utilisez un **nom de domaine fixe** issu de la configuration.
 
 ## 16.8 Configuration et déploiement sûrs
 
@@ -2135,7 +2942,7 @@ composer update                            # mettre à jour dans les contraintes
 composer update monolog/monolog            # un seul paquet
 composer remove monolog/monolog
 composer outdated                          # paquets obsolètes
-composer audit                             # vulnérabilités connues ✅
+composer audit                             # vulnérabilités connues
 composer show                              # liste des paquets
 composer why-not php 8.5                   # pourquoi un paquet bloque une version
 composer run test                          # exécuter un script
@@ -2152,16 +2959,20 @@ composer install --no-dev --optimize-autoloader    # production
 | `>=1.2 <2.0` | Intervalle |
 | `dev-main` | Branche de développement |
 
-> ✅ **Versionnez `composer.lock`** (applications) pour que tous les environnements aient exactement les mêmes versions. Ne versionnez pas `vendor/`.
+> **Bonne pratique :** **Versionnez `composer.lock`** (applications) pour que tous les environnements aient exactement les mêmes versions. Ne versionnez pas `vendor/`.
 
 ## 17.4 Chargement automatique
 
 ```php
 <?php
+// Prérequis : composer.json avec "autoload": {"psr-4": {"App\\": "src/"}}
+// et une classe App\Service\Mailer dans src/Service/Mailer.php
 require __DIR__ . '/vendor/autoload.php';       // une seule inclusion
 
 use App\Service\Mailer;
+
 $mailer = new Mailer();
+echo $mailer::class, PHP_EOL;                   // App\Service\Mailer
 ```
 
 Après avoir modifié la section `autoload` : `composer dump-autoload` (avec `-o` pour optimiser en production).
@@ -2214,10 +3025,23 @@ php artisan serve
 ```
 
 ```php
+<?php
 // routes/web.php
-Route::get('/articles/{id}', [ArticleController::class, 'show']);
+use App\Http\Controllers\ArticleController;
+use Illuminate\Support\Facades\Route;
 
+Route::get('/articles/{id}', [ArticleController::class, 'show']);
+```
+
+Contrôleur associé :
+
+```php
+<?php
 // app/Http/Controllers/ArticleController.php
+namespace App\Http\Controllers;
+
+use App\Models\Article;
+
 class ArticleController extends Controller
 {
     public function show(int $id)
@@ -2275,10 +3099,14 @@ composer require slim/slim slim/psr7
 
 ```php
 <?php
+// index.php : à lancer avec « php -S localhost:8000 index.php » après « composer require slim/slim slim/psr7 »
 use Slim\Factory\AppFactory;
+
 require __DIR__ . '/vendor/autoload.php';
 
 $app = AppFactory::create();
+$app->addErrorMiddleware(true, true, true);
+
 $app->get('/bonjour/{nom}', function ($request, $response, array $args) {
     $response->getBody()->write("Bonjour " . htmlspecialchars($args['nom']));
     return $response;
@@ -2298,7 +3126,7 @@ $app->run();
 
 Autres : **CakePHP**, **Yii**, **Laminas** ; CMS : **WordPress**, **Drupal**.
 
-> 📌 Vérifiez toujours la **version actuelle** et la **version minimale de PHP** requise sur le site officiel de chaque framework avant de démarrer un projet.
+> **Remarque :** Vérifiez toujours la **version actuelle** et la **version minimale de PHP** requise sur le site officiel de chaque framework avant de démarrer un projet.
 
 ---
 
@@ -2325,6 +3153,7 @@ vendor/bin/phpunit --version
 Classe à tester :
 
 ```php
+<?php
 // src/Calculatrice.php
 namespace App;
 
@@ -2343,6 +3172,7 @@ class Calculatrice
 Test :
 
 ```php
+<?php
 // tests/CalculatriceTest.php
 namespace Tests;
 
@@ -2382,7 +3212,7 @@ vendor/bin/phpunit --filter testAdditionner
 vendor/bin/phpunit --coverage-text      # nécessite Xdebug ou PCOV
 ```
 
-> ℹ️ Dans les versions récentes de PHPUnit, les **attributs** (`#[Test]`, `#[DataProvider]`) remplacent les annotations de commentaires (`@dataProvider`), dépréciées puis supprimées.
+> **Information :** Dans les versions récentes de PHPUnit, les **attributs** (`#[Test]`, `#[DataProvider]`) remplacent les annotations de commentaires (`@dataProvider`), dépréciées puis supprimées.
 
 ### Assertions courantes
 
@@ -2393,16 +3223,45 @@ vendor/bin/phpunit --coverage-text      # nécessite Xdebug ou PCOV
 Isoler la classe testée de ses dépendances :
 
 ```php
-public function testEnvoiEmailInscription(): void
-{
-    $mailer = $this->createMock(MailerInterface::class);
-    $mailer->expects($this->once())
-           ->method('envoyer')
-           ->with('alice@exemple.com')
-           ->willReturn(true);
+<?php
+// src/MailerInterface.php et src/InscriptionService.php
+namespace App;
 
-    $service = new InscriptionService($mailer);       // injection de dépendance
-    $this->assertTrue($service->inscrire('alice@exemple.com'));
+interface MailerInterface
+{
+    public function envoyer(string $destinataire): bool;
+}
+
+final class InscriptionService
+{
+    public function __construct(private MailerInterface $mailer) {}
+
+    public function inscrire(string $email): bool
+    {
+        return $this->mailer->envoyer($email);
+    }
+}
+
+// tests/InscriptionServiceTest.php
+namespace Tests;
+
+use App\InscriptionService;
+use App\MailerInterface;
+use PHPUnit\Framework\TestCase;
+
+final class InscriptionServiceTest extends TestCase
+{
+    public function testEnvoiEmailInscription(): void
+    {
+        $mailer = $this->createMock(MailerInterface::class);
+        $mailer->expects($this->once())
+               ->method('envoyer')
+               ->with('alice@exemple.com')
+               ->willReturn(true);
+
+        $service = new InscriptionService($mailer);       // injection de dépendance
+        $this->assertTrue($service->inscrire('alice@exemple.com'));
+    }
 }
 ```
 
@@ -2412,13 +3271,13 @@ public function testEnvoiEmailInscription(): void
 | **Mock** | Vérifie les appels reçus |
 | **Fake** | Implémentation simplifiée (ex. base en mémoire) |
 
-Outils : **Mockery**, **Prophecy**. 💡 Programmez **vers des interfaces** et utilisez l'**injection de dépendances** pour rendre le code testable.
+Outils : **Mockery**, **Prophecy**. Conseil : programmez **vers des interfaces** et utilisez l'**injection de dépendances** pour rendre le code testable.
 
 ## 19.3 TDD (*Test-Driven Development*)
 
-1. 🔴 **Rouge** : écrire un test qui échoue.
-2. 🟢 **Vert** : écrire le code minimal pour le faire passer.
-3. 🔵 **Refactoriser** : améliorer le code, tests toujours verts.
+1. **Rouge** : écrire un test qui échoue.
+2. **Vert** : écrire le code minimal pour le faire passer.
+3. **Refactoriser** : améliorer le code, tests toujours verts.
 
 ## 19.4 Autres outils *(ajout)*
 
@@ -2483,32 +3342,50 @@ jobs:
 ## 20.2 JSON en PHP
 
 ```php
+<?php
 // Encoder
-echo json_encode(['id' => 1, 'nom' => 'Alice'], JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR);
+echo json_encode(['id' => 1, 'nom' => 'Alice'], JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR), PHP_EOL;
 
 // Décoder
+$texte = '{"id":1,"nom":"Alice"}';
 $data = json_decode($texte, true, 512, JSON_THROW_ON_ERROR);      // true : tableau associatif
+echo $data['nom'], PHP_EOL;                                        // Alice
 
-// Corps d'une requête JSON
+// Corps d'une requête JSON (php://input est vide en ligne de commande)
 $brut = file_get_contents('php://input');
-$donnees = json_decode($brut, true, 512, JSON_THROW_ON_ERROR);
+var_dump($brut);                                                   // string(0) ""
+try {
+    $donnees = json_decode($brut, true, 512, JSON_THROW_ON_ERROR);
+} catch (JsonException $e) {
+    fwrite(STDERR, "Erreur JSON : " . $e->getMessage() . PHP_EOL);
+}
 
 // Objets : implémenter JsonSerializable
 class Produit implements JsonSerializable {
     public function __construct(private int $id, private string $nom) {}
     public function jsonSerialize(): array { return ['id' => $this->id, 'nom' => $this->nom]; }
 }
+echo json_encode(new Produit(7, "Stylo")), PHP_EOL;                // {"id":7,"nom":"Stylo"}
 
-json_validate($texte);       // 8.3 : valide sans décoder
+var_dump(json_validate($texte));                                   // 8.3 : valide sans décoder : bool(true)
+var_dump(json_validate('{invalide'));                              // bool(false)
 ```
 
 ## 20.3 Un mini-routeur d'API en PHP pur
 
 ```php
 <?php
+// api.php : à lancer avec « php -S localhost:8000 api.php » (le script sert de routeur)
 declare(strict_types=1);
 
 header('Content-Type: application/json; charset=utf-8');
+
+// SQLite pour que l'exemple soit autonome ; remplacez le DSN par celui de votre base
+$pdo = new PDO('sqlite:' . __DIR__ . '/api.sqlite', null, null, [
+    PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
+    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+]);
+$pdo->exec("CREATE TABLE IF NOT EXISTS utilisateurs (id INTEGER PRIMARY KEY, nom TEXT NOT NULL)");
 
 function reponse(mixed $data, int $statut = 200): never {
     http_response_code($statut);
@@ -2556,24 +3433,56 @@ try {
 ### Laravel
 
 ```php
+<?php
 // routes/api.php
-Route::apiResource('articles', ArticleController::class)->middleware('auth:sanctum');
+use App\Http\Controllers\ArticleController;
+use Illuminate\Support\Facades\Route;
 
-// Contrôleur
-public function store(StoreArticleRequest $request): JsonResponse        // validation par FormRequest
+Route::apiResource('articles', ArticleController::class)->middleware('auth:sanctum');
+```
+
+Contrôleur associé :
+
+```php
+<?php
+// app/Http/Controllers/ArticleController.php (extrait)
+namespace App\Http\Controllers;
+
+use App\Http\Requests\StoreArticleRequest;
+use App\Http\Resources\ArticleResource;
+use App\Models\Article;
+use Illuminate\Http\JsonResponse;
+
+class ArticleController extends Controller
 {
-    $article = Article::create($request->validated());
-    return (new ArticleResource($article))->response()->setStatusCode(201);
+    public function store(StoreArticleRequest $request): JsonResponse        // validation par FormRequest
+    {
+        $article = Article::create($request->validated());
+        return (new ArticleResource($article))->response()->setStatusCode(201);
+    }
 }
 ```
 
 ### Slim
 
 ```php
+<?php
+// index.php : à lancer avec « php -S localhost:8000 index.php » après « composer require slim/slim slim/psr7 »
+use Slim\Factory\AppFactory;
+
+require __DIR__ . '/vendor/autoload.php';
+
+$pdo = new PDO('sqlite::memory:', null, null, [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
+$pdo->exec("CREATE TABLE articles (id INTEGER PRIMARY KEY, titre TEXT)");
+$pdo->exec("INSERT INTO articles (titre) VALUES ('Premier article')");
+
+$app = AppFactory::create();
+
 $app->get('/api/articles', function ($req, $res) use ($pdo) {
-    $res->getBody()->write(json_encode($pdo->query("SELECT * FROM articles")->fetchAll()));
+    $res->getBody()->write(json_encode($pdo->query("SELECT * FROM articles")->fetchAll(PDO::FETCH_ASSOC)));
     return $res->withHeader('Content-Type', 'application/json');
 });
+$app->run();
 ```
 
 ### Symfony / API Platform
@@ -2600,10 +3509,15 @@ Décrivez vos entités avec l'attribut `#[ApiResource]` : l'API REST, la documen
 - Réponses d'erreur cohérentes (format **RFC 9457** *Problem Details* : `type`, `title`, `status`, `detail`).
 
 ```php
+<?php
+// cors.php : à lancer avec « php -S localhost:8000 »
 header('Access-Control-Allow-Origin: https://mon-front.exemple');
 header('Access-Control-Allow-Methods: GET, POST, PUT, PATCH, DELETE, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type, Authorization');
-if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') { http_response_code(204); exit; }     // requête de pré-vérification
+if (($_SERVER['REQUEST_METHOD'] ?? '') === 'OPTIONS') { http_response_code(204); exit; }     // requête de pré-vérification
+
+header('Content-Type: application/json; charset=utf-8');
+echo json_encode(['message' => 'Réponse normale']);
 ```
 
 ## 20.6 Tester une API
@@ -2632,16 +3546,18 @@ declare(strict_types=1);
 
 if (PHP_SAPI !== 'cli') { exit("Ce script s'exécute en ligne de commande.\n"); }
 
-$options = getopt('n:v', ['nom:', 'verbeux']);              // -n Alice --verbeux
+$options = getopt('n:v', ['nom:', 'verbeux']);              // php script.php -n Alice --verbeux
+echo "Options : " . json_encode($options) . PHP_EOL;
 echo "Arguments : " . implode(', ', array_slice($argv, 1)) . PHP_EOL;
 
 $saisie = trim((string) fgets(STDIN));                       // lecture au clavier
+echo "Saisie : $saisie" . PHP_EOL;
 fwrite(STDERR, "Message d'erreur\n");                        // sortie d'erreur
 exit(0);                                                     // code de sortie
 ```
 
 ```bash
-php script.php Alice --verbeux
+php script.php -n Alice --verbeux
 chmod +x script.php && ./script.php
 ```
 
@@ -2651,7 +3567,7 @@ Pour des commandes riches : **Symfony Console**, **Laravel Artisan**, **Laravel 
 
 | Levier | Détails |
 | --- | --- |
-| **OPcache** ✅ | Garde le bytecode en mémoire : **à activer en production** (`opcache.enable=1`, `opcache.validate_timestamps=0` avec redéploiement) |
+| **OPcache** | Garde le bytecode en mémoire : **à activer en production** (`opcache.enable=1`, `opcache.validate_timestamps=0` avec redéploiement) |
 | **JIT** | Utile pour du calcul intensif, peu d'effet sur les applications web classiques |
 | **Preloading** | Précharge des classes au démarrage (`opcache.preload`) |
 | **Serveurs d'application persistants** | **FrankenPHP**, **RoadRunner**, **Swoole / OpenSwoole** : application gardée en mémoire (Laravel Octane) |
@@ -2660,11 +3576,16 @@ Pour des commandes riches : **Symfony Console**, **Laravel Artisan**, **Laravel 
 | **Mémoire** | Générateurs, traitement par lots (`chunk`), éviter de charger de gros tableaux |
 | **Mesure** | **Xdebug** (profilage), **Blackfire**, **Tideways**, `microtime(true)`, `memory_get_peak_usage()` |
 
-> 💡 **Mesurez avant d'optimiser** : le goulot d'étranglement est presque toujours la base de données ou les appels externes.
+> **Astuce :** **Mesurez avant d'optimiser** : le goulot d'étranglement est presque toujours la base de données ou les appels externes.
 
 ```php
+<?php
 $debut = microtime(true);
-/* … code à mesurer … */
+
+$total = 0;
+for ($i = 0; $i < 1_000_000; $i++) { $total += $i; }          // code à mesurer
+$tableau = range(1, 100_000);
+
 printf("%.3f s, %.1f Mo\n", microtime(true) - $debut, memory_get_peak_usage(true) / 1048576);
 ```
 
@@ -2680,15 +3601,30 @@ printf("%.3f s, %.1f Mo\n", microtime(true) - $debut, memory_get_peak_usage(true
 | **Applicatif (framework)** | Laravel `Cache::remember()`, PSR-6 / **PSR-16** (`symfony/cache`) |
 
 ```php
+<?php
+// Utilise APCu s'il est actif, sinon un cache en mémoire du script (pour que l'exemple tourne partout)
 function lireAvecCache(string $cle, int $ttl, callable $calcul): mixed
 {
-    $valeur = apcu_fetch($cle, $trouve);
-    if ($trouve) return $valeur;
+    static $local = [];
 
+    if (function_exists('apcu_fetch') && apcu_enabled()) {
+        $valeur = apcu_fetch($cle, $trouve);
+        if ($trouve) return $valeur;
+        $valeur = $calcul();
+        apcu_store($cle, $valeur, $ttl);
+        return $valeur;
+    }
+
+    if (isset($local[$cle]) && $local[$cle][1] > time()) return $local[$cle][0];
     $valeur = $calcul();
-    apcu_store($cle, $valeur, $ttl);
+    $local[$cle] = [$valeur, time() + $ttl];
     return $valeur;
 }
+
+$calcul = function () { echo "(calcul lourd exécuté)", PHP_EOL; return 42; };
+
+echo lireAvecCache('reponse', 60, $calcul), PHP_EOL;    // calcul exécuté, puis 42
+echo lireAvecCache('reponse', 60, $calcul), PHP_EOL;    // 42, servi depuis le cache
 ```
 
 - Définissez toujours une **durée de vie** (TTL) et une stratégie d'**invalidation** (« il n'y a que deux problèmes difficiles en informatique… »).
@@ -2702,12 +3638,23 @@ composer require predis/predis
 ```
 
 ```php
-$redis = new Predis\Client(['scheme' => 'tcp', 'host' => '127.0.0.1', 'port' => 6379]);
+<?php
+// Après « composer require predis/predis » ; nécessite un serveur Redis sur 127.0.0.1:6379
+require __DIR__ . '/vendor/autoload.php';
 
-$redis->setex('utilisateur:42', 3600, json_encode($utilisateur));     // avec expiration
-$utilisateur = json_decode($redis->get('utilisateur:42') ?? 'null', true);
-$redis->incr('visites');                                               // compteur atomique
-$redis->del('utilisateur:42');
+$utilisateur = ['id' => 42, 'nom' => 'Alice'];
+
+try {
+    $redis = new Predis\Client(['scheme' => 'tcp', 'host' => '127.0.0.1', 'port' => 6379]);
+
+    $redis->setex('utilisateur:42', 3600, json_encode($utilisateur));     // avec expiration
+    $lu = json_decode($redis->get('utilisateur:42') ?? 'null', true);
+    echo $lu['nom'], PHP_EOL;                                              // Alice
+    echo $redis->incr('visites'), PHP_EOL;                                 // compteur atomique
+    $redis->del('utilisateur:42');
+} catch (Predis\Connection\ConnectionException $e) {
+    fwrite(STDERR, "Redis inaccessible : " . $e->getMessage() . PHP_EOL);
+}
 ```
 
 | Usage de Redis | Détails |
@@ -2732,21 +3679,38 @@ PHP traite une requête puis s'arrête : pour des connexions **persistantes** (c
 | **Mercure** (Symfony) | Push via **SSE** (*Server-Sent Events*) |
 
 ```php
-// Ratchet (extrait)
-use Ratchet\MessageComponentInterface;
+<?php
+// chat-serveur.php : après « composer require cboden/ratchet » ; lancer avec « php chat-serveur.php »
+require __DIR__ . '/vendor/autoload.php';
+
 use Ratchet\ConnectionInterface;
+use Ratchet\Http\HttpServer;
+use Ratchet\MessageComponentInterface;
+use Ratchet\Server\IoServer;
+use Ratchet\WebSocket\WsServer;
 
 class Chat implements MessageComponentInterface
 {
     protected \SplObjectStorage $clients;
-    public function __construct() { $this->clients = new \SplObjectStorage; }
-    public function onOpen(ConnectionInterface $c) { $this->clients->attach($c); }
-    public function onMessage(ConnectionInterface $de, $msg) {
-        foreach ($this->clients as $client) { if ($client !== $de) $client->send($msg); }
+
+    public function __construct() { $this->clients = new \SplObjectStorage(); }
+
+    public function onOpen(ConnectionInterface $c): void { $this->clients->attach($c); }
+
+    public function onMessage(ConnectionInterface $de, $msg): void
+    {
+        foreach ($this->clients as $client) {
+            if ($client !== $de) { $client->send($msg); }
+        }
     }
-    public function onClose(ConnectionInterface $c) { $this->clients->detach($c); }
-    public function onError(ConnectionInterface $c, \Exception $e) { $c->close(); }
+
+    public function onClose(ConnectionInterface $c): void { $this->clients->detach($c); }
+
+    public function onError(ConnectionInterface $c, \Exception $e): void { $c->close(); }
 }
+
+echo "Serveur WebSocket sur le port 8080", PHP_EOL;
+IoServer::factory(new HttpServer(new WsServer(new Chat())), 8080)->run();
 ```
 
 Dans la majorité des cas, les **SSE** ou l'**interrogation périodique** (*polling*) suffisent.
@@ -2756,12 +3720,13 @@ Dans la majorité des cas, les **SSE** ou l'**interrogation périodique** (*poll
 Les **Fibers** permettent de suspendre / reprendre l'exécution et servent de socle à des bibliothèques asynchrones (**Revolt**, **AMPHP**, **ReactPHP**) :
 
 ```php
+<?php
 $fibre = new Fiber(function (): void {
     $valeur = Fiber::suspend('pause');
     echo "Reprise avec $valeur\n";
 });
-echo $fibre->start();           // "pause"
-$fibre->resume('hello');
+echo $fibre->start(), PHP_EOL;       // pause
+$fibre->resume('hello');             // Reprise avec hello
 ```
 
 ## 21.7 Autres sujets utiles
@@ -2791,7 +3756,7 @@ $fibre->resume('hello');
 | **8.5** | **Opérateur pipe `\|>`**, **extension URI**, `#[\NoDiscard]`, `clone` avec modification de propriétés, `array_first()` / `array_last()` |
 | **8.6** | En test (bêta) à la date de rédaction : consultez les notes de version officielles |
 
-> 📌 Pour les détails exacts de chaque version : **php.net → Migration guides** ([php.net/manual/fr/appendices.php](https://www.php.net/manual/fr/appendices.php)).
+> **Remarque :** Pour les détails exacts de chaque version : **php.net → Migration guides** ([php.net/manual/fr/appendices.php](https://www.php.net/manual/fr/appendices.php)).
 
 ## 22.2 Fonctions et pratiques dépréciées ou supprimées
 
@@ -2830,17 +3795,17 @@ $fibre->resume('hello');
 
 ## 22.4 Ressources
 
-- 📘 **Manuel officiel** : <https://www.php.net/manual/fr/>
-- 📗 **PHP : la bonne méthode** (*PHP The Right Way*) : <https://phptherightway.com>
-- 📜 **PHP-FIG (PSR)** : <https://www.php-fig.org>
-- 🔒 **OWASP PHP Cheat Sheets** : <https://cheatsheetseries.owasp.org>
-- 📦 **Packagist** : <https://packagist.org>
-- 🧪 **3v4l.org** : exécuter un code sur toutes les versions de PHP
+- **Manuel officiel** : <https://www.php.net/manual/fr/>
+- **PHP : la bonne méthode** (*PHP The Right Way*) : <https://phptherightway.com>
+- **PHP-FIG (PSR)** : <https://www.php-fig.org>
+- **OWASP PHP Cheat Sheets** : <https://cheatsheetseries.owasp.org>
+- **Packagist** : <https://packagist.org>
+- **3v4l.org** : exécuter un code sur toutes les versions de PHP
 
 ---
 
 <div align="center">
 
-*Bon développement ! 🐘*
+*Bon développement !*
 
 </div>

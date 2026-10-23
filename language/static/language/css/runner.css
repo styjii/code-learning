@@ -104,3 +104,33 @@
 .markdown-body .code-block details.run-stdin { margin: 0; border: 0; border-top: 1px solid var(--border); border-radius: 0; }
 .markdown-body .code-block details.run-stdin summary { border: 0; border-radius: 0; }
 .markdown-body .code-block details.run-stdin > :not(summary) { margin-left: 1rem; margin-right: 1rem; }
+
+/* Aperçu du DOM (code qui utilise document, window…) : iframe isolé sous le résultat */
+.run-preview { border-top: 1px solid var(--border); background: var(--surface); }
+.run-preview[hidden] { display: none; }
+
+.run-preview-label {
+    padding: 0.35rem 1rem;
+    background: var(--code-header-bg);
+    color: var(--muted);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+.run-preview-frame { display: block; width: 100%; height: 120px; border: 0; background: #fff; }
+
+/* input() interactif : champ de saisie dans la ligne de sortie */
+.run-input {
+    width: min(24rem, 70%);
+    padding: 0 0.25rem;
+    border: 0;
+    border-bottom: 1px solid var(--accent);
+    background: transparent;
+    color: var(--text-strong, var(--text));
+    font: inherit;
+    outline: none;
+}
+
+.run-input:focus { background: var(--surface-3); }

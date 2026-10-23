@@ -4507,7 +4507,7 @@ asyncio.run(main())
 
 ## 18.3 Threads et processus
 
-```python
+```python norun
 from concurrent.futures import ThreadPoolExecutor, ProcessPoolExecutor
 import time
 
