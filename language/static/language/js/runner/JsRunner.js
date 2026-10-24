@@ -21,12 +21,13 @@ export function runJavaScript(code, hooks, { timeout = 8000 } = {}) {
         }, timeout);
 
         worker.onmessage = ({ data }) => {
-            if (data.type === "log") {
-                hooks.out(data.kind, data.text);
+            if (data.type === "console") {
+                hooks.console(data.msg);
             } else if (data.type === "done") {
                 done({ ok: true });
             } else if (data.type === "error") {
-                hooks.out("err", data.text);
+                if (data.msg) hooks.console(data.msg);
+                else hooks.out("err", data.text);
                 if (data.hint) hooks.out("info", data.hint);
                 done({ ok: false, reason: "error" });
             }

@@ -83,22 +83,8 @@
 
 .run-status { font-weight: 500; letter-spacing: 0; text-transform: none; }
 
-.run-lines {
-    max-height: 320px;
-    padding: 0.6rem 1rem 0.7rem;
-    overflow: auto;
-    font-family: var(--font-mono);
-    font-size: 0.83rem;
-    line-height: 1.6;
-}
-
-.run-line { white-space: pre-wrap; overflow-wrap: anywhere; color: var(--text); }
-.run-line.is-err { color: #cf222e; }
-.run-line.is-warn { color: #9a6700; }
-.run-line.is-info { color: var(--muted); font-style: italic; font-family: var(--font-sans); }
-
-[data-theme="dark"] .run-line.is-err { color: #ff8e8a; }
-[data-theme="dark"] .run-line.is-warn { color: #e3b341; }
+/* Zone de résultat : l'apparence des lignes vient de editor/css/chrome-console.css (console façon Chrome) */
+.run-lines { max-height: 360px; padding: 0; overflow: auto; }
 
 /* La zone de saisie ne doit pas hériter du style des <details> du cours */
 .markdown-body .code-block details.run-stdin { margin: 0; border: 0; border-top: 1px solid var(--border); border-radius: 0; }
@@ -128,9 +114,9 @@
     border: 0;
     border-bottom: 1px solid var(--accent);
     background: transparent;
-    color: var(--text-strong, var(--text));
+    color: inherit;
     font: inherit;
     outline: none;
 }
 
-.run-input:focus { background: var(--surface-3); }
+.run-input:focus { background: var(--cc-hover, var(--surface-3)); }

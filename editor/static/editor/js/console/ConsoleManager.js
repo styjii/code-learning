@@ -1,40 +1,27 @@
 import { ConsoleRenderer } from "./ConsoleRenderer.js";
 
 /**
- * Manages incoming console messages and delegates rendering.
+ * Reçoit les messages postés par l'iframe d'aperçu (iframe-console.js) et les confie au
+ * ConsoleRenderer. Seuls les messages de l'iframe d'aperçu sont acceptés.
  */
 export class ConsoleManager {
     static renderer = null;
 
-    /**
-     * Initializes the ConsoleManager by creating a ConsoleRenderer instance 
-     * attached to the console root DOM element.
-     */
+    /** Crée le moteur d'affichage dans l'élément #console. */
     static init() {
         const root = document.getElementById("console");
         ConsoleManager.renderer = new ConsoleRenderer(root);
     }
 
-    /**
-     * Handles console messages received via the window message event.
-     * Initializes the renderer if not present. Delegates message types 
-     * (clear, log, group, table, etc.) to the ConsoleRenderer.
-     * 
-     * @param {MessageEvent} event - The message event containing console data.
-     */
+    /** @param {MessageEvent} event message {__console: true, type, args, …} */
     static handleMessage(event) {
-        const { type, args = [], data, columns, label } = event.data;
-        if (!type || (!args.length && !data && !label)) return;
+        const message = event.data;
+        if (!message || message.__console !== true || !message.type) return;
 
-        if (!ConsoleManager.renderer) {
-            ConsoleManager.init();
-        }
+        const frame = document.getElementById("output");
+        if (frame && event.source !== frame.contentWindow) return;
 
-        if (type === "clear") {
-            ConsoleManager.renderer.clear();
-            return;
-        }
-
-        ConsoleManager.renderer.logMessage(type, args, data, columns, label);
+        if (!ConsoleManager.renderer) ConsoleManager.init();
+        ConsoleManager.renderer.add(message);
     }
 }

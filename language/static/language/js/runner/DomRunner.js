@@ -22,6 +22,9 @@ const DOM_PATTERN = new RegExp(
 
 export const usesDom = (source) => DOM_PATTERN.test(source.replace(/\/\/.*$|\/\*[\s\S]*?\*\//gm, ""));
 
+/** Sérialisation + console partagées (chargées dans l'iframe avant l'amorce ; URL absolue car srcdoc). */
+const RUNTIME_URL = new URL("../../../editor/js/console/console-runtime.js", import.meta.url).href;
+
 let workerSource = null;
 const loadWorkerSource = () => (workerSource ??= fetch(new URL("./js.worker.js", import.meta.url)).then((r) => {
     if (!r.ok) throw new Error(`js.worker.js introuvable (HTTP ${r.status})`);
@@ -150,6 +153,7 @@ export function runInDom(code, hooks, { container, timeout = 8000 }) {
     frame.title = "Aperçu de l'exécution";
     frame.setAttribute("sandbox", "allow-scripts");
     frame.srcdoc = `<!doctype html><html><head><meta charset="utf-8"><style>${PAGE_STYLE}</style>`
+        + `<script src="${RUNTIME_URL}"><\/script>`
         + `<script>${BOOTSTRAP}<\/script></head><body></body></html>`;
 
     let finish = () => {};
@@ -160,8 +164,8 @@ export function runInDom(code, hooks, { container, timeout = 8000 }) {
     const onMessage = (event) => {
         if (event.source !== frame.contentWindow || event.data?.course !== token) return;
         const data = event.data;
-        if (data.type === "log") {
-            hooks.out(data.kind, data.text);
+        if (data.type === "console") {
+            hooks.console(data.msg);
         } else if (data.type === "size") {
             empty = !!data.empty;
             if (finished) container.hidden = empty;
@@ -169,7 +173,8 @@ export function runInDom(code, hooks, { container, timeout = 8000 }) {
         } else if (data.type === "done") {
             settle({ ok: true });
         } else if (data.type === "error") {
-            hooks.out("err", data.text);
+            if (data.msg) hooks.console(data.msg);
+            else hooks.out("err", data.text);
             if (data.hint) hooks.out("info", data.hint);
             settle({ ok: false, reason: "error" });
         }

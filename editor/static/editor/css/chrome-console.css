@@ -1,0 +1,215 @@
+/* ==========================================================================
+   Console façon Chrome DevTools (éditeur HTML/CSS/JS et blocs exécutables du cours)
+   Le conteneur reçoit la classe .cc ; la palette suit <html data-theme="light|dark">.
+   ========================================================================== */
+
+.cc {
+    /* thème sombre (par défaut) */
+    --cc-bg: #242424;
+    --cc-text: #e8eaed;
+    --cc-dim: #9aa0a6;
+    --cc-border: #3b3b3b;
+    --cc-hover: rgba(255, 255, 255, 0.04);
+    --cc-warn-bg: #332b00;
+    --cc-warn-text: #ffdd9e;
+    --cc-warn-border: #4d3d00;
+    --cc-error-bg: #290000;
+    --cc-error-text: #ff8080;
+    --cc-error-border: #5c0000;
+    --cc-key: #7cacf8;
+    --cc-string: #f28b54;
+    --cc-number: #9980ff;
+    --cc-boolean: #9980ff;
+    --cc-null: #a8adb3;
+    --cc-symbol: #f28b54;
+    --cc-fn: #e6b450;
+    --cc-regexp: #f28b54;
+    --cc-tag: #5db0d7;
+    --cc-attr-name: #9bbbdc;
+    --cc-attr-value: #f29766;
+    --cc-comment: #7c9a6b;
+    --cc-badge-bg: #1f3a63;
+    --cc-badge-text: #cfe0ff;
+    --cc-arrow: #9aa0a6;
+    --cc-table-head: #333;
+    --cc-table-line: #4a4a4a;
+
+    background: var(--cc-bg);
+    color: var(--cc-text);
+    font: 12px/1.5 "Cascadia Mono", "JetBrains Mono", Menlo, Consolas, "DejaVu Sans Mono", monospace;
+    overflow-y: auto;
+}
+
+[data-theme="light"] .cc {
+    --cc-bg: #ffffff;
+    --cc-text: #202124;
+    --cc-dim: #80868b;
+    --cc-border: #ebebeb;
+    --cc-hover: rgba(0, 0, 0, 0.03);
+    --cc-warn-bg: #fffbe5;
+    --cc-warn-text: #5c3c00;
+    --cc-warn-border: #fff5c2;
+    --cc-error-bg: #fff0f0;
+    --cc-error-text: #d93025;
+    --cc-error-border: #ffd6d6;
+    --cc-key: #881391;
+    --cc-string: #c41a16;
+    --cc-number: #1c00cf;
+    --cc-boolean: #0d22aa;
+    --cc-null: #808080;
+    --cc-symbol: #c41a16;
+    --cc-fn: #a15c00;
+    --cc-regexp: #c41a16;
+    --cc-tag: #881280;
+    --cc-attr-name: #994500;
+    --cc-attr-value: #1a1aa6;
+    --cc-comment: #236e25;
+    --cc-badge-bg: #d2e3fc;
+    --cc-badge-text: #1a4fa3;
+    --cc-arrow: #6e6e6e;
+    --cc-table-head: #f1f3f4;
+    --cc-table-line: #dadce0;
+}
+
+/* ----------------------------- Lignes ----------------------------- */
+.cc-row {
+    position: relative;
+    box-sizing: border-box;
+    padding: 1px 12px 1px calc(26px + var(--lvl, 0) * 12px);
+    border-bottom: 1px solid var(--cc-border);
+    white-space: pre-wrap;
+    word-break: break-word;
+    min-height: 18px;
+}
+
+.cc-row:not(.cc-warn):not(.cc-error):hover { background: var(--cc-hover); }
+.cc-content { display: inline; }
+.cc-text { white-space: pre-wrap; }
+.cc-muted .cc-content { font-style: italic; }
+
+.cc-warn { background: var(--cc-warn-bg); color: var(--cc-warn-text); border-top: 1px solid var(--cc-warn-border); border-bottom-color: var(--cc-warn-border); }
+.cc-error { background: var(--cc-error-bg); color: var(--cc-error-text); border-top: 1px solid var(--cc-error-border); border-bottom-color: var(--cc-error-border); }
+.cc-debug { color: var(--cc-dim); }
+
+/* icônes d'avertissement et d'erreur (SVG en masque, donc recolorables) */
+.cc-warn::before, .cc-error::before {
+    content: "";
+    position: absolute;
+    left: calc(7px + var(--lvl, 0) * 12px);
+    top: 3px;
+    width: 13px;
+    height: 13px;
+    background: currentColor;
+    -webkit-mask: var(--cc-icon) center / contain no-repeat;
+    mask: var(--cc-icon) center / contain no-repeat;
+}
+.cc-warn { --cc-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M8 1.2 15.4 14H.6L8 1.2Zm-.8 5v4h1.6v-4H7.2Zm0 5.3v1.5h1.6v-1.5H7.2Z' fill-rule='evenodd'/%3E%3C/svg%3E"); }
+.cc-error { --cc-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M8 1a7 7 0 1 0 0 14A7 7 0 0 0 8 1Zm3.2 9.1-1.1 1.1L8 9.1l-2.1 2.1-1.1-1.1L6.9 8 4.8 5.9l1.1-1.1L8 6.9l2.1-2.1 1.1 1.1L9.1 8l2.1 2.1Z' fill-rule='evenodd'/%3E%3C/svg%3E"); }
+
+/* compteur de messages identiques consécutifs */
+.cc-badge {
+    display: inline-block;
+    min-width: 14px;
+    margin-right: 6px;
+    padding: 0 5px;
+    border-radius: 9px;
+    background: var(--cc-badge-bg);
+    color: var(--cc-badge-text);
+    font-size: 11px;
+    line-height: 15px;
+    text-align: center;
+    white-space: normal;
+}
+
+/* ----------------------------- Valeurs ----------------------------- */
+.cc-string { color: var(--cc-string); }
+.cc-number, .cc-boolean { color: var(--cc-number); }
+.cc-boolean { color: var(--cc-boolean); }
+.cc-null, .cc-undef, .cc-empty, .cc-ref { color: var(--cc-null); }
+.cc-empty, .cc-ref { font-style: italic; }
+.cc-symbol { color: var(--cc-symbol); }
+.cc-regexp { color: var(--cc-regexp); }
+.cc-fn { color: var(--cc-fn); font-style: italic; font-weight: 600; }
+.cc-key { color: var(--cc-key); }
+.cc-acc { color: var(--cc-dim); font-style: italic; }
+.cc-dim { opacity: 0.65; }
+.cc-note { color: var(--cc-dim); font-style: italic; }
+.cc-preview { white-space: pre-wrap; word-break: break-word; }
+.cc-error-text { white-space: pre-wrap; }
+.cc-stack { color: var(--cc-dim); white-space: pre-wrap; }
+
+/* éléments DOM */
+.cc-tag, .cc-tag-name { color: var(--cc-tag); }
+.cc-attr-name { color: var(--cc-attr-name); }
+.cc-attr-value { color: var(--cc-attr-value); }
+.cc-comment { color: var(--cc-comment); }
+.cc-text-node { color: var(--cc-text); }
+
+/* ----------------------------- Arbre dépliable ----------------------------- */
+.cc-node.cc-top { display: inline-block; vertical-align: top; }
+.cc-head { cursor: default; }
+.cc-spacer { display: inline-block; width: 12px; }
+.cc-children { display: none; margin-left: 12px; }
+.cc-open > .cc-children { display: block; }
+
+.cc-arrow {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    vertical-align: middle;
+    position: relative;
+    cursor: pointer;
+    outline-offset: 1px;
+}
+.cc-arrow::before {
+    content: "";
+    position: absolute;
+    left: 3px;
+    top: 2px;
+    border: 4px solid transparent;
+    border-left: 6px solid var(--cc-arrow);
+    border-right: 0;
+    transition: transform 0.08s;
+}
+.cc-open > .cc-head > .cc-arrow::before,
+.cc-open > .cc-group-head > .cc-arrow::before { transform: translate(-1px, 1px) rotate(90deg); }
+
+.cc-close-tag { display: none; }
+.cc-open > .cc-close-tag { display: block; }
+.cc-open > .cc-head .cc-when-closed { display: none; }
+.cc-node:not(.cc-open) > .cc-head .cc-when-open { display: none; }
+
+/* ----------------------------- Groupes ----------------------------- */
+.cc-group-head { cursor: pointer; font-weight: 700; }
+.cc-gutter-arrow { position: absolute; left: calc(7px + var(--lvl, 0) * 12px); top: 3px; }
+.cc-group-body { display: none; }
+.cc-group.cc-open > .cc-group-body { display: block; }
+
+/* ----------------------------- console.table -----------------------------
+   Sélecteurs volontairement spécifiques : les pages de cours stylent déjà « table, th, td ». */
+.cc table.cc-table {
+    display: table;
+    width: auto;
+    max-width: none;
+    margin: 2px 0;
+    border: 0;
+    border-collapse: collapse;
+    border-radius: 0;
+    font: inherit;
+    overflow: visible;
+}
+.cc table.cc-table th,
+.cc table.cc-table td {
+    padding: 1px 8px;
+    border: 1px solid var(--cc-table-line);
+    background: transparent;
+    color: var(--cc-text);
+    font: inherit;
+    text-align: left;
+    vertical-align: top;
+    white-space: pre-wrap;
+}
+.cc table.cc-table th { background: var(--cc-table-head); font-weight: 500; }
+.cc table.cc-table td.cc-table-index { color: var(--cc-dim); }
+.cc table.cc-table tbody tr { background: transparent; }
+.cc table.cc-table tbody tr:nth-child(even) { background: var(--cc-hover); }

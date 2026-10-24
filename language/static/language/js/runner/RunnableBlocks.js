@@ -3,6 +3,7 @@ import { runJavaScript } from "./JsRunner.js";
 import { runTypeScript } from "./TsRunner.js";
 import { runInDom, disposePreview, usesDom } from "./DomRunner.js";
 import { PythonRunner } from "./PythonRunner.js";
+import { ConsoleRenderer } from "../../../editor/js/console/ConsoleRenderer.js";
 
 /**
  * Rend exécutables les blocs de code JavaScript, TypeScript et Python des cours.
@@ -116,6 +117,7 @@ class RunnableBlock {
         this.outEl.setAttribute("aria-live", "polite");
         this.statusEl = el("span", "run-status");
         this.linesEl = el("div", "run-lines");
+        this.cc = new ConsoleRenderer(this.linesEl, { maxRows: 2 * MAX_LINES });   // affichage façon console Chrome
         const head = el("div", "run-output-head");
         head.append(el("span", "", "Résultat"), this.statusEl);
         this.outEl.append(head, this.linesEl);
@@ -198,18 +200,18 @@ class RunnableBlock {
     ask(prompt, { secret = false } = {}) {
         this.cancelAsk();
         return new Promise((resolve) => {
-            const line = el("div", "run-line is-out");
+            const line = el("span", "cc-text");
             const field = el("input", "run-input");
             field.type = secret ? "password" : "text";
             field.autocomplete = secret ? "new-password" : "off";
             field.spellcheck = false;
             field.setAttribute("aria-label", prompt || "Saisie demandée par input()");
             line.append(document.createTextNode(prompt), field);
-            this.linesEl.append(line);
+            const row = this.cc.addCustomRow(line);
             this.lines++;
             this.statusEl.textContent = "En attente de saisie…";
             field.focus({ preventScroll: true });
-            line.scrollIntoView({ block: "nearest" });
+            row.scrollIntoView({ block: "nearest" });
 
             const close = (value) => {
                 field.replaceWith(document.createTextNode(secret ? "" : field.value));
@@ -242,23 +244,36 @@ class RunnableBlock {
     /* ---------- Sortie ---------- */
     clearOutput() {
         this.cancelAsk();
-        this.linesEl?.replaceChildren();
+        this.cc?.clear();
         this.lines = 0;
         if (this.statusEl) this.statusEl.textContent = "";
     }
 
-    print(kind, text) {
+    /** Message de console structuré (JS/TS : voir console-runtime.js) ou ligne de texte (Python). */
+    emit(message) {
+        if (message.type === "clear") {
+            this.cc.add(message);
+            this.lines = 0;
+            return;
+        }
+        if (message.type === "groupEnd") {
+            this.cc.add(message);
+            return;
+        }
         if (this.lines >= MAX_LINES) {
             if (this.lines === MAX_LINES) {
-                this.linesEl.append(el("div", "run-line is-warn", "… sortie tronquée"));
+                this.cc.add({ type: "warn", args: ["… sortie tronquée"] });
                 this.lines++;
             }
             return;
         }
-        const line = el("div", `run-line is-${kind}`);
-        line.textContent = text;
-        this.linesEl.append(line);
+        this.cc.add(message);
         this.lines++;
+    }
+
+    print(kind, text) {
+        const type = { err: "error", warn: "warn" }[kind] || "log";
+        this.emit({ type, args: [text], muted: kind === "info" });
         if (kind === "err" && /EOFError/.test(text) && this.stdinEl) {
             this.print("info", "Ce programme attend une saisie : renseignez « Entrée standard » sous l'éditeur.");
         }
@@ -280,6 +295,7 @@ class RunnableBlock {
 
         const hooks = {
             out: (kind, text) => this.print(kind, text),
+            console: (message) => this.emit(message),
             status: (text) => { this.statusEl.textContent = text; },
             input: (prompt, options) => this.ask(prompt, options),
             // Python sans JSPI : retombe sur la zone « Entrée standard »
