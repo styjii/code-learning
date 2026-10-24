@@ -52,3 +52,16 @@ body.editor-app {
     min-height: 0;
     overflow: hidden;
 }
+
+/* Commutateur Web | Python dans l'en-tête des deux éditeurs */
+.mode-switch {
+    display: inline-flex;
+    padding: 2px;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: var(--surface-2);
+    font-size: 0.82rem;
+}
+.mode-switch a { padding: 0.15rem 0.8rem; border-radius: 999px; color: var(--muted); text-decoration: none; }
+.mode-switch a:hover { color: var(--text-strong); }
+.mode-switch a[aria-current="page"] { background: var(--accent); color: var(--accent-contrast); }

@@ -18,6 +18,7 @@ router.register(r'projects', ProjectViewSet, basename='project')
 
 urlpatterns = [
     path('', ensure_csrf_cookie(TemplateView.as_view(template_name='editor/index.html')), name='editor-index'),
+    path('python/', ensure_csrf_cookie(TemplateView.as_view(template_name='editor/python.html')), name='python-editor'),
     path('api/', include(router.urls)),
     path('api/load-monaco-config/', LoadMonacoConfigView.as_view(), name='load-monaco-config'),
     path('api/save-monaco-config/', SaveMonacoConfigView.as_view(), name='save-monaco-config'),

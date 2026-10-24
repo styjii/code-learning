@@ -15,6 +15,7 @@
     <nav class="topnav" aria-label="Navigation principale">
         <a href="#courses">Cours</a>
         <a href="{% url 'editor-index' %}">Éditeur</a>
+        <a href="{% url 'python-editor' %}">Éditeur Python</a>
     </nav>
     <div class="topbar-actions">
         {% include "partials/theme_toggle.html" %}
@@ -34,6 +35,7 @@
             <div class="hero-actions">
                 <a class="btn btn-primary" href="#courses">Explorer les cours</a>
                 <a class="btn btn-ghost" href="{% url 'editor-index' %}">Ouvrir l'éditeur</a>
+                <a class="btn btn-ghost" href="{% url 'python-editor' %}">Éditeur Python</a>
             </div>
         </div>
 

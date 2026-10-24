@@ -18,9 +18,10 @@ export const PythonRunner = {
     /**
      * @param {string} code
      * @param {{out: Function, status: Function, input?: (prompt: string, options: {secret: boolean}) => Promise<string|null>, mode?: Function}} hooks
-     * @param {{stdin?: string, timeout?: number}} options
+     * @param {{stdin?: string, timeout?: number, files?: Record<string, string>, filename?: string}} options
+     *   files : autres fichiers du projet (importables) · filename : nom affiché dans les tracebacks
      */
-    run(code, hooks, { stdin = "", timeout = 10000 } = {}) {
+    run(code, hooks, { stdin = "", timeout = 10000, files, filename } = {}) {
         let cancelled = false;
         let abort = null;
 
@@ -90,7 +91,7 @@ export const PythonRunner = {
                 finish({ ok: false, reason: "timeout" });
             }, 90000);
 
-            w.postMessage({ id, code, stdin, indexURL: document.body.dataset.pyodide, interactive: canPrompt && !!hooks.input });
+            w.postMessage({ id, code, stdin, files, filename, indexURL: document.body.dataset.pyodide, interactive: canPrompt && !!hooks.input });
         });
 
         const promise = (queue = queue.then(execute, execute));

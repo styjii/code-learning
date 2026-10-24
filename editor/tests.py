@@ -8,6 +8,7 @@ from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import Client, TestCase, override_settings
+from django.urls import reverse
 
 from .models import EditorPreferences
 from .monaco_config import DEFAULT_PREFERENCES, FIXED_OPTIONS, effective_options
@@ -215,3 +216,47 @@ class ImportZipLimitsTests(TestCase):
 
     def test_anonymous_still_gets_403(self):
         self.assertEqual(Client().post(IMPORT_URL, {}).status_code, 403)
+
+
+class PythonEditorPageTests(TestCase):
+    """Page de l'éditeur Python : protégée par la connexion, et reliée aux autres pages."""
+
+    def setUp(self):
+        self.user = User.objects.create_user("alice", password=PASSWORD)
+        self.client = Client()
+
+    def test_page_requires_login(self):
+        url = reverse("python-editor")
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 302)
+        self.assertIn("/accounts/login/", response["Location"])
+        self.assertIn(f"next={url}", response["Location"])
+
+    def test_page_contains_the_editor_and_runtime_settings(self):
+        self.client.force_login(self.user)
+        response = self.client.get(reverse("python-editor"))
+        self.assertEqual(response.status_code, 200)
+        html = response.content.decode()
+        for fragment in ('id="py-editor"', 'id="py-tabs"', 'id="console"', 'id="run-code"', 'id="py-stdin"',
+                         "data-pyodide=", "data-monaco=", "editor/js/python/main.js"):
+            self.assertIn(fragment, html)
+
+    def test_editors_and_home_link_to_each_other(self):
+        self.client.force_login(self.user)
+        python_url = reverse("python-editor")
+        web_url = reverse("editor-index")
+        self.assertContains(self.client.get(web_url), f'href="{python_url}"')
+        self.assertContains(self.client.get(python_url), f'href="{web_url}"')
+        self.assertContains(self.client.get(reverse("index")), f'href="{python_url}"')
+
+    def test_static_files_used_by_the_page_exist(self):
+        """Les modules chargés par la page (et leurs dépendances inter-applications) sont bien servis."""
+        from django.contrib.staticfiles import finders
+
+        for path in (
+            "editor/js/python/main.js", "editor/js/python/PythonEditorApp.js", "editor/js/python/FileStore.js",
+            "editor/js/console/ConsoleRenderer.js", "editor/css/python.css",
+            "language/js/runner/MonacoLoader.js", "language/js/runner/PythonRunner.js",
+            "language/js/runner/python.worker.js", "vendor/pyodide/pyodide.mjs",
+        ):
+            self.assertIsNotNone(finders.find(path), path)

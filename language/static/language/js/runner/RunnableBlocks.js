@@ -191,54 +191,16 @@ class RunnableBlock {
         this.editorEl.after(details);
     }
 
-    /**
-     * input() interactif : affiche l'invite dans « Résultat » avec un champ de saisie (Entrée valide,
-     * Ctrl+D sur un champ vide signale la fin d'entrée -> EOFError côté Python).
-     * « secret » (getpass) : champ masqué, valeur jamais réaffichée dans la sortie.
-     * @returns {Promise<string|null>}
-     */
-    ask(prompt, { secret = false } = {}) {
-        this.cancelAsk();
-        return new Promise((resolve) => {
-            const line = el("span", "cc-text");
-            const field = el("input", "run-input");
-            field.type = secret ? "password" : "text";
-            field.autocomplete = secret ? "new-password" : "off";
-            field.spellcheck = false;
-            field.setAttribute("aria-label", prompt || "Saisie demandée par input()");
-            line.append(document.createTextNode(prompt), field);
-            const row = this.cc.addCustomRow(line);
-            this.lines++;
-            this.statusEl.textContent = "En attente de saisie…";
-            field.focus({ preventScroll: true });
-            row.scrollIntoView({ block: "nearest" });
-
-            const close = (value) => {
-                field.replaceWith(document.createTextNode(secret ? "" : field.value));
-                this.statusEl.textContent = "";
-                this.pendingAsk = null;
-                resolve(value);
-            };
-            field.addEventListener("keydown", (event) => {
-                if (event.key === "Enter") {
-                    event.preventDefault();
-                    close(field.value);
-                } else if (event.key.toLowerCase() === "d" && event.ctrlKey && !field.value) {
-                    event.preventDefault();
-                    close(null);
-                }
-            });
-            this.pendingAsk = { line, field, resolve };
-        });
+    /** input() interactif : voir ConsoleRenderer.ask (Entrée valide, Ctrl+D = fin d'entrée, secret = getpass). */
+    ask(prompt, options = {}) {
+        this.lines++;
+        this.statusEl.textContent = "En attente de saisie…";
+        return this.cc.ask(prompt, { ...options, onEnd: () => { this.statusEl.textContent = ""; } });
     }
 
     /** Ferme un champ de saisie resté ouvert (exécution arrêtée, interrompue ou terminée). */
     cancelAsk() {
-        const pending = this.pendingAsk;
-        if (!pending) return;
-        this.pendingAsk = null;
-        pending.field.replaceWith(document.createTextNode(pending.field.type === "password" ? "" : pending.field.value));
-        pending.resolve(null);
+        this.cc?.cancelAsk();
     }
 
     /* ---------- Sortie ---------- */
@@ -273,7 +235,7 @@ class RunnableBlock {
 
     print(kind, text) {
         const type = { err: "error", warn: "warn" }[kind] || "log";
-        this.emit({ type, args: [text], muted: kind === "info" });
+        this.emit({ type, args: [text], muted: kind === "info", plain: true });
         if (kind === "err" && /EOFError/.test(text) && this.stdinEl) {
             this.print("info", "Ce programme attend une saisie : renseignez « Entrée standard » sous l'éditeur.");
         }

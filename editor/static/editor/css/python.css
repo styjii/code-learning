@@ -1,0 +1,133 @@
+/* Éditeur Python : onglets de fichiers, console toujours visible, entrée standard. */
+
+/* La console de l'éditeur Web est masquée par défaut ; ici elle est le résultat. */
+body.py-app #console { display: block; flex: 1; min-height: 0; padding: 0; }
+body.py-app #console.cc { font-size: 13px; }
+
+#py-editor { flex: 1; min-height: 0; }
+
+/* ----------------------------- Onglets ----------------------------- */
+.py-tabbar {
+    display: flex;
+    align-items: stretch;
+    flex-shrink: 0;
+    min-height: 38px;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface-2);
+}
+
+#py-tabs { display: flex; flex: 0 1 auto; min-width: 0; overflow-x: auto; scrollbar-width: thin; }
+
+.py-tab {
+    position: relative;
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+    border-right: 1px solid var(--border);
+    background: transparent;
+    color: var(--muted);
+}
+
+.py-tab:hover { background: var(--surface-3); color: var(--text-strong); }
+.py-tab.is-active { background: var(--surface); color: var(--text-strong); }
+.py-tab.is-active::after {
+    content: "";
+    position: absolute;
+    inset: auto 0 -1px 0;
+    height: 2px;
+    background: var(--accent);
+}
+
+.py-tab-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0 0.8rem;
+    height: 100%;
+    min-height: 37px;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    font-size: 0.88rem;
+    cursor: pointer;
+}
+
+.py-entry { color: #2da44e; font-size: 0.7rem; }
+.py-tab-label + .py-tab-close { margin-left: -0.5rem; }
+
+.py-tab-close {
+    margin-right: 0.35rem;
+    width: 20px;
+    height: 20px;
+    padding: 0;
+    border: 0;
+    border-radius: 4px;
+    background: transparent;
+    color: inherit;
+    font-size: 1.05rem;
+    line-height: 1;
+    cursor: pointer;
+    opacity: 0.6;
+}
+
+.py-tab-close:hover, .py-tab-close:focus-visible { background: var(--border-strong); opacity: 1; }
+
+.py-rename {
+    width: 11rem;
+    margin: 0 0.4rem;
+    padding: 0.15rem 0.4rem;
+    border: 1px solid var(--accent);
+    border-radius: var(--radius-sm);
+    background: var(--surface);
+    color: var(--text-strong);
+    font: inherit;
+    font-size: 0.88rem;
+}
+.py-rename[aria-invalid="true"] { border-color: #cf222e; }
+
+.py-add {
+    width: 38px;
+    border: 0;
+    border-right: 1px solid var(--border);
+    background: transparent;
+    color: var(--muted);
+    font-size: 1.25rem;
+    cursor: pointer;
+}
+.py-add:hover:not(:disabled) { background: var(--surface-3); color: var(--text-strong); }
+.py-add:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.py-save-state { margin-left: auto; align-self: center; padding: 0 0.8rem; color: var(--muted); font-size: 0.75rem; white-space: nowrap; }
+
+.py-message { padding: 0.4rem 0.8rem; flex-shrink: 0; border-bottom: 1px solid var(--border); background: var(--accent-soft); color: var(--text); font-size: 0.85rem; }
+.py-message.is-error { background: #fff0f0; color: #a40e26; border-color: #ffd6d6; }
+[data-theme="dark"] .py-message.is-error { background: #3a1114; color: #ffb3b8; border-color: #5c1f24; }
+.py-message[hidden] { display: none; }
+
+/* ----------------------------- Console ----------------------------- */
+#control-button { align-items: center; }
+#run-code.is-running { border-color: #cf222e !important; background: #cf222e !important; }
+#run-code:disabled { opacity: 0.6; cursor: wait; }
+.py-status { margin-left: auto; color: var(--muted); font-size: 0.82rem; }
+
+.py-stdin { flex-shrink: 0; padding: 0.4rem 0.8rem; border-top: 1px solid var(--border); background: var(--surface); font-size: 0.85rem; }
+.py-stdin[hidden] { display: none; }
+.py-stdin summary { cursor: pointer; font-weight: 600; }
+.py-stdin p { margin: 0.4rem 0; color: var(--muted); }
+.py-stdin textarea {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0.4rem 0.5rem;
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-sm);
+    background: var(--surface-2);
+    color: var(--text);
+    font: 0.85rem var(--font-mono, monospace);
+    resize: vertical;
+}
+
+@media (max-width: 640px) {
+    .py-save-state { display: none; }
+    .py-tab-label { padding: 0 0.6rem; }
+}

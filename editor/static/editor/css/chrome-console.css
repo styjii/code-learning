@@ -213,3 +213,16 @@
 .cc table.cc-table td.cc-table-index { color: var(--cc-dim); }
 .cc table.cc-table tbody tr { background: transparent; }
 .cc table.cc-table tbody tr:nth-child(even) { background: var(--cc-hover); }
+
+/* ----------------------------- Saisie d'input() ----------------------------- */
+.cc-input {
+    width: min(24rem, 70%);
+    padding: 0 0.25rem;
+    border: 0;
+    border-bottom: 1px solid var(--cc-key);
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    outline: none;
+}
+.cc-input:focus { background: var(--cc-hover); }

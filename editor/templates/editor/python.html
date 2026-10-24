@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Éditeur Python · Langage Learning{% endblock %}
+{% block description %}Éditeur Python en ligne : plusieurs fichiers, input() interactif et console.{% endblock %}
+{% block favicon %}{% static 'icons/python.svg' %}{% endblock %}
+{% block body_attrs %}data-app="editor" class="editor-app py-app"
+    data-monaco="{% static 'editor/monaco-editor/min/vs' %}" data-pyodide="{% static 'vendor/pyodide/' %}"{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="{% static 'editor/css/layout.css' %}">
+<link rel="stylesheet" href="{% static 'editor/css/navigation.css' %}">
+<link rel="stylesheet" href="{% static 'editor/css/editor.css' %}">
+<link rel="stylesheet" href="{% static 'editor/css/chrome-console.css' %}">
+<link rel="stylesheet" href="{% static 'editor/css/console.css' %}">
+<link rel="stylesheet" href="{% static 'editor/css/python.css' %}">
+{% endblock %}
+
+{% block body %}
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+    <symbol id="three-dots" viewBox="0 0 16 16"><path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"/></symbol>
+</svg>
+
+<header class="app-header">
+    <a class="brand" href="{% url 'index' %}" title="Retour à l'accueil">
+        {% include "partials/logo.html" with logo_id="python-editor" %}
+        <span class="brand-name">Éditeur</span>
+    </a>
+
+    <nav class="mode-switch" aria-label="Type d'éditeur">
+        <a href="{% url 'editor-index' %}">Web</a>
+        <a href="{% url 'python-editor' %}" aria-current="page">Python</a>
+    </nav>
+
+    <ul class="nav-bar">
+        <li class="drop">
+            <button class="navlink" aria-haspopup="true">Fichier</button>
+            <ul class="drop-menu" role="menu">
+                <li><button class="drop-item" id="py-new">Nouveau fichier</button></li>
+                <li><button class="drop-item" id="py-import">Importer des fichiers…</button></li>
+                <li><button class="drop-item" id="py-download">Télécharger le fichier actif</button></li>
+                <li><button class="drop-item" id="py-reset">Remplacer par l'exemple…</button></li>
+            </ul>
+        </li>
+        <li class="drop">
+            <button class="navlink" aria-haspopup="true">Affichage</button>
+            <ul class="drop-menu" role="menu">
+                <li><button class="drop-item" id="py-wrap">Retour à la ligne</button></li>
+            </ul>
+        </li>
+    </ul>
+
+    <div class="topbar-actions">
+        <a class="icon-btn" href="{% url 'index' %}" title="Retour aux cours" aria-label="Retour aux cours">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2zM4 19V5M9 7h6"/></svg>
+        </a>
+        {% include "partials/theme_toggle.html" %}
+        {% include "partials/logout.html" %}
+    </div>
+</header>
+
+<main class="workspace">
+    <div id="main-editor">
+        <section id="editor-container" aria-label="Code Python">
+            <div class="py-tabbar">
+                <div id="py-tabs" role="tablist" aria-label="Fichiers du projet"></div>
+                <button id="py-add" class="py-add" type="button" aria-label="Nouveau fichier" title="Nouveau fichier">+</button>
+                <span id="py-save-state" class="py-save-state" aria-live="polite"></span>
+            </div>
+            <div id="py-message" class="py-message" role="alert" hidden></div>
+            <div id="py-editor"></div>
+        </section>
+
+        <section id="output-container" aria-label="Console">
+            <div id="control-button">
+                <button id="run-code" type="button" aria-label="Exécuter main.py" title="Exécuter main.py (Ctrl+Entrée)" disabled>Exécuter</button>
+                <button id="py-clear" type="button" aria-label="Effacer la console">Effacer</button>
+                <span id="py-status" class="py-status" role="status" aria-live="polite"></span>
+            </div>
+            <div id="console" aria-label="Sortie du programme"></div>
+            <details id="py-stdin" class="py-stdin" hidden>
+                <summary>Entrée standard</summary>
+                <p>Ce navigateur ne permet pas de saisir pendant l'exécution : écrivez ici une ligne par appel à <code>input()</code>.</p>
+                <textarea id="py-stdin-text" rows="3" spellcheck="false" aria-label="Entrée standard" placeholder="Une ligne par input()"></textarea>
+            </details>
+        </section>
+    </div>
+    <input id="py-import-input" type="file" accept=".py,.txt,.json,.csv,.md,text/plain" multiple hidden>
+</main>
+{% endblock %}
+
+{% block scripts %}
+<script type="module" src="{% static 'editor/js/python/main.js' %}"></script>
+{% endblock %}

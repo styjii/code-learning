@@ -57,11 +57,34 @@ sys.breakpointhook = _breakpoint
 `;
 
 /** Retire les lignes internes de Pyodide pour ne garder que le code de l'élève. */
-function cleanTraceback(message) {
+const WORK_DIR = "/home/pyodide";
+let writtenFiles = new Set();     // fichiers déposés par l'exécution précédente (supprimés si absents ensuite)
+
+/** Dépose les fichiers du projet dans le système de fichiers de Pyodide : « import utils » fonctionne. */
+function syncFiles(files) {
+    const next = new Set();
+    for (const [name, content] of Object.entries(files || {})) {
+        if (!/^[\w.-]+$/.test(name) || name.includes("..")) continue;        // pas de chemin : fichiers à plat
+        pyodide.FS.writeFile(`${WORK_DIR}/${name}`, content);
+        next.add(name);
+    }
+    for (const name of writtenFiles) {
+        if (!next.has(name)) { try { pyodide.FS.unlink(`${WORK_DIR}/${name}`); } catch { /* déjà absent */ } }
+    }
+    // Un module déjà importé lors d'une exécution précédente resterait en cache avec son ancien code.
+    const modules = [...new Set([...writtenFiles, ...next].filter((n) => n.endsWith(".py")).map((n) => n.slice(0, -3)))];
+    if (modules.length) {
+        pyodide.globals.set("_course_stale", pyodide.toPy(modules));
+        pyodide.runPython("import sys, importlib\nfor _m in _course_stale: sys.modules.pop(_m, None)\nimportlib.invalidate_caches()\ndel _m, _course_stale");
+    }
+    writtenFiles = next;
+}
+
+function cleanTraceback(message, filename = "<exec>") {
     // Retire les cadres du hook d'input() (File "<course-input>" + la ligne de code qui suit).
     const lines = message.split("\n").filter((line, i, all) =>
         !line.includes(`File "${HOOK_FILE}"`) && !(i > 0 && all[i - 1].includes(`File "${HOOK_FILE}"`) && /^\s{4}/.test(line)));
-    const first = lines.findIndex((line) => line.includes('File "<exec>"'));
+    const first = lines.findIndex((line) => line.includes(`File "${filename}"`));
     if (first === -1) return message.trim();
     const head = lines[0].startsWith("Traceback") ? [lines[0]] : [];
     return [...head, ...lines.slice(first)].join("\n").trim();
@@ -74,7 +97,7 @@ self.onmessage = async ({ data }) => {
         resolve?.(data.text ?? undefined);    // fin d'entrée (null) -> undefined, converti en None (null deviendrait jsnull)
         return;
     }
-    const { id, code, stdin, indexURL, interactive } = data;
+    const { id, code, stdin, indexURL, interactive, files, filename = "<exec>" } = data;
     currentId = id;
     const post = (type, text) => self.postMessage({ id, type, text });
 
@@ -108,19 +131,21 @@ self.onmessage = async ({ data }) => {
         pyodide.setStdout({ batched: (line) => post("out", line) });
         pyodide.setStderr({ batched: (line) => post("err", line) });
 
+        syncFiles(files);
         post("status", "");
         post("started");
 
         const globals = pyodide.globals.get("dict")();
         globals.set("__name__", "__main__");     // sans cela, « if __name__ == "__main__": » ne s'exécute jamais
+        if (filename !== "<exec>") globals.set("__file__", `${WORK_DIR}/${filename}`);
         try {
-            await pyodide.runPythonAsync(code, { globals });
+            await pyodide.runPythonAsync(code, { globals, filename });
             pyodide.runPython("import sys; sys.stdout.flush(); sys.stderr.flush()");
         } finally {
             globals.destroy();
         }
         post("done");
     } catch (error) {
-        post("error", cleanTraceback(String(error?.message ?? error)));
+        post("error", cleanTraceback(String(error?.message ?? error), filename));
     }
 };

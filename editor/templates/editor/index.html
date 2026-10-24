@@ -28,6 +28,11 @@
         <span class="brand-name">Éditeur</span>
     </a>
 
+    <nav class="mode-switch" aria-label="Type d'éditeur">
+        <a href="{% url 'editor-index' %}" aria-current="page">Web</a>
+        <a href="{% url 'python-editor' %}">Python</a>
+    </nav>
+
     <span class="project-chip" title="Projet en cours"><span class="dot"></span><span id="current-project">…</span></span>
 
     <ul class="nav-bar">

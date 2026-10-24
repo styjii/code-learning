@@ -107,16 +107,3 @@
 
 .run-preview-frame { display: block; width: 100%; height: 120px; border: 0; background: #fff; }
 
-/* input() interactif : champ de saisie dans la ligne de sortie */
-.run-input {
-    width: min(24rem, 70%);
-    padding: 0 0.25rem;
-    border: 0;
-    border-bottom: 1px solid var(--accent);
-    background: transparent;
-    color: inherit;
-    font: inherit;
-    outline: none;
-}
-
-.run-input:focus { background: var(--cc-hover, var(--surface-3)); }

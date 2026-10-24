@@ -41,6 +41,7 @@ export class ConsoleRenderer {
 
     /** Efface tout (la page peut aussi avoir vidé le conteneur elle-même : on resynchronise). */
     clear() {
+        this.cancelAsk();
         this.rootEl.replaceChildren();
         this.stack = [];
         this.rowCount = 0;
@@ -53,7 +54,10 @@ export class ConsoleRenderer {
         }
     }
 
-    /** Point d'entrée : un message {type, args, label, count, text, columns, stack}. */
+    /**
+     * Point d'entrée : un message {type, args, label, count, text, columns, stack}.
+     * Options d'affichage : muted (italique grisé), plain (pas de regroupement des lignes identiques).
+     */
     add(message) {
         this.#sync();
         const { type } = message;
@@ -95,7 +99,7 @@ export class ConsoleRenderer {
                 return;
             default: {
                 const kind = ["info", "warn", "error", "debug"].includes(type) ? type : "log";
-                this.#row(kind, this.#render(args), { key: message.muted ? null : this.#key(kind, args), muted: !!message.muted });
+                this.#row(kind, this.#render(args), { key: message.muted || message.plain ? null : this.#key(kind, args), muted: !!message.muted });
             }
         }
     }
@@ -104,6 +108,56 @@ export class ConsoleRenderer {
     addCustomRow(node, type = "log") {
         this.#sync();
         return this.#row(type, [node]);
+    }
+
+    /* ---------- Saisie interactive (input() de Python) ---------- */
+
+    /**
+     * Affiche l'invite avec un champ de saisie dans la console. Entrée valide ; Ctrl+D sur un champ vide
+     * signale la fin d'entrée (résout null). En mode « secret » (getpass) le champ est masqué et la
+     * valeur n'est jamais réaffichée.
+     * @param {string} prompt
+     * @param {{secret?: boolean, onEnd?: () => void}} [options] onEnd : appelé dès que la saisie se termine
+     * @returns {Promise<string|null>}
+     */
+    ask(prompt, { secret = false, onEnd } = {}) {
+        this.cancelAsk();
+        this.#sync();
+        return new Promise((resolve) => {
+            const line = h("span", "cc-text");
+            const field = h("input", "cc-input");
+            field.type = secret ? "password" : "text";
+            field.autocomplete = secret ? "new-password" : "off";
+            field.spellcheck = false;
+            field.setAttribute("aria-label", prompt || "Saisie demandée par input()");
+            line.append(document.createTextNode(prompt), field);
+            const row = this.addCustomRow(line);
+
+            const close = (value) => {
+                if (this.pendingAsk?.field !== field) return;
+                this.pendingAsk = null;
+                field.replaceWith(document.createTextNode(secret ? "" : field.value));
+                onEnd?.();
+                resolve(value);
+            };
+            field.addEventListener("keydown", (event) => {
+                if (event.key === "Enter") {
+                    event.preventDefault();
+                    close(field.value);
+                } else if (event.key.toLowerCase() === "d" && event.ctrlKey && !field.value) {
+                    event.preventDefault();
+                    close(null);
+                }
+            });
+            this.pendingAsk = { field, close };
+            field.focus({ preventScroll: true });
+            row.scrollIntoView({ block: "nearest" });
+        });
+    }
+
+    /** Ferme un champ de saisie resté ouvert (exécution arrêtée, interrompue, terminée ou effacée). */
+    cancelAsk() {
+        this.pendingAsk?.close(null);
     }
 
     /* ---------- Rendu des arguments ---------- */
