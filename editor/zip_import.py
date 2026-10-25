@@ -1,5 +1,5 @@
 """
-Lecture sécurisée d'une archive .zip de projet (index.html, style.css, script.js).
+Lecture sécurisée d'une archive .zip de projet (index.html, style.css, script.js ou script.ts + tsconfig.json).
 
 Une archive minuscule peut annoncer des centaines de Mo une fois décompressée (« zip bomb »). Les limites
 ci-dessous (réglables dans ``settings.py``) sont donc vérifiées AVANT toute décompression, sur les tailles
@@ -35,6 +35,20 @@ def read_project_zip(fileobj, name):
     Lève ``ZipImportError`` si l'archive est invalide, a trop d'entrées, annonce trop de données
     ou contient un fichier trop gros.
     """
+    return _read_project_files(fileobj, name, ("index.html", "style.css", "script.js"))
+
+
+def read_typescript_zip(fileobj, name):
+    """
+    Retourne ``(index_html, style_css, script_ts, tsconfig_json)`` ; une partie absente vaut ``""``.
+
+    Mêmes plafonds et mêmes erreurs que ``read_project_zip``.
+    """
+    return _read_project_files(fileobj, name, ("index.html", "style.css", "script.ts", "tsconfig.json"))
+
+
+def _read_project_files(fileobj, name, filenames):
+    """Lit les fichiers demandés (à la racine ou dans le dossier ``name/``), avec tous les plafonds."""
     max_entries = settings.EDITOR_ZIP_MAX_ENTRIES
     max_file = settings.EDITOR_ZIP_MAX_FILE_BYTES
     max_total = settings.EDITOR_ZIP_MAX_TOTAL_BYTES
@@ -67,11 +81,7 @@ def read_project_zip(fileobj, name):
                 except UnicodeDecodeError:
                     raise ZipImportError(f"« {filename} » n'est pas encodé en UTF-8.") from None
 
-            return (
-                read_file(f"{name}/index.html") or read_file("index.html"),
-                read_file(f"{name}/style.css") or read_file("style.css"),
-                read_file(f"{name}/script.js") or read_file("script.js"),
-            )
+            return tuple(read_file(f"{name}/{filename}") or read_file(filename) for filename in filenames)
     except ZipImportError:
         raise
     except (zipfile.BadZipFile, zlib.error, EOFError, NotImplementedError, RuntimeError):

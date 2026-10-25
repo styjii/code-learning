@@ -1,0 +1,271 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Éditeur TypeScript · Langage Learning{% endblock %}
+{% block description %}Éditeur HTML, CSS et TypeScript avec vérification des types, options du compilateur, aperçu en direct et console.{% endblock %}
+{% block favicon %}{% static 'icons/typescript.svg' %}{% endblock %}
+{% block body_attrs %}data-app="editor" class="editor-app ts-app"{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="{% static 'editor/css/layout.css' %}">
+<link rel="stylesheet" href="{% static 'editor/css/navigation.css' %}">
+<link rel="stylesheet" href="{% static 'editor/css/editor.css' %}">
+<link rel="stylesheet" href="{% static 'editor/css/chrome-console.css' %}">
+<link rel="stylesheet" href="{% static 'editor/css/console.css' %}">
+<link rel="stylesheet" href="{% static 'editor/css/modal.css' %}">
+<link rel="stylesheet" href="{% static 'editor/css/typescript.css' %}">
+{% endblock %}
+
+{% block body %}
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+    <symbol id="three-dots" viewBox="0 0 16 16"><path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"/></symbol>
+    <symbol id="play" viewBox="0 0 16 16"><path d="m11.596 8.697-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393z"/></symbol>
+    <symbol id="terminal" viewBox="0 0 16 16"><path d="M0 3a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3zm9.5 5.5h-3a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1zm-6.354-.354a.5.5 0 1 0 .708.708l2-2a.5.5 0 0 0 0-.708l-2-2a.5.5 0 1 0-.708.708L4.793 6.5 3.146 8.146z"/></symbol>
+</svg>
+
+<header class="app-header">
+    <a class="brand" href="{% url 'index' %}" title="Retour à l'accueil">
+        {% include "partials/logo.html" with logo_id="typescript-editor" %}
+        <span class="brand-name">Éditeur</span>
+    </a>
+
+    <nav class="mode-switch" aria-label="Type d'éditeur">
+        <a href="{% url 'editor-index' %}">Web</a>
+        <a href="{% url 'python-editor' %}">Python</a>
+        <a href="{% url 'typescript-editor' %}" aria-current="page">TypeScript</a>
+    </nav>
+
+    <span class="project-chip" title="Projet en cours"><span class="dot"></span><span id="current-project">…</span></span>
+
+    <ul class="nav-bar">
+        <li class="drop">
+            <button class="navlink" aria-haspopup="true">Menu</button>
+            <ul class="drop-menu" role="menu">
+                <li><button class="drop-item" data-toggle="custom-modal" data-target="#ts-options">Options TypeScript…</button></li>
+                <li><button class="drop-item" id="format-document">Formater le document <kbd>Maj+Alt+F</kbd></button></li>
+                <li><button class="drop-item" id="command-palette">Palette de commandes… <kbd>Ctrl+Maj+P</kbd></button></li>
+                <li><button class="drop-item" id="text-wrap">Retour à la ligne <kbd>Ctrl+Alt+W</kbd></button></li>
+                <li><button class="drop-item" id="toggle-scroll-padding">Marge de défilement <kbd>Ctrl+Alt+L</kbd></button></li>
+            </ul>
+        </li>
+    </ul>
+
+    <div class="topbar-actions">
+        <a class="icon-btn" href="{% url 'index' %}" title="Retour aux cours" aria-label="Retour aux cours">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2zM4 19V5M9 7h6"/></svg>
+        </a>
+        {% include "partials/theme_toggle.html" %}
+        {% include "partials/logout.html" %}
+    </div>
+</header>
+
+<main class="workspace">
+    <nav class="nav-sidebar" aria-label="Fichiers et options">
+        <ul class="nav-navbar">
+            <li><button id="html-tab" class="navlink active tab" aria-label="HTML" title="HTML (Ctrl+1)"><img src="{% static 'editor/icons/html.svg' %}" alt="" class="icon" width="24" height="24"></button></li>
+            <li><button id="css-tab" class="navlink tab" aria-label="CSS" title="CSS (Ctrl+2)"><img src="{% static 'editor/icons/css.svg' %}" alt="" class="icon" width="24" height="24"></button></li>
+            <li><button id="ts-tab" class="navlink tab" aria-label="TypeScript" title="TypeScript (Ctrl+3)"><img src="{% static 'editor/icons/ts.svg' %}" alt="" class="icon" width="24" height="24"></button></li>
+        </ul>
+
+        <div class="drop">
+            <button class="navlink" aria-label="Plus d'options" aria-haspopup="true" title="Projets, export, options">
+                <svg class="icon" width="24" height="24"><use xlink:href="#three-dots"/></svg>
+            </button>
+            <ul class="drop-menu side" role="menu">
+                <li><button class="drop-item" data-toggle="custom-modal" data-target="#ts-options">Options TypeScript</button></li>
+                <li><button class="drop-item" data-toggle="custom-modal" data-target="#project-controls">Projets</button></li>
+                <li><button class="drop-item" data-toggle="custom-modal" data-target="#zip-controls">Import / export .zip</button></li>
+                <li><button class="drop-item" data-toggle="custom-modal" data-target="#preview-controls">Aperçu automatique</button></li>
+                <li><button class="drop-item" data-toggle="custom-modal" data-target="#head-controls">Bibliothèques (CDN)</button></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div id="main-editor">
+        <section id="editor-container" aria-label="Code TypeScript">
+            <div class="editor-block" id="html-editor"></div>
+            <div class="editor-block" id="css-editor"></div>
+            <div class="editor-block" id="ts-editor"></div>
+        </section>
+
+        <section id="output-container" aria-label="Résultat">
+            <div id="control-button">
+                <button id="run-code" aria-label="Exécuter le code" title="Exécuter (Ctrl+Entrée)">
+                    <svg class="icon" width="18" height="18" aria-hidden="true"><use xlink:href="#play"></use></svg>
+                    Exécuter
+                </button>
+                <button id="display-console" aria-label="Afficher la console" aria-pressed="false">
+                    <svg class="icon" width="18" height="18" aria-hidden="true"><use xlink:href="#terminal"></use></svg>
+                    Console
+                </button>
+                <span id="ts-summary" class="ts-summary" role="status" aria-live="polite" title="Options du compilateur (menu « Options TypeScript »)"></span>
+            </div>
+            <iframe id="output" title="Aperçu" sandbox="allow-scripts allow-modals" style="display: block;"></iframe>
+            <div id="console" style="display: none;"></div>
+        </section>
+    </div>
+
+    <!-- Options du compilateur -->
+    <div id="ts-options" class="custom-modal-overlay">
+        <div class="custom-modal">
+            <div class="custom-modal-header">
+                <h2 class="custom-modal-title">Options TypeScript</h2>
+                <button class="custom-modal-close" aria-label="Fermer">&times;</button>
+            </div>
+            <div class="custom-modal-body">
+                <form id="ts-options-form" class="custom-form" novalidate>
+                    <label for="ts-opt-target">Cible de compilation <code>target</code></label>
+                    <div class="custom-input-row">
+                        <select id="ts-opt-target" data-ts-option="target" aria-label="Cible de compilation">
+                            <option value="ES5">ES5</option>
+                            <option value="ES2015">ES2015</option>
+                            <option value="ES2016">ES2016</option>
+                            <option value="ES2017">ES2017</option>
+                            <option value="ES2018">ES2018</option>
+                            <option value="ES2019">ES2019</option>
+                            <option value="ES2020">ES2020</option>
+                            <option value="ES2021">ES2021</option>
+                            <option value="ES2022">ES2022</option>
+                            <option value="ESNext">ESNext</option>
+                        </select>
+                    </div>
+
+                    <div class="switch-wrapper">
+                        <label class="switch"><input type="checkbox" id="ts-opt-strict" data-ts-option="strict"><span class="slider"></span></label>
+                        <label for="ts-opt-strict"><code>strict</code> : toutes les vérifications strictes</label>
+                    </div>
+                    <div class="switch-wrapper">
+                        <label class="switch"><input type="checkbox" id="ts-opt-noEmitOnError" data-ts-option="noEmitOnError"><span class="slider"></span></label>
+                        <label for="ts-opt-noEmitOnError"><code>noEmitOnError</code> : bloquer l'exécution si le code a des erreurs de type</label>
+                    </div>
+
+                    <p class="ts-options-group">Vérifications supplémentaires</p>
+                    <div class="switch-wrapper">
+                        <label class="switch"><input type="checkbox" id="ts-opt-noUnusedLocals" data-ts-option="noUnusedLocals"><span class="slider"></span></label>
+                        <label for="ts-opt-noUnusedLocals"><code>noUnusedLocals</code></label>
+                    </div>
+                    <div class="switch-wrapper">
+                        <label class="switch"><input type="checkbox" id="ts-opt-noUnusedParameters" data-ts-option="noUnusedParameters"><span class="slider"></span></label>
+                        <label for="ts-opt-noUnusedParameters"><code>noUnusedParameters</code></label>
+                    </div>
+                    <div class="switch-wrapper">
+                        <label class="switch"><input type="checkbox" id="ts-opt-noImplicitReturns" data-ts-option="noImplicitReturns"><span class="slider"></span></label>
+                        <label for="ts-opt-noImplicitReturns"><code>noImplicitReturns</code></label>
+                    </div>
+                    <div class="switch-wrapper">
+                        <label class="switch"><input type="checkbox" id="ts-opt-noFallthroughCasesInSwitch" data-ts-option="noFallthroughCasesInSwitch"><span class="slider"></span></label>
+                        <label for="ts-opt-noFallthroughCasesInSwitch"><code>noFallthroughCasesInSwitch</code></label>
+                    </div>
+                    <div class="switch-wrapper">
+                        <label class="switch"><input type="checkbox" id="ts-opt-noUncheckedIndexedAccess" data-ts-option="noUncheckedIndexedAccess"><span class="slider"></span></label>
+                        <label for="ts-opt-noUncheckedIndexedAccess"><code>noUncheckedIndexedAccess</code></label>
+                    </div>
+
+                    <p class="ts-hint">
+                        Ces options sont propres au projet et écrites dans son <code>tsconfig.json</code> à l'export.
+                        Le script est toujours vérifié et exécuté comme un module (<code>module: ESNext</code>) : <code>await</code>
+                        est permis au premier niveau, mais les fonctions ne sont pas globales (pour un attribut
+                        <code>onclick</code>, utilisez <code>window.maFonction = maFonction</code>).
+                        Avec <code>ESNext</code>, les décorateurs ne sont pas transformés : choisissez <code>ES2022</code> pour les utiliser.
+                    </p>
+                </form>
+            </div>
+            <div class="custom-modal-footer">
+                <button type="button" class="custom-button export" id="ts-options-reset">Rétablir les valeurs par défaut</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Projets -->
+    <div id="project-controls" class="custom-modal-overlay">
+        <div class="custom-modal">
+            <div class="custom-modal-header">
+                <h2 class="custom-modal-title">Projets</h2>
+                <button class="custom-modal-close" aria-label="Fermer">&times;</button>
+            </div>
+            <div class="custom-modal-body">
+                <form id="project-form" class="custom-form" novalidate>
+                    <div class="custom-input-row"><select id="project-select" required aria-label="Projet"></select></div>
+                    <div class="custom-input-row">
+                        <input type="text" id="create-project" placeholder="Nom du nouveau projet" autocomplete="off" aria-label="Nom du nouveau projet">
+                        <button type="button" class="custom-button" id="create-btn">Créer</button>
+                    </div>
+                    <div id="create-feedback" class="custom-feedback feedback-error">Nom vide ou déjà utilisé.</div>
+                    <div id="create-success" class="custom-feedback feedback-success">Projet créé !</div>
+                </form>
+            </div>
+            <div class="custom-modal-footer">
+                <button type="button" class="custom-button delete" id="delete-btn">Supprimer ce projet</button>
+                <div id="delete-feedback" class="custom-feedback feedback-error">Il faut garder au moins un projet.</div>
+                <div id="delete-success" class="custom-feedback feedback-success">Projet supprimé.</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Zip -->
+    <div id="zip-controls" class="custom-modal-overlay">
+        <div class="custom-modal">
+            <div class="custom-modal-header">
+                <h2 class="custom-modal-title">Import / export</h2>
+                <button class="custom-modal-close" aria-label="Fermer">&times;</button>
+            </div>
+            <div class="custom-modal-body">
+                <form id="zip-form" class="custom-form" novalidate>
+                    <div class="custom-input-row">
+                        <label class="custom-file-label">Choisir un .zip<input type="file" id="zip-input" class="custom-file-input" accept=".zip"></label>
+                        <span class="custom-file-name" id="file-name">Aucun fichier</span>
+                        <button type="button" class="custom-button import" id="import-btn">Importer</button>
+                    </div>
+                    <div id="import-feedback" class="custom-feedback feedback-error">Sélectionnez un fichier .zip.</div>
+                    <div id="import-success" class="custom-feedback feedback-success">Archive importée !</div>
+                </form>
+            </div>
+            <div class="custom-modal-footer">
+                <button type="button" class="custom-button export" id="export-btn">Exporter le projet (.zip)</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Aperçu -->
+    <div id="preview-controls" class="custom-modal-overlay">
+        <div class="custom-modal">
+            <div class="custom-modal-header">
+                <h2 class="custom-modal-title">Aperçu automatique</h2>
+                <button class="custom-modal-close" aria-label="Fermer">&times;</button>
+            </div>
+            <div class="custom-modal-body">
+                <div class="custom-stack">
+                    <button id="live-code" class="custom-button">Auto : désactivé</button>
+                    <label for="delay">Délai avant mise à jour : <strong id="delay-value">500ms</strong></label>
+                    <input type="range" id="delay" min="100" max="2000" step="100" value="500">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CDN -->
+    <div id="head-controls" class="custom-modal-overlay">
+        <div class="custom-modal">
+            <div class="custom-modal-header">
+                <h2 class="custom-modal-title">Bibliothèques (CDN)</h2>
+                <button class="custom-modal-close" aria-label="Fermer">&times;</button>
+            </div>
+            <div class="custom-modal-body">
+                <div class="switch-wrapper">
+                    <label class="switch">
+                        <input type="checkbox" id="bootstrapCdnSwitch">
+                        <span class="slider"></span>
+                    </label>
+                    <label for="bootstrapCdnSwitch">Utiliser Bootstrap</label>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock %}
+
+{% block scripts %}
+<script src="{% static 'editor/js/emmet-monaco.min.js' %}"></script>
+<script src="{% static 'editor/monaco-editor/min/vs/loader.js' %}"></script>
+<script type="module" src="{% static 'editor/js/typescript/main.js' %}"></script>
+{% endblock %}

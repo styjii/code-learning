@@ -16,6 +16,7 @@
         <a href="#courses">Cours</a>
         <a href="{% url 'editor-index' %}">Éditeur</a>
         <a href="{% url 'python-editor' %}">Éditeur Python</a>
+        <a href="{% url 'typescript-editor' %}">Éditeur TypeScript</a>
     </nav>
     <div class="topbar-actions">
         {% include "partials/theme_toggle.html" %}
@@ -36,6 +37,7 @@
                 <a class="btn btn-primary" href="#courses">Explorer les cours</a>
                 <a class="btn btn-ghost" href="{% url 'editor-index' %}">Ouvrir l'éditeur</a>
                 <a class="btn btn-ghost" href="{% url 'python-editor' %}">Éditeur Python</a>
+                <a class="btn btn-ghost" href="{% url 'typescript-editor' %}">Éditeur TypeScript</a>
             </div>
         </div>
 

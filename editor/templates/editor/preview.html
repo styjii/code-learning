@@ -28,6 +28,11 @@
     <script src="{% static 'editor/js/iframe-console.js' %}"></script>
 
     <!-- project -->
+    {% if module %}
+    <script type="module">
+{{ js|safe }}
+    </script>
+    {% else %}
     <script>
         try {
             {{ js|safe }}
@@ -35,5 +40,6 @@
             window.onerror(e.message, e.filename || "inline", e.lineno || 1, e.colno || 1, e);
         }
     </script>
+    {% endif %}
 </body>
 </html>

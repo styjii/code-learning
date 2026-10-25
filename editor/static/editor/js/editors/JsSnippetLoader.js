@@ -1,15 +1,17 @@
 /**
  * Loads JavaScript snippets from a JSON URL and registers them
- * as Monaco completion items for JavaScript language.
+ * as Monaco completion items for JavaScript language (or another one, e.g. "typescript").
  */
 export class JsSnippetLoader {
     /**
      * @param {string} url URL to JSON snippet definitions
      * @param {() => void} [callback] Optional callback when loading completes
+     * @param {string} [language="javascript"] Monaco language that receives the snippets
      */
-    constructor(url, callback) {
+    constructor(url, callback, language = "javascript") {
         this.url = url;
         this.callback = callback;
+        this.language = language;
     }
 
     /**
@@ -36,7 +38,7 @@ export class JsSnippetLoader {
             range: null,
         }));
 
-        monaco.languages.registerCompletionItemProvider("javascript", {
+        monaco.languages.registerCompletionItemProvider(this.language, {
             provideCompletionItems: (model, position) => {
                 const word = model.getWordUntilPosition(position);
                 const range = {

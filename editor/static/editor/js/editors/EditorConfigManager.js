@@ -5,7 +5,13 @@ import { patchPassiveTouchStart } from "./utils.js";
  * Manages loading, saving, updating, and applying Monaco Editor configurations.
  */
 export class EditorConfigManager {
-    constructor() {
+    /**
+     * @param {{editors: Record<string, any>}} [editorState] état qui porte les éditeurs à configurer
+     *        (celui de l'éditeur Web par défaut ; l'éditeur TypeScript passe le sien)
+     */
+    constructor(editorState = state) {
+        this.state = editorState;
+
         /** @type {object} current config */
         this.editorConfig = {};
 
@@ -68,7 +74,7 @@ export class EditorConfigManager {
      * @param {any} value Option value
      */
     updateOption(key, value) {
-        Object.values(state.editors).forEach((editor) => {
+        Object.values(this.state.editors).forEach((editor) => {
             if (editor?.updateOptions) {
                 editor.updateOptions({ [key]: value });
             }
@@ -91,7 +97,7 @@ export class EditorConfigManager {
     registerCommands() {
         const getActiveEditor = () => {
             const activeTabId = document.querySelector(".tab.active")?.id?.replace("-tab", "");
-            return state.editors[activeTabId];
+            return this.state.editors[activeTabId];
         };
 
         const toggleWordWrap = () => {

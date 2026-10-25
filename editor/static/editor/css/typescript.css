@@ -1,0 +1,31 @@
+/* Éditeur TypeScript : résumé des options dans la barre de commandes, fenêtre « Options TypeScript ». */
+
+.ts-summary {
+    flex: 0 1 auto;
+    min-width: 0;
+    margin-left: auto;
+    align-self: center;
+    overflow: hidden;
+    color: var(--muted);
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* La fenêtre des options est plus haute que les autres : elle défile sur les petits écrans. */
+#ts-options .custom-modal { display: flex; flex-direction: column; width: min(520px, 92vw); max-height: 90vh; }
+#ts-options .custom-modal-body { flex: 1; min-height: 0; overflow-y: auto; }
+
+#ts-options code { font-family: var(--font-mono); font-size: 0.85em; }
+
+.ts-options-group {
+    margin: 0.4rem 0 0;
+    color: var(--faint);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+
+.ts-hint { margin: 0.25rem 0 0; color: var(--muted); font-size: 0.8rem; line-height: 1.55; }

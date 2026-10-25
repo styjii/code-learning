@@ -32,6 +32,39 @@ class Project(models.Model):
         return self.name
 
 
+class TypeScriptProject(models.Model):
+    """
+    Projet de l'éditeur TypeScript (HTML/CSS/TypeScript) appartenant à un utilisateur.
+
+    Fields:
+        - owner: utilisateur propriétaire (chacun ne voit que ses projets).
+        - name: nom du projet, unique par utilisateur.
+        - html, css, ts: code source.
+        - compiler_options: options du compilateur (liste blanche de ``typescript_config.py``), comme un
+          ``tsconfig.json`` : strict, target... Validées avant écriture et filtrées à nouveau à la lecture.
+    """
+    owner = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        null=True,
+        blank=True,
+        on_delete=models.CASCADE,
+        related_name="editor_typescript_projects",
+    )
+    name = models.CharField(max_length=100)
+    html = models.TextField(blank=True)
+    css = models.TextField(blank=True)
+    ts = models.TextField(blank=True)
+    compiler_options = models.JSONField(default=dict, blank=True)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=["owner", "name"], name="unique_typescript_project_name_per_owner"),
+        ]
+
+    def __str__(self):
+        return self.name
+
+
 class EditorPreferences(models.Model):
     """
     Préférences de l'éditeur propres à un utilisateur.

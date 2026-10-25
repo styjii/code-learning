@@ -1,6 +1,6 @@
 # Code Learning
 
-> Des cours de programmation **en français**, des blocs de code **exécutables dans le navigateur** et un **éditeur HTML / CSS / JS en ligne**, dans une seule application Django.
+> Des cours de programmation **en français**, des blocs de code **exécutables dans le navigateur** et des **éditeurs en ligne HTML / CSS / JS, Python et HTML / CSS / TypeScript**, dans une seule application Django.
 
 ![Python](https://img.shields.io/badge/Python-3.12%2B-3776ab?logo=python&logoColor=white)
 ![Django](https://img.shields.io/badge/Django-5.1%2B-092e20?logo=django&logoColor=white)
@@ -45,6 +45,7 @@
 **Éditeur en ligne**
 - Trois onglets HTML / CSS / JS propulsés par Monaco Editor (le moteur de VS Code), avec Emmet et des snippets JavaScript.
 - Aperçu dans une iframe isolée, console intégrée, aperçu automatique avec délai réglable, option Bootstrap en un clic.
+- **Éditeur TypeScript** (`/editor/typescript/`) : mêmes projets, aperçu et import / export, avec onglets HTML / CSS / **TS**. Le code est vérifié et compilé dans le navigateur (compilateur de Monaco) ; les erreurs de type sont soulignées et listées dans la console. **Options du compilateur** par projet (`target`, `strict`, `noUnusedLocals`...), écrites dans le `tsconfig.json` de l'export.
 - **Projets** enregistrés par utilisateur, **import / export .zip**.
 - Préférences d'éditeur (retour à la ligne, taille de tabulation, minimap...) propres à chaque compte.
 
@@ -146,7 +147,7 @@ Ouvrez <http://127.0.0.1:8000/> et connectez-vous.
 | Cours | `Échap` | Fermer la recherche |
 | Bloc de code exécutable | `Ctrl + Entrée` | Relancer le code |
 | Éditeur | `Ctrl + Entrée` | Exécuter |
-| Éditeur | `Ctrl + 1` / `2` / `3` | Onglet HTML / CSS / JS |
+| Éditeur | `Ctrl + 1` / `2` / `3` | Onglet HTML / CSS / JS (TS dans l'éditeur TypeScript) |
 | Éditeur | `Maj + Alt + F` | Formater le document |
 | Éditeur | `Ctrl + Maj + P` | Palette de commandes |
 | Éditeur | `Ctrl + Alt + W` | Activer / désactiver le retour à la ligne |
@@ -161,7 +162,7 @@ code-learning/
 ├── webapp/        accueil : catalogue des cours, préparation du contenu
 ├── language/      pages de cours (config.py = catalogue, topics/ = Markdown)
 ├── core/          conversion Markdown -> HTML à onglets
-├── editor/        éditeur Monaco, projets, aperçu, import/export zip, préférences
+├── editor/        éditeurs Monaco (Web, Python, TypeScript), projets, aperçu, import/export zip, préférences
 ├── templates/     base.html et partials partagés (thème, logo, déconnexion)
 ├── static/        CSS/JS communs, polices, icônes, Bootstrap, Pyodide
 ├── manage.py
@@ -186,9 +187,20 @@ code-learning/
 | `POST /editor/api/save-monaco-config/` | enregistre ses préférences (clés autorisées uniquement) |
 | `POST /editor/api/export-zip/` | génère le `.zip` du projet |
 | `POST /editor/api/import-zip/` | lit un `.zip` (plafonné) |
+| `GET/POST /editor/api/ts-projects/`, `GET/PUT/DELETE /editor/api/ts-projects/<id>/` | projets de l'éditeur TypeScript (html, css, ts, `compiler_options`) |
+| `POST /editor/api/ts-export-zip/` | `.zip` : `index.html`, `style.css`, `script.ts`, `tsconfig.json` |
+| `POST /editor/api/ts-import-zip/` | lit ce `.zip` (mêmes plafonds) et renvoie aussi les options du `tsconfig.json` |
 | `POST /editor/preview/` puis `GET /editor/preview/<id>/` | génère puis affiche l'aperçu (cinq derniers conservés) |
 
 L'API répond `403` aux utilisateurs non connectés.
+
+### Éditeur TypeScript
+
+- Le TypeScript est compilé **dans le navigateur** ; le JavaScript produit est envoyé à `POST /editor/preview/` avec `module=1` et s'exécute comme **module ES** (`await` au premier niveau permis, variables non globales : pour un `onclick`, écrire `window.maFonction = maFonction`).
+- Menu « Options TypeScript » : `target` (ES5 à ESNext), `strict`, `noEmitOnError` (vrai : une erreur de type bloque l'exécution), `noUnusedLocals`, `noUnusedParameters`, `noImplicitReturns`, `noFallthroughCasesInSwitch`, `noUncheckedIndexedAccess`. `module: ESNext` est imposé.
+- Les options sont enregistrées **par projet** (`TypeScriptProject.compiler_options`) et validées par liste blanche dans `editor/typescript_config.py` (clé inconnue ou valeur invalide : refus en `400`).
+- Avec `target: ESNext`, les décorateurs ne sont pas transformés : utiliser `ES2022`.
+- L'export ne contient pas de JavaScript : `npx tsc` produit `script.js`, que `index.html` charge en `type="module"` (à servir en HTTP, pas par `file://`).
 
 ## Ajouter ou modifier un cours
 
