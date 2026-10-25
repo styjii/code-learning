@@ -2,6 +2,7 @@
 
 > Des cours de programmation **en français**, des blocs de code **exécutables dans le navigateur** et des **éditeurs en ligne HTML / CSS / JS, Python et HTML / CSS / TypeScript**, dans une seule application Django.
 
+[![CI](https://github.com/styjii/code-learning/actions/workflows/ci.yml/badge.svg)](https://github.com/styjii/code-learning/actions/workflows/ci.yml)
 ![Python](https://img.shields.io/badge/Python-3.12%2B-3776ab?logo=python&logoColor=white)
 ![Django](https://img.shields.io/badge/Django-5.1%2B-092e20?logo=django&logoColor=white)
 ![DRF](https://img.shields.io/badge/Django%20REST%20framework-3.15%2B-a30000)
@@ -18,6 +19,7 @@
 - [Stack technique](#stack-technique)
 - [Installation](#installation)
 - [Utilisation](#utilisation)
+- [Les éditeurs en ligne](#les-éditeurs-en-ligne)
 - [Raccourcis clavier](#raccourcis-clavier)
 - [Architecture](#architecture)
 - [Ajouter ou modifier un cours](#ajouter-ou-modifier-un-cours)
@@ -26,6 +28,8 @@
 - [Sécurité](#sécurité)
 - [Déploiement en production](#déploiement-en-production)
 - [Tests](#tests)
+- [Intégration continue](#intégration-continue)
+- [Contribuer](#contribuer)
 - [Dépannage](#dépannage)
 - [Licence et auteur](#licence-et-auteur)
 
@@ -42,11 +46,11 @@
 - Les blocs JavaScript, TypeScript et Python ont un bouton **Exécuter** : ils deviennent un éditeur modifiable avec sa zone de résultat.
 - Tout s'exécute **dans le navigateur** (Web Worker isolé pour JS, Pyodide pour Python) : aucun code utilisateur n'est exécuté sur le serveur.
 
-**Éditeur en ligne**
-- Trois onglets HTML / CSS / JS propulsés par Monaco Editor (le moteur de VS Code), avec Emmet et des snippets JavaScript.
-- Aperçu dans une iframe isolée, console intégrée, aperçu automatique avec délai réglable, option Bootstrap en un clic.
-- **Éditeur TypeScript** (`/editor/typescript/`) : mêmes projets, aperçu et import / export, avec onglets HTML / CSS / **TS**. Le code est vérifié et compilé dans le navigateur (compilateur de Monaco) ; les erreurs de type sont soulignées et listées dans la console. **Options du compilateur** par projet (`target`, `strict`, `noUnusedLocals`...), écrites dans le `tsconfig.json` de l'export.
-- **Projets** enregistrés par utilisateur, **import / export .zip**.
+**Éditeurs en ligne** (commutateur *Web | Python | TypeScript* en haut de chaque éditeur)
+- **Web** (`/editor/`) : onglets HTML / CSS / JS propulsés par Monaco Editor (le moteur de VS Code), avec Emmet et des snippets JavaScript. Aperçu dans une iframe isolée, console intégrée, aperçu automatique avec délai réglable, option Bootstrap en un clic.
+- **TypeScript** (`/editor/typescript/`) : mêmes projets, aperçu et import / export, avec onglets HTML / CSS / **TS**. Le code est vérifié et compilé dans le navigateur (compilateur de Monaco) ; les erreurs de type sont soulignées et listées dans la console. **Options du compilateur** par projet (`target`, `strict`, `noUnusedLocals`...), écrites dans le `tsconfig.json` de l'export.
+- **Python** (`/editor/python/`) : plusieurs fichiers (`main.py` + modules importables), exécution dans Pyodide, `input()` interactif dans la console, bouton **Arrêter**. Les fichiers sont conservés **dans le navigateur**, pas sur le serveur.
+- **Projets** Web et TypeScript enregistrés par utilisateur, **import / export .zip**.
 - Préférences d'éditeur (retour à la ligne, taille de tabulation, minimap...) propres à chaque compte.
 
 **Comptes et sécurité**
@@ -75,6 +79,7 @@
 | Éditeur | Monaco Editor 0.47, Emmet |
 | Exécution navigateur | Web Workers, TypeScript (compilateur de Monaco), Pyodide (CPython 3.14 en WebAssembly) |
 | Option de l'éditeur | Bootstrap 5.3, activable dans l'aperçu |
+| Intégration continue | GitHub Actions, GitHub CLI (`gh`) |
 
 Monaco, Pyodide et Bootstrap sont **embarqués** dans le dépôt (`static/`) : l'application ne dépend d'aucun CDN externe.
 
@@ -82,7 +87,7 @@ Monaco, Pyodide et Bootstrap sont **embarqués** dans le dépôt (`static/`) : l
 
 ### Prérequis
 
-- Python 3.12 ou plus récent (testé avec Python 3.12 et Django 6.1)
+- Python 3.12 ou plus récent (testé en CI avec Python 3.12 et 3.13, Django 6.1)
 - `git` et `pip`
 
 ### Étapes
@@ -134,10 +139,35 @@ Ouvrez <http://127.0.0.1:8000/> et connectez-vous.
 1. **Connexion** sur `/accounts/login/`. Il n'y a pas d'inscription : créez les comptes avec `createsuperuser`, ou dans `/admin/` (*Utilisateurs > Ajouter*).
 2. **Premier lancement** : l'accueil convertit les cours un par un et affiche une barre de progression (annulable). Les pages sont ensuite servies depuis le cache.
 3. **Cours** : choisissez une carte sur l'accueil, naviguez par sections, recherchez avec `/` ou `Ctrl + K`.
-4. **Éditeur** : bouton `</>` en haut d'un cours, ou <http://127.0.0.1:8000/editor/>.
-   - Onglets HTML / CSS / JS, bouton **Exécuter**, bouton **Console**.
-   - Menu `⋯` : **Projets** (créer, changer, supprimer), **Import / export .zip**, **Aperçu automatique**, **Bibliothèques (CDN)** (active Bootstrap dans l'aperçu, servi depuis le projet).
-   - L'export produit `index.html`, `style.css` et `script.js` ; l'import relit une archive de cette forme.
+4. **Éditeurs** : bouton `</>` en haut d'un cours, ou directement <http://127.0.0.1:8000/editor/>. Le commutateur **Web | Python | TypeScript** passe de l'un à l'autre (détails : [Les éditeurs en ligne](#les-éditeurs-en-ligne)).
+   - **Web et TypeScript** : onglets de code, bouton **Exécuter**, bouton **Console**. Menu `⋯` : **Projets** (créer, changer, supprimer), **Import / export .zip**, **Aperçu automatique**, **Bibliothèques (CDN)** (active Bootstrap dans l'aperçu, servi depuis le projet) et, en TypeScript, **Options TypeScript**.
+   - **Python** : onglets de fichiers, bouton **Exécuter** / **Arrêter**, menu `⋯` : **Nouveau fichier**, **Importer des fichiers**, **Télécharger le fichier actif**, **Remplacer par l'exemple**.
+
+## Les éditeurs en ligne
+
+Les trois éditeurs partagent la même interface (Monaco, console, thème clair / sombre) mais pas le même stockage :
+
+| Éditeur | Langage exécuté | Où sont les fichiers ? | Export |
+|---|---|---|---|
+| Web | HTML, CSS, JavaScript (aperçu en iframe isolée) | base de données, par utilisateur | `index.html`, `style.css`, `script.js` |
+| TypeScript | HTML, CSS, TypeScript compilé en JavaScript | base de données, par utilisateur | `index.html`, `style.css`, `script.ts`, `tsconfig.json` |
+| Python | Python 3.14 (Pyodide, Web Worker) | **navigateur** (`localStorage`) | fichier par fichier |
+
+### Éditeur Python
+
+- `main.py` est le point d'entrée : il ne peut être ni renommé ni supprimé. Les autres fichiers `.py` sont importables (`import utils`) ; les fichiers `.txt`, `.json`, `.csv` et `.md` importés sont disponibles à côté du programme.
+- `input()` est interactif : tapez directement dans la console. La zone repliable « Entrée standard » permet de préremplir une ligne par `input()`.
+- **Enregistrement** : automatique, dans ce navigateur uniquement (indicateur « Enregistré dans ce navigateur », `Ctrl + S` pour forcer). Les fichiers ne suivent pas le compte et disparaissent si vous videz les données du site : utilisez **Télécharger le fichier actif** pour les sauvegarder.
+- Le bouton **Arrêter** interrompt le programme ; un délai maximal de 5 minutes s'applique. Pyodide (~13 Mo) est chargé au premier lancement.
+- Seules les préférences Monaco sont lues sur le serveur.
+
+### Éditeur TypeScript
+
+- Le TypeScript est compilé **dans le navigateur** ; le JavaScript produit est envoyé à `POST /editor/preview/` avec `module=1` et s'exécute comme **module ES** (`await` au premier niveau permis, variables non globales : pour un `onclick`, écrire `window.maFonction = maFonction`).
+- Menu « Options TypeScript » : `target` (ES5 à ESNext), `strict`, `noEmitOnError` (vrai : une erreur de type bloque l'exécution), `noUnusedLocals`, `noUnusedParameters`, `noImplicitReturns`, `noFallthroughCasesInSwitch`, `noUncheckedIndexedAccess`. `module: ESNext` est imposé. Le résumé des options actives s'affiche à côté du bouton **Console**.
+- Les options sont enregistrées **par projet** (`TypeScriptProject.compiler_options`) et validées par liste blanche dans `editor/typescript_config.py` (clé inconnue ou valeur invalide : refus en `400`).
+- Avec `target: ESNext`, les décorateurs ne sont pas transformés : utiliser `ES2022`.
+- L'export ne contient pas de JavaScript : `npx tsc` produit `script.js`, que `index.html` charge en `type="module"` (à servir en HTTP, pas par `file://`). L'import relit `tsconfig.json` et ignore les clés non autorisées.
 
 ## Raccourcis clavier
 
@@ -146,12 +176,14 @@ Ouvrez <http://127.0.0.1:8000/> et connectez-vous.
 | Cours | `/` ou `Ctrl/Cmd + K` | Ouvrir la recherche |
 | Cours | `Échap` | Fermer la recherche |
 | Bloc de code exécutable | `Ctrl + Entrée` | Relancer le code |
-| Éditeur | `Ctrl + Entrée` | Exécuter |
-| Éditeur | `Ctrl + 1` / `2` / `3` | Onglet HTML / CSS / JS (TS dans l'éditeur TypeScript) |
-| Éditeur | `Maj + Alt + F` | Formater le document |
-| Éditeur | `Ctrl + Maj + P` | Palette de commandes |
-| Éditeur | `Ctrl + Alt + W` | Activer / désactiver le retour à la ligne |
-| Éditeur | `Ctrl + Alt + L` | Activer / désactiver le défilement après la dernière ligne |
+| Éditeurs | `Ctrl + Entrée` | Exécuter |
+| Éditeur Web / TypeScript | `Ctrl + 1` / `2` / `3` | Onglet HTML / CSS / JS (ou TS) |
+| Éditeur Web / TypeScript | `Maj + Alt + F` | Formater le document |
+| Éditeur Web / TypeScript | `Ctrl + Maj + P` | Palette de commandes |
+| Éditeur Web / TypeScript | `Ctrl + Alt + W` | Activer / désactiver le retour à la ligne |
+| Éditeur Web / TypeScript | `Ctrl + Alt + L` | Activer / désactiver le défilement après la dernière ligne |
+| Éditeur Python | `Ctrl + S` | Enregistrer dans le navigateur |
+| Éditeur Python | `F2` / `Suppr` (onglet sélectionné) | Renommer / supprimer le fichier |
 
 ## Architecture
 
@@ -192,15 +224,7 @@ code-learning/
 | `POST /editor/api/ts-import-zip/` | lit ce `.zip` (mêmes plafonds) et renvoie aussi les options du `tsconfig.json` |
 | `POST /editor/preview/` puis `GET /editor/preview/<id>/` | génère puis affiche l'aperçu (cinq derniers conservés) |
 
-L'API répond `403` aux utilisateurs non connectés.
-
-### Éditeur TypeScript
-
-- Le TypeScript est compilé **dans le navigateur** ; le JavaScript produit est envoyé à `POST /editor/preview/` avec `module=1` et s'exécute comme **module ES** (`await` au premier niveau permis, variables non globales : pour un `onclick`, écrire `window.maFonction = maFonction`).
-- Menu « Options TypeScript » : `target` (ES5 à ESNext), `strict`, `noEmitOnError` (vrai : une erreur de type bloque l'exécution), `noUnusedLocals`, `noUnusedParameters`, `noImplicitReturns`, `noFallthroughCasesInSwitch`, `noUncheckedIndexedAccess`. `module: ESNext` est imposé.
-- Les options sont enregistrées **par projet** (`TypeScriptProject.compiler_options`) et validées par liste blanche dans `editor/typescript_config.py` (clé inconnue ou valeur invalide : refus en `400`).
-- Avec `target: ESNext`, les décorateurs ne sont pas transformés : utiliser `ES2022`.
-- L'export ne contient pas de JavaScript : `npx tsc` produit `script.js`, que `index.html` charge en `type="module"` (à servir en HTTP, pas par `file://`).
+L'API répond `403` aux utilisateurs non connectés. L'éditeur Python n'utilise que `load-monaco-config` : ses fichiers restent dans le navigateur.
 
 ## Ajouter ou modifier un cours
 
@@ -277,6 +301,7 @@ Toutes les valeurs sensibles sont lues dans `.env` (jamais versionné, voir `.gi
 
 - **Préférences Monaco** : enregistrées **par utilisateur** en base (`EditorPreferences`), jamais dans un fichier du code source. Seules les clés de la liste blanche de `editor/monaco_config.py` sont acceptées, avec type et plage vérifiés ; `readOnly`, `value`, `theme`... sont refusés. Le thème suit celui du site (navigateur).
 - **Import .zip** : taille du fichier, nombre d'entrées, taille de chaque fichier et total décompressé sont plafonnés (`EDITOR_ZIP_*`), contrôlés **avant** toute décompression ; refus en `413`. En production, ajoutez aussi une limite côté serveur web (ex. nginx `client_max_body_size 6m;`).
+- **Options TypeScript** : liste blanche dans `editor/typescript_config.py` (type et valeur vérifiés, clés inconnues refusées), à l'écriture comme à la lecture ; `module` est imposé et non modifiable.
 - **Aperçu** : servi avec `Content-Security-Policy: sandbox` et dans une iframe `sandbox` : le code de l'utilisateur ne peut pas utiliser sa session.
 - **Clickjacking** : `X-Frame-Options: DENY` sur le site (sauf l'aperçu, volontairement intégrable).
 
@@ -298,10 +323,43 @@ Toutes les valeurs sensibles sont lues dans `.env` (jamais versionné, voir `.gi
 
 ## Tests
 
+Les tests ont besoin d'une clé secrète : avec un `.env` en place, rien à faire ; sinon `export DJANGO_SECRET_KEY=test DJANGO_DEBUG=1` (PowerShell : `$env:DJANGO_SECRET_KEY="test"; $env:DJANGO_DEBUG="1"`).
+
 ```bash
-python manage.py test accounts editor language   # authentification, isolation des projets, CSRF, config Monaco, import zip, cache des cours
-python -m pytest core                   # conversion Markdown
+python manage.py test accounts editor language   # authentification, isolation des projets, CSRF, config Monaco, import zip, cache des cours, éditeur TypeScript
+python manage.py test editor.test_typescript     # un seul module : options du compilateur, projets TS, zip TS, aperçu en module
+python -m pytest core                            # conversion Markdown
+python manage.py makemigrations --check --dry-run  # un modèle modifié sans migration fait échouer la commande
 ```
+
+La syntaxe des modules JavaScript du site est vérifiée en CI (voir ci-dessous) ; en local : `node --check fichier.mjs` (copiez le fichier en `.mjs` pour que `import` / `export` soient acceptés).
+
+## Intégration continue
+
+Le workflow [`.github/workflows/ci.yml`](.github/workflows/ci.yml) se lance à chaque **push** (toutes les branches) et à chaque **Pull Request**. Un push sur une branche qui a déjà une PR ouverte est ignoré (la CI de la PR le couvre) : c'est le job `Contexte (gh)` qui le détecte.
+
+| Job | Quand | Rôle |
+|---|---|---|
+| `Contexte (gh)` | toujours | vérifie le dépôt visé (`styjii/code-learning`) et évite les doublons push / PR |
+| `Tests (Python 3.12 / 3.13)` | push, PR | `manage.py check`, migrations manquantes, tests Django, `pytest core` |
+| `Syntaxe JavaScript` | push, PR | `node --check` sur tous les modules du site |
+| `Vérifications de la PR (gh)` | PR | `.github/scripts/pr-checks.sh` : fichiers interdits (`.env`, `db.sqlite3`, caches), titre et description, taille, code sans test, étiquettes automatiques |
+| `Commentaire de synthèse` | PR du dépôt | un seul commentaire mis à jour à chaque push |
+| `Vérifications du push (gh)` | push | aucun fichier sensible versionné, Pull Requests liées au commit |
+
+- Les fichiers sensibles font **échouer** la CI ; titre court, description vide, PR volumineuse (plus de 50 fichiers ou 1500 lignes) ou code sans test ne sont que des **avertissements**.
+- Étiquettes posées selon les dossiers touchés : `editor`, `cours`, `site`, `docs`, `tests`, `ci`.
+- Aucun secret à configurer : le workflow utilise le jeton automatique et une clé Django de test.
+- Les PR venant d'un fork lancent les tests mais ne reçoivent ni étiquettes ni commentaire (jeton en lecture seule).
+- Si les étiquettes ou le commentaire échouent avec « Resource not accessible by integration » : *Settings > Actions > General > Workflow permissions > Read and write permissions*.
+- Pour **bloquer le merge** sans CI verte : *Settings > Branches > Branch protection rules* puis cochez les jobs `Tests`, `Syntaxe JavaScript` et `Commentaire de synthèse` comme obligatoires.
+
+## Contribuer
+
+1. Créez une branche : `git switch -c feat/ma-modification`.
+2. Faites des commits courts au format `type(portée): description` (par exemple `feat(editor): ...`, `docs(topics): ...`, `fix(accounts): ...`).
+3. Lancez les [tests](#tests) en local.
+4. Ouvrez une Pull Request vers `main` : la [CI](#intégration-continue) s'exécute et commente le résultat. Corrigez, poussez : le commentaire est mis à jour.
 
 ## Dépannage
 
@@ -316,6 +374,11 @@ python -m pytest core                   # conversion Markdown
 | Le premier clic sur « Exécuter » en Python est lent | Normal : Pyodide (~13 Mo) est chargé une seule fois. |
 | Import zip refusé (erreur 413) | L'archive dépasse une limite : voir les variables `EDITOR_ZIP_*`. |
 | Compte bloqué après des échecs | Attendez `DJANGO_LOGIN_LOCKOUT_SECONDS` (15 min par défaut). |
+| Éditeur TypeScript : le code ne s'exécute pas, la console liste des `TS…` | `noEmitOnError` est actif : corrigez les erreurs de type, ou désactivez-le dans « Options TypeScript ». |
+| Éditeur TypeScript : `ReferenceError: maFonction is not defined` (attribut `onclick`) | Le script est un module : écrivez `window.maFonction = maFonction` ou utilisez `addEventListener`. |
+| Éditeur Python : fichiers disparus | Ils sont stockés dans le navigateur : vider les données du site ou changer de navigateur les efface. Téléchargez-les pour les sauvegarder. |
+| Les tests échouent avec `DJANGO_SECRET_KEY est absent` | Créez `.env`, ou `export DJANGO_SECRET_KEY=test DJANGO_DEBUG=1` avant de lancer les tests. |
+| CI : `Resource not accessible by integration` | Droits du jeton insuffisants : voir [Intégration continue](#intégration-continue). |
 
 ## Licence et auteur
 
