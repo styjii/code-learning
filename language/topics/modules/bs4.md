@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🍲 BeautifulSoup — Guide complet
+# BeautifulSoup — Guide complet
 
 **Analyser HTML et XML, extraire des données et faire du *web scraping* avec Python**
 
@@ -10,7 +10,7 @@
 
 ---
 
-## 🗂️ Sommaire
+## Sommaire
 
 1. [Introduction](#1-introduction)
 2. [Installation et parseurs](#2-installation-et-parseurs)
@@ -32,7 +32,9 @@
 18. [Erreurs courantes et débogage](#18-erreurs-courantes-et-débogage)
 19. [Alternatives, aide-mémoire et ressources](#19-alternatives-aide-mémoire-et-ressources)
 
-> 💡 **Légende** : *(ajout)* = notion absente du guide d'origine ; *(à jour)* = correction ou pratique moderne remplaçant une ancienne.
+> **Légende** : *(ajout)* = notion absente du guide d'origine ; *(à jour)* = correction ou pratique moderne remplaçant une ancienne.
+>
+> **Convention pour les exemples** : chaque section commence par un extrait autonome (imports et données compris). Les extraits suivants d'une même section se lisent comme les cellules d'un notebook et réutilisent ses variables (`soup`, `html`…). Installation préalable : `pip install beautifulsoup4 lxml html5lib requests`.
 
 ---
 
@@ -42,7 +44,7 @@
 
 **Beautiful Soup** (paquet `beautifulsoup4`, import `bs4`) est une bibliothèque Python qui **analyse du HTML ou du XML** — même **mal formé** — et construit un **arbre d'objets** que l'on peut **parcourir, rechercher et modifier** facilement.
 
-> ℹ️ Beautiful Soup **n'effectue pas de requêtes réseau** et **n'exécute pas de JavaScript** : il analyse un texte déjà obtenu (via `requests`, `httpx`, un navigateur piloté, un fichier…). Il s'associe à un **parseur** (`html.parser`, `lxml`, `html5lib`) qui fait le travail de découpage.
+> Beautiful Soup **n'effectue pas de requêtes réseau** et **n'exécute pas de JavaScript** : il analyse un texte déjà obtenu (via `requests`, `httpx`, un navigateur piloté, un fichier…). Il s'associe à un **parseur** (`html.parser`, `lxml`, `html5lib`) qui fait le travail de découpage.
 
 ## 1.2 Cas d'usage
 
@@ -64,7 +66,7 @@
 
 Autres points :
 
-- Les noms hérités de Beautiful Soup 3 et du début de la v4 (`findAll`, `findChildren`, `renderContents`, `replaceWith`, `nextSibling`…) sont **dépréciés** : utilisez la forme en `snake_case` (`find_all`, `find_all` / `.children`, `decode_contents`, `replace_with`, `next_sibling`).
+- Les noms hérités de Beautiful Soup 3 et du début de la v4 (`findAll`, `findChildren`, `renderContents`, `replaceWith`, `nextSibling`…) sont **dépréciés** : utilisez la forme en `snake_case` (`find_all`, `.children`, `decode_contents`, `replace_with`, `next_sibling`).
 - L'argument **`text=`** de `find()` / `find_all()` est déprécié : utilisez **`string=`**.
 - Python **3.7 minimum** (versions récentes : Python 3.9 et plus recommandé).
 
@@ -84,7 +86,7 @@ print(bs4.__version__)
 | **Tableaux HTML → DataFrame** | **`pandas.read_html()`** |
 | Existe une **API officielle ou un export** | **L'utiliser plutôt que scraper** |
 
-> ⚖️ **Avant de scraper**, vérifiez les **conditions d'utilisation**, le fichier **`robots.txt`**, la législation sur les **données personnelles** (RGPD) et le **droit d'auteur** : voir [section 14](#14-scraper-de-façon-responsable).
+> **Avant de scraper**, vérifiez les **conditions d'utilisation**, le fichier **`robots.txt`**, la législation sur les **données personnelles** (RGPD) et le **droit d'auteur** : voir [section 14](#14-scraper-de-façon-responsable).
 
 ---
 
@@ -97,7 +99,7 @@ pip install beautifulsoup4                    # (ou : uv add beautifulsoup4)
 pip install lxml html5lib                     # parseurs optionnels
 ```
 
-> ⚠️ Le paquet s'appelle **`beautifulsoup4`** (et non `bs4`, ni `BeautifulSoup`, qui correspond à l'ancienne version 3). On l'**importe** pourtant avec `from bs4 import BeautifulSoup`.
+> Le paquet s'appelle **`beautifulsoup4`** (et non `bs4`, ni `BeautifulSoup`, qui correspond à l'ancienne version 3). On l'**importe** pourtant avec `from bs4 import BeautifulSoup`.
 
 Travaillez dans un **environnement virtuel** (`python -m venv .venv`) et épinglez vos versions (`requirements.txt`, `uv.lock`).
 
@@ -118,11 +120,12 @@ Travaillez dans un **environnement virtuel** (`python -m venv .venv`) et épingl
 | Tolérance aux erreurs | Moyenne | Bonne | **Maximale** (comme un navigateur) |
 | Installation | Aucune | `pip install lxml` | `pip install html5lib` |
 | Structure complétée | Non (fragment conservé) | Oui (`html`/`body`) | Oui (`html`/`head`/`body`) |
-| XML | ❌ | ✅ (`"xml"`) | ❌ |
+| XML | Non | Oui (`"xml"`) | Non |
 
 ### Le même HTML cassé, trois résultats
 
 ```python
+# Nécessite : pip install beautifulsoup4 lxml html5lib
 from bs4 import BeautifulSoup
 
 mauvais = "<div><p>Paragraphe<p>Autre<b>gras</div>"
@@ -135,13 +138,13 @@ for parseur in ("html.parser", "lxml", "html5lib"):
 # html5lib     → <html><head></head><body><div><p>Paragraphe</p><p>Autre<b>gras</b></p></div></body></html>
 ```
 
-> 🔑 **Conséquence** : l'arbre dépend du parseur ; si votre code fonctionne avec l'un et pas avec l'autre, c'est souvent une **différence de réparation du HTML**. **Précisez toujours le parseur** (sinon Beautiful Soup choisit lui-même et peut afficher un avertissement) et gardez le même en développement et en production.
+> **Conséquence** : l'arbre dépend du parseur ; si votre code fonctionne avec l'un et pas avec l'autre, c'est souvent une **différence de réparation du HTML**. **Précisez toujours le parseur** (sinon Beautiful Soup choisit lui-même et peut afficher un avertissement) et gardez le même en développement et en production.
 
 ## 2.3 Quel parseur choisir ?
 
 | Situation | Choix |
 | --- | --- |
-| Usage général, performances | **`lxml`** ✅ |
+| Usage général, performances | **`lxml`** |
 | Aucune dépendance autorisée | `html.parser` |
 | HTML **très** défectueux, rendu « comme Chrome » | `html5lib` |
 | Documents **XML** | `"xml"` |
@@ -170,12 +173,21 @@ Le premier argument peut être une **chaîne** (`str`), des **octets** (`bytes`)
 ## 3.2 Depuis un fichier
 
 ```python
+from pathlib import Path
+
+from bs4 import BeautifulSoup
+
+html = "<html><head><title>Page de test</title></head><body><h1>Titre principal</h1></body></html>"
+Path("exemple.html").write_text(html, encoding="utf-8")        # crée le fichier utilisé ci-dessous
+
 with open("exemple.html", encoding="utf-8") as f:
-    soup = BeautifulSoup(f, "lxml")                       # on peut passer l'objet fichier directement
+    soup = BeautifulSoup(f, "lxml")                            # on peut passer l'objet fichier directement
+print(soup.title.string)                                       # Page de test
 
 # Ou en octets : Beautiful Soup détecte lui-même l'encodage (meta charset, BOM, heuristiques)
 with open("exemple.html", "rb") as f:
     soup = BeautifulSoup(f.read(), "lxml")
+print(soup.h1.string)                                          # Titre principal
 ```
 
 ## 3.3 Depuis le web
@@ -184,13 +196,14 @@ with open("exemple.html", "rb") as f:
 import requests
 from bs4 import BeautifulSoup
 
-reponse = requests.get("https://example.com", timeout=10)      # ✅ toujours un délai d'expiration
+reponse = requests.get("https://example.com", timeout=10)      # toujours un délai d'expiration
 reponse.raise_for_status()                                      # lève une exception pour les codes 4xx / 5xx
 
-soup = BeautifulSoup(reponse.content, "lxml")                   # ✅ passer .content (octets) : meilleure détection d'encodage
+soup = BeautifulSoup(reponse.content, "lxml")                   # passer .content (octets) : meilleure détection d'encodage
+print(soup.title.string)                                        # Example Domain
 ```
 
-> 💡 **`reponse.content`** (octets) plutôt que `reponse.text` : Beautiful Soup lit l'encodage déclaré dans le document (`<meta charset>`) alors que `requests` peut se tromper quand l'en-tête HTTP est absent (il se rabat parfois sur `ISO-8859-1`). Voir [17.2](#172-encodages).
+> **`reponse.content`** (octets) plutôt que `reponse.text` : Beautiful Soup lit l'encodage déclaré dans le document (`<meta charset>`) alors que `requests` peut se tromper quand l'en-tête HTTP est absent (il se rabat parfois sur `ISO-8859-1`). Voir [17.2](#172-encodages).
 
 ## 3.4 Paramètres utiles du constructeur
 
@@ -204,7 +217,12 @@ soup = BeautifulSoup(reponse.content, "lxml")                   # ✅ passer .co
 | `attribute_dict_class` | Type de dictionnaire des attributs (4.13) |
 
 ```python
+from bs4 import BeautifulSoup
+
+html = '<p class="a b">Texte</p>'
+
 soup = BeautifulSoup(html, "lxml", multi_valued_attributes=None)       # class reste une chaîne
+print(soup.p["class"])                                                  # a b
 ```
 
 ---
@@ -232,7 +250,7 @@ print(isinstance(p.contents[0], NavigableString))             # True
 print(p.name, p.attrs)                                        # p {'class': ['intro']}
 ```
 
-> 🔑 **Les enfants d'une balise sont de deux types** : des `Tag` **et** des chaînes (`NavigableString`, y compris les **retours à la ligne** entre balises). Une grande partie des confusions de débutants vient de là.
+> **Les enfants d'une balise sont de deux types** : des `Tag` **et** des chaînes (`NavigableString`, y compris les **retours à la ligne** entre balises). Une grande partie des confusions de débutants vient de là.
 
 ---
 
@@ -241,6 +259,8 @@ print(p.name, p.attrs)                                        # p {'class': ['in
 ## 5.1 Accéder aux balises comme des attributs
 
 ```python
+from bs4 import BeautifulSoup
+
 html = """
 <html>
   <head><title>Page d'exemple</title></head>
@@ -260,11 +280,13 @@ print(soup.body.h1)             # <h1>Titre principal</h1>
 print(soup.p)                   # le PREMIER <p> seulement : <p class="intro">Premier paragraphe.</p>
 ```
 
-> ⚠️ `soup.p` ne renvoie que la **première** balise de ce nom, et **`None`** s'il n'y en a pas : `soup.table.tr` lève alors `AttributeError: 'NoneType' object has no attribute 'tr'`. Pour plusieurs balises ou une recherche sûre : `find()` / `find_all()` / `select()`.
+> `soup.p` ne renvoie que la **première** balise de ce nom, et **`None`** s'il n'y en a pas : `soup.table.tr` lève alors `AttributeError: 'NoneType' object has no attribute 'tr'`. Pour plusieurs balises ou une recherche sûre : `find()` / `find_all()` / `select()`.
 
 ## 5.2 Propriétés courantes d'une balise
 
 ```python
+from bs4 import BeautifulSoup
+
 a = BeautifulSoup('<a href="https://example.com" class="lien externe" id="accueil">Accueil</a>', "lxml").a
 
 print(a.name)                   # a
@@ -282,8 +304,8 @@ print(a.get_attribute_list("class"))      # toujours une liste (utile pour trait
 `class`, `rel`, `rev`, `accept-charset`, `headers`, `accesskey`, `dropzone` sont des **listes** (HTML : valeurs séparées par des espaces) :
 
 ```python
-a["class"]                      # ['lien', 'externe']
-" ".join(a["class"])            # 'lien externe'
+print(a["class"])               # ['lien', 'externe']
+print(" ".join(a["class"]))     # lien externe
 ```
 
 ## 5.3 Contenu textuel
@@ -296,6 +318,8 @@ a["class"]                      # ['lien', 'externe']
 | `.strings` / `.stripped_strings` | **Générateurs** des morceaux de texte (bruts / nettoyés) |
 
 ```python
+from bs4 import BeautifulSoup
+
 div = BeautifulSoup("<div><p>Bonjour <b>le monde</b></p></div>", "lxml").div
 
 print(div.string)                       # None   (plusieurs enfants)
@@ -306,13 +330,17 @@ print(div.get_text(" ", strip=True))    # Bonjour le monde
 print(list(div.stripped_strings))       # ['Bonjour', 'le monde']
 ```
 
-> ⚠️ `.text` d'un document inclut le contenu des balises `<script>` et `<style>` : retirez-les avant (`for t in soup(["script", "style"]): t.decompose()`).
+> `.text` d'un document inclut le contenu des balises `<script>` et `<style>` : retirez-les avant (`for t in soup(["script", "style"]): t.decompose()`).
 
 ## 5.4 Raccourci d'appel
 
 ```python
-soup("a")                       # équivaut à soup.find_all("a")
-soup(["script", "style"])       # plusieurs noms de balises
+from bs4 import BeautifulSoup
+
+soup = BeautifulSoup("<p>Texte</p><a href='/x'>Lien</a><script>var x = 1;</script>", "lxml")
+
+print(soup("a"))                        # équivaut à soup.find_all("a")
+print(soup(["a", "script"]))            # plusieurs noms de balises
 ```
 
 ---
@@ -327,6 +355,10 @@ soup(["script", "style"])       # plusieurs noms de balises
 | `find_all(...)` | **Toutes** les correspondances (objet `ResultSet`, sous-classe de `list`) | Liste **vide** |
 
 ```python
+import re
+
+from bs4 import BeautifulSoup
+
 html = """
 <html><body>
   <div class="item">Objet 1</div>
@@ -359,12 +391,12 @@ Signature : `find_all(name, attrs, recursive, string, limit, **kwargs)`.
 ### Par attributs
 
 ```python
-soup.find_all("a", href=True)                          # <a> ayant un href
-soup.find_all("a", attrs={"href": "/a"})               # attrs= pour les noms non valides en Python
-soup.find("div", id="pied")
-soup.find_all(attrs={"data-id": "42"})                 # attributs data-*
-soup.find_all("a", href=re.compile(r"^https://"))      # valeur par expression régulière
-soup.find_all("a", href=lambda v: v and v.endswith(".pdf"))     # valeur par fonction
+print(soup.find_all("a", href=True))                          # <a> ayant un href
+print(soup.find_all("a", attrs={"href": "/a"}))               # attrs= pour les noms non valides en Python
+print(soup.find("div", class_="pied"))
+print(soup.find_all(attrs={"data-id": "42"}))                 # attributs data-* (liste vide ici : aucun élément n'en a)
+print(soup.find_all("a", href=re.compile(r"^https://")))      # valeur par expression régulière
+print(soup.find_all("a", href=lambda v: v and v.endswith(".pdf")))     # valeur par fonction
 ```
 
 ### La classe CSS : `class_`
@@ -372,12 +404,12 @@ soup.find_all("a", href=lambda v: v and v.endswith(".pdf"))     # valeur par fon
 `class` est un mot réservé de Python : on écrit **`class_`** (ou `attrs={"class": …}`).
 
 ```python
-soup.find_all("div", class_="item")             # a la classe « item » (parmi d'autres)
-soup.find_all("div", class_="item promo")       # correspond EXACTEMENT à la chaîne « item promo » (ordre compris)
-soup.find_all("div", class_=["item", "pied"])   # l'une OU l'autre
+print(soup.find_all("div", class_="item"))             # a la classe « item » (parmi d'autres) : 2 résultats
+print(soup.find_all("div", class_="item promo"))       # correspond EXACTEMENT à la chaîne « item promo » (ordre compris)
+print(soup.find_all("div", class_=["item", "pied"]))   # l'une OU l'autre : 3 résultats
 ```
 
-> 🎯 Pour plusieurs classes simultanées, préférez un **sélecteur CSS** : `soup.select("div.item.promo")` (plus fiable).
+> Pour plusieurs classes simultanées, préférez un **sélecteur CSS** : `soup.select("div.item.promo")` (plus fiable).
 
 ### Par fonction (et `lambda`)
 
@@ -385,8 +417,9 @@ soup.find_all("div", class_=["item", "pied"])   # l'une OU l'autre
 def a_classe_sans_id(balise):
     return balise.has_attr("class") and not balise.has_attr("id")
 
-soup.find_all(a_classe_sans_id)
-soup.find_all(lambda t: t.name == "a" and len(t.attrs) == 0)
+
+print(soup.find_all(a_classe_sans_id))
+print(soup.find_all(lambda t: t.name == "a" and len(t.attrs) == 0))
 ```
 
 ### Par texte et expression régulière
@@ -394,19 +427,19 @@ soup.find_all(lambda t: t.name == "a" and len(t.attrs) == 0)
 ```python
 import re
 
-soup.find_all(string=re.compile("Objet"))                 # chaînes (NavigableString) contenant « Objet »
-soup.find_all("div", string="Objet 1")                     # balises dont le .string vaut exactement ce texte
-soup.find_all("div", string=re.compile(r"Objet \d"))
-soup.find_all(re.compile("^d"))                            # balises dont le nom commence par « d »
+print(soup.find_all(string=re.compile("Objet")))           # chaînes (NavigableString) contenant « Objet »
+print(soup.find_all("div", string="Objet 1"))              # balises dont le .string vaut exactement ce texte
+print(soup.find_all("div", string=re.compile(r"Objet \d")))
+print(soup.find_all(re.compile("^d")))                     # balises dont le nom commence par « d »
 ```
 
-> 📌 **À jour** : `find_all(text=…)` est **déprécié** ; écrivez `string=…`.
+> **À jour** : `find_all(text=…)` est **déprécié** ; écrivez `string=…`.
 
 ## 6.3 Options de recherche
 
 ```python
-soup.find_all("a", limit=2)                    # s'arrête après 2 résultats
-soup.body.find_all("div", recursive=False)     # uniquement les ENFANTS DIRECTS (pas les descendants)
+print(soup.find_all("a", limit=2))                    # s'arrête après 2 résultats
+print(soup.body.find_all("div", recursive=False))     # uniquement les ENFANTS DIRECTS (pas les descendants)
 ```
 
 ## 6.4 Rechercher dans une direction
@@ -422,22 +455,37 @@ soup.body.find_all("div", recursive=False)     # uniquement les ENFANTS DIRECTS 
 | `find_previous("p")` · `find_all_previous("p")` | **Tout ce qui précède** |
 
 ```python
+from bs4 import BeautifulSoup
+
+html = """
+<section>
+  <h2>Prix</h2>
+  <p>12 euros</p>
+  <table><tr><td>Détail</td></tr></table>
+</section>
+"""
+soup = BeautifulSoup(html, "lxml")
+
 titre = soup.find("h2", string="Prix")
 valeur = titre.find_next_sibling("p")              # le paragraphe juste après un titre repéré
 tableau = titre.find_next("table")
 section = titre.find_parent("section")
+
+print(valeur.get_text())                            # 12 euros
+print(tableau.get_text(strip=True))                 # Détail
+print(section.name)                                 # section
 ```
 
-> ⚠️ Les anciens noms en camelCase (`findAll`, `findNext`, `findParent`, `findNextSibling`…) sont **dépréciés** : n'utilisez que les noms en `snake_case`.
+> Les anciens noms en camelCase (`findAll`, `findNext`, `findParent`, `findNextSibling`…) sont **dépréciés** : n'utilisez que les noms en `snake_case`.
 
 ## 6.5 `find()` ou `select()` ?
 
 | | `find` / `find_all` | `select` / `select_one` |
 | --- | --- | --- |
 | Syntaxe | Arguments Python | **Sélecteurs CSS** (comme dans les DevTools) |
-| Plusieurs classes, relations | Verbeux | ✅ Concis |
-| Filtres par **fonction / expression régulière** | ✅ | ⚠️ limité (`:-soup-contains`) |
-| Recherche **relative** (frères, ancêtres) | ✅ méthodes dédiées | via combinateurs |
+| Plusieurs classes, relations | Verbeux | Concis |
+| Filtres par **fonction / expression régulière** | Oui | Limité (`:-soup-contains`) |
+| Recherche **relative** (frères, ancêtres) | Oui, méthodes dédiées | via combinateurs |
 | Lisibilité des cas courants | Bonne | **Excellente** (copiable depuis le navigateur) |
 
 ---
@@ -454,6 +502,8 @@ Beautiful Soup s'appuie sur la bibliothèque **Soup Sieve**, qui implémente une
 | `select_one(sel)` | La **première** balise | `None` |
 
 ```python
+from bs4 import BeautifulSoup
+
 html = """
 <div class="conteneur">
   <p id="premier">Bonjour</p>
@@ -469,7 +519,7 @@ print(soup.select_one(".surligne").text)              # Monde
 print(soup.select_one("#premier").text)               # Bonjour
 ```
 
-> 💡 **Astuce** : dans les DevTools du navigateur, clic droit sur un élément → *Copier* → *Copier le sélecteur*, puis ajustez-le (les sélecteurs générés sont souvent trop précis et fragiles).
+> **Astuce** : dans les DevTools du navigateur, clic droit sur un élément → *Copier* → *Copier le sélecteur*, puis ajustez-le (les sélecteurs générés sont souvent trop précis et fragiles).
 
 ## 7.2 Sélecteurs de base et combinateurs
 
@@ -486,10 +536,10 @@ print(soup.select_one("#premier").text)               # Bonjour
 | `a, b` | Les éléments de l'un **ou** l'autre sélecteur |
 
 ```python
-soup.select("div p")
-soup.select("div > p")
-soup.select("p + a")
-soup.select("div.conteneur > p.surligne")        # combinaisons
+print(soup.select("div p"))
+print(soup.select("div > p"))
+print(soup.select("p + a"))
+print(soup.select("div.conteneur > p.surligne"))        # combinaisons
 ```
 
 ## 7.3 Sélecteurs d'attributs
@@ -506,11 +556,20 @@ soup.select("div.conteneur > p.surligne")        # combinaisons
 | `[attr="v" i]` | Comparaison **insensible à la casse** |
 
 ```python
-soup.select("a[href]")                       # <a> avec un href
-soup.select('a[href^="https://"]')           # liens sécurisés
-soup.select('a[href$=".pdf"]')               # liens vers des PDF
-soup.select('img[src*="logo"]')
-soup.select("[data-id]")
+from bs4 import BeautifulSoup
+
+html = """
+<a href="https://exemple.fr/a">Sécurisé</a>
+<a href="/doc/guide.pdf">Guide</a>
+<img src="/img/logo.png" data-id="7">
+"""
+soup = BeautifulSoup(html, "lxml")
+
+print(soup.select("a[href]"))                       # <a> avec un href
+print(soup.select('a[href^="https://"]'))           # liens sécurisés
+print(soup.select('a[href$=".pdf"]'))               # liens vers des PDF
+print(soup.select('img[src*="logo"]'))
+print(soup.select("[data-id]"))
 ```
 
 ## 7.4 Pseudo-classes prises en charge *(à jour : bien plus que « limité »)*
@@ -525,29 +584,44 @@ L'original indiquait un support « limité » ; **Soup Sieve** gère en réalit�
 | **États HTML** | `:checked`, `:disabled`, `:enabled`, `:required`, `:optional`, `:read-only`, `:link`, `:any-link`… |
 | **Autres** | `:lang()`, `:dir()`, `:defined`… |
 
-> ❌ Les pseudo-classes **dynamiques** (`:hover`, `:focus`, `:visited`, `:active`…) ne s'appliquent pas à un document statique.
+> Les pseudo-classes **dynamiques** (`:hover`, `:focus`, `:visited`, `:active`…) ne s'appliquent pas à un document statique.
 
 ```python
-soup.select("li:first-child")
-soup.select("tr:nth-child(odd)")
-soup.select("li:not(.cache)")
-soup.select("div:has(> img)")                         # <div> qui contient directement une <img>
-soup.select("p:-soup-contains('Monde')")              # <p> contenant le texte « Monde »
-soup.select("h2:-soup-contains-own('Prix') + p")
+from bs4 import BeautifulSoup
+
+html = """
+<ul><li>Un</li><li class="cache">Deux</li><li>Trois</li></ul>
+<table><tr><td>1</td></tr><tr><td>2</td></tr><tr><td>3</td></tr></table>
+<div><img src="a.png"></div><div><p>Sans image</p></div>
+<p>Bonjour Monde</p>
+<h2>Prix</h2><p>10 euros</p>
+"""
+soup = BeautifulSoup(html, "lxml")
+
+print(soup.select("li:first-child"))
+print(soup.select("tr:nth-child(odd)"))
+print(soup.select("li:not(.cache)"))
+print(soup.select("div:has(> img)"))                         # <div> qui contient directement une <img>
+print(soup.select("p:-soup-contains('Monde')"))              # <p> contenant le texte « Monde »
+print(soup.select("h2:-soup-contains-own('Prix') + p"))
 ```
 
-> 📌 **À jour** : `:contains()` est **déprécié** (avertissement `FutureWarning`) ; utilisez **`:-soup-contains()`**.
+> **À jour** : `:contains()` est **déprécié** (avertissement `FutureWarning`) ; utilisez **`:-soup-contains()`**.
 
 ## 7.5 L'interface `soup.css` *(ajout, 4.12+)*
 
 ```python
-soup.css.select("p.surligne")             # équivaut à soup.select(...)
-soup.css.select_one("#premier")
-soup.css.iselect("p")                     # ITÉRATEUR (évite de construire la liste complète)
-soup.css.filter("p")                      # filtre les ENFANTS directs qui correspondent
-soup.css.match("p")                       # cet élément correspond-il au sélecteur ?
-soup.css.escape("a:b")                    # échappe un identifiant à utiliser dans un sélecteur
-soup.select("p", limit=1)                 # limiter le nombre de résultats
+from bs4 import BeautifulSoup
+
+soup = BeautifulSoup('<p id="premier">Bonjour</p><p class="surligne">Monde</p>', "lxml")
+
+print(soup.css.select("p.surligne"))              # équivaut à soup.select(...)
+print(soup.css.select_one("#premier"))
+print(list(soup.css.iselect("p")))                # ITÉRATEUR (évite de construire la liste complète)
+print(soup.body.css.filter("p"))                  # filtre les ENFANTS directs qui correspondent
+print(soup.p.css.match("#premier"))               # cet élément correspond-il au sélecteur ?
+print(soup.css.escape("a:b"))                     # échappe un identifiant à utiliser dans un sélecteur
+print(soup.select("p", limit=1))                  # limiter le nombre de résultats
 ```
 
 > `select()` appelé sur une **balise** cherche dans ses **descendants** : `soup.select_one("table").select("tr > td")`.
@@ -555,8 +629,15 @@ soup.select("p", limit=1)                 # limiter le nombre de résultats
 ## 7.6 Espaces de noms (XML)
 
 ```python
-xml = BeautifulSoup(xml_texte, "xml")
-xml.select("dc|title", namespaces={"dc": "http://purl.org/dc/elements/1.1/"})
+from bs4 import BeautifulSoup
+
+xml_texte = """<?xml version="1.0" encoding="UTF-8"?>
+<notice xmlns:dc="http://purl.org/dc/elements/1.1/">
+  <dc:title>Le Petit Prince</dc:title>
+</notice>"""
+
+xml = BeautifulSoup(xml_texte, "xml")             # nécessite lxml
+print(xml.select("dc|title", namespaces={"dc": "http://purl.org/dc/elements/1.1/"}))
 ```
 
 ---
@@ -573,6 +654,8 @@ xml.select("dc|title", namespaces={"dc": "http://purl.org/dc/elements/1.1/"})
 | `.strings` / `.stripped_strings` | itérateurs | Tous les **textes** descendants (bruts / sans espaces en bordure) |
 
 ```python
+from bs4 import BeautifulSoup
+
 soup = BeautifulSoup("<div><p>Premier</p><p>Second</p>Texte</div>", "lxml")
 div = soup.div
 
@@ -586,7 +669,7 @@ for descendant in div.descendants:          # <p>, 'Premier', <p>, 'Second', 'Te
 print(list(div.stripped_strings))           # ['Premier', 'Second', 'Texte']
 ```
 
-> 💡 Pour ne garder que les **balises** parmi les enfants : `[e for e in div.children if e.name]` ou `div.find_all(recursive=False)`.
+> Pour ne garder que les **balises** parmi les enfants : `[e for e in div.children if e.name]` ou `div.find_all(recursive=False)`.
 
 ## 8.2 Parents
 
@@ -609,53 +692,90 @@ print([a.name for a in p.parents])          # ['div', 'body', 'html', '[document
 | `.next_siblings` / `.previous_siblings` | Itérateurs sur **tous** les frères suivants / précédents |
 
 ```python
+from bs4 import BeautifulSoup
+
 html = "<ul>\n  <li>A</li>\n  <li>B</li>\n</ul>"
 li = BeautifulSoup(html, "html.parser").li
 
 print(repr(li.next_sibling))                # '\n  '   ← un TEXTE (retour à la ligne), pas la balise suivante !
 print(li.next_sibling.next_sibling)         # <li>B</li>
-print(li.find_next_sibling("li"))           # ✅ <li>B</li> : saute les textes, plus robuste
+print(li.find_next_sibling("li"))           # <li>B</li> : saute les textes, plus robuste
 ```
 
-> ⚠️ **Piège classique** : les espaces et retours à la ligne entre balises sont des **nœuds texte**. Préférez **`find_next_sibling()`** à `.next_sibling`.
+> **Piège classique** : les espaces et retours à la ligne entre balises sont des **nœuds texte**. Préférez **`find_next_sibling()`** à `.next_sibling`.
 
 ## 8.4 Ordre du document : `.next_element` / `.previous_element`
 
 Ils suivent l'**ordre d'analyse** du document (balise ouvrante, texte, balise suivante…), indépendamment de la hiérarchie :
 
 ```python
+from bs4 import BeautifulSoup
+
 soup = BeautifulSoup("<a><b>x</b></a><c>y</c>", "html.parser")
 print(soup.b.next_element)                  # x
 print(soup.b.next_element.next_element)     # <c>y</c>
-for e in soup.b.next_elements: print(repr(e))
+for e in soup.b.next_elements:
+    print(repr(e))
 ```
 
 ---
 
 # 9. Extraire des données : recettes
 
-*(Section ajoutée : exemples concrets d'extraction.)*
+*(Section ajoutée : exemples concrets d'extraction. Tous les extraits de cette section partagent le document `html` et l'objet `soup` définis en 9.1.)*
 
 ## 9.1 Liens et URL absolues
 
 ```python
 from urllib.parse import urljoin
 
+from bs4 import BeautifulSoup
+
+html = """
+<html><head>
+  <title>Boutique</title>
+  <meta name="description" content="Catalogue de papeterie">
+  <meta property="og:image" content="https://exemple.fr/img/couverture.jpg">
+  <link rel="canonical" href="https://exemple.fr/articles/">
+  <script type="application/ld+json">{"@type": "Organization", "name": "Papeterie Exemple"}</script>
+</head><body>
+  <nav><a href="/accueil">Accueil</a> <a href="../contact">Contact</a></nav>
+  <ul class="produits"><li>Stylo</li><li>Cahier</li></ul>
+  <table id="prix">
+    <thead><tr><th>Produit</th><th>Prix</th></tr></thead>
+    <tbody>
+      <tr><td>Stylo</td><td>1,50 €</td></tr>
+      <tr><td>Cahier</td><td>3,20 €</td></tr>
+    </tbody>
+  </table>
+  <div class="produit"><h2 class="nom">Stylo</h2><span class="prix">1,50 €</span><a href="/produits/stylo">Voir</a></div>
+  <div class="produit"><h2 class="nom">Cahier</h2><a href="/produits/cahier">Voir</a></div>
+  <form id="connexion" action="/login" method="post">
+    <input type="hidden" name="csrf" value="abc123"><input type="text" name="email">
+  </form>
+  <img src="img/logo.png">
+</body></html>
+"""
+soup = BeautifulSoup(html, "lxml")
+
 base = "https://exemple.fr/articles/"
 liens = []
 for a in soup.select("a[href]"):
     liens.append({
         "texte": a.get_text(strip=True),
-        "url": urljoin(base, a["href"]),             # ✅ transforme « ../page » ou « /page » en URL complète
+        "url": urljoin(base, a["href"]),             # transforme « ../page » ou « /page » en URL complète
     })
 
 images = [urljoin(base, img["src"]) for img in soup.select("img[src]")]
+print(liens)
+print(images)
 ```
 
 ## 9.2 Listes
 
 ```python
 produits = [li.get_text(strip=True) for li in soup.select("ul.produits > li")]
+print(produits)                                       # ['Stylo', 'Cahier']
 ```
 
 ## 9.3 Tableaux HTML
@@ -675,9 +795,12 @@ print(lignes[0])                                                # {'Produit': 'S
 Raccourci pour obtenir des **DataFrames** pandas :
 
 ```python
-import pandas as pd
 from io import StringIO
+
+import pandas as pd
+
 tables = pd.read_html(StringIO(str(soup)))          # liste de DataFrames (nécessite lxml ou html5lib)
+print(tables[0])
 ```
 
 ## 9.4 Un bloc répété (cartes de produits)
@@ -689,34 +812,48 @@ for carte in soup.select("div.produit"):
     prix = carte.select_one("span.prix")
     lien = carte.select_one("a[href]")
     resultats.append({
-        "nom": nom.get_text(strip=True) if nom else None,           # ✅ toujours tester None
+        "nom": nom.get_text(strip=True) if nom else None,           # toujours tester None
         "prix": prix.get_text(strip=True) if prix else None,
         "url": urljoin(base, lien["href"]) if lien else None,
     })
+print(resultats)
 ```
 
-> ✅ **Motif robuste** : bouclez sur le **conteneur** de chaque élément, puis cherchez les champs **à l'intérieur** (pas de listes parallèles qui se décalent si un champ manque).
+> **Motif robuste** : bouclez sur le **conteneur** de chaque élément, puis cherchez les champs **à l'intérieur** (pas de listes parallèles qui se décalent si un champ manque).
 
 ## 9.5 Texte propre
 
 ```python
+import re
+
 texte = soup.get_text(separator="\n", strip=True)
 
-import re
+
 def nettoyer(t: str) -> str:
     return re.sub(r"\s+", " ", t).strip()            # réduit tous les espaces / sauts de ligne
 
+
+print(nettoyer(texte)[:80])
+
 prix = float(re.sub(r"[^\d,]", "", "1 234,50 €").replace(",", "."))      # 1234.5
+print(prix)
 ```
 
 ## 9.6 Métadonnées de la page
 
 ```python
 titre = soup.title.string if soup.title else None
+
 description = soup.find("meta", attrs={"name": "description"})
 description = description["content"] if description else None
+
 og_image = soup.select_one('meta[property="og:image"]')
-canonique = soup.select_one('link[rel="canonical"]')            # .get("href")
+og_image = og_image["content"] if og_image else None
+
+canonique = soup.select_one('link[rel="canonical"]')
+canonique = canonique.get("href") if canonique else None
+
+print(titre, description, og_image, canonique, sep="\n")
 ```
 
 ## 9.7 Données structurées (JSON-LD et données intégrées)
@@ -731,7 +868,8 @@ for script in soup.select('script[type="application/ld+json"]'):
         donnees = json.loads(script.string)
     except (json.JSONDecodeError, TypeError):
         continue
-    print(donnees.get("@type"), donnees.get("name"))
+    if isinstance(donnees, dict):
+        print(donnees.get("@type"), donnees.get("name"))      # Organization Papeterie Exemple
 ```
 
 Cherchez aussi `<script id="__NEXT_DATA__">`, `window.__INITIAL_STATE__`, les microdata (`itemprop`)… et l'onglet **Réseau** des DevTools : la page appelle peut-être une **API JSON** directement utilisable (méthode la plus propre).
@@ -742,6 +880,7 @@ Cherchez aussi `<script id="__NEXT_DATA__">`, `window.__INITIAL_STATE__`, les mi
 formulaire = soup.select_one("form#connexion")
 action = formulaire.get("action")
 champs = {i.get("name"): i.get("value", "") for i in formulaire.select("input[name]")}      # champs cachés (jetons CSRF…)
+print(action, champs)                                 # /login {'csrf': 'abc123', 'email': ''}
 ```
 
 ---
@@ -753,6 +892,8 @@ Beautiful Soup permet de **modifier** le document (nettoyage, transformation) pu
 ## 10.1 Modifier texte et attributs
 
 ```python
+from bs4 import BeautifulSoup
+
 soup = BeautifulSoup('<a href="/x" class="a">Lien</a>', "html.parser")
 a = soup.a
 
@@ -767,6 +908,8 @@ print(soup)
 ## 10.2 Créer et ajouter des éléments
 
 ```python
+from bs4 import BeautifulSoup
+
 soup = BeautifulSoup("<div><p>Premier</p></div>", "html.parser")
 div = soup.div
 
@@ -796,6 +939,8 @@ print(div.prettify())
 | `.unwrap()` | Supprime la balise mais **garde son contenu** |
 
 ```python
+from bs4 import BeautifulSoup
+
 soup = BeautifulSoup("<div><p>A</p><p>B</p></div>", "html.parser")
 
 retire = soup.p.extract()              # <p>A</p>  (peut être réinséré ailleurs)
@@ -806,40 +951,66 @@ print(soup)                            # <div></div>
 ### Nettoyage typique avant extraction de texte
 
 ```python
+html = "<body><nav>Menu</nav><p>Bonjour</p><script>var x = 1;</script><footer>Pied</footer></body>"
+soup = BeautifulSoup(html, "html.parser")
+
 for balise in soup(["script", "style", "noscript", "nav", "footer"]):
     balise.decompose()
 texte = soup.get_text(" ", strip=True)
+print(texte)                                          # Bonjour
 ```
 
-> ⚠️ Ne modifiez pas un résultat d'itération **pendant** qu'on le parcourt dans une boucle sur `.descendants` ; construisez d'abord la liste (`for t in list(soup.find_all("b")): …`) ou utilisez `find_all` (qui renvoie une liste complète).
+> Ne modifiez pas un résultat d'itération **pendant** qu'on le parcourt dans une boucle sur `.descendants` ; construisez d'abord la liste (`for t in list(soup.find_all("b")): …`) ou utilisez `find_all` (qui renvoie une liste complète).
 
 ## 10.4 Remplacer, envelopper, dérouler
 
 ```python
-p = soup.new_tag("p"); p.string = "texte"
+from bs4 import BeautifulSoup
+
+soup = BeautifulSoup("<div><a href='/x'>Lien</a></div>", "html.parser")
+
+p = soup.new_tag("p")
+p.string = "texte"
 soup.div.append(p)
 
 p.replace_with(soup.new_tag("span"))            # remplace par un autre élément (ou une chaîne)
 
-p = soup.new_tag("p"); p.string = "x"; soup.div.append(p)
+p = soup.new_tag("p")
+p.string = "x"
+soup.div.append(p)
 p.wrap(soup.new_tag("section"))                 # <section><p>x</p></section>
 soup.section.unwrap()                           # retire <section>, garde <p>
 
 for lien in soup.find_all("a"):
     lien.replace_with(lien.get_text())          # remplace les liens par leur texte
+print(soup)                                     # <div>Lien<span></span><p>x</p></div>
 ```
 
 ## 10.5 Remplacer du texte
 
 ```python
+import re
+
+from bs4 import BeautifulSoup
+
+soup = BeautifulSoup("<p>un ancien texte, un ancien mot</p>", "html.parser")
+
 for noeud in soup.find_all(string=re.compile("ancien")):
     noeud.replace_with(noeud.replace("ancien", "nouveau"))       # NavigableString.replace_with
+print(soup)                                                      # <p>un nouveau texte, un nouveau mot</p>
 ```
 
 ## 10.6 Fusionner les textes adjacents
 
 ```python
+from bs4 import BeautifulSoup
+
+soup = BeautifulSoup("<p>Bonjour</p>", "html.parser")
+soup.p.append(" le")
+soup.p.append(" monde")
+print(soup.p.contents)                # ['Bonjour', ' le', ' monde'] : trois chaînes
 soup.smooth()                         # après de nombreuses modifications : fusionne les NavigableString voisines
+print(soup.p.contents)                # ['Bonjour le monde']
 ```
 
 ---
@@ -857,16 +1028,18 @@ soup.smooth()                         # après de nombreuses modifications : fus
 | `soup.get_text()` | **Texte** seulement |
 
 ```python
+from bs4 import BeautifulSoup
+
 soup = BeautifulSoup("<div><p>Bonjour</p><p>Monde</p></div>", "lxml")
 
 print(soup.prettify())
 # <html>
-#  <body>
-#   <div>
-#    <p>
-#     Bonjour
-#    </p>
-#    …
+# <body>
+# <div>
+# <p>
+# Bonjour
+# </p>
+# …
 
 html_str = str(soup)                       # str
 html_oct = soup.encode("utf-8")            # bytes
@@ -874,32 +1047,36 @@ print(type(html_str).__name__, type(html_oct).__name__)       # str bytes
 print(soup.div.decode_contents())          # <p>Bonjour</p><p>Monde</p>
 ```
 
-> 📌 **Correction** : `.decode()` d'un objet **Beautiful Soup** renvoie une **chaîne** ; il ne faut pas le confondre avec `bytes.decode()` (`soup.encode().decode("utf-8")` fait appel à celui de `bytes`).
+> **Correction** : `.decode()` d'un objet **Beautiful Soup** renvoie une **chaîne** ; il ne faut pas le confondre avec `bytes.decode()` (`soup.encode().decode("utf-8")` fait appel à celui de `bytes`).
 > `prettify()` ajoute **un retour à la ligne et une indentation autour de chaque texte** : ne l'utilisez pas pour reconstruire du HTML à diffuser (il peut modifier les espaces significatifs).
 
 ## 11.2 `get_text()` en détail
 
 ```python
+from bs4 import BeautifulSoup
+
 html = "<div><p> Bonjour </p><p> Monde </p></div>"
 soup = BeautifulSoup(html, "html.parser")
 
 print(repr(soup.get_text()))                           # ' Bonjour  Monde '
 print(repr(soup.get_text(strip=True)))                 # 'BonjourMonde'    (textes collés !)
-print(repr(soup.get_text(" ", strip=True)))            # 'Bonjour Monde'   ✅ séparateur + strip
+print(repr(soup.get_text(" ", strip=True)))            # 'Bonjour Monde'   séparateur + strip
 print(repr(soup.get_text("\n", strip=True)))           # 'Bonjour\nMonde'
 ```
 
-> 🔑 `get_text(strip=True)` **sans séparateur** colle les morceaux (« BonjourMonde ») : donnez presque toujours un **`separator`**.
+> `get_text(strip=True)` **sans séparateur** colle les morceaux (« BonjourMonde ») : donnez presque toujours un **`separator`**.
 
 ## 11.3 Formateurs (échappement des caractères)
 
 ```python
+from bs4 import BeautifulSoup
+
 soup = BeautifulSoup("<p>Café &amp; croissants &lt;3</p>", "html.parser")
 
 print(soup.decode(formatter="minimal"))     # (défaut) échappe seulement &, <, >
 print(soup.decode(formatter="html"))        # entités HTML nommées : é → &eacute;
 print(soup.decode(formatter="html5"))
-print(soup.decode(formatter=None))          # AUCUN échappement (⚠️ peut produire du HTML invalide)
+print(soup.decode(formatter=None))          # AUCUN échappement (attention : peut produire du HTML invalide)
 from bs4.formatter import HTMLFormatter
 print(soup.prettify(formatter=HTMLFormatter(indent=2)))       # taille d'indentation personnalisée (2 espaces)
 print(soup.decode(formatter=HTMLFormatter(entity_substitution=None)))    # équivalent de formatter=None
@@ -916,7 +1093,7 @@ with open("sortie.html", "wb") as f:
     f.write(soup.encode("utf-8"))
 ```
 
-> 🔒 Beautiful Soup n'est **pas un assainisseur de sécurité** : pour **nettoyer du HTML** non fiable (protection XSS), utilisez **`nh3`** (ou `bleach`, en maintenance), pas une liste de balises à `decompose()`.
+> Beautiful Soup n'est **pas un assainisseur de sécurité** : pour **nettoyer du HTML** non fiable (protection XSS), utilisez **`nh3`** (ou `bleach`, en maintenance), pas une liste de balises à `decompose()`.
 
 ---
 
@@ -951,7 +1128,7 @@ for noeud in soup.contents:
         print("Doctype :", noeud)                                    # html
 ```
 
-> 💡 **Astuce** : les commentaires conditionnels et le contenu **commenté** (`<!-- <div>…</div> -->`) contiennent parfois des données : réanalysez le texte du commentaire avec un nouveau `BeautifulSoup`.
+> **Astuce** : les commentaires conditionnels et le contenu **commenté** (`<!-- <div>…</div> -->`) contiennent parfois des données : réanalysez le texte du commentaire avec un nouveau `BeautifulSoup`.
 
 ## 12.2 `NavigableString`
 
@@ -961,6 +1138,7 @@ Les textes sont des `NavigableString` (sous-classe de `str`) : on les manipule c
 texte = soup.p.string
 print(type(texte).__name__, texte.parent.name)                    # NavigableString p
 texte.replace_with("Salut")
+print(soup)
 ```
 
 > Copier un texte hors de l'arbre : `str(texte)` (sinon il garde une référence vers l'arbre entier, ce qui consomme de la mémoire).
@@ -970,6 +1148,8 @@ texte.replace_with("Salut")
 Beautiful Soup **répare** le HTML selon le **parseur** (voir [2.2](#22-les-parseurs)) :
 
 ```python
+from bs4 import BeautifulSoup
+
 casse = "<div><p>Paragraphe <b>gras <i>italique</p></div>"
 print(BeautifulSoup(casse, "html.parser").prettify())      # balises refermées automatiquement
 print(BeautifulSoup(casse, "html5lib").prettify())         # arbre conforme à HTML5, comme un navigateur
@@ -991,10 +1171,10 @@ pip install requests
 import requests
 from bs4 import BeautifulSoup
 
-session = requests.Session()                                   # ✅ réutilise la connexion TCP, conserve les cookies
+session = requests.Session()                                   # réutilise la connexion TCP, conserve les cookies
 session.headers.update({"User-Agent": "MonRobot/1.0 (+https://exemple.fr/robot; contact@exemple.fr)"})
 
-reponse = session.get("https://example.com/page", timeout=(3.05, 10))      # (connexion, lecture)
+reponse = session.get("https://example.com/", timeout=(3.05, 10))      # (connexion, lecture)
 reponse.raise_for_status()                                               # exceptions pour 4xx / 5xx
 soup = BeautifulSoup(reponse.content, "lxml")
 ```
@@ -1002,10 +1182,22 @@ soup = BeautifulSoup(reponse.content, "lxml")
 ### Codes de statut
 
 ```python
-if reponse.status_code == 200: ...
-elif reponse.status_code == 404: print("Page introuvable")
-elif reponse.status_code == 429: print("Trop de requêtes : ralentir (en-tête Retry-After)")
-elif reponse.status_code in (403, 401): print("Accès refusé ou authentification requise")
+import sys
+
+import requests
+
+reponse = requests.get("https://example.com/introuvable", timeout=10)
+
+if reponse.status_code == 200:
+    print("Page récupérée")
+elif reponse.status_code == 404:
+    print("Page introuvable", file=sys.stderr)
+elif reponse.status_code == 429:
+    print("Trop de requêtes : ralentir (en-tête Retry-After)", file=sys.stderr)
+elif reponse.status_code in (403, 401):
+    print("Accès refusé ou authentification requise", file=sys.stderr)
+else:
+    print(f"Statut inattendu : {reponse.status_code}", file=sys.stderr)
 ```
 
 | Code | Signification | Réaction |
@@ -1019,25 +1211,34 @@ elif reponse.status_code in (403, 401): print("Accès refusé ou authentificatio
 
 ## 13.2 En-têtes et User-Agent *(à jour)*
 
-> ⚠️ **Correction** : l'ancien conseil « se faire passer pour un navigateur » (copier une chaîne `Mozilla/5.0 … Chrome/58`) est **déconseillé** : cette chaîne est périmée (ancienne version) et **trompeuse**. **Identifiez-vous honnêtement** (nom du robot + contact) ; si un site bloque les robots, respectez ce choix ou demandez l'autorisation, ou cherchez une API.
+> **Correction** : l'ancien conseil « se faire passer pour un navigateur » (copier une chaîne `Mozilla/5.0 … Chrome/58`) est **déconseillé** : cette chaîne est périmée (ancienne version) et **trompeuse**. **Identifiez-vous honnêtement** (nom du robot + contact) ; si un site bloque les robots, respectez ce choix ou demandez l'autorisation, ou cherchez une API.
 
 ```python
+import requests
+
+url = "https://example.com/"
 entetes = {
     "User-Agent": "MonRobot/1.0 (+https://exemple.fr/robot; contact@exemple.fr)",
     "Accept-Language": "fr-FR,fr;q=0.9",
 }
 reponse = requests.get(url, headers=entetes, timeout=10)
+print(reponse.status_code)
 ```
 
 ## 13.3 Nouvelles tentatives et résilience
 
 ```python
+import requests
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
 
+session = requests.Session()
 retry = Retry(total=3, backoff_factor=1.0, status_forcelist=[429, 500, 502, 503, 504], respect_retry_after_header=True)
 session.mount("https://", HTTPAdapter(max_retries=retry))
 session.mount("http://", HTTPAdapter(max_retries=retry))
+
+reponse = session.get("https://example.com/", timeout=10)
+print(reponse.status_code)
 ```
 
 ## 13.4 Cache local *(ajout)*
@@ -1045,15 +1246,23 @@ session.mount("http://", HTTPAdapter(max_retries=retry))
 Évitez de **retélécharger** les mêmes pages pendant la mise au point :
 
 ```python
-import requests_cache
-session = requests_cache.CachedSession("cache_scraping", expire_after=3600)      # pip install requests-cache
+import requests_cache                                            # pip install requests-cache
+
+session = requests_cache.CachedSession("cache_scraping", expire_after=3600)
+reponse = session.get("https://example.com/", timeout=10)
+print(reponse.from_cache)                                        # False au premier appel, True ensuite
 ```
 
 ## 13.5 `httpx` : HTTP/2 et asynchrone *(ajout)*
 
 ```python
-import asyncio, httpx
+from __future__ import annotations
+
+import asyncio
+
+import httpx                                                     # pip install httpx
 from bs4 import BeautifulSoup
+
 
 async def titre(client: httpx.AsyncClient, url: str) -> str | None:
     r = await client.get(url)
@@ -1061,14 +1270,16 @@ async def titre(client: httpx.AsyncClient, url: str) -> str | None:
     soup = BeautifulSoup(r.content, "lxml")                      # l'analyse reste synchrone et liée au processeur
     return soup.title.string if soup.title else None
 
+
 async def main(urls):
-    limite = asyncio.Semaphore(5)                                # ✅ limiter la concurrence
+    limite = asyncio.Semaphore(5)                                # limiter la concurrence
     async with httpx.AsyncClient(timeout=10, headers={"User-Agent": "MonRobot/1.0"}) as client:
         async def un(url):
             async with limite:
-                await asyncio.sleep(0.5)                          # politesse entre les requêtes
+                await asyncio.sleep(0.5)                         # politesse entre les requêtes
                 return await titre(client, url)
         return await asyncio.gather(*(un(u) for u in urls), return_exceptions=True)
+
 
 print(asyncio.run(main(["https://example.com", "https://example.org"])))
 ```
@@ -1082,16 +1293,18 @@ Si le contenu **n'apparaît pas** dans `reponse.text` mais s'affiche dans le nav
 3. **Navigateur piloté** : **Playwright** (recommandé) ou Selenium, puis Beautiful Soup sur le HTML rendu.
 
 ```python
-from playwright.sync_api import sync_playwright           # pip install playwright && playwright install chromium
 from bs4 import BeautifulSoup
+from playwright.sync_api import sync_playwright           # pip install playwright && playwright install chromium
 
 with sync_playwright() as p:
     navigateur = p.chromium.launch()
     page = navigateur.new_page()
-    page.goto("https://exemple.fr/liste", wait_until="networkidle")
-    page.wait_for_selector("div.produit")                  # attendre l'élément voulu
+    page.goto("https://quotes.toscrape.com/js/", wait_until="networkidle")      # citations générées par JavaScript
+    page.wait_for_selector("div.quote")                    # attendre l'élément voulu
     soup = BeautifulSoup(page.content(), "lxml")
     navigateur.close()
+
+print(len(soup.select("div.quote")))                       # 10
 ```
 
 ## 13.7 Flux de travail type
@@ -1121,21 +1334,26 @@ with sync_playwright() as p:
 | **API officielle** | À préférer à toute extraction |
 | **Authentification** | Ne contournez ni connexion, ni CAPTCHA, ni protections techniques |
 
-> ⚖️ Ceci **n'est pas un avis juridique** : en cas de projet commercial ou de données sensibles, consultez un juriste.
+> Ceci **n'est pas un avis juridique** : en cas de projet commercial ou de données sensibles, consultez un juriste.
 
 ## 14.2 Respecter `robots.txt` avec la bibliothèque standard
 
 ```python
+import sys
 from urllib import robotparser
 
 rp = robotparser.RobotFileParser()
-rp.set_url("https://exemple.fr/robots.txt")
+rp.set_url("https://quotes.toscrape.com/robots.txt")
 rp.read()
 
 agent = "MonRobot"
-if rp.can_fetch(agent, "https://exemple.fr/produits/"):
+if rp.can_fetch(agent, "https://quotes.toscrape.com/page/2/"):
     print("Autorisé")
+else:
+    print("Interdit par robots.txt", file=sys.stderr)
+
 delai = rp.crawl_delay(agent)                               # délai demandé par le site (ou None)
+print(delai)
 ```
 
 ## 14.3 Bonnes pratiques de politesse
@@ -1155,6 +1373,8 @@ delai = rp.crawl_delay(agent)                               # délai demandé pa
 
 ```python
 """Collecte les citations de https://quotes.toscrape.com et les enregistre en JSON et CSV."""
+from __future__ import annotations
+
 import csv
 import json
 import time
@@ -1232,8 +1452,13 @@ Pistes d'amélioration : journalisation (`logging`), reprise après erreur, base
 
 ```python
 import timeit
+
+from bs4 import BeautifulSoup
+
+html = "<div>" + "<p>Texte <a href='/x'>lien</a></p>" * 2000 + "</div>"
+
 for p in ("html.parser", "lxml", "html5lib"):
-    print(p, timeit.timeit(lambda: BeautifulSoup(html, p), number=50))
+    print(p, timeit.timeit(lambda: BeautifulSoup(html, p), number=5))
 ```
 
 ## 16.2 Ne parser qu'une partie : `SoupStrainer` *(à jour)*
@@ -1243,15 +1468,22 @@ for p in ("html.parser", "lxml", "html5lib"):
 ```python
 from bs4 import BeautifulSoup, SoupStrainer
 
+html = """
+<a href="/a">A</a><a>sans lien</a>
+<div class="produit">Stylo</div><div class="pied">Pied</div>
+"""
+
 seulement_liens = SoupStrainer("a", href=True)                    # nom + attributs
 soup = BeautifulSoup(html, "lxml", parse_only=seulement_liens)
 for lien in soup.find_all("a"):
     print(lien["href"])
 
-seulement_produits = SoupStrainer("div", class_="produit")
+seulement_produits = SoupStrainer("div", attrs={"class": "produit"})
+soup = BeautifulSoup(html, "lxml", parse_only=seulement_produits)
+print(soup.find_all("div"))
 ```
 
-> 📌 **À jour (4.13)** : `SoupStrainer` a été **refondu** autour de la nouvelle classe **`ElementFilter`** (importable depuis `bs4`) ; certaines propriétés (`SoupStrainer.text`, `.string`) sont dépréciées. Les cas d'usage simples ci-dessus **fonctionnent toujours**. Notez aussi :
+> **À jour (4.13)** : `SoupStrainer` a été **refondu** autour de la nouvelle classe **`ElementFilter`** (importable depuis `bs4`) ; certaines propriétés (`SoupStrainer.text`, `.string`) sont dépréciées. Les cas d'usage simples ci-dessus **fonctionnent toujours**. Notez aussi :
 > - `parse_only` **ne fonctionne pas avec `html5lib`** (qui construit toujours l'arbre complet) ;
 > - les valeurs d'attributs sont transmises sous forme de **chaînes brutes** pendant l'analyse initiale (une classe `"a b"` n'est pas encore une liste).
 
@@ -1306,10 +1538,15 @@ for livre in soup.find_all("livre"):
 Beautiful Soup convertit tout en **Unicode** en interne (`str`) et produit du **UTF-8** par défaut.
 
 ```python
+from bs4 import BeautifulSoup
+
+octets = "<p>Café</p>".encode("iso-8859-1")
+
 soup = BeautifulSoup(octets, "lxml")
 print(soup.original_encoding)                       # encodage détecté (None si on a passé une str)
 
 soup = BeautifulSoup(octets, "lxml", from_encoding="iso-8859-1")      # imposer l'encodage si la détection se trompe
+print(soup.p.text)                                  # Café
 ```
 
 | Source | Bon réflexe |
@@ -1322,15 +1559,19 @@ soup = BeautifulSoup(octets, "lxml", from_encoding="iso-8859-1")      # imposer 
 ```python
 from bs4 import UnicodeDammit
 
+octets = "Café crème".encode("windows-1252")
+
 dammit = UnicodeDammit(octets, ["utf-8", "windows-1252"])         # détection / conversion à la demande
-print(dammit.unicode_markup, dammit.original_encoding)
+print(dammit.unicode_markup, dammit.original_encoding)             # Café crème windows-1252
 ```
 
-> 💡 Pour les caractères « bizarres » (mojibake `Ã©`) : mauvais encodage deviné ; essayez `from_encoding=` ou la bibliothèque **`ftfy`**.
+> Pour les caractères « bizarres » (mojibake `Ã©`) : mauvais encodage deviné ; essayez `from_encoding=` ou la bibliothèque **`ftfy`**.
 
 ## 17.3 Multilingue et Unicode
 
 ```python
+from bs4 import BeautifulSoup
+
 soup = BeautifulSoup("<p>こんにちは — مرحبا — Привет</p>", "html.parser")
 print(soup.p.text)                                  # texte Unicode préservé
 ```
@@ -1344,17 +1585,20 @@ Depuis la 4.13, Beautiful Soup est **entièrement annoté**. Conséquence : un v
 ```python
 from bs4 import BeautifulSoup, Tag
 
+html = '<h1>Titre</h1><a href="/accueil">Accueil</a>'
 soup = BeautifulSoup(html, "lxml")
 
 titre = soup.find("h1")
-if isinstance(titre, Tag):                 # ✅ restreint le type
+if isinstance(titre, Tag):                 # restreint le type
     print(titre.get_text(strip=True))
 
-# Ou, pour les sélecteurs CSS : select_one renvoie Tag | None
+# Pour les sélecteurs CSS : select_one renvoie Tag | None
 lien = soup.select_one("a[href]")
 if lien is not None:
     href = lien.get("href")                # str | list[str] | None  (attribut potentiellement multi-valeurs)
-    if isinstance(href, str): ...
+    if isinstance(href, str):
+        print(href)
+
 
 # Fonction utilitaire
 def requis(parent: Tag, selecteur: str) -> Tag:
@@ -1362,6 +1606,9 @@ def requis(parent: Tag, selecteur: str) -> Tag:
     if el is None:
         raise ValueError(f"Élément introuvable : {selecteur}")
     return el
+
+
+print(requis(soup, "h1").get_text())
 ```
 
 ## 17.5 Autres fonctionnalités avancées
@@ -1372,7 +1619,7 @@ def requis(parent: Tag, selecteur: str) -> Tag:
 | **`ElementFilter` (4.13)** | API de **bas niveau** pour filtrer l'arbre : `soup.descendants` + `ElementFilter.filter()` |
 | **Copie d'arbre** | `copy.copy(tag)` ou `copy.deepcopy(soup)` |
 | **Sérialisation** | `pickle` d'un `BeautifulSoup` (déconseillé : préférez `str(soup)`) |
-| **Avertissements** | Active `warnings.simplefilter("error")` en développement pour voir les dépréciations |
+| **Avertissements** | Activez `warnings.simplefilter("error")` en développement pour voir les dépréciations |
 | **Combiner avec lxml / XPath** | `from lxml import etree; etree.HTML(str(soup)).xpath("//a/@href")` |
 | **HTML → Markdown / texte** | `markdownify`, `html2text` |
 
@@ -1396,7 +1643,7 @@ def requis(parent: Tag, selecteur: str) -> Tag:
 | Résultats différents selon la machine | Parseur par défaut différent | **Toujours préciser** le parseur |
 | `403` / contenu vide | Blocage anti-robots, JavaScript | Voir sections 13 et 14 ; API officielle |
 
-> 🔑 **« L'inspecteur » n'est pas « le code source »** : les DevTools montrent le DOM **après** JavaScript ; Beautiful Soup reçoit le HTML **brut** du serveur. Comparez avec `view-source:` ou `curl`.
+> **« L'inspecteur » n'est pas « le code source »** : les DevTools montrent le DOM **après** JavaScript ; Beautiful Soup reçoit le HTML **brut** du serveur. Comparez avec `view-source:` ou `curl`.
 
 ## 18.2 Avertissements fréquents
 
@@ -1411,17 +1658,28 @@ def requis(parent: Tag, selecteur: str) -> Tag:
 ## 18.3 Diagnostiquer
 
 ```python
-from bs4.diagnose import diagnose
+from bs4 import BeautifulSoup
+from bs4.diagnose import diagnose, lxml_trace
+
+html = "<div><p>Paragraphe<p>Autre</div>"
+soup = BeautifulSoup(html, "lxml")
 
 diagnose(html)                         # essaie tous les parseurs et affiche les différences
 print(soup.prettify()[:2000])          # regarder l'arbre RÉELLEMENT construit
-
-from bs4.diagnose import lxml_trace
+lxml_trace(html)                       # affiche les événements vus par lxml
 ```
 
 Autres techniques : tester d'abord avec un **petit extrait** enregistré dans un fichier ; comparer `html.parser` / `lxml` / `html5lib` ; afficher `len(soup.find_all(...))` à chaque étape.
 
 ## 18.4 Tester son code d'extraction
+
+Enregistrez d'abord une page de référence (une seule fois), puis testez sans réseau. Le module `mon_scraper` est le script de la [section 15](#15-projet-complet--citations-avec-pagination) enregistré sous `mon_scraper.py`.
+
+```bash
+mkdir -p tests/pages
+curl -o tests/pages/page1.html https://quotes.toscrape.com/
+pip install pytest
+```
 
 ```python
 # tests/test_extraction.py (pytest) : sans réseau, sur une page HTML enregistrée
@@ -1486,16 +1744,16 @@ def test_extraire_citations():
 
 ## 19.4 Ressources
 
-- 📘 **Documentation officielle (traduite en plusieurs langues)** : <https://www.crummy.com/software/BeautifulSoup/bs4/doc/>
-- 🧩 **Soup Sieve** (sélecteurs CSS) : <https://facelessuser.github.io/soupsieve/>
-- 🔧 **lxml** : <https://lxml.de> · **Playwright** : <https://playwright.dev/python/> · **Scrapy** : <https://scrapy.org>
-- 🧪 **Sites d'entraînement** : <https://quotes.toscrape.com> · <https://books.toscrape.com>
-- 🤖 **robots.txt** : <https://www.robotstxt.org>
+- **Documentation officielle (traduite en plusieurs langues)** : <https://www.crummy.com/software/BeautifulSoup/bs4/doc/>
+- **Soup Sieve** (sélecteurs CSS) : <https://facelessuser.github.io/soupsieve/>
+- **lxml** : <https://lxml.de> · **Playwright** : <https://playwright.dev/python/> · **Scrapy** : <https://scrapy.org>
+- **Sites d'entraînement** : <https://quotes.toscrape.com> · <https://books.toscrape.com>
+- **robots.txt** : <https://www.robotstxt.org>
 
 ---
 
 <div align="center">
 
-*Bon scraping — et soyez courtois avec les serveurs ! 🍲*
+*Bon scraping, et soyez courtois avec les serveurs !*
 
 </div>
