@@ -1,8 +1,8 @@
-# 🐍 Python : les modules essentiels de la bibliothèque standard
+# Python : les modules essentiels de la bibliothèque standard
 
-> Aide-mémoire illustré avec des exemples prêts à copier. Les exemples ciblent **Python 3.11+** ; lorsqu'une fonctionnalité demande une version plus récente, c'est indiqué.
+> Aide-mémoire illustré avec des exemples prêts à copier. Les exemples ciblent **Python 3.11+** ; lorsqu'une fonctionnalité demande une version plus récente, c'est indiqué. Les exemples d'une même section se suivent : ils peuvent réutiliser les variables et les fichiers créés plus haut, mais chaque bloc importe lui-même les modules dont il a besoin. Les erreurs sont affichées sur la sortie d'erreur (`file=sys.stderr`), les résultats sur la sortie standard.
 
-## 📑 Sommaire
+## Sommaire
 
 1. [Expressions régulières (`re`)](#1-expressions-régulières-re)
 2. [Le module `os`](#2-le-module-os)
@@ -43,15 +43,15 @@ import re
 ```python
 import re
 
-re.match(r"abc", "abcdef")    # <re.Match object; span=(0, 3), match='abc'>
-re.match(r"def", "abcdef")    # None : "def" n'est pas au début
-re.search(r"def", "abcdef")   # <re.Match object; span=(3, 6), match='def'>
-re.fullmatch(r"abc", "abcdef")  # None : la chaîne entière ne correspond pas
+print(re.match(r"abc", "abcdef"))       # <re.Match object; span=(0, 3), match='abc'>
+print(re.match(r"def", "abcdef"))       # None : "def" n'est pas au début
+print(re.search(r"def", "abcdef"))      # <re.Match object; span=(3, 6), match='def'>
+print(re.fullmatch(r"abc", "abcdef"))   # None : la chaîne entière ne correspond pas
 ```
 
 ### Syntaxe de base
 
-> 💡 Utilisez toujours des **chaînes brutes** (`r"..."`) : le backslash s'écrit alors une seule fois (`\d`, et non `\\d`).
+> **Astuce** : Utilisez toujours des **chaînes brutes** (`r"..."`) : le backslash s'écrit alors une seule fois (`\d`, et non `\\d`).
 
 | Symbole         | Description                                            |
 | --------------- | ------------------------------------------------------ |
@@ -74,9 +74,11 @@ re.fullmatch(r"abc", "abcdef")  # None : la chaîne entière ne correspond pas
 | `*?`, `+?`, `??`| Versions **paresseuses** (non gourmandes)              |
 
 ```python
-re.search(r"^a", "abc")    # Correspond : "a" est au début
-re.search(r"c$", "abc")    # Correspond : "c" est à la fin
-re.search(r"a$", "abc")    # None : "a" n'est pas à la fin
+import re
+
+print(re.search(r"^a", "abc"))   # <re.Match object; span=(0, 1), match='a'> : "a" est au début
+print(re.search(r"c$", "abc"))   # <re.Match object; span=(2, 3), match='c'> : "c" est à la fin
+print(re.search(r"a$", "abc"))   # None : "a" n'est pas à la fin
 ```
 
 ### Classes de caractères prédéfinies
@@ -90,11 +92,13 @@ re.search(r"a$", "abc")    # None : "a" n'est pas à la fin
 | `\s`   | Espace blanc (espace, tabulation, saut de ligne…) |
 | `\S`   | Tout sauf un espace blanc                    |
 
-> ℹ️ Sur une chaîne `str`, `\d` et `\w` sont compatibles **Unicode** (ils reconnaissent aussi « é » ou les chiffres d'autres alphabets). Ajoutez `re.ASCII` pour restreindre à l'ASCII.
+> **Note** : Sur une chaîne `str`, `\d` et `\w` sont compatibles **Unicode** (ils reconnaissent aussi « é » ou les chiffres d'autres alphabets). Ajoutez `re.ASCII` pour restreindre à l'ASCII.
 
 ```python
-re.findall(r"\d", "abc123def")   # ['1', '2', '3']
-re.findall(r"\w", "abc 123")     # ['a', 'b', 'c', '1', '2', '3']
+import re
+
+print(re.findall(r"\d", "abc123def"))   # ['1', '2', '3']
+print(re.findall(r"\w", "abc 123"))     # ['a', 'b', 'c', '1', '2', '3']
 ```
 
 ### Gourmand ou paresseux ?
@@ -102,9 +106,11 @@ re.findall(r"\w", "abc 123")     # ['a', 'b', 'c', '1', '2', '3']
 Par défaut, les quantificateurs sont **gourmands** : ils capturent le plus possible.
 
 ```python
+import re
+
 texte = "<a><b>"
-re.findall(r"<.+>", texte)    # ['<a><b>']      (gourmand)
-re.findall(r"<.+?>", texte)   # ['<a>', '<b>']  (paresseux)
+print(re.findall(r"<.+>", texte))    # ['<a><b>']      (gourmand)
+print(re.findall(r"<.+?>", texte))   # ['<a>', '<b>']  (paresseux)
 ```
 
 ### Drapeaux (*flags*)
@@ -120,8 +126,10 @@ Les drapeaux modifient le comportement de la recherche. On les combine avec `|`.
 | `re.ASCII`      | `re.A`      | `\w`, `\d`, `\s`… limités à l'ASCII                    |
 
 ```python
-re.search(r"bonjour", "Bonjour", re.IGNORECASE)   # Correspond quelle que soit la casse
-re.findall(r"^\w+", "un\ndeux", re.MULTILINE)     # ['un', 'deux']
+import re
+
+print(re.search(r"bonjour", "Bonjour", re.IGNORECASE))   # <re.Match object; span=(0, 7), match='Bonjour'>
+print(re.findall(r"^\w+", "un\ndeux", re.MULTILINE))     # ['un', 'deux']
 ```
 
 ### Exemples utiles
@@ -129,22 +137,28 @@ re.findall(r"^\w+", "un\ndeux", re.MULTILINE)     # ['un', 'deux']
 **Trouver tous les nombres d'une chaîne**
 
 ```python
-re.findall(r"\d+", "abc123def456")   # ['123', '456']
+import re
+
+print(re.findall(r"\d+", "abc123def456"))   # ['123', '456']
 ```
 
 **Extraire les composantes d'une date**
 
 ```python
+import re
+
 date_str = "2025-05-01"
 m = re.search(r"(\d{4})-(\d{2})-(\d{2})", date_str)
 if m:
     annee, mois, jour = m.groups()
-    print(f"Année : {annee}, mois : {mois}, jour : {jour}")
+    print(f"Année : {annee}, mois : {mois}, jour : {jour}")   # Année : 2025, mois : 05, jour : 01
 ```
 
 **Utiliser des groupes nommés (plus lisible)**
 
 ```python
+import re
+
 m = re.search(r"(?P<annee>\d{4})-(?P<mois>\d{2})-(?P<jour>\d{2})", "2025-05-01")
 if m:
     print(m["annee"], m.group("mois"), m.groupdict())
@@ -154,32 +168,38 @@ if m:
 **Valider une adresse e-mail (version simple)**
 
 ```python
+import re
+
 motif_email = r"[\w.-]+@[\w.-]+\.\w{2,}"
 est_valide = re.fullmatch(motif_email, "user@example.com") is not None
 print(est_valide)   # True
 ```
 
-> ⚠️ Ce motif convient pour un contrôle rapide, mais il ne couvre pas toute la norme des adresses e-mail. Pour une validation stricte, envoyez un message de confirmation.
+> **Attention** : Ce motif convient pour un contrôle rapide, mais il ne couvre pas toute la norme des adresses e-mail. Pour une validation stricte, envoyez un message de confirmation.
 
 **Remplacer du texte**
 
 ```python
-re.sub(r"cat", "dog", "one cat, two cats")
-# 'one dog, two dogs'
+import re
+
+print(re.sub(r"cat", "dog", "one cat, two cats"))
+# one dog, two dogs
 
 # Avec des références arrière : AAAA-MM-JJ → JJ/MM/AAAA
-re.sub(r"(\d{4})-(\d{2})-(\d{2})", r"\3/\2/\1", "2025-05-01")
-# '01/05/2025'
+print(re.sub(r"(\d{4})-(\d{2})-(\d{2})", r"\3/\2/\1", "2025-05-01"))
+# 01/05/2025
 
 # Avec une fonction de remplacement
-re.sub(r"\d+", lambda m: str(int(m.group()) * 2), "3 pommes, 5 poires")
-# '6 pommes, 10 poires'
+print(re.sub(r"\d+", lambda m: str(int(m.group()) * 2), "3 pommes, 5 poires"))
+# 6 pommes, 10 poires
 ```
 
 **Découper une chaîne**
 
 ```python
-re.split(r"[,;]\s*", "a, b;c,  d")   # ['a', 'b', 'c', 'd']
+import re
+
+print(re.split(r"[,;]\s*", "a, b;c,  d"))   # ['a', 'b', 'c', 'd']
 ```
 
 ### L'objet *Match*
@@ -195,10 +215,12 @@ Un objet *Match* est retourné lorsqu'un motif correspond (sinon, la fonction re
 | `.span()`               | Tuple `(début, fin)`                           |
 
 ```python
+import re
+
 m = re.search(r"(\d{4})-(\d{2})-(\d{2})", "Date : 2025-05-01")
 if m:
-    print(m.group())    # '2025-05-01'
-    print(m.group(1))   # '2025'
+    print(m.group())    # 2025-05-01
+    print(m.group(1))   # 2025
     print(m.groups())   # ('2025', '05', '01')
     print(m.span())     # (7, 17)
 ```
@@ -208,14 +230,18 @@ if m:
 Quand un motif est utilisé plusieurs fois, compilez-le une seule fois :
 
 ```python
+import re
+
 motif = re.compile(r"\d+")
-motif.findall("a1 b22 c333")   # ['1', '22', '333']
-motif.sub("#", "a1 b22")       # 'a# b#'
+print(motif.findall("a1 b22 c333"))   # ['1', '22', '333']
+print(motif.sub("#", "a1 b22"))       # a# b#
 ```
 
 ### Motifs complexes avec `re.VERBOSE`
 
 ```python
+import re
+
 motif_tel = re.compile(r"""
     ^(?:\+33|0)      # indicatif : +33 ou 0
     \s?[1-9]         # premier chiffre (1 à 9)
@@ -223,10 +249,10 @@ motif_tel = re.compile(r"""
     $
 """, re.VERBOSE)
 
-motif_tel.match("06 12 34 56 78")   # Correspond
+print(motif_tel.match("06 12 34 56 78"))   # <re.Match object; span=(0, 14), match='06 12 34 56 78'>
 ```
 
-### ✅ Bonnes pratiques
+### Bonnes pratiques
 
 - **Chaînes brutes** (`r"..."`) : évitent que Python interprète les backslashes.
 - **`re.compile()`** : pour tout motif réutilisé plusieurs fois.
@@ -248,25 +274,30 @@ Le module `os` donne accès aux fonctionnalités **dépendantes du système d'ex
 import os
 ```
 
-> 💡 Pour manipuler des chemins et des fichiers au quotidien, `pathlib` (section 3) est aujourd'hui l'approche recommandée. `os` reste utile pour les variables d'environnement, les processus et le code existant.
+> **Astuce** : Pour manipuler des chemins et des fichiers au quotidien, `pathlib` (section 3) est aujourd'hui l'approche recommandée. `os` reste utile pour les variables d'environnement, les processus et le code existant.
 
 ### 2.1 Travailler avec le système de fichiers
 
 **Répertoire de travail**
 
 ```python
-print(os.getcwd())   # ex. : /home/utilisateur/projet
-os.chdir("/tmp")     # Change de répertoire
-print(os.getcwd())   # /tmp
+import os
+import tempfile
+
+print(os.getcwd())                  # ex. : /home/utilisateur/projet
+os.chdir(tempfile.gettempdir())     # Change de répertoire (le dossier temporaire du système)
+print(os.getcwd())                  # ex. : /tmp
 ```
 
-> 💡 Pour un changement **temporaire** de répertoire, utilisez `contextlib.chdir()` (Python 3.11+, voir [section 6](#6-gestionnaires-de-contexte-with)).
+> **Astuce** : Pour un changement **temporaire** de répertoire, utilisez `contextlib.chdir()` (Python 3.11+, voir [section 6](#6-gestionnaires-de-contexte-with)).
 
 **Lister le contenu d'un dossier**
 
 ```python
+import os
+
 print(os.listdir())          # Dossier courant
-print(os.listdir("/etc"))    # Contenu de /etc
+print(os.listdir("/etc"))    # Contenu de /etc (Linux et macOS)
 
 # Plus efficace : scandir() donne directement les infos de chaque entrée
 with os.scandir(".") as entrees:
@@ -277,48 +308,90 @@ with os.scandir(".") as entrees:
 **Créer et supprimer des dossiers**
 
 ```python
+import os
+
 os.mkdir("dossier_test")                    # Un seul dossier
 os.makedirs("dir/subdir", exist_ok=True)    # Dossiers imbriqués, sans erreur s'ils existent
+print(os.path.isdir("dossier_test"), os.path.isdir("dir/subdir"))   # True True
 
 os.rmdir("dossier_test")      # Supprime un dossier VIDE
 os.removedirs("dir/subdir")   # Supprime les dossiers vides imbriqués
+print(os.path.exists("dossier_test"), os.path.exists("dir"))        # False False
 ```
 
-> ⚠️ Pour supprimer un dossier **non vide**, utilisez `shutil.rmtree("dossier")` (irréversible).
+> **Attention** : Pour supprimer un dossier **non vide**, utilisez `shutil.rmtree("dossier")` (irréversible).
+
+```python
+import os
+import shutil
+import sys
+
+os.makedirs("dossier_plein", exist_ok=True)
+with open("dossier_plein/a.txt", "w", encoding="utf-8") as f:
+    f.write("contenu")
+
+try:
+    os.rmdir("dossier_plein")
+except OSError as e:
+    print(f"Erreur : {e}", file=sys.stderr)   # [Errno 39] Directory not empty: 'dossier_plein'
+
+shutil.rmtree("dossier_plein")                # Supprime le dossier et tout son contenu
+print(os.path.exists("dossier_plein"))        # False
+```
 
 **Créer, renommer et supprimer des fichiers**
 
 ```python
+import os
+
 # Créer un fichier
 with open("fichier.txt", "w", encoding="utf-8") as f:
     f.write("Bonjour")
 
 os.rename("fichier.txt", "renomme.txt")   # Renommer
+print(os.path.exists("renomme.txt"))      # True
 os.remove("renomme.txt")                  # Supprimer
+print(os.path.exists("renomme.txt"))      # False
 ```
 
-> ℹ️ `os.replace(src, dst)` renomme en **écrasant** la destination de façon fiable sur tous les systèmes. Pour copier ou déplacer entre disques, utilisez `shutil.copy()` et `shutil.move()`.
+> **Note** : `os.replace(src, dst)` renomme en **écrasant** la destination de façon fiable sur tous les systèmes. Pour copier ou déplacer entre disques, utilisez `shutil.copy()` et `shutil.move()`.
 
 ### 2.2 Informations sur les fichiers et les chemins
+
+Préparation des exemples de cette section :
+
+```python
+import os
+
+with open("fichier.txt", "w", encoding="utf-8") as f:
+    f.write("Bonjour")
+os.makedirs("mon_dossier", exist_ok=True)
+```
 
 **Chemins absolus et relatifs**
 
 ```python
+import os
+
 print(os.path.abspath("fichier.txt"))   # Chemin absolu
-print(os.path.relpath("/etc/passwd"))   # Chemin relatif au répertoire courant
+print(os.path.relpath("/etc/passwd"))   # Chemin relatif au répertoire courant (Linux et macOS)
 ```
 
 **Tests d'existence**
 
 ```python
-print(os.path.exists("fichier.txt"))   # Existe ?
-print(os.path.isfile("fichier.txt"))   # Est un fichier ?
-print(os.path.isdir("mon_dossier"))    # Est un dossier ?
+import os
+
+print(os.path.exists("fichier.txt"))   # True : existe ?
+print(os.path.isfile("fichier.txt"))   # True : est un fichier ?
+print(os.path.isdir("mon_dossier"))    # True : est un dossier ?
 ```
 
 **Assembler et découper des chemins**
 
 ```python
+import os
+
 chemin = os.path.join("dossier", "sous_dossier", "fichier.txt")
 print(chemin)   # dossier/sous_dossier/fichier.txt (ou avec \ sous Windows)
 
@@ -332,39 +405,53 @@ print(nom, extension)   # rapport  .pdf
 **Métadonnées**
 
 ```python
+import os
 from datetime import datetime
 
 infos = os.stat("fichier.txt")
-print("Taille :", infos.st_size, "octets")
+print("Taille :", infos.st_size, "octets")   # Taille : 7 octets
 print("Dernière modification :", datetime.fromtimestamp(infos.st_mtime))
 ```
 
 ### 2.3 Variables d'environnement
 
 ```python
-print(os.environ["HOME"])        # KeyError si la variable n'existe pas
-print(os.environ.get("PATH"))    # Plus sûr : renvoie None si absente
-print(os.getenv("MA_VAR", "valeur par défaut"))   # Avec valeur par défaut
+import os
+import sys
+
+print(os.environ["PATH"])                          # Accès direct : lève KeyError si la variable est absente
+print(os.environ.get("MA_VAR"))                    # Plus sûr : renvoie None si absente
+print(os.getenv("MA_VAR", "valeur par défaut"))    # Avec valeur par défaut : valeur par défaut
+
+try:
+    print(os.environ["VARIABLE_ABSENTE"])
+except KeyError as e:
+    print(f"Variable introuvable : {e}", file=sys.stderr)   # Variable introuvable : 'VARIABLE_ABSENTE'
 ```
 
 **Définir et supprimer**
 
 ```python
+import os
+
 os.environ["MA_VAR"] = "valeur"
-print(os.environ["MA_VAR"])
+print(os.environ["MA_VAR"])   # valeur
 
 del os.environ["MA_VAR"]
+print(os.getenv("MA_VAR"))    # None
 ```
 
-> 🔐 Les variables d'environnement sont l'endroit idéal pour stocker des **secrets** (clés d'API, mots de passe) plutôt que de les écrire en dur dans le code. Les modifications faites via `os.environ` ne durent que le temps du programme et de ses sous-processus.
+> **Sécurité** : Les variables d'environnement sont l'endroit idéal pour stocker des **secrets** (clés d'API, mots de passe) plutôt que de les écrire en dur dans le code. Les modifications faites via `os.environ` ne durent que le temps du programme et de ses sous-processus.
 
 ### 2.4 Exécuter des commandes système
 
 ```python
-os.system("echo Bonjour depuis le shell")
+import os
+
+os.system("echo Bonjour depuis le shell")   # Affiche : Bonjour depuis le shell
 ```
 
-> ⚠️ **Attention** : `os.system` est à éviter, notamment avec des données venant d'un utilisateur (risque d'injection de commandes). Préférez le module `subprocess` :
+> **Attention** : `os.system` est à éviter, notamment avec des données venant d'un utilisateur (risque d'injection de commandes). Préférez le module `subprocess` :
 
 ```python
 import subprocess
@@ -375,12 +462,14 @@ resultat = subprocess.run(
     text=True,
     check=True,            # Lève une exception si la commande échoue
 )
-print(resultat.stdout)
+print(resultat.stdout)   # Bonjour
 ```
 
 ### 2.5 Constantes et informations système
 
 ```python
+import os
+
 print(os.name)         # 'posix' (Linux/macOS) ou 'nt' (Windows)
 print(os.sep)          # '/' sous Unix, '\\' sous Windows
 print(os.linesep)      # '\n' sous Unix, '\r\n' sous Windows
@@ -391,6 +480,8 @@ print(os.getpid())     # Identifiant du processus courant
 ### 2.6 Parcourir une arborescence
 
 ```python
+import os
+
 for dirpath, dirnames, filenames in os.walk("."):
     print(f"Dossier : {dirpath}")
     for fichier in filenames:
@@ -402,10 +493,12 @@ for dirpath, dirnames, filenames in os.walk("."):
 ### 2.7 Permissions et droits d'accès
 
 ```python
+import os
+
 os.chmod("fichier.txt", 0o644)   # rw-r--r-- (Unix)
 
-print(os.access("fichier.txt", os.R_OK))   # Lisible ?
-print(os.access("fichier.txt", os.W_OK))   # Modifiable ?
+print(os.access("fichier.txt", os.R_OK))   # True : lisible ?
+print(os.access("fichier.txt", os.W_OK))   # True : modifiable ?
 ```
 
 ---
@@ -425,36 +518,47 @@ from pathlib import Path
 ### 3.1 Créer des objets `Path`
 
 ```python
+from pathlib import Path
+
 p = Path("exemple.txt")               # Chemin relatif
 maison = Path.home()                  # Dossier personnel
 absolu = Path("/usr/bin/python")      # Chemin absolu
 courant = Path.cwd()                  # Répertoire de travail
+
+print(p, maison, absolu, courant, sep="\n")
 ```
 
 ### 3.2 Tester l'existence
 
 ```python
-p = Path("exemple.txt")
+from pathlib import Path
 
-print(p.exists())    # Le fichier ou dossier existe ?
-print(p.is_file())   # C'est un fichier ?
-print(p.is_dir())    # C'est un dossier ?
+p = Path("exemple.txt")
+p.touch()            # Crée le fichier pour l'exemple
+
+print(p.exists())    # True : le fichier ou dossier existe ?
+print(p.is_file())   # True : c'est un fichier ?
+print(p.is_dir())    # False : c'est un dossier ?
 ```
 
 ### 3.3 Lire et écrire des fichiers
 
 ```python
+from pathlib import Path
+
 p = Path("data.txt")
 
 p.write_text("Bonjour le monde !", encoding="utf-8")   # Écrire
-print(p.read_text(encoding="utf-8"))                   # Lire
+print(p.read_text(encoding="utf-8"))                   # Bonjour le monde !
 ```
 
-> 💡 Indiquez toujours `encoding="utf-8"` : le comportement par défaut dépend du système. Pour du contenu binaire, utilisez `write_bytes()` et `read_bytes()`. Pour de gros fichiers, utilisez `with p.open() as f:`.
+> **Astuce** : Indiquez toujours `encoding="utf-8"` : le comportement par défaut dépend du système. Pour du contenu binaire, utilisez `write_bytes()` et `read_bytes()`. Pour de gros fichiers, utilisez `with p.open() as f:`.
 
 ### 3.4 Créer des dossiers et des fichiers
 
 ```python
+from pathlib import Path
+
 Path("mon_dossier").mkdir(exist_ok=True)
 
 # Dossiers imbriqués
@@ -462,23 +566,33 @@ Path("parent/enfant/petit_enfant").mkdir(parents=True, exist_ok=True)
 
 # Créer un fichier vide (ou mettre à jour sa date de modification)
 Path("vide.txt").touch()
+
+print(Path("mon_dossier").is_dir(), Path("parent/enfant/petit_enfant").is_dir(), Path("vide.txt").exists())   # True True True
 ```
 
 ### 3.5 Renommer et supprimer
 
 ```python
+from pathlib import Path
+
 p = Path("ancien_nom.txt")
+p.write_text("contenu", encoding="utf-8")   # Crée le fichier pour l'exemple
+
 p = p.rename("nouveau_nom.txt")   # Retourne le nouveau Path
+print(p)                          # nouveau_nom.txt
 
 p.unlink()                        # Supprime le fichier
 p.unlink(missing_ok=True)         # Sans erreur s'il n'existe déjà plus (3.8+)
+print(p.exists())                 # False
 ```
 
-> ⚠️ `.rmdir()` ne supprime que les dossiers **vides**. Pour un dossier non vide : `shutil.rmtree()`.
+> **Attention** : `.rmdir()` ne supprime que les dossiers **vides**. Pour un dossier non vide : `shutil.rmtree()`.
 
 ### 3.6 Parcourir les dossiers
 
 ```python
+from pathlib import Path
+
 # Contenu direct d'un dossier
 for element in Path(".").iterdir():
     print(element)
@@ -492,11 +606,13 @@ for fichier in Path(".").rglob("*.txt"):
     print(fichier)
 ```
 
-> 💡 Depuis Python 3.12, `Path.walk()` offre le même comportement que `os.walk()` en version objet.
+> **Astuce** : Depuis Python 3.12, `Path.walk()` offre le même comportement que `os.walk()` en version objet.
 
 ### 3.7 Décomposer un chemin
 
 ```python
+from pathlib import Path
+
 p = Path("/usr/local/bin/script.py")
 
 print(p.name)      # 'script.py'
@@ -513,6 +629,8 @@ print(p.with_name("autre.py"))     # /usr/local/bin/autre.py
 ### 3.8 Assembler des chemins avec `/`
 
 ```python
+from pathlib import Path
+
 p = Path("dossier")
 nouveau = p / "sous_dossier" / "fichier.txt"
 print(nouveau)   # dossier/sous_dossier/fichier.txt
@@ -521,9 +639,12 @@ print(nouveau)   # dossier/sous_dossier/fichier.txt
 ### 3.9 Métadonnées et permissions
 
 ```python
-p = Path("fichier.txt")
+from pathlib import Path
 
-print(p.stat().st_size)    # Taille en octets
+p = Path("fichier.txt")
+p.write_text("Bonjour", encoding="utf-8")   # Crée le fichier pour l'exemple
+
+print(p.stat().st_size)    # 7 : taille en octets
 print(p.stat().st_mtime)   # Date de dernière modification (timestamp)
 
 p.chmod(0o644)             # rw-r--r-- (Unix)
@@ -532,10 +653,12 @@ p.chmod(0o644)             # rw-r--r-- (Unix)
 ### 3.10 Chemins absolus et relatifs
 
 ```python
+from pathlib import Path
+
 p = Path("fichier.txt")
 
-print(p.resolve())                        # Chemin absolu (résout aussi les liens symboliques)
-print(p.resolve().relative_to(Path.cwd()))  # Chemin relatif au répertoire courant
+print(p.resolve())                          # Chemin absolu (résout aussi les liens symboliques)
+print(p.resolve().relative_to(Path.cwd()))  # fichier.txt : chemin relatif au répertoire courant
 ```
 
 ### 3.11 Correspondance `os` / `pathlib`
@@ -587,6 +710,7 @@ from datetime import date
 aujourdhui = date.today()      # Date du jour
 d = date(2025, 5, 1)           # Date précise
 
+print(aujourdhui)              # ex. : 2026-10-25
 print(d.year, d.month, d.day)  # 2025 5 1
 print(d.weekday())             # 3 → jeudi (0 = lundi, 6 = dimanche)
 ```
@@ -608,14 +732,18 @@ from datetime import datetime
 maintenant = datetime.now()          # Date et heure locales actuelles
 dt = datetime(2025, 5, 1, 14, 30)    # Date et heure précises
 
-print(maintenant.year, maintenant.hour, maintenant.minute)
+print(maintenant.year, maintenant.hour, maintenant.minute)   # ex. : 2026 14 30
+print(dt)                                                    # 2025-05-01 14:30:00
 ```
 
 ### Formater en texte avec `strftime()`
 
 ```python
+from datetime import datetime
+
 maintenant = datetime.now()
-texte = maintenant.strftime("%d/%m/%Y %H:%M:%S")   # ex. : 01/05/2025 14:30:45
+texte = maintenant.strftime("%d/%m/%Y %H:%M:%S")
+print(texte)   # ex. : 01/05/2025 14:30:45
 ```
 
 | Code | Signification              | Exemple  |
@@ -630,17 +758,22 @@ texte = maintenant.strftime("%d/%m/%Y %H:%M:%S")   # ex. : 01/05/2025 14:30:45
 | `%A` | Nom du jour                | Thursday |
 | `%B` | Nom du mois                | May      |
 
-> ℹ️ `%A` et `%B` dépendent de la **locale** du système (langue). Pour du texte localisé de façon fiable, utilisez une bibliothèque comme `Babel`.
+> **Note** : `%A` et `%B` dépendent de la **locale** du système (langue). Pour du texte localisé de façon fiable, utilisez une bibliothèque comme `Babel`.
 
 ### Convertir du texte en date avec `strptime()`
 
 ```python
+from datetime import datetime
+
 dt = datetime.strptime("2025-05-01 14:30", "%Y-%m-%d %H:%M")
+print(dt)   # 2025-05-01 14:30:00
 ```
 
 ### Format ISO 8601 (recommandé pour échanger des dates)
 
 ```python
+from datetime import datetime
+
 dt = datetime(2025, 5, 1, 14, 30)
 
 print(dt.isoformat())                              # '2025-05-01T14:30:00'
@@ -654,6 +787,8 @@ from datetime import datetime, timedelta
 
 dans_une_semaine = datetime.now() + timedelta(days=7)
 il_y_a_une_heure = datetime.now() - timedelta(hours=1)
+print(dans_une_semaine)    # ex. : 2026-11-01 14:30:45.123456
+print(il_y_a_une_heure)    # ex. : 2026-10-25 13:30:45.123456
 
 # Durée entre deux dates
 delta = datetime(2025, 5, 1) - datetime(2024, 5, 1)
@@ -668,7 +803,20 @@ Il existe deux sortes de `datetime` :
 - **naïf** : sans information de fuseau (`datetime.now()`) ;
 - **averti** (*aware*) : avec un fuseau horaire (`tzinfo`).
 
-> ⚠️ On ne peut pas comparer ou soustraire un `datetime` naïf et un `datetime` averti (`TypeError`).
+> **Attention** : On ne peut pas comparer ou soustraire un `datetime` naïf et un `datetime` averti (`TypeError`).
+
+```python
+import sys
+from datetime import datetime, timezone
+
+naif = datetime(2025, 5, 1, 12, 0)
+averti = datetime(2025, 5, 1, 12, 0, tzinfo=timezone.utc)
+
+try:
+    print(averti - naif)
+except TypeError as e:
+    print(f"Erreur : {e}", file=sys.stderr)   # can't subtract offset-naive and offset-aware datetimes
+```
 
 **Décalage fixe avec `timezone`**
 
@@ -683,10 +831,13 @@ print(dt.isoformat())               # 2025-05-01T14:00:00+03:00
 **Heure UTC actuelle**
 
 ```python
+from datetime import datetime, timezone
+
 maintenant_utc = datetime.now(timezone.utc)
+print(maintenant_utc)   # ex. : 2026-10-25 12:30:45.123456+00:00
 ```
 
-> ⚠️ `datetime.utcnow()` et `datetime.utcfromtimestamp()` sont **dépréciés depuis Python 3.12** : ils renvoient un datetime *naïf* source d'erreurs. Utilisez `datetime.now(timezone.utc)`.
+> **Attention** : `datetime.utcnow()` et `datetime.utcfromtimestamp()` sont **dépréciés depuis Python 3.12** : ils renvoient un datetime *naïf* source d'erreurs. Utilisez `datetime.now(timezone.utc)`.
 
 **Fuseaux nommés avec `zoneinfo` (Python 3.9+)**
 
@@ -702,7 +853,7 @@ print(paris.astimezone(ZoneInfo("Indian/Antananarivo")))  # 2025-07-01 13:00:00+
 print(paris.astimezone(timezone.utc))                 # 2025-07-01 10:00:00+00:00
 ```
 
-> 💡 Sous Windows, installez le paquet `tzdata` (`pip install tzdata`) si les fuseaux sont introuvables.
+> **Astuce** : Sous Windows, installez le paquet `tzdata` (`pip install tzdata`) si les fuseaux sont introuvables.
 
 ---
 
@@ -723,11 +874,13 @@ import json
 | `json.loads()`  | JSON → Python              | **chaîne**           |
 | `json.load()`   | JSON → Python              | **fichier**          |
 
-> 💡 Mnémotechnique : le **`s`** de `dumps`/`loads` signifie *string*.
+> **Astuce** : Mnémotechnique : le **`s`** de `dumps`/`loads` signifie *string*.
 
 ### Python → chaîne JSON (`json.dumps`)
 
 ```python
+import json
+
 data = {
     "name": "Alice",
     "age": 30,
@@ -748,6 +901,10 @@ print(json_string)
 ### Écrire dans un fichier (`json.dump`)
 
 ```python
+import json
+
+data = {"name": "Alice", "age": 30, "is_admin": False, "skills": ["Python", "Machine Learning"]}
+
 with open("user.json", "w", encoding="utf-8") as f:
     json.dump(data, f, indent=4, ensure_ascii=False)
 ```
@@ -755,6 +912,8 @@ with open("user.json", "w", encoding="utf-8") as f:
 ### Lire depuis une chaîne (`json.loads`)
 
 ```python
+import json
+
 json_data = '{"name": "Bob", "age": 25}'
 python_obj = json.loads(json_data)
 print(python_obj["name"])   # Bob
@@ -763,14 +922,20 @@ print(python_obj["name"])   # Bob
 ### Lire depuis un fichier (`json.load`)
 
 ```python
+import json
+
 with open("user.json", encoding="utf-8") as f:
     user = json.load(f)
-    print(user["skills"])
+    print(user["skills"])   # ['Python', 'Machine Learning']
 ```
 
 ### Affichage lisible et options utiles
 
 ```python
+import json
+
+data = {"name": "Alice", "age": 30, "is_admin": False, "skills": ["Python", "Machine Learning"]}
+
 print(json.dumps(data, indent=4))
 ```
 
@@ -805,7 +970,7 @@ print(json.dumps(data, indent=4))
 | `True` / `False`   | `true` / `false` |
 | `None`             | `null`          |
 
-> ⚠️ Les clés d'un objet JSON sont toujours des **chaînes** : `{1: "a"}` devient `{"1": "a"}`. De même, un `tuple` revient sous forme de `list` après un aller-retour.
+> **Attention** : Les clés d'un objet JSON sont toujours des **chaînes** : `{1: "a"}` devient `{"1": "a"}`. De même, un `tuple` revient sous forme de `list` après un aller-retour.
 
 ### Erreurs courantes
 
@@ -813,18 +978,29 @@ print(json.dumps(data, indent=4))
 - **`json.JSONDecodeError`** → le texte n'est pas du JSON valide (virgule en trop, apostrophes au lieu de guillemets doubles…).
 
 ```python
+import json
+import sys
+
 try:
     json.loads("{'name': 'Bob'}")   # Invalide : il faut des guillemets doubles
 except json.JSONDecodeError as e:
-    print(f"JSON invalide : {e}")
+    print(f"JSON invalide : {e}", file=sys.stderr)   # JSON invalide : Expecting property name enclosed in double quotes: line 1 column 2 (char 1)
 ```
 
 ### Sérialisation personnalisée
 
 ```python
 import json
+import sys
 from datetime import datetime
 
+# Sans traitement spécial, un datetime ou un set provoque une erreur
+try:
+    json.dumps({"cree_le": datetime.now()})
+except TypeError as e:
+    print(f"Erreur : {e}", file=sys.stderr)   # Object of type datetime is not JSON serializable
+
+# Avec une fonction de sérialisation personnalisée
 def serialiseur(obj):
     if isinstance(obj, datetime):
         return obj.isoformat()
@@ -846,6 +1022,8 @@ Un **gestionnaire de contexte** garantit qu'une ressource (fichier, connexion, v
 # Le fichier est fermé automatiquement à la sortie du bloc, erreur ou non
 with open("notes.txt", "w", encoding="utf-8") as f:
     f.write("Bonjour")
+
+print(f.closed)   # True
 ```
 
 Équivalent (plus lourd) sans `with` :
@@ -856,6 +1034,8 @@ try:
     f.write("Bonjour")
 finally:
     f.close()
+
+print(f.closed)   # True
 ```
 
 ### Gestionnaires de contexte prêts à l'emploi
@@ -865,6 +1045,10 @@ import contextlib
 import os
 import tempfile
 
+# Préparation : un fichier source à copier
+with open("source.txt", "w", encoding="utf-8") as f:
+    f.write("Bonjour")
+
 # Plusieurs ressources dans un seul with
 with open("source.txt", encoding="utf-8") as src, open("copie.txt", "w", encoding="utf-8") as dst:
     dst.write(src.read())
@@ -872,15 +1056,18 @@ with open("source.txt", encoding="utf-8") as src, open("copie.txt", "w", encodin
 # Dossier temporaire supprimé automatiquement
 with tempfile.TemporaryDirectory() as dossier:
     print("Dossier temporaire :", dossier)
+print(os.path.exists(dossier))   # False : le dossier a été supprimé
 
 # Changer temporairement de répertoire (Python 3.11+)
-with contextlib.chdir("/tmp"):
-    print(os.getcwd())   # /tmp
-print(os.getcwd())       # Retour au répertoire d'origine
+print(os.getcwd())                       # Répertoire d'origine
+with contextlib.chdir(tempfile.gettempdir()):
+    print(os.getcwd())                   # Dossier temporaire du système (ex. : /tmp)
+print(os.getcwd())                       # Retour au répertoire d'origine
 
 # Ignorer une exception précise
 with contextlib.suppress(FileNotFoundError):
     os.remove("fichier_inexistant.txt")
+print("Aucune erreur levée")
 ```
 
 ### Créer le sien avec `@contextmanager`
@@ -899,7 +1086,9 @@ def chronometre(nom):
         print(f"{nom} : {duree:.3f} s")
 
 with chronometre("Calcul"):
-    sum(range(10_000_000))
+    total = sum(range(10_000_000))
+
+print(total)   # 49999995000000
 ```
 
 ### Créer le sien avec une classe
@@ -916,6 +1105,8 @@ class Connexion:
 
 with Connexion() as c:
     print("Travail en cours")
+
+# Affiche : Ouverture, Travail en cours, Fermeture
 ```
 
 ### Contextes asynchrones
@@ -923,11 +1114,18 @@ with Connexion() as c:
 Pour les ressources asynchrones (sessions réseau, bases de données), on utilise `async with` (voir [section 8](#8-programmation-asynchrone-asyncio)) :
 
 ```python
-async with aiohttp.ClientSession() as session:
-    ...
+import asyncio
+import aiohttp
+
+async def main():
+    async with aiohttp.ClientSession() as session:
+        async with session.get("https://example.com") as reponse:
+            print(reponse.status)   # 200
+
+asyncio.run(main())
 ```
 
-> ✅ **Règle d'or** : dès qu'une ressource doit être fermée (fichier, session HTTP, connexion, verrou), utilisez `with`.
+> **Règle d'or** : dès qu'une ressource doit être fermée (fichier, session HTTP, connexion, verrou), utilisez `with`.
 
 ---
 
@@ -960,21 +1158,30 @@ print("Nom :", data["name"])
 print("Dépôts publics :", data["public_repos"])
 ```
 
-> ⏱ Précisez toujours un **`timeout`** : sans lui, `requests` peut attendre indéfiniment.
+> **Important** : Précisez toujours un **`timeout`** : sans lui, `requests` peut attendre indéfiniment.
 
 **Paramètres d'URL**
 
 ```python
+import requests
+
 reponse = requests.get(
     "https://api.github.com/search/repositories",
     params={"q": "python", "per_page": 3},   # → ?q=python&per_page=3
     timeout=10,
 )
+reponse.raise_for_status()
+
+print(reponse.url)   # https://api.github.com/search/repositories?q=python&per_page=3
+for depot in reponse.json()["items"]:
+    print(depot["full_name"])
 ```
 
 **Requête POST (envoi de JSON)**
 
 ```python
+import requests
+
 url = "https://httpbin.org/post"
 payload = {"username": "alice", "message": "Bonjour"}
 
@@ -987,25 +1194,36 @@ print(reponse.json())
 ```python
 import os
 
+import requests
+
+# Pour l'exemple uniquement : en pratique, la variable est définie hors du code
+os.environ.setdefault("API_KEY", "cle-de-demonstration")
+
 cle_api = os.environ["API_KEY"]   # Ne jamais écrire une clé en dur dans le code !
 headers = {"Authorization": f"Bearer {cle_api}"}
 
-reponse = requests.get("https://api.example.com/data", headers=headers, timeout=10)
+reponse = requests.get("https://httpbin.org/bearer", headers=headers, timeout=10)
+print(reponse.status_code)   # 200
+print(reponse.json())        # {'authenticated': True, 'token': 'cle-de-demonstration'}
 ```
 
 **Gérer les erreurs proprement**
 
 ```python
+import sys
+
+import requests
+
 try:
-    reponse = requests.get("https://api.example.com/data", timeout=10)
+    reponse = requests.get("https://httpbin.org/status/404", timeout=10)   # Renvoie toujours un code 404
     reponse.raise_for_status()
     print(reponse.json())
 except requests.exceptions.HTTPError as e:
-    print("Erreur HTTP :", e.response.status_code)
+    print("Erreur HTTP :", e.response.status_code, file=sys.stderr)   # Erreur HTTP : 404
 except requests.exceptions.Timeout:
-    print("Délai dépassé")
+    print("Délai dépassé", file=sys.stderr)
 except requests.exceptions.RequestException as e:
-    print("Erreur réseau :", e)
+    print("Erreur réseau :", e, file=sys.stderr)
 ```
 
 **Réutiliser la connexion avec une `Session`**
@@ -1013,6 +1231,8 @@ except requests.exceptions.RequestException as e:
 Pour plusieurs requêtes vers le même serveur, une `Session` (gestionnaire de contexte) est plus rapide et permet de partager les en-têtes.
 
 ```python
+import requests
+
 with requests.Session() as session:
     session.headers.update({"Accept": "application/json"})
     for utilisateur in ("octocat", "torvalds"):
@@ -1029,6 +1249,7 @@ pip install flask
 **Exemple : une API REST minimale**
 
 ```python
+# app.py
 from flask import Flask, jsonify, request
 
 app = Flask(__name__)
@@ -1074,7 +1295,7 @@ Lancer le serveur (mode développement) :
 flask --app app run --debug
 ```
 
-> ⚠️ Le mode `debug` ne doit **jamais** être activé en production. Pour déployer, utilisez un serveur WSGI comme `gunicorn`.
+> **Attention** : Le mode `debug` ne doit **jamais** être activé en production. Pour déployer, utilisez un serveur WSGI comme `gunicorn`.
 
 **Tester l'API**
 
@@ -1097,6 +1318,7 @@ pip install fastapi uvicorn
 ```
 
 ```python
+# main.py
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 
@@ -1165,7 +1387,7 @@ La **programmation asynchrone** permet à un programme d'avancer sur plusieurs t
 - Meilleures performances pour les tâches limitées par les entrées/sorties (*I/O-bound*)
 - Code souvent plus simple que les threads pour ces cas d'usage
 
-> ℹ️ L'asynchrone n'accélère **pas** les calculs lourds (CPU-bound). Pour ceux-ci, utilisez `multiprocessing` ou `concurrent.futures.ProcessPoolExecutor`.
+> **Note** : L'asynchrone n'accélère **pas** les calculs lourds (CPU-bound). Pour ceux-ci, utilisez `multiprocessing` ou `concurrent.futures.ProcessPoolExecutor`.
 
 ### 8.1 Synchrone vs asynchrone
 
@@ -1182,7 +1404,7 @@ print(fetch_data())
 print("Terminé")
 ```
 
-⏱ Résultat (≈ 2 secondes) :
+Résultat (≈ 2 secondes) :
 
 ```
 Données reçues
@@ -1256,7 +1478,7 @@ Fin de C
 ['A', 'B', 'C']
 ```
 
-> ⏱ Durée totale : ≈ 3 secondes au lieu de 6.
+> Durée totale : ≈ 3 secondes au lieu de 6.
 
 Pour qu'une erreur dans une tâche n'annule pas les autres, ajoutez `return_exceptions=True` : les exceptions sont alors renvoyées dans la liste de résultats.
 
@@ -1265,22 +1487,42 @@ Pour qu'une erreur dans une tâche n'annule pas les autres, ajoutez `return_exce
 `TaskGroup` est un gestionnaire de contexte asynchrone : il attend la fin de **toutes** les tâches, et si l'une échoue, il **annule les autres** proprement.
 
 ```python
+import asyncio
+
+async def tache(nom, delai):
+    print(f"Début de {nom}")
+    await asyncio.sleep(delai)
+    print(f"Fin de {nom}")
+    return nom
+
 async def main():
     async with asyncio.TaskGroup() as tg:
         t1 = tg.create_task(tache("A", 2))
         t2 = tg.create_task(tache("B", 1))
     # Ici, toutes les tâches sont terminées
-    print(t1.result(), t2.result())
+    print(t1.result(), t2.result())   # A B
+
+asyncio.run(main())
 ```
 
 Les erreurs sont regroupées dans un `ExceptionGroup`, qu'on gère avec `except*` :
 
 ```python
-try:
-    async with asyncio.TaskGroup() as tg:
-        tg.create_task(tache_qui_echoue())
-except* ValueError as groupe:
-    print("Erreurs de valeur :", groupe.exceptions)
+import asyncio
+import sys
+
+async def tache_qui_echoue():
+    await asyncio.sleep(0.1)
+    raise ValueError("valeur invalide")
+
+async def main():
+    try:
+        async with asyncio.TaskGroup() as tg:
+            tg.create_task(tache_qui_echoue())
+    except* ValueError as groupe:
+        print("Erreurs de valeur :", groupe.exceptions, file=sys.stderr)   # (ValueError('valeur invalide'),)
+
+asyncio.run(main())
 ```
 
 ### 8.5 `asyncio.create_task()`
@@ -1288,25 +1530,40 @@ except* ValueError as groupe:
 Planifie une coroutine pour qu'elle s'exécute indépendamment :
 
 ```python
+import asyncio
+
+async def tache(nom, delai):
+    print(f"Début de {nom}")
+    await asyncio.sleep(delai)
+    print(f"Fin de {nom}")
+    return nom
+
 async def main():
     t1 = asyncio.create_task(tache("A", 2))
     t2 = asyncio.create_task(tache("B", 3))
     print("Tâches créées")
     await t1
     await t2
+
+asyncio.run(main())
 ```
 
-> ⚠️ **Conservez toujours une référence** à la tâche créée (variable, liste…). Sinon, elle risque d'être supprimée par le ramasse-miettes avant d'avoir fini.
+> **Attention** : **Conservez toujours une référence** à la tâche créée (variable, liste…). Sinon, elle risque d'être supprimée par le ramasse-miettes avant d'avoir fini.
 
 ### 8.6 Limiter le temps d'attente
 
 ```python
+import asyncio
+import sys
+
 async def main():
     try:
         async with asyncio.timeout(2):   # Python 3.11+
             await asyncio.sleep(10)
     except TimeoutError:
-        print("Trop long, abandon")
+        print("Trop long, abandon", file=sys.stderr)
+
+asyncio.run(main())
 ```
 
 ### 8.7 Mélanger code synchrone et asynchrone

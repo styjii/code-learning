@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🌿 Git — Guide complet
+# Git — Guide complet
 
 **Du premier `git init` aux workflows d'équipe avancés**
 
@@ -10,7 +10,7 @@
 
 ---
 
-## 🗂️ Sommaire
+## Sommaire
 
 1. [Introduction et installation](#1-introduction-et-installation)
 2. [Bases de Git (niveau débutant)](#2-bases-de-git-niveau-débutant)
@@ -25,7 +25,9 @@
 11. [Sécurité et bonnes pratiques](#11-sécurité-et-bonnes-pratiques)
 12. [Aide-mémoire](#12-aide-mémoire)
 
-> 💡 **Légende** : les sections marquées *(ajout)* complètent le guide d'origine ; les mentions *(à jour)* signalent une pratique moderne qui remplace une ancienne.
+> **Légende** : les sections marquées *(ajout)* complètent le guide d'origine ; les mentions *(à jour)* signalent une pratique moderne qui remplace une ancienne.
+
+> **Conventions des exemples** : les valeurs entre chevrons (`<hash>`, `<url>`, `<fichier>`) sont à remplacer par vos propres valeurs ; lorsqu'un bloc présente plusieurs variantes d'une même commande, elles sont indépendantes (à lire comme « l'une ou l'autre »).
 
 ---
 
@@ -43,13 +45,13 @@
 
 | Avantage | Détail |
 | --- | --- |
-| 🕰️ Historique | Chaque modification est conservée et datée |
-| 🤝 Collaboration | Travail en parallèle, relectures, *pull requests* |
-| ⏪ Retour arrière | Retrouver une version antérieure en cas de bug |
-| 🌱 Expérimentation | Tester une idée dans une branche sans risque |
-| 🌐 Hors-ligne | Presque toutes les opérations fonctionnent sans réseau |
+| Historique | Chaque modification est conservée et datée |
+| Collaboration | Travail en parallèle, relectures, *pull requests* |
+| Retour arrière | Retrouver une version antérieure en cas de bug |
+| Expérimentation | Tester une idée dans une branche sans risque |
+| Hors-ligne | Presque toutes les opérations fonctionnent sans réseau |
 
-> ℹ️ **Git ≠ GitHub.** Git est l'outil ; GitHub, GitLab, Bitbucket, etc. sont des services qui hébergent des dépôts Git.
+> **Remarque** : **Git ≠ GitHub.** Git est l'outil ; GitHub, GitLab, Bitbucket, etc. sont des services qui hébergent des dépôts Git.
 
 ## 1.2 Installer Git
 
@@ -76,7 +78,7 @@ brew install git            # recommandé (version à jour)
 xcode-select --install      # alternative : outils en ligne de commande Xcode
 ```
 
-> ⚠️ Le Git fourni par Apple est souvent plus ancien que la dernière version.
+> **Attention** : Le Git fourni par Apple est souvent plus ancien que la dernière version.
 
 ### Linux
 
@@ -104,7 +106,7 @@ git config --global user.email "vous@exemple.com"
 
 ```bash
 git config --global init.defaultBranch main     # branche initiale = main
-git config --global pull.rebase false           # ou true / "only" : choisir sa stratégie de pull
+git config --global pull.rebase false           # fusion au pull (true : rebase)
 git config --global core.editor "code --wait"   # éditeur (VS Code)
 git config --global color.ui auto
 git config --global push.autoSetupRemote true   # git push crée la branche distante au besoin
@@ -152,7 +154,7 @@ Répertoire de travail ──git add──▶ Index ──git commit──▶ D�
 
 Pour dialoguer avec un dépôt distant sans retaper vos identifiants, trois méthodes existent.
 
-> ⚠️ Les **mots de passe de compte** ne sont plus acceptés par GitHub pour Git (depuis 2021) : utilisez une clé SSH, un **jeton d'accès personnel** (*PAT*) ou un gestionnaire d'identifiants.
+> **Attention** : Les **mots de passe de compte** ne sont plus acceptés par GitHub pour Git (depuis 2021) : utilisez une clé SSH, un **jeton d'accès personnel** (*PAT*) ou un gestionnaire d'identifiants.
 
 ### Option A — Clés SSH (recommandé)
 
@@ -196,7 +198,11 @@ ssh -T git@github.com
 **Git Credential Manager** (inclus avec Git pour Windows) stocke vos identifiants de façon sécurisée et gère l'authentification par navigateur.
 
 ```bash
-git config --global credential.helper manager   # Windows / macOS
+# Windows
+git config --global credential.helper manager
+
+# macOS
+git config --global credential.helper osxkeychain
 ```
 
 ### Option C — GitHub CLI *(ajout)*
@@ -223,9 +229,9 @@ Cela crée un dossier caché **`.git`** contenant toutes les données du dépôt
 ## 2.2 Cloner un dépôt (`git clone`)
 
 ```bash
-git clone https://github.com/utilisateur/depot.git
-git clone git@github.com:utilisateur/depot.git        # via SSH
-git clone https://github.com/utilisateur/depot.git mon-dossier
+git clone https://github.com/utilisateur/depot.git               # via HTTPS (crée le dossier depot)
+git clone git@github.com:utilisateur/depot.git depot-ssh         # via SSH, dans un dossier distinct
+git clone https://github.com/utilisateur/depot.git mon-dossier   # dans un dossier au nom choisi
 ```
 
 Cela crée un dossier contenant les fichiers **et tout l'historique**.
@@ -258,7 +264,7 @@ git add -u               # seulement les fichiers DÉJÀ suivis (modifiés / sup
 git add -p               # choisir interactivement les morceaux (hunks) à indexer
 ```
 
-> 💡 `git add -p` permet de réaliser des commits **petits et cohérents** même quand vous avez modifié plusieurs choses à la fois.
+> **Astuce** : `git add -p` permet de réaliser des commits **petits et cohérents** même quand vous avez modifié plusieurs choses à la fois.
 
 ### Supprimer et renommer
 
@@ -297,7 +303,7 @@ La convention **Conventional Commits** est très répandue :
 | `test` | Ajout / modification de tests |
 | `chore` | Maintenance, outils |
 
-> ⚠️ **Ne réécrivez** (`--amend`) **jamais** un commit déjà poussé et partagé.
+> **Attention** : **Ne réécrivez** (`--amend`) **jamais** un commit déjà poussé et partagé.
 
 ## 2.6 Consulter l'historique (`git log`)
 
@@ -311,7 +317,7 @@ git log --graph --oneline --all      # graphe des branches
 git log --author="Alice"             # par auteur
 git log --since="2 weeks ago"        # par date
 git log -S"fonction"                 # commits qui ajoutent/suppriment ce texte
-git log -p fichier.txt               # historique détaillé d'un fichier
+git log -p -- fichier.txt               # historique détaillé d'un fichier
 git log --stat                       # fichiers modifiés par commit
 git show <hash>                      # détail d'un commit
 ```
@@ -343,8 +349,9 @@ build/*
 | `**/temp` | Dans tous les sous-dossiers |
 | `!fichier` | **Exception** (ne pas ignorer) |
 
-> ⚠️ `.gitignore` n'agit pas sur les fichiers **déjà suivis**. Pour les retirer : `git rm --cached <fichier>`.
-> 💡 Modèles prêts à l'emploi : [github.com/github/gitignore](https://github.com/github/gitignore). Ignore global personnel : `git config --global core.excludesFile ~/.gitignore_global`.
+> **Attention** : `.gitignore` n'agit pas sur les fichiers **déjà suivis**. Pour les retirer : `git rm --cached <fichier>`.
+>
+> **Astuce** : Modèles prêts à l'emploi : [github.com/github/gitignore](https://github.com/github/gitignore). Ignore global personnel : `git config --global core.excludesFile ~/.gitignore_global`.
 
 ## 2.8 Exemple de workflow complet
 
@@ -414,7 +421,7 @@ En cas de conflit, voir la [section 6.1](#61-résoudre-les-conflits-de-fusion).
 
 ```bash
 git branch -d feature/login     # suppression sûre (refuse si non fusionnée)
-git branch -D feature/login     # suppression forcée (⚠️ perte possible)
+git branch -D feature/login     # suppression forcée (perte possible)
 git push origin --delete feature/login    # supprime la branche distante
 git fetch --prune                         # nettoie les références distantes obsolètes
 ```
@@ -430,13 +437,13 @@ Une **étiquette** est un pointeur **fixe** vers un commit, souvent utilisé pou
 
 ```bash
 git tag                          # lister
-git tag -a v1.0 -m "Version 1.0"
-git tag -a v0.9 <hash> -m "..."  # étiqueter un ancien commit
+git tag -a v1.0 -m "Version 1.0"             # étiqueter le commit courant
+git tag -a v0.9 <hash> -m "Version 0.9"      # étiqueter un ancien commit
 git show v1.0                    # détails
-git tag -d v1.0                  # supprimer en local
 git push origin v1.0             # pousser une étiquette
 git push origin --tags           # pousser toutes les étiquettes
 git push origin --delete v1.0    # supprimer côté distant
+git tag -d v1.0                  # supprimer en local
 ```
 
 > Les étiquettes **ne sont pas poussées automatiquement**.
@@ -445,12 +452,13 @@ git push origin --delete v1.0    # supprimer côté distant
 
 ```bash
 git switch -c feature/signup              # créer et basculer
+echo "<h1>Inscription</h1>" > inscription.html   # créer un fichier
 git add . && git commit -m "Ajoute la page d'inscription"
 git switch main                           # revenir à main
 git merge feature/signup                  # fusionner
 git branch -d feature/signup              # supprimer la branche locale
 git tag -a v1.0 -m "Version 1.0"          # étiqueter la release
-git push origin main --tags               # pousser branche et étiquettes
+git push origin main --tags               # pousser branche et étiquettes (nécessite un dépôt distant : voir la section 4)
 ```
 
 ---
@@ -463,10 +471,11 @@ Un **dépôt distant** (*remote*) est une version du projet hébergée ailleurs.
 
 ```bash
 git remote add origin https://github.com/utilisateur/monprojet.git
-git remote -v                          # lister
-git remote rename origin principal     # renommer
-git remote set-url origin <nouvelle-url>
-git remote remove origin
+git remote -v                                                  # lister
+git remote set-url origin https://github.com/utilisateur/nouveau-nom.git   # changer l'URL
+git remote rename origin principal                             # renommer
+git remote rename principal origin                             # revenir au nom conventionnel
+git remote remove origin                                       # supprimer (inutile si vous poursuivez les exemples)
 ```
 
 ## 4.2 Récupérer sans fusionner (`git fetch`)
@@ -490,7 +499,7 @@ git pull --rebase             # rejoue vos commits au-dessus (historique linéai
 git pull --ff-only            # refuse tout sauf une avance rapide (le plus sûr)
 ```
 
-> 💡 Pour fixer votre préférence : `git config --global pull.rebase true` (rebase) ou `pull.ff only`.
+> **Astuce** : Pour fixer votre préférence : `git config --global pull.rebase true` (rebase) ou `git config --global pull.ff only` (avance rapide uniquement).
 
 ## 4.4 Envoyer des changements (`git push`)
 
@@ -503,8 +512,8 @@ git push                          # ensuite, simplement
 ### Forcer un envoi : à manier avec précaution
 
 ```bash
-git push --force-with-lease       # ✅ forcer SEULEMENT si personne n'a poussé entre-temps
-# git push --force                # ❌ écrase aveuglément le travail des autres
+git push --force-with-lease       # forcer SEULEMENT si personne n'a poussé entre-temps
+# git push --force                # écrase aveuglément le travail des autres
 ```
 
 Ne forcez que sur **vos propres branches** (par exemple après un rebase).
@@ -529,6 +538,8 @@ git push origin main
 
 # 4. Travaillez dans une branche, poussez-la sur votre fork
 git switch -c feature/ma-contribution
+# ...modifiez des fichiers...
+git add . && git commit -m "Décrit la contribution"
 git push -u origin feature/ma-contribution
 # 5. Ouvrez la pull request depuis l'interface web
 ```
@@ -536,10 +547,14 @@ git push -u origin feature/ma-contribution
 ### Avec GitHub CLI *(ajout)*
 
 ```bash
-gh repo fork --clone proprietaire/projet
-gh pr create --fill              # crée la PR depuis la branche courante
-gh pr checkout 123               # récupère la PR n° 123 en local
-gh pr merge --squash
+gh repo fork proprietaire/projet --clone   # fork + clone (remote « upstream » configuré)
+cd projet
+git switch -c feature/ma-contribution
+# ...modifiez des fichiers...
+git add . && git commit -m "Décrit la contribution"
+gh pr create --fill              # crée la PR depuis la branche courante (propose de la pousser)
+gh pr checkout 123               # récupère la PR n° 123 en local (pour la relire)
+gh pr merge 123 --squash         # fusionne la PR n° 123 (si vous avez les droits)
 ```
 
 ## 4.6 Suivi des branches distantes
@@ -565,7 +580,7 @@ git push -u origin feature/chat         # publier une nouvelle branche
 
 # 5. Annuler des modifications et gérer l'historique
 
-> 🧭 **Règle d'or** : avant de défaire quelque chose, demandez-vous *« ce commit est-il déjà poussé ? »*.
+> **Règle d'or** : avant de défaire quelque chose, demandez-vous *« ce commit est-il déjà poussé ? »*.
 > - **Non poussé** → vous pouvez réécrire l'historique (`reset`, `amend`, `rebase`).
 > - **Déjà poussé / partagé** → utilisez `git revert` (nouveau commit inverse).
 
@@ -585,7 +600,7 @@ git diff --word-diff        # différences mot à mot
 
 ```bash
 git add index.html
-git restore --staged index.html       # ✅ moderne (Git 2.23+)
+git restore --staged index.html       # moderne (Git 2.23+)
 # git reset HEAD index.html           # ancienne syntaxe, équivalente
 ```
 
@@ -594,14 +609,14 @@ Le fichier reste modifié dans le répertoire de travail, mais n'est plus index�
 ## 5.3 Annuler des modifications locales *(à jour)*
 
 ```bash
-git restore index.html                # ✅ moderne
+git restore index.html                # moderne
 # git checkout -- index.html          # ancienne syntaxe
 git restore .                         # tous les fichiers
 git restore -p fichier                # choisir morceau par morceau
 git restore --source=HEAD~2 fichier   # restaurer depuis un ancien commit
 ```
 
-> ⚠️ **Irréversible** : les modifications non validées sont définitivement perdues.
+> **Irréversible** : les modifications non validées sont définitivement perdues.
 
 ## 5.4 Corriger le dernier commit
 
@@ -627,25 +642,25 @@ Déplace la branche courante vers un autre commit.
 
 | Mode | HEAD | Index | Répertoire de travail |
 | --- | --- | --- | --- |
-| `--soft` | ✅ déplacé | conservé | conservé |
-| `--mixed` *(défaut)* | ✅ déplacé | ✅ réinitialisé | conservé |
-| `--hard` | ✅ déplacé | ✅ réinitialisé | ⚠️ **écrasé** |
+| `--soft` | déplacé | conservé | conservé |
+| `--mixed` *(défaut)* | déplacé | réinitialisé | conservé |
+| `--hard` | déplacé | réinitialisé | **écrasé** |
 
 ```bash
 git reset --soft HEAD~1     # annule le commit, garde tout indexé
 git reset HEAD~1            # annule le commit, garde les changements non indexés
 git reset --hard HEAD~1     # annule le commit ET supprime les changements
-git reset --hard origin/main  # aligne sur le distant (⚠️ perd le travail local)
+git reset --hard origin/main  # aligne sur le distant (perd le travail local)
 ```
 
-> ⚠️ N'utilisez pas `--hard` sur une branche partagée. En cas d'erreur, `git reflog` peut vous sauver (voir [9.3](#93-retrouver-des-commits-perdus-git-reflog)).
+> **Attention** : N'utilisez pas `--hard` sur une branche partagée. En cas d'erreur, `git reflog` peut vous sauver (voir [9.3](#93-retrouver-des-commits-perdus-git-reflog)).
 
 ### `reset` ou `revert` ?
 
 | | `git reset` | `git revert` |
 | --- | --- | --- |
 | Effet | Supprime des commits de l'historique | Ajoute un commit inverse |
-| Historique partagé | ❌ Dangereux | ✅ Sûr |
+| Historique partagé | Dangereux | Sûr |
 | Usage | Travail local non poussé | Annuler un commit publié |
 
 ## 5.7 Mettre de côté (`git stash`)
@@ -668,10 +683,10 @@ git stash clear                    # supprime tous les stashes
 ## 5.8 Nettoyer les fichiers non suivis (`git clean`)
 
 ```bash
-git clean -n          # 🔍 simulation : montre ce qui serait supprimé
+git clean -n          # simulation : montre ce qui serait supprimé
 git clean -f          # supprime les fichiers non suivis
 git clean -fd         # + les dossiers non suivis
-git clean -fdx        # + les fichiers ignorés (⚠️ très destructeur)
+git clean -fdx        # + les fichiers ignorés (très destructeur)
 git clean -i          # mode interactif
 ```
 
@@ -697,8 +712,9 @@ git add .
 git commit -m "Travail en cours"
 git reset --soft HEAD~1        # oups : annuler le commit en gardant les changements
 git stash                      # changer de contexte
-git switch autre-branche       # ... travailler, committer ...
-git switch -
+git switch -c autre-branche   # créer une autre branche
+# ... travailler, committer ...
+git switch -                  # revenir à la branche précédente
 git stash pop                  # reprendre
 ```
 
@@ -740,8 +756,9 @@ git checkout --theirs fichier    # garder la version de l'AUTRE branche
 git mergetool                    # ouvrir un outil graphique
 ```
 
-> 💡 **`git rerere`** (*reuse recorded resolution*) mémorise vos résolutions et les réapplique automatiquement : `git config --global rerere.enabled true`.
-> 💡 Outils visuels : VS Code, Meld, KDiff3, GitKraken. Réglez `merge.conflictStyle zdiff3` pour afficher aussi l'ancêtre commun.
+> **Astuce** : **`git rerere`** (*reuse recorded resolution*) mémorise vos résolutions et les réapplique automatiquement : `git config --global rerere.enabled true`.
+>
+> **Astuce** : Outils visuels : VS Code, Meld, KDiff3, GitKraken. Réglez `git config --global merge.conflictStyle zdiff3` pour afficher aussi l'ancêtre commun.
 
 ## 6.2 Rebaser (`git rebase`)
 
@@ -770,7 +787,7 @@ feature:            D'──E'      (D' et E' sont de NOUVEAUX commits)
 | Commits | Conservés tels quels | **Réécrits** (nouveaux hashs) |
 | Risque | Faible | Élevé sur du code partagé |
 
-> ⚠️ **Règle d'or du rebase : ne rebasez jamais des commits déjà poussés et utilisés par d'autres.**
+> **Règle d'or du rebase : ne rebasez jamais des commits déjà poussés et utilisés par d'autres.**
 
 En cas de conflit pendant un rebase :
 
@@ -855,7 +872,7 @@ Les plateformes (GitHub, GitLab) proposent aussi **« Squash and merge »** à l
 Permet d'avoir **plusieurs branches extraites en même temps**, dans des dossiers différents, sans cloner à nouveau ni mettre de côté votre travail.
 
 ```bash
-git worktree add ../correctif-urgent hotfix/1.2    # nouveau dossier lié au dépôt
+git worktree add -b hotfix/1.2 ../correctif-urgent    # nouvelle branche dans un nouveau dossier lié au dépôt
 git worktree list
 git worktree remove ../correctif-urgent
 ```
@@ -863,10 +880,18 @@ git worktree remove ../correctif-urgent
 ## 6.7 Exemple de workflow
 
 ```bash
-git switch main && git merge feature          # fusionner (éventuels conflits)
-git switch feature && git rebase main         # ou rebaser sur main à jour
-git switch hotfix && git cherry-pick abc1234  # reporter un correctif
-git rebase -i HEAD~2                          # écraser les 2 derniers commits
+# Option A : fusionner feature dans main
+git switch main && git merge feature
+
+# Option B : rebaser feature sur main à jour, puis fusionner (avance rapide)
+git switch feature && git rebase main
+git switch main && git merge feature
+
+# Reporter un correctif sur une autre branche
+git switch hotfix && git cherry-pick abc1234
+
+# Écraser les 2 derniers commits (ouvre l'éditeur)
+git rebase -i HEAD~2
 ```
 
 ---
@@ -944,9 +969,9 @@ Les **hooks** sont des scripts exécutés automatiquement à certains moments du
 
 ### Utilisation
 
-```bash
-# .git/hooks/pre-commit
+```sh
 #!/bin/sh
+# Contenu du fichier .git/hooks/pre-commit
 npm run lint || exit 1      # un code de sortie ≠ 0 bloque le commit
 ```
 
@@ -954,7 +979,7 @@ npm run lint || exit 1      # un code de sortie ≠ 0 bloque le commit
 chmod +x .git/hooks/pre-commit
 ```
 
-> ⚠️ Le dossier `.git/hooks` **n'est pas versionné** : les hooks ne sont pas partagés par défaut.
+> **Attention** : Le dossier `.git/hooks` **n'est pas versionné** : les hooks ne sont pas partagés par défaut.
 
 ### Partager des hooks avec l'équipe *(ajout)*
 
@@ -1009,9 +1034,16 @@ git submodule update --remote                 # les mettre à jour vers la derni
 Le fichier `.gitattributes` définit un comportement par type de fichier.
 
 ```gitattributes
-* text=auto eol=lf              # normalise les fins de ligne
-*.png binary                     # fichier binaire
-*.psd filter=lfs diff=lfs merge=lfs -text   # géré par Git LFS
+# Normalise les fins de ligne
+* text=auto eol=lf
+
+# Fichier binaire
+*.png binary
+
+# Géré par Git LFS
+*.psd filter=lfs diff=lfs merge=lfs -text
+
+# Compté comme documentation par GitHub Linguist
 docs/*.md linguist-documentation
 ```
 
@@ -1020,7 +1052,7 @@ docs/*.md linguist-documentation
 ```bash
 git config --global alias.st status          # alias
 echo '#!/bin/sh' > .git/hooks/pre-commit     # hook
-echo 'npm run lint' >> .git/hooks/pre-commit
+echo 'echo "Vérifications avant commit"' >> .git/hooks/pre-commit   # remplacez par votre linter (npm run lint, etc.)
 chmod +x .git/hooks/pre-commit
 git submodule add https://github.com/user/lib.git libs/lib    # sous-module
 git commit -am "Ajoute le sous-module lib"
@@ -1040,13 +1072,14 @@ Tout le monde travaille **directement sur une seule branche** (`main`). Courant 
 
 ```bash
 git clone https://github.com/org/depot.git
+cd depot
 git pull --rebase
 # ...modifications...
 git add . && git commit -m "Corrige une faute de frappe"
 git push origin main
 ```
 
-| ✅ Avantages | ❌ Inconvénients |
+| Avantages | Inconvénients |
 | --- | --- |
 | Très simple | Risque de conflits |
 | Idéal pour petites équipes | Aucune isolation des fonctionnalités |
@@ -1064,12 +1097,13 @@ main ──●────────●────────●──▶
 ```bash
 git switch main && git pull
 git switch -c feature/navbar            # 1. branche
+# ...modifications des fichiers...
 git add . && git commit -m "Ajoute la barre de navigation"
 git push -u origin feature/navbar       # 2. publier
 # 3. ouvrir une pull request  → 4. relecture + CI → 5. fusion → 6. suppression de la branche
 ```
 
-| ✅ Avantages | ❌ Inconvénients |
+| Avantages | Inconvénients |
 | --- | --- |
 | Développement parallèle sûr | Un peu plus de discipline |
 | Revue de code, historique propre | |
@@ -1097,13 +1131,14 @@ develop       ●──●──●──●──●───●──●──
 ```bash
 git switch -c develop main
 git switch -c feature/paiement develop
+# ...développement et commits sur la fonctionnalité...
 # fin de fonctionnalité
 git switch develop && git merge --no-ff feature/paiement
 # préparer une release
 git switch -c release/1.0 develop
 ```
 
-> ⚠️ L'auteur même du modèle recommande de **ne pas l'utiliser** pour les applications web livrées en continu : préférez GitHub flow ou le trunk-based development.
+> **Attention** : L'auteur même du modèle recommande de **ne pas l'utiliser** pour les applications web livrées en continu : préférez GitHub flow ou le trunk-based development.
 
 ## 8.4 Workflow par fork
 
@@ -1198,7 +1233,7 @@ git reset --hard c34ab91               # ou revenir directement dessus
 ### Exemple : se remettre d'un mauvais `reset`
 
 ```bash
-git reset --hard HEAD~1     # 😱 un commit perdu
+git reset --hard HEAD~1     # un commit perdu
 git reflog                  # retrouver son hash
 git reset --hard c34ab91    # restauré
 ```
@@ -1206,10 +1241,11 @@ git reset --hard c34ab91    # restauré
 ## 9.4 Patches (`git format-patch`, `git apply`, `git am`)
 
 ```bash
-git format-patch -1 HEAD            # crée un fichier .patch pour le dernier commit
-git format-patch main..feature      # un patch par commit
+git format-patch -1 HEAD            # crée un fichier 0001-....patch pour le dernier commit
+git format-patch main..feature      # un fichier .patch par commit
+git format-patch -1 HEAD --stdout > changements.patch   # un seul fichier, nom choisi
 git apply changements.patch         # applique les modifications (sans commit)
-git am *.patch                      # applique en recréant les commits (auteur conservé)
+git am changements.patch            # ou : applique en recréant le commit (auteur conservé)
 ```
 
 Utile pour envoyer des changements par e-mail ou hors plateforme.
@@ -1228,7 +1264,7 @@ git commit -m "Ajoute le fichier PSD via LFS"
 git lfs ls-files                 # fichiers gérés par LFS
 ```
 
-> ⚠️ Vérifiez les quotas de stockage de votre plateforme. Autre option : conserver les gros fichiers hors de Git (stockage objet, DVC pour les données ML).
+> **Attention** : Vérifiez les quotas de stockage de votre plateforme. Autre option : conserver les gros fichiers hors de Git (stockage objet, DVC pour les données ML).
 
 ## 9.6 Rechercher dans le code et l'historique *(ajout)*
 
@@ -1278,7 +1314,7 @@ git bisect reset
 
 **VS Code** : panneau *Source Control* (`Ctrl+Shift+G`) pour indexer, valider, changer de branche ; conflits affichés avec *Accept Current / Incoming / Both*.
 
-> 💡 Même avec une interface graphique, **apprenez la ligne de commande** : elle donne un contrôle complet et reste indispensable sur les serveurs.
+> **Astuce** : Même avec une interface graphique, **apprenez la ligne de commande** : elle donne un contrôle complet et reste indispensable sur les serveurs.
 
 ## 10.2 Plateformes d'hébergement
 
@@ -1313,16 +1349,16 @@ jobs:
       - name: Installer Python
         uses: actions/setup-python@v6
         with:
-          python-version: "3.14"        # ⚠️ entre guillemets (3.10 sans guillemets serait lu comme 3.1)
+          python-version: "3.14"        # entre guillemets (3.10 sans guillemets serait lu comme 3.1)
       - name: Installer les dépendances
-        run: pip install -r requirements.txt
+        run: pip install -r requirements.txt pytest
       - name: Lancer les tests
         run: pytest
 ```
 
 GitHub exécute ce workflow à chaque `push` sur `main` et à chaque PR.
 
-> 💡 Vérifiez régulièrement la **dernière version majeure** des actions (`checkout`, `setup-*`) ; les anciennes finissent par être dépréciées. Pour plus de sécurité, **épinglez** les actions tierces sur un **hash de commit**.
+> **Astuce** : Vérifiez régulièrement la **dernière version majeure** des actions (`checkout`, `setup-*`) ; les anciennes finissent par être dépréciées. Pour plus de sécurité, **épinglez** les actions tierces sur un **hash de commit**.
 > GitLab CI (`.gitlab-ci.yml`), Bitbucket Pipelines et Azure Pipelines offrent des mécanismes équivalents.
 
 ## 10.4 Héberger un site statique avec GitHub Pages
@@ -1370,6 +1406,9 @@ Mots de passe, jetons d'API, clés privées, fichiers `.env` : **à ne jamais ve
 ```bash
 pip install git-filter-repo
 git filter-repo --path secrets.env --invert-paths
+git remote add origin <url>     # git filter-repo retire le remote par sécurité
+git push --force --all
+git push --force --tags
 ```
 
 ## 11.3 Bonnes pratiques générales
@@ -1396,7 +1435,7 @@ git filter-repo --path secrets.env --invert-paths
 | `Your local changes would be overwritten` | Validez, mettez de côté (`git stash`) ou annulez vos changements |
 | `detached HEAD` | `git switch -c nouvelle-branche` pour conserver votre travail |
 | Fichier ajouté au `.gitignore` toujours suivi | `git rm --cached <fichier>` |
-| Mauvais auteur dans les commits | `git config user.name/email` puis `git commit --amend --reset-author` |
+| Mauvais auteur dans les commits | `git config user.name` et `git config user.email`, puis `git commit --amend --reset-author` |
 
 ---
 
@@ -1422,7 +1461,7 @@ git filter-repo --path secrets.env --invert-paths
 | Annuler des changements | `git restore <fichier>` |
 | Annuler un commit publié | `git revert <hash>` |
 | Mettre de côté | `git stash` · `git stash pop` |
-| Étiqueter | `git tag -a v1.0 -m "…"` |
+| Étiqueter | `git tag -a v1.0 -m "message"` |
 | Retrouver du perdu | `git reflog` |
 | Trouver un bug | `git bisect` |
 
@@ -1436,20 +1475,20 @@ git filter-repo --path secrets.env --invert-paths
 | 2.54 – 2.55 | Hooks configurables et exécutés en parallèle, commande `git history` (réécriture simplifiée de l'historique) |
 | **Git 3.0** *(à venir)* | Branche par défaut `main`, SHA-256 par défaut, format de références `reftable`, Rust requis |
 
-> 📌 Vérifiez les détails exacts dans les notes de version sur [git-scm.com](https://git-scm.com/) (dernière version stable au moment de la rédaction : **2.55**).
+> **À noter** : Vérifiez les détails exacts dans les notes de version sur [git-scm.com](https://git-scm.com/) (dernière version stable au moment de la rédaction : **2.55**).
 
 ## 12.3 Ressources
 
-- 📘 Livre officiel gratuit **Pro Git** (en français) : <https://git-scm.com/book/fr/v2>
-- 📖 Documentation de référence : <https://git-scm.com/docs>
-- 🎮 Apprendre en jouant : <https://learngitbranching.js.org/?locale=fr_FR>
-- 🧰 Modèles `.gitignore` : <https://github.com/github/gitignore>
-- 📜 Conventional Commits : <https://www.conventionalcommits.org/fr>
+- Livre officiel gratuit **Pro Git** (en français) : <https://git-scm.com/book/fr/v2>
+- Documentation de référence : <https://git-scm.com/docs>
+- Apprendre en jouant : <https://learngitbranching.js.org/?locale=fr_FR>
+- Modèles `.gitignore` : <https://github.com/github/gitignore>
+- Conventional Commits : <https://www.conventionalcommits.org/fr>
 
 ---
 
 <div align="center">
 
-*Bon versionnement ! 🌿*
+*Bon versionnement !*
 
 </div>

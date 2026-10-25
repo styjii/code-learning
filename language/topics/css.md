@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🎨 CSS — Guide complet
+# CSS — Guide complet
 
 **Des sélecteurs à Flexbox, Grid, aux conteneurs, aux animations et au CSS moderne**
 
@@ -10,9 +10,9 @@
 
 ---
 
-## 🗂️ Sommaire
+## Sommaire
 
-**🟢 Fondamentaux**
+**Fondamentaux**
 
 1. [Introduction à CSS](#1-introduction-à-css)
 2. [Syntaxe et sélecteurs](#2-syntaxe-et-sélecteurs)
@@ -22,14 +22,14 @@
 6. [Le modèle de boîte](#6-le-modèle-de-boîte)
 7. [Texte et polices](#7-texte-et-polices)
 
-**🟡 Mise en page**
+**Mise en page**
 
 8. [Affichage, positionnement et débordement](#8-affichage-positionnement-et-débordement)
 9. [Flexbox](#9-flexbox)
 10. [CSS Grid](#10-css-grid)
 11. [Arrière-plans, bordures, ombres et effets](#11-arrière-plans-bordures-ombres-et-effets)
 
-**🔴 CSS dynamique et moderne**
+**CSS dynamique et moderne**
 
 12. [Variables CSS (propriétés personnalisées)](#12-variables-css-propriétés-personnalisées)
 13. [Transitions, animations et transformations](#13-transitions-animations-et-transformations)
@@ -37,7 +37,7 @@
 15. [Fonctionnalités modernes : imbrication, `:has()`, couches, `@scope`, ancrage…](#15-fonctionnalités-modernes)
 16. [Accessibilité et CSS](#16-accessibilité-et-css)
 
-**🛠️ Outils et pratique**
+**Outils et pratique**
 
 17. [Frameworks CSS](#17-frameworks-css)
 18. [Préprocesseurs et outils de build](#18-préprocesseurs-et-outils-de-build)
@@ -49,13 +49,13 @@
 24. [Composants et projets](#24-composants-et-projets)
 25. [Aide-mémoire et ressources](#25-aide-mémoire-et-ressources)
 
-> 💡 **Légende** : *(ajout)* = notion absente du guide d'origine ; *(à jour)* = pratique moderne remplaçant une ancienne ; *(héritage)* = technique ancienne, encore rencontrée.
+> **Légende** : *(ajout)* = notion absente du guide d'origine ; *(à jour)* = pratique moderne remplaçant une ancienne ; *(héritage)* = technique ancienne, encore rencontrée.
 >
-> 📌 **À propos du support des navigateurs** : l'état de disponibilité des fonctionnalités récentes évolue vite. Les mentions « **Baseline** » (*newly available* = disponible dans les dernières versions de tous les navigateurs majeurs ; *widely available* = disponible depuis ≥ 30 mois) sont données à titre indicatif : **vérifiez toujours sur [MDN](https://developer.mozilla.org) ou [caniuse.com](https://caniuse.com)** avant d'utiliser une fonctionnalité sans solution de repli.
+> **À propos du support des navigateurs** : l'état de disponibilité des fonctionnalités récentes évolue vite. Les mentions « **Baseline** » (*newly available* = disponible dans les dernières versions de tous les navigateurs majeurs ; *widely available* = disponible depuis ≥ 30 mois) sont données à titre indicatif : **vérifiez toujours sur [MDN](https://developer.mozilla.org) ou [caniuse.com](https://caniuse.com)** avant d'utiliser une fonctionnalité sans solution de repli.
 
 ---
 
-# 🟢 Fondamentaux
+# Fondamentaux
 
 ---
 
@@ -82,9 +82,9 @@
 ## 1.2 Comment le navigateur applique le CSS
 
 ```text
-HTML ──▶ DOM ─┐
-              ├─▶ Arbre de rendu ──▶ Mise en page (layout) ──▶ Peinture ──▶ Composition ──▶ Écran
-CSS  ──▶ CSSOM ┘
+HTML ──> DOM ─┐
+              ├─> Arbre de rendu ──> Mise en page (layout) ──> Peinture ──> Composition ──> Écran
+CSS  ──> CSSOM ┘
 ```
 
 1. Le navigateur construit le **DOM** (à partir du HTML) et le **CSSOM** (à partir du CSS).
@@ -190,7 +190,7 @@ button.primaire { background: royalblue; }     /* <button class="primaire"> uniq
 .carte.mise-en-avant { border-color: gold; }   /* élément avec les DEUX classes */
 ```
 
-> ✅ Préférez les **classes** aux identifiants pour le style (réutilisables, spécificité plus basse).
+> Préférez les **classes** aux identifiants pour le style (réutilisables, spécificité plus basse).
 
 ## 2.4 Regrouper et combiner
 
@@ -231,12 +231,12 @@ Une **pseudo-classe** cible un **état** ou une **position** (`:` simple).
 
 | Catégorie | Pseudo-classes |
 | --- | --- |
-| **Interaction** | `:hover`, `:active`, `:focus`, **`:focus-visible`** ✅, `:focus-within`, `:target` |
+| **Interaction** | `:hover`, `:active`, `:focus`, **`:focus-visible`**, `:focus-within`, `:target` |
 | **Liens** | `:link`, `:visited` (propriétés limitées pour la vie privée), `:any-link` |
-| **Formulaires** | `:checked`, `:disabled`, `:enabled`, `:required`, `:optional`, `:placeholder-shown`, `:read-only`, `:valid`, `:invalid`, **`:user-valid` / `:user-invalid`** ✅ (après interaction), `:in-range`, `:out-of-range`, `:indeterminate` |
+| **Formulaires** | `:checked`, `:disabled`, `:enabled`, `:required`, `:optional`, `:placeholder-shown`, `:read-only`, `:valid`, `:invalid`, **`:user-valid` / `:user-invalid`** (après interaction), `:in-range`, `:out-of-range`, `:indeterminate` |
 | **Position** | `:first-child`, `:last-child`, `:only-child`, `:nth-child(…)`, `:nth-last-child(…)`, `:first-of-type`, `:last-of-type`, `:nth-of-type(…)` |
 | **Structure** | `:root`, `:empty`, `:defined` |
-| **Fonctionnelles** | **`:not()`**, **`:is()`**, **`:where()`**, **`:has()`** ✅ |
+| **Fonctionnelles** | **`:not()`**, **`:is()`**, **`:where()`**, **`:has()`** |
 | **Autres** | `:dir()`, `:lang()`, `:modal`, `:popover-open`, `:fullscreen` |
 
 ```css
@@ -271,7 +271,7 @@ form:has(:user-invalid) .envoyer { opacity: .5; }
 h2:has(+ p) { margin-bottom: .25em; }                       /* titre suivi d'un paragraphe */
 ```
 
-> ✅ **`:has()`** est disponible dans tous les navigateurs modernes depuis fin 2023 (Baseline *widely available*). Il évite de nombreux scripts.
+> **`:has()`** est disponible dans tous les navigateurs modernes depuis fin 2023 (Baseline *widely available*). Il évite de nombreux scripts.
 
 ## 2.7 Pseudo-éléments
 
@@ -334,7 +334,7 @@ Le CSS accepte désormais l'**imbrication** de règles, **sans préprocesseur** 
 
 | Méthode | Où | Quand |
 | --- | --- | --- |
-| **Externe** ✅ | Fichier `.css` lié avec `<link>` | **Presque toujours** : mise en cache, réutilisation |
+| **Externe** | Fichier `.css` lié avec `<link>` | **Presque toujours** : mise en cache, réutilisation |
 | **Interne** | Balise `<style>` dans le `<head>` | Page unique, **CSS critique** en ligne, démos |
 | **En ligne** (*inline*) | Attribut `style="…"` | Valeurs **dynamiques** (JS), e-mails HTML ; à éviter sinon |
 
@@ -358,11 +358,11 @@ Le CSS accepte désormais l'**imbrication** de règles, **sans préprocesseur** 
 
 | | Externe | Interne | En ligne |
 | --- | --- | --- | --- |
-| Réutilisable entre pages | ✅ | ❌ | ❌ |
-| Mis en cache | ✅ | ❌ | ❌ |
+| Réutilisable entre pages | Oui | Non | Non |
+| Mis en cache | Oui | Non | Non |
 | Priorité (spécificité) | Normale | Normale | **Très haute** |
-| Maintenance | ✅ | Moyenne | ❌ |
-| Compatible avec une CSP stricte | ✅ | Nécessite un `nonce` | Nécessite `'unsafe-inline'` (déconseillé) |
+| Maintenance | Facile | Moyenne | Difficile |
+| Compatible avec une CSP stricte | Oui | Nécessite un `nonce` | Nécessite `'unsafe-inline'` (déconseillé) |
 
 ## 3.2 L'ordre compte
 
@@ -371,11 +371,11 @@ Si deux règles ont la **même spécificité**, **la dernière** l'emporte. L'or
 ## 3.3 `@import` (à éviter)
 
 ```css
-@import url("autre.css");                 /* ❌ bloque le chargement en série */
+@import url("autre.css");                 /* à éviter : bloque le chargement en série */
 @import url("theme.css") layer(theme);    /* possible avec une couche */
 ```
 
-> ⚠️ `@import` force le navigateur à télécharger les fichiers **les uns après les autres** : préférez plusieurs `<link>` (chargés en parallèle) ou un outil de **build** qui regroupe le CSS (section 18).
+> **Attention** : `@import` force le navigateur à télécharger les fichiers **les uns après les autres** : préférez plusieurs `<link>` (chargés en parallèle) ou un outil de **build** qui regroupe le CSS (section 18).
 
 ## 3.4 Charger le CSS efficacement
 
@@ -413,18 +413,18 @@ La spécificité s'exprime comme **trois colonnes (A, B, C)**, comparées **de g
 | **C** | Sélecteurs de **type** et **pseudo-éléments** | `p`, `::before` |
 
 ```css
-p                     /* (0,0,1) */
-.titre                /* (0,1,0) */
-p.titre               /* (0,1,1) */
-#titre                /* (1,0,0) */
-nav ul li a:hover     /* (0,1,4) */
-:is(#a, .b)           /* (1,0,0) — :is() prend la spécificité de son argument le plus spécifique */
-:where(#a, .b)        /* (0,0,0) — :where() vaut toujours zéro */
-:not(.x)              /* (0,1,0) — comme son argument */
-*                     /* (0,0,0) */
+p { }                     /* (0,0,1) */
+.titre { }                /* (0,1,0) */
+p.titre { }               /* (0,1,1) */
+#titre { }                /* (1,0,0) */
+nav ul li a:hover { }     /* (0,1,4) */
+:is(#a, .b) { }           /* (1,0,0) : :is() prend la spécificité de son argument le plus spécifique */
+:where(#a, .b) { }        /* (0,0,0) : :where() vaut toujours zéro */
+:not(.x) { }              /* (0,1,0) : comme son argument */
+* { }                     /* (0,0,0) */
 ```
 
-> ⚠️ **Idée reçue** : « ID = 100, classe = 10, balise = 1 » est une **simplification**. Avec 11 classes, vous **ne battez pas** un identifiant : (0,11,0) < (1,0,0), car les colonnes ne « débordent » jamais l'une sur l'autre.
+> **Idée reçue** : « ID = 100, classe = 10, balise = 1 » est une **simplification**. Avec 11 classes, vous **ne battez pas** un identifiant : (0,11,0) < (1,0,0), car les colonnes ne « débordent » jamais l'une sur l'autre.
 > Les **styles en ligne** (`style="…"`) l'emportent sur tous les sélecteurs (au-dessus de la colonne A) ; `!important` passe devant tout.
 
 ```css
@@ -437,7 +437,7 @@ h1     { color: green; }    /* (0,0,1) */
 ## 4.3 `!important`
 
 ```css
-.bouton { background: gray !important; }     /* ⚠️ à éviter */
+.bouton { background: gray !important; }     /* à éviter */
 ```
 
 À réserver aux **classes utilitaires** (`.cache { display: none !important; }`) et à la surcharge de styles tiers impossibles à modifier. Préférez les **couches** (`@layer`) ou une spécificité maîtrisée.
@@ -530,7 +530,7 @@ Dans les **DevTools** (F12 → onglet *Styles*) : les règles sont listées par 
 | **`rgb()`** | `rgb(255 0 0)`, `rgb(255 0 0 / 50%)` | Syntaxe **moderne** : espaces et `/` pour l'alpha |
 | **`hsl()`** | `hsl(240 100% 50%)`, `hsl(240 100% 50% / .3)` | Teinte (0–360°), saturation, luminosité : intuitif |
 | **`hwb()`** | `hwb(240 0% 0%)` | Teinte, blanc, noir |
-| **`oklch()`** ✅ | `oklch(70% 0.15 250)` | Luminosité, chroma, teinte : **perceptuellement uniforme**, gamme étendue |
+| **`oklch()`** | `oklch(70% 0.15 250)` | Luminosité, chroma, teinte : **perceptuellement uniforme**, gamme étendue |
 | **`oklab()`**, `lab()`, `lch()` | | Espaces perceptuels |
 | **`color()`** | `color(display-p3 1 0 0)` | Espaces à gamut large (écrans P3) |
 | **`currentColor`** | `border-color: currentColor;` | Valeur courante de `color` |
@@ -544,7 +544,7 @@ p {
 }
 ```
 
-> 📌 **À jour** : les formes **`rgba()`** et **`hsla()`** et les **virgules** (`rgb(255, 0, 0)`) sont **historiques** mais restent valides. La syntaxe moderne (`rgb(r g b / a)`) est équivalente et plus cohérente.
+> **À jour** : les formes **`rgba()`** et **`hsla()`** et les **virgules** (`rgb(255, 0, 0)`) sont **historiques** mais restent valides. La syntaxe moderne (`rgb(r g b / a)`) est équivalente et plus cohérente.
 
 ### Fonctions de couleur modernes *(ajout)*
 
@@ -571,8 +571,8 @@ body { background: light-dark(#fff, #121212); color: light-dark(#222, #eee); }
 ## 5.2 Opacité
 
 ```css
-div { opacity: .5; }                     /* ⚠️ affecte l'élément ET tous ses enfants */
-div { background: rgb(0 0 0 / .5); }     /* ✅ seulement le fond */
+div { opacity: .5; }                     /* attention : affecte l'élément ET tous ses enfants */
+div { background: rgb(0 0 0 / .5); }     /* seulement le fond */
 ```
 
 ## 5.3 Unités de longueur
@@ -589,7 +589,7 @@ div { background: rgb(0 0 0 / .5); }     /* ✅ seulement le fond */
 | Unité | Relative à… |
 | --- | --- |
 | `em` | **Taille de police** de l'élément (de son parent pour `font-size`) |
-| `rem` | Taille de police de l'élément **racine** (`<html>`) ✅ |
+| `rem` | Taille de police de l'élément **racine** (`<html>`) |
 | `ch` | Largeur du caractère « 0 » (idéal pour limiter la longueur de ligne : `max-width: 65ch`) |
 | `ex`, `cap`, `ic` | Hauteur du « x », des majuscules, d'un idéogramme |
 | `lh`, `rlh` | **Hauteur de ligne** de l'élément / de la racine |
@@ -600,11 +600,11 @@ div { background: rgb(0 0 0 / .5); }     /* ✅ seulement le fond */
 | --- | --- |
 | `vw`, `vh` | 1 % de la largeur / hauteur de la fenêtre |
 | `vmin`, `vmax` | 1 % de la plus petite / plus grande dimension |
-| **`svh`, `lvh`, `dvh`** ✅ | Hauteur **petite** (barre d'adresse visible), **grande** (masquée), **dynamique** (s'adapte) |
+| **`svh`, `lvh`, `dvh`** | Hauteur **petite** (barre d'adresse visible), **grande** (masquée), **dynamique** (s'adapte) |
 | `svw`, `dvw`… ; `vi`, `vb` | Équivalents horizontaux ; axes **logiques** (inline / block) |
 
 ```css
-.hero { min-height: 100dvh; }            /* ✅ sur mobile, 100vh dépasse l'écran visible à cause de la barre d'adresse */
+.hero { min-height: 100dvh; }            /* sur mobile, 100vh dépasse l'écran visible à cause de la barre d'adresse */
 ```
 
 ### Relatives au **conteneur** *(ajout)*
@@ -637,13 +637,13 @@ h1 { font-size: 2rem; margin-block: 1.5rem; }
 ## 5.4 Fonctions mathématiques *(ajout)*
 
 ```css
-width: calc(100% - 2rem);                              /* mélange d'unités */
-width: min(90%, 60rem);                                /* la plus petite valeur */
-padding: max(1rem, 3vw);                               /* la plus grande */
-font-size: clamp(1rem, 0.9rem + 1vw, 1.5rem);         /* min, valeur fluide, max */
-height: round(down, 100%, 8px);                        /* arrondi à un multiple (round, mod, rem) */
-transform: rotate(calc(var(--i) * 15deg));
-width: calc(var(--colonnes) * 1fr);
+.exemple-calc   { width: calc(100% - 2rem); }                         /* mélange d'unités */
+.exemple-min    { width: min(90%, 60rem); }                           /* la plus petite valeur */
+.exemple-max    { padding: max(1rem, 3vw); }                          /* la plus grande */
+.exemple-clamp  { font-size: clamp(1rem, 0.9rem + 1vw, 1.5rem); }    /* min, valeur fluide, max */
+.exemple-round  { height: round(down, 100%, 8px); }                   /* arrondi à un multiple (round, mod, rem) */
+.exemple-rotate { --i: 2; transform: rotate(calc(var(--i) * 15deg)); }
+.exemple-grille { --colonnes: 3; display: grid; grid-template-columns: repeat(var(--colonnes), 1fr); }
 ```
 
 Fonctions disponibles : `calc()`, `min()`, `max()`, `clamp()`, `round()`, `mod()`, `rem()`, `abs()`, `sign()`, trigonométriques (`sin()`, `cos()`, `tan()`, `atan2()`), `pow()`, `sqrt()`, `hypot()`, `log()`, `exp()`.
@@ -668,10 +668,10 @@ Fonctions disponibles : `calc()`, `min()`, `max()`, `clamp()`, `round()`, `mod()
 
 | Zone | Rôle | Fond de l'élément ? |
 | --- | --- | --- |
-| **Contenu** | Texte, images | ✅ |
-| **Padding** | Espace **intérieur** entre le contenu et la bordure | ✅ |
-| **Bordure** | Contour | ✅ |
-| **Marge** | Espace **extérieur** (transparent) | ❌ |
+| **Contenu** | Texte, images | Oui |
+| **Padding** | Espace **intérieur** entre le contenu et la bordure | Oui |
+| **Bordure** | Contour | Oui |
+| **Marge** | Espace **extérieur** (transparent) | Non |
 
 ## 6.2 `box-sizing`
 
@@ -684,7 +684,7 @@ Par défaut (`content-box`), `width` ne concerne que le **contenu** : padding et
 ```
 
 ```css
-/* ✅ Réglage universel recommandé */
+/* Réglage universel recommandé */
 *, *::before, *::after { box-sizing: border-box; }
 ```
 
@@ -696,7 +696,7 @@ Par défaut (`content-box`), `width` ne concerne que le **contenu** : padding et
     height: auto;                          /* défaut : s'adapte au contenu */
     min-width: 200px;  max-width: 100%;
     min-height: 100px; max-height: 80vh;
-    aspect-ratio: 16 / 9;                  /* ✅ rapport largeur/hauteur (remplace le « padding hack ») */
+    aspect-ratio: 16 / 9;                  /* rapport largeur/hauteur (remplace le « padding hack ») */
 }
 
 .contenu {
@@ -713,7 +713,7 @@ Par défaut (`content-box`), `width` ne concerne que le **contenu** : padding et
 | `min-content` / `max-content` | Plus petite / plus grande largeur possible du contenu |
 | `stretch` | Remplit l'espace disponible (marges comprises) |
 
-> 💡 **`max-width` + `width: 100%`** pour des éléments flexibles ; **`min-height`** plutôt que `height` fixe pour laisser respirer le contenu.
+> **`max-width` + `width: 100%`** pour des éléments flexibles ; **`min-height`** plutôt que `height` fixe pour laisser respirer le contenu.
 
 ## 6.4 Marges et espacement intérieur
 
@@ -738,7 +738,7 @@ h2 { margin-bottom: 2rem; }
 p  { margin-top: 1rem; }               /* l'espace entre h2 et p vaut 2rem, pas 3rem */
 ```
 
-> ✅ **Astuce moderne** : utilisez **`gap`** (Flexbox/Grid) ou un seul sens de marge (`margin-block-end`) pour espacer les éléments de façon prévisible.
+> **Astuce moderne** : utilisez **`gap`** (Flexbox/Grid) ou un seul sens de marge (`margin-block-end`) pour espacer les éléments de façon prévisible.
 
 ## 6.5 Propriétés logiques *(à jour)*
 
@@ -789,7 +789,7 @@ button:focus-visible {
 }
 ```
 
-> ⚠️ **Ne supprimez jamais** `outline` sans le remplacer (`outline: none` rend la navigation au clavier impossible). Utilisez `:focus-visible` pour n'afficher l'anneau qu'au clavier.
+> **Ne supprimez jamais** `outline` sans le remplacer (`outline: none` rend la navigation au clavier impossible). Utilisez `:focus-visible` pour n'afficher l'anneau qu'au clavier.
 
 ## 6.7 Débordement et affichage du modèle de boîte
 
@@ -818,7 +818,7 @@ Un élément **en ligne** (`inline`) ignore `width`/`height` et les marges verti
 ```css
 p {
     color: #333;
-    text-align: start;                       /* start | end | center | justify (⚠️ left/right physiques) */
+    text-align: start;                       /* start | end | center | justify (attention : left/right physiques) */
     text-indent: 2em;                        /* retrait de la première ligne */
     text-decoration: underline wavy red;     /* ligne | style | couleur */
     text-transform: capitalize;
@@ -859,7 +859,7 @@ body {
 | `serif` | Georgia, Times |
 | `sans-serif` | Arial, Helvetica |
 | `monospace` | Courier, Consolas |
-| `system-ui` ✅ | Police système (rapide, native) |
+| `system-ui` | Police système (rapide, native) |
 | `ui-serif`, `ui-sans-serif`, `ui-monospace`, `ui-rounded` | Variantes système |
 | `cursive`, `fantasy`, `math` | Spécifiques |
 
@@ -911,14 +911,14 @@ h1 { font-variation-settings: "wght" 650, "wdth" 110; }
 
 ```css
 p {
-    line-height: 1.6;                       /* ✅ SANS unité : multiple de la taille de police */
+    line-height: 1.6;                       /* SANS unité : multiple de la taille de police */
     letter-spacing: .02em;                  /* espacement des lettres */
     word-spacing: .1em;                     /* espacement des mots */
 }
 h1 { line-height: 1.2; letter-spacing: -.02em; }
 ```
 
-> ✅ **`line-height` sans unité** (1.5 – 1.7 pour le texte courant) est héritée comme **facteur** ; avec une unité (`24px`), la valeur calculée est héritée telle quelle, ce qui peut poser problème.
+> **`line-height` sans unité** (1.5 – 1.7 pour le texte courant) est héritée comme **facteur** ; avec une unité (`24px`), la valeur calculée est héritée telle quelle, ce qui peut poser problème.
 
 ## 7.5 Gestion de l'espace blanc et du retour à la ligne
 
@@ -928,7 +928,7 @@ h1 { line-height: 1.2; letter-spacing: -.02em; }
 | `overflow-wrap` | `anywhere`, `break-word` : coupe les mots trop longs |
 | `word-break` | `normal`, `break-all`, `keep-all` (CJK) |
 | `hyphens` | `manual`, `auto` (coupure avec `lang` défini) |
-| `text-wrap` ✅ | `balance` (titres équilibrés), `pretty` (évite les lignes orphelines), `nowrap`, `stable` |
+| `text-wrap` | `balance` (titres équilibrés), `pretty` (évite les lignes orphelines), `nowrap`, `stable` |
 | `text-overflow` | `ellipsis` (avec `overflow: hidden; white-space: nowrap`) |
 
 ```css
@@ -982,7 +982,7 @@ h1 { font-size: var(--titre); }
 
 ---
 
-# 🟡 Mise en page
+# Mise en page
 
 ---
 
@@ -1011,14 +1011,14 @@ h1 { font-size: var(--titre); }
 .parent { display: flow-root; }          /* contient ses enfants flottants, sans « clearfix » */
 ```
 
-> ♿ `display: none` et `visibility: hidden` **masquent aussi aux lecteurs d'écran**. Pour masquer **visuellement** seulement, voir la classe `.sr-only` (section 16).
+> **Accessibilité** : `display: none` et `visibility: hidden` **masquent aussi aux lecteurs d'écran**. Pour masquer **visuellement** seulement, voir la classe `.sr-only` (section 16).
 
 | | `display: none` | `visibility: hidden` | `opacity: 0` |
 | --- | --- | --- | --- |
-| Prend de la place | ❌ | ✅ | ✅ |
-| Interactif (clics, focus) | ❌ | ❌ | ✅ |
-| Lecteurs d'écran | ❌ | ❌ | ✅ |
-| Animable | ❌ (transition spéciale, voir 13.4) | ✅ | ✅ |
+| Prend de la place | Non | Oui | Oui |
+| Interactif (clics, focus) | Non | Non | Oui |
+| Lecteurs d'écran | Non | Non | Oui |
+| Animable | Non (transition spéciale, voir 13.4) | Oui | Oui |
 
 ## 8.2 La propriété `position`
 
@@ -1057,7 +1057,7 @@ h1 { font-size: var(--titre); }
 | --- | --- |
 | Texte centré horizontalement | `text-align: center;` |
 | Bloc de largeur définie, horizontalement | `margin-inline: auto;` |
-| **Centrer dans les deux axes** ✅ | `display: grid; place-items: center;` |
+| **Centrer dans les deux axes** | `display: grid; place-items: center;` |
 | Idem avec Flexbox | `display: flex; justify-content: center; align-items: center;` |
 | Élément absolu | `position: absolute; inset: 0; margin: auto; width: …; height: …;` |
 | Absolu (méthode classique) | `top: 50%; left: 50%; translate: -50% -50%;` |
@@ -1081,7 +1081,7 @@ h1 { font-size: var(--titre); }
 Un élément crée un **contexte d'empilement** quand il a, entre autres : `position` (≠ `static`) + `z-index` ≠ `auto` ; `opacity` < 1 ; `transform`, `filter`, `perspective`, `will-change` ; `isolation: isolate` ; `mix-blend-mode`. Ses enfants sont empilés **à l'intérieur** de ce contexte : leur `z-index` **ne peut pas dépasser** celui de leur contexte parent.
 
 ```css
-.composant { isolation: isolate; }          /* ✅ crée un contexte sans effet visuel : évite les « guerres de z-index » */
+.composant { isolation: isolate; }          /* crée un contexte sans effet visuel : évite les « guerres de z-index » */
 ```
 
 ### Bonnes pratiques
@@ -1098,7 +1098,7 @@ Détermine ce qui se passe quand le **contenu dépasse** la boîte.
 | `visible` (défaut) | Le contenu **déborde** |
 | `hidden` | **Rogné**, pas de barre de défilement |
 | `scroll` | Barres **toujours** affichées |
-| `auto` | Barres **seulement si nécessaire** ✅ |
+| `auto` | Barres **seulement si nécessaire** |
 | `clip` | Rogné **sans** créer de conteneur de défilement |
 
 ```css
@@ -1152,7 +1152,7 @@ img, video {
 .apres { clear: both; }                                                              /* se place sous les flottants */
 ```
 
-> ✅ **Aujourd'hui**, `float` ne sert **plus** qu'à **habiller une image avec du texte**. Pour les mises en page : **Flexbox** et **Grid**.
+> **Aujourd'hui**, `float` ne sert **plus** qu'à **habiller une image avec du texte**. Pour les mises en page : **Flexbox** et **Grid**.
 > Le « *clearfix* » (`::after { content: ""; display: table; clear: both; }`) est **remplacé** par `display: flow-root` sur le parent.
 
 ## 8.8 Comparaison des méthodes de mise en page
@@ -1174,10 +1174,10 @@ img, video {
 **Flexbox** dispose des éléments **sur un axe** (ligne ou colonne) en répartissant l'espace et en gérant l'alignement.
 
 ```text
-Axe principal (main axis)   ──────────────────▶   (flex-direction : row)
-┌─────────┬─────────┬─────────┐ ▲
+Axe principal (main axis)   ──────────────────>   (flex-direction : row)
+┌─────────┬─────────┬─────────┐ ^
 │  item 1 │  item 2 │  item 3 │ │ Axe secondaire (cross axis)
-└─────────┴─────────┴─────────┘ ▼
+└─────────┴─────────┴─────────┘ v
 ```
 
 ```css
@@ -1194,7 +1194,7 @@ Axe principal (main axis)   ─────────────────�
 | `justify-content` | `flex-start`, `center`, `flex-end`, `space-between`, `space-around`, `space-evenly` | Alignement sur l'**axe principal** |
 | `align-items` | `stretch` (défaut), `flex-start`, `center`, `flex-end`, `baseline` | Alignement sur l'**axe secondaire** |
 | `align-content` | idem `justify-content` | Répartition des **lignes** (avec `wrap`) |
-| **`gap`** | `1rem`, `1rem 2rem` | **Espacement** entre éléments (✅ remplace les marges) |
+| **`gap`** | `1rem`, `1rem 2rem` | **Espacement** entre éléments (remplace les marges) |
 
 ```css
 .barre {
@@ -1215,7 +1215,7 @@ Axe principal (main axis)   ─────────────────�
 | `flex-basis` | Taille **de départ** sur l'axe principal (`auto`, `200px`, `30%`) |
 | **`flex`** (raccourci) | `grow shrink basis` |
 | `align-self` | Alignement **individuel** sur l'axe secondaire |
-| `order` | Ordre d'affichage (⚠️ n'affecte pas l'ordre de navigation au clavier ni de lecture) |
+| `order` | Ordre d'affichage (attention : n'affecte pas l'ordre de navigation au clavier ni de lecture) |
 | `min-width: 0` | Autorise un élément flex à **rétrécir** sous la taille de son contenu |
 
 ```css
@@ -1315,12 +1315,12 @@ Flexbox est **unidimensionnel** : il excelle pour aligner des éléments **dans 
 ### Unités et fonctions de Grid
 
 ```css
-grid-template-columns: 200px 1fr 1fr;                       /* fixe + flexibles */
-grid-template-columns: repeat(3, 1fr);                      /* 3 colonnes égales */
-grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));    /* ✅ nombre de colonnes AUTOMATIQUE (responsive sans media query) */
-grid-template-columns: minmax(0, 1fr) auto;
-grid-template-columns: [debut] 1fr [milieu] 2fr [fin];     /* lignes nommées */
-grid-template-rows: auto 1fr auto;
+.grille-fixe    { display: grid; grid-template-columns: 200px 1fr 1fr; }                    /* fixe + flexibles */
+.grille-egale   { display: grid; grid-template-columns: repeat(3, 1fr); }                   /* 3 colonnes égales */
+.grille-auto    { display: grid; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); }   /* nombre de colonnes AUTOMATIQUE (responsive sans media query) */
+.grille-minmax  { display: grid; grid-template-columns: minmax(0, 1fr) auto; }
+.grille-nommee  { display: grid; grid-template-columns: [debut] 1fr [milieu] 2fr [fin]; }   /* lignes nommées */
+.grille-lignes  { display: grid; grid-template-rows: auto 1fr auto; }
 ```
 
 | Valeur | Signification |
@@ -1409,7 +1409,7 @@ Une **grille imbriquée** peut **hériter des pistes** de sa grille parente : le
 }
 ```
 
-> ✅ **Subgrid** est disponible dans tous les navigateurs modernes depuis fin 2023 (Baseline *widely available*).
+> **Subgrid** est disponible dans tous les navigateurs modernes depuis fin 2023 (Baseline *widely available*).
 
 ## 10.6 Autres fonctionnalités
 
@@ -1426,7 +1426,7 @@ Une **grille imbriquée** peut **hériter des pistes** de sa grille parente : le
 | Idéal pour | Barres, boutons, centrage, petits composants | Page entière, galeries, tableaux de bord, alignement multi-lignes |
 | Alignement sur les deux axes | Un axe à la fois (par ligne) | Natif |
 
-> ✅ Ils se **combinent** : Grid pour la structure globale, Flexbox à l'intérieur des cellules.
+> Ils se **combinent** : Grid pour la structure globale, Flexbox à l'intérieur des cellules.
 
 ---
 
@@ -1441,7 +1441,7 @@ Une **grille imbriquée** peut **hériter des pistes** de sa grille parente : le
     background-repeat: no-repeat;                /* repeat | repeat-x | repeat-y | space | round */
     background-position: center;                 /* ou « 50% 20% », « top right » */
     background-size: cover;                      /* cover | contain | 100% auto | 200px */
-    background-attachment: fixed;                /* effet de parallaxe (⚠️ coûteux, désactivé sur mobile) */
+    background-attachment: fixed;                /* effet de parallaxe (attention : coûteux, désactivé sur mobile) */
     background-clip: padding-box;                /* border-box | padding-box | content-box | text */
     background-origin: padding-box;
 }
@@ -1457,17 +1457,17 @@ Une **grille imbriquée** peut **hériter des pistes** de sa grille parente : le
 }
 ```
 
-> 💡 Une image **de contenu** (informative) va dans `<img>` avec `alt` ; une image **décorative** dans `background-image`.
+> **Astuce** : une image **de contenu** (informative) va dans `<img>` avec `alt` ; une image **décorative** dans `background-image`.
 
 ## 11.2 Dégradés
 
 ```css
-background: linear-gradient(to right, red, yellow);                      /* direction */
-background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);          /* angle + arrêts */
-background: radial-gradient(circle at top left, white, transparent 60%);
-background: conic-gradient(from 0deg, red, yellow, green, red);         /* camembert, roue chromatique */
-background: repeating-linear-gradient(45deg, #eee 0 10px, #ddd 10px 20px);   /* rayures */
-background: linear-gradient(in oklch, red, blue);                        /* interpolation dans un espace perceptuel (dégradés plus vifs) */
+.degrade-direction { background: linear-gradient(to right, red, yellow); }                      /* direction */
+.degrade-angle     { background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%); }          /* angle + arrêts */
+.degrade-radial    { background: radial-gradient(circle at top left, white, transparent 60%); }
+.degrade-conique   { background: conic-gradient(from 0deg, red, yellow, green, red); }         /* camembert, roue chromatique */
+.degrade-rayures   { background: repeating-linear-gradient(45deg, #eee 0 10px, #ddd 10px 20px); }   /* rayures */
+.degrade-oklch     { background: linear-gradient(in oklch, red, blue); }                        /* interpolation dans un espace perceptuel (dégradés plus vifs) */
 ```
 
 ## 11.3 Ombres
@@ -1541,7 +1541,7 @@ thead th { position: sticky; top: 0; background: white; }          /* en-tête c
 
 ---
 
-# 🔴 CSS dynamique et moderne
+# CSS dynamique et moderne
 
 ---
 
@@ -1588,7 +1588,7 @@ p { color: var(--couleur-texte, #333); }                 /* valeur de REPLI si l
 | **Design tokens** | Couleurs, espacements, rayons, ombres, échelles typographiques |
 | **Composants configurables** | `.avatar { --taille: 3rem; width: var(--taille); }` |
 | **Valeurs dynamiques depuis JS** | `element.style.setProperty("--x", valeur)` |
-| **Calculs** | `calc(var(--colonnes) * 1fr)` |
+| **Calculs** | `calc(var(--n) * 1rem)` |
 | **Éviter la répétition** | Une valeur, un seul endroit |
 
 ```css
@@ -1627,9 +1627,11 @@ body { background: var(--fond); color: var(--texte); }
 ## 12.5 Basculer avec JavaScript
 
 ```js
-document.documentElement.dataset.theme = "sombre";                        // change le thème
-document.documentElement.style.setProperty("--couleur-principale", "tomato");
-getComputedStyle(document.documentElement).getPropertyValue("--espacement");   // lire
+document.documentElement.dataset.theme = "sombre";                                   // change le thème
+document.documentElement.style.setProperty("--couleur-principale", "tomato");        // modifie une variable
+
+const espacement = getComputedStyle(document.documentElement).getPropertyValue("--espacement");
+console.log(espacement.trim());                                                      // "1rem" (valeur déclarée dans :root)
 ```
 
 ## 12.6 Propriétés enregistrées : `@property` *(ajout)*
@@ -1644,10 +1646,13 @@ getComputedStyle(document.documentElement).getPropertyValue("--espacement");   /
 }
 
 .roue {
+    width: 10rem;
+    aspect-ratio: 1;
+    border-radius: 50%;
     background: conic-gradient(from var(--angle), red, yellow, red);
-    animation: tourner 4s linear infinite;
+    animation: tourner-angle 4s linear infinite;
 }
-@keyframes tourner { to { --angle: 360deg; } }          /* animation d'un dégradé */
+@keyframes tourner-angle { to { --angle: 360deg; } }          /* animation d'un dégradé */
 ```
 
 > Baseline *widely available* (2024).
@@ -1657,7 +1662,7 @@ getComputedStyle(document.documentElement).getPropertyValue("--espacement");   /
 | Problème | Explication |
 | --- | --- |
 | Valeur invalide sans erreur visible | Une variable invalide rend la propriété **« invalide au moment du calcul »** (`unset`) : vérifier dans les DevTools |
-| Pas utilisable dans les **requêtes média** | `@media (min-width: var(--x))` ❌ ; utilisez les requêtes de **conteneur** ou des valeurs fixes |
+| Pas utilisable dans les **requêtes média** | `@media (min-width: var(--x))` (invalide) ; utilisez les requêtes de **conteneur** ou des valeurs fixes |
 | Noms **sensibles à la casse** | `--Couleur` ≠ `--couleur` |
 | Variables et `calc()` | Mettre des **unités** : `calc(var(--n) * 1px)` si `--n` est un nombre |
 
@@ -1736,7 +1741,7 @@ Une **transition** anime le **passage** d'une valeur à une autre quand elle cha
     transform-origin: top left;                                                   /* point d'ancrage (centre par défaut) */
 }
 
-/* ✅ Propriétés de transformation INDIVIDUELLES (plus simples à animer séparément) */
+/* Propriétés de transformation INDIVIDUELLES (plus simples à animer séparément) */
 .moderne { translate: 20px 10px; rotate: 15deg; scale: 1.2; }
 .moderne:hover { scale: 1.3; }
 ```
@@ -1801,7 +1806,7 @@ Jusqu'à récemment, animer un élément **de `display: none` à visible** exige
 | `filter` (avec prudence) | |
 
 ```css
-.mobile { will-change: transform; }          /* ⚠️ à utiliser avec parcimonie, uniquement pour des éléments qui vont VRAIMENT s'animer */
+.mobile { will-change: transform; }          /* attention : à utiliser avec parcimonie, uniquement pour des éléments qui vont VRAIMENT s'animer */
 ```
 
 - Animez **`transform` et `opacity`** de préférence.
@@ -1825,7 +1830,7 @@ Jusqu'à récemment, animer un élément **de `display: none` à visible** exige
 }
 ```
 
-> ♿ Les animations de **mouvement** (translation, zoom, parallaxe) peuvent provoquer des **malaises** (troubles vestibulaires) : respectez toujours cette préférence.
+> **Accessibilité** : les animations de **mouvement** (translation, zoom, parallaxe) peuvent provoquer des **malaises** (troubles vestibulaires) : respectez toujours cette préférence.
 
 ## 13.7 Animations liées au défilement *(ajout)*
 
@@ -1849,14 +1854,22 @@ Les **animations pilotées par le défilement** (*scroll-driven animations*) lie
 }
 ```
 
-> ⚠️ Support : Chromium et Safari ; Firefox à vérifier selon la version. **Amélioration progressive** : entourez de `@supports (animation-timeline: scroll())` et prévoyez un état final lisible sans animation.
+> **Support** : Chromium et Safari ; Firefox à vérifier selon la version. **Amélioration progressive** : entourez de `@supports (animation-timeline: scroll())` et prévoyez un état final lisible sans animation.
 
 ## 13.8 Transitions de vue (*View Transitions*) *(ajout)*
 
 Animations fluides **entre deux états de page** (changement de contenu, navigation) avec très peu de code :
 
 ```js
-document.startViewTransition(() => mettreAJourLeDOM());       // même document
+function mettreAJourLeDOM() {
+    document.querySelector(".vignette").classList.toggle("agrandie");
+}
+
+if (document.startViewTransition) {
+    document.startViewTransition(() => mettreAJourLeDOM());     // même document
+} else {
+    mettreAJourLeDOM();                                         // repli : changement sans animation
+}
 ```
 
 ```css
@@ -1864,6 +1877,11 @@ document.startViewTransition(() => mettreAJourLeDOM());       // même document
 ::view-transition-new(root) { animation: .3s ease-in both fondu-entree; }
 
 .vignette { view-transition-name: image-produit; }            /* l'élément « voyage » entre les deux états */
+
+@keyframes fondu-sortie { to { opacity: 0; } }
+@keyframes fondu-entree { from { opacity: 0; } }
+
+.vignette.agrandie { scale: 1.2; }
 
 @view-transition { navigation: auto; }                         /* navigations entre pages du même site (multi-pages) */
 ```
@@ -1940,7 +1958,7 @@ Sans elle, les mobiles affichent la page comme sur un écran de bureau (« dézo
 | Grand | ≥ 64 rem (1024 px) | Portables |
 | Très grand | ≥ 80 rem (1280 px) | Bureau |
 
-> ✅ **Choisissez les points de rupture selon votre contenu** (quand la mise en page « casse »), pas selon des appareils précis. Exprimez-les en **`rem`/`em`** (respecte le zoom du texte).
+> **Choisissez les points de rupture selon votre contenu** (quand la mise en page « casse »), pas selon des appareils précis. Exprimez-les en **`rem`/`em`** (respecte le zoom du texte).
 
 ## 14.5 Requêtes de conteneur : `@container` *(ajout, à jour)*
 
@@ -1961,7 +1979,7 @@ Les **requêtes de conteneur** adaptent un composant à la taille de **son conte
 
 | Élément | Rôle |
 | --- | --- |
-| `container-type: inline-size` | Conteneur de **taille** sur l'axe en ligne (largeur) ✅ ; `size` = les deux axes ; `normal` = pour les requêtes de style |
+| `container-type: inline-size` | Conteneur de **taille** sur l'axe en ligne (largeur) ; `size` = les deux axes ; `normal` = pour les requêtes de style |
 | `container-name` | Nom (facultatif) |
 | `container: carte / inline-size` | Raccourci |
 | `@container (…)` | Requête de taille |
@@ -1969,7 +1987,7 @@ Les **requêtes de conteneur** adaptent un composant à la taille de **son conte
 | `@container style(--theme: sombre)` | **Requêtes de style** sur les variables (support en progression) |
 | `@container scroll-state(stuck: top)` | Requêtes sur l'**état de défilement** (collé, accroché ; Chromium) |
 
-> ✅ **Requêtes de taille de conteneur** : Baseline *widely available* depuis 2023. **Media queries** pour la **mise en page globale**, **container queries** pour les **composants**.
+> **Requêtes de taille de conteneur** : Baseline *widely available* depuis 2023. **Media queries** pour la **mise en page globale**, **container queries** pour les **composants**.
 
 ## 14.6 Unités et mises en page fluides
 
@@ -2003,7 +2021,7 @@ img, video, svg { max-width: 100%; height: auto; }
 .fond { background-image: image-set(url("fond.avif") type("image/avif"), url("fond.jpg") type("image/jpeg")); }
 ```
 
-> 💡 Renseignez toujours **`width` et `height`** (ou `aspect-ratio`) sur les images : cela évite les **décalages de mise en page** (CLS). `loading="lazy"` pour les images hors écran.
+> **Astuce** : renseignez toujours **`width` et `height`** (ou `aspect-ratio`) sur les images : cela évite les **décalages de mise en page** (CLS). `loading="lazy"` pour les images hors écran.
 
 ## 14.8 Tableaux et grilles sur mobile
 
@@ -2028,25 +2046,25 @@ img, video, svg { max-width: 100%; height: auto; }
 
 | Fonctionnalité | Rôle | Statut approximatif (octobre 2026) |
 | --- | --- | --- |
-| **Imbrication** (`&`) | Imbriquer les règles sans préprocesseur | ✅ Largement disponible |
-| **`:has()`** | Sélecteur « parent » | ✅ Largement disponible |
-| **`@layer`** | Couches de cascade | ✅ Largement disponible |
-| **Requêtes de conteneur** (taille) | Composants adaptatifs | ✅ Largement disponible |
-| **Subgrid** | Grilles imbriquées alignées | ✅ Largement disponible |
-| **Propriétés logiques** | Sens d'écriture | ✅ Largement disponible |
-| `color-mix()`, `oklch()`, syntaxe de couleur relative | Couleurs modernes | ✅ Largement / récemment disponible |
-| `light-dark()` | Valeur selon le thème | ✅ Disponible |
-| `text-wrap: balance / pretty` | Typographie | ✅ Disponible |
-| `@starting-style`, `transition-behavior` | Animer `display` | ✅ Disponible (récent) |
-| `@property` | Variables typées / animables | ✅ Disponible |
-| **Transitions de vue** (même document) | Animations d'interface | ✅ Disponible |
-| **`@scope`** | Portée des styles | ✅ Récemment disponible (2026) |
-| **Positionnement par ancrage** | Infobulles, menus sans JS | ✅ Récemment disponible (début 2026, noyau) |
-| `sibling-index()` / `sibling-count()` | Mise en page selon la position | ✅ Récemment disponible |
-| **Animations liées au défilement** | Animations sans JS | ⚠️ Selon les navigateurs (vérifier) |
-| `if()`, `@function`, mixins CSS | Logique conditionnelle, fonctions | ⚠️ Expérimental (Chromium) |
-| `field-sizing`, `interpolate-size`, `corner-shape`, `contrast-color()`, `shape()` | Divers | ⚠️ Support partiel / récent |
-| `masonry`, gap decorations, `reading-flow` | Mises en page avancées | ⚠️ En cours de standardisation |
+| **Imbrication** (`&`) | Imbriquer les règles sans préprocesseur | Largement disponible |
+| **`:has()`** | Sélecteur « parent » | Largement disponible |
+| **`@layer`** | Couches de cascade | Largement disponible |
+| **Requêtes de conteneur** (taille) | Composants adaptatifs | Largement disponible |
+| **Subgrid** | Grilles imbriquées alignées | Largement disponible |
+| **Propriétés logiques** | Sens d'écriture | Largement disponible |
+| `color-mix()`, `oklch()`, syntaxe de couleur relative | Couleurs modernes | Largement / récemment disponible |
+| `light-dark()` | Valeur selon le thème | Disponible |
+| `text-wrap: balance / pretty` | Typographie | Disponible |
+| `@starting-style`, `transition-behavior` | Animer `display` | Disponible (récent) |
+| `@property` | Variables typées / animables | Disponible |
+| **Transitions de vue** (même document) | Animations d'interface | Disponible |
+| **`@scope`** | Portée des styles | Récemment disponible (2026) |
+| **Positionnement par ancrage** | Infobulles, menus sans JS | Récemment disponible (début 2026, noyau) |
+| `sibling-index()` / `sibling-count()` | Mise en page selon la position | Récemment disponible |
+| **Animations liées au défilement** | Animations sans JS | Selon les navigateurs (vérifier) |
+| `if()`, `@function`, mixins CSS | Logique conditionnelle, fonctions | Expérimental (Chromium) |
+| `field-sizing`, `interpolate-size`, `corner-shape`, `contrast-color()`, `shape()` | Divers | Support partiel / récent |
+| `masonry`, gap decorations, `reading-flow` | Mises en page avancées | En cours de standardisation |
 
 ## 15.2 Positionnement par ancrage (*Anchor Positioning*)
 
@@ -2087,7 +2105,7 @@ Combiné à l'attribut HTML **`popover`** (section 24), il remplace Floating UI 
 .boite { width: --double(10px); }
 ```
 
-> ⚠️ **Ne les utilisez que derrière `@supports`** ou comme amélioration progressive ; leur syntaxe peut encore évoluer.
+> **Ne les utilisez que derrière `@supports`** ou comme amélioration progressive ; leur syntaxe peut encore évoluer.
 
 ## 15.5 Quand utiliser quoi (récapitulatif)
 
@@ -2134,7 +2152,7 @@ Combiné à l'attribut HTML **`popover`** (section 24), il remplace Floating UI 
 :focus:not(:focus-visible) { outline: none; }        /* pas d'anneau au clic souris, présent au clavier */
 ```
 
-> 🚫 **Ne retirez jamais l'indicateur de focus** sans le remplacer par un équivalent **visible**.
+> **Ne retirez jamais l'indicateur de focus** sans le remplacer par un équivalent **visible**.
 
 ## 16.3 Cibles tactiles
 
@@ -2158,9 +2176,9 @@ button, a.bouton, input { min-block-size: 2.75rem; min-inline-size: 2.75rem; }  
 
 | Technique | Visible | Lecteurs d'écran |
 | --- | --- | --- |
-| `.sr-only` | ❌ | ✅ |
-| `display: none`, `hidden`, `visibility: hidden` | ❌ | ❌ |
-| `aria-hidden="true"` | ✅ | ❌ |
+| `.sr-only` | Non | Oui |
+| `display: none`, `hidden`, `visibility: hidden` | Non | Non |
+| `aria-hidden="true"` | Oui | Non |
 
 ## 16.5 Préférences utilisateur
 
@@ -2191,7 +2209,7 @@ button, a.bouton, input { min-block-size: 2.75rem; min-inline-size: 2.75rem; }  
 
 ---
 
-# 🛠️ Outils et pratique
+# Outils et pratique
 
 ---
 
@@ -2201,13 +2219,13 @@ button, a.bouton, input { min-block-size: 2.75rem; min-inline-size: 2.75rem; }  
 
 Un **framework CSS** fournit des **styles prêts à l'emploi** (grille, composants, utilitaires) pour développer plus vite avec une apparence cohérente.
 
-| ✅ Avantages | ❌ Inconvénients |
+| Avantages | Inconvénients |
 | --- | --- |
 | Développement rapide, design cohérent | Poids et dépendance au framework |
 | Composants testés, responsive intégré | Sites qui se ressemblent (sans personnalisation) |
 | Documentation et communauté | Courbe d'apprentissage des conventions |
 
-> ✅ Le CSS moderne (Grid, Flexbox, variables, `@layer`, conteneurs) permet aujourd'hui de **se passer d'un framework** pour de nombreux projets.
+> Le CSS moderne (Grid, Flexbox, variables, `@layer`, conteneurs) permet aujourd'hui de **se passer d'un framework** pour de nombreux projets.
 
 ## 17.2 Principaux frameworks
 
@@ -2271,7 +2289,7 @@ npm install tailwindcss @tailwindcss/vite        # (ou @tailwindcss/postcss)
 | **`@apply`** | Extrait des classes utilitaires dans une règle CSS (à utiliser avec modération) |
 | **Purge automatique** | Seules les classes utilisées sont générées |
 
-> ⚠️ Avantage : cohérence et vitesse ; inconvénient : HTML chargé de classes. Extraire des **composants** (framework JS, partiels) pour éviter la répétition.
+> **Compromis** : avantage : cohérence et vitesse ; inconvénient : HTML chargé de classes. Extraire des **composants** (framework JS, partiels) pour éviter la répétition.
 
 ## 17.5 Choisir
 
@@ -2292,7 +2310,7 @@ Un **préprocesseur** ajoute des fonctionnalités (variables, imbrication, fonct
 
 | | **Sass / SCSS** | **Less** | **Stylus** |
 | --- | --- | --- | --- |
-| Popularité | ✅ La plus répandue | En déclin | Rare |
+| Popularité | La plus répandue | En déclin | Rare |
 | Syntaxe | SCSS (proche de CSS) ou indentée | Proche de CSS | Souple |
 | Compilateur | **Dart Sass** (`sass`) | `lessc` (JavaScript) | Node |
 
@@ -2302,17 +2320,21 @@ $couleur-principale: #3498db;
 $points: (petit: 40rem, moyen: 48rem, grand: 64rem);
 
 // _mixins.scss
+@use "sass:map";
+@use "variables" as v;
+
 @mixin a-partir-de($taille) {
-    @media (min-width: map-get($points, $taille)) { @content; }
+    @media (min-width: map.get(v.$points, $taille)) { @content; }
 }
 
 // style.scss
-@use "variables" as *;                       // ✅ @use / @forward (le système de modules)
+@use "sass:color";
+@use "variables" as *;                       // @use / @forward : le système de modules
 @use "mixins" as m;
 
 .carte {
     color: $couleur-principale;
-    &:hover { color: darken($couleur-principale, 10%); }
+    &:hover { color: color.adjust($couleur-principale, $lightness: -10%); }
     @include m.a-partir-de(moyen) { padding: 2rem; }
 }
 ```
@@ -2322,7 +2344,7 @@ npm install -D sass
 npx sass --watch src/scss:dist/css          # compilation en continu
 ```
 
-> 📌 **À jour** : `@import` de Sass est **déprécié** (remplacé par **`@use`** / **`@forward`**) ; **LibSass / node-sass** sont abandonnés : utilisez **Dart Sass**.
+> **À jour** : `@import` de Sass est **déprécié** (remplacé par **`@use`** / **`@forward`**) ; **LibSass / node-sass** sont abandonnés : utilisez **Dart Sass**.
 
 ## 18.2 Le CSS natif remplace une partie des préprocesseurs
 
@@ -2333,9 +2355,9 @@ npx sass --watch src/scss:dist/css          # compilation en continu
 | `darken()`, `lighten()`, `mix()` | **`color-mix()`**, couleur relative |
 | `calc`, `min`, `max`, `clamp` | Fonctions mathématiques natives |
 | Partiels / modules | `@import` + `@layer`, ou outil de build |
-| Mixins, fonctions, boucles, conditions | ❌ (partiellement `@function` / `if()` expérimentaux) → toujours utiles dans Sass |
+| Mixins, fonctions, boucles, conditions | Non (partiellement `@function` / `if()` expérimentaux) → toujours utiles dans Sass |
 
-> ✅ **Aujourd'hui**, Sass n'est plus **indispensable** ; il reste pertinent pour les **mixins, boucles, fonctions** et les bases de code existantes.
+> **Aujourd'hui**, Sass n'est plus **indispensable** ; il reste pertinent pour les **mixins, boucles, fonctions** et les bases de code existantes.
 
 ## 18.3 PostCSS, Lightning CSS et Autoprefixer
 
@@ -2348,8 +2370,9 @@ npx sass --watch src/scss:dist/css          # compilation en continu
 | **cssnano** | Minification |
 | **Vite / webpack / esbuild** | Outils de build qui intègrent la plupart de ces fonctions |
 
+Fichier `package.json` (navigateurs ciblés) :
+
 ```json
-// package.json — navigateurs ciblés
 { "browserslist": [">= 0.5%", "last 2 versions", "not dead"] }
 ```
 
@@ -2367,7 +2390,7 @@ CSS moderne (imbrication, @layer, variables…)
         │  ├─ imbrication transpilée si nécessaire
         │  ├─ préfixes selon browserslist
         │  └─ minification + regroupement
-        ▼
+        v
    CSS optimisé (+ compression Brotli)
 ```
 
@@ -2470,8 +2493,9 @@ Alternatives : **normalize.css**, **modern-normalize**, **the-new-css-reset**.
 - **Pas d'`!important`** (sauf utilitaires) ; sélecteurs **peu spécifiques**.
 - Supprimer le **code mort** (voir l'outil *Coverage*, section 23).
 
+Fichier `.stylelintrc.json` :
+
 ```json
-// .stylelintrc.json
 { "extends": ["stylelint-config-standard"], "rules": { "selector-class-pattern": null, "declaration-no-important": true } }
 ```
 
@@ -2496,7 +2520,7 @@ Le CSS est **bloquant pour le rendu** : le navigateur n'affiche rien avant de l'
 | **Éviter `@import`** | Évite les chargements en série |
 | **Découper** par page / route (CSS « code-splitting ») | Ne charge que le nécessaire |
 
-> 📌 **À jour** : l'ancien conseil « regrouper tous les fichiers pour réduire les requêtes HTTP » est **moins important** avec **HTTP/2 et HTTP/3** (multiplexage). Regrouper reste utile pour la compression et la simplicité, mais n'est plus une règle absolue.
+> **À jour** : l'ancien conseil « regrouper tous les fichiers pour réduire les requêtes HTTP » est **moins important** avec **HTTP/2 et HTTP/3** (multiplexage). Regrouper reste utile pour la compression et la simplicité, mais n'est plus une règle absolue.
 
 ## 20.3 Performance de rendu
 
@@ -2518,7 +2542,7 @@ Le CSS est **bloquant pour le rendu** : le navigateur n'affiche rien avant de l'
 | Réserver l'espace des images / polices (`width`/`height`, `size-adjust`) | Évite le CLS |
 | `font-display: swap` / `optional` ; polices **WOFF2** variables | Texte rapide, moins de fichiers |
 
-> 💡 **Mythe** : la complexité des sélecteurs (`div > ul li a`) a **très peu d'impact** sur les navigateurs modernes. Concentrez-vous sur la **taille du CSS**, la **mise en cache** et la **taille du DOM**.
+> **Mythe** : la complexité des sélecteurs (`div > ul li a`) a **très peu d'impact** sur les navigateurs modernes. Concentrez-vous sur la **taille du CSS**, la **mise en cache** et la **taille du DOM**.
 
 ## 20.4 Mesurer
 
@@ -2564,7 +2588,7 @@ Sources : **MDN**, **caniuse.com**, **web.dev/baseline**.
 @supports (position-anchor: --x) { .menu { position-anchor: --menu; } }
 ```
 
-> ⚠️ Un sélecteur ou un bloc **invalide** invalide **toute la règle** : n'écrivez pas `:is(:has-inconnu, .a)` dans une liste commune ; utilisez `@supports selector(…)`.
+> **Attention** : un sélecteur ou un bloc **invalide** invalide **toute la règle** : n'écrivez pas `:is(:has-inconnu, .a)` dans une liste commune ; utilisez `@supports selector(…)`.
 
 ## 21.3 Préfixes de fournisseurs *(à jour)*
 
@@ -2604,22 +2628,22 @@ Les navigateurs ont des **feuilles de style par défaut** différentes : un **re
 ## 22.1 Modifier les styles
 
 ```js
-const el = document.querySelector(".carte");
+const el = document.querySelector(".carte");              // suppose un élément <div class="carte"> dans la page
 
-// 1) Classes (✅ méthode recommandée : le CSS reste dans la feuille de style)
+// 1) Classes (méthode recommandée : le CSS reste dans la feuille de style)
 el.classList.add("active");
 el.classList.remove("cachee");
 el.classList.toggle("ouverte");
-el.classList.contains("active");
-el.classList.replace("ancienne", "nouvelle");
+console.log(el.classList.contains("active"));             // true
+el.classList.replace("active", "inactive");
 
 // 2) Style en ligne (valeurs dynamiques)
 el.style.color = "tomato";
-el.style.backgroundColor = "rgb(0 0 0 / .1)";          // camelCase
+el.style.backgroundColor = "rgb(0 0 0 / .1)";             // camelCase
 el.style.cssText = "color: red; margin: 0;";
 el.style.removeProperty("color");
 
-// 3) Variables CSS (✅ idéal pour passer des valeurs dynamiques au CSS)
+// 3) Variables CSS (idéal pour passer des valeurs dynamiques au CSS)
 el.style.setProperty("--progression", "70%");
 document.documentElement.style.setProperty("--couleur-principale", "tomato");
 ```
@@ -2631,30 +2655,38 @@ document.documentElement.style.setProperty("--couleur-principale", "tomato");
 ## 22.2 Lire les styles
 
 ```js
+const el = document.querySelector(".carte");
 const styles = getComputedStyle(el);                      // valeurs CALCULÉES (lecture seule)
-styles.getPropertyValue("--couleur-principale");
-styles.width;                                             // "320px"
 
-el.getBoundingClientRect();                               // position et taille à l'écran
-el.offsetWidth; el.clientHeight; el.scrollHeight;
+console.log(styles.getPropertyValue("--couleur-principale"));
+console.log(styles.width);                                // "320px"
+console.log(el.getBoundingClientRect());                  // position et taille à l'écran
+console.log(el.offsetWidth, el.clientHeight, el.scrollHeight);
 ```
 
-> ⚠️ Lire des dimensions **puis** modifier le style **en boucle** force des recalculs de mise en page (*layout thrashing*) : regroupez lectures et écritures, ou utilisez `requestAnimationFrame`.
+> **Attention** : lire des dimensions **puis** modifier le style **en boucle** force des recalculs de mise en page (*layout thrashing*) : regroupez lectures et écritures, ou utilisez `requestAnimationFrame`.
 
 ## 22.3 Requêtes média et fonctionnalités en JavaScript
 
 ```js
+function appliquerTheme(theme) {
+    document.documentElement.dataset.theme = theme;
+}
+
 const sombre = matchMedia("(prefers-color-scheme: dark)");
+appliquerTheme(sombre.matches ? "sombre" : "clair");
 sombre.addEventListener("change", (e) => appliquerTheme(e.matches ? "sombre" : "clair"));
 
-matchMedia("(prefers-reduced-motion: reduce)").matches;
-CSS.supports("display", "grid");                          // true / false
-CSS.supports("selector(:has(*))");
+console.log(matchMedia("(prefers-reduced-motion: reduce)").matches);
+console.log(CSS.supports("display", "grid"));             // true / false
+console.log(CSS.supports("selector(:has(*))"));
 ```
 
 ## 22.4 Animations en JavaScript
 
 ```js
+const el = document.querySelector(".carte");
+
 // Web Animations API : les mêmes moteurs que les animations CSS, pilotables par JS
 const animation = el.animate(
     [{ transform: "translateY(20px)", opacity: 0 }, { transform: "none", opacity: 1 }],
@@ -2663,8 +2695,8 @@ const animation = el.animate(
 animation.pause(); animation.play(); animation.reverse();
 animation.finished.then(() => console.log("terminé"));
 
-el.addEventListener("transitionend", () => { /* fin d'une transition CSS */ });
-el.addEventListener("animationend", () => { /* fin d'une animation CSS */ });
+el.addEventListener("transitionend", () => console.log("fin d'une transition CSS"));
+el.addEventListener("animationend", () => console.log("fin d'une animation CSS"));
 ```
 
 Autres outils : `IntersectionObserver` (déclencher selon la visibilité), `ResizeObserver` (réagir aux tailles), `requestAnimationFrame`, `document.startViewTransition()`.
@@ -2676,7 +2708,7 @@ const feuille = new CSSStyleSheet();
 feuille.replaceSync(".nouveau { color: red; }");
 document.adoptedStyleSheets = [...document.adoptedStyleSheets, feuille];        // partageable avec les Shadow DOM
 
-CSS.registerProperty({ name: "--angle", syntax: "<angle>", inherits: false, initialValue: "0deg" });   // équivalent de @property
+CSS.registerProperty({ name: "--angle", syntax: "<angle>", inherits: false, initialValue: "0deg" });   // équivalent de @property (à n'utiliser que si la règle @property n'existe pas déjà)
 ```
 
 ## 22.6 Dialogues, popovers et état en HTML
@@ -2684,8 +2716,14 @@ CSS.registerProperty({ name: "--angle", syntax: "<angle>", inherits: false, init
 Le HTML moderne gère déjà ouverture/fermeture, focus et couche supérieure : le CSS ne fait que **styler** les états (`:modal`, `:popover-open`, `[open]`).
 
 ```js
-dialogue.showModal();  dialogue.close();
-menu.togglePopover();  menu.showPopover();  menu.hidePopover();
+const dialogue = document.querySelector("#modale");       // <dialog id="modale"> (voir 24.3)
+const menu = document.querySelector("#menu");             // <ul id="menu" popover> (voir 24.4)
+
+dialogue.showModal();
+dialogue.close();
+menu.togglePopover();
+menu.showPopover();
+menu.hidePopover();
 ```
 
 ## 22.7 Bonnes pratiques
@@ -2838,12 +2876,12 @@ dialog {
 body:has(dialog[open]) { overflow: hidden; }            /* bloque le défilement de la page */
 ```
 
-> ✅ `<dialog>` + `showModal()` fournit **gratuitement** : piégeage du focus, fermeture avec Échap, fond inerte, **couche supérieure** (pas de `z-index`).
+> `<dialog>` + `showModal()` fournit **gratuitement** : piégeage du focus, fermeture avec Échap, fond inerte, **couche supérieure** (pas de `z-index`).
 
 ## 24.4 Menu déroulant avec `popover` et ancrage
 
 ```html
-<button popovertarget="menu" id="declencheur">Menu ▾</button>
+<button popovertarget="menu" id="declencheur">Menu</button>
 <ul id="menu" popover>
     <li><a href="#">Profil</a></li>
     <li><a href="#">Paramètres</a></li>
@@ -2869,7 +2907,7 @@ body:has(dialog[open]) { overflow: hidden; }            /* bloque le défilement
 .deroulant:focus-within .menu { display: block; }          /* :focus-within : accessible au clavier */
 ```
 
-> ♿ `:hover` seul **n'est pas accessible** au clavier et au tactile : combinez avec `:focus-within`, ou préférez `popover` / `<details>`.
+> **Accessibilité** : `:hover` seul **n'est pas accessible** au clavier et au tactile : combinez avec `:focus-within`, ou préférez `popover` / `<details>`.
 
 ## 24.5 Accordéon avec `<details>`
 
@@ -2926,7 +2964,7 @@ details[open]::details-content { height: auto; }               /* avec interpola
 }
 ```
 
-> ✅ Cette approche (défilement **natif**, tactile, clavier) est **plus accessible** que l'ancienne technique « boutons radio `:checked` ». Chromium propose en plus des **pseudo-éléments de carrousel** (`::scroll-button()`, `::scroll-marker`) pour créer boutons et pastilles **sans JavaScript** (support partiel : à vérifier).
+> Cette approche (défilement **natif**, tactile, clavier) est **plus accessible** que l'ancienne technique « boutons radio `:checked` ». Chromium propose en plus des **pseudo-éléments de carrousel** (`::scroll-button()`, `::scroll-marker`) pour créer boutons et pastilles **sans JavaScript** (support partiel : à vérifier).
 
 ## 24.8 Barre de navigation responsive
 
@@ -2956,14 +2994,14 @@ body { display: grid; grid-template-rows: auto 1fr auto; min-height: 100dvh; }
 
 | Niveau | Projet | Compétences |
 | --- | --- | --- |
-| 🟢 | **Page de présentation / CV** | Typographie, boîte, Flexbox, variables |
-| 🟢 | **Carte de profil + galerie** | Grid, `aspect-ratio`, survols, transitions |
-| 🟡 | **Portfolio responsive** | Grid, mobile-first, requêtes de conteneur, thème sombre (`light-dark`) |
-| 🟡 | **Tableau de bord** | Grid + subgrid, composants, tableaux responsives |
-| 🟡 | **Système de design** (tokens, boutons, formulaires, modale, `@layer`) | Architecture, variables, accessibilité |
-| 🔴 | **Page d'atterrissage animée** (sans JS) | `@keyframes`, animations liées au défilement, `@starting-style`, transitions de vue |
-| 🔴 | **Bibliothèque de composants** (accordéon, onglets, carrousel, infobulles ancrées) | `popover`, ancrage, `:has()`, `@scope` |
-| 🔴 | **Reproduire une interface existante** (pixel-perfect, responsive) | Analyse, Grid/Flexbox, précision |
+| Débutant | **Page de présentation / CV** | Typographie, boîte, Flexbox, variables |
+| Débutant | **Carte de profil + galerie** | Grid, `aspect-ratio`, survols, transitions |
+| Intermédiaire | **Portfolio responsive** | Grid, mobile-first, requêtes de conteneur, thème sombre (`light-dark`) |
+| Intermédiaire | **Tableau de bord** | Grid + subgrid, composants, tableaux responsives |
+| Intermédiaire | **Système de design** (tokens, boutons, formulaires, modale, `@layer`) | Architecture, variables, accessibilité |
+| Avancé | **Page d'atterrissage animée** (sans JS) | `@keyframes`, animations liées au défilement, `@starting-style`, transitions de vue |
+| Avancé | **Bibliothèque de composants** (accordéon, onglets, carrousel, infobulles ancrées) | `popover`, ancrage, `:has()`, `@scope` |
+| Avancé | **Reproduire une interface existante** (pixel-perfect, responsive) | Analyse, Grid/Flexbox, précision |
 
 ---
 
@@ -2995,12 +3033,12 @@ body { display: grid; grid-template-rows: auto 1fr auto; min-height: 100dvh; }
 
 ```css
 .composant {
-    /* 1. Variables locales */   --fond: white;
+    /* 1. Variables locales */    --fond: white;
     /* 2. Affichage / position */ display: grid; position: relative; inset: 0; z-index: 1;
     /* 3. Modèle de boîte */      width: 100%; margin-block: 1rem; padding: 1rem; border: 1px solid;
     /* 4. Typographie */          font: 1rem/1.5 system-ui; color: #222;
-    /* 5. Visuel */               background: var(--fond); border-radius: .5rem; box-shadow: …;
-    /* 6. Divers */               transition: …; cursor: pointer;
+    /* 5. Visuel */               background: var(--fond); border-radius: .5rem; box-shadow: 0 1px 3px rgb(0 0 0 / .2);
+    /* 6. Divers */               transition: background .2s; cursor: pointer;
 }
 ```
 
@@ -3021,17 +3059,17 @@ body { display: grid; grid-template-rows: auto 1fr auto; min-height: 100dvh; }
 
 ## 25.4 Ressources pour progresser
 
-- 📘 **MDN — CSS** : <https://developer.mozilla.org/fr/docs/Web/CSS>
-- 🎓 **web.dev — Learn CSS** : <https://web.dev/learn/css>
-- 🧭 **Spécifications du W3C (CSSWG)** : <https://www.w3.org/Style/CSS/>
-- ✅ **Baseline** : <https://web.dev/baseline> · **Can I use** : <https://caniuse.com>
-- 🧪 **CSS-Tricks**, **Every Layout**, **Modern CSS Solutions**, **Kevin Powell** (vidéos)
-- 🎮 **Flexbox Froggy**, **Grid Garden**, **CSS Diner** (jeux d'apprentissage)
+- **MDN — CSS** : <https://developer.mozilla.org/fr/docs/Web/CSS>
+- **web.dev — Learn CSS** : <https://web.dev/learn/css>
+- **Spécifications du W3C (CSSWG)** : <https://www.w3.org/Style/CSS/>
+- **Baseline** : <https://web.dev/baseline> · **Can I use** : <https://caniuse.com>
+- **CSS-Tricks**, **Every Layout**, **Modern CSS Solutions**, **Kevin Powell** (vidéos)
+- **Flexbox Froggy**, **Grid Garden**, **CSS Diner** (jeux d'apprentissage)
 
 ---
 
 <div align="center">
 
-*Bon style ! 🎨*
+*Bon style !*
 
 </div>

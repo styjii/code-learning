@@ -1,0 +1,231 @@
+name: CI
+
+# Se lance sur les Pull Requests ET sur les push (toutes les branches).
+# Un push sur une branche qui a déjà une PR ouverte est ignoré (le job « contexte » le détecte avec gh) :
+# la CI de la PR le couvre déjà, sans exécuter tout deux fois.
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+  push:
+    branches: ["**"]
+
+# Une nouvelle exécution annule la précédente sur la même PR ; les push ne sont jamais annulés
+# (chaque commit de main garde son résultat).
+concurrency:
+  group: ci-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+permissions:
+  contents: read
+
+env:
+  # Dépôt visé, écrit en dur : gh n'a besoin ni d'un dossier .git ni du dépôt « courant » pour le trouver.
+  GH_REPO: styjii/code-learning
+  # Valeurs de test uniquement (aucun secret) : le démarrage de Django exige une clé.
+  DJANGO_SECRET_KEY: ci-only-not-a-secret
+  DJANGO_DEBUG: "1"
+
+jobs:
+  contexte:
+    name: Contexte (gh)
+    # Ne s'exécute que dans styjii/code-learning (pas dans un fork qui aurait copié le workflow).
+    if: ${{ github.repository == 'styjii/code-learning' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      pull-requests: read
+    env:
+      GH_TOKEN: ${{ github.token }}   # sans GH_TOKEN, gh refuse de s'authentifier dans Actions
+    outputs:
+      skip: ${{ steps.decide.outputs.skip }}
+    steps:
+      - name: Vérifier le dépôt visé et décider de l'exécution
+        id: decide
+        env:
+          EVENT: ${{ github.event_name }}
+          BRANCH: ${{ github.ref_name }}
+        run: |
+          gh repo view "$GH_REPO" --json nameWithOwner,isPrivate,defaultBranchRef \
+            --jq '"Dépôt : \(.nameWithOwner) (privé : \(.isPrivate)), branche par défaut : \(.defaultBranchRef.name)"'
+
+          skip=false
+          if [ "$EVENT" = "push" ]; then
+            # En cas d'échec de l'API, on exécute quand même (mieux vaut un doublon qu'une CI absente).
+            open=$(gh pr list --head "$BRANCH" --state open --json number --jq length 2>/dev/null || echo 0)
+            if [ "${open:-0}" -gt 0 ]; then
+              skip=true
+              echo "Push sur « $BRANCH » : une Pull Request ouverte le couvre déjà, exécution ignorée." | tee -a "$GITHUB_STEP_SUMMARY"
+            fi
+          fi
+          echo "skip=$skip" >> "$GITHUB_OUTPUT"
+
+  tests:
+    name: Tests (Python ${{ matrix.python }})
+    needs: contexte
+    if: ${{ needs.contexte.outputs.skip != 'true' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        python: ["3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+          cache: pip
+
+      - name: Installer les dépendances
+        run: pip install -r requirements.txt
+
+      - name: Vérifier la configuration Django
+        run: python manage.py check
+
+      - name: Vérifier qu'aucune migration ne manque
+        run: python manage.py makemigrations --check --dry-run
+
+      - name: Tests Django (accounts, editor, language)
+        run: python manage.py test accounts editor language
+
+      - name: Tests de la conversion Markdown
+        run: python -m pytest core -q
+
+  javascript:
+    name: Syntaxe JavaScript
+    needs: contexte
+    if: ${{ needs.contexte.outputs.skip != 'true' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Vérifier la syntaxe des modules du site
+        run: |
+          fail=0
+          tmp="$(mktemp -d)"
+          while IFS= read -r f; do
+            cp "$f" "$tmp/check.mjs"   # .mjs : syntaxe des modules ES (import / export)
+            node --check "$tmp/check.mjs" || { echo "::error file=$f::erreur de syntaxe"; fail=1; }
+          done < <(find editor/static/editor/js language/static webapp/static accounts/static static/js -name '*.js' ! -name '*.min.js')
+          exit $fail
+
+  # --- Pull Requests ------------------------------------------------------------------------------
+
+  pr-checks:
+    name: Vérifications de la PR (gh)
+    needs: contexte
+    if: ${{ github.event_name == 'pull_request' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      pull-requests: write   # étiquettes ; le jeton d'une PR venant d'un fork reste en lecture seule
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Analyser la Pull Request
+        env:
+          # Les PR de forks n'ont pas le droit d'écrire : pas d'étiquettes dans ce cas.
+          LABELS_ENABLED: ${{ github.event.pull_request.head.repo.full_name == env.GH_REPO && '1' || '0' }}
+        run: .github/scripts/pr-checks.sh "${{ github.event.pull_request.number }}"
+
+      - name: Conserver le rapport
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pr-report
+          path: pr-report.md
+          if-no-files-found: ignore
+
+  report:
+    name: Commentaire de synthèse
+    needs: [tests, javascript, pr-checks]
+    # Toujours exécuté, mais seulement pour les PR du dépôt (un fork ne peut pas commenter).
+    if: ${{ always() && github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == 'styjii/code-learning' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      pull-requests: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: pr-report
+
+      - name: Publier ou mettre à jour le commentaire
+        env:
+          PR: ${{ github.event.pull_request.number }}
+          TESTS: ${{ needs.tests.result }}
+          JS: ${{ needs.javascript.result }}
+          CHECKS: ${{ needs.pr-checks.result }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          icon() { [ "$1" = "success" ] && echo "✅" || echo "❌"; }
+          {
+            echo "## Résultat de l'intégration continue"
+            echo
+            echo "| Contrôle | Résultat |"
+            echo "|---|---|"
+            echo "| Tests Django et Markdown | $(icon "$TESTS") $TESTS |"
+            echo "| Syntaxe JavaScript | $(icon "$JS") $JS |"
+            echo "| Vérifications de la PR | $(icon "$CHECKS") $CHECKS |"
+            echo
+            [ -f pr-report.md ] && cat pr-report.md
+            echo
+            echo "[Détails de l'exécution]($RUN_URL)"
+          } > comment.md
+          # Un seul commentaire, mis à jour à chaque push. « --create-if-none » n'existe que dans les gh récents :
+          # à défaut, on publie un nouveau commentaire.
+          gh pr comment "$PR" --edit-last --create-if-none --body-file comment.md \
+            || gh pr comment "$PR" --body-file comment.md
+
+      - name: Échouer si un contrôle a échoué
+        if: ${{ needs.tests.result != 'success' || needs.javascript.result != 'success' || needs.pr-checks.result != 'success' }}
+        run: exit 1
+
+  # --- Push ---------------------------------------------------------------------------------------
+
+  push-checks:
+    name: Vérifications du push (gh)
+    needs: contexte
+    if: ${{ github.event_name == 'push' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      pull-requests: read
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Aucun fichier sensible versionné
+        run: |
+          bad=$(git ls-files | grep -E '(^|/)(\.env|db\.sqlite3)$|__pycache__/|\.pyc$' || true)
+          if [ -n "$bad" ]; then
+            echo "::error::Fichiers à ne pas versionner (secrets, base de données, caches) :"
+            echo "$bad"
+            exit 1
+          fi
+          echo "Aucun fichier sensible versionné."
+
+      - name: Pull Requests liées à ce commit
+        env:
+          SHA: ${{ github.sha }}
+        run: |
+          {
+            echo "### Pull Requests liées au commit \`${SHA::7}\`"
+            prs=$(gh api "repos/${GH_REPO}/commits/${SHA}/pulls" --jq '.[] | "- #\(.number) \(.title) (\(.state))"')
+            echo "${prs:-_Aucune._}"
+          } | tee -a "$GITHUB_STEP_SUMMARY"
