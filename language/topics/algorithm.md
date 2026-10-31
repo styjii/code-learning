@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🧮 Algorithmique — Guide complet
+# Algorithmique — Guide complet
 
 **Des fondements à la programmation dynamique, aux graphes et aux flots**
 
@@ -10,18 +10,18 @@
 
 ---
 
-## 🧰 Outils
+## Outils
 
 | Ressource | Lien |
 | --- | --- |
-| 📝 Exercices | [exercise](/language/exercises/algorithm) |
-| ✅ Solutions | [solutions](/language/solutions/algorithm) |
+| Exercices | [exercise](/language/exercises/algorithm) |
+| Solutions | [solutions](/language/solutions/algorithm) |
 
 ---
 
-## 🗂️ Sommaire
+## Sommaire
 
-**🟢 Niveau débutant**
+**Niveau débutant**
 
 1. [Introduction aux algorithmes](#1-introduction-aux-algorithmes)
 2. [Analyse des algorithmes](#2-analyse-des-algorithmes)
@@ -31,7 +31,7 @@
 6. [Algorithmes de recherche](#6-algorithmes-de-recherche)
 7. [Algorithmes mathématiques de base](#7-algorithmes-mathématiques-de-base)
 
-**🟡 Niveau intermédiaire**
+**Niveau intermédiaire**
 
 8. [Algorithmes de tri avancés](#8-algorithmes-de-tri-avancés)
 9. [Diviser pour régner](#9-diviser-pour-régner)
@@ -44,7 +44,7 @@
 16. [Algorithmes de théorie des nombres](#16-algorithmes-de-théorie-des-nombres)
 17. [Hachage](#17-hachage)
 
-**🔴 Niveau avancé**
+**Niveau avancé**
 
 18. [Programmation dynamique](#18-programmation-dynamique)
 19. [Algorithmes sur les graphes](#19-algorithmes-sur-les-graphes)
@@ -55,11 +55,11 @@
 24. [Algorithmes sur les chaînes](#24-algorithmes-sur-les-chaînes)
 25. [Aller plus loin](#25-aller-plus-loin)
 
-> 💡 **Légende** : *(ajout)* = notion absente du guide d'origine ; *(à jour)* = correction ou mise à jour ; les exemples utilisent Python, mais les idées s'appliquent à tout langage.
+> **Légende** : *(ajout)* = notion absente du guide d'origine ; *(à jour)* = correction ou mise à jour ; les exemples utilisent Python, mais les idées s'appliquent à tout langage.
 
 ---
 
-# 🟢 Niveau débutant
+# Niveau débutant
 
 ---
 
@@ -80,7 +80,7 @@ Un **algorithme** est une **suite finie d'instructions précises et non ambiguë
 | **Efficacité** | Chaque étape est réalisable (assez simple pour être exécutée) |
 | **Correction** | Il donne le résultat attendu pour **toute** entrée valide |
 
-> 🍳 **Analogie** : une **recette de cuisine**. Les ingrédients sont l'entrée, les étapes sont l'algorithme, le plat est la sortie. Une recette imprécise ou infinie n'est pas un algorithme.
+> **Analogie** : une **recette de cuisine**. Les ingrédients sont l'entrée, les étapes sont l'algorithme, le plat est la sortie. Une recette imprécise ou infinie n'est pas un algorithme.
 
 ```python
 def maximum(valeurs):
@@ -160,7 +160,7 @@ print((a + b + c) / 3)    # 12.0
 | 5. **Analyser** | Complexité en temps et en espace |
 | 6. **Coder et tester** | Jeux de tests, cas limites, comparaison avec la solution naïve |
 
-> 💡 Les contraintes **guident** le choix : `n ≤ 20` → exponentiel acceptable ; `n ≤ 5 000` → O(n²) ; `n ≤ 10⁵` à `10⁶` → O(n log n) ou O(n).
+> Les contraintes **guident** le choix : `n ≤ 20` → exponentiel acceptable ; `n ≤ 5 000` → O(n²) ; `n ≤ 10⁵` à `10⁶` → O(n log n) ou O(n).
 
 ## 1.6 Grandes familles d'algorithmes
 
@@ -181,7 +181,7 @@ print((a + b + c) / 3)    # 12.0
 | --- | --- | --- |
 | Nature | **Idée** abstraite, indépendante du langage | **Implémentation** concrète |
 | Forme | Pseudo-code, schéma, texte | Code source dans un langage |
-| Dépend de la machine | ❌ | ✅ |
+| Dépend de la machine | Non | Oui |
 | Finitude | Obligatoire | Peut tourner indéfiniment (serveur, jeu) |
 | Exemple | « Trier par fusion » | `sorted(liste)` en Python |
 
@@ -231,16 +231,16 @@ Ces notations décrivent la **croissance d'une fonction** `f(n)` :
 | **Θ(g(n))** | `f` est à la fois O(g) et Ω(g) | `f` croît **exactement** comme `g` (**borne serrée**) |
 | **o(g(n))** | `f(n)/g(n) → 0` | `f` croît **strictement moins vite** |
 
-> ⚠️ **Idée reçue à éviter** : « O = pire cas, Ω = meilleur cas, Θ = cas moyen ». **C'est faux.**
+> **Idée reçue à éviter** : « O = pire cas, Ω = meilleur cas, Θ = cas moyen ». **C'est faux.**
 > `O`, `Ω` et `Θ` sont des **bornes sur une fonction**, pas des « cas ». Les **cas** (pire, meilleur, moyen) sont **trois fonctions différentes** de `n`, et pour **chacune** on peut donner une borne `O`, `Ω` ou `Θ`.
 >
 > *Exemple (recherche linéaire)* : pire cas `T(n) = n` → Θ(n) ; meilleur cas `T(n) = 1` → Θ(1) ; cas moyen `T(n) ≈ n/2` → Θ(n). On dit couramment « la recherche linéaire est en O(n) » : c'est une **garantie valable dans tous les cas**.
 
 ```text
 Exemple : f(n) = 3n² + 5n
-   f ∈ Θ(n²)   ✅ (borne serrée)
-   f ∈ O(n²), O(n³), O(2ⁿ)  ✅ (bornes supérieures, de moins en moins précises)
-   f ∈ Ω(n²), Ω(n), Ω(1)    ✅ (bornes inférieures)
+   f ∈ Θ(n²)                (borne serrée)
+   f ∈ O(n²), O(n³), O(2ⁿ)  (bornes supérieures, de moins en moins précises)
+   f ∈ Ω(n²), Ω(n), Ω(1)    (bornes inférieures)
 ```
 
 ## 2.4 Pire, meilleur et cas moyen
@@ -268,16 +268,16 @@ Exemple : f(n) = 3n² + 5n
 | O(√n) | Racine carrée | Test de primalité naïf | 1 000 |
 | O(n) | Linéaire | Parcours | 10⁶ |
 | O(n log n) | Quasi-linéaire | Tri efficace | 2 × 10⁷ |
-| O(n²) | Quadratique | Deux boucles imbriquées | 10¹² ❌ |
-| O(n³) | Cubique | Floyd-Warshall | ❌ |
-| O(2ⁿ) | Exponentielle | Sous-ensembles | ❌ dès `n ≈ 40` |
-| O(n!) | Factorielle | Permutations | ❌ dès `n ≈ 12` |
+| O(n²) | Quadratique | Deux boucles imbriquées | 10¹² (trop lent) |
+| O(n³) | Cubique | Floyd-Warshall | trop lent |
+| O(2ⁿ) | Exponentielle | Sous-ensembles | trop lent dès `n ≈ 40` |
+| O(n!) | Factorielle | Permutations | trop lent dès `n ≈ 12` |
 
 ```text
 Ordre de croissance :  1  <  log n  <  √n  <  n  <  n log n  <  n²  <  n³  <  2ⁿ  <  n!
 ```
 
-> 🎯 **Règle pratique** : un ordinateur moderne effectue environ **10⁸ opérations simples par seconde** en langage compilé (C++), et **~10⁷** en Python pur. Cela permet d'estimer si une solution passera dans un délai donné.
+> **Règle pratique** : un ordinateur moderne effectue environ **10⁸ opérations simples par seconde** en langage compilé (C++), et **~10⁷** en Python pur. Cela permet d'estimer si une solution passera dans un délai donné.
 
 ## 2.6 Complexité en espace
 
@@ -365,7 +365,7 @@ pile.pop()                      # 2 (dernier entré, premier sorti)
 file = deque()
 file.append(1); file.append(2)
 file.popleft()                  # 1 (premier entré, premier sorti) — O(1)
-# ⚠️ list.pop(0) est en O(n) : utilisez deque pour une file
+# Attention : list.pop(0) est en O(n) : utilisez deque pour une file
 ```
 
 ## 3.3 Liste chaînée
@@ -381,6 +381,15 @@ def inverser(tete):
     while tete:
         tete.suivant, precedent, tete = precedent, tete, tete.suivant
     return precedent
+
+# Démonstration : 1 → 2 → 3 devient 3 → 2 → 1
+tete = Noeud(1, Noeud(2, Noeud(3)))
+tete = inverser(tete)
+valeurs = []
+while tete:
+    valeurs.append(tete.valeur)
+    tete = tete.suivant
+print(valeurs)                   # [3, 2, 1]
 ```
 
 ## 3.4 Tas et file de priorité
@@ -393,11 +402,22 @@ import heapq
 tas = []
 for x in [5, 1, 8, 3]:
     heapq.heappush(tas, x)
-heapq.heappop(tas)               # 1 (le plus petit)
+print(heapq.heappop(tas))        # 1 (le plus petit)
+
+liste = [9, 4, 7, 1, 8]
 heapq.heapify(liste)             # transforme une liste en tas en O(n)
-heapq.nsmallest(3, liste)        # les 3 plus petits
-heapq.heappush(tas, (priorite, element))     # file de priorité avec des tuples
-heapq.heappush(tas, -x)          # astuce tas-max : stocker l'opposé
+print(liste[0])                  # 1 : le minimum est toujours en tête
+print(heapq.nsmallest(3, [9, 4, 7, 1, 8]))    # [1, 4, 7] : les 3 plus petits
+
+taches = []                      # file de priorité avec des tuples (priorité, élément)
+heapq.heappush(taches, (2, "écrire"))
+heapq.heappush(taches, (1, "lire"))
+print(heapq.heappop(taches))     # (1, 'lire')
+
+tas_max = []                     # astuce tas-max : stocker l'opposé
+for x in [5, 1, 8, 3]:
+    heapq.heappush(tas_max, -x)
+print(-heapq.heappop(tas_max))   # 8 (le plus grand)
 ```
 
 ## 3.5 Arbres
@@ -412,6 +432,11 @@ def parcours_infixe(n):                    # gauche, racine, droite (trié pour 
         yield from parcours_infixe(n.gauche)
         yield n.valeur
         yield from parcours_infixe(n.droite)
+
+# Démonstration : arbre de recherche  2 ← 4 → 6
+racine = NoeudArbre(4)
+racine.gauche, racine.droite = NoeudArbre(2), NoeudArbre(6)
+print(list(parcours_infixe(racine)))    # [2, 4, 6] : ordre trié
 ```
 
 | Parcours | Ordre |
@@ -444,7 +469,7 @@ Un **arbre binaire de recherche** (ABR) maintient `gauche < racine < droite` : r
 
 Une fonction est **récursive** quand elle **s'appelle elle-même** pour résoudre une version plus petite du même problème.
 
-> 🪆 **Analogie** : des poupées russes : on ouvre chacune jusqu'à la plus petite.
+> **Analogie** : des poupées russes : on ouvre chacune jusqu'à la plus petite.
 
 ```python
 def factorielle(n):
@@ -510,8 +535,12 @@ def hanoi(n, source, cible, aide):            # O(2ⁿ)
     print(f"Déplacer le disque {n} : {source} → {cible}")
     hanoi(n - 1, aide, cible, source)
 
-def fib(n):                                   # ❌ O(2ⁿ) : à ne pas utiliser tel quel
+def fib(n):                                   # O(2ⁿ) : à ne pas utiliser tel quel
     return n if n < 2 else fib(n - 1) + fib(n - 2)
+
+print(somme([1, 2, 3]), inverser_chaine("abc"), est_palindrome("kayak"), puissance(2, 10))   # 6 cba True 1024
+hanoi(2, "A", "C", "B")                       # 3 déplacements
+print(fib(10))                                # 55
 ```
 
 ### Corriger Fibonacci : mémoïsation
@@ -529,12 +558,12 @@ def fib(n):
 
 | | Récursivité | Itération |
 | --- | --- | --- |
-| Lisibilité | ✅ Très naturelle (arbres, diviser pour régner) | Parfois plus lourde |
+| Lisibilité | Très naturelle (arbres, diviser pour régner) | Parfois plus lourde |
 | Mémoire | O(profondeur) | O(1) souvent |
 | Vitesse | Surcoût des appels | Plus rapide |
 | Limite | Profondeur de pile | Aucune |
 
-> ℹ️ Python **n'optimise pas la récursion terminale** : une boucle ou une pile explicite est préférable pour de grandes profondeurs.
+> Python **n'optimise pas la récursion terminale** : une boucle ou une pile explicite est préférable pour de grandes profondeurs.
 
 ## 4.7 Quand l'utiliser ?
 
@@ -567,6 +596,8 @@ def tri_bulles(t):
         if not echange:          # déjà trié : arrêt anticipé → meilleur cas O(n)
             break
     return t
+
+print(tri_bulles([5, 2, 9, 1]))          # [1, 2, 5, 9]
 ```
 
 Complexité : **O(n²)** pire et moyen, **O(n)** meilleur cas (avec arrêt anticipé) · espace O(1) · **stable**.
@@ -581,6 +612,8 @@ def tri_selection(t):
         m = min(range(i, len(t)), key=t.__getitem__)
         t[i], t[m] = t[m], t[i]
     return t
+
+print(tri_selection([5, 2, 9, 1]))        # [1, 2, 5, 9]
 ```
 
 **Θ(n²)** dans tous les cas · espace O(1) · **non stable** · fait **peu d'échanges** (au plus n − 1).
@@ -599,6 +632,8 @@ def tri_insertion(t):
             j -= 1
         t[j + 1] = cle
     return t
+
+print(tri_insertion([5, 2, 9, 1]))        # [1, 2, 5, 9]
 ```
 
 **O(n²)** pire et moyen, **O(n)** si presque trié · espace O(1) · **stable** · **excellent sur de petites listes ou des listes presque triées** (utilisé comme brique dans Timsort).
@@ -607,11 +642,11 @@ def tri_insertion(t):
 
 | Tri | Meilleur | Moyen | Pire | Espace | Stable | Remarque |
 | --- | --- | --- | --- | --- | --- | --- |
-| **Bulles** | O(n) | O(n²) | O(n²) | O(1) | ✅ | Pédagogique uniquement |
-| **Sélection** | O(n²) | O(n²) | O(n²) | O(1) | ❌ | Peu d'échanges |
-| **Insertion** | O(n) | O(n²) | O(n²) | O(1) | ✅ | Rapide sur petites / presque triées |
+| **Bulles** | O(n) | O(n²) | O(n²) | O(1) | Oui | Pédagogique uniquement |
+| **Sélection** | O(n²) | O(n²) | O(n²) | O(1) | Non | Peu d'échanges |
+| **Insertion** | O(n) | O(n²) | O(n²) | O(1) | Oui | Rapide sur petites / presque triées |
 
-> 🐍 **En pratique** : utilisez `sorted(t)` ou `t.sort()` (**Timsort**, stable, O(n log n) pire cas, O(n) si déjà trié). Voir [section 8](#8-algorithmes-de-tri-avancés).
+> **En pratique** : utilisez `sorted(t)` ou `t.sort()` (**Timsort**, stable, O(n log n) pire cas, O(n) si déjà trié). Voir [section 8](#8-algorithmes-de-tri-avancés).
 
 ---
 
@@ -627,6 +662,8 @@ def recherche_lineaire(t, cible):
         if x == cible:
             return i
     return -1
+
+print(recherche_lineaire([4, 8, 15], 15), recherche_lineaire([4, 8, 15], 3))   # 2 -1
 ```
 
 **O(n)** pire cas, O(1) meilleur cas · O(1) espace.
@@ -663,9 +700,11 @@ bisect_left(t, 2)          # 1 : première position où insérer 2 (premier inde
 bisect_right(t, 2)         # 4 : après le dernier 2
 bisect_right(t, 2) - bisect_left(t, 2)    # 3 : nombre d'occurrences
 insort(t, 2)               # insère en gardant la liste triée (O(n) à cause du décalage)
+
+print(t)                   # [1, 2, 2, 2, 2, 3]
 ```
 
-> ⚠️ Pièges classiques : **boucle infinie** (`bas = milieu` au lieu de `milieu + 1`), **condition `bas <= haut`** oubliée, liste **non triée**.
+> **Pièges classiques** : **boucle infinie** (`bas = milieu` au lieu de `milieu + 1`), **condition `bas <= haut`** oubliée, liste **non triée**.
 
 ## 6.3 Comparaison
 
@@ -675,7 +714,7 @@ insort(t, 2)               # insère en gardant la liste triée (O(n) à cause d
 | Temps | O(n) | **O(log n)** |
 | Quand | Petite liste, une seule recherche | Nombreuses recherches sur des données triées |
 
-> 💡 Pour des appartenances **fréquentes** sur des données **non ordonnées**, un `set` (O(1)) est encore plus efficace.
+> Pour des appartenances **fréquentes** sur des données **non ordonnées**, un `set` (O(1)) est encore plus efficace.
 
 ---
 
@@ -773,7 +812,7 @@ bin(10), int("1010", 2) # conversions de base
 
 ---
 
-# 🟡 Niveau intermédiaire
+# Niveau intermédiaire
 
 ---
 
@@ -783,14 +822,14 @@ bin(10), int("1010", 2) # conversions de base
 
 | Tri | Meilleur | Moyen | Pire | Espace | Stable | Principe |
 | --- | --- | --- | --- | --- | --- | --- |
-| **Fusion** (*merge*) | O(n log n) | O(n log n) | O(n log n) | O(n) | ✅ | Diviser pour régner |
-| **Rapide** (*quick*) | O(n log n) | O(n log n) | **O(n²)** | O(log n) | ❌ | Partitionnement autour d'un pivot |
-| **Par tas** (*heap*) | O(n log n) | O(n log n) | O(n log n) | **O(1)** | ❌ | Tas binaire |
-| **Par comptage** | O(n + k) | O(n + k) | O(n + k) | O(k) | ✅ | Compter les occurrences |
-| **Radix** (par base) | O(d(n + k)) | O(d(n + k)) | O(d(n + k)) | O(n + k) | ✅ | Tri chiffre par chiffre |
-| **Timsort** (Python, Java) | **O(n)** | O(n log n) | O(n log n) | O(n) | ✅ | Fusion + insertion, exploite les séquences déjà triées |
+| **Fusion** (*merge*) | O(n log n) | O(n log n) | O(n log n) | O(n) | Oui | Diviser pour régner |
+| **Rapide** (*quick*) | O(n log n) | O(n log n) | **O(n²)** | O(log n) | Non | Partitionnement autour d'un pivot |
+| **Par tas** (*heap*) | O(n log n) | O(n log n) | O(n log n) | **O(1)** | Non | Tas binaire |
+| **Par comptage** | O(n + k) | O(n + k) | O(n + k) | O(k) | Oui | Compter les occurrences |
+| **Radix** (par base) | O(d(n + k)) | O(d(n + k)) | O(d(n + k)) | O(n + k) | Oui | Tri chiffre par chiffre |
+| **Timsort** (Python, Java) | **O(n)** | O(n log n) | O(n log n) | O(n) | Oui | Fusion + insertion, exploite les séquences déjà triées |
 
-> 📐 **Borne inférieure** : tout tri **par comparaisons** exige **Ω(n log n)** comparaisons dans le pire cas. Seuls les tris **sans comparaison** (comptage, radix) font mieux, sous hypothèses sur les clés.
+> **Borne inférieure** : tout tri **par comparaisons** exige **Ω(n log n)** comparaisons dans le pire cas. Seuls les tris **sans comparaison** (comptage, radix) font mieux, sous hypothèses sur les clés.
 
 ## 8.2 Tri fusion (*Merge Sort*)
 
@@ -810,6 +849,8 @@ def tri_fusion(t):
         else:
             resultat.append(droite[j]); j += 1
     return resultat + gauche[i:] + droite[j:]
+
+print(tri_fusion([5, 2, 9, 1, 5]))      # [1, 2, 5, 5, 9]
 ```
 
 **Θ(n log n)** garanti · O(n) espace · stable · idéal pour les **listes chaînées** et le **tri externe** (fichiers énormes). Récurrence : `T(n) = 2T(n/2) + O(n)`.
@@ -829,6 +870,8 @@ def tri_rapide(t):
     egaux   = [x for x in t if x == pivot]
     plus    = [x for x in t if x > pivot]
     return tri_rapide(moins) + egaux + tri_rapide(plus)
+
+print(tri_rapide([5, 2, 9, 1, 5]))      # [1, 2, 5, 5, 9]
 ```
 
 ### Version en place (partition de Lomuto)
@@ -848,6 +891,10 @@ def tri_rapide_en_place(t, bas=0, haut=None):
         t[p], t[haut] = t[haut], t[p]
         tri_rapide_en_place(t, bas, p - 1)
         tri_rapide_en_place(t, p + 1, haut)
+
+liste = [5, 2, 9, 1, 5]
+tri_rapide_en_place(liste)
+print(liste)                       # [1, 2, 5, 5, 9]
 ```
 
 - **Moyen O(n log n)**, **pire O(n²)** (pivot toujours extrême : pivot fixe sur liste triée).
@@ -866,6 +913,8 @@ def tri_par_tas(t):
     tas = list(t)
     heapq.heapify(tas)                            # O(n)
     return [heapq.heappop(tas) for _ in range(len(tas))]   # n × O(log n)
+
+print(tri_par_tas([5, 2, 9, 1, 5]))      # [1, 2, 5, 5, 9]
 ```
 
 **Θ(n log n)** garanti ; la version ci-dessus utilise O(n) d'espace, alors que la version « en place » classique n'en utilise que O(1) (non stable). Moins rapide que quicksort en pratique (mauvaise localité).
@@ -880,6 +929,8 @@ def tri_comptage(t, k):
     for x in t:
         compte[x] += 1
     return [v for v, c in enumerate(compte) for _ in range(c)]
+
+print(tri_comptage([3, 1, 3, 0, 2], 3))   # [0, 1, 2, 3, 3]
 ```
 
 **O(n + k)** · utile si `k = O(n)`. (La version stable avec sommes cumulées sert de brique au radix.)
@@ -899,6 +950,8 @@ def tri_radix(t):
         t = [x for seau in seaux for x in seau]
         exp *= 10
     return t
+
+print(tri_radix([170, 45, 75, 90, 802, 24, 2, 66]))   # [2, 24, 45, 66, 75, 90, 170, 802]
 ```
 
 **O(d · (n + b))** (`d` chiffres, base `b`). Pour entiers positifs ou chaînes de longueur fixe.
@@ -946,7 +999,7 @@ sorted(t, reverse=True)
 | k-ième élément | Quickselect | O(n) en moyenne |
 | Transformée de Fourier rapide | FFT | O(n log n) |
 
-> ℹ️ **Diviser pour régner ≠ programmation dynamique** : ici les sous-problèmes sont **indépendants** ; en DP ils se **chevauchent** (et on les mémorise).
+> **Diviser pour régner ≠ programmation dynamique** : ici les sous-problèmes sont **indépendants** ; en DP ils se **chevauchent** (et on les mémorise).
 
 ## 9.2 Exemple : maximum d'une liste
 
@@ -957,6 +1010,8 @@ def maximum_dc(t, bas=0, haut=None):
         return t[bas]
     milieu = (bas + haut) // 2
     return max(maximum_dc(t, bas, milieu), maximum_dc(t, milieu + 1, haut))
+
+print(maximum_dc([3, 8, 2, 9, 4]))        # 9
 ```
 
 ## 9.3 Exemple : sous-tableau de somme maximale
@@ -976,9 +1031,11 @@ def somme_max(t, bas=0, haut=None):
         s += t[i]; meilleur_d = max(meilleur_d, s)
 
     return max(somme_max(t, bas, m), somme_max(t, m + 1, haut), meilleur_g + meilleur_d)
+
+print(somme_max([-2, 1, -3, 4, -1, 2, 1, -5, 4]))   # 6
 ```
 
-> 💡 L'**algorithme de Kadane** résout ce problème en **O(n)** : `courant = max(x, courant + x)`.
+> L'**algorithme de Kadane** résout ce problème en **O(n)** : `courant = max(x, courant + x)`.
 
 ## 9.4 Quickselect : le k-ième plus petit élément
 
@@ -994,6 +1051,8 @@ def quickselect(t, k):                       # k = 0 pour le minimum
     if k < len(moins) + len(egaux):
         return pivot
     return quickselect([x for x in t if x > pivot], k - len(moins) - len(egaux))
+
+print(quickselect([7, 1, 5, 3, 9], 2))     # 5 (le 3e plus petit)
 ```
 
 **O(n)** en moyenne, O(n²) au pire (la **médiane des médianes** garantit O(n)).
@@ -1030,7 +1089,7 @@ C11 = M1 + M4 − M5 + M7         C12 = M3 + M5
 C21 = M2 + M4                   C22 = M1 − M2 + M3 + M6
 ```
 
-> 📈 *(à jour)* L'exposant optimal ω de la multiplication matricielle reste un problème ouvert : les meilleures bornes **théoriques** actuelles sont d'environ **2,37**, mais ces algorithmes sont **impraticables** (constantes énormes). En pratique, on utilise l'algorithme naïf optimisé (BLAS, cache, parallélisme) ou, pour de grandes tailles, Strassen.
+> *(à jour)* L'exposant optimal ω de la multiplication matricielle reste un problème ouvert : les meilleures bornes **théoriques** actuelles sont d'environ **2,37**, mais ces algorithmes sont **impraticables** (constantes énormes). En pratique, on utilise l'algorithme naïf optimisé (BLAS, cache, parallélisme) ou, pour de grandes tailles, Strassen.
 
 ---
 
@@ -1040,7 +1099,7 @@ C21 = M2 + M4                   C22 = M1 − M2 + M3 + M6
 
 Un algorithme **glouton** (*greedy*) construit la solution en faisant, à chaque étape, **le choix localement optimal**, sans jamais revenir en arrière.
 
-| ✅ Avantages | ❌ Limites |
+| Avantages | Limites |
 | --- | --- |
 | Simples et rapides (souvent O(n log n)) | Optimal **seulement si** le problème s'y prête |
 | Peu de mémoire | Le choix local peut mener à un mauvais résultat global |
@@ -1080,7 +1139,7 @@ print(selection_activites([(1, 4), (3, 5), (0, 6), (5, 7), (8, 9), (5, 9)]))
 # [(1, 4), (5, 7), (8, 9)]
 ```
 
-**O(n log n)** (le tri domine). ⚠️ Trier par **début** ou par **durée** ne donne **pas** l'optimum.
+**O(n log n)** (le tri domine). Attention : trier par **début** ou par **durée** ne donne **pas** l'optimum.
 
 ## 10.5 Sac à dos fractionnaire
 
@@ -1101,7 +1160,7 @@ def sac_a_dos_fractionnaire(objets, capacite):    # objets : (valeur, poids)
 print(sac_a_dos_fractionnaire([(60, 10), (100, 20), (120, 30)], 50))   # 240.0
 ```
 
-> ⚠️ Pour le **sac à dos 0/1** (objets indivisibles), le glouton n'est **plus optimal** : il faut la **programmation dynamique** (section 18).
+> **Attention** : pour le **sac à dos 0/1** (objets indivisibles), le glouton n'est **plus optimal** : il faut la **programmation dynamique** (section 18).
 
 ## 10.6 Codage de Huffman
 
@@ -1154,7 +1213,9 @@ def monnaie_gloutonne(pieces, montant):
             montant -= p; rendu.append(p)
     return rendu
 
-monnaie_gloutonne([1, 3, 4], 6)    # [4, 1, 1] → 3 pièces ❌ ; l'optimum est [3, 3] → 2 pièces
+monnaie_gloutonne([1, 3, 4], 6)    # [4, 1, 1] → 3 pièces (non optimal) ; l'optimum est [3, 3] → 2 pièces
+
+print(monnaie_gloutonne([1, 3, 4], 6))
 ```
 
 Pour des systèmes de pièces arbitraires, utilisez la **programmation dynamique**.
@@ -1184,15 +1245,27 @@ Arbre de recherche :        choix 1 ── choix 2 ── choix 3 ✗ (impasse)
 ## 11.2 Schéma général
 
 ```python
-def retour_sur_trace(etat, solutions):
+def retour_sur_trace(etat, solutions, est_complet, candidats, est_valide, appliquer, annuler):
     if est_complet(etat):                    # solution trouvée
-        solutions.append(copie(etat))
+        solutions.append(list(etat))         # copie de l'état courant
         return
     for choix in candidats(etat):
         if est_valide(etat, choix):          # élagage : on ne continue que si c'est prometteur
             appliquer(etat, choix)           # 1. choisir
-            retour_sur_trace(etat, solutions)    # 2. explorer
+            retour_sur_trace(etat, solutions, est_complet, candidats, est_valide, appliquer, annuler)  # 2. explorer
             annuler(etat, choix)             # 3. défaire (backtrack)
+
+# Application : toutes les permutations de {1, 2, 3}
+solutions = []
+retour_sur_trace(
+    [], solutions,
+    est_complet=lambda etat: len(etat) == 3,
+    candidats=lambda etat: [1, 2, 3],
+    est_valide=lambda etat, c: c not in etat,        # élagage : pas de répétition
+    appliquer=lambda etat, c: etat.append(c),
+    annuler=lambda etat, c: etat.pop(),
+)
+print(solutions)    # 6 permutations : [[1, 2, 3], [1, 3, 2], [2, 1, 3], ...]
 ```
 
 ## 11.3 Exemple : sous-ensembles et permutations
@@ -1220,9 +1293,12 @@ def permutations(t):
     aller(0)
     return resultat                           # n! permutations
 
+print(len(sous_ensembles([1, 2, 3])))         # 8 = 2³
+print(len(permutations([1, 2, 3])))           # 6 = 3!
+
 # Équivalents de la bibliothèque standard
 from itertools import permutations as perms, combinations
-list(combinations([1, 2, 3], 2))              # [(1, 2), (1, 3), (2, 3)]
+print(list(combinations([1, 2, 3], 2)))       # [(1, 2), (1, 3), (2, 3)]
 ```
 
 ## 11.4 Problème des N reines
@@ -1274,9 +1350,17 @@ def resoudre_sudoku(grille):                   # grille 9×9, 0 = case vide
                         grille[l][c] = 0           # retour en arrière
                 return False                        # aucune valeur possible : impasse
     return True                                     # grille complète
+
+grille = [
+    [5, 3, 0, 0, 7, 0, 0, 0, 0], [6, 0, 0, 1, 9, 5, 0, 0, 0], [0, 9, 8, 0, 0, 0, 0, 6, 0],
+    [8, 0, 0, 0, 6, 0, 0, 0, 3], [4, 0, 0, 8, 0, 3, 0, 0, 1], [7, 0, 0, 0, 2, 0, 0, 0, 6],
+    [0, 6, 0, 0, 0, 0, 2, 8, 0], [0, 0, 0, 4, 1, 9, 0, 0, 5], [0, 0, 0, 0, 8, 0, 0, 7, 9],
+]
+print(resoudre_sudoku(grille))      # True
+print(grille[0])                    # [5, 3, 4, 6, 7, 8, 9, 1, 2]
 ```
 
-> ⚡ **Optimisation** : choisir d'abord la case ayant **le moins de valeurs possibles** (heuristique MRV) ; suivre les valeurs possibles avec des **masques de bits**.
+> **Optimisation** : choisir d'abord la case ayant **le moins de valeurs possibles** (heuristique MRV) ; suivre les valeurs possibles avec des **masques de bits**.
 
 ## 11.6 Autres problèmes classiques
 
@@ -1295,11 +1379,11 @@ Pire cas **exponentiel** (O(2ⁿ), O(n!)…) : l'élagage améliore beaucoup la 
 | | Retour sur trace | Glouton | Programmation dynamique |
 | --- | --- | --- | --- |
 | Exploration | Exhaustive avec élagage | Un seul chemin | Sous-problèmes mémorisés |
-| Revient en arrière | ✅ | ❌ | — |
+| Revient en arrière | Oui | Non | — |
 | Sous-problèmes répétés | Souvent recalculés | — | **Mémorisés** |
-| Garantie d'optimalité | ✅ (exhaustif) | ❌ | ✅ |
+| Garantie d'optimalité | Oui (exhaustif) | Non | Oui |
 
-> 💡 Si l'on observe des **sous-problèmes qui se répètent**, ajoutez de la **mémoïsation** : le retour sur trace devient de la programmation dynamique.
+> Si l'on observe des **sous-problèmes qui se répètent**, ajoutez de la **mémoïsation** : le retour sur trace devient de la programmation dynamique.
 
 ---
 
@@ -1327,6 +1411,8 @@ def deux_somme_trie(t, cible):
         if s < cible: g += 1          # il faut une somme plus grande
         else:         d -= 1          # il faut une somme plus petite
     return None
+
+print(deux_somme_trie([1, 3, 4, 6, 9], 10))   # (0, 4) car 1 + 9 = 10
 ```
 
 **O(n)** (après un éventuel tri O(n log n)). Sur un tableau **non trié**, un `dict` donne aussi O(n) (section 17).
@@ -1371,11 +1457,21 @@ def aire_max_conteneur(h):                    # « Container With Most Water »
         if h[g] < h[d]: g += 1
         else: d -= 1
     return meilleur
+
+print(est_palindrome("Esope reste ici et se repose"))      # True
+t = [1, 1, 2, 2, 3]
+print(supprimer_doublons_tries(t), t[:3])                # 3 [1, 2, 3]
+print(trois_somme([-1, 0, 1, 2, -1, -4]))                # [(-1, -1, 2), (-1, 0, 1)]
+print(aire_max_conteneur([1, 8, 6, 2, 5, 4, 8, 3, 7]))   # 49
 ```
 
 ### Détection de cycle (lièvre et tortue de Floyd)
 
 ```python
+class Noeud:                                  # même classe qu'en 3.3
+    def __init__(self, valeur, suivant=None):
+        self.valeur, self.suivant = valeur, suivant
+
 def a_un_cycle(tete):
     lent = rapide = tete
     while rapide and rapide.suivant:
@@ -1383,6 +1479,12 @@ def a_un_cycle(tete):
         if lent is rapide:
             return True
     return False
+
+a, b, c = Noeud(1), Noeud(2), Noeud(3)
+a.suivant, b.suivant = b, c
+print(a_un_cycle(a))                          # False
+c.suivant = a                                 # on referme la boucle
+print(a_un_cycle(a))                          # True
 ```
 
 ## 12.4 Quand l'utiliser ?
@@ -1414,6 +1516,8 @@ def somme_max_fenetre(t, k):
         somme += t[i] - t[i - k]              # entre t[i], sort t[i-k]
         meilleur = max(meilleur, somme)
     return meilleur
+
+print(somme_max_fenetre([2, 1, 5, 1, 3, 2], 3))   # 9
 ```
 
 ## 13.3 Taille variable : plus longue sous-chaîne sans répétition
@@ -1444,9 +1548,11 @@ def plus_court_sous_tableau(t, S):
             meilleur = min(meilleur, d - g + 1)
             somme -= t[g]; g += 1
     return 0 if meilleur == float("inf") else meilleur
+
+print(plus_court_sous_tableau([2, 3, 1, 2, 4, 3], 7))   # 2 (4 + 3)
 ```
 
-> ⚠️ Cette méthode suppose des **valeurs positives** : avec des négatifs, utilisez les sommes préfixes + table de hachage.
+> **Attention** : cette méthode suppose des **valeurs positives** : avec des négatifs, utilisez les sommes préfixes + table de hachage.
 
 ## 13.5 Maximum de chaque fenêtre : file monotone *(ajout)*
 
@@ -1464,6 +1570,8 @@ def maximums_fenetres(t, k):
         if i >= k - 1:
             res.append(t[dq[0]])
     return res                                  # O(n) amorti
+
+print(maximums_fenetres([1, 3, -1, -3, 5, 3, 6, 7], 3))   # [3, 3, 5, 5, 6, 7]
 ```
 
 ## 13.6 Autres problèmes classiques
@@ -1508,6 +1616,8 @@ def nb_sous_tableaux_somme(t, k):
         total += vus[somme - k]          # nombre de préfixes précédents tels que somme - préfixe = k
         vus[somme] += 1
     return total                         # O(n)
+
+print(nb_sous_tableaux_somme([1, 1, 1], 2))   # 2
 ```
 
 ### Version 2D
@@ -1523,6 +1633,10 @@ def construire_prefixe_2d(m):
 
 def somme_rect(P, r1, c1, r2, c2):       # inclusif
     return P[r2 + 1][c2 + 1] - P[r1][c2 + 1] - P[r2 + 1][c1] + P[r1][c1]
+
+m = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
+P2 = construire_prefixe_2d(m)
+print(somme_rect(P2, 1, 1, 2, 2))      # 5 + 6 + 8 + 9 = 28
 ```
 
 ## 14.2 Tableau de différences
@@ -1556,7 +1670,7 @@ La **différence** est l'opération inverse de la somme préfixe.
 | Dessiner des rectangles sur une grille | Différences 2D |
 | Sous-tableau de somme `k` | Préfixes + `dict` |
 
-> 💡 Si le tableau **change** entre les requêtes, utilisez un **arbre de Fenwick** ou un **arbre de segments** ([section 23](#23-arbres-de-segments-et-arbres-de-fenwick)).
+> Si le tableau **change** entre les requêtes, utilisez un **arbre de Fenwick** ou un **arbre de segments** ([section 23](#23-arbres-de-segments-et-arbres-de-fenwick)).
 
 ---
 
@@ -1591,6 +1705,7 @@ Pour **maximiser** (dernière valeur valide), utiliser `milieu = (bas + haut + 1
 Poids `p`, capacité minimale d'un camion pour tout livrer en `D` jours (ordre fixé) :
 
 ```python
+# Réutilise plus_petite_valeur_valide, définie en 15.2
 def capacite_minimale(poids, D):
     def faisable(cap):
         jours, charge = 1, 0
@@ -1613,7 +1728,16 @@ Complexité : **O(n · log(somme))**.
 from math import ceil
 
 def vitesse_minimale(piles, heures):
-    return plus_petite_valeur_valide(1, max(piles), lambda v: sum(ceil(p / v) for p in piles) <= heures)
+    bas, haut = 1, max(piles)
+    while bas < haut:                         # même modèle qu'en 15.2
+        milieu = (bas + haut) // 2
+        if sum(ceil(p / milieu) for p in piles) <= heures:
+            haut = milieu
+        else:
+            bas = milieu + 1
+    return bas
+
+print(vitesse_minimale([3, 6, 7, 11], 8))     # 4
 ```
 
 ## 15.5 Schémas fréquents
@@ -1690,13 +1814,17 @@ Pour éviter les nombres énormes, on calcule **modulo** `m` (souvent `10⁹ + 7
 
 ```python
 MOD = 10**9 + 7
+a, b = 10**12, 3 * 10**11
 
-(a + b) % MOD ; (a * b) % MOD ; (a - b) % MOD      # en Python, % renvoie un résultat ≥ 0
+print((a + b) % MOD, (a * b) % MOD, (a - b) % MOD)   # en Python, % renvoie un résultat ≥ 0
+print((3 - 5) % MOD)                                  # 1000000005 (jamais négatif)
 ```
 
 ### Exponentiation rapide : `a^b mod m` en O(log b)
 
 ```python
+MOD = 10**9 + 7
+
 def puissance_mod(a, b, m):
     resultat, a = 1, a % m
     while b:
@@ -1706,7 +1834,7 @@ def puissance_mod(a, b, m):
         b >>= 1
     return resultat
 
-pow(2, 10**18, MOD)          # équivalent intégré, optimisé
+print(puissance_mod(2, 10**18, MOD) == pow(2, 10**18, MOD))   # True : pow est l'équivalent intégré
 ```
 
 ### Inverse modulaire
@@ -1718,18 +1846,22 @@ pow(2, 10**18, MOD)          # équivalent intégré, optimisé
 | **Intégré** *(Python 3.8+)* | `pgcd(a, m) = 1` | `pow(a, -1, m)` |
 
 ```python
-pow(3, -1, 11)               # 4 car 3 × 4 = 12 ≡ 1 (mod 11)
+print(pow(3, -1, 11))        # 4 car 3 × 4 = 12 ≡ 1 (mod 11)
 
 def euclide_etendu(a, b):    # renvoie (g, x, y) avec a·x + b·y = g = pgcd(a, b)
     if b == 0:
         return a, 1, 0
     g, x, y = euclide_etendu(b, a % b)
     return g, y, x - (a // b) * y
+
+print(euclide_etendu(240, 46))    # (2, -9, 47) car 240·(-9) + 46·47 = 2
 ```
 
 ### Binôme de Newton modulo un premier
 
 ```python
+MOD = 10**9 + 7
+
 def precalculer_factorielles(n, m=MOD):
     fact = [1] * (n + 1)
     for i in range(1, n + 1): fact[i] = fact[i - 1] * i % m
@@ -1740,6 +1872,9 @@ def precalculer_factorielles(n, m=MOD):
 
 def C(n, k, fact, inv, m=MOD):
     return 0 if k < 0 or k > n else fact[n] * inv[k] % m * inv[n - k] % m
+
+fact, inv = precalculer_factorielles(1000)
+print(C(10, 3, fact, inv))        # 120
 ```
 
 ## 16.4 Autres outils
@@ -1761,6 +1896,8 @@ def phi(n):
         d += 1
     if n > 1: r -= r // n
     return r
+
+print(phi(36))                    # 12
 ```
 
 ## 16.5 Test de primalité de Miller-Rabin *(ajout)*
@@ -1785,6 +1922,8 @@ def miller_rabin(n):
         else:
             return False
     return True
+
+print(miller_rabin(2**61 - 1), miller_rabin(561))   # True False (561 est un nombre de Carmichael)
 ```
 
 Complexité **O(log³ n)** : bien plus rapide que O(√n) pour de grands nombres (cryptographie : RSA).
@@ -1818,7 +1957,7 @@ ensemble = {1, 2, 3}            # set : valeurs uniques
 ensemble | {4}; ensemble & {2, 9}; ensemble - {1}      # union, intersection, différence
 ```
 
-Les clés doivent être **hachables** (donc **immuables**) : `int`, `str`, `tuple` de valeurs hachables ✅ ; `list`, `dict`, `set` ❌. Depuis Python 3.7, un `dict` **conserve l'ordre d'insertion**.
+Les clés doivent être **hachables** (donc **immuables**) : `int`, `str`, `tuple` de valeurs hachables sont utilisables comme clés ; `list`, `dict`, `set` ne le sont pas. Depuis Python 3.7, un `dict` **conserve l'ordre d'insertion**.
 
 ## 17.3 Gestion des collisions
 
@@ -1838,7 +1977,7 @@ Deux clés différentes peuvent avoir le même indice : c'est une **collision**.
 | Parcours | O(n) | O(n) |
 | Mémoire | O(n) | O(n) |
 
-> ⚠️ Pour des chaînes, Python **randomise** le hachage à chaque lancement (`PYTHONHASHSEED`) pour empêcher les attaques par collisions. En compétition, des tests « anti-hash » peuvent dégrader un `dict` basé sur des entiers : mélangez les clés (XOR avec une constante aléatoire) si nécessaire.
+> **Attention** : pour des chaînes, Python **randomise** le hachage à chaque lancement (`PYTHONHASHSEED`) pour empêcher les attaques par collisions. En compétition, des tests « anti-hash » peuvent dégrader un `dict` basé sur des entiers : mélangez les clés (XOR avec une constante aléatoire) si nécessaire.
 
 ## 17.5 Problèmes classiques
 
@@ -1852,6 +1991,8 @@ def deux_somme(t, cible):
             return (vus[cible - x], i)
         vus[x] = i
     return None                                # O(n)
+
+print(deux_somme([2, 7, 11, 15], 9))   # (0, 1)
 ```
 
 ### Regrouper les anagrammes
@@ -1864,6 +2005,9 @@ def grouper_anagrammes(mots):
     for m in mots:
         groupes["".join(sorted(m))].append(m)
     return list(groupes.values())
+
+print(grouper_anagrammes(["eat", "tea", "tan", "ate", "nat", "bat"]))
+# [['eat', 'tea', 'ate'], ['tan', 'nat'], ['bat']]
 ```
 
 ### Plus longue suite consécutive
@@ -1877,6 +2021,8 @@ def plus_longue_suite(t):
             while x + longueur in ensemble: longueur += 1
             meilleur = max(meilleur, longueur)
     return meilleur                              # O(n)
+
+print(plus_longue_suite([100, 4, 200, 1, 3, 2]))   # 4 (1, 2, 3, 4)
 ```
 
 ### Autres
@@ -1911,7 +2057,7 @@ Autres usages : **hachage cryptographique** (SHA-256, vérification d'intégrit�
 
 ---
 
-# 🔴 Niveau avancé
+# Niveau avancé
 
 ---
 
@@ -1993,6 +2139,8 @@ def voleur(maisons):
     for argent in maisons:
         prend, ignore = ignore + argent, max(prend, ignore)
     return max(prend, ignore)
+
+print(voleur([2, 7, 9, 3, 1]))       # 12 (2 + 9 + 1)
 ```
 
 ### Sous-tableau de somme maximale (Kadane)
@@ -2004,6 +2152,8 @@ def kadane(t):
         courant = max(x, courant + x)
         meilleur = max(meilleur, courant)
     return meilleur                              # O(n)
+
+print(kadane([-2, 1, -3, 4, -1, 2, 1, -5, 4]))   # 6
 ```
 
 ### Plus longue sous-suite croissante (LIS)
@@ -2018,6 +2168,8 @@ def lis(t):                                      # O(n log n)
         if i == len(queues): queues.append(x)
         else: queues[i] = x
     return len(queues)
+
+print(lis([10, 9, 2, 5, 3, 7, 101, 18]))   # 4 (2, 3, 7, 18)
 ```
 
 (La version DP classique `dp[i] = 1 + max(dp[j] pour j < i, t[j] < t[i])` est en O(n²).)
@@ -2084,6 +2236,8 @@ def nb_chemins(lignes, colonnes):
         for j in range(1, colonnes):
             dp[i][j] = dp[i - 1][j] + dp[i][j - 1]
     return dp[-1][-1]
+
+print(nb_chemins(3, 7))             # 28
 ```
 
 ### Autres classiques
@@ -2112,6 +2266,9 @@ def tsp(dist):
                     dp[nouveau][j] = min(dp[nouveau][j], dp[masque][i] + dist[i][j])
     pleine = (1 << n) - 1
     return min(dp[pleine][i] + dist[i][0] for i in range(n))
+
+distances = [[0, 10, 15, 20], [10, 0, 35, 25], [15, 35, 0, 30], [20, 25, 30, 0]]
+print(tsp(distances))                 # 80
 ```
 
 Complexité **O(n² · 2ⁿ)** (contre O(n!) en force brute).
@@ -2138,7 +2295,7 @@ Un **graphe** `G = (V, E)` est un ensemble de **sommets** reliés par des **arê
 
 | Représentation | Mémoire | Test d'arête `(u, v)` | Parcourir les voisins de `u` | Quand l'utiliser |
 | --- | --- | --- | --- | --- |
-| **Liste d'adjacence** | O(V + E) | O(deg(u)) | **O(deg(u))** | Graphes **creux** (le cas le plus courant) ✅ |
+| **Liste d'adjacence** | O(V + E) | O(deg(u)) | **O(deg(u))** | Graphes **creux** (le cas le plus courant) |
 | **Matrice d'adjacence** | O(V²) | **O(1)** | O(V) | Graphes **denses**, petits `V` |
 | **Liste d'arêtes** | O(E) | O(E) | O(E) | Kruskal, Bellman-Ford |
 
@@ -2170,6 +2327,9 @@ def bfs(graphe, source):
                 distance[v] = distance[u] + 1
                 file.append(v)
     return distance                        # O(V + E)
+
+g_demo = {0: [1, 2], 1: [0, 3], 2: [0, 3], 3: [1, 2]}
+print(bfs(g_demo, 0))                     # {0: 0, 1: 1, 2: 1, 3: 2}
 ```
 
 ## 19.3 Parcours en profondeur (DFS)
@@ -2192,12 +2352,18 @@ def dfs_recursif(graphe, u, visites):
     for v in graphe[u]:
         if v not in visites:
             dfs_recursif(graphe, v, visites)
+
+g_demo = {0: [1, 2], 1: [0, 3], 2: [0, 3], 3: [1, 2]}
+print(dfs(g_demo, 0))                     # [0, 1, 3, 2]
+visites = set()
+dfs_recursif(g_demo, 0, visites)
+print(sorted(visites))                    # [0, 1, 2, 3]
 ```
 
 | | BFS | DFS |
 | --- | --- | --- |
 | Structure | File | Pile / récursion |
-| Plus court chemin (non pondéré) | ✅ | ❌ |
+| Plus court chemin (non pondéré) | Oui | Non |
 | Usages | Distances, niveaux | Composantes connexes, cycles, tri topologique, labyrinthes |
 
 ### Applications
@@ -2229,6 +2395,9 @@ def tri_topologique(n, aretes):               # algorithme de Kahn
             if degre_entrant[v] == 0:
                 file.append(v)
     return ordre if len(ordre) == n else None    # None : il existe un cycle
+
+print(tri_topologique(4, [(0, 1), (0, 2), (1, 3), (2, 3)]))   # [0, 1, 2, 3]
+print(tri_topologique(2, [(0, 1), (1, 0)]))                   # None (cycle)
 ```
 
 **O(V + E)**. La bibliothèque standard propose aussi `graphlib.TopologicalSorter`.
@@ -2258,6 +2427,10 @@ class UnionFind:
         self.parent[b] = a
         self.taille[a] += self.taille[b]
         return True
+
+uf = UnionFind(5)
+uf.unir(0, 1); uf.unir(3, 4)
+print(uf.trouver(0) == uf.trouver(1), uf.trouver(1) == uf.trouver(3))   # True False
 ```
 
 Les opérations coûtent **O(α(n))** amorti (inverse d'Ackermann : quasi constant).
@@ -2265,12 +2438,15 @@ Les opérations coûtent **O(α(n))** amorti (inverse d'Ackermann : quasi consta
 ### Algorithme de Kruskal (glouton, trie les arêtes)
 
 ```python
-def kruskal(n, aretes):                          # aretes : (poids, u, v)
+def kruskal(n, aretes):                          # aretes : (poids, u, v) ; utilise la classe UnionFind ci-dessus
     uf, poids_total, choisies = UnionFind(n), 0, []
     for w, u, v in sorted(aretes):
         if uf.unir(u, v):
             poids_total += w; choisies.append((u, v, w))
     return poids_total, choisies                 # O(E log E)
+
+print(kruskal(4, [(1, 0, 1), (4, 0, 2), (3, 1, 2), (2, 1, 3), (5, 2, 3)]))
+# (6, [(0, 1, 1), (1, 3, 2), (1, 2, 3)])
 ```
 
 ### Algorithme de Prim (glouton, fait grossir un arbre)
@@ -2288,6 +2464,9 @@ def prim(graphe, depart=0):                       # graphe[u] = [(v, poids), …
             if v not in vus:
                 heapq.heappush(tas, (poids, v))
     return total                                  # O(E log V)
+
+g_prim = {0: [(1, 1), (2, 4)], 1: [(0, 1), (2, 3), (3, 2)], 2: [(0, 4), (1, 3), (3, 5)], 3: [(1, 2), (2, 5)]}
+print(prim(g_prim))                       # 6
 ```
 
 | | Kruskal | Prim |
@@ -2309,12 +2488,12 @@ def prim(graphe, depart=0):                       # graphe[u] = [(v, poids), …
 | --- | --- | --- | --- | --- |
 | **BFS** | Source unique | — (non pondéré) | O(V + E) | Arêtes sans poids |
 | **0-1 BFS** | Source unique | Poids 0 ou 1 | O(V + E) | Poids binaires |
-| **Dijkstra** | Source unique | ❌ **Non** | O((V + E) log V) | Cas général à poids ≥ 0 |
-| **Bellman-Ford** | Source unique | ✅ (détecte les cycles négatifs) | O(V·E) | Poids négatifs |
-| **SPFA** | Source unique | ✅ | O(V·E) pire cas, souvent rapide | Pratique (à utiliser avec prudence) |
-| **Floyd-Warshall** | **Toutes paires** | ✅ | O(V³) | Petit graphe, toutes les distances |
-| **A\*** | Source → cible | ❌ (heuristique admissible) | Dépend de l'heuristique | Cartes, jeux |
-| **DAG (tri topologique)** | Source unique | ✅ | O(V + E) | Graphes orientés acycliques |
+| **Dijkstra** | Source unique | **Non** | O((V + E) log V) | Cas général à poids ≥ 0 |
+| **Bellman-Ford** | Source unique | Oui (détecte les cycles négatifs) | O(V·E) | Poids négatifs |
+| **SPFA** | Source unique | Oui | O(V·E) pire cas, souvent rapide | Pratique (à utiliser avec prudence) |
+| **Floyd-Warshall** | **Toutes paires** | Oui | O(V³) | Petit graphe, toutes les distances |
+| **A\*** | Source → cible | Non (heuristique admissible) | Dépend de l'heuristique | Cartes, jeux |
+| **DAG (tri topologique)** | Source unique | Oui | O(V + E) | Graphes orientés acycliques |
 
 ## 20.2 Dijkstra
 
@@ -2345,9 +2524,14 @@ def chemin(parent, cible):
     while cible is not None:
         p.append(cible); cible = parent.get(cible)
     return p[::-1]
+
+g_poids = {"A": [("B", 4), ("C", 1)], "B": [("D", 1)], "C": [("B", 2), ("D", 5)], "D": []}
+dist, parent = dijkstra(g_poids, "A")     # tous les sommets doivent être des clés du dictionnaire
+print(dist)                               # {'A': 0, 'B': 3, 'C': 1, 'D': 4}
+print(chemin(parent, "D"))                # ['A', 'C', 'B', 'D']
 ```
 
-> 🔍 *(à jour)* Dijkstra est resté **le** standard pendant plus de 60 ans car il « trie » implicitement les sommets par distance. Une avancée théorique de 2025 (Duan et coll., *Breaking the Sorting Barrier for Directed Single-Source Shortest Paths*, STOC 2025) a montré qu'on peut **contourner cette barrière de tri** pour les graphes orientés creux, en temps O(m log^(2/3) n). C'est un résultat **théorique** : en pratique, Dijkstra avec un tas binaire reste l'algorithme de référence.
+> *(à jour)* Dijkstra est resté **le** standard pendant plus de 60 ans car il « trie » implicitement les sommets par distance. Une avancée théorique de 2025 (Duan et coll., *Breaking the Sorting Barrier for Directed Single-Source Shortest Paths*, STOC 2025) a montré qu'on peut **contourner cette barrière de tri** pour les graphes orientés creux, en temps O(m log^(2/3) n). C'est un résultat **théorique** : en pratique, Dijkstra avec un tas binaire reste l'algorithme de référence.
 
 ## 20.3 Bellman-Ford
 
@@ -2370,6 +2554,8 @@ def bellman_ford(n, aretes, source):             # aretes : (u, v, poids)
         if dist[u] != INF and dist[u] + w < dist[v]:
             raise ValueError("Cycle de poids négatif atteignable")
     return dist                                    # O(V·E)
+
+print(bellman_ford(4, [(0, 1, 4), (0, 2, 1), (2, 1, -2), (1, 3, 1)], 0))   # [0, -1, 1, 0]
 ```
 
 ## 20.4 Floyd-Warshall
@@ -2385,6 +2571,10 @@ def floyd_warshall(dist):                         # dist : matrice, INF si pas d
                 if dist[i][k] + dist[k][j] < dist[i][j]:
                     dist[i][j] = dist[i][k] + dist[k][j]
     return dist                                    # O(V³) ; un dist[i][i] < 0 révèle un cycle négatif
+
+INF = float("inf")
+matrice = [[0, 3, INF], [INF, 0, 1], [2, INF, 0]]
+print(floyd_warshall(matrice))            # [[0, 3, 4], [3, 0, 1], [2, 5, 0]]
 ```
 
 ## 20.5 BFS 0-1
@@ -2405,6 +2595,8 @@ def bfs_01(graphe, source, n):
                 dist[v] = dist[u] + w
                 dq.appendleft(v) if w == 0 else dq.append(v)
     return dist
+
+print(bfs_01({0: [(1, 0), (2, 1)], 1: [(2, 1)], 2: []}, 0, 3))   # [0, 0, 1]
 ```
 
 ## 20.6 SPFA (Bellman-Ford avec file)
@@ -2427,9 +2619,11 @@ def spfa(graphe, source, n):
                     if compte[v] > n: raise ValueError("Cycle négatif")
                     file.append(v); dans_file[v] = True
     return dist
+
+print(spfa({0: [(1, 4), (2, 1)], 1: [(3, 1)], 2: [(1, -2)], 3: []}, 0, 4))   # [0, -1, 1, 0]
 ```
 
-> ⚠️ SPFA est **O(V·E) au pire** : il peut être mis en échec par des entrées conçues pour cela. Préférez Dijkstra dès que les poids sont positifs.
+> **Attention** : SPFA est **O(V·E) au pire** : il peut être mis en échec par des entrées conçues pour cela. Préférez Dijkstra dès que les poids sont positifs.
 
 ## 20.7 A\* *(ajout)*
 
@@ -2454,6 +2648,12 @@ def a_etoile(graphe, debut, but, h):
     return None
 
 # Sur une grille : h = distance de Manhattan abs(x - xb) + abs(y - yb)
+
+# Grille 3 × 3 : sommets (ligne, colonne), h = distance de Manhattan
+grille_g = {(i, j): [((i + di, j + dj), 1) for di, dj in ((1, 0), (-1, 0), (0, 1), (0, -1))
+                     if 0 <= i + di < 3 and 0 <= j + dj < 3]
+            for i in range(3) for j in range(3)}
+print(a_etoile(grille_g, (0, 0), (2, 2), lambda v: abs(v[0] - 2) + abs(v[1] - 2)))   # 4
 ```
 
 ## 20.8 Plus courts chemins dans un DAG
@@ -2466,6 +2666,9 @@ def plus_court_dag(graphe, ordre_topo, source):
             for v, w in graphe[u]:
                 dist[v] = min(dist[v], dist[u] + w)
     return dist                                      # O(V + E), poids négatifs acceptés
+
+g_dag = {0: [(1, 2), (2, 6)], 1: [(2, 3)], 2: []}
+print(plus_court_dag(g_dag, [0, 1, 2], 0))     # {0: 0, 1: 2, 2: 5}
 ```
 
 ## 20.9 Conseils de choix
@@ -2533,6 +2736,9 @@ def kosaraju(n, graphe):                     # graphe[u] = liste des successeurs
         if not visite[u]:
             dfs2(u, nb); nb += 1
     return nb, comp                           # O(V + E)
+
+g_scc = [[1], [2], [0, 3], [4], [3]]                # cycles {0, 1, 2} et {3, 4}
+print(kosaraju(5, g_scc))                         # (2, [0, 0, 0, 1, 1])
 ```
 
 ## 21.3 Algorithme de Tarjan (un seul parcours)
@@ -2563,9 +2769,11 @@ def tarjan(n, graphe):
     for u in range(n):
         if idx[u] == -1: dfs(u)
     return nb, comp                               # O(V + E)
+
+print(tarjan(5, [[1], [2], [0, 3], [4], [3]]))   # (2, [1, 1, 1, 0, 0]) : numérotation inverse de Kosaraju
 ```
 
-> ⚠️ En Python, ces versions **récursives** dépassent vite la limite de pile (graphes de plus de ~1000 sommets en profondeur) : augmentez `sys.setrecursionlimit` (et la taille de pile via `threading.stack_size`) ou réécrivez-les **avec une pile explicite**.
+> **Attention** : en Python, ces versions **récursives** dépassent vite la limite de pile (graphes de plus de ~1000 sommets en profondeur) : augmentez `sys.setrecursionlimit` (et la taille de pile via `threading.stack_size`) ou réécrivez-les **avec une pile explicite**.
 
 ## 21.4 Kosaraju ou Tarjan ?
 
@@ -2574,7 +2782,7 @@ def tarjan(n, graphe):
 | Parcours | 2 DFS + graphe transposé | **1** DFS |
 | Complexité | O(V + E) | O(V + E) |
 | Mémoire | Plus (graphe transposé) | Moins |
-| Facilité de compréhension | ✅ Plus intuitif | Plus subtil |
+| Facilité de compréhension | Plus intuitif | Plus subtil |
 | Ordre des composantes | Ordre topologique du graphe condensé | Ordre topologique **inverse** |
 
 ---
@@ -2590,7 +2798,7 @@ Un **réseau de flot** est un graphe orienté dont chaque arête a une **capacit
 
 **Problème du flot maximal** : envoyer le plus de flot possible de `s` à `t`.
 
-> 🧠 **Théorème flot max – coupe min** : la valeur du flot maximal est **égale à la capacité de la plus petite coupe** séparant `s` de `t`.
+> **Théorème flot max – coupe min** : la valeur du flot maximal est **égale à la capacité de la plus petite coupe** séparant `s` de `t`.
 
 ## 22.2 Réseau résiduel et arêtes inverses
 
@@ -2627,6 +2835,10 @@ def edmonds_karp(capacite, s, t):                 # capacite : matrice n × n (m
             v = u
         flot_total += goulot
     return flot_total
+
+reseau = [[0, 16, 13, 0, 0, 0], [0, 0, 10, 12, 0, 0], [0, 4, 0, 0, 14, 0],
+          [0, 0, 9, 0, 0, 20], [0, 0, 0, 7, 0, 4], [0, 0, 0, 0, 0, 0]]
+print(edmonds_karp(reseau, 0, 5))     # 23
 ```
 
 ## 22.4 Dinic
@@ -2677,6 +2889,12 @@ class Dinic:
             while (f := self._dfs(s, t, float("inf"))) > 0:
                 total += f
         return total
+
+d = Dinic(6)
+for u, v, c in [(0, 1, 16), (0, 2, 13), (1, 2, 10), (1, 3, 12), (2, 1, 4), (2, 4, 14),
+                (3, 2, 9), (3, 5, 20), (4, 3, 7), (4, 5, 4)]:
+    d.ajouter(u, v, c)
+print(d.flot_max(0, 5))               # 23
 ```
 
 ## 22.5 Complexités
@@ -2700,7 +2918,7 @@ class Dinic:
 | **Sélection de projets** (profit max avec dépendances) | Coupe minimale |
 | **Flot à coût minimal** | Chemins augmentants **les moins coûteux** (Bellman-Ford / Dijkstra avec potentiels) |
 
-> 💡 **Limites** : les flots ordinaires ne gèrent pas les **coûts** (flot à coût minimal), les **bornes inférieures** (circulations) ni les **flots entiers multi-produits** (NP-difficile).
+> **Limites** : les flots ordinaires ne gèrent pas les **coûts** (flot à coût minimal), les **bornes inférieures** (circulations) ni les **flots entiers multi-produits** (NP-difficile).
 
 ---
 
@@ -2749,7 +2967,7 @@ print(fen.somme(2, 5))        # 2 - 1 + 6 + 5 = 12
 
 **Construction O(n log n)** (ou O(n) avec une astuce) · **requête / mise à jour O(log n)** · mémoire O(n).
 
-> 💡 Variantes : BIT pour **mise à jour d'intervalle + requête de point** (sur le tableau de différences), BIT 2D, **comptage d'inversions** d'un tableau.
+> Variantes : BIT pour **mise à jour d'intervalle + requête de point** (sur le tableau de différences), BIT 2D, **comptage d'inversions** d'un tableau.
 
 ## 23.3 Arbre de segments (*Segment Tree*)
 
@@ -2778,6 +2996,11 @@ class ArbreSegments:
             if r & 1: r -= 1; res += self.arbre[r]
             l //= 2; r //= 2
         return res
+
+seg = ArbreSegments([3, 2, -1, 6, 5, 4, -3, 3])
+print(seg.requete(1, 5))              # 2 - 1 + 6 + 5 = 12   (t[1..4])
+seg.modifier(2, 10)
+print(seg.requete(1, 5))              # 2 + 10 + 6 + 5 = 23
 ```
 
 Pour un **minimum** : remplacer `+` par `min` et `0` par `float("inf")`. Cette version « ascendante » est compacte et rapide ; la version récursive classique (nœud, `[debut, fin]`) est plus flexible.
@@ -2829,6 +3052,11 @@ class ArbreSegmentsParesseux:                    # ajout sur intervalle + somme 
         self._pousser(noeud, l, r)
         m = (l + r) // 2
         return self.requete(2 * noeud, l, m, a, b) + self.requete(2 * noeud + 1, m + 1, r, a, b)
+
+ap = ArbreSegmentsParesseux([1, 2, 3, 4, 5])
+ap.ajouter(1, 0, 4, 1, 3, 10)         # t[1..3] += 10
+print(ap.requete(1, 0, 4, 0, 4))      # 15 + 30 = 45
+print(ap.requete(1, 0, 4, 2, 2))      # 13
 ```
 
 ## 23.5 Fenwick ou arbre de segments ?
@@ -2837,7 +3065,7 @@ class ArbreSegmentsParesseux:                    # ajout sur intervalle + somme 
 | --- | --- | --- |
 | Code | Très court | Plus long |
 | Opérations supportées | Somme, XOR (inversibles) | **Toute opération associative** (min, max, pgcd…) |
-| Mise à jour d'intervalle | Limitée (astuce différences) | ✅ (propagation paresseuse) |
+| Mise à jour d'intervalle | Limitée (astuce différences) | Oui (propagation paresseuse) |
 | Constante | **Plus petite** | Plus grande |
 | Mémoire | n | 2n à 4n |
 
@@ -2888,6 +3116,8 @@ def kmp(texte, motif):                           # positions de toutes les occur
     return positions                              # O(n + m)
 
 print(kmp("abababcabab", "abab"))                 # [0, 2, 7]
+
+print(table_prefixes("abab"))                     # [0, 0, 1, 2]
 ```
 
 ## 24.3 Algorithme de Rabin-Karp
@@ -2910,6 +3140,8 @@ def rabin_karp(texte, motif, base=256, mod=10**9 + 7):
         if i < n - m:                                          # fait glisser la fenêtre en O(1)
             h_texte = ((h_texte - ord(texte[i]) * puissance) * base + ord(texte[i + m])) % mod
     return positions
+
+print(rabin_karp("abababcabab", "abab"))          # [0, 2, 7]
 ```
 
 **O(n + m) en moyenne**, O(n · m) au pire (collisions). Très utile pour chercher **plusieurs motifs** ou détecter des **doublons de sous-chaînes**.
@@ -2931,6 +3163,11 @@ def z_algorithme(s):
             l, r = i, i + z[i]
     return z                                     # O(n)
 # Recherche de motif : z_algorithme(motif + "#" + texte) ; Z[i] == len(motif) → occurrence
+
+print(z_algorithme("aabxaab"))                     # [0, 1, 0, 0, 3, 1, 0]
+motif, texte = "aab", "xaabaab"
+z = z_algorithme(motif + "#" + texte)
+print([i - len(motif) - 1 for i, v in enumerate(z) if v == len(motif)])   # [1, 4]
 ```
 
 ## 24.5 Trie (arbre préfixe)
@@ -2971,6 +3208,12 @@ class Trie:
         n = self._noeud(prefixe)
         if n: parcourir(n, "")
         return resultat
+
+trie = Trie()
+for mot in ["chat", "char", "chien", "car"]:
+    trie.inserer(mot)
+print(trie.contient("car"), trie.contient("ca"), trie.commence_par("ch"))   # True False True
+print(sorted(trie.completions("cha")))                                      # ['char', 'chat']
 ```
 
 Usages : **autocomplétion**, correcteurs orthographiques, **routage IP** (trie binaire), recherche de mots dans une grille, dictionnaires, **Aho-Corasick** (recherche simultanée de plusieurs motifs).
@@ -3068,18 +3311,18 @@ La question **P = NP ?** reste ouverte.
 
 ## 25.5 Ressources
 
-- 📘 *Introduction à l'algorithmique* — Cormen, Leiserson, Rivest, Stein (**CLRS**)
-- 📗 *The Algorithm Design Manual* — Steven Skiena
-- 📙 *Algorithms* — Sedgewick & Wayne (et leur site compagnon)
-- 📕 *Competitive Programmer's Handbook* — Antti Laaksonen (gratuit)
-- 🌐 **cp-algorithms.com** : référence très complète de compétition
-- 🧩 **LeetCode**, **Codeforces**, **AtCoder**, **Kattis**, **Advent of Code**, **Project Euler**, **France-IOI** (en français)
-- 🎞️ **VisuAlgo** (visualisations animées), **Python Tutor** (exécution pas à pas)
+- *Introduction à l'algorithmique* — Cormen, Leiserson, Rivest, Stein (**CLRS**)
+- *The Algorithm Design Manual* — Steven Skiena
+- *Algorithms* — Sedgewick & Wayne (et leur site compagnon)
+- *Competitive Programmer's Handbook* — Antti Laaksonen (gratuit)
+- **cp-algorithms.com** : référence très complète de compétition
+- **LeetCode**, **Codeforces**, **AtCoder**, **Kattis**, **Advent of Code**, **Project Euler**, **France-IOI** (en français)
+- **VisuAlgo** (visualisations animées), **Python Tutor** (exécution pas à pas)
 
 ---
 
 <div align="center">
 
-*Bon voyage au pays des algorithmes ! 🧮*
+*Bon voyage au pays des algorithmes !*
 
 </div>
