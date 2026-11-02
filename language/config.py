@@ -48,6 +48,8 @@ _PAGES: List[Page] = [
          "Le langage côté serveur pour créer des sites dynamiques."),
     Page("c", "language-c.md", "Langage C", "topics", "icons/c.svg", "#5c6bc0",
          "Le langage fondamental de la programmation système."),
+    Page("cpp", "language-cpp.md", "Langage C++", "topics", "icons/cpp.svg", "#00599c",
+         "Du C++ moderne (C++17 à C++26) : POO, STL, fichiers et compilation."),
     Page("git", "git.md", "Git", "topics", "icons/git.svg", "#f05032",
          "Versionner son code et collaborer sans stress."),
     Page("algorithm", "algorithm.md", "Algorithmique", "topics", "icons/algorithm.svg", "#8b5cf6",
