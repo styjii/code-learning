@@ -5,3 +5,4 @@ beautifulsoup4>=4.12
 Pygments>=2.17
 python-dotenv>=1.0
 pytest>=8.0        # tests (optionnel)
+redis>=5.0        # cache partagé : requis si DJANGO_CACHE_URL=redis://… (production, plusieurs processus)

@@ -57,7 +57,8 @@ CSRF_COOKIE_SECURE = HTTPS
 SECURE_SSL_REDIRECT = HTTPS
 SECURE_HSTS_SECONDS = env_int("DJANGO_HSTS_SECONDS", 0) if HTTPS else 0
 SECURE_HSTS_INCLUDE_SUBDOMAINS = SECURE_HSTS_SECONDS > 0
-if env_bool("DJANGO_BEHIND_PROXY", False):
+BEHIND_PROXY = env_bool("DJANGO_BEHIND_PROXY", False)
+if BEHIND_PROXY:
     SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
 SESSION_COOKIE_HTTPONLY = True
@@ -72,8 +73,24 @@ X_FRAME_OPTIONS = "DENY"
 LOGIN_URL = "login"
 LOGIN_REDIRECT_URL = "index"
 LOGOUT_REDIRECT_URL = "login"
+# Limitation des tentatives (voir accounts/throttle.py). Trois compteurs complémentaires :
+#   - par (IP, identifiant)  : LOGIN_MAX_ATTEMPTS, strict ;
+#   - par IP, tous identifiants confondus : LOGIN_MAX_ATTEMPTS_PER_IP (« password spraying ») ;
+#   - par identifiant, toutes IP confondues : LOGIN_MAX_ATTEMPTS_PER_USERNAME (attaque distribuée).
 LOGIN_MAX_ATTEMPTS = env_int("DJANGO_LOGIN_MAX_ATTEMPTS", 5)
+LOGIN_MAX_ATTEMPTS_PER_IP = env_int("DJANGO_LOGIN_MAX_ATTEMPTS_PER_IP", 20)
+LOGIN_MAX_ATTEMPTS_PER_USERNAME = env_int("DJANGO_LOGIN_MAX_ATTEMPTS_PER_USERNAME", 20)
 LOGIN_LOCKOUT_SECONDS = env_int("DJANGO_LOGIN_LOCKOUT_SECONDS", 900)
+# Durée de validité du cookie « appareil de confiance » posé après une connexion réussie.
+LOGIN_TRUSTED_DEVICE_DAYS = env_int("DJANGO_LOGIN_TRUSTED_DEVICE_DAYS", 30)
+
+# Adresse IP réelle du client derrière un proxy inverse (voir accounts/netutils.py).
+# Les en-têtes de proxy ne sont lus que si DJANGO_BEHIND_PROXY=1 ET si la connexion TCP vient
+# d'un proxy de confiance : DJANGO_TRUSTED_PROXIES (IP ou réseaux CIDR, séparés par des virgules).
+# Vide = loopback + réseaux privés (cas courant : nginx sur la même machine ou en conteneur).
+TRUSTED_PROXIES = env_list("DJANGO_TRUSTED_PROXIES")
+# En-tête portant l'IP du client : X-Forwarded-For (liste), ou X-Real-IP / CF-Connecting-IP (valeur unique).
+PROXY_IP_HEADER = os.environ.get("DJANGO_PROXY_IP_HEADER", "").strip() or "X-Forwarded-For"
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -119,6 +136,31 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = "config.wsgi.application"
+
+# ---------------------------------------------------------------------------
+# Cache Django : stocke les compteurs de tentatives de connexion.
+# Il doit être PARTAGÉ entre tous les processus (sinon chaque worker a son propre compteur
+# et la limite est multipliée par leur nombre) et offrir un incr() atomique.
+#   DJANGO_CACHE_URL=redis://127.0.0.1:6379/1          (recommandé ; pip install redis)
+#   DJANGO_CACHE_URL=memcached://127.0.0.1:11211        (pip install pymemcache)
+#   vide = mémoire locale : acceptable en développement, un seul processus.
+# ---------------------------------------------------------------------------
+def cache_from_url(url: str) -> dict:
+    url = (url or "").strip()
+    if not url:
+        return {"BACKEND": "django.core.cache.backends.locmem.LocMemCache", "LOCATION": "code-learning"}
+    scheme, _, rest = url.partition("://")
+    if scheme in ("redis", "rediss"):
+        return {"BACKEND": "django.core.cache.backends.redis.RedisCache", "LOCATION": url,
+                "KEY_PREFIX": "code-learning"}
+    if scheme == "memcached" and rest:
+        return {"BACKEND": "django.core.cache.backends.memcached.PyMemcacheCache",
+                "LOCATION": [host.strip() for host in rest.split(",") if host.strip()],
+                "KEY_PREFIX": "code-learning"}
+    raise ImproperlyConfigured("DJANGO_CACHE_URL doit commencer par redis://, rediss:// ou memcached://.")
+
+
+CACHES = {"default": cache_from_url(os.environ.get("DJANGO_CACHE_URL", ""))}
 
 DATABASES = {
     "default": {

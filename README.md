@@ -279,9 +279,15 @@ Toutes les valeurs sensibles sont lues dans `.env` (jamais versionné, voir `.gi
 | `DJANGO_CSRF_TRUSTED_ORIGINS` | origines HTTPS de confiance | — |
 | `DJANGO_HTTPS` | cookies `Secure` + redirection HTTPS | actif si `DEBUG=0` |
 | `DJANGO_HSTS_SECONDS` | durée HSTS en secondes (0 = désactivé) | `0` |
-| `DJANGO_BEHIND_PROXY` | `1` derrière un proxy qui envoie `X-Forwarded-Proto` | `0` |
+| `DJANGO_BEHIND_PROXY` | `1` derrière un proxy inverse : lit `X-Forwarded-Proto` et l'IP réelle du client | `0` |
+| `DJANGO_TRUSTED_PROXIES` | proxys de confiance (IP ou CIDR, séparés par des virgules) dont l'en-tête d'IP est cru | loopback + réseaux privés |
+| `DJANGO_PROXY_IP_HEADER` | en-tête portant l'IP du client (`X-Forwarded-For`, `X-Real-IP`, `CF-Connecting-IP`) | `X-Forwarded-For` |
+| `DJANGO_CACHE_URL` | cache partagé : `redis://…` ou `memcached://…` (vide = mémoire locale, un seul processus) | — |
 | `DJANGO_SESSION_HOURS` | durée d'une session | `168` |
-| `DJANGO_LOGIN_MAX_ATTEMPTS` | échecs tolérés avant blocage | `5` |
+| `DJANGO_LOGIN_MAX_ATTEMPTS` | échecs tolérés par couple (IP, identifiant) avant blocage | `5` |
+| `DJANGO_LOGIN_MAX_ATTEMPTS_PER_IP` | échecs tolérés par IP, tous identifiants confondus | `20` |
+| `DJANGO_LOGIN_MAX_ATTEMPTS_PER_USERNAME` | échecs tolérés par identifiant, toutes IP confondues | `20` |
+| `DJANGO_LOGIN_TRUSTED_DEVICE_DAYS` | validité du cookie « appareil de confiance » | `30` |
 | `DJANGO_LOGIN_LOCKOUT_SECONDS` | durée du blocage | `900` |
 | `EDITOR_ZIP_MAX_UPLOAD_KB` | taille maximale du `.zip` envoyé | `5120` |
 | `EDITOR_ZIP_MAX_FILE_KB` | taille décompressée maximale d'un fichier | `1024` |
@@ -291,7 +297,14 @@ Toutes les valeurs sensibles sont lues dans `.env` (jamais versionné, voir `.gi
 ## Sécurité
 
 - **Authentification** : `LoginRequiredMiddleware` redirige toutes les pages vers la connexion ; l'API REST répond `403` aux anonymes. Déconnexion par `POST` uniquement.
-- **Force brute** : blocage temporaire après plusieurs échecs (par IP + identifiant). Le compteur utilise le cache Django (mémoire locale) : configurez un cache partagé si vous lancez plusieurs processus.
+- **Force brute** : blocage temporaire (`DJANGO_LOGIN_LOCKOUT_SECONDS`) après plusieurs échecs, avec trois compteurs complémentaires (`accounts/throttle.py`) :
+  - **(IP, identifiant)**, seuil strict : un attaquant ne peut bloquer que sa propre IP ;
+  - **IP seule** : un poste qui essaie de nombreux identifiants ;
+  - **identifiant seul** : une attaque répartie sur de nombreuses IP. Comme il permettrait de bloquer le compte d'autrui, son seuil est plus haut et un **appareil de confiance** (cookie signé posé après une connexion réussie) n'y est pas soumis. Le seuil (IP, identifiant) reste toujours appliqué.
+
+  Chaque tentative est comptée **avant** l'authentification, avec des opérations atomiques du cache : des requêtes simultanées ne peuvent pas dépasser la limite. Un champ vide ou un compte déjà bloqué n'incrémente rien, donc marteler un compte ne prolonge pas son blocage.
+- **IP du client derrière un proxy** : avec `DJANGO_BEHIND_PROXY=1`, l'IP est lue dans `X-Forwarded-For` **uniquement** si la connexion vient d'un proxy de confiance (`DJANGO_TRUSTED_PROXIES`) ; on remonte la chaîne depuis la droite, car les entrées de gauche sont forgeables. Les clients IPv6 sont regroupés par préfixe /64.
+- **Cache partagé** : les compteurs vivent dans le cache Django. En production avec plusieurs processus, définissez `DJANGO_CACHE_URL` (Redis ou Memcached) : en mémoire locale, chaque processus aurait son compteur. `python manage.py check --deploy` signale une configuration inadaptée.
 - **CSRF** : protection active sur tous les appels de l'éditeur.
 - **Isolation des projets** : chaque utilisateur ne voit et ne modifie que les siens. Projets créés avant l'authentification (sans propriétaire) : rattachez-les avec
 
@@ -308,12 +321,14 @@ Toutes les valeurs sensibles sont lues dans `.env` (jamais versionné, voir `.gi
 ## Déploiement en production
 
 1. Dans `.env` : `DJANGO_DEBUG=0`, `DJANGO_SECRET_KEY` unique, `DJANGO_ALLOWED_HOSTS=votre-domaine.fr`, `DJANGO_CSRF_TRUSTED_ORIGINS=https://votre-domaine.fr`.
-2. Servez en HTTPS. Derrière un proxy inverse, ajoutez `DJANGO_BEHIND_PROXY=1`. Une fois HTTPS validé, activez HSTS (ex. `DJANGO_HSTS_SECONDS=31536000`).
+2. Servez en HTTPS. Derrière un proxy inverse, ajoutez `DJANGO_BEHIND_PROXY=1` (et `DJANGO_TRUSTED_PROXIES` si le proxy n'est pas sur la machine ou un réseau privé). Le proxy doit **ajouter** l'IP du client à `X-Forwarded-For` (nginx : `proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;`). Une fois HTTPS validé, activez HSTS (ex. `DJANGO_HSTS_SECONDS=31536000`).
+   Avec plusieurs workers, configurez aussi un cache partagé : `pip install redis` puis `DJANGO_CACHE_URL=redis://127.0.0.1:6379/1`.
 3. Appliquez les migrations et collectez les fichiers statiques :
 
    ```bash
    python manage.py migrate
    python manage.py collectstatic
+   python manage.py check --deploy   # avertit si le cache n'est pas partagé/atomique
    ```
 
 4. Lancez l'application avec un serveur WSGI de votre choix (gunicorn, uWSGI...) derrière nginx ou Apache.
@@ -373,7 +388,7 @@ Le workflow [`.github/workflows/ci.yml`](.github/workflows/ci.yml) se lance à c
 | Le premier affichage des cours est lent | Normal : conversion des pages et mise en cache au premier passage (barre de progression à l'accueil). |
 | Le premier clic sur « Exécuter » en Python est lent | Normal : Pyodide (~13 Mo) est chargé une seule fois. |
 | Import zip refusé (erreur 413) | L'archive dépasse une limite : voir les variables `EDITOR_ZIP_*`. |
-| Compte bloqué après des échecs | Attendez `DJANGO_LOGIN_LOCKOUT_SECONDS` (15 min par défaut). |
+| Compte bloqué après des échecs | Attendez `DJANGO_LOGIN_LOCKOUT_SECONDS` (15 min par défaut). Derrière un proxy, si des utilisateurs distincts se bloquent entre eux, vérifiez `DJANGO_BEHIND_PROXY=1` et que le proxy envoie `X-Forwarded-For` : sinon tous partagent l'IP du proxy. |
 | Éditeur TypeScript : le code ne s'exécute pas, la console liste des `TS…` | `noEmitOnError` est actif : corrigez les erreurs de type, ou désactivez-le dans « Options TypeScript ». |
 | Éditeur TypeScript : `ReferenceError: maFonction is not defined` (attribut `onclick`) | Le script est un module : écrivez `window.maFonction = maFonction` ou utilisez `addEventListener`. |
 | Éditeur Python : fichiers disparus | Ils sont stockés dans le navigateur : vider les données du site ou changer de navigateur les efface. Téléchargez-les pour les sauvegarder. |

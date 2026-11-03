@@ -1,7 +1,10 @@
+from unittest import mock
+
 from django.contrib.auth import get_user_model
 from django.core.cache import cache
 from django.test import Client, TestCase, override_settings
 from django.urls import reverse
+from django.utils.html import escape
 
 from editor.models import Project
 
@@ -92,6 +95,90 @@ class LoginLogoutTests(TestCase):
         response = self.client.post(reverse("login"), {"username": "ada", "password": PASSWORD})
         self.assertEqual(response.status_code, 429)
         self.assertEqual(self.client.get("/").status_code, 302)
+
+
+    @override_settings(LOGIN_MAX_ATTEMPTS=3)
+    def test_lockout_cannot_be_bypassed_with_unicode_variant_of_username(self):
+        for _ in range(3):
+            self.client.post(reverse("login"), {"username": "ada", "password": "faux"})
+        # « ａda » (a pleine chasse) est normalisé en « ada » par le formulaire
+        for variant in ("\uff41da", " ada ", "ADA"):
+            with self.subTest(variant=variant):
+                response = self.client.post(reverse("login"), {"username": variant, "password": PASSWORD})
+                self.assertEqual(response.status_code, 429)
+                self.assertEqual(self.client.get("/").status_code, 302)
+
+    @override_settings(LOGIN_MAX_ATTEMPTS=3, LOGIN_LOCKOUT_SECONDS=900,
+                       CACHES={"default": {"BACKEND": "django.core.cache.backends.locmem.LocMemCache"}})
+    def test_lockout_lasts_full_duration_from_the_last_failure(self):
+        now = [1000.0]
+        with mock.patch("time.time", lambda: now[0]):
+            self.client.post(reverse("login"), {"username": "ada", "password": "faux"})
+            now[0] += 890                       # la limite est atteinte 890 s après le premier échec
+            for _ in range(2):
+                self.client.post(reverse("login"), {"username": "ada", "password": "faux"})
+            now[0] += 20                        # 20 s après le blocage : toujours bloqué
+            response = self.client.post(reverse("login"), {"username": "ada", "password": PASSWORD})
+            self.assertEqual(response.status_code, 429)
+            now[0] += 900                       # blocage écoulé : la connexion est de nouveau possible
+            response = self.client.post(reverse("login"), {"username": "ada", "password": PASSWORD})
+            self.assertRedirects(response, reverse("index"), fetch_redirect_response=False)
+
+
+class LoginFormStateTests(TestCase):
+    """Champs vides, absence de règle de longueur et état du bouton."""
+
+    def setUp(self):
+        cache.clear()
+        User.objects.create_user("ada", password=PASSWORD)
+
+    def test_empty_fields_show_explicit_messages(self):
+        for data, expected in [
+            ({"username": "", "password": ""}, ["Le nom d'utilisateur est obligatoire.", "Le mot de passe est obligatoire."]),
+            ({"username": "ada", "password": ""}, ["Le mot de passe est obligatoire."]),
+            ({"username": "   ", "password": "x"}, ["Le nom d'utilisateur est obligatoire."]),
+        ]:
+            with self.subTest(data=data):
+                response = self.client.post(reverse("login"), data)
+                self.assertEqual(response.status_code, 200)
+                for message in expected:
+                    # texte réellement affiché sous le champ (et non l'attribut data-* du gabarit)
+                    self.assertContains(response, f">{escape(message)}</p>")
+
+    def test_no_length_rule_is_displayed_or_enforced(self):
+        response = self.client.get(reverse("login"))
+        self.assertNotContains(response, "minlength")
+        # 1 caractère : accepté par le formulaire (seule l'authentification échoue, sans message de longueur)
+        response = self.client.post(reverse("login"), {"username": "a", "password": "b"})
+        self.assertEqual(response.status_code, 200)
+        for message in ("Le nom d'utilisateur est obligatoire.", "Le mot de passe est obligatoire."):
+            self.assertNotContains(response, f">{escape(message)}</p>")
+        for word in ("au moins", "minimum", "trop court", "caractères"):
+            self.assertNotContains(response, word)
+
+    @override_settings(LOGIN_MAX_ATTEMPTS=3)
+    def test_empty_submissions_do_not_count_as_attempts(self):
+        for _ in range(5):
+            self.client.post(reverse("login"), {"username": "ada", "password": ""})
+        response = self.client.post(reverse("login"), {"username": "ada", "password": PASSWORD})
+        self.assertRedirects(response, reverse("index"), fetch_redirect_response=False)
+
+    @override_settings(LOGIN_MAX_ATTEMPTS=3)
+    def test_submit_button_is_disabled_once_the_limit_is_reached(self):
+        self.assertNotContains(self.client.get(reverse("login")), "disabled")
+        for attempt in range(1, 4):
+            response = self.client.post(reverse("login"), {"username": "ada", "password": "faux"})
+            self.assertEqual(response.status_code, 200)
+            if attempt < 3:
+                self.assertNotContains(response, 'id="login-submit" disabled')
+        # la 3e erreur atteint la limite : le bouton est déjà désactivé dans cette réponse
+        self.assertContains(response, 'id="login-submit" disabled')
+        self.assertContains(response, "Trop de tentatives")
+        self.assertGreater(response.context["lock_seconds"], 0)
+        # et il le reste tant que le blocage court
+        response = self.client.post(reverse("login"), {"username": "ada", "password": PASSWORD})
+        self.assertEqual(response.status_code, 429)
+        self.assertContains(response, 'id="login-submit" disabled', status_code=429)
 
 
 class ProjectIsolationTests(TestCase):

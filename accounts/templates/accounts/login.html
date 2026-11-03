@@ -18,19 +18,21 @@
         <h1 id="auth-title">Connexion</h1>
         <p class="auth-lead">Cet espace est privé : connectez-vous pour accéder aux cours et à l'éditeur.</p>
 
-        {% if form.non_field_errors %}
+        {% if form.non_field_errors or lock_message %}
         <div class="auth-error" role="alert">
             {% for error in form.non_field_errors %}<p>{{ error }}</p>{% endfor %}
+            {% if lock_message %}<p>{{ lock_message }}</p>{% endif %}
         </div>
         {% endif %}
 
-        <form method="post" novalidate>
+        <form method="post" novalidate id="login-form" data-lock-seconds="{{ lock_seconds|default:0 }}">
             {% csrf_token %}
             <input type="hidden" name="next" value="{{ next }}">
 
             <div class="field">
                 <label for="{{ form.username.id_for_label }}">Nom d'utilisateur</label>
                 {{ form.username }}
+                <p class="field-error" id="username-error" role="alert" data-required-message="{{ form.username.field.error_messages.required }}"{% if not form.username.errors %} hidden{% endif %}>{% for error in form.username.errors %}{{ error }}{% endfor %}</p>
             </div>
 
             <div class="field">
@@ -39,9 +41,11 @@
                     {{ form.password }}
                     <button type="button" class="toggle-password" aria-label="Afficher le mot de passe" aria-pressed="false">Afficher</button>
                 </div>
+                <p class="field-error" id="password-error" role="alert" data-required-message="{{ form.password.field.error_messages.required }}"{% if not form.password.errors %} hidden{% endif %}>{% for error in form.password.errors %}{{ error }}{% endfor %}</p>
             </div>
 
-            <button type="submit" class="btn btn-primary auth-submit">Se connecter</button>
+            <button type="submit" class="btn btn-primary auth-submit" id="login-submit"{% if locked %} disabled aria-disabled="true"{% endif %}>Se connecter</button>
+            <p class="auth-lock" id="lock-hint" aria-live="polite"{% if not locked %} hidden{% endif %}></p>
         </form>
     </section>
 </main>
