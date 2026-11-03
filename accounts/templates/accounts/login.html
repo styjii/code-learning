@@ -18,10 +18,10 @@
         <h1 id="auth-title">Connexion</h1>
         <p class="auth-lead">Cet espace est privé : connectez-vous pour accéder aux cours et à l'éditeur.</p>
 
-        {% if form.non_field_errors or lock_message %}
+        {% if form.non_field_errors or locked %}
         <div class="auth-error" role="alert">
             {% for error in form.non_field_errors %}<p>{{ error }}</p>{% endfor %}
-            {% if lock_message %}<p>{{ lock_message }}</p>{% endif %}
+            {% if locked %}<p id="lock-message">Trop de tentatives échouées. Réessayez dans <strong class="lock-countdown" role="timer" aria-live="off">{{ lock_time }}</strong>.</p>{% endif %}
         </div>
         {% endif %}
 
@@ -45,7 +45,7 @@
             </div>
 
             <button type="submit" class="btn btn-primary auth-submit" id="login-submit"{% if locked %} disabled aria-disabled="true"{% endif %}>Se connecter</button>
-            <p class="auth-lock" id="lock-hint" aria-live="polite"{% if not locked %} hidden{% endif %}></p>
+            <p class="auth-lock" id="lock-hint" role="timer" aria-live="off"{% if not locked %} hidden{% endif %}>{% if locked %}Connexion indisponible. Réessayez dans {{ lock_time }}.{% endif %}</p>
         </form>
     </section>
 </main>

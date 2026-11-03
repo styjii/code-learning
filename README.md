@@ -288,7 +288,7 @@ Toutes les valeurs sensibles sont lues dans `.env` (jamais versionné, voir `.gi
 | `DJANGO_LOGIN_MAX_ATTEMPTS_PER_IP` | échecs tolérés par IP, tous identifiants confondus | `20` |
 | `DJANGO_LOGIN_MAX_ATTEMPTS_PER_USERNAME` | échecs tolérés par identifiant, toutes IP confondues | `20` |
 | `DJANGO_LOGIN_TRUSTED_DEVICE_DAYS` | validité du cookie « appareil de confiance » | `30` |
-| `DJANGO_LOGIN_LOCKOUT_SECONDS` | durée du blocage | `900` |
+| `DJANGO_LOGIN_LOCKOUT_SECONDS` | durée du blocage, en secondes | `300` (5 min) |
 | `EDITOR_ZIP_MAX_UPLOAD_KB` | taille maximale du `.zip` envoyé | `5120` |
 | `EDITOR_ZIP_MAX_FILE_KB` | taille décompressée maximale d'un fichier | `1024` |
 | `EDITOR_ZIP_MAX_TOTAL_KB` | total décompressé maximal de l'archive | `5120` |
@@ -388,7 +388,7 @@ Le workflow [`.github/workflows/ci.yml`](.github/workflows/ci.yml) se lance à c
 | Le premier affichage des cours est lent | Normal : conversion des pages et mise en cache au premier passage (barre de progression à l'accueil). |
 | Le premier clic sur « Exécuter » en Python est lent | Normal : Pyodide (~13 Mo) est chargé une seule fois. |
 | Import zip refusé (erreur 413) | L'archive dépasse une limite : voir les variables `EDITOR_ZIP_*`. |
-| Compte bloqué après des échecs | Attendez `DJANGO_LOGIN_LOCKOUT_SECONDS` (15 min par défaut). Derrière un proxy, si des utilisateurs distincts se bloquent entre eux, vérifiez `DJANGO_BEHIND_PROXY=1` et que le proxy envoie `X-Forwarded-For` : sinon tous partagent l'IP du proxy. |
+| Compte bloqué après des échecs | Attendez `DJANGO_LOGIN_LOCKOUT_SECONDS` (5 min par défaut ; un compte à rebours s'affiche sur la page de connexion). Derrière un proxy, si des utilisateurs distincts se bloquent entre eux, vérifiez `DJANGO_BEHIND_PROXY=1` et que le proxy envoie `X-Forwarded-For` : sinon tous partagent l'IP du proxy. |
 | Éditeur TypeScript : le code ne s'exécute pas, la console liste des `TS…` | `noEmitOnError` est actif : corrigez les erreurs de type, ou désactivez-le dans « Options TypeScript ». |
 | Éditeur TypeScript : `ReferenceError: maFonction is not defined` (attribut `onclick`) | Le script est un module : écrivez `window.maFonction = maFonction` ou utilisez `addEventListener`. |
 | Éditeur Python : fichiers disparus | Ils sont stockés dans le navigateur : vider les données du site ou changer de navigateur les efface. Téléchargez-les pour les sauvegarder. |

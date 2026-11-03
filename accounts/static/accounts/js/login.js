@@ -73,22 +73,25 @@ if (form) {
         }
     };
 
+    // « 4 min 05 s » (identique au format produit par le serveur).
     const formatRemaining = (ms) => {
         const total = Math.max(0, Math.ceil(ms / 1000));
-        const minutes = String(Math.floor(total / 60)).padStart(2, "0");
-        const seconds = String(total % 60).padStart(2, "0");
-        return `${minutes}:${seconds}`;
+        return `${Math.floor(total / 60)} min ${String(total % 60).padStart(2, "0")} s`;
     };
+
+    const countdowns = () => document.querySelectorAll(".lock-countdown");
 
     // Retire l'état bloqué de l'interface (sans oublier le blocage mémorisé).
     const release = () => {
         clearInterval(timer);
         timer = null;
         lockUntil = 0;
+        lastText = "";
         submit.disabled = false;
         submit.removeAttribute("aria-disabled");
         hint.hidden = true;
         hint.textContent = "";
+        document.getElementById("lock-message")?.remove();  // le message « Réessayez dans… » n'a plus lieu d'être
     };
 
     // Fin du blocage : on réactive le bouton et on oublie le blocage.
@@ -97,20 +100,28 @@ if (form) {
         writeStored(null);
     };
 
+    // Le temps restant est calculé à partir de l'échéance (pas en décrémentant) : aucune dérive, même si
+    // l'onglet est mis en veille. On l'évalue 4 fois par seconde, mais l'affichage ne change qu'une fois par seconde.
+    let lastText = "";
     const tick = () => {
         const remaining = lockUntil - Date.now();
         if (remaining <= 0) return unlock();
-        hint.textContent = `Connexion indisponible. Réessayez dans ${formatRemaining(remaining)}.`;
+        const text = formatRemaining(remaining);
+        if (text === lastText) return;
+        lastText = text;
+        hint.textContent = `Connexion indisponible. Réessayez dans ${text}.`;
+        countdowns().forEach((node) => (node.textContent = text));
     };
 
     const lock = (until) => {
         lockUntil = until;
+        lastText = "";
         submit.disabled = true;
         submit.setAttribute("aria-disabled", "true");
         hint.hidden = false;
         tick();
         clearInterval(timer);
-        timer = setInterval(tick, 1000);
+        timer = setInterval(tick, 250);
     };
 
     // Le blocage vaut pour un identifiant donné : on le réapplique si l'utilisateur

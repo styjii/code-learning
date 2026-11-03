@@ -181,6 +181,57 @@ class LoginFormStateTests(TestCase):
         self.assertContains(response, 'id="login-submit" disabled', status_code=429)
 
 
+class LockoutCountdownTests(TestCase):
+    """Durée de 5 minutes et temps restant affiché à l'utilisateur."""
+
+    def setUp(self):
+        cache.clear()
+        User.objects.create_user("ada", password=PASSWORD)
+
+    def test_format_remaining(self):
+        from accounts.views import format_remaining
+        for seconds, expected in [(300, "5 min 00 s"), (299, "4 min 59 s"), (65, "1 min 05 s"), (9, "0 min 09 s"), (0, "0 min 00 s")]:
+            with self.subTest(seconds=seconds):
+                self.assertEqual(format_remaining(seconds), expected)
+
+    @override_settings(LOGIN_MAX_ATTEMPTS=3, LOGIN_LOCKOUT_SECONDS=300)
+    def test_lock_lasts_five_minutes_and_page_shows_the_remaining_time(self):
+        for _ in range(3):
+            response = self.client.post(reverse("login"), {"username": "ada", "password": "faux"})
+        self.assertEqual(response.context["lock_seconds"], 300)
+        self.assertEqual(response.context["lock_time"], "5 min 00 s")
+        self.assertContains(response, 'class="lock-countdown"')
+        self.assertContains(response, "5 min 00 s")
+        self.assertContains(response, 'data-lock-seconds="300"')
+
+    @override_settings(LOGIN_MAX_ATTEMPTS=3, LOGIN_LOCKOUT_SECONDS=300,
+                       CACHES={"default": {"BACKEND": "django.core.cache.backends.locmem.LocMemCache"}})
+    def test_remaining_time_decreases_and_lock_ends_after_five_minutes(self):
+        now = [1000.0]
+        with mock.patch("time.time", lambda: now[0]):
+            for _ in range(3):
+                self.client.post(reverse("login"), {"username": "ada", "password": "faux"})
+            now[0] += 61
+            response = self.client.post(reverse("login"), {"username": "ada", "password": PASSWORD})
+            self.assertEqual(response.status_code, 429)
+            self.assertEqual(response.context["lock_time"], "3 min 59 s")
+            self.assertEqual(response.context["lock_seconds"], 239)
+            now[0] = 1000 + 301
+            response = self.client.post(reverse("login"), {"username": "ada", "password": PASSWORD})
+            self.assertRedirects(response, reverse("index"), fetch_redirect_response=False)
+
+    def test_default_lockout_setting_is_five_minutes(self):
+        import importlib, os
+        from unittest import mock as _mock
+        with _mock.patch.dict(os.environ, {"DJANGO_LOGIN_LOCKOUT_SECONDS": ""}):
+            import config.settings as settings_module
+            reloaded = importlib.reload(settings_module)
+            try:
+                self.assertEqual(reloaded.LOGIN_LOCKOUT_SECONDS, 300)
+            finally:
+                importlib.reload(settings_module)
+
+
 class ProjectIsolationTests(TestCase):
     """Chaque utilisateur ne voit que ses propres projets."""
 

@@ -6,6 +6,12 @@ from .netutils import get_client_ip
 from .throttle import LoginThrottle, is_trusted_device, normalize_username, trust_device
 
 
+def format_remaining(seconds: int) -> str:
+    """« 4 min 05 s » : même format que le compte à rebours du navigateur (login.js)."""
+    minutes, secs = divmod(max(0, int(seconds)), 60)
+    return f"{minutes} min {secs:02d} s"
+
+
 class ThrottledLoginView(LoginView):
     """
     Page de connexion avec limitation des tentatives (détails : ``accounts/throttle.py``).
@@ -34,9 +40,6 @@ class ThrottledLoginView(LoginView):
             self.request.POST.get("password", "")
         )
 
-    def _lockout_message(self) -> str:
-        minutes = max(1, -(-self.throttle.lock_remaining() // 60))
-        return _("Trop de tentatives échouées. Réessayez dans %(minutes)d minute(s).") % {"minutes": minutes}
 
     # --- formulaire -----------------------------------------------------------
     def _customize(self, form):
@@ -58,7 +61,7 @@ class ThrottledLoginView(LoginView):
         remaining = self.throttle.lock_remaining() if self.request.method == "POST" else 0
         context["locked"] = remaining > 0
         context["lock_seconds"] = remaining
-        context["lock_message"] = self._lockout_message() if remaining else ""
+        context["lock_time"] = format_remaining(remaining)
         return context
 
     def _locked_response(self):
