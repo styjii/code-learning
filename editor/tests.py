@@ -214,8 +214,8 @@ class ImportZipLimitsTests(TestCase):
         data[data.index(b"body") + 2] ^= 0xFF                    # contenu altéré : CRC invalide
         self.assertEqual(self.upload(bytes(data)).status_code, 400)
 
-    def test_anonymous_still_gets_403(self):
-        self.assertEqual(Client().post(IMPORT_URL, {}).status_code, 403)
+    def test_anonymous_gets_401(self):
+        self.assertEqual(Client().post(IMPORT_URL, {}).status_code, 401)
 
 
 class PythonEditorPageTests(TestCase):

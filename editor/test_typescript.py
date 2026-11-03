@@ -93,9 +93,9 @@ class TypeScriptProjectApiTests(TestCase):
     def post(self, client, payload):
         return client.post(PROJECTS_URL, json.dumps(payload), content_type="application/json")
 
-    def test_anonymous_gets_403(self):
-        self.assertEqual(Client().get(PROJECTS_URL).status_code, 403)
-        self.assertEqual(Client().post(PROJECTS_URL, "{}", content_type="application/json").status_code, 403)
+    def test_anonymous_gets_401(self):
+        self.assertEqual(Client().get(PROJECTS_URL).status_code, 401)
+        self.assertEqual(Client().post(PROJECTS_URL, "{}", content_type="application/json").status_code, 401)
 
     def test_create_returns_complete_default_options(self):
         response = self.post(self.alice_client, {"name": "Test", "html": "<p>", "css": "p{}", "ts": "let a = 1"})
@@ -232,9 +232,9 @@ class TypeScriptZipTests(TestCase):
         self.assertEqual(self.upload(make_zip({"tsconfig.json": "a" * (9 * 1024)})).status_code, 413)
         self.assertEqual(self.upload(make_zip({f"f{i}.txt": "x" for i in range(11)})).status_code, 413)
 
-    def test_anonymous_gets_403(self):
-        self.assertEqual(Client().post(EXPORT_URL, "{}", content_type="application/json").status_code, 403)
-        self.assertEqual(Client().post(IMPORT_URL, {}).status_code, 403)
+    def test_anonymous_gets_401(self):
+        self.assertEqual(Client().post(EXPORT_URL, "{}", content_type="application/json").status_code, 401)
+        self.assertEqual(Client().post(IMPORT_URL, {}).status_code, 401)
 
     def test_web_import_is_unchanged_by_the_refactoring(self):
         data = make_zip({"index.html": "<body>w</body>", "style.css": "a{}", "script.js": "1", "script.ts": "ignoré"})

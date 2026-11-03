@@ -68,7 +68,9 @@ CSRF_COOKIE_SAMESITE = "Lax"  # lisible par le JavaScript de l'éditeur (CSRF_CO
 X_FRAME_OPTIONS = "DENY"
 
 # ---------------------------------------------------------------------------
-# Authentification : toute page exige une connexion (LoginRequiredMiddleware)
+# Authentification : toute route exige une connexion (StrictLoginRequiredMiddleware, accounts/middleware.py)
+#   - page sans connexion  -> redirection vers LOGIN_URL ;
+#   - API / JSON sans connexion -> 401 (au lieu d'une redirection ou d'un 403).
 # ---------------------------------------------------------------------------
 LOGIN_URL = "login"
 LOGIN_REDIRECT_URL = "index"
@@ -112,7 +114,7 @@ MIDDLEWARE = [
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
-    "django.contrib.auth.middleware.LoginRequiredMiddleware",
+    "accounts.middleware.StrictLoginRequiredMiddleware",  # après AuthenticationMiddleware : refus par défaut
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
@@ -193,10 +195,12 @@ STATICFILES_DIRS = [
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # ---------------------------------------------------------------------------
-# API REST : réservée aux utilisateurs connectés, JSON uniquement
+# API REST : réservée aux utilisateurs connectés, JSON uniquement.
+# SessionAuthentication401 : un anonyme reçoit 401 (et non 403) ; le middleware ci-dessus le refuse déjà
+# avant la vue, ces réglages DRF sont la seconde barrière.
 # ---------------------------------------------------------------------------
 REST_FRAMEWORK = {
-    "DEFAULT_AUTHENTICATION_CLASSES": ["rest_framework.authentication.SessionAuthentication"],
+    "DEFAULT_AUTHENTICATION_CLASSES": ["accounts.authentication.SessionAuthentication401"],
     "DEFAULT_PERMISSION_CLASSES": ["rest_framework.permissions.IsAuthenticated"],
     "DEFAULT_RENDERER_CLASSES": ["rest_framework.renderers.JSONRenderer"],
 }

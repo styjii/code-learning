@@ -224,7 +224,7 @@ code-learning/
 | `POST /editor/api/ts-import-zip/` | lit ce `.zip` (mêmes plafonds) et renvoie aussi les options du `tsconfig.json` |
 | `POST /editor/preview/` puis `GET /editor/preview/<id>/` | génère puis affiche l'aperçu (cinq derniers conservés) |
 
-L'API répond `403` aux utilisateurs non connectés. L'éditeur Python n'utilise que `load-monaco-config` : ses fichiers restent dans le navigateur.
+L'API répond `401` (JSON) aux utilisateurs non connectés. L'éditeur Python n'utilise que `load-monaco-config` : ses fichiers restent dans le navigateur.
 
 ## Ajouter ou modifier un cours
 
@@ -296,7 +296,7 @@ Toutes les valeurs sensibles sont lues dans `.env` (jamais versionné, voir `.gi
 
 ## Sécurité
 
-- **Authentification** : `LoginRequiredMiddleware` redirige toutes les pages vers la connexion ; l'API REST répond `403` aux anonymes. Déconnexion par `POST` uniquement.
+- **Authentification** : `StrictLoginRequiredMiddleware` (`accounts/middleware.py`) refuse par défaut toute route sans connexion : redirection vers la page de connexion pour les pages, `401` JSON pour l'API REST et les appels `fetch()`, y compris pour une vue DRF déclarée par erreur avec `AllowAny`. Seules la page de connexion et celle de l'admin sont publiques (`accounts/test_auth_coverage.py` le vérifie sur toutes les routes). Déconnexion par `POST` uniquement.
 - **Force brute** : blocage temporaire (`DJANGO_LOGIN_LOCKOUT_SECONDS`) après plusieurs échecs, avec trois compteurs complémentaires (`accounts/throttle.py`) :
   - **(IP, identifiant)**, seuil strict : un attaquant ne peut bloquer que sa propre IP ;
   - **IP seule** : un poste qui essaie de nombreux identifiants ;

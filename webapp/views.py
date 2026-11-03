@@ -2,11 +2,13 @@ from django.http import JsonResponse
 from django.shortcuts import render
 from django.views.decorators.http import require_GET
 
+from accounts.decorators import api_endpoint
 from language.catalog import grouped_catalog
 from language.services import stale_keys
 from .services import process_language_entry
 
 
+@api_endpoint  # sans connexion : 401 JSON (appelé par fetch), pas de redirection
 @require_GET
 def populate_step(request):
     """Prépare une page de cours (l'indice est donné par ?index=)."""

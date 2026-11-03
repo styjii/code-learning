@@ -11,23 +11,22 @@ from editor.models import Project
 User = get_user_model()
 PASSWORD = "Mot-de-passe-solide-42"
 
-# Pages web : redirigées vers la connexion par LoginRequiredMiddleware
+# Pages web : redirigées vers la connexion par StrictLoginRequiredMiddleware
 PROTECTED = [
     "/",
     "/language/css/",
     "/language/frameworks/django/",
     "/editor/",
-    "/populate-step/?index=0",
 ]
 
-# API REST (DRF) : réponse 403 JSON via la permission IsAuthenticated (plus adaptée à fetch())
-PROTECTED_API_READ = ["/editor/api/projects/", "/editor/api/load-monaco-config/"]
+# Points d'entrée JSON : réponse 401 (sans redirection, inutile pour un fetch())
+PROTECTED_API_READ = ["/editor/api/projects/", "/editor/api/load-monaco-config/", "/populate-step/?index=0"]
 PROTECTED_API_WRITE = ["/editor/api/projects/", "/editor/preview/", "/editor/api/export-zip/",
                        "/editor/api/import-zip/", "/editor/api/save-monaco-config/"]
 
 
 class AuthenticationRequiredTests(TestCase):
-    """Tout accès sans connexion doit être redirigé vers la page de connexion."""
+    """Tout accès sans connexion est refusé : redirection (pages) ou 401 (API)."""
 
     def test_anonymous_is_redirected_everywhere(self):
         for url in PROTECTED:
@@ -36,13 +35,22 @@ class AuthenticationRequiredTests(TestCase):
                 self.assertEqual(response.status_code, 302)
                 self.assertTrue(response["Location"].startswith(reverse("login")), response["Location"])
 
-    def test_anonymous_api_is_forbidden(self):
+    def test_anonymous_api_is_unauthorized(self):
         for url in PROTECTED_API_READ:
-            with self.subTest(url=url):
-                self.assertEqual(self.client.get(url).status_code, 403)
+            with self.subTest(method="GET", url=url):
+                self.assertEqual(self.client.get(url).status_code, 401)
         for url in PROTECTED_API_WRITE:
+            with self.subTest(method="POST", url=url):
+                self.assertEqual(self.client.post(url, {}).status_code, 401)
+
+    def test_anonymous_api_response_is_json_with_challenge(self):
+        for url in ("/editor/api/projects/", "/populate-step/?index=0"):
             with self.subTest(url=url):
-                self.assertEqual(self.client.post(url, {}).status_code, 403)
+                response = self.client.get(url)
+                self.assertEqual(response["Content-Type"], "application/json")
+                self.assertTrue(response["WWW-Authenticate"].startswith("Session"))
+                self.assertIn("detail", response.json())
+                self.assertIn("message", response.json())  # lu par ProgressMain.js
 
     def test_anonymous_preview_is_not_served(self):
         self.assertEqual(self.client.get("/editor/preview/abcdef/").status_code, 302)
