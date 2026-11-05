@@ -5,7 +5,8 @@
 {% block description %}Éditeur Python en ligne : plusieurs fichiers, input() interactif et console.{% endblock %}
 {% block favicon %}{% static 'icons/python.svg' %}{% endblock %}
 {% block body_attrs %}data-app="editor" class="editor-app py-app"
-    data-monaco="{% static 'editor/monaco-editor/min/vs' %}" data-pyodide="{% static 'vendor/pyodide/' %}"{% endblock %}
+    data-monaco="{% static 'editor/monaco-editor/min/vs' %}" data-pyodide="{% static 'vendor/pyodide/' %}"
+    data-python-tools="{% static 'vendor/python-tools/' %}"{% endblock %}
 
 {% block styles %}
 <link rel="stylesheet" href="{% static 'editor/css/layout.css' %}">
@@ -67,6 +68,7 @@
                 <div id="py-tabs" role="tablist" aria-label="Fichiers du projet"></div>
                 <button id="py-add" class="py-add" type="button" aria-label="Nouveau fichier" title="Nouveau fichier">+</button>
                 <span id="py-save-state" class="py-save-state" aria-live="polite"></span>
+                <span id="py-lang-state" class="py-lang-state" aria-live="polite"></span>
             </div>
             <div id="py-message" class="py-message" role="alert" hidden></div>
             <div id="py-editor"></div>

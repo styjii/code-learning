@@ -49,7 +49,7 @@
 **Éditeurs en ligne** (commutateur *Web | Python | TypeScript* en haut de chaque éditeur)
 - **Web** (`/editor/`) : onglets HTML / CSS / JS propulsés par Monaco Editor (le moteur de VS Code), avec Emmet et des snippets JavaScript. Aperçu dans une iframe isolée, console intégrée, aperçu automatique avec délai réglable, option Bootstrap en un clic.
 - **TypeScript** (`/editor/typescript/`) : mêmes projets, aperçu et import / export, avec onglets HTML / CSS / **TS**. Le code est vérifié et compilé dans le navigateur (compilateur de Monaco) ; les erreurs de type sont soulignées et listées dans la console. **Options du compilateur** par projet (`target`, `strict`, `noUnusedLocals`...), écrites dans le `tsconfig.json` de l'export.
-- **Python** (`/editor/python/`) : plusieurs fichiers (`main.py` + modules importables), exécution dans Pyodide, `input()` interactif dans la console, bouton **Arrêter**. Les fichiers sont conservés **dans le navigateur**, pas sur le serveur.
+- **Python** (`/editor/python/`) : plusieurs fichiers (`main.py` + modules importables), exécution dans Pyodide, `input()` interactif dans la console, bouton **Arrêter**, **détection d'erreurs, autocomplétion, infobulles et aide aux appels** comme dans l'éditeur TypeScript. Les fichiers sont conservés **dans le navigateur**, pas sur le serveur.
 - **Projets** Web et TypeScript enregistrés par utilisateur, **import / export .zip**.
 - Préférences d'éditeur (retour à la ligne, taille de tabulation, minimap...) propres à chaque compte.
 
@@ -157,6 +157,7 @@ Les trois éditeurs partagent la même interface (Monaco, console, thème clair 
 
 - `main.py` est le point d'entrée : il ne peut être ni renommé ni supprimé. Les autres fichiers `.py` sont importables (`import utils`) ; les fichiers `.txt`, `.json`, `.csv` et `.md` importés sont disponibles à côté du programme.
 - `input()` est interactif : tapez directement dans la console. La zone repliable « Entrée standard » permet de préremplir une ligne par `input()`.
+- **Aide à l'écriture** (comme pour JavaScript/TypeScript, que Monaco gère en natif) : erreurs soulignées pendant la frappe (syntaxe, noms non définis, imports et variables inutilisés, messages en français), **autocomplétion** (bibliothèque standard, vos propres fichiers, arguments nommés), **infobulle** au survol (signature, type, documentation) et **aide aux arguments** à l'ouverture d'une parenthèse. Elle s'appuie sur `jedi` et `pyflakes`, exécutés dans un second Pyodide (Web Worker) qui n'interfère pas avec l'exécution du programme ; l'indicateur « Analyse du code : chargement… » disparaît une fois prêt. Si elle ne démarre pas, l'éditeur et l'exécution restent utilisables.
 - **Enregistrement** : automatique, dans ce navigateur uniquement (indicateur « Enregistré dans ce navigateur », `Ctrl + S` pour forcer). Les fichiers ne suivent pas le compte et disparaissent si vous videz les données du site : utilisez **Télécharger le fichier actif** pour les sauvegarder.
 - Le bouton **Arrêter** interrompt le programme ; un délai maximal de 5 minutes s'applique. Pyodide (~13 Mo) est chargé au premier lancement.
 - Seules les préférences Monaco sont lues sur le serveur.
@@ -266,6 +267,7 @@ Les blocs ` ```js `, ` ```ts ` et ` ```python ` ont un bouton **Exécuter** : le
 - Les extraits JS/TS qui utilisent `import`, `export` ou `require()` ne sont pas exécutables et n'ont pas de bouton.
 - Le C / C++ n'est pas encore pris en charge.
 - Pyodide est embarqué dans `static/vendor/pyodide/` (licence MPL-2.0).
+- Les outils d'analyse de l'éditeur Python (`jedi`, `parso`, `pyflakes`, licence MIT) sont embarqués dans `static/vendor/python-tools/` ; leur `README.md` explique comment les mettre à jour.
 
 ## Configuration (`.env`)
 
@@ -387,6 +389,7 @@ Le workflow [`.github/workflows/ci.yml`](.github/workflows/ci.yml) se lance à c
 | `no such table: editor_editorpreferences` | Migrations non appliquées : `python manage.py migrate`. |
 | Le premier affichage des cours est lent | Normal : conversion des pages et mise en cache au premier passage (barre de progression à l'accueil). |
 | Le premier clic sur « Exécuter » en Python est lent | Normal : Pyodide (~13 Mo) est chargé une seule fois. |
+| Éditeur Python : « Analyse du code indisponible » | Le second Pyodide (erreurs, autocomplétion) n'a pas démarré ; survolez le message pour la cause. Vérifiez que `static/vendor/python-tools/` est bien servi (`collectstatic` en production). L'éditeur et l'exécution fonctionnent sans elle. |
 | Import zip refusé (erreur 413) | L'archive dépasse une limite : voir les variables `EDITOR_ZIP_*`. |
 | Compte bloqué après des échecs | Attendez `DJANGO_LOGIN_LOCKOUT_SECONDS` (5 min par défaut ; un compte à rebours s'affiche sur la page de connexion). Derrière un proxy, si des utilisateurs distincts se bloquent entre eux, vérifiez `DJANGO_BEHIND_PROXY=1` et que le proxy envoie `X-Forwarded-For` : sinon tous partagent l'IP du proxy. |
 | Éditeur TypeScript : le code ne s'exécute pas, la console liste des `TS…` | `noEmitOnError` est actif : corrigez les erreurs de type, ou désactivez-le dans « Options TypeScript ». |

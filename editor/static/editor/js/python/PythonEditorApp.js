@@ -3,6 +3,7 @@ import { PythonRunner } from "../../../language/js/runner/PythonRunner.js";
 import { ConsoleRenderer } from "../console/ConsoleRenderer.js";
 import { DropdownEvents } from "../events/DropdownEvents.js";
 import { FileStore, MAIN_FILE, MAX_CHARS, MAX_FILES, validateName } from "./FileStore.js";
+import { PythonLanguageService, createLanguageClient } from "./language/PythonLanguageService.js";
 
 /**
  * Éditeur Python en ligne : plusieurs fichiers (main.py + modules importables), Monaco, exécution
@@ -41,6 +42,9 @@ export class PythonEditorApp {
         this.renaming = null;
         this.monaco = null;
         this.editor = null;
+        this.language = null;
+        this.languageClient = null;
+        this.languageState = "idle";
     }
 
     async start() {
@@ -50,6 +54,7 @@ export class PythonEditorApp {
         if (!this.store.persistent) {
             this.notify("Le stockage local du navigateur est indisponible : vos fichiers ne seront pas conservés.", true);
         }
+        this.languageClient = createLanguageClient((state, error) => this.setLanguageState(state, error));
         try {
             this.monaco = await loadMonaco();
         } catch (error) {
@@ -57,8 +62,12 @@ export class PythonEditorApp {
             this.notify(error.message, true);
             return;
         }
+        // L'analyse (erreurs, autocomplétion) n'a pas besoin de l'éditeur : son worker démarre dès que Monaco est
+        // chargé, sans attendre la configuration ni la création de l'éditeur (et sans lui disputer la bande passante).
+        this.languageClient.start();
         await this.createEditor();
         this.activate(this.store.active);
+        this.applySuggestionMode();      // le service a pu devenir prêt avant que l'éditeur n'existe
         this.setStatus("");
         $("run-code").disabled = false;
     }
@@ -94,6 +103,14 @@ export class PythonEditorApp {
         });
         this.editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.Enter, () => this.run());
         this.editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyS, () => this.saveNow());
+
+        // Erreurs, autocomplétion, infobulles et aide aux appels : Monaco n'en a pas en natif pour Python.
+        // Chargé en arrière-plan : l'éditeur et l'exécution ne dépendent pas de lui.
+        this.language = new PythonLanguageService(monaco, {
+            getFiles: () => Object.fromEntries(this.store.files.map((file) => [file.name, file.content])),
+            client: this.languageClient,     // déjà en cours de démarrage (voir start())
+        });
+        this.editor.onDidChangeModel(() => this.applySuggestionMode());
     }
 
     modelFor(name) {
@@ -102,6 +119,7 @@ export class PythonEditorApp {
             model = this.monaco.editor.createModel(this.store.content(name), languageOf(name), this.monaco.Uri.parse(`file:///${name}`));
             model.onDidChangeContent(() => this.onEdit(name, model));
             this.models.set(name, model);
+            this.language?.watch(model);
         }
         return model;
     }
@@ -127,6 +145,7 @@ export class PythonEditorApp {
         const current = this.editor.getModel();
         if (current) this.viewStates.set(current.uri.path.slice(1), this.editor.saveViewState());
         this.editor.setModel(this.modelFor(name));
+        this.applySuggestionMode();
         const state = this.viewStates.get(name);
         if (state) this.editor.restoreViewState(state);
         this.store.active = name;
@@ -420,6 +439,24 @@ export class PythonEditorApp {
     }
 
     /* ------------------------------------------------------------------ Interface */
+
+    /** Les suggestions « mots du document » de Monaco font doublon dès que le service Python propose les vraies. */
+    applySuggestionMode() {
+        const model = this.editor?.getModel();
+        if (!model) return;
+        const smart = this.languageState === "ready" && model.getLanguageId() === "python";
+        this.editor.updateOptions({ wordBasedSuggestions: smart ? "off" : "matchingDocuments" });
+    }
+
+    setLanguageState(state, error) {
+        this.languageState = state;
+        const label = $("py-lang-state");
+        label.textContent = { loading: "Analyse du code : chargement…", failed: "Analyse du code indisponible" }[state] ?? "";
+        label.classList.toggle("is-failed", state === "failed");
+        label.title = state === "failed" && error ? `${error.message}. L'éditeur et l'exécution restent utilisables.` : "";
+        if (state === "failed") console.warn("[éditeur Python] service d'analyse indisponible :", error);
+        this.applySuggestionMode();
+    }
 
     setStatus(text) { $("py-status").textContent = text; }
     setSaveState(text) { $("py-save-state").textContent = text; }

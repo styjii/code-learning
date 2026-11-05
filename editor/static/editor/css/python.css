@@ -99,6 +99,8 @@ body.py-app #console.cc { font-size: 13px; }
 .py-add:disabled { opacity: 0.4; cursor: not-allowed; }
 
 .py-save-state { margin-left: auto; align-self: center; padding: 0 0.8rem; color: var(--muted); font-size: 0.75rem; white-space: nowrap; }
+.py-lang-state { align-self: center; padding: 0 0.8rem 0 0; color: var(--muted); font-size: 0.75rem; white-space: nowrap; }
+.py-lang-state.is-failed { color: #cf222e; cursor: help; }
 
 .py-message { padding: 0.4rem 0.8rem; flex-shrink: 0; border-bottom: 1px solid var(--border); background: var(--accent-soft); color: var(--text); font-size: 0.85rem; }
 .py-message.is-error { background: #fff0f0; color: #a40e26; border-color: #ffd6d6; }
@@ -127,7 +129,30 @@ body.py-app #console.cc { font-size: 13px; }
     resize: vertical;
 }
 
+/* ----------------------------- En-tête ------------------------------
+ * L'en-tête Python a un menu de plus (« Affichage ») que celui des éditeurs Web et TypeScript : il mesurait ~630 px
+ * et dépassait les écrans de moins de 640 px (téléphone, petite tablette). La page devenait alors plus large que
+ * l'écran : le navigateur dézoomait pour tout afficher, laissant une bande vide qui empêchait le plein écran.
+ * Ici l'en-tête ne déborde plus jamais : il se compacte, puis passe sur deux lignes si vraiment il n'y a pas la place.
+ * (Pas de `overflow: hidden` : il couperait les menus déroulants.) */
+body.py-app .app-header {
+    height: auto;
+    min-height: 48px;
+    flex-wrap: wrap;
+    row-gap: 0.25rem;
+    padding-block: 0.25rem;
+    max-width: 100%;
+}
+body.py-app .app-header > * { flex-shrink: 0; }
+
+@media (max-width: 720px) {
+    body.py-app .app-header { gap: 0.4rem; padding-inline: 0.5rem; }
+    body.py-app .brand-name { display: none; }           /* le logo suffit, et renvoie à l'accueil */
+    body.py-app .mode-switch a { padding-inline: 0.55rem; }
+    body.py-app .nav-bar .navlink { padding-inline: 0.5rem; }
+}
+
 @media (max-width: 640px) {
-    .py-save-state { display: none; }
+    .py-save-state, .py-lang-state { display: none; }
     .py-tab-label { padding: 0 0.6rem; }
 }

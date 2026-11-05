@@ -1,0 +1,19 @@
+{
+  "wheels": [
+    {
+      "file": "parso-0.8.6-py2.py3-none-any.whl",
+      "sha256": "2c549f800b70a5c4952197248825584cb00f033b29c692671d3bf08bf380baff",
+      "size": 106894
+    },
+    {
+      "file": "jedi-0.19.2-py2.py3-none-any.whl",
+      "sha256": "a8ef22bde8490f57fe5c7681a3c83cb58874daf72b4784de3cce5b6ef6edb5b9",
+      "size": 1572278
+    },
+    {
+      "file": "pyflakes-4.1.0-py2.py3-none-any.whl",
+      "sha256": "b2e05e6bac8e49b67be2a6ffa63422c60f7193fc72e8180255907b41ec997dc1",
+      "size": 66258
+    }
+  ]
+}
