@@ -62,7 +62,7 @@
 | Catégorie | Contenu |
 |---|---|
 | **Langages & outils** | CSS, JavaScript, TypeScript, Python, PHP, Langage C, Git, Algorithmique |
-| **Frameworks** | Angular, Django |
+| **Frameworks** | Angular, Django, Vue.js |
 | **Modules** | Modules Python (bibliothèque standard), BeautifulSoup |
 | **Exercices** | JavaScript, TypeScript, C, Algorithmique |
 | **Corrigés** | JavaScript, TypeScript, C, Algorithmique |

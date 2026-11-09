@@ -59,6 +59,8 @@ _PAGES: List[Page] = [
          "Le framework de Google pour des applications web robustes."),
     Page("frameworks/django", "frameworks/django.md", "Django", "frameworks", "icons/django.svg", "#44b78b",
          "Le framework Python « batteries included » pour le web."),
+    Page("frameworks/vuejs", "frameworks/vuejs.md", "Vue.js", "frameworks", "icons/vue.svg", "#41b883",
+         "Le framework progressif pour des interfaces réactives, avec Vue 3 et TypeScript."),
     # --- Modules ---
     Page("modules/python", "modules/python.md", "Modules Python", "modules", "icons/python.svg", "#3776ab",
          "Les modules essentiels de la bibliothèque standard."),
