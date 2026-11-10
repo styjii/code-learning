@@ -6,6 +6,7 @@ import { ProjectManager } from "./projects/ProjectManager.js";
 import { EditorBinder } from "./editors/EditorBinder.js";
 import { SettingsBinder } from "./projects/SettingsBinder.js";
 import { ConsoleManager } from "./console/ConsoleManager.js";
+import { PreviewStorage } from "./projects/PreviewStorage.js";
 import { bindAllEvents } from "./events/index.js";
 
 patchPassiveTouchStart();
@@ -27,5 +28,6 @@ document.addEventListener("DOMContentLoaded", () => {
     SettingsBinder.bindListeners();
     bindAllEvents();
     window.addEventListener("message", ConsoleManager.handleMessage);
+    window.addEventListener("message", PreviewStorage.handleMessage);
     ConsoleManager.init();
 });

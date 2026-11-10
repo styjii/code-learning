@@ -1,6 +1,7 @@
 import { state } from "./state.js";
 import { compileTypeScript } from "./TsCompiler.js";
 import { ConsoleManager } from "../console/ConsoleManager.js";
+import { PreviewStorage } from "../projects/PreviewStorage.js";
 
 /**
  * Compile le TypeScript, affiche les erreurs dans la console, puis envoie HTML, CSS et JavaScript produit
@@ -74,6 +75,7 @@ export class TsPreviewManager {
         formData.append("module", "1");
         formData.append("cdn_css", JSON.stringify(state.cssCdnLinks));
         formData.append("cdn_js", JSON.stringify(state.jsCdnLinks));
+        formData.append("storage", PreviewStorage.begin("ts", state.projects[state.currentProject]?.id));
 
         try {
             const res = await fetch("/editor/preview/", { method: "POST", body: formData });

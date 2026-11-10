@@ -2,6 +2,7 @@ import "../utils/csrf.js"; // doit être chargé en premier (jeton CSRF sur les 
 import { EditorConfigManager } from "../editors/EditorConfigManager.js";
 import { patchPassiveTouchStart } from "../editors/utils.js";
 import { ConsoleManager } from "../console/ConsoleManager.js";
+import { PreviewStorage } from "../projects/PreviewStorage.js";
 import { state } from "./state.js";
 import { TsEditorManager } from "./TsEditorManager.js";
 import { TsEditorBinder } from "./TsEditorBinder.js";
@@ -30,5 +31,6 @@ document.addEventListener("DOMContentLoaded", () => {
     TsSettingsBinder.bindListeners();
     bindAllEvents(editorManager);
     window.addEventListener("message", ConsoleManager.handleMessage);
+    window.addEventListener("message", PreviewStorage.handleMessage);
     ConsoleManager.init();
 });

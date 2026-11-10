@@ -26,6 +26,9 @@ import zipfile
 from urllib.parse import quote
 
 MAX_PREVIEWS = 5
+# Données localStorage du code de l'aperçu (voir static/editor/js/preview-storage.js) : mêmes plafonds que le navigateur.
+PREVIEW_STORAGE_MAX_CHARS = 256 * 1024
+PREVIEW_STORAGE_MAX_KEYS = 200
 
 # Marge pour l'enveloppe multipart (délimiteurs, en-têtes) autour du fichier envoyé.
 UPLOAD_OVERHEAD_BYTES = 64 * 1024
@@ -372,6 +375,24 @@ class PythonImportZipView(ImportZipView):
         return Response({'files': files, 'skipped': skipped})
 
 
+def clean_preview_storage(raw):
+    """
+    Données ``localStorage`` envoyées par l'éditeur pour l'aperçu : un objet « clé -> chaîne », dans les plafonds.
+    Tout le reste (JSON invalide, mauvais types, trop gros) est ignoré : l'aperçu démarre alors avec un stockage vide.
+    """
+    try:
+        data = json.loads(raw or "{}")
+    except ValueError:
+        return {}
+    if not isinstance(data, dict) or len(data) > PREVIEW_STORAGE_MAX_KEYS:
+        return {}
+    if not all(isinstance(v, str) for v in data.values()):
+        return {}
+    if sum(len(k) + len(v) for k, v in data.items()) > PREVIEW_STORAGE_MAX_CHARS:
+        return {}
+    return data
+
+
 class LivePreviewView(APIView):
     def post(self, request):
         """
@@ -395,6 +416,7 @@ class LivePreviewView(APIView):
         module = request.POST.get("module") == "1"
 
         context = {
+            "storage": clean_preview_storage(request.POST.get("storage", "")),
             "html": html,
             "css": css,
             "js": js,

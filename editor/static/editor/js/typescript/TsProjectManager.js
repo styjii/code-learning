@@ -1,5 +1,6 @@
 import { state } from "./state.js";
 import { TsPreviewManager } from "./TsPreviewManager.js";
+import { PreviewStorage } from "../projects/PreviewStorage.js";
 import { TsOptionsManager } from "./TsOptionsManager.js";
 import { DEFAULT_COMPILER_OPTIONS, normalizeCompilerOptions } from "./TsCompilerOptions.js";
 
@@ -178,6 +179,7 @@ export class TsProjectManager {
         const res = await fetch(`${API}${id}/`, { method: "DELETE" });
 
         if (res.ok) {
+            PreviewStorage.forget("ts", id);   // données localStorage de l'aperçu de ce projet
             delete state.projects[state.currentProject];
             state.currentProject = Object.keys(state.projects)[0] ?? null;
             feedback.style.display = "none";

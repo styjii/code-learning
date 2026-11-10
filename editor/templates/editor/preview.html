@@ -5,6 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WEB PREVIEW</title>
+    <!-- localStorage / sessionStorage de remplacement (bac à sable) : à charger avant tout autre script -->
+    {{ storage|json_script:"preview-storage-data" }}
+    <script src="{% static 'editor/js/preview-storage.js' %}"></script>
     {% for css in cdn_css %}
     <link rel="stylesheet" href="{{ css }}">
     {% endfor %}

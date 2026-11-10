@@ -1,5 +1,6 @@
 import { state } from "../state/state.js";
 import { PreviewManager } from "./PreviewManager.js";
+import { PreviewStorage } from "./PreviewStorage.js";
 
 /**
  * Manages CRUD operations for user projects (HTML/CSS/JS sets).
@@ -194,6 +195,7 @@ export class ProjectManager {
 
             // 404 : déjà supprimé (autre onglet) -> même résultat final côté interface.
             if (res.ok || res.status === 404) {
+                PreviewStorage.forget("web", id);   // données localStorage de l'aperçu de ce projet
                 delete state.projects[state.currentProject];
                 state.currentProject = Object.keys(state.projects)[0] ?? null;
                 feedback.style.display = "none";
