@@ -1,7 +1,8 @@
 import { ProjectManager } from "../projects/ProjectManager.js";
+import { ProjectRenameBinder } from "../projects/ProjectRenameBinder.js";
 
 /**
- * ProjectEvents handles project selection, creation, and deletion.
+ * ProjectEvents handles project selection, creation, renaming, and deletion.
  */
 export class ProjectEvents {
     /**
@@ -19,5 +20,6 @@ export class ProjectEvents {
 
         document.getElementById("create-btn").addEventListener("click", async () => await ProjectManager.create());
         document.getElementById("delete-btn").addEventListener("click", async () => await ProjectManager.delete());
+        ProjectRenameBinder.bind(ProjectManager);
     }
 }

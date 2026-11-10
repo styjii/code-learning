@@ -187,11 +187,74 @@ export class TsProjectManager {
         }
     }
 
+    /**
+     * Renomme le projet courant via l'API (``PATCH { name }``) puis met l'interface à jour.
+     *
+     * Le contenu en attente de sauvegarde est enregistré d'abord, sous l'ancien nom, pour qu'aucune
+     * sauvegarde différée ne rétablisse ensuite l'ancien nom.
+     *
+     * @param {string} newName - Nouveau nom saisi par l'utilisateur.
+     * @returns {Promise<{ok: boolean, unchanged?: boolean, message?: string}>}
+     */
+    static async rename(newName) {
+        if (this.isRenaming) return { ok: false, message: "Renommage en cours." };
+
+        const oldName = state.currentProject;
+        const project = state.projects[oldName];
+        const name = String(newName ?? "").trim();
+
+        if (!project?.id) return { ok: false, message: "Projet introuvable." };
+        if (!name) return { ok: false, message: "Le nom ne peut pas être vide." };
+        if (name.length > 100) return { ok: false, message: "Le nom ne doit pas dépasser 100 caractères." };
+        if (name === oldName) return { ok: true, unchanged: true };
+        if (state.projects[name]) return { ok: false, message: "Un projet porte déjà ce nom." };
+
+        this.isRenaming = true;
+        try {
+            await this.flush();
+            const id = project.id;
+            const res = await fetch(`${API}${id}/`, {
+                method: "PATCH",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ name }),
+            });
+
+            if (res.status === 400) {
+                // Nom invalide ou déjà pris (aussi en cas de requêtes simultanées) : message du serveur.
+                const errors = await res.json().catch(() => ({}));
+                return { ok: false, message: errors.name?.[0] ?? "Nom invalide." };
+            }
+            if (res.status === 404) return { ok: false, message: "Ce projet n'existe plus. Rechargez la page." };
+            if (!res.ok) throw new Error("Failed to rename project");
+
+            const data = await res.json();
+            // On change la clé en gardant l'ordre des projets (celui de la liste déroulante).
+            state.projects = Object.fromEntries(
+                Object.entries(state.projects).map(([key, value]) => [key === oldName ? data.name : key, value])
+            );
+            state.currentProject = data.name;
+            this.updateDropdown();
+            return { ok: true };
+        } catch (err) {
+            console.error("Error renaming project:", err);
+            return { ok: false, message: "Renommage impossible. Réessayez." };
+        } finally {
+            this.isRenaming = false;
+        }
+    }
+
     /** Updates the project selection dropdown in the UI. */
     static updateDropdown() {
         const select = document.getElementById("project-select");
         const chip = document.getElementById("current-project");
         if (chip) chip.textContent = state.currentProject ?? "—";
+        const label = document.getElementById("project-current-name");
+        if (label) {
+            label.textContent = state.currentProject ?? "—";
+            label.title = state.currentProject ?? "Projet en cours";
+        }
+        // Le projet courant a changé (sélection, création, suppression, renommage) : l'édition du nom en cours est caduque.
+        document.dispatchEvent(new CustomEvent("project:current-changed"));
         select.innerHTML = "";
 
         Object.keys(state.projects).forEach((name) => {

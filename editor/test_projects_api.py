@@ -210,12 +210,55 @@ class DeleteProjectTests:
         self.assertTrue(self.model.objects.filter(pk=self.project.pk).exists())
 
 
-class WebProjectsApiTests(CreateProjectTests, ProjectIsolationTests, DeleteProjectTests, ProjectsApiTestCase):
+class RenameProjectTests:
+    """Renommage depuis la modale « Projets » : ``PATCH {"name": ...}`` sur le projet courant."""
+
+    def rename(self, client, pk, name):
+        return client.patch(self.detail(pk), json.dumps({"name": name}), content_type=JSON)
+
+    def test_patch_name_renames_and_keeps_the_content(self):
+        response = self.rename(self.alice_client, self.project.pk, "renommé")
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["name"], "renommé")
+        self.project.refresh_from_db()
+        self.assertEqual((self.project.name, self.project.html, self.project.css),
+                         ("renommé", self.payload["html"], self.payload["css"]))
+
+    def test_renaming_to_its_own_name_is_accepted(self):
+        self.assertEqual(self.rename(self.alice_client, self.project.pk, "demo").status_code, 200)
+
+    def test_rename_to_a_name_used_by_another_project_is_400_and_changes_nothing(self):
+        other = self.model.objects.create(owner=self.alice, name="autre")
+        response = self.rename(self.alice_client, other.pk, "demo")
+        self.assertEqual(response.status_code, 400)
+        self.assertIn("name", response.json())
+        other.refresh_from_db()
+        self.assertEqual(other.name, "autre")
+
+    def test_rename_to_a_name_used_by_someone_else_is_allowed(self):
+        self.model.objects.create(owner=self.bob, name="pris-par-bob")
+        self.assertEqual(self.rename(self.alice_client, self.project.pk, "pris-par-bob").status_code, 200)
+
+    def test_rename_with_an_empty_or_too_long_name_is_400(self):
+        for name in ("", "x" * 101):
+            with self.subTest(length=len(name)):
+                self.assertEqual(self.rename(self.alice_client, self.project.pk, name).status_code, 400)
+        self.project.refresh_from_db()
+        self.assertEqual(self.project.name, "demo")
+
+    def test_cannot_rename_a_foreign_project(self):
+        self.assertEqual(self.rename(self.bob_client, self.project.pk, "volé").status_code, 404)
+        self.project.refresh_from_db()
+        self.assertEqual(self.project.name, "demo")
+
+
+class WebProjectsApiTests(CreateProjectTests, ProjectIsolationTests, DeleteProjectTests, RenameProjectTests,
+                           ProjectsApiTestCase):
     """API de l'éditeur Web (HTML/CSS/JS)."""
 
 
 class TypeScriptProjectsApiTests(CreateProjectTests, ProjectIsolationTests, DeleteProjectTests,
-                                 ProjectsApiTestCase):
+                                 RenameProjectTests, ProjectsApiTestCase):
     """L'API TypeScript hérite du même code : mêmes garanties, sur son propre modèle."""
 
     url = "/editor/api/ts-projects/"

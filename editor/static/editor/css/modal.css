@@ -162,6 +162,57 @@ label { user-select: none; }
 .switch input:checked + .slider::before { transform: translateX(18px); }
 .switch input:focus-visible + .slider { outline: 2px solid var(--accent); outline-offset: 2px; }
 
+/* Projet en cours : libellé + bouton de renommage, puis champ d'édition à la place. */
+.project-current {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    min-height: var(--tap, 40px);
+    padding: 0.15rem 0.3rem 0.15rem 0.8rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--surface-2);
+}
+
+.project-current-dot { width: 7px; height: 7px; flex-shrink: 0; margin-right: 0.15rem; border-radius: 50%; background: #2da44e; }
+
+.project-current-label {
+    flex: 0 1 auto;
+    min-width: 0;                    /* le nom s'abrège (…) au lieu de pousser le bouton hors de la fenêtre */
+    overflow: hidden;
+    color: var(--text-strong);
+    font-weight: 600;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.project-current[hidden], .custom-input-row[hidden] { display: none; }
+
+.project-icon-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    border: 0;
+    border-radius: var(--radius);
+    background: transparent;
+    color: var(--muted);
+    cursor: pointer;
+    transition: background-color 0.15s, color 0.15s;
+}
+
+.project-icon-btn svg { width: 16px; height: 16px; }
+.project-icon-btn:hover { background: var(--surface-3); color: var(--text-strong); }
+.project-icon-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+.project-icon-btn.confirm { color: #2da44e; }
+.project-icon-btn:disabled { opacity: 0.5; cursor: default; }
+.custom-input-row .project-icon-btn { align-self: center; }
+
+@media (pointer: coarse) { .project-icon-btn { width: var(--tap, 44px); height: var(--tap, 44px); } }
+
 /* ----------------------------- Adaptation aux écrans ----------------------------- */
 
 /* Écran tactile : un champ de moins de 16 px fait zoomer Safari iOS à la saisie. */
