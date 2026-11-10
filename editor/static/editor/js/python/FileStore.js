@@ -1,9 +1,12 @@
 /**
- * Fichiers du projet de l'éditeur Python, conservés dans le navigateur (localStorage).
+ * Fichiers du projet courant de l'éditeur Python, tenus en mémoire (copie de travail).
  * Fichiers « à plat » : main.py est le point d'entrée, les autres .py sont importables
  * (« import utils ») et les autres extensions (.txt, .json, .csv…) lisibles avec open().
+ *
+ * L'enregistrement est assuré par ``PythonProjectManager`` (projets sur le serveur). Avant les projets, les fichiers
+ * étaient gardés dans le navigateur (localStorage) : ``readLegacyProject`` permet de les récupérer une fois.
  */
-const STORAGE_KEY = "python-editor:v1";
+const LEGACY_STORAGE_KEY = "python-editor:v1";
 
 export const MAIN_FILE = "main.py";
 export const MAX_FILES = 20;
@@ -64,59 +67,35 @@ export function validateName(raw, existing, { ignore } = {}) {
     return { name, error: null };
 }
 
-function browserStorage() {
+/**
+ * Fichiers que l'éditeur gardait dans le navigateur avant les projets enregistrés, ou ``null`` s'il n'y en a pas.
+ * Les fichiers sont renvoyés tels quels : ``FileStore.replaceAll`` les revalide.
+ * @returns {{name: string, content: string}[]|null}
+ */
+export function readLegacyProject() {
     try {
-        const storage = window.localStorage;
-        storage.getItem(STORAGE_KEY);      // lève une exception si le stockage est bloqué
-        return storage;
+        const data = JSON.parse(window.localStorage.getItem(LEGACY_STORAGE_KEY) ?? "null");
+        const files = Array.isArray(data?.files) ? data.files.filter((f) => f && typeof f.name === "string" && typeof f.content === "string") : [];
+        return files.length ? files : null;
     } catch {
-        return null;
+        return null;       // stockage bloqué ou contenu illisible
     }
 }
 
+/** Supprime les fichiers d'avant les projets, une fois repris dans un projet enregistré. */
+export function clearLegacyProject() {
+    try { window.localStorage.removeItem(LEGACY_STORAGE_KEY); } catch { /* stockage bloqué */ }
+}
+
 export class FileStore {
-    /** @param {Storage|null} [storage] injecté dans les tests ; par défaut localStorage */
-    constructor(storage = browserStorage()) {
-        this.storage = storage;
+    constructor() {
         /** @type {{name: string, content: string}[]} */
-        this.files = [];
+        this.files = [{ name: MAIN_FILE, content: SAMPLE }];
         this.active = MAIN_FILE;
-        this.persistent = !!storage;
-        this.#load();
-    }
-
-    #load() {
-        let data = null;
-        try { data = JSON.parse(this.storage?.getItem(STORAGE_KEY) ?? "null"); } catch { data = null; }
-
-        const seen = new Set();
-        for (const file of Array.isArray(data?.files) ? data.files : []) {
-            if (!file || typeof file.name !== "string" || typeof file.content !== "string") continue;
-            const key = file.name.toLowerCase();
-            if (seen.has(key) || validateName(file.name, []).error) continue;
-            seen.add(key);
-            this.files.push({ name: file.name, content: file.content.slice(0, MAX_CHARS) });
-            if (this.files.length >= MAX_FILES) break;
-        }
-        if (!this.files.some((file) => file.name === MAIN_FILE)) this.files.unshift({ name: MAIN_FILE, content: SAMPLE });
-        this.#sortMainFirst();
-        this.active = this.has(data?.active) ? data.active : MAIN_FILE;
     }
 
     #sortMainFirst() {
         this.files.sort((a, b) => (a.name === MAIN_FILE ? -1 : b.name === MAIN_FILE ? 1 : 0));
-    }
-
-    /** @returns {boolean} false si le navigateur refuse d'écrire (stockage plein ou bloqué) */
-    save() {
-        if (!this.storage) return false;
-        try {
-            this.storage.setItem(STORAGE_KEY, JSON.stringify({ version: 1, active: this.active, files: this.files }));
-            return true;
-        } catch {
-            this.persistent = false;
-            return false;
-        }
     }
 
     names() { return this.files.map((file) => file.name); }
@@ -174,7 +153,7 @@ export class FileStore {
     }
 
     /**
-     * Remplace tout le projet (restauration d'une archive .zip). Chaque fichier repasse par les mêmes règles que
+     * Remplace tout le projet (changement de projet, restauration d'une archive .zip). Chaque fichier repasse par les mêmes règles que
      * ``add`` (nom, doublons, limites) : ce qui ne les respecte pas est écarté et signalé, jamais enregistré.
      * Sans main.py dans l'archive, l'exemple de départ en tient lieu.
      *

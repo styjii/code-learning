@@ -238,7 +238,11 @@ class PythonEditorPageTests(TestCase):
         self.assertEqual(response.status_code, 200)
         html = response.content.decode()
         for fragment in ('id="py-editor"', 'id="py-tabs"', 'id="console"', 'id="run-code"', 'id="py-stdin"',
-                         "data-pyodide=", "data-monaco=", "editor/js/python/main.js"):
+                         "data-pyodide=", "data-monaco=", "editor/js/python/main.js",
+                         # modale « Projets » : mêmes éléments que dans les éditeurs Web et TypeScript
+                         'id="current-project"', 'data-target="#project-controls"', 'id="project-controls"',
+                         'id="project-select"', 'id="create-btn"', 'id="delete-btn"', 'id="rename-btn"',
+                         'id="project-current-name"'):
             self.assertIn(fragment, html)
 
     def test_editors_and_home_link_to_each_other(self):
@@ -255,6 +259,7 @@ class PythonEditorPageTests(TestCase):
 
         for path in (
             "editor/js/python/main.js", "editor/js/python/PythonEditorApp.js", "editor/js/python/FileStore.js",
+            "editor/js/python/PythonProjectManager.js", "editor/js/projects/ProjectRenameBinder.js",
             "editor/js/console/ConsoleRenderer.js", "editor/css/python.css",
             "language/js/runner/MonacoLoader.js", "language/js/runner/PythonRunner.js",
             "language/js/runner/python.worker.js", "vendor/pyodide/pyodide.mjs",

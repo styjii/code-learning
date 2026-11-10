@@ -3,13 +3,15 @@ import { PythonRunner } from "../../../language/js/runner/PythonRunner.js";
 import { ConsoleRenderer } from "../console/ConsoleRenderer.js";
 import { DropdownEvents } from "../events/DropdownEvents.js";
 import { ModalEvents } from "../events/ModalEvents.js";
+import { ProjectRenameBinder } from "../projects/ProjectRenameBinder.js";
 import { FileStore, MAIN_FILE, MAX_CHARS, MAX_FILES, validateName } from "./FileStore.js";
 import { PythonLanguageService, createLanguageClient } from "./language/PythonLanguageService.js";
+import { PythonProjectManager } from "./PythonProjectManager.js";
 import { PythonZipManager } from "./PythonZipManager.js";
 
 /**
- * Éditeur Python en ligne : plusieurs fichiers (main.py + modules importables), Monaco, exécution
- * dans Pyodide (Web Worker), console façon Chrome et input() interactif.
+ * Éditeur Python en ligne : plusieurs projets enregistrés (modale « Projets »), plusieurs fichiers par projet
+ * (main.py + modules importables), Monaco, exécution dans Pyodide (Web Worker), console façon Chrome et input() interactif.
  */
 
 const RUN_TIMEOUT = 5 * 60 * 1000;      // l'élève peut arrêter à tout moment : délai large
@@ -35,12 +37,12 @@ function el(tag, className, text) {
 export class PythonEditorApp {
     constructor() {
         this.store = new FileStore();
+        this.projects = new PythonProjectManager(this);
         this.console = new ConsoleRenderer($("console"));
         this.models = new Map();
         this.viewStates = new Map();
         this.running = false;
         this.job = null;
-        this.saveTimer = null;
         this.renaming = null;
         this.monaco = null;
         this.editor = null;
@@ -53,10 +55,9 @@ export class PythonEditorApp {
         this.bindUi();
         this.renderTabs();
         this.setStatus("Chargement de l'éditeur…");
-        if (!this.store.persistent) {
-            this.notify("Le stockage local du navigateur est indisponible : vos fichiers ne seront pas conservés.", true);
-        }
         this.languageClient = createLanguageClient((state, error) => this.setLanguageState(state, error));
+        // Les projets se chargent pendant que Monaco démarre : le premier est affiché dès que l'éditeur existe.
+        const projectsLoaded = this.projects.fetchAll();
         try {
             this.monaco = await loadMonaco();
         } catch (error) {
@@ -68,6 +69,7 @@ export class PythonEditorApp {
         // chargé, sans attendre la configuration ni la création de l'éditeur (et sans lui disputer la bande passante).
         this.languageClient.start();
         await this.createEditor();
+        await projectsLoaded;
         this.activate(this.store.active);
         this.applySuggestionMode();      // le service a pu devenir prêt avant que l'éditeur n'existe
         this.setStatus("");
@@ -138,14 +140,12 @@ export class PythonEditorApp {
         this.store.setContent(name, model.getValue());
         this.clearMarkers();
         this.setSaveState("Modifications non enregistrées…");
-        clearTimeout(this.saveTimer);
-        this.saveTimer = setTimeout(() => this.saveNow(), SAVE_DELAY);
+        this.projects.scheduleSave(SAVE_DELAY);
     }
 
+    /** Enregistre tout de suite le projet courant sur le serveur. */
     saveNow() {
-        clearTimeout(this.saveTimer);
-        const ok = this.store.save();
-        this.setSaveState(ok ? "Enregistré dans ce navigateur" : "Enregistrement impossible");
+        return this.projects.save();
     }
 
     /* ------------------------------------------------------------------ Onglets */
@@ -161,7 +161,6 @@ export class PythonEditorApp {
         this.store.active = name;
         this.renderTabs();
         if (!this.renaming) this.editor.focus();
-        this.store.save();
     }
 
     renderTabs() {
@@ -300,7 +299,7 @@ export class PythonEditorApp {
 
     async run() {
         if (this.running || !this.editor) return;
-        this.saveNow();
+        this.projects.flush();       // un enregistrement différé part tout de suite ; sinon rien à envoyer
         this.clearMarkers();
         this.console.clear();
         this.notify("");
@@ -443,21 +442,38 @@ export class PythonEditorApp {
     }
 
     /**
-     * Restaure le projet depuis une archive .zip déjà validée par le serveur (voir PythonZipManager).
+     * Affiche ces fichiers à la place de ceux de l'éditeur, sans rien enregistrer : changement de projet ou
+     * restauration d'une archive. Chaque fichier repasse par les règles de ``FileStore.replaceAll``.
      * @param {{name: string, content: string}[]} files
      * @returns {{count: number, skipped: string[], sampleMain: boolean}}
      */
-    restoreFiles(files) {
+    showFiles(files) {
+        if (this.running) this.stop();       // le programme en cours appartient au projet qu'on quitte
         for (const model of this.models.values()) model.dispose();
         this.models.clear();
         this.viewStates.clear();
         const result = this.store.replaceAll(files);
-        this.saveNow();
         this.console.clear();
-        this.setStatus("");
-        this.notify("");
-        if (this.editor) this.activate(MAIN_FILE);
-        else this.renderTabs();       // Monaco n'a pas démarré : les fichiers sont restaurés, l'éditeur les affichera
+        if (this.editor) {
+            this.setStatus("");
+            this.notify("");
+            this.activate(MAIN_FILE);
+        } else {
+            // Monaco n'a pas (encore) démarré : les fichiers sont là, l'éditeur les affichera. Le message de
+            // chargement ou d'erreur de Monaco, lui, doit rester affiché.
+            this.renderTabs();
+        }
+        return result;
+    }
+
+    /**
+     * Restaure le projet courant depuis une archive .zip déjà validée par le serveur (voir PythonZipManager).
+     * @param {{name: string, content: string}[]} files
+     * @returns {{count: number, skipped: string[], sampleMain: boolean}}
+     */
+    restoreFiles(files) {
+        const result = this.showFiles(files);
+        this.saveNow();
         return result;
     }
 
@@ -497,10 +513,20 @@ export class PythonEditorApp {
         box.classList.toggle("is-error", isError);
     }
 
+    /** Modale « Projets » : sélection, création, renommage et suppression, comme dans les éditeurs Web et TypeScript. */
+    bindProjects() {
+        $("project-form").addEventListener("submit", (e) => e.preventDefault());
+        $("project-select").addEventListener("change", async (e) => await this.projects.switch(e.target.value));
+        $("create-btn").addEventListener("click", async () => await this.projects.create());
+        $("delete-btn").addEventListener("click", async () => await this.projects.delete());
+        ProjectRenameBinder.bind(this.projects);
+    }
+
     bindUi() {
         DropdownEvents.bind();
         ModalEvents.bind();                   // fenêtre « Import / export .zip », la même que celle de l'éditeur Web
         new PythonZipManager(this).bind();
+        this.bindProjects();
         $("run-code").disabled = true;
         $("run-code").addEventListener("click", () => (this.running ? this.stop() : this.run()));
         $("py-clear").addEventListener("click", () => { this.console.clear(); this.setStatus(""); });
@@ -524,7 +550,7 @@ export class PythonEditorApp {
                 this.saveNow();
             }
         });
-        window.addEventListener("pagehide", () => this.saveNow());
+        window.addEventListener("pagehide", () => this.projects.flush());
         window.addEventListener("beforeunload", () => this.job?.stop());
     }
 }

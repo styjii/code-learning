@@ -1,6 +1,7 @@
 from rest_framework import serializers
 
-from .models import Project, TypeScriptProject
+from . import python_files
+from .models import Project, PythonProject, TypeScriptProject
 from .typescript_config import effective_compiler_options, validate_compiler_options
 
 DUPLICATE_NAME_MESSAGE = "Un projet porte déjà ce nom."
@@ -56,3 +57,25 @@ class TypeScriptProjectSerializer(ProjectSerializer):
         data = super().to_representation(instance)
         data["compiler_options"] = effective_compiler_options(instance.compiler_options)
         return data
+
+
+class PythonProjectSerializer(ProjectSerializer):
+    """
+    Serializer du modèle PythonProject (champs : id, name, files).
+
+    ``files`` est la liste ``[{"name", "content"}]`` du projet ; elle est vérifiée avec les règles de
+    ``python_files.py`` (noms, doublons, limites de taille et de nombre : 400 sinon). Une liste vide est acceptée :
+    le navigateur ajoute alors ``main.py``.
+    """
+    files = serializers.JSONField(required=False)
+
+    class Meta:
+        model = PythonProject
+        fields = ["id", "name", "files"]
+
+    def validate_files(self, value):
+        error = python_files.files_error(value, allow_empty=True)
+        if error:
+            raise serializers.ValidationError(error)
+        # On ne garde que les clés attendues : rien d'autre n'est stocké.
+        return [{"name": f["name"], "content": f["content"]} for f in value]

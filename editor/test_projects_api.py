@@ -1,5 +1,6 @@
 """
-Tests de l'API ``/editor/api/projects/`` (et ``/editor/api/ts-projects/``, qui partage le même code) :
+Tests de l'API ``/editor/api/projects/`` (et ``/editor/api/ts-projects/`` et ``/editor/api/py-projects/``, qui
+partagent le même code) :
 création, isolation par utilisateur, suppression, gestion des erreurs et authentification obligatoire.
 """
 import json
@@ -8,8 +9,9 @@ from unittest import mock
 from django.contrib.auth import get_user_model
 from django.test import Client, TestCase
 
-from .models import Project, TypeScriptProject
-from .serializers import ProjectSerializer, TypeScriptProjectSerializer
+from . import python_files
+from .models import Project, PythonProject, TypeScriptProject
+from .serializers import ProjectSerializer, PythonProjectSerializer, TypeScriptProjectSerializer
 
 User = get_user_model()
 PASSWORD = "Mot-de-passe-solide-42"
@@ -26,7 +28,7 @@ def logged_in_client(user):
 class ProjectsApiTestCase(TestCase):
     """
     Base : deux utilisateurs et un projet d'Alice (``self.project``). Les groupes de tests ci-dessous sont des
-    mixins, assemblés pour l'éditeur Web puis pour l'éditeur TypeScript (mêmes garanties, autre modèle).
+    mixins, assemblés pour les éditeurs Web, TypeScript puis Python (mêmes garanties, autre modèle).
     """
 
     url = "/editor/api/projects/"
@@ -34,6 +36,8 @@ class ProjectsApiTestCase(TestCase):
     serializer = ProjectSerializer
     payload = {"name": "demo", "html": "<p>a</p>", "css": "p{}", "js": "1"}   # projet existant d'Alice
     new = {"name": "nouveau", "html": "<p>b</p>", "css": "", "js": ""}        # à créer dans les tests
+    content_fields = ("html", "css")                                          # champs de contenu à conserver au renommage
+    invalid_content = {"name": "ok", "html": None}                            # contenu refusé par le serializer
 
     def setUp(self):
         self.alice = User.objects.create_user("alice", password=PASSWORD)
@@ -92,7 +96,7 @@ class CreateProjectTests:
     def test_invalid_payloads_are_400_never_500(self):
         invalid = [
             {}, {"name": ""}, {"name": "   "}, {"name": None}, {"name": "x" * 101},
-            {"name": "ok", "html": None}, {"name": ["liste"]}, {"name": {"a": 1}},
+            self.invalid_content, {"name": ["liste"]}, {"name": {"a": 1}},
         ]
         for data in invalid:
             with self.subTest(data=data):
@@ -221,8 +225,9 @@ class RenameProjectTests:
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()["name"], "renommé")
         self.project.refresh_from_db()
-        self.assertEqual((self.project.name, self.project.html, self.project.css),
-                         ("renommé", self.payload["html"], self.payload["css"]))
+        self.assertEqual(self.project.name, "renommé")
+        for field in self.content_fields:
+            self.assertEqual(getattr(self.project, field), self.payload[field], field)
 
     def test_renaming_to_its_own_name_is_accepted(self):
         self.assertEqual(self.rename(self.alice_client, self.project.pk, "demo").status_code, 200)
@@ -272,6 +277,82 @@ class TypeScriptProjectsApiTests(CreateProjectTests, ProjectIsolationTests, Dele
         self.assertEqual([p["name"] for p in self.alice_client.get(self.url).json()], ["demo"])
 
 
+class PythonProjectsApiTests(CreateProjectTests, ProjectIsolationTests, DeleteProjectTests,
+                             RenameProjectTests, ProjectsApiTestCase):
+    """L'API Python hérite du même code : mêmes garanties, sur son propre modèle (liste de fichiers)."""
+
+    url = "/editor/api/py-projects/"
+    model = PythonProject
+    serializer = PythonProjectSerializer
+    payload = {"name": "demo", "files": [{"name": "main.py", "content": "print('a')"}]}
+    new = {"name": "nouveau", "files": [{"name": "main.py", "content": ""}]}
+    content_fields = ("files",)
+    invalid_content = {"name": "ok", "files": None}
+
+    def test_python_web_and_typescript_projects_are_independent(self):
+        Project.objects.create(owner=self.alice, name="web")
+        TypeScriptProject.objects.create(owner=self.alice, name="ts")
+        self.assertEqual([p["name"] for p in self.alice_client.get(self.url).json()], ["demo"])
+        self.assertEqual(self.alice_client.get("/editor/api/projects/").json()[0]["name"], "web")
+
+    def test_files_are_stored_and_returned_as_sent(self):
+        files = [{"name": "main.py", "content": "import utils"}, {"name": "utils.py", "content": "X = 1"},
+                 {"name": "data.json", "content": "{}"}]
+        response = self.post(self.alice_client, {"name": "multi", "files": files})
+        self.assertEqual(response.status_code, 201)
+        self.assertEqual(response.json()["files"], files)
+        self.assertEqual(self.model.objects.get(name="multi").files, files)
+
+    def test_unexpected_keys_of_a_file_are_dropped(self):
+        files = [{"name": "main.py", "content": "", "owner": self.bob.pk, "extra": [1]}]
+        response = self.post(self.alice_client, {"name": "propre", "files": files})
+        self.assertEqual(response.status_code, 201)
+        self.assertEqual(response.json()["files"], [{"name": "main.py", "content": ""}])
+
+    def test_files_are_optional_and_may_be_empty(self):
+        for name, data in (("sans", {"name": "sans"}), ("vide", {"name": "vide", "files": []})):
+            with self.subTest(name=name):
+                response = self.post(self.alice_client, data)
+                self.assertEqual(response.status_code, 201)
+        self.assertEqual(self.model.objects.get(name="sans").files, [])
+
+    def test_invalid_files_are_400_and_nothing_is_stored(self):
+        too_many = [{"name": f"m{i}.py", "content": ""} for i in range(python_files.MAX_FILES + 1)]
+        invalid = {
+            "pas une liste": "main.py",
+            "élément sans contenu": [{"name": "main.py"}],
+            "contenu non textuel": [{"name": "main.py", "content": 1}],
+            "élément qui n'est pas un objet": ["main.py"],
+            "nom avec dossier": [{"name": "dir/main.py", "content": ""}],
+            "nom qui remonte": [{"name": "../main.py", "content": ""}],
+            "module standard masqué": [{"name": "json.py", "content": ""}],
+            "doublon (casse ignorée)": [{"name": "utils.py", "content": ""}, {"name": "Utils.py", "content": ""}],
+            "trop de fichiers": too_many,
+            "contenu trop long": [{"name": "main.py", "content": "x" * (python_files.MAX_CHARS + 1)}],
+        }
+        for why, files in invalid.items():
+            with self.subTest(why=why):
+                response = self.post(self.alice_client, {"name": "refuse", "files": files})
+                self.assertEqual(response.status_code, 400)
+                self.assertIn("files", response.json())
+        self.assertFalse(self.model.objects.filter(name="refuse").exists())
+
+    def test_patch_files_saves_the_content_and_never_touches_the_name(self):
+        """C'est ce que fait l'éditeur à chaque enregistrement : un enregistrement tardif ne peut pas défaire un renommage."""
+        files = [{"name": "main.py", "content": "print(2)"}]
+        response = self.alice_client.patch(self.detail(self.project.pk), json.dumps({"files": files}), content_type=JSON)
+        self.assertEqual(response.status_code, 200)
+        self.project.refresh_from_db()
+        self.assertEqual((self.project.name, self.project.files), ("demo", files))
+
+    def test_invalid_files_on_update_are_400_and_keep_the_stored_ones(self):
+        response = self.alice_client.patch(
+            self.detail(self.project.pk), json.dumps({"files": [{"name": "1abc.py", "content": ""}]}), content_type=JSON)
+        self.assertEqual(response.status_code, 400)
+        self.project.refresh_from_db()
+        self.assertEqual(self.project.files, self.payload["files"])
+
+
 class AuthenticationRequiredTests(TestCase):
     """Aucune route de l'API de l'éditeur n'est accessible sans connexion."""
 
@@ -286,6 +367,11 @@ class AuthenticationRequiredTests(TestCase):
         ("post", "/editor/api/ts-projects/"),
         ("get", "/editor/api/ts-projects/1/"),
         ("delete", "/editor/api/ts-projects/1/"),
+        ("get", "/editor/api/py-projects/"),
+        ("post", "/editor/api/py-projects/"),
+        ("get", "/editor/api/py-projects/1/"),
+        ("patch", "/editor/api/py-projects/1/"),
+        ("delete", "/editor/api/py-projects/1/"),
         ("get", "/editor/api/load-monaco-config/"),
         ("post", "/editor/api/save-monaco-config/"),
         ("post", "/editor/api/export-zip/"),
@@ -322,6 +408,6 @@ class AuthenticationRequiredTests(TestCase):
     def test_viewsets_declare_permissions_explicitly(self):
         from rest_framework.permissions import IsAuthenticated
 
-        from .views import ProjectViewSet, TypeScriptProjectViewSet
-        for view in (ProjectViewSet, TypeScriptProjectViewSet):
+        from .views import ProjectViewSet, PythonProjectViewSet, TypeScriptProjectViewSet
+        for view in (ProjectViewSet, TypeScriptProjectViewSet, PythonProjectViewSet):
             self.assertEqual(view.permission_classes, [IsAuthenticated])

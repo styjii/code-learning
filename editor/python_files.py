@@ -41,3 +41,30 @@ def filename_error(name):
     elif not _OTHER_NAME.fullmatch(name):
         return "caractères autorisés : lettres, chiffres, « _ », « - » et « . »"
     return None
+
+
+def files_error(files, *, allow_empty=False):
+    """
+    Message d'erreur (français) si ``files`` n'est pas une liste de fichiers valide, sinon ``None``.
+
+    Chaque élément est ``{"name": str, "content": str}`` : nom accepté par ``filename_error``, sans doublon (casse
+    ignorée), contenu de ``MAX_CHARS`` caractères au plus, ``MAX_FILES`` fichiers au plus.
+    """
+    if not isinstance(files, list) or (not files and not allow_empty):
+        return "Aucun fichier à exporter." if not allow_empty else "Liste de fichiers invalide."
+    if len(files) > MAX_FILES:
+        return f"Limite de {MAX_FILES} fichiers dépassée."
+    seen = set()
+    for f in files:
+        if not isinstance(f, dict) or not isinstance(f.get("content"), str):
+            return "Fichier invalide."
+        name = f.get("name")
+        problem = filename_error(name)
+        if problem:
+            return f"« {name} » : {problem}."
+        if name.lower() in seen:
+            return f"« {name} » : un fichier de ce nom existe déjà."
+        seen.add(name.lower())
+        if len(f["content"]) > MAX_CHARS:
+            return f"« {name} » dépasse {MAX_CHARS} caractères."
+    return None

@@ -49,8 +49,8 @@
 **Éditeurs en ligne** (commutateur *Web | Python | TypeScript* en haut de chaque éditeur)
 - **Web** (`/editor/`) : onglets HTML / CSS / JS propulsés par Monaco Editor (le moteur de VS Code), avec Emmet et des snippets JavaScript. Aperçu dans une iframe isolée, console intégrée, aperçu automatique avec délai réglable, option Bootstrap en un clic.
 - **TypeScript** (`/editor/typescript/`) : mêmes projets, aperçu et import / export, avec onglets HTML / CSS / **TS**. Le code est vérifié et compilé dans le navigateur (compilateur de Monaco) ; les erreurs de type sont soulignées et listées dans la console. **Options du compilateur** par projet (`target`, `strict`, `noUnusedLocals`...), écrites dans le `tsconfig.json` de l'export.
-- **Python** (`/editor/python/`) : plusieurs fichiers (`main.py` + modules importables), exécution dans Pyodide, `input()` interactif dans la console, bouton **Arrêter**, **détection d'erreurs, autocomplétion, infobulles et aide aux appels** comme dans l'éditeur TypeScript. Les fichiers sont conservés **dans le navigateur**, pas sur le serveur.
-- **Projets** Web et TypeScript enregistrés par utilisateur, **import / export .zip**.
+- **Python** (`/editor/python/`) : plusieurs fichiers (`main.py` + modules importables), exécution dans Pyodide, `input()` interactif dans la console, bouton **Arrêter**, **détection d'erreurs, autocomplétion, infobulles et aide aux appels** comme dans l'éditeur TypeScript. Les fichiers sont enregistrés **par utilisateur**, dans des projets (menu **Fichier › Projets**).
+- **Projets** Web, TypeScript et Python enregistrés par utilisateur, **import / export .zip**.
 - Préférences d'éditeur (retour à la ligne, taille de tabulation, minimap...) propres à chaque compte.
 
 **Comptes et sécurité**
@@ -171,22 +171,23 @@ Ouvrez ensuite `https://localhost:8443/`. Sur un autre appareil, installez d'abo
 
 ## Les éditeurs en ligne
 
-Les trois éditeurs partagent la même interface (Monaco, console, thème clair / sombre) mais pas le même stockage :
+Les trois éditeurs partagent la même interface (Monaco, console, thème clair / sombre) mais pas le même format de projet :
 
 | Éditeur | Langage exécuté | Où sont les fichiers ? | Export |
 |---|---|---|---|
 | Web | HTML, CSS, JavaScript (aperçu en iframe isolée) | base de données, par utilisateur | `index.html`, `style.css`, `script.js` |
 | TypeScript | HTML, CSS, TypeScript compilé en JavaScript | base de données, par utilisateur | `index.html`, `style.css`, `script.ts`, `tsconfig.json` |
-| Python | Python 3.14 (Pyodide, Web Worker) | **navigateur** (`localStorage`) | fichier par fichier |
+| Python | Python 3.14 (Pyodide, Web Worker) | base de données, par utilisateur (liste de fichiers par projet) | `python-project.zip` ; fichier par fichier |
 
 ### Éditeur Python
 
 - `main.py` est le point d'entrée : il ne peut être ni renommé ni supprimé. Les autres fichiers `.py` sont importables (`import utils`) ; les fichiers `.txt`, `.json`, `.csv` et `.md` importés sont disponibles à côté du programme.
 - `input()` est interactif : tapez directement dans la console. La zone repliable « Entrée standard » permet de préremplir une ligne par `input()`.
 - **Aide à l'écriture** (comme pour JavaScript/TypeScript, que Monaco gère en natif) : erreurs soulignées pendant la frappe (syntaxe, noms non définis, imports et variables inutilisés, messages en français), **autocomplétion** (bibliothèque standard, vos propres fichiers, arguments nommés), **infobulle** au survol (signature, type, documentation) et **aide aux arguments** à l'ouverture d'une parenthèse. Elle s'appuie sur `jedi` et `pyflakes`, exécutés dans un second Pyodide (Web Worker) qui n'interfère pas avec l'exécution du programme ; l'indicateur « Analyse du code : chargement… » disparaît une fois prêt. Si elle ne démarre pas, l'éditeur et l'exécution restent utilisables.
-- **Enregistrement** : automatique, dans ce navigateur uniquement (indicateur « Enregistré dans ce navigateur », `Ctrl + S` pour forcer). Les fichiers ne suivent pas le compte et disparaissent si vous videz les données du site : utilisez **Télécharger le fichier actif** pour les sauvegarder.
+- **Projets** : **Fichier › Projets** ouvre la même fenêtre que dans les éditeurs Web et TypeScript. Elle liste les projets, affiche le projet en cours (aussi dans la pastille de l'en-tête) et permet d'en **créer**, d'en **renommer** (crayon à côté du nom) et de **supprimer** le projet en cours (le dernier projet est conservé). Chaque projet a ses propres fichiers.
+- **Enregistrement** : automatique, sur le serveur, dans le projet en cours (indicateur « Enregistré », `Ctrl + S` pour forcer). Les fichiers suivent le compte. À la première ouverture, les fichiers que l'éditeur gardait auparavant dans le navigateur deviennent le projet « Mon projet ».
 - Le bouton **Arrêter** interrompt le programme ; un délai maximal de 5 minutes s'applique. Pyodide (~13 Mo) est chargé au premier lancement.
-- Seules les préférences Monaco sont lues sur le serveur.
+- Les préférences Monaco sont lues sur le serveur, comme pour les autres éditeurs.
 
 ### Éditeur TypeScript
 
@@ -209,7 +210,7 @@ Les trois éditeurs partagent la même interface (Monaco, console, thème clair 
 | Éditeur Web / TypeScript | `Ctrl + Maj + P` | Palette de commandes |
 | Éditeur Web / TypeScript | `Ctrl + Alt + W` | Activer / désactiver le retour à la ligne |
 | Éditeur Web / TypeScript | `Ctrl + Alt + L` | Activer / désactiver le défilement après la dernière ligne |
-| Éditeur Python | `Ctrl + S` | Enregistrer dans le navigateur |
+| Éditeur Python | `Ctrl + S` | Enregistrer le projet |
 | Éditeur Python | `F2` / `Suppr` (onglet sélectionné) | Renommer / supprimer le fichier |
 
 ## Architecture
@@ -249,9 +250,10 @@ code-learning/
 | `GET/POST /editor/api/ts-projects/`, `GET/PUT/DELETE /editor/api/ts-projects/<id>/` | projets de l'éditeur TypeScript (html, css, ts, `compiler_options`) |
 | `POST /editor/api/ts-export-zip/` | `.zip` : `index.html`, `style.css`, `script.ts`, `tsconfig.json` |
 | `POST /editor/api/ts-import-zip/` | lit ce `.zip` (mêmes plafonds) et renvoie aussi les options du `tsconfig.json` |
+| `GET/POST /editor/api/py-projects/`, `GET/PUT/PATCH/DELETE /editor/api/py-projects/<id>/` | projets de l'éditeur Python (`files` : liste de `{name, content}`, mêmes règles que l'export) |
 | `POST /editor/preview/` puis `GET /editor/preview/<id>/` | génère puis affiche l'aperçu (cinq derniers conservés) |
 
-L'API répond `401` (JSON) aux utilisateurs non connectés. L'éditeur Python n'utilise que `load-monaco-config` : ses fichiers restent dans le navigateur.
+L'API répond `401` (JSON) aux utilisateurs non connectés.
 
 ## Ajouter ou modifier un cours
 

@@ -13,6 +13,7 @@ from .views import (
     TypeScriptExportZipView,
     TypeScriptImportZipView,
     TypeScriptProjectViewSet,
+    PythonProjectViewSet,
     PythonExportZipView,
     PythonImportZipView,
 )
@@ -21,6 +22,7 @@ from .views import (
 router = DefaultRouter()
 router.register(r'projects', ProjectViewSet, basename='project')
 router.register(r'ts-projects', TypeScriptProjectViewSet, basename='ts-project')
+router.register(r'py-projects', PythonProjectViewSet, basename='py-project')
 
 urlpatterns = [
     path('', ensure_csrf_cookie(TemplateView.as_view(template_name='editor/index.html')), name='editor-index'),

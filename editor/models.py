@@ -65,6 +65,35 @@ class TypeScriptProject(models.Model):
         return self.name
 
 
+class PythonProject(models.Model):
+    """
+    Projet de l'éditeur Python appartenant à un utilisateur.
+
+    Fields:
+        - owner: utilisateur propriétaire (chacun ne voit que ses projets).
+        - name: nom du projet, unique par utilisateur.
+        - files: fichiers « à plat » du projet, sous la forme ``[{"name": "main.py", "content": "..."}]``.
+          Validés avant écriture avec les règles de ``python_files.py`` (les mêmes que celles du navigateur).
+    """
+    owner = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        null=True,
+        blank=True,
+        on_delete=models.CASCADE,
+        related_name="editor_python_projects",
+    )
+    name = models.CharField(max_length=100)
+    files = models.JSONField(default=list, blank=True)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=["owner", "name"], name="unique_python_project_name_per_owner"),
+        ]
+
+    def __str__(self):
+        return self.name
+
+
 class EditorPreferences(models.Model):
     """
     Préférences de l'éditeur propres à un utilisateur.

@@ -78,7 +78,7 @@ export class PythonZipManager {
         const feedback = $("export-feedback");
         hide(feedback);
         try {
-            this.app.saveNow();
+            this.app.projects.flush();
             const res = await fetch(EXPORT_URL, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },

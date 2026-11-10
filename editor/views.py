@@ -12,10 +12,15 @@ from django.template.loader import render_to_string
 from django.conf import settings
 from django.db import IntegrityError, transaction
 from . import python_files
-from .models import EditorPreferences, Project, TypeScriptProject
+from .models import EditorPreferences, Project, PythonProject, TypeScriptProject
 from .monaco_config import effective_options, sanitize_preferences, validate_preferences
 from .services import id
-from .serializers import DUPLICATE_NAME_MESSAGE, ProjectSerializer, TypeScriptProjectSerializer
+from .serializers import (
+    DUPLICATE_NAME_MESSAGE,
+    ProjectSerializer,
+    PythonProjectSerializer,
+    TypeScriptProjectSerializer,
+)
 from .typescript_config import build_tsconfig, options_from_tsconfig, effective_compiler_options
 from .zip_import import ZipImportError, format_size, read_project_zip, read_python_zip, read_typescript_zip
 from bs4 import BeautifulSoup
@@ -90,6 +95,15 @@ class TypeScriptProjectViewSet(ProjectViewSet):
     """
     model = TypeScriptProject
     serializer_class = TypeScriptProjectSerializer
+
+
+class PythonProjectViewSet(ProjectViewSet):
+    """
+    Même API que ``ProjectViewSet`` pour les projets de l'éditeur Python (liste de fichiers ``files``). Les trois
+    types de projets sont indépendants : un projet Web ou TypeScript n'apparaît jamais ici.
+    """
+    model = PythonProject
+    serializer_class = PythonProjectSerializer
 
 
 class SaveMonacoConfigView(APIView):
@@ -333,24 +347,7 @@ class PythonExportZipView(APIView):
 
     @staticmethod
     def _validate(files):
-        if not isinstance(files, list) or not files:
-            return "Aucun fichier à exporter."
-        if len(files) > python_files.MAX_FILES:
-            return f"Limite de {python_files.MAX_FILES} fichiers dépassée."
-        seen = set()
-        for f in files:
-            if not isinstance(f, dict) or not isinstance(f.get('content'), str):
-                return "Fichier invalide."
-            name = f.get('name')
-            problem = python_files.filename_error(name)
-            if problem:
-                return f"« {name} » : {problem}."
-            if name.lower() in seen:
-                return f"« {name} » : un fichier de ce nom existe déjà."
-            seen.add(name.lower())
-            if len(f['content']) > python_files.MAX_CHARS:
-                return f"« {name} » dépasse {python_files.MAX_CHARS} caractères."
-        return None
+        return python_files.files_error(files)
 
 
 class PythonImportZipView(ImportZipView):
