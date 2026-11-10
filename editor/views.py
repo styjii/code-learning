@@ -461,5 +461,9 @@ class PreviewDisplayView(View):
         response = HttpResponse(content)
         # Même ouvert directement dans un onglet, l'aperçu s'exécute dans un bac à sable
         # (origine opaque) : le code de l'utilisateur ne peut pas utiliser sa session.
-        response["Content-Security-Policy"] = "sandbox allow-scripts allow-modals"
+        # « allow-forms » : sans lui le navigateur ne déclenche même pas l'évènement « submit » d'un formulaire
+        # (le bouton « Ajouter » d'une application de tâches reste muet). Il ne donne pas accès à la session :
+        # l'origine reste opaque, donc les cookies SameSite ne partent pas et le contrôle CSRF de l'API refuse.
+        # Ni « allow-same-origin », ni « allow-top-navigation », ni « allow-popups ».
+        response["Content-Security-Policy"] = "sandbox allow-scripts allow-modals allow-forms"
         return response

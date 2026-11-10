@@ -49,15 +49,17 @@ class PreviewPageTests(TestCase):
     def test_sandbox_is_never_relaxed(self):
         response, _ = self.page(storage='{"tasks": "[1]"}')
         policy = response["Content-Security-Policy"]
-        self.assertEqual(policy, "sandbox allow-scripts allow-modals")
-        self.assertNotIn("allow-same-origin", policy)
+        self.assertEqual(policy, "sandbox allow-scripts allow-modals allow-forms")
+        for dangerous in ("allow-same-origin", "allow-top-navigation", "allow-popups", "allow-downloads"):
+            self.assertNotIn(dangerous, policy)
 
     def test_iframes_keep_their_sandbox_attribute(self):
         for template in ("editor/index.html", "editor/typescript.html"):
             with self.subTest(template=template):
                 html = (Path(settings.BASE_DIR) / "editor" / "templates" / template).read_text(encoding="utf-8")
-                self.assertIn('sandbox="allow-scripts allow-modals"', html)
-                self.assertNotIn("allow-same-origin", html)
+                self.assertIn('sandbox="allow-scripts allow-modals allow-forms"', html)
+                for dangerous in ("allow-same-origin", "allow-top-navigation", "allow-popups"):
+                    self.assertNotIn(dangerous, html)
 
     def test_stored_data_is_embedded_and_the_shim_loads_first(self):
         _, page = self.page(storage='{"tasks": "[{\\"id\\": 1}]"}')
