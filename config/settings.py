@@ -67,6 +67,13 @@ SESSION_COOKIE_AGE = env_int("DJANGO_SESSION_HOURS", 168) * 3600
 CSRF_COOKIE_SAMESITE = "Lax"  # lisible par le JavaScript de l'éditeur (CSRF_COOKIE_HTTPONLY=False)
 X_FRAME_OPTIONS = "DENY"
 
+# Isole le groupe de navigation de l'application : une page d'une autre origine qui l'ouvre (window.open)
+# ou qui est ouverte par elle n'obtient pas de référence window.opener (fuites inter-origines, XS-Leaks).
+# Valeur par défaut de Django, explicite ici pour qu'elle ne change pas sans qu'on s'en aperçoive.
+# Attention : le navigateur ne l'applique que sur une origine fiable (HTTPS ou localhost/127.0.0.1) ;
+# en HTTP sur une adresse du réseau local il l'ignore et l'écrit dans la console. Voir README : « HTTPS en développement ».
+SECURE_CROSS_ORIGIN_OPENER_POLICY = "same-origin"
+
 # ---------------------------------------------------------------------------
 # Authentification : toute route exige une connexion (StrictLoginRequiredMiddleware, accounts/middleware.py)
 #   - page sans connexion  -> redirection vers LOGIN_URL ;

@@ -134,6 +134,32 @@ Ouvrez <http://127.0.0.1:8000/> et connectez-vous.
 
 > **Important en local :** gardez `DJANGO_DEBUG=1`. Avec `DJANGO_DEBUG=0` (valeur du `.env.example`), la redirection HTTPS est active et `runserver` ne sert plus les fichiers statiques.
 
+### HTTPS en développement
+
+Les navigateurs n'appliquent certaines protections que sur une origine « fiable » : HTTPS, ou `http://localhost` / `http://127.0.0.1`. Ouvrir l'éditeur en HTTP sur une adresse du réseau local (ex. `http://192.168.x.x:8000`) affiche dans la console :
+
+> The Cross-Origin-Opener-Policy header has been ignored, because the URL's origin was untrustworthy.
+
+L'en-tête `Cross-Origin-Opener-Policy: same-origin` est bien envoyé par l'application, mais le navigateur l'ignore. Deux façons de l'obtenir :
+
+**1. Rester sur `localhost`** (le plus simple) : ouvrez `http://127.0.0.1:8000/` ou `http://localhost:8000/`, jamais l'adresse IP de la machine.
+
+**2. Servir en HTTPS** (nécessaire pour ouvrir l'éditeur depuis un autre appareil du réseau) :
+
+```bash
+# Une seule fois : certificat de développement reconnu par votre navigateur (https://github.com/FiloSottile/mkcert)
+mkcert -install
+mkdir -p certs
+mkcert -cert-file certs/dev.pem -key-file certs/dev-key.pem localhost 127.0.0.1 ::1 <IP-DU-RÉSEAU-LOCAL>
+
+# Dans .env : DJANGO_DEBUG=1, DJANGO_HTTPS=1 et, pour un accès distant, DJANGO_ALLOWED_HOSTS=localhost,127.0.0.1,<IP-DU-RÉSEAU-LOCAL>
+python manage.py runserver_https 0.0.0.0:8443
+```
+
+Ouvrez ensuite `https://localhost:8443/`. Sur un autre appareil, installez d'abord l'autorité de `mkcert` (fichier `rootCA.pem`, dossier donné par `mkcert -CAROOT`), sinon le navigateur affichera une alerte de certificat. Le dossier `certs/` est ignoré par git : ne publiez jamais la clé privée.
+
+`runserver_https` est réservé au développement ; en production, le TLS est géré par le proxy inverse (voir ci-dessous).
+
 ## Utilisation
 
 1. **Connexion** sur `/accounts/login/`. Il n'y a pas d'inscription : créez les comptes avec `createsuperuser`, ou dans `/admin/` (*Utilisateurs > Ajouter*).
@@ -385,6 +411,7 @@ Le workflow [`.github/workflows/ci.yml`](.github/workflows/ci.yml) se lance à c
 | `DJANGO_SECRET_KEY est absent` | `.env` manquant ou clé vide : `cp .env.example .env` puis renseignez la clé. |
 | `DJANGO_ALLOWED_HOSTS est obligatoire` | Vous êtes en `DJANGO_DEBUG=0` : renseignez les hôtes, ou passez à `1` en local. |
 | La page redirige vers `https://` en local | `DJANGO_DEBUG=0` active la redirection HTTPS. Mettez `DJANGO_DEBUG=1` (ou `DJANGO_HTTPS=0`). |
+| Console : « Cross-Origin-Opener-Policy header has been ignored… untrustworthy » | Page ouverte en HTTP sur une adresse IP du réseau. Utilisez `http://localhost:8000` ou `runserver_https` (voir « HTTPS en développement »). |
 | CSS / JS / éditeur non chargés | Fichiers statiques non servis : `DJANGO_DEBUG=1` en local, `collectstatic` + serveur web en production. |
 | `no such table: editor_editorpreferences` | Migrations non appliquées : `python manage.py migrate`. |
 | Le premier affichage des cours est lent | Normal : conversion des pages et mise en cache au premier passage (barre de progression à l'accueil). |
