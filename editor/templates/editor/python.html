@@ -3,6 +3,7 @@
 
 {% block title %}Éditeur Python · Langage Learning{% endblock %}
 {% block description %}Éditeur Python en ligne : plusieurs fichiers, input() interactif et console.{% endblock %}
+{% block viewport %}width=device-width, initial-scale=1, viewport-fit=cover{% endblock %}
 {% block favicon %}{% static 'icons/python.svg' %}{% endblock %}
 {% block body_attrs %}data-app="editor" class="editor-app py-app"
     data-monaco="{% static 'editor/monaco-editor/min/vs' %}" data-pyodide="{% static 'vendor/pyodide/' %}"
@@ -23,7 +24,7 @@
 </svg>
 
 <header class="app-header">
-    <a class="brand" href="{% url 'index' %}" title="Retour à l'accueil">
+    <a class="brand" href="{% url 'index' %}" title="Retour à l'accueil" aria-label="Éditeur : retour à l'accueil">
         {% include "partials/logo.html" with logo_id="python-editor" %}
         <span class="brand-name">Éditeur</span>
     </a>

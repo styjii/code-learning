@@ -9,9 +9,9 @@ export class ProjectManager {
      * Fetches all saved projects from the backend and updates state.
      * Sets the first project as the active one if available and loads its contents.
      */
-    static async fetchAll() {
+    static async fetchAll({ allowCreateDefault = true } = {}) {
         try {
-            const res = await fetch("/editor/api/projects");
+            const res = await fetch("/editor/api/projects/");
             if (!res.ok) throw new Error("Failed to fetch projects");
 
             const data = await res.json();
@@ -21,7 +21,7 @@ export class ProjectManager {
             });
 
             // Première utilisation : aucun projet n'existe, on en crée un pour que le travail soit sauvegardé.
-            if (!data.length) {
+            if (!data.length && allowCreateDefault) {
                 await this.createDefault();
                 return;
             }
@@ -42,6 +42,11 @@ export class ProjectManager {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(payload),
         });
+        if (res.status === 400) {
+            // Un autre onglet (ou une requête simultanée) a déjà créé le projet par défaut : on le récupère.
+            await this.fetchAll({ allowCreateDefault: false });
+            return;
+        }
         if (!res.ok) throw new Error("Failed to create default project");
         const data = await res.json();
         state.projects[payload.name] = { ...payload, id: data.id };
@@ -108,32 +113,53 @@ export class ProjectManager {
      * Updates the UI dropdown and loads the new, empty project.
      */
     static async create() {
+        if (this.isCreating) return; // un double-clic enverrait deux POST identiques
+
         const input = document.getElementById("create-project");
         const feedback = document.getElementById("create-feedback");
         const success = document.getElementById("create-success");
 
         const name = input.value.trim();
         if (!name || state.projects[name]) {
+            feedback.textContent = "Nom vide ou déjà utilisé.";
             feedback.style.display = "block";
             success.style.display = "none";
             return;
         }
 
-        const payload = { name, html: "", css: "", js: "" };
-        const res = await fetch("/editor/api/projects/", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(payload),
-        });
+        this.isCreating = true;
+        try {
+            const payload = { name, html: "", css: "", js: "" };
+            const res = await fetch("/editor/api/projects/", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload),
+            });
 
-        if (res.ok) {
-            const data = await res.json();
-            state.projects[name] = { ...payload, id: data.id };
-            state.currentProject = name;
-            this.updateDropdown();
-            this.load(name);
-            feedback.style.display = "none";
-            success.style.display = "block";
+            if (res.ok) {
+                const data = await res.json();
+                state.projects[name] = { ...payload, id: data.id };
+                state.currentProject = name;
+                this.updateDropdown();
+                this.load(name);
+                feedback.style.display = "none";
+                success.style.display = "block";
+                return;
+            }
+
+            // 400 : nom invalide ou déjà pris ; autre code : problème serveur ou session expirée.
+            feedback.textContent = res.status === 400
+                ? "Nom vide ou déjà utilisé."
+                : "Impossible de créer le projet. Réessayez.";
+            feedback.style.display = "block";
+            success.style.display = "none";
+        } catch (err) {
+            console.error("Error creating project:", err);
+            feedback.textContent = "Impossible de créer le projet. Réessayez.";
+            feedback.style.display = "block";
+            success.style.display = "none";
+        } finally {
+            this.isCreating = false;
         }
     }
 
@@ -142,11 +168,14 @@ export class ProjectManager {
      * Updates the dropdown and loads the next available project.
      */
     static async delete() {
+        if (this.isDeleting) return;
+
         const keys = Object.keys(state.projects);
         const feedback = document.getElementById("delete-feedback");
         const success = document.getElementById("delete-success");
 
         if (keys.length <= 1) {
+            feedback.textContent = "Il faut garder au moins un projet.";
             feedback.style.display = "block";
             success.style.display = "none";
             return;
@@ -154,16 +183,36 @@ export class ProjectManager {
 
         if (!confirm(`Supprimer le projet « ${state.currentProject} » ?`)) return;
 
-        const id = state.projects[state.currentProject].id;
-        const res = await fetch(`/editor/api/projects/${id}/`, { method: "DELETE" });
+        this.isDeleting = true;
+        try {
+            // Une sauvegarde différée ne doit pas se déclencher (ni recréer le projet) pendant la suppression.
+            clearTimeout(state.saveTimer);
+            state.saveTimer = null;
 
-        if (res.ok) {
-            delete state.projects[state.currentProject];
-            state.currentProject = Object.keys(state.projects)[0] ?? null;
-            feedback.style.display = "none";
-            success.style.display = "block";
-            this.updateDropdown();
-            this.load(state.currentProject);
+            const id = state.projects[state.currentProject].id;
+            const res = await fetch(`/editor/api/projects/${id}/`, { method: "DELETE" });
+
+            // 404 : déjà supprimé (autre onglet) -> même résultat final côté interface.
+            if (res.ok || res.status === 404) {
+                delete state.projects[state.currentProject];
+                state.currentProject = Object.keys(state.projects)[0] ?? null;
+                feedback.style.display = "none";
+                success.style.display = "block";
+                this.updateDropdown();
+                this.load(state.currentProject);
+                return;
+            }
+
+            feedback.textContent = "Suppression impossible. Réessayez.";
+            feedback.style.display = "block";
+            success.style.display = "none";
+        } catch (err) {
+            console.error("Error deleting project:", err);
+            feedback.textContent = "Suppression impossible. Réessayez.";
+            feedback.style.display = "block";
+            success.style.display = "none";
+        } finally {
+            this.isDeleting = false;
         }
     }
 

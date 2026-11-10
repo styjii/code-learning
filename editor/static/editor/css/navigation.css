@@ -1,25 +1,31 @@
-/* Éditeur : barre latérale, menus déroulants. */
+/* Éditeur : barre de menus, barre latérale / barre d'onglets, menus déroulants. */
 
+/* ------------------------- Menus de l'en-tête ------------------------- */
 .nav-bar { display: flex; align-items: center; margin: 0; padding: 0; list-style: none; }
 .nav-bar .drop { position: relative; border: 0; }
 
 .nav-bar .navlink {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--tap);
     padding: 0.3rem 0.7rem;
     border: 0;
     border-radius: var(--radius-sm);
     background: transparent;
     color: var(--muted);
     font-size: 0.9rem;
+    white-space: nowrap;
 }
 
 .nav-bar .navlink:hover { background: var(--surface-2); color: var(--text-strong); }
 
-/* Barre latérale */
+/* ------------------- Barre latérale (onglets de fichiers) ------------------- */
 .nav-sidebar {
     display: flex;
     flex-direction: column;
     flex-shrink: 0;
-    width: 56px;
+    width: calc(56px + env(safe-area-inset-left, 0px));
+    padding-left: env(safe-area-inset-left, 0px);
     border-right: 1px solid var(--border);
     background: var(--surface);
 }
@@ -31,6 +37,7 @@
     display: grid;
     place-items: center;
     width: 100%;
+    min-height: var(--tap);
     padding: 0.8rem 0;
     border: 0;
     background: transparent;
@@ -53,7 +60,7 @@
 
 .icon { fill: currentColor; pointer-events: none; vertical-align: -0.125em; }
 
-/* Menus */
+/* ------------------------------- Menus ------------------------------- */
 .drop { position: relative; }
 .nav-sidebar > .drop { border-top: 1px solid var(--border); }
 
@@ -61,14 +68,21 @@
     display: none;
     position: absolute;
     z-index: 1000;
-    min-width: 15rem;
+    min-width: min(15rem, calc(100vw - 16px));
+    max-width: calc(100vw - 16px);
+    max-height: calc(100vh - 80px);
+    max-height: calc(100dvh - 80px);
     margin: 0;
     padding: 0.35rem;
+    overflow-y: auto;
+    overscroll-behavior: contain;
     list-style: none;
     border: 1px solid var(--border-strong);
     border-radius: var(--radius);
     background: var(--surface);
     box-shadow: var(--shadow-lg);
+    /* DropdownEvents.js remet le menu dans l'écran s'il en sortirait (position horizontale) */
+    transform: translateX(var(--shift-x, 0px));
 }
 
 .nav-bar .drop-menu { top: calc(100% + 6px); left: 0; }
@@ -81,6 +95,7 @@
     justify-content: space-between;
     gap: 1.5rem;
     width: 100%;
+    min-height: 36px;
     padding: 0.45rem 0.7rem;
     border: 0;
     border-radius: var(--radius-sm);
@@ -95,14 +110,64 @@
 .drop-item:active { background: var(--accent); color: var(--accent-contrast); }
 .drop-item kbd { font-size: 0.7rem; }
 
-/* Petits écrans : barre latérale horizontale en bas */
-@media (max-width: 767.98px) {
+/* Écran tactile : lignes plus hautes, et pas de raccourcis clavier qui ne servent à rien. */
+@media (pointer: coarse) {
+    .drop-item { min-height: var(--tap); }
+}
+@media (hover: none) {
+    .drop-item kbd { display: none; }
+}
+
+/* ---- Téléphone portrait : « feuilles » pleine largeur ----
+ * Un menu ancré sous son bouton débordait de l'écran : on l'ancre à l'en-tête (ou à la barre du bas). */
+@media (max-width: 599.98px) {
+    .app-header .nav-bar .drop { position: static; }
+    .app-header .nav-bar .drop-menu {
+        top: 100%;
+        left: 0.5rem;
+        right: 0.5rem;
+        min-width: 0;
+        max-width: none;
+        margin-top: 4px;
+        transform: none;
+        max-height: calc(100dvh - 120px);
+    }
+    .drop-item { white-space: normal; }
+}
+
+/* ---- Moins de 768 px, en portrait ou assez haut : la barre latérale devient une barre d'onglets en bas ---- */
+@media (max-width: 767.98px) and (min-height: 501px), (max-width: 767.98px) and (orientation: portrait) {
     .workspace { flex-direction: column-reverse; }
-    .nav-sidebar { flex-direction: row; width: 100%; height: 52px; border-right: 0; border-top: 1px solid var(--border); }
+    .nav-sidebar {
+        position: relative;
+        flex-direction: row;
+        width: 100%;
+        height: calc(var(--bar-h) + env(safe-area-inset-bottom, 0px));
+        padding: 0 env(safe-area-inset-right, 0px) env(safe-area-inset-bottom, 0px) env(safe-area-inset-left, 0px);
+        border-right: 0;
+        border-top: 1px solid var(--border);
+    }
     .nav-navbar { flex-direction: row; flex: 1; padding: 0; }
     .nav-navbar li { flex: 1; }
-    .navlink { height: 100%; padding: 0; }
-    .nav-sidebar > .drop { width: 56px; border-top: 0; border-left: 1px solid var(--border); }
+    .nav-sidebar .navlink { height: 100%; padding: 0; }
+    .nav-sidebar > .drop { position: static; width: calc(var(--bar-h) + 8px); border-top: 0; border-left: 1px solid var(--border); }
     .nav-sidebar .navlink.active::before { inset: 0 8px auto; width: auto; height: 3px; border-radius: 0 0 3px 3px; }
-    .drop-menu.side { left: auto; right: 6px; bottom: calc(100% + 6px); }
+    /* feuille pleine largeur au-dessus de la barre */
+    .drop-menu.side {
+        left: 0.5rem;
+        right: 0.5rem;
+        bottom: calc(100% + 6px);
+        min-width: 0;
+        max-width: none;
+        transform: none;
+        max-height: calc(100dvh - 160px);
+    }
+}
+
+/* Barre latérale à gauche en paysage bas : compacte, et son menu s'ouvre vers la droite. */
+@media (max-height: 600px) and (orientation: landscape) {
+    .nav-sidebar { width: calc(48px + env(safe-area-inset-left, 0px)); }
+    .nav-navbar { padding: 0.2rem 0; }
+    .nav-sidebar .navlink { padding: 0.55rem 0; }
+    .drop-menu.side { max-height: calc(100dvh - var(--hdr-h) - 16px); }
 }

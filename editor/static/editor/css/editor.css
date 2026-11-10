@@ -1,4 +1,4 @@
-/* Éditeur : zone de code et zone de résultat. */
+/* Éditeur : zone de code, zone de résultat et barre d'outils. */
 
 #main-editor { display: flex; flex: 1; flex-direction: column; min-width: 0; min-height: 0; }
 
@@ -8,10 +8,13 @@
 
 .editor-block { display: none; width: 100%; height: 100%; }
 
+/* ----------------------------- Barre d'outils ----------------------------- */
 #control-button {
     display: flex;
+    align-items: center;
     gap: 0.5rem;
-    padding: 0.5rem 0.75rem;
+    min-width: 0;
+    padding: 0.4rem 0.75rem;
     flex-shrink: 0;
     border-bottom: 1px solid var(--border);
     background: var(--surface);
@@ -20,7 +23,10 @@
 #control-button button {
     display: inline-flex;
     align-items: center;
+    justify-content: center;
     gap: 0.4rem;
+    flex-shrink: 0;
+    min-height: 34px;
     padding: 0.3rem 0.8rem;
     border: 1px solid var(--border-strong);
     border-radius: var(--radius-sm);
@@ -28,6 +34,7 @@
     color: var(--text);
     font-size: 0.88rem;
     font-weight: 500;
+    white-space: nowrap;
     cursor: pointer;
     transition: background-color 0.15s, color 0.15s, border-color 0.15s;
 }
@@ -39,13 +46,37 @@
 #run-code:hover { background: var(--accent-hover) !important; }
 #display-console[aria-pressed="true"] { border-color: var(--accent); background: var(--accent-soft); color: var(--accent); }
 
-#output { flex: 1; width: 100%; border: 0; background: #fff; }
-#console { flex: 1; padding: 0.5rem; overflow: auto; background: var(--theme-bg); color: var(--theme-text); }
+/* Écran tactile : boutons à la taille d'un doigt. */
+@media (pointer: coarse) {
+    #control-button { padding: 0.35rem 0.6rem; }
+    #control-button button { min-height: var(--tap); padding-inline: 1rem; }
+}
+
+/* Écran étroit : les boutons se partagent la ligne au lieu de laisser un vide à droite. */
+@media (max-width: 599.98px) {
+    #control-button { gap: 0.4rem; padding-inline: 0.5rem; }
+    #control-button button { flex: 1 1 0; padding-inline: 0.5rem; }
+    #control-button .py-status, #control-button .ts-summary { flex: 0 1 auto; }
+}
+
+/* min-height: 0 : un <iframe> a une hauteur minimale automatique de 150 px qui le faisait dépasser son conteneur
+   et recouvrir la barre d'onglets du bas sur les écrans peu hauts. */
+#output { flex: 1; min-height: 0; width: 100%; border: 0; background: #fff; }
+#console { flex: 1; min-height: 0; padding: 0.5rem; overflow: auto; background: var(--theme-bg); color: var(--theme-text); }
 
 /* Monaco */
 .monaco-editor { outline: none !important; }
 
-@media (min-width: 1024px) {
+/* ------------------------- Disposition des deux zones ------------------------- */
+
+/* Téléphone / tablette en portrait : empilées. Le code (qu'on tape) reçoit un peu plus de place que l'aperçu. */
+@media (max-width: 767.98px) and (orientation: portrait) {
+    #editor-container { flex: 11 1 0; }
+    #output-container { flex: 9 1 0; }
+}
+
+/* Ordinateur, tablette en paysage, téléphone en paysage : côte à côte. */
+@media (min-width: 1024px), (orientation: landscape) and (min-width: 560px) and (max-height: 600px) {
     #main-editor { flex-direction: row; }
     #editor-container { border-bottom: 0; border-right: 1px solid var(--border); }
 }

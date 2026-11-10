@@ -3,6 +3,8 @@ from rest_framework import serializers
 from .models import Project, TypeScriptProject
 from .typescript_config import effective_compiler_options, validate_compiler_options
 
+DUPLICATE_NAME_MESSAGE = "Un projet porte déjà ce nom."
+
 
 class ProjectSerializer(serializers.ModelSerializer):
     """
@@ -15,13 +17,19 @@ class ProjectSerializer(serializers.ModelSerializer):
         fields = ["id", "name", "html", "css", "js"]
 
     def validate_name(self, value):
-        """Le nom doit être unique parmi les projets de l'utilisateur."""
+        """
+        Le nom doit être unique parmi les projets de l'utilisateur.
+
+        Ce contrôle donne un message clair dans le cas courant ; la contrainte en base
+        (``unique_project_name_per_owner``) reste la garantie finale, et la vue transforme son
+        ``IntegrityError`` en 400 (deux requêtes simultanées peuvent passer ce contrôle ensemble).
+        """
         user = self.context["request"].user
         duplicates = self.Meta.model.objects.filter(owner=user, name=value)
         if self.instance is not None:
             duplicates = duplicates.exclude(pk=self.instance.pk)
         if duplicates.exists():
-            raise serializers.ValidationError("Un projet porte déjà ce nom.")
+            raise serializers.ValidationError(DUPLICATE_NAME_MESSAGE)
         return value
 
 

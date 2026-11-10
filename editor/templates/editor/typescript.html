@@ -3,6 +3,7 @@
 
 {% block title %}Éditeur TypeScript · Langage Learning{% endblock %}
 {% block description %}Éditeur HTML, CSS et TypeScript avec vérification des types, options du compilateur, aperçu en direct et console.{% endblock %}
+{% block viewport %}width=device-width, initial-scale=1, viewport-fit=cover{% endblock %}
 {% block favicon %}{% static 'icons/typescript.svg' %}{% endblock %}
 {% block body_attrs %}data-app="editor" class="editor-app ts-app"{% endblock %}
 
@@ -24,7 +25,7 @@
 </svg>
 
 <header class="app-header">
-    <a class="brand" href="{% url 'index' %}" title="Retour à l'accueil">
+    <a class="brand" href="{% url 'index' %}" title="Retour à l'accueil" aria-label="Éditeur : retour à l'accueil">
         {% include "partials/logo.html" with logo_id="typescript-editor" %}
         <span class="brand-name">Éditeur</span>
     </a>

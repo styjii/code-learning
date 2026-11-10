@@ -1,4 +1,6 @@
 from rest_framework import viewsets, status
+from rest_framework.exceptions import ValidationError
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
@@ -8,11 +10,11 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.clickjacking import xframe_options_exempt
 from django.template.loader import render_to_string
 from django.conf import settings
-from django.db import transaction
+from django.db import IntegrityError, transaction
 from .models import EditorPreferences, Project, TypeScriptProject
 from .monaco_config import effective_options, sanitize_preferences, validate_preferences
 from .services import id
-from .serializers import ProjectSerializer, TypeScriptProjectSerializer
+from .serializers import DUPLICATE_NAME_MESSAGE, ProjectSerializer, TypeScriptProjectSerializer
 from .typescript_config import build_tsconfig, options_from_tsconfig, effective_compiler_options
 from .zip_import import ZipImportError, format_size, read_project_zip, read_typescript_zip
 from bs4 import BeautifulSoup
@@ -30,29 +32,60 @@ UPLOAD_OVERHEAD_BYTES = 64 * 1024
 
 class ProjectViewSet(viewsets.ModelViewSet):
     """
-    A viewset for viewing and editing Project instances.
+    CRUD des projets Web (HTML/CSS/JS) de l'utilisateur connecté : ``list``, ``create``, ``retrieve``,
+    ``update``, ``partial_update`` et ``destroy``.
 
-    This viewset provides `list`, `create`, `retrieve`, `update`, and `destroy` actions
-    for Project model objects using Django REST Framework.
+    Isolation par utilisateur :
+        - ``get_queryset`` ne renvoie que les projets dont l'utilisateur est propriétaire : un projet
+          d'un autre compte (ou sans propriétaire) est introuvable (404) pour lire, modifier ou supprimer,
+          sans révéler son existence ;
+        - le propriétaire n'est jamais lu dans le corps de la requête : il est imposé à la création.
+
+    Robustesse :
+        - un doublon de nom détecté seulement à l'écriture (requêtes simultanées) donne un 400, pas un 500 ;
+        - seul le JSON est accepté (415 sinon).
     """
+    model = Project
     serializer_class = ProjectSerializer
+    # Déjà imposé par REST_FRAMEWORK et par StrictLoginRequiredMiddleware : explicite ici par défense en profondeur.
+    permission_classes = [IsAuthenticated]
+    parser_classes = [JSONParser]
 
     def get_queryset(self):
+        user = self.request.user
+        if not user.is_authenticated:
+            return self.model.objects.none()
         # Chaque utilisateur ne voit et ne modifie que ses propres projets.
-        return Project.objects.filter(owner=self.request.user).order_by("id")
+        return self.model.objects.filter(owner=user).order_by("id")
 
     def perform_create(self, serializer):
-        serializer.save(owner=self.request.user)
+        self._save_or_reject_duplicate(serializer, owner=self.request.user)
+
+    def perform_update(self, serializer):
+        # Le propriétaire ne change jamais : il n'est pas dans les champs du serializer.
+        self._save_or_reject_duplicate(serializer)
+
+    @staticmethod
+    def _save_or_reject_duplicate(serializer, **extra):
+        """
+        Enregistre ; une violation de la contrainte « nom unique par propriétaire » devient un 400.
+
+        ``atomic`` isole l'écriture : l'échec d'un INSERT n'invalide pas une transaction englobante.
+        """
+        try:
+            with transaction.atomic():
+                serializer.save(**extra)
+        except IntegrityError:
+            raise ValidationError({"name": [DUPLICATE_NAME_MESSAGE]})
+
 
 class TypeScriptProjectViewSet(ProjectViewSet):
     """
     Même API que ``ProjectViewSet`` pour les projets de l'éditeur TypeScript (HTML, CSS, TypeScript et
     options du compilateur). Les deux types de projets sont indépendants : un projet Web n'apparaît jamais ici.
     """
+    model = TypeScriptProject
     serializer_class = TypeScriptProjectSerializer
-
-    def get_queryset(self):
-        return TypeScriptProject.objects.filter(owner=self.request.user).order_by("id")
 
 
 class SaveMonacoConfigView(APIView):

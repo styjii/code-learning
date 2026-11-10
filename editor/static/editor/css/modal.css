@@ -7,6 +7,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    padding: max(1rem, env(safe-area-inset-top, 0px)) max(1rem, env(safe-area-inset-right, 0px)) max(1rem, env(safe-area-inset-bottom, 0px)) max(1rem, env(safe-area-inset-left, 0px));
     background: rgba(5, 8, 14, 0.55);
     backdrop-filter: blur(2px);
     opacity: 0;
@@ -17,7 +18,10 @@
 .custom-modal-overlay.active { opacity: 1; pointer-events: auto; }
 
 .custom-modal {
-    width: min(480px, 92vw);
+    display: flex;
+    flex-direction: column;
+    width: min(480px, 100%);
+    max-height: 100%;                /* jamais plus haut que l'écran : le corps défile */
     border: 1px solid var(--border-strong);
     border-radius: var(--radius-lg);
     background: var(--surface);
@@ -28,14 +32,16 @@
 
 .custom-modal-overlay.active .custom-modal { transform: none; }
 
-.custom-modal-header, .custom-modal-body, .custom-modal-footer { padding: 0.9rem 1.1rem; }
+.custom-modal-header, .custom-modal-body, .custom-modal-footer { padding: 0.9rem 1.1rem; flex-shrink: 0; }
+.custom-modal-body { flex: 1 1 auto; min-height: 0; overflow-y: auto; }
 .custom-modal-header { display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); }
 .custom-modal-footer { border-top: 1px solid var(--border); }
 .custom-modal-title { margin: 0; color: var(--text-strong); font-size: 1.05rem; }
 
 .custom-modal-close {
-    width: 32px;
-    height: 32px;
+    width: var(--tap, 40px);
+    height: var(--tap, 40px);
+    margin: -0.3rem -0.5rem -0.3rem 0;
     border: 0;
     border-radius: var(--radius-sm);
     background: transparent;
@@ -126,7 +132,7 @@ label { user-select: none; }
     white-space: nowrap;
 }
 
-.switch-wrapper { display: flex; align-items: center; gap: 0.7rem; }
+.switch-wrapper { display: flex; align-items: center; gap: 0.7rem; min-height: var(--tap, 40px); }
 .switch { position: relative; display: inline-block; width: 42px; height: 24px; flex-shrink: 0; }
 .switch input { width: 0; height: 0; opacity: 0; }
 
@@ -155,3 +161,37 @@ label { user-select: none; }
 .switch input:checked + .slider { background: var(--accent); }
 .switch input:checked + .slider::before { transform: translateX(18px); }
 .switch input:focus-visible + .slider { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* ----------------------------- Adaptation aux écrans ----------------------------- */
+
+/* Écran tactile : un champ de moins de 16 px fait zoomer Safari iOS à la saisie. */
+@media (pointer: coarse) {
+    input[type="text"], select, textarea { font-size: max(16px, 1em); }
+    input[type="text"], select, .custom-file-label, .custom-file-name, .custom-button { min-height: var(--tap, 44px); }
+    input[type="range"] { height: var(--tap, 44px); }
+}
+
+/* Téléphone portrait : la fenêtre devient une feuille ancrée en bas (accessible au pouce). */
+@media (max-width: 599.98px) {
+    .custom-modal-overlay { align-items: flex-end; padding: 0; }
+    .custom-modal {
+        width: 100%;
+        max-height: 92%;
+        border-bottom: 0;
+        border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+        transform: translateY(24px);
+    }
+    .custom-modal-header, .custom-modal-body, .custom-modal-footer { padding-inline: max(1rem, env(safe-area-inset-left, 0px)) max(1rem, env(safe-area-inset-right, 0px)); }
+    .custom-modal-footer:last-child, .custom-modal-body:last-child { padding-bottom: calc(0.9rem + env(safe-area-inset-bottom, 0px)); }
+    /* Choix d'un .zip : trois éléments ne tiennent pas côte à côte sur 320 px. */
+    #zip-form .custom-input-row { flex-direction: column; }
+    #zip-form .custom-input-row > * + * { border-top: 1px solid var(--border-strong); }
+    #zip-form .custom-file-label { justify-content: center; }
+    #zip-form .custom-file-name { text-align: center; }
+}
+
+/* Paysage bas : fenêtre compacte, le corps défile. */
+@media (max-height: 600px) and (orientation: landscape) {
+    .custom-modal-overlay { padding-block: 0.5rem; }
+    .custom-modal-header, .custom-modal-body, .custom-modal-footer { padding-block: 0.6rem; }
+}

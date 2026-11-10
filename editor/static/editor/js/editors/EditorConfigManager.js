@@ -20,6 +20,11 @@ export class EditorConfigManager {
 
         // Patch event listeners for performance
         patchPassiveTouchStart();
+
+        // Écran étroit : le minimap prend ~60 px sur 320 px de large. Il est coupé à l'exécution seulement :
+        // la préférence enregistrée de l'utilisateur n'est pas modifiée et revient au passage en grand écran.
+        this.narrowScreen = window.matchMedia("(max-width: 767.98px)");
+        this.narrowScreen.addEventListener("change", () => this.applyResponsiveOptions());
     }
 
     /**
@@ -84,11 +89,21 @@ export class EditorConfigManager {
     }
 
     /**
-     * Gets current editor configuration copy.
+     * Gets current editor configuration copy, adapted to the current screen width.
      * @returns {object}
      */
     getConfig() {
-        return { ...this.editorConfig };
+        const config = { ...this.editorConfig };
+        if (this.narrowScreen?.matches) config.minimap = { ...(config.minimap || {}), enabled: false };
+        return config;
+    }
+
+    /** Applies the screen-dependent options to the editors that already exist. */
+    applyResponsiveOptions() {
+        const enabled = !this.narrowScreen.matches && (this.editorConfig.minimap?.enabled ?? true);
+        Object.values(this.state.editors).forEach((editor) => {
+            editor?.updateOptions?.({ minimap: { ...(this.editorConfig.minimap || {}), enabled } });
+        });
     }
 
     /**

@@ -13,9 +13,8 @@
     white-space: nowrap;
 }
 
-/* La fenêtre des options est plus haute que les autres : elle défile sur les petits écrans. */
-#ts-options .custom-modal { display: flex; flex-direction: column; width: min(520px, 92vw); max-height: 90vh; }
-#ts-options .custom-modal-body { flex: 1; min-height: 0; overflow-y: auto; }
+/* La fenêtre des options est plus haute que les autres : son corps défile (règles communes dans modal.css). */
+#ts-options .custom-modal { width: min(520px, 100%); }
 
 #ts-options code { font-family: var(--font-mono); font-size: 0.85em; }
 
@@ -29,3 +28,9 @@
 }
 
 .ts-hint { margin: 0.25rem 0 0; color: var(--muted); font-size: 0.8rem; line-height: 1.55; }
+
+/* Écran étroit : le résumé des options n'a plus la place d'être lisible. Il reste annoncé aux lecteurs d'écran
+ * (role=status) mais n'occupe plus la barre d'outils. Les options restent dans Menu > Options TypeScript. */
+@media (max-width: 599.98px) {
+    .ts-summary { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+}

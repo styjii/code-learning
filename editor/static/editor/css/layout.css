@@ -1,36 +1,77 @@
-/* Éditeur : structure générale de la page. */
+/* Éditeur : structure générale de la page.
+ *
+ * Régimes d'affichage (les trois éditeurs partagent ce fichier) :
+ *   < 600 px   téléphone portrait : en-tête sur deux lignes, barre d'onglets en bas (navigation.css)
+ *   600–1023   grand téléphone / tablette : en-tête sur une ligne, code et aperçu empilés
+ *   >= 1024    ordinateur : code et aperçu côte à côte
+ *   paysage bas (hauteur <= 600 px) : côte à côte aussi, barre latérale à gauche, en-tête compact
+ */
 
 html, body.editor-app { height: 100%; }
 
+/* ---- Jetons de taille ----
+ * --hdr-h : hauteur d'une ligne d'en-tête ; --tap : côté minimal d'une cible tactile.
+ * Écran tactile : 44 px (recommandation Apple / WCAG 2.5.5) ; souris : plus dense. */
 body.editor-app {
+    --hdr-h: 48px;
+    --tap: 40px;
+    --bar-h: 52px;          /* barre d'onglets du bas (téléphone) */
     display: flex;
     flex-direction: column;
     overflow: hidden;
+    /* base.css impose min-height: 100vh, qui dépasse la zone visible sur mobile (barre d'adresse) :
+     * la barre du bas passerait sous l'interface du navigateur. dvh suit la zone réellement visible. */
+    min-height: 0;
+    height: 100vh;
+    height: 100dvh;
     font-size: 0.95rem;
     line-height: 1.5;
 }
 
+@media (pointer: coarse) {
+    body.editor-app { --hdr-h: 52px; --tap: 44px; --bar-h: 56px; }
+}
+
+/* 320 px : logo + menus + 3 icônes doivent tenir sur une ligne, 40 px suffisent. */
+@media (max-width: 359.98px) {
+    body.editor-app { --tap: 40px; }
+}
+
+/* Paysage bas : chaque pixel de hauteur compte. */
+@media (max-height: 600px) and (orientation: landscape) {
+    body.editor-app { --hdr-h: 44px; --tap: 40px; --bar-h: 48px; }
+}
+
 *:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
 
+/* ----------------------------- En-tête ----------------------------- */
 .app-header {
     position: relative;
     z-index: 1020;
     display: flex;
+    flex-wrap: wrap;                 /* filet de sécurité : jamais de débordement, au pire une 2e ligne */
     align-items: center;
-    gap: 0.75rem;
-    height: 48px;
-    padding: 0 0.75rem;
+    gap: 0 0.5rem;
+    min-height: calc(var(--hdr-h) + env(safe-area-inset-top, 0px));
+    padding: env(safe-area-inset-top, 0px) max(0.75rem, env(safe-area-inset-right, 0px)) 0 max(0.75rem, env(safe-area-inset-left, 0px));
     flex-shrink: 0;
     border-bottom: 1px solid var(--border);
     background: var(--surface);
 }
 
-.app-header .brand svg { width: 26px; height: 26px; }
+.app-header .brand { flex-shrink: 0; justify-content: center; min-width: var(--tap); min-height: var(--tap); padding-inline: 0.15rem; }
+.app-header .brand svg { width: 28px; height: 28px; }
+
+/* Les icônes d'action suivent la taille tactile (base.css : 38 px). */
+.app-header .icon-btn { width: var(--tap); height: var(--tap); }
+.topbar-actions { flex-shrink: 0; gap: 2px; }
 
 .project-chip {
     display: none;
     align-items: center;
     gap: 0.5rem;
+    flex: 0 1 auto;
+    min-width: 0;                    /* laisse le nom s'abréger (…) au lieu de pousser les boutons */
     max-width: 260px;
     padding: 0.2rem 0.7rem;
     border: 1px solid var(--border);
@@ -43,25 +84,65 @@ body.editor-app {
 .project-chip .dot { width: 7px; height: 7px; flex-shrink: 0; border-radius: 50%; background: #2da44e; }
 .project-chip #current-project { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
-@media (min-width: 640px) { .project-chip { display: inline-flex; } }
+@media (min-width: 600px) { .project-chip { display: inline-flex; } }
 
-.workspace {
-    position: relative;
-    display: flex;
-    flex: 1;
-    min-height: 0;
-    overflow: hidden;
-}
+/* Le mot « Éditeur » n'apparaît que lorsqu'il y a la place : le logo renvoie déjà à l'accueil. */
+@media (max-width: 899.98px) { .app-header .brand-name { display: none; } }
 
-/* Commutateur Web | Python dans l'en-tête des deux éditeurs */
+/* Commutateur Web | Python | TypeScript */
 .mode-switch {
     display: inline-flex;
+    flex-shrink: 0;
     padding: 2px;
     border: 1px solid var(--border);
     border-radius: 999px;
     background: var(--surface-2);
     font-size: 0.82rem;
 }
-.mode-switch a { padding: 0.15rem 0.8rem; border-radius: 999px; color: var(--muted); text-decoration: none; }
+.mode-switch a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 28px;
+    padding: 0 0.8rem;
+    border-radius: 999px;
+    color: var(--muted);
+    text-decoration: none;
+    white-space: nowrap;
+}
 .mode-switch a:hover { color: var(--text-strong); }
 .mode-switch a[aria-current="page"] { background: var(--accent); color: var(--accent-contrast); }
+@media (pointer: coarse) { .mode-switch a { min-height: 36px; } }
+
+/* ---- Téléphone portrait : deux lignes ----
+ *   ligne 1 : logo | menus ............ actions
+ *   ligne 2 : commutateur d'éditeur sur toute la largeur
+ * Une seule ligne ne peut pas contenir le logo, le commutateur (~210 px), les menus et 3 icônes sur 320 px :
+ * les derniers boutons sortaient de l'écran et devenaient inaccessibles. */
+@media (max-width: 599.98px) {
+    .app-header {
+        display: grid;
+        grid-template-columns: auto 1fr auto;
+        grid-template-areas: "brand nav actions" "switch switch switch";
+        align-items: center;
+        gap: 0 0.25rem;
+        padding-inline: max(0.5rem, env(safe-area-inset-left, 0px)) max(0.5rem, env(safe-area-inset-right, 0px));
+        padding-bottom: 6px;
+    }
+    .app-header .brand { grid-area: brand; }
+    .app-header .nav-bar { grid-area: nav; min-width: 0; }
+    .app-header .topbar-actions { grid-area: actions; }
+    .app-header .mode-switch { grid-area: switch; display: flex; width: 100%; margin-top: 2px; }
+    .app-header .mode-switch a { flex: 1; min-height: 34px; padding: 0 0.4rem; }
+}
+
+/* ------------------------------ Espace de travail ------------------------------ */
+.workspace {
+    position: relative;
+    display: flex;
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+    padding-right: env(safe-area-inset-right, 0px);   /* encoche en paysage */
+}
+body.py-app .workspace { padding-left: env(safe-area-inset-left, 0px); }   /* pas de barre latérale : le contenu touche le bord */

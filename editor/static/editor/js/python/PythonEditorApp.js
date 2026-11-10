@@ -101,6 +101,14 @@ export class PythonEditorApp {
             automaticLayout: true,
             ariaLabel: "Code Python",
         });
+        // Écran étroit : pas de minimap (il prendrait ~60 px sur 320). Coupé à l'exécution seulement : la
+        // préférence enregistrée n'est pas modifiée et revient en grand écran.
+        const narrow = window.matchMedia("(max-width: 767.98px)");
+        const wantsMinimap = prefs.minimap?.enabled ?? false;
+        const applyMinimap = () => this.editor.updateOptions({ minimap: { ...(prefs.minimap || {}), enabled: wantsMinimap && !narrow.matches } });
+        applyMinimap();
+        narrow.addEventListener("change", applyMinimap);
+
         this.editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.Enter, () => this.run());
         this.editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyS, () => this.saveNow());
 
