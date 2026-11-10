@@ -13,6 +13,8 @@ from .views import (
     TypeScriptExportZipView,
     TypeScriptImportZipView,
     TypeScriptProjectViewSet,
+    PythonExportZipView,
+    PythonImportZipView,
 )
 
 
@@ -31,6 +33,8 @@ urlpatterns = [
     path('api/import-zip/', ImportZipView.as_view(), name='import_zip'),
     path('api/ts-export-zip/', TypeScriptExportZipView.as_view(), name='ts_export_zip'),
     path('api/ts-import-zip/', TypeScriptImportZipView.as_view(), name='ts_import_zip'),
+    path('api/py-export-zip/', PythonExportZipView.as_view(), name='py_export_zip'),
+    path('api/py-import-zip/', PythonImportZipView.as_view(), name='py_import_zip'),
     path("preview/", LivePreviewView.as_view(), name="live-preview"),
     path("preview/<str:preview_id>/", PreviewDisplayView.as_view(), name="preview-display"),
 ]

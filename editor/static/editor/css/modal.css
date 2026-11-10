@@ -104,6 +104,8 @@ label { user-select: none; }
 .custom-feedback { display: none; font-size: 0.85rem; }
 .feedback-error { color: #e5484d; }
 .feedback-success { color: #2da44e; }
+.feedback-warning { color: #b7791f; }
+[data-theme="dark"] .feedback-warning { color: #e3b341; }
 
 .custom-file-label {
     position: relative;

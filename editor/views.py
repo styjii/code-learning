@@ -11,12 +11,13 @@ from django.views.decorators.clickjacking import xframe_options_exempt
 from django.template.loader import render_to_string
 from django.conf import settings
 from django.db import IntegrityError, transaction
+from . import python_files
 from .models import EditorPreferences, Project, TypeScriptProject
 from .monaco_config import effective_options, sanitize_preferences, validate_preferences
 from .services import id
 from .serializers import DUPLICATE_NAME_MESSAGE, ProjectSerializer, TypeScriptProjectSerializer
 from .typescript_config import build_tsconfig, options_from_tsconfig, effective_compiler_options
-from .zip_import import ZipImportError, format_size, read_project_zip, read_typescript_zip
+from .zip_import import ZipImportError, format_size, read_project_zip, read_python_zip, read_typescript_zip
 from bs4 import BeautifulSoup
 import html as html_lib
 import io
@@ -298,6 +299,77 @@ class TypeScriptImportZipView(ImportZipView):
             'ts': script_ts,
             'compiler_options': effective_compiler_options(options_from_tsconfig(tsconfig)),
         })
+
+
+class PythonExportZipView(APIView):
+    """
+    API endpoint qui génère le .zip d'un projet de l'éditeur Python.
+
+    Le JSON reçu contient ``files`` : la liste des ``{"name", "content"}`` du projet (stocké dans le navigateur).
+    L'archive contient ces fichiers à plat, ``main.py`` en tête. Les noms et tailles sont revérifiés (400 sinon) :
+    une archive exportée est toujours réimportable.
+    """
+    parser_classes = [JSONParser]
+
+    def post(self, request):
+        data = request.data
+        files = data.get('files') if isinstance(data, dict) else None
+        error = self._validate(files)
+        if error:
+            return Response({'error': error}, status=status.HTTP_400_BAD_REQUEST)
+
+        ordered = sorted(files, key=lambda f: f['name'] != python_files.MAIN_FILE)
+        zip_buffer = io.BytesIO()
+        with zipfile.ZipFile(zip_buffer, 'w', zipfile.ZIP_DEFLATED) as zf:
+            for f in ordered:
+                zf.writestr(f['name'], f['content'])
+
+        response = HttpResponse(zip_buffer.getvalue(), content_type='application/zip')
+        response['Content-Disposition'] = "attachment; filename*=UTF-8''python-project.zip"
+        return response
+
+    @staticmethod
+    def _validate(files):
+        if not isinstance(files, list) or not files:
+            return "Aucun fichier à exporter."
+        if len(files) > python_files.MAX_FILES:
+            return f"Limite de {python_files.MAX_FILES} fichiers dépassée."
+        seen = set()
+        for f in files:
+            if not isinstance(f, dict) or not isinstance(f.get('content'), str):
+                return "Fichier invalide."
+            name = f.get('name')
+            problem = python_files.filename_error(name)
+            if problem:
+                return f"« {name} » : {problem}."
+            if name.lower() in seen:
+                return f"« {name} » : un fichier de ce nom existe déjà."
+            seen.add(name.lower())
+            if len(f['content']) > python_files.MAX_CHARS:
+                return f"« {name} » dépasse {python_files.MAX_CHARS} caractères."
+        return None
+
+
+class PythonImportZipView(ImportZipView):
+    """
+    API endpoint d'import d'un .zip de projet Python : renvoie ``files`` (``{"name", "content"}`` valides, ``main.py``
+    en premier) et ``skipped`` (messages pour les entrées ignorées). Rien n'est enregistré côté serveur : le navigateur
+    restaure le projet dans son stockage local.
+
+    Mêmes plafonds de taille que ``ImportZipView`` (contrôle avant lecture, refus en 413).
+    """
+
+    def post(self, request):
+        uploaded_file = request.FILES.get('zip_file')
+        if not uploaded_file:
+            return Response({'error': 'No zip file provided.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        limit = settings.EDITOR_ZIP_MAX_UPLOAD_BYTES
+        if uploaded_file.size > limit:
+            raise ZipImportError(f"Fichier trop volumineux (maximum {format_size(limit)}).", 413)
+
+        files, skipped = read_python_zip(uploaded_file)
+        return Response({'files': files, 'skipped': skipped})
 
 
 class LivePreviewView(APIView):

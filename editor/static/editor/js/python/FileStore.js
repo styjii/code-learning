@@ -172,4 +172,37 @@ export class FileStore {
         this.files = [{ name: MAIN_FILE, content: SAMPLE }];
         this.active = MAIN_FILE;
     }
+
+    /**
+     * Remplace tout le projet (restauration d'une archive .zip). Chaque fichier repasse par les mêmes règles que
+     * ``add`` (nom, doublons, limites) : ce qui ne les respecte pas est écarté et signalé, jamais enregistré.
+     * Sans main.py dans l'archive, l'exemple de départ en tient lieu.
+     *
+     * @param {{name: string, content: string}[]} files
+     * @returns {{count: number, skipped: string[], sampleMain: boolean}}
+     */
+    replaceAll(files) {
+        const kept = [];
+        const skipped = [];
+        // main.py d'abord : la limite de fichiers ne doit jamais le faire écarter.
+        const incoming = (Array.isArray(files) ? [...files] : []).sort((a, b) => (b?.name === MAIN_FILE) - (a?.name === MAIN_FILE));
+        for (const file of incoming) {
+            const label = `« ${file?.name} »`;
+            if (typeof file?.content !== "string") { skipped.push(`${label} : contenu invalide.`); continue; }
+            if (kept.length >= MAX_FILES) { skipped.push(`${label} : limite de ${MAX_FILES} fichiers atteinte.`); continue; }
+            const { name, error } = validateName(file.name, kept.map((f) => f.name));
+            if (error) { skipped.push(`${label} : ${error}`); continue; }
+            kept.push({ name, content: file.content.slice(0, MAX_CHARS) });
+        }
+        const sampleMain = !kept.some((file) => file.name === MAIN_FILE);
+        if (sampleMain) {
+            // L'exemple prend la place de main.py : on ne dépasse pas la limite.
+            if (kept.length >= MAX_FILES) skipped.push(`« ${kept.pop().name} » : limite de ${MAX_FILES} fichiers atteinte.`);
+            kept.unshift({ name: MAIN_FILE, content: SAMPLE });
+        }
+        this.files = kept;
+        this.#sortMainFirst();
+        this.active = MAIN_FILE;
+        return { count: kept.length, skipped, sampleMain };
+    }
 }

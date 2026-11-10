@@ -2,8 +2,10 @@ import { loadMonaco } from "../../../language/js/runner/MonacoLoader.js";
 import { PythonRunner } from "../../../language/js/runner/PythonRunner.js";
 import { ConsoleRenderer } from "../console/ConsoleRenderer.js";
 import { DropdownEvents } from "../events/DropdownEvents.js";
+import { ModalEvents } from "../events/ModalEvents.js";
 import { FileStore, MAIN_FILE, MAX_CHARS, MAX_FILES, validateName } from "./FileStore.js";
 import { PythonLanguageService, createLanguageClient } from "./language/PythonLanguageService.js";
+import { PythonZipManager } from "./PythonZipManager.js";
 
 /**
  * Éditeur Python en ligne : plusieurs fichiers (main.py + modules importables), Monaco, exécution
@@ -440,6 +442,25 @@ export class PythonEditorApp {
         this.activate(MAIN_FILE);
     }
 
+    /**
+     * Restaure le projet depuis une archive .zip déjà validée par le serveur (voir PythonZipManager).
+     * @param {{name: string, content: string}[]} files
+     * @returns {{count: number, skipped: string[], sampleMain: boolean}}
+     */
+    restoreFiles(files) {
+        for (const model of this.models.values()) model.dispose();
+        this.models.clear();
+        this.viewStates.clear();
+        const result = this.store.replaceAll(files);
+        this.saveNow();
+        this.console.clear();
+        this.setStatus("");
+        this.notify("");
+        if (this.editor) this.activate(MAIN_FILE);
+        else this.renderTabs();       // Monaco n'a pas démarré : les fichiers sont restaurés, l'éditeur les affichera
+        return result;
+    }
+
     toggleWrap() {
         const next = this.editor.getOption(this.monaco.editor.EditorOption.wordWrap) === "off" ? "on" : "off";
         this.editor.updateOptions({ wordWrap: next });
@@ -478,6 +499,8 @@ export class PythonEditorApp {
 
     bindUi() {
         DropdownEvents.bind();
+        ModalEvents.bind();                   // fenêtre « Import / export .zip », la même que celle de l'éditeur Web
+        new PythonZipManager(this).bind();
         $("run-code").disabled = true;
         $("run-code").addEventListener("click", () => (this.running ? this.stop() : this.run()));
         $("py-clear").addEventListener("click", () => { this.console.clear(); this.setStatus(""); });

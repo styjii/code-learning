@@ -1,3 +1,4 @@
+import "../utils/csrf.js";            // doit être chargé en premier (jeton CSRF sur les fetch d'écriture)
 import { PythonEditorApp } from "./PythonEditorApp.js";
 
 const app = new PythonEditorApp();

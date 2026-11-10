@@ -15,6 +15,7 @@
 <link rel="stylesheet" href="{% static 'editor/css/editor.css' %}">
 <link rel="stylesheet" href="{% static 'editor/css/chrome-console.css' %}">
 <link rel="stylesheet" href="{% static 'editor/css/console.css' %}">
+<link rel="stylesheet" href="{% static 'editor/css/modal.css' %}">
 <link rel="stylesheet" href="{% static 'editor/css/python.css' %}">
 {% endblock %}
 
@@ -42,6 +43,7 @@
                 <li><button class="drop-item" id="py-new">Nouveau fichier</button></li>
                 <li><button class="drop-item" id="py-import">Importer des fichiers…</button></li>
                 <li><button class="drop-item" id="py-download">Télécharger le fichier actif</button></li>
+                <li><button class="drop-item" data-toggle="custom-modal" data-target="#zip-controls">Import / export .zip</button></li>
                 <li><button class="drop-item" id="py-reset">Remplacer par l'exemple…</button></li>
             </ul>
         </li>
@@ -91,6 +93,32 @@
     </div>
     <input id="py-import-input" type="file" accept=".py,.txt,.json,.csv,.md,text/plain" multiple hidden>
 </main>
+
+<!-- Zip : même fenêtre que l'éditeur Web -->
+<div id="zip-controls" class="custom-modal-overlay">
+    <div class="custom-modal">
+        <div class="custom-modal-header">
+            <h2 class="custom-modal-title">Import / export</h2>
+            <button class="custom-modal-close" aria-label="Fermer">&times;</button>
+        </div>
+        <div class="custom-modal-body">
+            <form id="zip-form" class="custom-form" novalidate>
+                <div class="custom-input-row">
+                    <label class="custom-file-label">Choisir un .zip<input type="file" id="zip-input" class="custom-file-input" accept=".zip"></label>
+                    <span class="custom-file-name" id="file-name">Aucun fichier</span>
+                    <button type="button" class="custom-button import" id="import-btn">Importer</button>
+                </div>
+                <div id="import-feedback" class="custom-feedback feedback-error" role="alert">Sélectionnez un fichier .zip.</div>
+                <div id="import-success" class="custom-feedback feedback-success" role="status">Archive importée !</div>
+                <div id="import-skipped" class="custom-feedback feedback-warning"></div>
+            </form>
+        </div>
+        <div class="custom-modal-footer">
+            <button type="button" class="custom-button export" id="export-btn">Exporter le projet (.zip)</button>
+            <div id="export-feedback" class="custom-feedback feedback-error" role="alert"></div>
+        </div>
+    </div>
+</div>
 {% endblock %}
 
 {% block scripts %}
