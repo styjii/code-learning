@@ -7,7 +7,8 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import Client, TestCase, override_settings
 from django.urls import reverse
 
-from .models import Project, TypeScriptProject
+from .models import Project
+from .test_support import JS, TS, export_url, import_url, page_url, projects_url
 from .tests import make_zip
 from .typescript_config import (
     DEFAULT_COMPILER_OPTIONS,
@@ -20,9 +21,11 @@ from .typescript_config import (
 
 User = get_user_model()
 PASSWORD = "Mot-de-passe-solide-42"
-PROJECTS_URL = "/editor/api/ts-projects/"
-EXPORT_URL = "/editor/api/ts-export-zip/"
-IMPORT_URL = "/editor/api/ts-import-zip/"
+PROJECTS_URL = projects_url(TS)
+
+
+def ts_projects():
+    return Project.objects.filter(editor=TS)
 
 
 class CompilerOptionsConfigTests(TestCase):
@@ -103,7 +106,7 @@ class TypeScriptProjectApiTests(TestCase):
         body = response.json()
         self.assertEqual((body["html"], body["css"], body["ts"]), ("<p>", "p{}", "let a = 1"))
         self.assertEqual(body["compiler_options"], DEFAULT_COMPILER_OPTIONS)
-        self.assertEqual(TypeScriptProject.objects.get().owner, self.alice)
+        self.assertEqual(ts_projects().get().owner, self.alice)
 
     def test_options_are_saved_and_returned_complete(self):
         project_id = self.post(self.alice_client, {"name": "A"}).json()["id"]
@@ -119,7 +122,7 @@ class TypeScriptProjectApiTests(TestCase):
         project_id = self.post(self.alice_client, {"name": "A", "compiler_options": {"strict": False}}).json()["id"]
         self.alice_client.put(f"{PROJECTS_URL}{project_id}/", json.dumps({"name": "A", "ts": "y"}),
                               content_type="application/json")
-        self.assertIs(TypeScriptProject.objects.get().compiler_options["strict"], False)
+        self.assertIs(ts_projects().get().data["compiler_options"]["strict"], False)
 
     def test_invalid_options_are_refused_and_nothing_is_saved(self):
         for options in ({"outDir": "/tmp"}, {"target": "ES2099"}, {"strict": "yes"}, {"module": "CommonJS"}, [], "x"):
@@ -127,7 +130,7 @@ class TypeScriptProjectApiTests(TestCase):
                 response = self.post(self.alice_client, {"name": "Bad", "compiler_options": options})
                 self.assertEqual(response.status_code, 400)
                 self.assertIn("compiler_options", response.json())
-        self.assertFalse(TypeScriptProject.objects.exists())
+        self.assertFalse(ts_projects().exists())
 
     def test_projects_are_private_to_their_owner(self):
         project_id = self.post(self.alice_client, {"name": "Secret", "ts": "x"}).json()["id"]
@@ -143,63 +146,83 @@ class TypeScriptProjectApiTests(TestCase):
         self.assertEqual(self.post(self.bob_client, {"name": "Même nom"}).status_code, 201)
 
     def test_web_and_typescript_projects_are_independent(self):
-        Project.objects.create(owner=self.alice, name="Web", js="1")
+        Project.objects.create(owner=self.alice, editor=JS, name="Web", data={"js": "1"})
         self.assertEqual(self.alice_client.get(PROJECTS_URL).json(), [])
         self.assertEqual(self.post(self.alice_client, {"name": "Web"}).status_code, 201)   # même nom permis
-        self.assertEqual(len(self.alice_client.get("/editor/api/projects/").json()), 1)    # l'éditeur Web est inchangé
+        self.assertEqual(len(self.alice_client.get(projects_url(JS)).json()), 1)           # l'éditeur Web est inchangé
 
     def test_owner_cannot_be_set_by_client(self):
         self.post(self.alice_client, {"name": "A", "owner": self.bob.pk})
-        self.assertEqual(TypeScriptProject.objects.get().owner, self.alice)
+        self.assertEqual(ts_projects().get().owner, self.alice)
 
 
 class TypeScriptZipTests(TestCase):
+    """Export / import .zip de codelab-ts : l'archive vient de la base et l'import y écrit directement."""
+
     def setUp(self):
         self.user = User.objects.create_user("alice", password=PASSWORD)
         self.client = Client()
         self.client.force_login(self.user)
+        self.project = self.make("Démo <b>")
 
-    def export(self, payload):
-        response = self.client.post(EXPORT_URL, json.dumps(payload), content_type="application/json")
+    def make(self, name, **data):
+        return Project.objects.create(owner=self.user, editor=TS, name=name, data=data)
+
+    def export(self, project=None, **data):
+        project = project or self.project
+        if data:
+            project.data = data
+            project.save()
+        response = self.client.get(export_url(TS, project.pk))
         self.assertEqual(response.status_code, 200)
         return zipfile.ZipFile(io.BytesIO(response.content))
 
     def upload(self, data, name="project.zip"):
-        return self.client.post(IMPORT_URL, {"zip_file": SimpleUploadedFile(name, data)})
+        return self.client.post(import_url(TS, self.project.pk), {"zip_file": SimpleUploadedFile(name, data)})
+
+    def stored(self):
+        self.project.refresh_from_db()
+        return self.project.data
 
     def test_export_contains_the_four_files(self):
-        archive = self.export({"project": "Démo <b>", "html": "<p>Salut</p>", "css": "p{color:red}", "ts": "const a: number = 1;",
-                               "compilerOptions": {"target": "ES2020", "strict": False}})
+        archive = self.export(html="<p>Salut</p>", css="p{color:red}", ts="const a: number = 1;",
+                              compiler_options={"target": "ES2020", "strict": False})
         self.assertEqual(sorted(archive.namelist()), ["index.html", "script.ts", "style.css", "tsconfig.json"])
         index = archive.read("index.html").decode()
         self.assertIn("<p>Salut</p>", index)
-        self.assertIn("&lt;b&gt;", index)                                   # titre échappé
+        self.assertIn("&lt;b&gt;", index)                                   # titre (nom du projet) échappé
         self.assertIn('<script type="module" src="./script.js"></script>', index)
         self.assertEqual(archive.read("script.ts").decode(), "const a: number = 1;")
         tsconfig = json.loads(archive.read("tsconfig.json"))
         self.assertEqual((tsconfig["compilerOptions"]["target"], tsconfig["compilerOptions"]["strict"]), ("ES2020", False))
 
-    def test_export_ignores_invalid_options(self):
-        archive = self.export({"project": "p", "compilerOptions": {"outDir": "/etc", "target": "nope"}})
+    def test_export_filename_is_the_project_name(self):
+        response = self.client.get(export_url(TS, self.project.pk))
+        self.assertEqual(response["Content-Type"], "application/zip")
+        self.assertIn("filename*=UTF-8''D%C3%A9mo%20%3Cb%3E.zip", response["Content-Disposition"])
+
+    def test_export_ignores_invalid_stored_options(self):
+        archive = self.export(compiler_options={"outDir": "/etc", "target": "nope"})
         options = json.loads(archive.read("tsconfig.json"))["compilerOptions"]
         self.assertNotIn("outDir", options)
         self.assertEqual(options["target"], DEFAULT_COMPILER_OPTIONS["target"])
 
     def test_export_without_options_uses_defaults(self):
-        options = json.loads(self.export({"project": "p"}).read("tsconfig.json"))["compilerOptions"]
+        options = json.loads(self.export(html="", css="", ts="").read("tsconfig.json"))["compilerOptions"]
         self.assertIs(options["strict"], True)
 
     def test_round_trip(self):
-        archive_bytes = self.client.post(EXPORT_URL, json.dumps({
-            "project": "Rond", "html": "<h1>Titre é</h1>", "css": "h1{}", "ts": "let x: string = 'é';",
-            "compilerOptions": {"target": "ES2018", "strict": False, "noUnusedLocals": True}}),
-            content_type="application/json").content
+        source = self.make("Rond", html="<h1>Titre é</h1>", css="h1{}", ts="let x: string = 'é';",
+                           compiler_options={"target": "ES2018", "strict": False, "noUnusedLocals": True})
+        archive_bytes = self.client.get(export_url(TS, source.pk)).content
         body = self.upload(archive_bytes, "Rond.zip").json()
-        self.assertEqual(body["project"], "Rond")
+        self.assertEqual(body["name"], "Démo <b>")                        # le nom du projet visé ne change pas
         self.assertEqual(body["html"].strip(), "<h1>Titre é</h1>")
         self.assertEqual((body["css"], body["ts"]), ("h1{}", "let x: string = 'é';"))
-        self.assertEqual(body["compiler_options"],
-                         {**DEFAULT_COMPILER_OPTIONS, "target": "ES2018", "strict": False, "noUnusedLocals": True})
+        expected = {**DEFAULT_COMPILER_OPTIONS, "target": "ES2018", "strict": False, "noUnusedLocals": True}
+        self.assertEqual(body["compiler_options"], expected)
+        self.assertEqual(self.stored()["compiler_options"], expected)      # écrit en base
+        self.assertEqual(self.stored()["ts"], "let x: string = 'é';")
 
     def test_import_without_tsconfig_gives_defaults_and_removes_scripts(self):
         data = make_zip({"index.html": "<body><p>x</p><script>evil()</script></body>", "script.ts": "let a = 1"})
@@ -208,22 +231,27 @@ class TypeScriptZipTests(TestCase):
         self.assertEqual(body["ts"], "let a = 1")
         self.assertEqual(body["css"], "")
         self.assertEqual(body["compiler_options"], DEFAULT_COMPILER_OPTIONS)
+        self.assertEqual(self.stored()["html"], "<p>x</p>")
 
     def test_import_ignores_forbidden_tsconfig_keys(self):
         tsconfig = json.dumps({"compilerOptions": {"outDir": "/etc", "strict": False}})
         body = self.upload(make_zip({"tsconfig.json": tsconfig})).json()
         self.assertNotIn("outDir", body["compiler_options"])
         self.assertIs(body["compiler_options"]["strict"], False)
+        self.assertNotIn("outDir", self.stored()["compiler_options"])
 
     def test_import_in_project_folder(self):
         data = make_zip({"proj/index.html": "<body>x</body>", "proj/script.ts": "1", "proj/tsconfig.json": "{}"})
         self.assertEqual(self.upload(data, "proj.zip").json()["ts"], "1")
 
     def test_import_without_file_is_400(self):
-        self.assertEqual(self.client.post(IMPORT_URL, {}).status_code, 400)
+        self.assertEqual(self.client.post(import_url(TS, self.project.pk), {}).status_code, 400)
 
-    def test_invalid_archive_is_400(self):
+    def test_invalid_archive_is_400_and_the_project_is_untouched(self):
+        self.project.data = {"html": "", "css": "", "ts": "avant", "compiler_options": {}}
+        self.project.save()
         self.assertEqual(self.upload(b"pas un zip").status_code, 400)
+        self.assertEqual(self.stored()["ts"], "avant")
 
     @override_settings(EDITOR_ZIP_MAX_UPLOAD_BYTES=64 * 1024, EDITOR_ZIP_MAX_ENTRIES=10,
                        EDITOR_ZIP_MAX_FILE_BYTES=8 * 1024, EDITOR_ZIP_MAX_TOTAL_BYTES=16 * 1024)
@@ -233,12 +261,19 @@ class TypeScriptZipTests(TestCase):
         self.assertEqual(self.upload(make_zip({f"f{i}.txt": "x" for i in range(11)})).status_code, 413)
 
     def test_anonymous_gets_401(self):
-        self.assertEqual(Client().post(EXPORT_URL, "{}", content_type="application/json").status_code, 401)
-        self.assertEqual(Client().post(IMPORT_URL, {}).status_code, 401)
+        self.assertEqual(Client().get(export_url(TS, self.project.pk)).status_code, 401)
+        self.assertEqual(Client().post(import_url(TS, self.project.pk), {}).status_code, 401)
 
-    def test_web_import_is_unchanged_by_the_refactoring(self):
+    def test_a_web_project_cannot_be_reached_through_the_typescript_editor(self):
+        web = Project.objects.create(owner=self.user, editor=JS, name="w", data={"html": "", "css": "", "js": ""})
+        self.assertEqual(self.client.get(export_url(TS, web.pk)).status_code, 404)
+        archive = SimpleUploadedFile("w.zip", make_zip({"script.ts": "1"}))
+        self.assertEqual(self.client.post(import_url(TS, web.pk), {"zip_file": archive}).status_code, 404)
+
+    def test_web_import_keeps_its_own_files(self):
+        web = Project.objects.create(owner=self.user, editor=JS, name="w", data={"html": "", "css": "", "js": ""})
         data = make_zip({"index.html": "<body>w</body>", "style.css": "a{}", "script.js": "1", "script.ts": "ignoré"})
-        body = self.client.post("/editor/api/import-zip/", {"zip_file": SimpleUploadedFile("w.zip", data)}).json()
+        body = self.client.post(import_url(JS, web.pk), {"zip_file": SimpleUploadedFile("w.zip", data)}).json()
         self.assertEqual((body["html"], body["css"], body["js"]), ("w", "a{}", "1"))
         self.assertNotIn("ts", body)
 
@@ -274,14 +309,14 @@ class TypeScriptEditorPageTests(TestCase):
         self.client = Client()
 
     def test_page_requires_login(self):
-        url = reverse("typescript-editor")
+        url = page_url(TS)
         response = self.client.get(url)
         self.assertEqual(response.status_code, 302)
         self.assertIn("/accounts/login/", response["Location"])
 
     def test_page_contains_the_editor_and_options(self):
         self.client.force_login(self.user)
-        response = self.client.get(reverse("typescript-editor"))
+        response = self.client.get(page_url(TS))
         self.assertEqual(response.status_code, 200)
         html = response.content.decode()
         for fragment in ('id="html-editor"', 'id="css-editor"', 'id="ts-editor"', 'id="ts-tab"', 'id="run-code"',
@@ -292,17 +327,16 @@ class TypeScriptEditorPageTests(TestCase):
 
     def test_every_option_of_the_server_has_a_form_control(self):
         self.client.force_login(self.user)
-        html = self.client.get(reverse("typescript-editor")).content.decode()
+        html = self.client.get(page_url(TS)).content.decode()
         for key in DEFAULT_COMPILER_OPTIONS:
             self.assertIn(f'data-ts-option="{key}"', html)
 
     def test_editors_and_home_link_to_each_other(self):
         self.client.force_login(self.user)
-        ts_url = reverse("typescript-editor")
-        for name in ("editor-index", "python-editor"):
-            self.assertContains(self.client.get(reverse(name)), f'href="{ts_url}"')
-        self.assertContains(self.client.get(ts_url), f'href="{reverse("editor-index")}"')
-        self.assertContains(self.client.get(ts_url), f'href="{reverse("python-editor")}"')
+        ts_url = page_url(TS)
+        for editor in ("codelab-js", "codelab-py"):
+            self.assertContains(self.client.get(page_url(editor)), f'href="{ts_url}"')
+            self.assertContains(self.client.get(ts_url), f'href="{page_url(editor)}"')
         self.assertContains(self.client.get(reverse("index")), f'href="{ts_url}"')
 
     def test_static_files_used_by_the_page_exist(self):
@@ -314,6 +348,7 @@ class TypeScriptEditorPageTests(TestCase):
             "editor/js/typescript/TsEditorBinder.js", "editor/js/typescript/TsOptionsManager.js",
             "editor/js/typescript/TsPreviewManager.js", "editor/js/typescript/TsProjectManager.js",
             "editor/js/typescript/TsProjectZipManager.js", "editor/js/typescript/TsSettingsBinder.js",
+            "editor/js/projects/api.js",
             "editor/js/typescript/events/index.js", "editor/js/typescript/events/TsOptionsEvents.js",
             "editor/css/typescript.css", "editor/icons/ts.svg", "editor/snippets/javascript.json",
         ):

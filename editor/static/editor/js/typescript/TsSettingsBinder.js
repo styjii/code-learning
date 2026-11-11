@@ -29,12 +29,12 @@ export class TsSettingsBinder {
 
         // Réglage propre à cet éditeur (l'éditeur Web a le sien).
         let stored = null;
-        try { stored = localStorage.getItem("typescript-editor:useBootstrap"); } catch { /* stockage indisponible */ }
+        try { stored = localStorage.getItem("codelab-ts:useBootstrap"); } catch { /* stockage indisponible */ }
         bootstrapToggle.checked = stored === "true";
         TsPreviewManager.syncCdnLinks(); // l'aperçu est lancé par le chargement du projet
 
         bootstrapToggle.addEventListener("change", () => {
-            try { localStorage.setItem("typescript-editor:useBootstrap", bootstrapToggle.checked); } catch { /* idem */ }
+            try { localStorage.setItem("codelab-ts:useBootstrap", bootstrapToggle.checked); } catch { /* idem */ }
             TsPreviewManager.updateCdnLinks();
         });
     }

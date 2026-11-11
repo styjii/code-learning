@@ -1,5 +1,12 @@
+import { state } from "../state/state.js";
+import { CODELAB_JS, exportZipUrl, importZipUrl, postZip, zipFormData } from "./api.js";
+import { ProjectManager } from "./ProjectManager.js";
+
 /**
- * Handles importing and exporting projects as ZIP files.
+ * Import / export du projet courant en .zip (index.html, style.css, script.js).
+ *
+ * L'archive est lue et construite par le serveur directement à partir de la base de données : le navigateur
+ * enregistre d'abord ses modifications en attente, puis ne fait que téléverser ou télécharger l'archive.
  */
 export class ProjectZipManager {
     /**
@@ -9,9 +16,7 @@ export class ProjectZipManager {
         this.state = state;
     }
 
-    /**
-     * Imports a project from a ZIP file and updates editor contents.
-     */
+    /** Importe une archive .zip dans le projet courant : le serveur remplace son contenu en base. */
     async importFromZip() {
         const zipInput = document.getElementById("zip-input");
         const importFeedback = document.getElementById("import-feedback");
@@ -24,14 +29,13 @@ export class ProjectZipManager {
             return;
         }
 
-        const formData = new FormData();
-        formData.append("zip_file", zipInput.files[0]);
-
         try {
-            const res = await fetch("/editor/api/import-zip/", {
-                method: "POST",
-                body: formData,
-            });
+            const formData = await zipFormData(zipInput.files[0]);
+            const project = this.state.projects[this.state.currentProject];
+            if (!project?.id) throw new Error("Aucun projet ouvert.");
+            await ProjectManager.save();     // une sauvegarde différée ne doit pas écraser l'import
+
+            const res = await postZip(importZipUrl(CODELAB_JS, project.id), formData);
 
             if (!res.ok) {
                 // Le serveur explique le refus (fichier trop volumineux, archive invalide...).
@@ -39,11 +43,7 @@ export class ProjectZipManager {
                 throw new Error(body.error || "Failed to import project");
             }
 
-            const data = await res.json();
-
-            this.state.editors.html?.setValue(data.html ?? "");
-            this.state.editors.css?.setValue(data.css ?? "");
-            this.state.editors.js?.setValue(data.js ?? "");
+            ProjectManager.adopt(await res.json());     // le contenu est déjà en base : on l'affiche
 
             importFeedback.style.display = "none";
             importSuccess.style.display = "block";
@@ -54,22 +54,14 @@ export class ProjectZipManager {
         }
     }
 
-    /**
-     * Exports the current project to a ZIP file and triggers download.
-     */
+    /** Télécharge l'archive .zip du projet courant, telle qu'elle est enregistrée en base. */
     async exportToZip() {
         try {
-            const res = await fetch("/editor/api/export-zip/", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    project: this.state.currentProject,
-                    html: this.state.editors.html?.getValue() ?? "",
-                    css: this.state.editors.css?.getValue() ?? "",
-                    js: this.state.editors.js?.getValue() ?? "",
-                }),
-            });
+            const project = this.state.projects[this.state.currentProject];
+            if (!project?.id) throw new Error("Aucun projet ouvert.");
+            await ProjectManager.save();     // l'archive reflète ce qui est à l'écran
 
+            const res = await fetch(exportZipUrl(CODELAB_JS, project.id));
             if (!res.ok) throw new Error("Failed to export ZIP");
 
             const blob = await res.blob();

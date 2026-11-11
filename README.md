@@ -47,10 +47,10 @@
 - Tout s'exécute **dans le navigateur** (Web Worker isolé pour JS, Pyodide pour Python) : aucun code utilisateur n'est exécuté sur le serveur.
 
 **Éditeurs en ligne** (commutateur *Web | Python | TypeScript* en haut de chaque éditeur)
-- **Web** (`/editor/`) : onglets HTML / CSS / JS propulsés par Monaco Editor (le moteur de VS Code), avec Emmet et des snippets JavaScript. Aperçu dans une iframe isolée, console intégrée, aperçu automatique avec délai réglable, option Bootstrap en un clic.
-- **TypeScript** (`/editor/typescript/`) : mêmes projets, aperçu et import / export, avec onglets HTML / CSS / **TS**. Le code est vérifié et compilé dans le navigateur (compilateur de Monaco) ; les erreurs de type sont soulignées et listées dans la console. **Options du compilateur** par projet (`target`, `strict`, `noUnusedLocals`...), écrites dans le `tsconfig.json` de l'export.
-- **Python** (`/editor/python/`) : plusieurs fichiers (`main.py` + modules importables), exécution dans Pyodide, `input()` interactif dans la console, bouton **Arrêter**, **détection d'erreurs, autocomplétion, infobulles et aide aux appels** comme dans l'éditeur TypeScript. Les fichiers sont enregistrés **par utilisateur**, dans des projets (menu **Fichier › Projets**).
-- **Projets** Web, TypeScript et Python enregistrés par utilisateur, **import / export .zip**.
+- **Web** (`codelab-js`, `/editor/codelab-js/`) : onglets HTML / CSS / JS propulsés par Monaco Editor (le moteur de VS Code), avec Emmet et des snippets JavaScript. Aperçu dans une iframe isolée, console intégrée, aperçu automatique avec délai réglable, option Bootstrap en un clic.
+- **TypeScript** (`codelab-ts`, `/editor/codelab-ts/`) : mêmes projets, aperçu et import / export, avec onglets HTML / CSS / **TS**. Le code est vérifié et compilé dans le navigateur (compilateur de Monaco) ; les erreurs de type sont soulignées et listées dans la console. **Options du compilateur** par projet (`target`, `strict`, `noUnusedLocals`...), écrites dans le `tsconfig.json` de l'export.
+- **Python** (`codelab-py`, `/editor/codelab-py/`) : plusieurs fichiers (`main.py` + modules importables), exécution dans Pyodide, `input()` interactif dans la console, bouton **Arrêter**, **détection d'erreurs, autocomplétion, infobulles et aide aux appels** comme dans l'éditeur TypeScript. Les fichiers sont enregistrés **par utilisateur**, dans des projets (menu **Fichier › Projets**).
+- **Projets** `codelab-js`, `codelab-ts` et `codelab-py` enregistrés par utilisateur dans un seul modèle (`Project` : utilisateur + éditeur + nom, unique ensemble), **import / export .zip**.
 - Préférences d'éditeur (retour à la ligne, taille de tabulation, minimap...) propres à chaque compte.
 
 **Comptes et sécurité**
@@ -165,7 +165,7 @@ Ouvrez ensuite `https://localhost:8443/`. Sur un autre appareil, installez d'abo
 1. **Connexion** sur `/accounts/login/`. Il n'y a pas d'inscription : créez les comptes avec `createsuperuser`, ou dans `/admin/` (*Utilisateurs > Ajouter*).
 2. **Premier lancement** : l'accueil convertit les cours un par un et affiche une barre de progression (annulable). Les pages sont ensuite servies depuis le cache.
 3. **Cours** : choisissez une carte sur l'accueil, naviguez par sections, recherchez avec `/` ou `Ctrl + K`.
-4. **Éditeurs** : bouton `</>` en haut d'un cours, ou directement <http://127.0.0.1:8000/editor/>. Le commutateur **Web | Python | TypeScript** passe de l'un à l'autre (détails : [Les éditeurs en ligne](#les-éditeurs-en-ligne)).
+4. **Éditeurs** : bouton `</>` en haut d'un cours, ou directement <http://127.0.0.1:8000/editor/codelab-js/> (les anciennes adresses `/editor/`, `/editor/python/` et `/editor/typescript/` redirigent vers les nouvelles). Le commutateur **Web | Python | TypeScript** passe de l'un à l'autre (détails : [Les éditeurs en ligne](#les-éditeurs-en-ligne)).
    - **Web et TypeScript** : onglets de code, bouton **Exécuter**, bouton **Console**. Menu `⋯` : **Projets** (créer, changer, supprimer), **Import / export .zip**, **Aperçu automatique**, **Bibliothèques (CDN)** (active Bootstrap dans l'aperçu, servi depuis le projet) et, en TypeScript, **Options TypeScript**.
    - **Python** : onglets de fichiers, bouton **Exécuter** / **Arrêter**, menu `⋯` : **Nouveau fichier**, **Importer des fichiers**, **Télécharger le fichier actif**, **Remplacer par l'exemple**.
 
@@ -175,9 +175,9 @@ Les trois éditeurs partagent la même interface (Monaco, console, thème clair 
 
 | Éditeur | Langage exécuté | Où sont les fichiers ? | Export |
 |---|---|---|---|
-| Web | HTML, CSS, JavaScript (aperçu en iframe isolée) | base de données, par utilisateur | `index.html`, `style.css`, `script.js` |
-| TypeScript | HTML, CSS, TypeScript compilé en JavaScript | base de données, par utilisateur | `index.html`, `style.css`, `script.ts`, `tsconfig.json` |
-| Python | Python 3.14 (Pyodide, Web Worker) | base de données, par utilisateur (liste de fichiers par projet) | `python-project.zip` ; fichier par fichier |
+| Web (`codelab-js`) | HTML, CSS, JavaScript (aperçu en iframe isolée) | base de données, par utilisateur | `index.html`, `style.css`, `script.js` |
+| TypeScript (`codelab-ts`) | HTML, CSS, TypeScript compilé en JavaScript | base de données, par utilisateur | `index.html`, `style.css`, `script.ts`, `tsconfig.json` |
+| Python (`codelab-py`) | Python 3.14 (Pyodide, Web Worker) | base de données, par utilisateur (liste de fichiers par projet) | `<nom du projet>.zip` : les fichiers du projet, `main.py` en tête ; fichier par fichier |
 
 ### Éditeur Python
 
@@ -193,7 +193,7 @@ Les trois éditeurs partagent la même interface (Monaco, console, thème clair 
 
 - Le TypeScript est compilé **dans le navigateur** ; le JavaScript produit est envoyé à `POST /editor/preview/` avec `module=1` et s'exécute comme **module ES** (`await` au premier niveau permis, variables non globales : pour un `onclick`, écrire `window.maFonction = maFonction`).
 - Menu « Options TypeScript » : `target` (ES5 à ESNext), `strict`, `noEmitOnError` (vrai : une erreur de type bloque l'exécution), `noUnusedLocals`, `noUnusedParameters`, `noImplicitReturns`, `noFallthroughCasesInSwitch`, `noUncheckedIndexedAccess`. `module: ESNext` est imposé. Le résumé des options actives s'affiche à côté du bouton **Console**.
-- Les options sont enregistrées **par projet** (`TypeScriptProject.compiler_options`) et validées par liste blanche dans `editor/typescript_config.py` (clé inconnue ou valeur invalide : refus en `400`).
+- Les options sont enregistrées **par projet** (`Project.data["compiler_options"]` pour `codelab-ts`) et validées par liste blanche dans `editor/typescript_config.py` (clé inconnue ou valeur invalide : refus en `400`).
 - Avec `target: ESNext`, les décorateurs ne sont pas transformés : utiliser `ES2022`.
 - L'export ne contient pas de JavaScript : `npx tsc` produit `script.js`, que `index.html` charge en `type="module"` (à servir en HTTP, pas par `file://`). L'import relit `tsconfig.json` et ignore les clés non autorisées.
 
@@ -241,16 +241,11 @@ code-learning/
 
 | Route | Rôle |
 |---|---|
-| `GET/POST /editor/api/projects/` | liste / création des projets de l'utilisateur |
-| `GET/PUT/DELETE /editor/api/projects/<id>/` | lecture / modification / suppression |
+| `GET/POST /editor/api/<editor>/projects/`, `GET/PUT/PATCH/DELETE /editor/api/<editor>/projects/<id>/` | projets de l'utilisateur pour l'éditeur `codelab-js` (html, css, js), `codelab-ts` (html, css, ts, `compiler_options`) ou `codelab-py` (`files` : liste de `{name, content}`) : **une seule vue**, les champs et leur validation dépendent de l'éditeur (`editor/editors.py`) |
+| `GET /editor/api/<editor>/projects/<id>/export-zip/` | `.zip` du projet, construit à partir de la base : `index.html`, `style.css`, `script.js` (`codelab-js`) ; `index.html`, `style.css`, `script.ts`, `tsconfig.json` (`codelab-ts`) ; les fichiers du projet, `main.py` en tête (`codelab-py`) |
+| `POST /editor/api/<editor>/projects/<id>/import-zip/` | lit un `.zip` (plafonné) et **remplace le contenu du projet en base** ; renvoie le projet enregistré et `skipped` |
 | `GET /editor/api/load-monaco-config/` | options Monaco de l'utilisateur connecté |
 | `POST /editor/api/save-monaco-config/` | enregistre ses préférences (clés autorisées uniquement) |
-| `POST /editor/api/export-zip/` | génère le `.zip` du projet |
-| `POST /editor/api/import-zip/` | lit un `.zip` (plafonné) |
-| `GET/POST /editor/api/ts-projects/`, `GET/PUT/DELETE /editor/api/ts-projects/<id>/` | projets de l'éditeur TypeScript (html, css, ts, `compiler_options`) |
-| `POST /editor/api/ts-export-zip/` | `.zip` : `index.html`, `style.css`, `script.ts`, `tsconfig.json` |
-| `POST /editor/api/ts-import-zip/` | lit ce `.zip` (mêmes plafonds) et renvoie aussi les options du `tsconfig.json` |
-| `GET/POST /editor/api/py-projects/`, `GET/PUT/PATCH/DELETE /editor/api/py-projects/<id>/` | projets de l'éditeur Python (`files` : liste de `{name, content}`, mêmes règles que l'export) |
 | `POST /editor/preview/` puis `GET /editor/preview/<id>/` | génère puis affiche l'aperçu (cinq derniers conservés) |
 
 L'API répond `401` (JSON) aux utilisateurs non connectés.

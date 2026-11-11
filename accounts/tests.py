@@ -16,13 +16,18 @@ PROTECTED = [
     "/",
     "/language/css/",
     "/language/frameworks/django/",
-    "/editor/",
+    "/editor/",                  # anciennes adresses : la connexion passe avant la redirection
+    "/editor/codelab-js/",
+    "/editor/codelab-ts/",
+    "/editor/codelab-py/",
 ]
 
 # Points d'entrée JSON : réponse 401 (sans redirection, inutile pour un fetch())
-PROTECTED_API_READ = ["/editor/api/projects/", "/editor/api/load-monaco-config/", "/populate-step/?index=0"]
-PROTECTED_API_WRITE = ["/editor/api/projects/", "/editor/preview/", "/editor/api/export-zip/",
-                       "/editor/api/import-zip/", "/editor/api/save-monaco-config/"]
+PROTECTED_API_READ = ["/editor/api/codelab-js/projects/", "/editor/api/codelab-ts/projects/",
+                      "/editor/api/codelab-py/projects/", "/editor/api/codelab-js/projects/1/export-zip/",
+                      "/editor/api/load-monaco-config/", "/populate-step/?index=0"]
+PROTECTED_API_WRITE = ["/editor/api/codelab-js/projects/", "/editor/preview/",
+                       "/editor/api/codelab-js/projects/1/import-zip/", "/editor/api/save-monaco-config/"]
 
 
 class AuthenticationRequiredTests(TestCase):
@@ -44,7 +49,7 @@ class AuthenticationRequiredTests(TestCase):
                 self.assertEqual(self.client.post(url, {}).status_code, 401)
 
     def test_anonymous_api_response_is_json_with_challenge(self):
-        for url in ("/editor/api/projects/", "/populate-step/?index=0"):
+        for url in ("/editor/api/codelab-js/projects/", "/populate-step/?index=0"):
             with self.subTest(url=url):
                 response = self.client.get(url)
                 self.assertEqual(response["Content-Type"], "application/json")
@@ -246,21 +251,21 @@ class ProjectIsolationTests(TestCase):
     def setUp(self):
         self.ada = User.objects.create_user("ada", password=PASSWORD)
         self.bob = User.objects.create_user("bob", password=PASSWORD)
-        self.project = Project.objects.create(owner=self.ada, name="secret", html="<p>x</p>")
+        self.project = Project.objects.create(owner=self.ada, name="secret", data={"html": "<p>x</p>"})
 
     def test_list_is_scoped(self):
         bob = Client()
         bob.force_login(self.bob)
-        self.assertEqual(bob.get("/editor/api/projects/").json(), [])
+        self.assertEqual(bob.get("/editor/api/codelab-js/projects/").json(), [])
 
         ada = Client()
         ada.force_login(self.ada)
-        self.assertEqual([p["name"] for p in ada.get("/editor/api/projects/").json()], ["secret"])
+        self.assertEqual([p["name"] for p in ada.get("/editor/api/codelab-js/projects/").json()], ["secret"])
 
     def test_cannot_read_modify_or_delete_foreign_project(self):
         bob = Client()
         bob.force_login(self.bob)
-        url = f"/editor/api/projects/{self.project.pk}/"
+        url = f"/editor/api/codelab-js/projects/{self.project.pk}/"
         self.assertEqual(bob.get(url).status_code, 404)
         self.assertEqual(bob.put(url, {"name": "pwn", "html": "", "css": "", "js": ""},
                                  content_type="application/json").status_code, 404)
@@ -271,16 +276,16 @@ class ProjectIsolationTests(TestCase):
         bob = Client()
         bob.force_login(self.bob)
         payload = {"name": "secret", "html": "", "css": "", "js": "", "owner": self.ada.pk}
-        response = bob.post("/editor/api/projects/", payload, content_type="application/json")
+        response = bob.post("/editor/api/codelab-js/projects/", payload, content_type="application/json")
         self.assertEqual(response.status_code, 201)          # même nom qu'Ada : autorisé
         self.assertEqual(Project.objects.get(pk=response.json()["id"]).owner, self.bob)
-        duplicate = bob.post("/editor/api/projects/", payload, content_type="application/json")
+        duplicate = bob.post("/editor/api/codelab-js/projects/", payload, content_type="application/json")
         self.assertEqual(duplicate.status_code, 400)          # doublon chez Bob : refusé
 
     def test_csrf_is_enforced_for_logged_in_users(self):
         strict = Client(enforce_csrf_checks=True)
         strict.force_login(self.ada)
-        response = strict.post("/editor/api/projects/", {"name": "x", "html": "", "css": "", "js": ""},
+        response = strict.post("/editor/api/codelab-js/projects/", {"name": "x", "html": "", "css": "", "js": ""},
                                content_type="application/json")
         self.assertEqual(response.status_code, 403)
 

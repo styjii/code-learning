@@ -1,5 +1,6 @@
 import { state } from "../state/state.js";
 import { PreviewStorage } from "./PreviewStorage.js";
+import { CODELAB_JS } from "./api.js";
 
 /**
  * Handles updating, sanitizing, and running the live preview logic.
@@ -39,7 +40,7 @@ export class PreviewManager {
         formData.append("js", state.editors.js?.getValue() ?? "");
         formData.append("cdn_css", JSON.stringify(state.cssCdnLinks));
         formData.append("cdn_js", JSON.stringify(state.jsCdnLinks));
-        formData.append("storage", PreviewStorage.begin("web", state.projects[state.currentProject]?.id));
+        formData.append("storage", PreviewStorage.begin(CODELAB_JS, state.projects[state.currentProject]?.id));
 
         fetch("/editor/preview/", {
             method: "POST",

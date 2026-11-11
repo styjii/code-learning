@@ -110,7 +110,7 @@ class VendoredToolsTests(SimpleTestCase):
 class PageTests(TestCase):
     def test_page_exposes_the_tools_location_and_the_status_label(self):
         self.client.force_login(get_user_model().objects.create_user("alice", password="Mot-de-passe-solide-42"))
-        html = self.client.get(reverse("python-editor")).content.decode()
+        html = self.client.get(reverse("editor", args=["codelab-py"])).content.decode()
         self.assertIn("data-python-tools=", html)
         self.assertIn("vendor/python-tools/", html)
         self.assertIn('id="py-lang-state"', html)
@@ -123,7 +123,7 @@ class PageTests(TestCase):
             self.assertIsNotNone(finders.find(path), path)
 
     def test_anonymous_cannot_load_the_editor(self):
-        self.assertEqual(Client().get(reverse("python-editor")).status_code, 302)
+        self.assertEqual(Client().get(reverse("editor", args=["codelab-py"])).status_code, 302)
 
 
 class LintTests(ServiceTestCase):

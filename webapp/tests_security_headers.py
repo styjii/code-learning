@@ -28,7 +28,7 @@ class CrossOriginOpenerPolicyTests(TestCase):
         user = get_user_model().objects.create_user("alice", password="Mot-de-passe-solide-42")
         client = Client()
         client.force_login(user)
-        for url in ("/accounts/login/", "/editor/", "/editor/api/projects/"):
+        for url in ("/accounts/login/", "/editor/codelab-js/", "/editor/api/codelab-js/projects/"):
             with self.subTest(url=url):
                 response = client.get(url, secure=True)
                 self.assertEqual(response.headers.get("Cross-Origin-Opener-Policy"), "same-origin")

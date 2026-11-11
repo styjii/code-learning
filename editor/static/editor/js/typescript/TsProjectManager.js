@@ -1,10 +1,11 @@
 import { state } from "./state.js";
 import { TsPreviewManager } from "./TsPreviewManager.js";
 import { PreviewStorage } from "../projects/PreviewStorage.js";
+import { CODELAB_TS, projectsUrl } from "../projects/api.js";
 import { TsOptionsManager } from "./TsOptionsManager.js";
 import { DEFAULT_COMPILER_OPTIONS, normalizeCompilerOptions } from "./TsCompilerOptions.js";
 
-const API = "/editor/api/ts-projects/";
+const API = projectsUrl(CODELAB_TS);
 
 /**
  * Gère les projets TypeScript de l'utilisateur (HTML, CSS, TypeScript et options du compilateur).
@@ -179,7 +180,7 @@ export class TsProjectManager {
         const res = await fetch(`${API}${id}/`, { method: "DELETE" });
 
         if (res.ok) {
-            PreviewStorage.forget("ts", id);   // données localStorage de l'aperçu de ce projet
+            PreviewStorage.forget(CODELAB_TS, id);   // données localStorage de l'aperçu de ce projet
             delete state.projects[state.currentProject];
             state.currentProject = Object.keys(state.projects)[0] ?? null;
             feedback.style.display = "none";
@@ -285,6 +286,15 @@ export class TsProjectManager {
      * then triggers a preview update.
      * @param {string|null} name
      */
+    /**
+     * Adopte le projet renvoyé par le serveur après un import .zip (le contenu est déjà en base) et l'affiche.
+     * @param {{id: number, html: string, css: string, ts: string, compiler_options: object}} data
+     */
+    static adopt(data) {
+        state.projects[state.currentProject] = this.#toState(data, data.id);
+        this.load(state.currentProject);
+    }
+
     static load(name) {
         const project = state.projects[name];
         if (!project) return;

@@ -132,6 +132,6 @@ class DrfSecondBarrierTests(TestCase):
     def test_401_without_the_middleware(self):
         middleware = [m for m in settings.MIDDLEWARE if m != "accounts.middleware.StrictLoginRequiredMiddleware"]
         with override_settings(MIDDLEWARE=middleware):
-            response = self.client.get("/api/projects/")
+            response = self.client.get("/api/codelab-js/projects/")
         self.assertEqual(response.status_code, 401)
         self.assertTrue(response["WWW-Authenticate"].startswith("Session"))

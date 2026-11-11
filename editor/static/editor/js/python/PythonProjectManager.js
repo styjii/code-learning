@@ -1,6 +1,7 @@
+import { CODELAB_PY, projectsUrl } from "../projects/api.js";
 import { FileStore, MAIN_FILE, SAMPLE, clearLegacyProject, readLegacyProject } from "./FileStore.js";
 
-const API = "/editor/api/py-projects/";
+const API = projectsUrl(CODELAB_PY);
 const DEFAULT_NAME = "Mon projet";
 const MAX_NAME_LENGTH = 100;
 
@@ -23,7 +24,7 @@ const copyFiles = (files) => files.map(({ name, content }) => ({ name, content }
 /**
  * Gère les projets Python de l'utilisateur (une liste de fichiers par projet), enregistrés sur le serveur.
  * Calqué sur ``TsProjectManager`` (éditeur TypeScript) et ``ProjectManager`` (éditeur Web) : mêmes éléments dans
- * la modale « Projets », même API (``/editor/api/py-projects/``), mêmes messages.
+ * la modale « Projets », même API (``/editor/api/codelab-py/projects/``), mêmes messages.
  *
  * Les fichiers du projet courant vivent dans ``app.store`` (FileStore) ; ce gestionnaire les enregistre, en
  * charge d'autres au changement de projet et tient la liste des projets (nom -> {id, files}).
@@ -94,6 +95,20 @@ export class PythonProjectManager {
         this.currentProject = payload.name;
         this.updateDropdown();
         this.load(payload.name);
+    }
+
+    /** Projet courant (``{id, files}``), ou ``undefined`` si aucun n'est ouvert. */
+    current() {
+        return this.projects.get(this.currentProject);
+    }
+
+    /**
+     * Prend acte des fichiers que le serveur vient d'écrire en base (import .zip) : le cache les reprend.
+     * @param {{name: string, content: string}[]} files
+     */
+    adopt(files) {
+        const project = this.current();
+        if (project) project.files = copyFiles(files);
     }
 
     /** Planifie un enregistrement après une courte pause de frappe. */

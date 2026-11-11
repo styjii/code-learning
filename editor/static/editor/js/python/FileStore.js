@@ -6,6 +6,7 @@
  * L'enregistrement est assuré par ``PythonProjectManager`` (projets sur le serveur). Avant les projets, les fichiers
  * étaient gardés dans le navigateur (localStorage) : ``readLegacyProject`` permet de les récupérer une fois.
  */
+// Ancienne clé (avant les projets enregistrés sur le serveur) : lue une seule fois pour reprendre les fichiers.
 const LEGACY_STORAGE_KEY = "python-editor:v1";
 
 export const MAIN_FILE = "main.py";

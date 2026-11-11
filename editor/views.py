@@ -5,29 +5,23 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
 from django.http import JsonResponse, HttpResponse, HttpResponseNotFound
+from django.shortcuts import get_object_or_404
+from django.utils.functional import cached_property
 from django.views import View
+from django.views.generic import TemplateView
+from django.views.decorators.csrf import ensure_csrf_cookie
 from django.utils.decorators import method_decorator
 from django.views.decorators.clickjacking import xframe_options_exempt
 from django.template.loader import render_to_string
 from django.conf import settings
 from django.db import IntegrityError, transaction
-from . import python_files
-from .models import EditorPreferences, Project, PythonProject, TypeScriptProject
+from . import editors
+from .models import EditorPreferences, Project
 from .monaco_config import effective_options, sanitize_preferences, validate_preferences
 from .services import id
-from .serializers import (
-    DUPLICATE_NAME_MESSAGE,
-    ProjectSerializer,
-    PythonProjectSerializer,
-    TypeScriptProjectSerializer,
-)
-from .typescript_config import build_tsconfig, options_from_tsconfig, effective_compiler_options
-from .zip_import import ZipImportError, format_size, read_project_zip, read_python_zip, read_typescript_zip
-from bs4 import BeautifulSoup
-import html as html_lib
-import io
+from .serializers import DUPLICATE_NAME_MESSAGE, ProjectSerializer
+from .zip_import import ZipImportError, format_size
 import json
-import zipfile
 from urllib.parse import quote
 
 MAX_PREVIEWS = 5
@@ -39,45 +33,69 @@ PREVIEW_STORAGE_MAX_KEYS = 200
 UPLOAD_OVERHEAD_BYTES = 64 * 1024
 
 
+@method_decorator(ensure_csrf_cookie, name="dispatch")
+class EditorPageView(TemplateView):
+    """
+    Page d'un éditeur : une seule vue pour les trois, l'éditeur courant (``codelab-js``, ``codelab-ts`` ou
+    ``codelab-py``) vient de l'URL. Le gabarit est celui de l'éditeur (voir ``editors.py``).
+    """
+
+    def get_template_names(self):
+        return [editors.get(self.kwargs["editor"]).template]
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["editor"] = self.kwargs["editor"]
+        context["editors"] = list(editors.EDITORS.values())      # sélecteur d'éditeur de l'en-tête
+        return context
+
+
 class ProjectViewSet(viewsets.ModelViewSet):
     """
-    CRUD des projets Web (HTML/CSS/JS) de l'utilisateur connecté : ``list``, ``create``, ``retrieve``,
-    ``update``, ``partial_update`` et ``destroy``.
+    CRUD des projets de l'utilisateur connecté pour l'éditeur de l'URL (``/editor/api/<editor>/projects/``) :
+    ``list``, ``create``, ``retrieve``, ``update``, ``partial_update`` et ``destroy``. Une seule vue pour les trois
+    éditeurs : ce qui diffère (champs de contenu, validation) est décrit par ``editors.py``.
 
-    Isolation par utilisateur :
-        - ``get_queryset`` ne renvoie que les projets dont l'utilisateur est propriétaire : un projet
-          d'un autre compte (ou sans propriétaire) est introuvable (404) pour lire, modifier ou supprimer,
-          sans révéler son existence ;
+    Isolation :
+        - ``get_queryset`` ne renvoie que les projets de l'utilisateur ET de l'éditeur de l'URL : un projet d'un autre
+          compte, d'un autre éditeur (ou sans propriétaire) est introuvable (404), sans révéler son existence ;
         - le propriétaire n'est jamais lu dans le corps de la requête : il est imposé à la création.
 
     Robustesse :
-        - un doublon de nom détecté seulement à l'écriture (requêtes simultanées) donne un 400, pas un 500 ;
+        - un doublon de nom (même utilisateur, même éditeur) détecté seulement à l'écriture (requêtes simultanées)
+          donne un 400, pas un 500 ;
         - seul le JSON est accepté (415 sinon).
     """
-    model = Project
     serializer_class = ProjectSerializer
     # Déjà imposé par REST_FRAMEWORK et par StrictLoginRequiredMiddleware : explicite ici par défense en profondeur.
     permission_classes = [IsAuthenticated]
     parser_classes = [JSONParser]
 
+    @cached_property
+    def editor(self):
+        return editors.get(self.kwargs["editor"])
+
+    def get_serializer_context(self):
+        return {**super().get_serializer_context(), "editor": self.editor}
+
     def get_queryset(self):
         user = self.request.user
         if not user.is_authenticated:
-            return self.model.objects.none()
-        # Chaque utilisateur ne voit et ne modifie que ses propres projets.
-        return self.model.objects.filter(owner=user).order_by("id")
+            return Project.objects.none()
+        # Chaque utilisateur ne voit et ne modifie que ses propres projets, dans l'éditeur de l'URL.
+        return Project.objects.filter(owner=user, editor=self.editor.id).order_by("id")
 
     def perform_create(self, serializer):
         self._save_or_reject_duplicate(serializer, owner=self.request.user)
 
     def perform_update(self, serializer):
-        # Le propriétaire ne change jamais : il n'est pas dans les champs du serializer.
+        # Le propriétaire et l'éditeur ne changent jamais : ils ne sont pas dans les champs du serializer.
         self._save_or_reject_duplicate(serializer)
 
     @staticmethod
     def _save_or_reject_duplicate(serializer, **extra):
         """
-        Enregistre ; une violation de la contrainte « nom unique par propriétaire » devient un 400.
+        Enregistre ; une violation de la contrainte « nom unique par propriétaire et par éditeur » devient un 400.
 
         ``atomic`` isole l'écriture : l'échec d'un INSERT n'invalide pas une transaction englobante.
         """
@@ -86,24 +104,6 @@ class ProjectViewSet(viewsets.ModelViewSet):
                 serializer.save(**extra)
         except IntegrityError:
             raise ValidationError({"name": [DUPLICATE_NAME_MESSAGE]})
-
-
-class TypeScriptProjectViewSet(ProjectViewSet):
-    """
-    Même API que ``ProjectViewSet`` pour les projets de l'éditeur TypeScript (HTML, CSS, TypeScript et
-    options du compilateur). Les deux types de projets sont indépendants : un projet Web n'apparaît jamais ici.
-    """
-    model = TypeScriptProject
-    serializer_class = TypeScriptProjectSerializer
-
-
-class PythonProjectViewSet(ProjectViewSet):
-    """
-    Même API que ``ProjectViewSet`` pour les projets de l'éditeur Python (liste de fichiers ``files``). Les trois
-    types de projets sont indépendants : un projet Web ou TypeScript n'apparaît jamais ici.
-    """
-    model = PythonProject
-    serializer_class = PythonProjectSerializer
 
 
 class SaveMonacoConfigView(APIView):
@@ -139,58 +139,39 @@ class LoadMonacoConfigView(APIView):
         prefs = EditorPreferences.objects.filter(user=request.user).first()
         return Response(effective_options(prefs.monaco if prefs else {}), status=status.HTTP_200_OK)
 
-class ExportZipView(APIView):
+class ProjectZipMixin:
+    """Le projet d'un export ou d'un import : celui de l'utilisateur, dans l'éditeur de l'URL (404 sinon)."""
+
+    def get_project(self, request, editor, pk):
+        return get_object_or_404(Project, pk=pk, owner=request.user, editor=editors.get(editor).id)
+
+
+class ProjectExportZipView(ProjectZipMixin, APIView):
     """
-    API endpoint that generates a ZIP file from HTML, CSS, and JavaScript content.
-
-    Parses project content from a POST request in JSON format and returns a ZIP
-    file containing the content as 'index.html', 'style.css', and 'script.js'.
+    ``GET /editor/api/<editor>/projects/<id>/export-zip/`` : l'archive .zip du projet, construite à partir de ce qui est
+    enregistré en base (le navigateur enregistre d'abord ses modifications en attente). Le contenu de l'archive
+    dépend de l'éditeur (voir ``editors.py``).
     """
-    parser_classes = [JSONParser]
 
-    def post(self, request):
-        """
-        Handle POST request to export project data as a ZIP file.
+    def get(self, request, editor, pk):
+        project = self.get_project(request, editor, pk)
+        try:
+            data = editors.get(editor).export_zip(project)
+        except ValueError as error:
+            return Response({'error': str(error)}, status=status.HTTP_400_BAD_REQUEST)
 
-        Returns:
-            HttpResponse: A downloadable ZIP file containing the project.
-        """
-        data = request.data
-        project_name = str(data.get('project') or 'project')
-        safe_title = html_lib.escape(project_name)
-        html_content = f"""<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{safe_title}</title>
-    <link rel="stylesheet" href="./style.css" />
-</head>
-<body>
-{data.get('html', '')}
-<script src="./script.js"></script>
-</body>
-</html>
-"""
-
-        zip_buffer = io.BytesIO()
-        with zipfile.ZipFile(zip_buffer, 'w') as zf:
-            zf.writestr("index.html", html_content)
-            zf.writestr("style.css", data.get('css', ''))
-            zf.writestr("script.js", data.get('js', ''))
-
-        zip_buffer.seek(0)
-        response = HttpResponse(zip_buffer.read(), content_type='application/zip')
-        response['Content-Disposition'] = f"attachment; filename*=UTF-8''{quote(project_name)}.zip"
+        response = HttpResponse(data, content_type='application/zip')
+        response['Content-Disposition'] = f"attachment; filename*=UTF-8''{quote(project.name or 'project')}.zip"
         return response
 
-class ImportZipView(APIView):
-    """
-    API endpoint for importing a ZIP file and extracting HTML, CSS, and JS content.
 
-    Parses the uploaded ZIP file, extracts its contents, and returns them
-    as a JSON response suitable for restoring a project. Les tailles sont plafonnées
-    (voir ``zip_import.py`` et les réglages ``EDITOR_ZIP_*``) : refus en 413 au-delà.
+class ProjectImportZipView(ProjectZipMixin, APIView):
+    """
+    ``POST /editor/api/<editor>/projects/<id>/import-zip/`` : lit l'archive envoyée (champ ``zip_file``) et remplace le
+    contenu du projet en base. Renvoie le projet enregistré (mêmes champs que l'API des projets) et ``skipped``, les
+    messages pour les entrées ignorées. Le nom du projet ne change pas.
+
+    Les tailles sont plafonnées (voir ``zip_import.py`` et les réglages ``EDITOR_ZIP_*``) : refus en 413 au-delà.
     """
     parser_classes = [MultiPartParser, FormParser]
 
@@ -211,14 +192,10 @@ class ImportZipView(APIView):
             return Response({'error': exc.message}, status=exc.status)
         return super().handle_exception(exc)
 
-    def post(self, request):
-        """
-        Handle POST request to import project data from a ZIP file.
+    def post(self, request, editor, pk):
+        spec = editors.get(editor)
+        project = self.get_project(request, editor, pk)
 
-        Returns:
-            Response: A JSON object with 'html', 'css', 'js', and 'project' name,
-                      or an error message if the ZIP file is invalid or too large.
-        """
         uploaded_file = request.FILES.get('zip_file')
         if not uploaded_file:
             return Response({'error': 'No zip file provided.'}, status=status.HTTP_400_BAD_REQUEST)
@@ -227,149 +204,12 @@ class ImportZipView(APIView):
         if uploaded_file.size > limit:
             raise ZipImportError(f"Fichier trop volumineux (maximum {format_size(limit)}).", 413)
 
-        name = uploaded_file.name.replace(".zip", "")
-        index_html, style_css, script_js = read_project_zip(uploaded_file, name)
+        content, skipped = spec.import_zip(uploaded_file, uploaded_file.name.replace(".zip", ""))
 
-        soup = BeautifulSoup(index_html, 'html.parser')
-        for tag in soup.find_all('script'):
-            tag.extract()
-        body_content = soup.body.decode_contents() if soup.body else ''
-
-        return Response({
-            'project': name,
-            'html': body_content,
-            'css': style_css,
-            'js': script_js
-        })
-
-class TypeScriptExportZipView(APIView):
-    """
-    API endpoint qui génère le .zip d'un projet TypeScript.
-
-    Le JSON reçu contient ``project``, ``html``, ``css``, ``ts`` et ``compilerOptions``. L'archive contient
-    'index.html', 'style.css', 'script.ts' et 'tsconfig.json' : ``npx tsc`` produit ensuite 'script.js',
-    chargé par 'index.html' comme module.
-    """
-    parser_classes = [JSONParser]
-
-    def post(self, request):
-        data = request.data
-        project_name = str(data.get('project') or 'project')
-        safe_title = html_lib.escape(project_name)
-        html_content = f"""<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{safe_title}</title>
-    <link rel="stylesheet" href="./style.css" />
-</head>
-<body>
-{data.get('html', '')}
-<script type="module" src="./script.js"></script>
-</body>
-</html>
-"""
-        tsconfig = json.dumps(build_tsconfig(data.get('compilerOptions')), indent=2) + "\n"
-
-        zip_buffer = io.BytesIO()
-        with zipfile.ZipFile(zip_buffer, 'w') as zf:
-            zf.writestr("index.html", html_content)
-            zf.writestr("style.css", str(data.get('css', '')))
-            zf.writestr("script.ts", str(data.get('ts', '')))
-            zf.writestr("tsconfig.json", tsconfig)
-
-        zip_buffer.seek(0)
-        response = HttpResponse(zip_buffer.read(), content_type='application/zip')
-        response['Content-Disposition'] = f"attachment; filename*=UTF-8''{quote(project_name)}.zip"
-        return response
-
-class TypeScriptImportZipView(ImportZipView):
-    """
-    API endpoint d'import d'un .zip de projet TypeScript : renvoie ``html``, ``css``, ``ts`` et
-    ``compiler_options`` (lues dans 'tsconfig.json', complétées par les valeurs par défaut).
-
-    Mêmes plafonds de taille que ``ImportZipView`` (contrôle avant lecture, refus en 413).
-    """
-
-    def post(self, request):
-        uploaded_file = request.FILES.get('zip_file')
-        if not uploaded_file:
-            return Response({'error': 'No zip file provided.'}, status=status.HTTP_400_BAD_REQUEST)
-
-        limit = settings.EDITOR_ZIP_MAX_UPLOAD_BYTES
-        if uploaded_file.size > limit:
-            raise ZipImportError(f"Fichier trop volumineux (maximum {format_size(limit)}).", 413)
-
-        name = uploaded_file.name.replace(".zip", "")
-        index_html, style_css, script_ts, tsconfig = read_typescript_zip(uploaded_file, name)
-
-        soup = BeautifulSoup(index_html, 'html.parser')
-        for tag in soup.find_all('script'):
-            tag.extract()
-        body_content = soup.body.decode_contents() if soup.body else ''
-
-        return Response({
-            'project': name,
-            'html': body_content,
-            'css': style_css,
-            'ts': script_ts,
-            'compiler_options': effective_compiler_options(options_from_tsconfig(tsconfig)),
-        })
-
-
-class PythonExportZipView(APIView):
-    """
-    API endpoint qui génère le .zip d'un projet de l'éditeur Python.
-
-    Le JSON reçu contient ``files`` : la liste des ``{"name", "content"}`` du projet (stocké dans le navigateur).
-    L'archive contient ces fichiers à plat, ``main.py`` en tête. Les noms et tailles sont revérifiés (400 sinon) :
-    une archive exportée est toujours réimportable.
-    """
-    parser_classes = [JSONParser]
-
-    def post(self, request):
-        data = request.data
-        files = data.get('files') if isinstance(data, dict) else None
-        error = self._validate(files)
-        if error:
-            return Response({'error': error}, status=status.HTTP_400_BAD_REQUEST)
-
-        ordered = sorted(files, key=lambda f: f['name'] != python_files.MAIN_FILE)
-        zip_buffer = io.BytesIO()
-        with zipfile.ZipFile(zip_buffer, 'w', zipfile.ZIP_DEFLATED) as zf:
-            for f in ordered:
-                zf.writestr(f['name'], f['content'])
-
-        response = HttpResponse(zip_buffer.getvalue(), content_type='application/zip')
-        response['Content-Disposition'] = "attachment; filename*=UTF-8''python-project.zip"
-        return response
-
-    @staticmethod
-    def _validate(files):
-        return python_files.files_error(files)
-
-
-class PythonImportZipView(ImportZipView):
-    """
-    API endpoint d'import d'un .zip de projet Python : renvoie ``files`` (``{"name", "content"}`` valides, ``main.py``
-    en premier) et ``skipped`` (messages pour les entrées ignorées). Rien n'est enregistré côté serveur : le navigateur
-    restaure le projet dans son stockage local.
-
-    Mêmes plafonds de taille que ``ImportZipView`` (contrôle avant lecture, refus en 413).
-    """
-
-    def post(self, request):
-        uploaded_file = request.FILES.get('zip_file')
-        if not uploaded_file:
-            return Response({'error': 'No zip file provided.'}, status=status.HTTP_400_BAD_REQUEST)
-
-        limit = settings.EDITOR_ZIP_MAX_UPLOAD_BYTES
-        if uploaded_file.size > limit:
-            raise ZipImportError(f"Fichier trop volumineux (maximum {format_size(limit)}).", 413)
-
-        files, skipped = read_python_zip(uploaded_file)
-        return Response({'files': files, 'skipped': skipped})
+        project.data = spec.merge(project.data, content)
+        project.save(update_fields=['data'])
+        data = ProjectSerializer(project, context={'request': request, 'editor': spec}).data
+        return Response({**data, 'skipped': skipped})
 
 
 def clean_preview_storage(raw):

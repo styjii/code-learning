@@ -1,0 +1,3 @@
+<nav class="mode-switch" aria-label="Type d'éditeur">
+        {% for e in editors %}<a href="{% url 'editor' e.id %}"{% if e.id == editor %} aria-current="page"{% endif %}>{{ e.label }}</a>
+        {% endfor %}</nav>

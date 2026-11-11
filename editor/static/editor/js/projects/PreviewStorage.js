@@ -36,7 +36,7 @@ export function validate(data) {
 export class PreviewStorage {
     /**
      * À appeler avant chaque aperçu.
-     * @param {"web"|"ts"} kind éditeur
+     * @param {"codelab-js"|"codelab-ts"} kind éditeur
      * @param {number|string|undefined} projectId identifiant du projet (stable : le renommage ne change rien)
      * @returns {string} JSON à envoyer au serveur dans le champ ``storage``
      */

@@ -12,7 +12,7 @@ from django.test import Client, TestCase
 from django.urls import reverse
 
 CSS_DIR = Path(__file__).resolve().parent / "static" / "editor" / "css"
-EDITOR_URLS = ("editor-index", "python-editor", "typescript-editor")
+EDITOR_URLS = ("codelab-js", "codelab-py", "codelab-ts")
 
 
 class EditorTemplatesResponsiveTests(TestCase):
@@ -22,7 +22,7 @@ class EditorTemplatesResponsiveTests(TestCase):
         self.client.force_login(user)
 
     def html(self, name):
-        response = self.client.get(reverse(name))
+        response = self.client.get(reverse("editor", args=[name]))
         self.assertEqual(response.status_code, 200)
         return response.content.decode()
 

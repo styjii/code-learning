@@ -1,6 +1,7 @@
 import { state } from "../state/state.js";
 import { PreviewManager } from "./PreviewManager.js";
 import { PreviewStorage } from "./PreviewStorage.js";
+import { CODELAB_JS, projectsUrl } from "./api.js";
 
 /**
  * Manages CRUD operations for user projects (HTML/CSS/JS sets).
@@ -12,7 +13,7 @@ export class ProjectManager {
      */
     static async fetchAll({ allowCreateDefault = true } = {}) {
         try {
-            const res = await fetch("/editor/api/projects/");
+            const res = await fetch(projectsUrl(CODELAB_JS));
             if (!res.ok) throw new Error("Failed to fetch projects");
 
             const data = await res.json();
@@ -38,7 +39,7 @@ export class ProjectManager {
     /** Crée le projet par défaut lors de la première ouverture. */
     static async createDefault() {
         const payload = { name: "Mon projet", html: "", css: "", js: "" };
-        const res = await fetch("/editor/api/projects/", {
+        const res = await fetch(projectsUrl(CODELAB_JS), {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(payload),
@@ -91,8 +92,8 @@ export class ProjectManager {
         const project = state.projects[projectName];
         const isUpdate = !!project?.id;
         const url = isUpdate
-            ? `/editor/api/projects/${project.id}/`
-            : `/editor/api/projects/`;
+            ? projectsUrl(CODELAB_JS, project.id)
+            : projectsUrl(CODELAB_JS);
 
         try {
             const res = await fetch(url, {
@@ -131,7 +132,7 @@ export class ProjectManager {
         this.isCreating = true;
         try {
             const payload = { name, html: "", css: "", js: "" };
-            const res = await fetch("/editor/api/projects/", {
+            const res = await fetch(projectsUrl(CODELAB_JS), {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(payload),
@@ -191,11 +192,11 @@ export class ProjectManager {
             state.saveTimer = null;
 
             const id = state.projects[state.currentProject].id;
-            const res = await fetch(`/editor/api/projects/${id}/`, { method: "DELETE" });
+            const res = await fetch(projectsUrl(CODELAB_JS, id), { method: "DELETE" });
 
             // 404 : déjà supprimé (autre onglet) -> même résultat final côté interface.
             if (res.ok || res.status === 404) {
-                PreviewStorage.forget("web", id);   // données localStorage de l'aperçu de ce projet
+                PreviewStorage.forget(CODELAB_JS, id);   // données localStorage de l'aperçu de ce projet
                 delete state.projects[state.currentProject];
                 state.currentProject = Object.keys(state.projects)[0] ?? null;
                 feedback.style.display = "none";
@@ -244,7 +245,7 @@ export class ProjectManager {
         try {
             await this.flush();
             const id = project.id;
-            const res = await fetch(`/editor/api/projects/${id}/`, {
+            const res = await fetch(projectsUrl(CODELAB_JS, id), {
                 method: "PATCH",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ name }),
@@ -320,6 +321,15 @@ export class ProjectManager {
      * 
      * @param {string|null} name - The name of the project to load.
      */
+    /**
+     * Adopte le projet renvoyé par le serveur après un import .zip (le contenu est déjà en base) et l'affiche.
+     * @param {{id: number, html: string, css: string, js: string}} data
+     */
+    static adopt(data) {
+        state.projects[state.currentProject] = { id: data.id, html: data.html, css: data.css, js: data.js };
+        this.load(state.currentProject);
+    }
+
     static load(name) {
         const project = state.projects[name];
         if (!project) return;

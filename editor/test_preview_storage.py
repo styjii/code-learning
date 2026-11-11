@@ -54,7 +54,7 @@ class PreviewPageTests(TestCase):
             self.assertNotIn(dangerous, policy)
 
     def test_iframes_keep_their_sandbox_attribute(self):
-        for template in ("editor/index.html", "editor/typescript.html"):
+        for template in ("editor/codelab-js.html", "editor/codelab-ts.html"):
             with self.subTest(template=template):
                 html = (Path(settings.BASE_DIR) / "editor" / "templates" / template).read_text(encoding="utf-8")
                 self.assertIn('sandbox="allow-scripts allow-modals allow-forms"', html)

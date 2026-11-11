@@ -1,15 +1,22 @@
 from django.conf import settings
 from django.db import models
 
+from . import editors
+
 
 class Project(models.Model):
     """
-    Projet front-end (HTML/CSS/JS) appartenant à un utilisateur.
+    Projet d'un des éditeurs en ligne (``codelab-js``, ``codelab-ts`` ou ``codelab-py``) appartenant à un utilisateur.
 
     Fields:
         - owner: utilisateur propriétaire (chacun ne voit que ses projets).
-        - name: nom du projet, unique par utilisateur.
-        - html, css, js: code source.
+        - editor: éditeur du projet. Le nom d'un projet n'est unique que dans son éditeur.
+        - name: nom du projet.
+        - data: contenu du projet ; les clés dépendent de l'éditeur (voir ``editors.py``) :
+          ``html``/``css``/``js`` (codelab-js), ``html``/``css``/``ts``/``compiler_options`` (codelab-ts) ou
+          ``files`` (codelab-py). Validé par l'API avant écriture.
+
+    Unicité : (owner, editor, name) -- deux éditeurs peuvent avoir un projet de même nom, jamais un même éditeur.
     """
     owner = models.ForeignKey(
         settings.AUTH_USER_MODEL,
@@ -18,80 +25,18 @@ class Project(models.Model):
         on_delete=models.CASCADE,
         related_name="editor_projects",
     )
+    editor = models.CharField(max_length=20, choices=editors.choices(), default=editors.CODELAB_JS)
     name = models.CharField(max_length=100)
-    html = models.TextField(blank=True)
-    css = models.TextField(blank=True)
-    js = models.TextField(blank=True)
+    data = models.JSONField(default=dict, blank=True)
 
     class Meta:
         constraints = [
-            models.UniqueConstraint(fields=["owner", "name"], name="unique_project_name_per_owner"),
+            models.UniqueConstraint(
+                fields=["owner", "editor", "name"], name="unique_project_name_per_owner_and_editor"),
         ]
 
     def __str__(self):
-        return self.name
-
-
-class TypeScriptProject(models.Model):
-    """
-    Projet de l'éditeur TypeScript (HTML/CSS/TypeScript) appartenant à un utilisateur.
-
-    Fields:
-        - owner: utilisateur propriétaire (chacun ne voit que ses projets).
-        - name: nom du projet, unique par utilisateur.
-        - html, css, ts: code source.
-        - compiler_options: options du compilateur (liste blanche de ``typescript_config.py``), comme un
-          ``tsconfig.json`` : strict, target... Validées avant écriture et filtrées à nouveau à la lecture.
-    """
-    owner = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        null=True,
-        blank=True,
-        on_delete=models.CASCADE,
-        related_name="editor_typescript_projects",
-    )
-    name = models.CharField(max_length=100)
-    html = models.TextField(blank=True)
-    css = models.TextField(blank=True)
-    ts = models.TextField(blank=True)
-    compiler_options = models.JSONField(default=dict, blank=True)
-
-    class Meta:
-        constraints = [
-            models.UniqueConstraint(fields=["owner", "name"], name="unique_typescript_project_name_per_owner"),
-        ]
-
-    def __str__(self):
-        return self.name
-
-
-class PythonProject(models.Model):
-    """
-    Projet de l'éditeur Python appartenant à un utilisateur.
-
-    Fields:
-        - owner: utilisateur propriétaire (chacun ne voit que ses projets).
-        - name: nom du projet, unique par utilisateur.
-        - files: fichiers « à plat » du projet, sous la forme ``[{"name": "main.py", "content": "..."}]``.
-          Validés avant écriture avec les règles de ``python_files.py`` (les mêmes que celles du navigateur).
-    """
-    owner = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        null=True,
-        blank=True,
-        on_delete=models.CASCADE,
-        related_name="editor_python_projects",
-    )
-    name = models.CharField(max_length=100)
-    files = models.JSONField(default=list, blank=True)
-
-    class Meta:
-        constraints = [
-            models.UniqueConstraint(fields=["owner", "name"], name="unique_python_project_name_per_owner"),
-        ]
-
-    def __str__(self):
-        return self.name
+        return f"{self.name} ({self.editor})"
 
 
 class EditorPreferences(models.Model):

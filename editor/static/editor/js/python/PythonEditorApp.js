@@ -16,7 +16,7 @@ import { PythonZipManager } from "./PythonZipManager.js";
 
 const RUN_TIMEOUT = 5 * 60 * 1000;      // l'élève peut arrêter à tout moment : délai large
 const SAVE_DELAY = 400;
-const WRAP_KEY = "python-editor:wrap";
+const WRAP_KEY = "codelab-py:wrap";
 const MARKER_OWNER = "python-run";
 
 const LANGUAGES = { py: "python", json: "json", md: "markdown", html: "html", css: "css", js: "javascript" };
@@ -463,17 +463,6 @@ export class PythonEditorApp {
             // chargement ou d'erreur de Monaco, lui, doit rester affiché.
             this.renderTabs();
         }
-        return result;
-    }
-
-    /**
-     * Restaure le projet courant depuis une archive .zip déjà validée par le serveur (voir PythonZipManager).
-     * @param {{name: string, content: string}[]} files
-     * @returns {{count: number, skipped: string[], sampleMain: boolean}}
-     */
-    restoreFiles(files) {
-        const result = this.showFiles(files);
-        this.saveNow();
         return result;
     }
 

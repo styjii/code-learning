@@ -1,8 +1,11 @@
-import { TsOptionsManager } from "./TsOptionsManager.js";
+import { CODELAB_TS, exportZipUrl, importZipUrl, postZip, zipFormData } from "../projects/api.js";
 import { TsProjectManager } from "./TsProjectManager.js";
 
 /**
- * Import / export d'un projet TypeScript en .zip (index.html, style.css, script.ts, tsconfig.json).
+ * Import / export du projet courant en .zip (index.html, style.css, script.ts, tsconfig.json).
+ *
+ * L'archive est lue et construite par le serveur directement à partir de la base de données : le navigateur
+ * enregistre d'abord ses modifications en attente, puis ne fait que téléverser ou télécharger l'archive.
  */
 export class TsProjectZipManager {
     /** @param {import("./state.js").TsState} state */
@@ -10,7 +13,7 @@ export class TsProjectZipManager {
         this.state = state;
     }
 
-    /** Imports a project from a ZIP file and updates editor contents and compiler options. */
+    /** Importe une archive .zip dans le projet courant : le serveur remplace son contenu et ses options en base. */
     async importFromZip() {
         const zipInput = document.getElementById("zip-input");
         const importFeedback = document.getElementById("import-feedback");
@@ -23,11 +26,13 @@ export class TsProjectZipManager {
             return;
         }
 
-        const formData = new FormData();
-        formData.append("zip_file", zipInput.files[0]);
-
         try {
-            const res = await fetch("/editor/api/ts-import-zip/", { method: "POST", body: formData });
+            const formData = await zipFormData(zipInput.files[0]);
+            const project = this.state.projects[this.state.currentProject];
+            if (!project?.id) throw new Error("Aucun projet ouvert.");
+            await TsProjectManager.save();     // une sauvegarde différée ne doit pas écraser l'import
+
+            const res = await postZip(importZipUrl(CODELAB_TS, project.id), formData);
 
             if (!res.ok) {
                 // Le serveur explique le refus (fichier trop volumineux, archive invalide...).
@@ -35,13 +40,7 @@ export class TsProjectZipManager {
                 throw new Error(body.error || "Failed to import project");
             }
 
-            const data = await res.json();
-
-            TsOptionsManager.apply(data.compiler_options);
-            this.state.editors.html?.setValue(data.html ?? "");
-            this.state.editors.css?.setValue(data.css ?? "");
-            this.state.editors.ts?.setValue(data.ts ?? "");
-            TsProjectManager.scheduleSave(); // couvre aussi le cas où seules les options ont changé
+            TsProjectManager.adopt(await res.json());     // contenu et options déjà en base : on les affiche
 
             importFeedback.style.display = "none";
             importSuccess.style.display = "block";
@@ -52,21 +51,14 @@ export class TsProjectZipManager {
         }
     }
 
-    /** Exports the current project to a ZIP file and triggers download. */
+    /** Télécharge l'archive .zip du projet courant, telle qu'elle est enregistrée en base. */
     async exportToZip() {
         try {
-            const res = await fetch("/editor/api/ts-export-zip/", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    project: this.state.currentProject,
-                    html: this.state.editors.html?.getValue() ?? "",
-                    css: this.state.editors.css?.getValue() ?? "",
-                    ts: this.state.editors.ts?.getValue() ?? "",
-                    compilerOptions: this.state.compilerOptions,
-                }),
-            });
+            const project = this.state.projects[this.state.currentProject];
+            if (!project?.id) throw new Error("Aucun projet ouvert.");
+            await TsProjectManager.save();     // l'archive reflète ce qui est à l'écran
 
+            const res = await fetch(exportZipUrl(CODELAB_TS, project.id));
             if (!res.ok) throw new Error("Failed to export ZIP");
 
             const blob = await res.blob();
