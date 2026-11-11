@@ -463,11 +463,11 @@ class AuthenticationRequiredTests(TestCase):
         ("get", "/editor/api/load-monaco-config/"),
         ("post", "/editor/api/save-monaco-config/"),
         ("get", "/editor/api/codelab-js/projects/1/export-zip/"),
-        ("post", "/editor/api/codelab-js/projects/1/import-zip/"),
+        ("post", "/editor/api/codelab-js/projects/import-zip/"),
         ("get", "/editor/api/codelab-ts/projects/1/export-zip/"),
-        ("post", "/editor/api/codelab-ts/projects/1/import-zip/"),
+        ("post", "/editor/api/codelab-ts/projects/import-zip/"),
         ("get", "/editor/api/codelab-py/projects/1/export-zip/"),
-        ("post", "/editor/api/codelab-py/projects/1/import-zip/"),
+        ("post", "/editor/api/codelab-py/projects/import-zip/"),
         ("post", "/editor/preview/"),
     ]
 

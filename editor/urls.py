@@ -46,8 +46,9 @@ urlpatterns = [
     path('<editor:editor>/', EditorPageView.as_view(), name='editor'),
     path('api/<editor:editor>/projects/', project_list, name='project-list'),
     path('api/<editor:editor>/projects/<int:pk>/', project_detail, name='project-detail'),
+    # Import : crée un nouveau projet (ne touche pas au projet ouvert)
+    path('api/<editor:editor>/projects/import-zip/', ProjectImportZipView.as_view(), name='project-import-zip'),
     path('api/<editor:editor>/projects/<int:pk>/export-zip/', ProjectExportZipView.as_view(), name='project-export-zip'),
-    path('api/<editor:editor>/projects/<int:pk>/import-zip/', ProjectImportZipView.as_view(), name='project-import-zip'),
     path('api/load-monaco-config/', LoadMonacoConfigView.as_view(), name='load-monaco-config'),
     path('api/save-monaco-config/', SaveMonacoConfigView.as_view(), name='save-monaco-config'),
     path("preview/", LivePreviewView.as_view(), name="live-preview"),

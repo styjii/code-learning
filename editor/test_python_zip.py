@@ -47,14 +47,18 @@ class PythonZipBase(TestCase):
         return Project.objects.create(owner=owner or self.user, editor=editor, name=name, data={"files": files})
 
     def stored_files(self):
-        self.project.refresh_from_db()
-        return self.project.data["files"]
+        """Les fichiers du projet créé par l'import."""
+        return self.imported().latest("id").data["files"]
 
     def export(self, project=None, client=None, editor=PY):
         return (client or self.client).get(export_url(editor, (project or self.project).pk))
 
     def upload(self, data, name="projet.zip", client=None):
-        return (client or self.client).post(import_url(PY, self.project.pk), {"zip_file": SimpleUploadedFile(name, data)})
+        return (client or self.client).post(import_url(PY), {"zip_file": SimpleUploadedFile(name, data)})
+
+    def imported(self):
+        """Les projets créés par un import (tous sauf celui du départ)."""
+        return Project.objects.filter(owner=self.user, editor=PY).exclude(pk=self.project.pk)
 
 
 class ExportPythonZipTests(PythonZipBase):
@@ -105,7 +109,7 @@ class ExportPythonZipTests(PythonZipBase):
         strict = Client(enforce_csrf_checks=True)
         strict.force_login(self.user)
         archive = SimpleUploadedFile("p.zip", make_zip({"main.py": "1"}))
-        self.assertEqual(strict.post(import_url(PY, self.project.pk), {"zip_file": archive}).status_code, 403)
+        self.assertEqual(strict.post(import_url(PY), {"zip_file": archive}).status_code, 403)
 
 
 @override_settings(
@@ -126,31 +130,22 @@ class ImportPythonZipTests(PythonZipBase):
         source = self.make_project("source", files)
         archive = self.export(source).content
         self.assertEqual(self.upload(archive).json()["files"], files)
-        self.assertEqual(self.stored_files(), files)             # écrit en base, dans le projet visé
+        self.assertEqual(self.stored_files(), files)             # écrit en base, dans un nouveau projet
 
-    def test_import_writes_to_the_database_and_keeps_name_and_other_projects(self):
+    def test_import_creates_a_new_project_in_the_database_and_touches_no_other(self):
         other = self.make_project("autre", [{"name": "main.py", "content": "intact"}])
-        body = self.upload(make_zip({"main.py": "nouveau\n", "utils.py": "X = 1\n"})).json()
-        self.assertEqual((body["id"], body["name"]), (self.project.pk, "demo"))
+        body = self.upload(make_zip({"main.py": "nouveau\n", "utils.py": "X = 1\n"}), "Mon TP.zip").json()
+        self.assertEqual(body["name"], "Mon TP")                                 # nom du fichier
+        self.assertNotIn(body["id"], (self.project.pk, other.pk))
         self.assertEqual([f["name"] for f in self.stored_files()], ["main.py", "utils.py"])
-        other.refresh_from_db()
-        self.assertEqual(other.data["files"][0]["content"], "intact")
+        for project, content in ((self.project, "print('avant')"), (other, "intact")):
+            project.refresh_from_db()
+            self.assertEqual(project.data["files"][0]["content"], content)
 
-    def test_a_refused_archive_leaves_the_stored_files_untouched(self):
-        before = self.stored_files()
+    def test_a_refused_archive_creates_nothing(self):
         for data in (b"pas un zip", make_zip({"a b.py": "x"}), make_zip({"main.py": "a" * (9 * 1024)})):
             self.assertIn(self.upload(data).status_code, (400, 413))
-        self.assertEqual(self.stored_files(), before)
-
-    def test_import_into_a_project_of_another_user_or_editor_is_404(self):
-        bob = User.objects.create_user("bob", password=PASSWORD)
-        theirs = self.make_project("secret", [{"name": "main.py", "content": "s"}], owner=bob)
-        ts = self.make_project("ts", [], editor=TS)
-        for target, editor in ((theirs, PY), (ts, PY), (self.project, TS)):
-            archive = SimpleUploadedFile("p.zip", make_zip({"main.py": "pwn"}))
-            self.assertEqual(self.client.post(import_url(editor, target.pk), {"zip_file": archive}).status_code, 404)
-        theirs.refresh_from_db()
-        self.assertEqual(theirs.data["files"][0]["content"], "s")
+        self.assertFalse(self.imported().exists())
 
     def test_single_root_folder_is_stripped(self):
         body = self.upload(make_zip({"projet/main.py": "1", "projet/utils.py": "2"})).json()
@@ -217,5 +212,5 @@ class ImportPythonZipTests(PythonZipBase):
         self.assertEqual(self.upload(make_zip({f"f{i}.txt": "a" * 7000 for i in range(10)})).status_code, 413)  # total
 
     def test_missing_file_is_400_and_anonymous_is_401(self):
-        self.assertEqual(self.client.post(import_url(PY, self.project.pk), {}).status_code, 400)
+        self.assertEqual(self.client.post(import_url(PY), {}).status_code, 400)
         self.assertEqual(self.upload(make_zip({"main.py": "1"}), client=Client()).status_code, 401)

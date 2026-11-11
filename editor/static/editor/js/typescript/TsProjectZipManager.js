@@ -1,54 +1,23 @@
-import { CODELAB_TS, exportZipUrl, importZipUrl, postZip, zipFormData } from "../projects/api.js";
+import { CODELAB_TS, exportZipUrl } from "../projects/api.js";
+import { ZipImporter } from "../projects/ZipImporter.js";
 import { TsProjectManager } from "./TsProjectManager.js";
 
 /**
- * Import / export du projet courant en .zip (index.html, style.css, script.ts, tsconfig.json).
+ * Import / export en .zip (index.html, style.css, script.ts, tsconfig.json).
  *
- * L'archive est lue et construite par le serveur directement à partir de la base de données : le navigateur
- * enregistre d'abord ses modifications en attente, puis ne fait que téléverser ou télécharger l'archive.
+ * L'archive est lue et construite par le serveur directement à partir de la base de données. L'import crée un nouveau
+ * projet (nom du fichier) ; en cas de doublon, ``ZipImporter`` demande d'écraser le projet existant ou de le renommer.
  */
 export class TsProjectZipManager {
     /** @param {import("./state.js").TsState} state */
     constructor(state) {
         this.state = state;
+        this.importer = new ZipImporter({ editor: CODELAB_TS, open: (project) => TsProjectManager.openImported(project) });
     }
 
-    /** Importe une archive .zip dans le projet courant : le serveur remplace son contenu et ses options en base. */
+    /** Importe l'archive choisie comme nouveau projet. */
     async importFromZip() {
-        const zipInput = document.getElementById("zip-input");
-        const importFeedback = document.getElementById("import-feedback");
-        const importSuccess = document.getElementById("import-success");
-
-        if (!zipInput.files.length) {
-            importFeedback.textContent = "Sélectionnez un fichier .zip.";
-            importFeedback.style.display = "block";
-            importSuccess.style.display = "none";
-            return;
-        }
-
-        try {
-            const formData = await zipFormData(zipInput.files[0]);
-            const project = this.state.projects[this.state.currentProject];
-            if (!project?.id) throw new Error("Aucun projet ouvert.");
-            await TsProjectManager.save();     // une sauvegarde différée ne doit pas écraser l'import
-
-            const res = await postZip(importZipUrl(CODELAB_TS, project.id), formData);
-
-            if (!res.ok) {
-                // Le serveur explique le refus (fichier trop volumineux, archive invalide...).
-                const body = await res.json().catch(() => ({}));
-                throw new Error(body.error || "Failed to import project");
-            }
-
-            TsProjectManager.adopt(await res.json());     // contenu et options déjà en base : on les affiche
-
-            importFeedback.style.display = "none";
-            importSuccess.style.display = "block";
-        } catch (err) {
-            importFeedback.textContent = `Échec de l'import : ${err.message}`;
-            importFeedback.style.display = "block";
-            importSuccess.style.display = "none";
-        }
+        await this.importer.start();
     }
 
     /** Télécharge l'archive .zip du projet courant, telle qu'elle est enregistrée en base. */

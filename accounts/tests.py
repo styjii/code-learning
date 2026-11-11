@@ -27,7 +27,7 @@ PROTECTED_API_READ = ["/editor/api/codelab-js/projects/", "/editor/api/codelab-t
                       "/editor/api/codelab-py/projects/", "/editor/api/codelab-js/projects/1/export-zip/",
                       "/editor/api/load-monaco-config/", "/populate-step/?index=0"]
 PROTECTED_API_WRITE = ["/editor/api/codelab-js/projects/", "/editor/preview/",
-                       "/editor/api/codelab-js/projects/1/import-zip/", "/editor/api/save-monaco-config/"]
+                       "/editor/api/codelab-js/projects/import-zip/", "/editor/api/save-monaco-config/"]
 
 
 class AuthenticationRequiredTests(TestCase):

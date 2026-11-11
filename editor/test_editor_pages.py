@@ -56,6 +56,18 @@ class EditorPageViewTests(TestCase):
             self.assertEqual(switch.count("aria-current"), 1)
             self.assertRegex(switch, rf'href="/editor/{current}/" aria-current="page"')
 
+    def test_the_import_modal_has_the_confirmation_block_in_every_editor(self):
+        """Doublon à l'import : le bloc d'import (#import-block) est remplacé par #import-conflict (ZipImporter.js)."""
+        for editor in editors.EDITORS:
+            html = self.client.get(f"/editor/{editor}/").content.decode()
+            with self.subTest(editor=editor):
+                self.assertTemplateUsed(self.client.get(f"/editor/{editor}/"), "editor/_import_conflict.html")
+                for element_id in ("import-block", "import-conflict", "import-conflict-message", "import-rename-input",
+                                   "import-rename-btn", "import-overwrite-btn", "import-cancel-btn", "import-conflict-error",
+                                   "zip-input", "import-btn", "import-feedback", "import-success"):
+                    self.assertIn(f'id="{element_id}"', html)
+                self.assertRegex(html, r'id="import-conflict"[^>]*style="display: none;"')      # masqué au départ
+
     def test_unknown_editors_are_404(self):
         for editor in ("web", "ts", "py", "js", "codelab", "codelab-rb", "api"):
             with self.subTest(editor=editor):

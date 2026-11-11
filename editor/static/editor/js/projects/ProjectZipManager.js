@@ -1,12 +1,13 @@
 import { state } from "../state/state.js";
-import { CODELAB_JS, exportZipUrl, importZipUrl, postZip, zipFormData } from "./api.js";
+import { CODELAB_JS, exportZipUrl } from "./api.js";
 import { ProjectManager } from "./ProjectManager.js";
+import { ZipImporter } from "./ZipImporter.js";
 
 /**
- * Import / export du projet courant en .zip (index.html, style.css, script.js).
+ * Import / export en .zip (index.html, style.css, script.js).
  *
- * L'archive est lue et construite par le serveur directement à partir de la base de données : le navigateur
- * enregistre d'abord ses modifications en attente, puis ne fait que téléverser ou télécharger l'archive.
+ * L'archive est lue et construite par le serveur directement à partir de la base de données. L'import crée un nouveau
+ * projet (nom du fichier) ; en cas de doublon, ``ZipImporter`` demande d'écraser le projet existant ou de le renommer.
  */
 export class ProjectZipManager {
     /**
@@ -14,44 +15,12 @@ export class ProjectZipManager {
      */
     constructor(state) {
         this.state = state;
+        this.importer = new ZipImporter({ editor: CODELAB_JS, open: (project) => ProjectManager.openImported(project) });
     }
 
-    /** Importe une archive .zip dans le projet courant : le serveur remplace son contenu en base. */
+    /** Importe l'archive choisie comme nouveau projet. */
     async importFromZip() {
-        const zipInput = document.getElementById("zip-input");
-        const importFeedback = document.getElementById("import-feedback");
-        const importSuccess = document.getElementById("import-success");
-
-        if (!zipInput.files.length) {
-            importFeedback.textContent = "Sélectionnez un fichier .zip.";
-            importFeedback.style.display = "block";
-            importSuccess.style.display = "none";
-            return;
-        }
-
-        try {
-            const formData = await zipFormData(zipInput.files[0]);
-            const project = this.state.projects[this.state.currentProject];
-            if (!project?.id) throw new Error("Aucun projet ouvert.");
-            await ProjectManager.save();     // une sauvegarde différée ne doit pas écraser l'import
-
-            const res = await postZip(importZipUrl(CODELAB_JS, project.id), formData);
-
-            if (!res.ok) {
-                // Le serveur explique le refus (fichier trop volumineux, archive invalide...).
-                const body = await res.json().catch(() => ({}));
-                throw new Error(body.error || "Failed to import project");
-            }
-
-            ProjectManager.adopt(await res.json());     // le contenu est déjà en base : on l'affiche
-
-            importFeedback.style.display = "none";
-            importSuccess.style.display = "block";
-        } catch (err) {
-            importFeedback.textContent = `Échec de l'import : ${err.message}`;
-            importFeedback.style.display = "block";
-            importSuccess.style.display = "none";
-        }
+        await this.importer.start();
     }
 
     /** Télécharge l'archive .zip du projet courant, telle qu'elle est enregistrée en base. */

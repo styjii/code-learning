@@ -12,7 +12,7 @@ from django.urls import reverse
 
 from .models import EditorPreferences, Project
 from .monaco_config import DEFAULT_PREFERENCES, FIXED_OPTIONS, effective_options
-from .test_support import JS, PY, TS, import_url, page_url
+from .test_support import JS, PY, import_url, page_url
 
 User = get_user_model()
 PASSWORD = "Mot-de-passe-solide-42"
@@ -131,8 +131,8 @@ class MonacoConfigTests(TestCase):
 )
 class ImportZipLimitsTests(TestCase):
     """
-    L'import refuse les archives piégées avant de les décompresser, et écrit directement dans la base : le projet
-    visé est celui de l'URL (``/editor/api/codelab-js/projects/<id>/import-zip/``).
+    L'import crée un **nouveau projet** en base (``POST /editor/api/codelab-js/projects/import-zip/``) et refuse les
+    archives piégées avant de les décompresser : une archive refusée ne laisse rien en base.
     """
 
     def setUp(self):
@@ -141,62 +141,63 @@ class ImportZipLimitsTests(TestCase):
         self.client.force_login(self.user)
         self.project = Project.objects.create(
             owner=self.user, editor=JS, name="demo", data={"html": "<p>avant</p>", "css": "a{}", "js": "avant()"})
-        self.import_url = import_url(JS, self.project.pk)
+        self.import_url = import_url(JS)
 
-    def upload(self, data, name="project.zip"):
-        return self.client.post(self.import_url, {"zip_file": SimpleUploadedFile(name, data)})
+    def upload(self, data, name="project.zip", **fields):
+        return self.client.post(self.import_url, {"zip_file": SimpleUploadedFile(name, data), **fields})
 
-    def stored(self):
+    def imported(self):
+        """Les projets créés par l'import (tous sauf celui du départ)."""
+        return Project.objects.filter(owner=self.user, editor=JS).exclude(pk=self.project.pk)
+
+    def assertUntouched(self):
         self.project.refresh_from_db()
-        return self.project.data
+        self.assertEqual(self.project.data, {"html": "<p>avant</p>", "css": "a{}", "js": "avant()"})
+        self.assertFalse(self.imported().exists())
 
-    def test_valid_archive_is_imported(self):
+    def test_valid_archive_creates_a_new_project_named_after_the_file(self):
         data = make_zip({
             "index.html": "<html><body><p>Salut é</p><script>evil()</script></body></html>",
             "style.css": "p { color: red; }",
             "script.js": "console.log(1)",
         })
-        body = self.upload(data).json()
+        response = self.upload(data, "Mon TP.zip")
+        self.assertEqual(response.status_code, 201)
+        body = response.json()
         self.assertEqual(body["html"], "<p>Salut é</p>")        # <script> retiré, comme avant
         self.assertEqual(body["css"], "p { color: red; }")
         self.assertEqual(body["js"], "console.log(1)")
-        self.assertEqual(body["name"], "demo")                  # le nom du projet ne change pas
-        self.assertEqual(self.stored(), {"html": "<p>Salut é</p>", "css": "p { color: red; }", "js": "console.log(1)"})
+        self.assertEqual((body["name"], body["created"], body["renamed"]), ("Mon TP", True, False))
+        project = self.imported().get()
+        self.assertEqual(project.pk, body["id"])
+        self.assertEqual(project.name, "Mon TP")                 # nom du fichier sans « .zip »
+        self.assertEqual(project.data, {"html": "<p>Salut é</p>", "css": "p { color: red; }", "js": "console.log(1)"})
 
-    def test_import_replaces_the_content_in_the_database_only_for_that_project(self):
-        other = Project.objects.create(owner=self.user, editor=JS, name="autre", data={"html": "x", "css": "", "js": ""})
-        self.upload(make_zip({"index.html": "<body>nouveau</body>", "script.js": "1"}))
-        other.refresh_from_db()
-        self.assertEqual(other.data["html"], "x")
-        self.assertEqual(self.stored()["html"], "nouveau")
+    def test_the_open_project_is_never_modified(self):
+        self.upload(make_zip({"index.html": "<body>nouveau</body>", "script.js": "1"}), "autre.zip")
+        self.project.refresh_from_db()
+        self.assertEqual(self.project.data, {"html": "<p>avant</p>", "css": "a{}", "js": "avant()"})
+        self.assertEqual(self.imported().get().data["html"], "nouveau")
 
-    def test_import_into_a_project_of_another_user_or_editor_is_404(self):
-        bob = User.objects.create_user("bob", password=PASSWORD)
-        theirs = Project.objects.create(owner=bob, editor=JS, name="secret", data={"html": "s", "css": "", "js": ""})
-        ts = Project.objects.create(owner=self.user, editor=TS, name="ts")
-        archive = SimpleUploadedFile("p.zip", make_zip({"index.html": "<body>pwn</body>"}))
-        self.assertEqual(self.client.post(import_url(JS, theirs.pk), {"zip_file": archive}).status_code, 404)
-        archive = SimpleUploadedFile("p.zip", make_zip({"index.html": "<body>pwn</body>"}))
-        self.assertEqual(self.client.post(import_url(JS, ts.pk), {"zip_file": archive}).status_code, 404)   # autre éditeur
-        theirs.refresh_from_db(); ts.refresh_from_db()
-        self.assertEqual(theirs.data["html"], "s")
-        self.assertEqual(ts.data, {})
+    def test_the_extension_is_removed_whatever_its_case(self):
+        for filename, expected in (("a.ZIP", "a"), ("b.Zip", "b"), ("c.tar.zip", "c.tar"), ("d", "d"), ("  e  .zip", "e")):
+            with self.subTest(filename=filename):
+                self.assertEqual(self.upload(make_zip({"index.html": "<body></body>"}), filename).json()["name"], expected)
 
-    def test_a_refused_archive_leaves_the_project_untouched(self):
-        before = dict(self.stored())
+    def test_a_refused_archive_leaves_nothing_in_the_database(self):
         for data in (b"pas un zip", make_zip({"style.css": "a" * (9 * 1024)})):
             self.assertIn(self.upload(data).status_code, (400, 413))
-        self.assertEqual(self.stored(), before)
+        self.assertUntouched()
 
     def test_archive_with_project_folder_is_imported(self):
         data = make_zip({"project/index.html": "<body>x</body>", "project/style.css": "a{}", "project/script.js": "1"})
-        body = self.upload(data).json()
+        body = self.upload(data, "project.zip").json()
         self.assertEqual((body["html"], body["css"], body["js"]), ("x", "a{}", "1"))
 
     def test_missing_files_give_empty_strings(self):
         body = self.upload(make_zip({"readme.txt": "rien"})).json()
         self.assertEqual((body["html"], body["css"], body["js"]), ("", "", ""))
-        self.assertEqual(self.stored(), {"html": "", "css": "", "js": ""})
+        self.assertEqual(self.imported().get().data, {"html": "", "css": "", "js": ""})
 
     def test_zip_bomb_is_refused_without_decompressing(self):
         data = make_zip({"index.html": "<body>" + "a" * (3 * 1024 * 1024) + "</body>"})
@@ -204,6 +205,7 @@ class ImportZipLimitsTests(TestCase):
         response = self.upload(data)
         self.assertEqual(response.status_code, 413)
         self.assertIn("error", response.json())
+        self.assertUntouched()
 
     def test_total_declared_size_is_capped(self):
         files = {f"data{i}.bin": "a" * 5000 for i in range(4)}   # 20 Ko > 16 Ko, aucun fichier lu pourtant
@@ -235,6 +237,7 @@ class ImportZipLimitsTests(TestCase):
         response = self.upload(bytes(data))
         self.assertIn(response.status_code, (400, 413))                # jamais 200 avec 20 Ko de contenu
         self.assertNotIn("css", response.json())
+        self.assertUntouched()
 
     def test_invalid_archives_are_400_without_internal_details(self):
         for data in (b"pas un zip", b"PK\x03\x04" + b"\0" * 50, b""):
@@ -297,7 +300,7 @@ class PythonEditorPageTests(TestCase):
         for path in (
             "editor/js/python/main.js", "editor/js/python/PythonEditorApp.js", "editor/js/python/FileStore.js",
             "editor/js/python/PythonProjectManager.js", "editor/js/projects/ProjectRenameBinder.js",
-            "editor/js/projects/api.js",
+            "editor/js/projects/api.js", "editor/js/projects/ZipImporter.js",
             "editor/js/console/ConsoleRenderer.js", "editor/css/python.css",
             "language/js/runner/MonacoLoader.js", "language/js/runner/PythonRunner.js",
             "language/js/runner/python.worker.js", "vendor/pyodide/pyodide.mjs",

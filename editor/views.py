@@ -15,13 +15,14 @@ from django.views.decorators.clickjacking import xframe_options_exempt
 from django.template.loader import render_to_string
 from django.conf import settings
 from django.db import IntegrityError, transaction
-from . import editors
+from . import editors, project_names
 from .models import EditorPreferences, Project
 from .monaco_config import effective_options, sanitize_preferences, validate_preferences
 from .services import id
 from .serializers import DUPLICATE_NAME_MESSAGE, ProjectSerializer
 from .zip_import import ZipImportError, format_size
 import json
+import uuid
 from urllib.parse import quote
 
 MAX_PREVIEWS = 5
@@ -165,13 +166,24 @@ class ProjectExportZipView(ProjectZipMixin, APIView):
         return response
 
 
-class ProjectImportZipView(ProjectZipMixin, APIView):
+class ProjectImportZipView(APIView):
     """
-    ``POST /editor/api/<editor>/projects/<id>/import-zip/`` : lit l'archive envoyée (champ ``zip_file``) et remplace le
-    contenu du projet en base. Renvoie le projet enregistré (mêmes champs que l'API des projets) et ``skipped``, les
-    messages pour les entrées ignorées. Le nom du projet ne change pas.
+    ``POST /editor/api/<editor>/projects/import-zip/`` : crée un **nouveau projet** à partir d'une archive .zip (champ
+    ``zip_file``) ; le projet ouvert n'est jamais modifié. Le contenu est lu par le serveur (plafonds de tailles, voir
+    ``zip_import.py`` et les réglages ``EDITOR_ZIP_*`` : 413 au-delà) et écrit directement en base.
 
-    Les tailles sont plafonnées (voir ``zip_import.py`` et les réglages ``EDITOR_ZIP_*``) : refus en 413 au-delà.
+    Nom du projet :
+        - par défaut, celui du fichier sans ``.zip`` ;
+        - si ce nom est invalide ou dépasse la longueur maximale de la base, ``projet-import-{id du projet}`` ;
+        - ``name`` (champ optionnel) impose un nom : refusé en 400 s'il est invalide (jamais de nom de secours).
+
+    Doublon (même utilisateur, même éditeur, même nom) :
+        - par défaut, rien n'est écrit et la réponse est un 409 qui décrit le conflit : le navigateur demande à
+          l'utilisateur d'écraser le projet existant ou de choisir un autre nom ;
+        - avec ``on_conflict=overwrite``, le contenu du projet existant est remplacé (son id et son nom restent).
+
+    Réponse : le projet (mêmes champs que l'API des projets), ``created`` (False si écrasé), ``renamed`` (True si le
+    nom de secours a été utilisé) et ``skipped``, les messages pour les entrées ignorées. 201 si créé, 200 si écrasé.
     """
     parser_classes = [MultiPartParser, FormParser]
 
@@ -192,9 +204,8 @@ class ProjectImportZipView(ProjectZipMixin, APIView):
             return Response({'error': exc.message}, status=exc.status)
         return super().handle_exception(exc)
 
-    def post(self, request, editor, pk):
+    def post(self, request, editor):
         spec = editors.get(editor)
-        project = self.get_project(request, editor, pk)
 
         uploaded_file = request.FILES.get('zip_file')
         if not uploaded_file:
@@ -204,12 +215,58 @@ class ProjectImportZipView(ProjectZipMixin, APIView):
         if uploaded_file.size > limit:
             raise ZipImportError(f"Fichier trop volumineux (maximum {format_size(limit)}).", 413)
 
-        content, skipped = spec.import_zip(uploaded_file, uploaded_file.name.replace(".zip", ""))
+        # Lecture et validation de l'archive avant toute écriture : une archive refusée ne laisse rien en base.
+        content, skipped = spec.import_zip(uploaded_file, project_names.stem_of(uploaded_file.name))
+        data = spec.merge({}, content)
 
-        project.data = spec.merge(project.data, content)
-        project.save(update_fields=['data'])
-        data = ProjectSerializer(project, context={'request': request, 'editor': spec}).data
-        return Response({**data, 'skipped': skipped})
+        requested = request.data.get('name')
+        if requested:
+            name = project_names.clean_name(requested)
+            if name is None:
+                return Response(
+                    {'error': f"Nom invalide : 1 à {project_names.MAX_NAME_LENGTH} caractères, sans caractère de contrôle."},
+                    status=status.HTTP_400_BAD_REQUEST)
+        else:
+            name = project_names.name_from_filename(uploaded_file.name)      # None : nom de secours
+
+        projects = Project.objects.filter(owner=request.user, editor=spec.id)
+        if name is not None:
+            existing = projects.filter(name=name).first()
+            if existing is not None:
+                if request.data.get('on_conflict') != 'overwrite':
+                    return self._conflict(name, existing)
+                existing.data = data
+                existing.save(update_fields=['data'])
+                return self._created(request, spec, existing, skipped, created=False, renamed=False)
+
+        try:
+            with transaction.atomic():
+                project = Project.objects.create(
+                    owner=request.user, editor=spec.id, data=data,
+                    # Nom provisoire unique : le nom de secours contient l'id, connu seulement une fois créé.
+                    name=name if name is not None else f"~import-{uuid.uuid4().hex}")
+                if name is None:
+                    project.name = project_names.fallback_name(request.user, spec.id, project.pk)
+                    project.save(update_fields=['name'])
+        except IntegrityError:
+            # Un projet de ce nom a été créé entre-temps (requêtes simultanées) : même réponse qu'un doublon.
+            existing = projects.filter(name=name).first()
+            if existing is None:
+                raise
+            return self._conflict(name, existing)
+        return self._created(request, spec, project, skipped, created=True, renamed=name is None)
+
+    @staticmethod
+    def _conflict(name, existing):
+        return Response(
+            {'error': f"Un projet « {name} » existe déjà.", 'conflict': {'name': name, 'id': existing.pk}},
+            status=status.HTTP_409_CONFLICT)
+
+    @staticmethod
+    def _created(request, spec, project, skipped, *, created, renamed):
+        body = ProjectSerializer(project, context={'request': request, 'editor': spec}).data
+        return Response({**body, 'created': created, 'renamed': renamed, 'skipped': skipped},
+                        status=status.HTTP_201_CREATED if created else status.HTTP_200_OK)
 
 
 def clean_preview_storage(raw):

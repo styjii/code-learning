@@ -50,7 +50,7 @@
 - **Web** (`codelab-js`, `/editor/codelab-js/`) : onglets HTML / CSS / JS propulsés par Monaco Editor (le moteur de VS Code), avec Emmet et des snippets JavaScript. Aperçu dans une iframe isolée, console intégrée, aperçu automatique avec délai réglable, option Bootstrap en un clic.
 - **TypeScript** (`codelab-ts`, `/editor/codelab-ts/`) : mêmes projets, aperçu et import / export, avec onglets HTML / CSS / **TS**. Le code est vérifié et compilé dans le navigateur (compilateur de Monaco) ; les erreurs de type sont soulignées et listées dans la console. **Options du compilateur** par projet (`target`, `strict`, `noUnusedLocals`...), écrites dans le `tsconfig.json` de l'export.
 - **Python** (`codelab-py`, `/editor/codelab-py/`) : plusieurs fichiers (`main.py` + modules importables), exécution dans Pyodide, `input()` interactif dans la console, bouton **Arrêter**, **détection d'erreurs, autocomplétion, infobulles et aide aux appels** comme dans l'éditeur TypeScript. Les fichiers sont enregistrés **par utilisateur**, dans des projets (menu **Fichier › Projets**).
-- **Projets** `codelab-js`, `codelab-ts` et `codelab-py` enregistrés par utilisateur dans un seul modèle (`Project` : utilisateur + éditeur + nom, unique ensemble), **import / export .zip**.
+- **Projets** `codelab-js`, `codelab-ts` et `codelab-py` enregistrés par utilisateur dans un seul modèle (`Project` : utilisateur + éditeur + nom, unique ensemble), **import / export .zip**. L'import crée un **nouveau projet** nommé d'après le fichier ; si ce nom existe déjà, la fenêtre propose d'**écraser** le projet existant, de l'**importer sous un autre nom** ou d'**annuler**.
 - Préférences d'éditeur (retour à la ligne, taille de tabulation, minimap...) propres à chaque compte.
 
 **Comptes et sécurité**
@@ -167,7 +167,7 @@ Ouvrez ensuite `https://localhost:8443/`. Sur un autre appareil, installez d'abo
 3. **Cours** : choisissez une carte sur l'accueil, naviguez par sections, recherchez avec `/` ou `Ctrl + K`.
 4. **Éditeurs** : bouton `</>` en haut d'un cours, ou directement <http://127.0.0.1:8000/editor/codelab-js/> (les anciennes adresses `/editor/`, `/editor/python/` et `/editor/typescript/` redirigent vers les nouvelles). Le commutateur **Web | Python | TypeScript** passe de l'un à l'autre (détails : [Les éditeurs en ligne](#les-éditeurs-en-ligne)).
    - **Web et TypeScript** : onglets de code, bouton **Exécuter**, bouton **Console**. Menu `⋯` : **Projets** (créer, changer, supprimer), **Import / export .zip**, **Aperçu automatique**, **Bibliothèques (CDN)** (active Bootstrap dans l'aperçu, servi depuis le projet) et, en TypeScript, **Options TypeScript**.
-   - **Python** : onglets de fichiers, bouton **Exécuter** / **Arrêter**, menu `⋯` : **Nouveau fichier**, **Importer des fichiers**, **Télécharger le fichier actif**, **Remplacer par l'exemple**.
+   - **Python** : onglets de fichiers, bouton **Exécuter** / **Arrêter**, menu `⋯` : **Projets**, **Nouveau fichier**, **Import / export .zip**, **Télécharger le fichier actif**, **Remplacer par l'exemple**.
 
 ## Les éditeurs en ligne
 
@@ -243,7 +243,7 @@ code-learning/
 |---|---|
 | `GET/POST /editor/api/<editor>/projects/`, `GET/PUT/PATCH/DELETE /editor/api/<editor>/projects/<id>/` | projets de l'utilisateur pour l'éditeur `codelab-js` (html, css, js), `codelab-ts` (html, css, ts, `compiler_options`) ou `codelab-py` (`files` : liste de `{name, content}`) : **une seule vue**, les champs et leur validation dépendent de l'éditeur (`editor/editors.py`) |
 | `GET /editor/api/<editor>/projects/<id>/export-zip/` | `.zip` du projet, construit à partir de la base : `index.html`, `style.css`, `script.js` (`codelab-js`) ; `index.html`, `style.css`, `script.ts`, `tsconfig.json` (`codelab-ts`) ; les fichiers du projet, `main.py` en tête (`codelab-py`) |
-| `POST /editor/api/<editor>/projects/<id>/import-zip/` | lit un `.zip` (plafonné) et **remplace le contenu du projet en base** ; renvoie le projet enregistré et `skipped` |
+| `POST /editor/api/<editor>/projects/import-zip/` | lit un `.zip` (plafonné) et **crée un nouveau projet en base**, nommé d'après le fichier (sans `.zip`) ; le projet ouvert n'est pas touché. Doublon (même utilisateur, éditeur et nom) : **409** sans rien écrire, puis le champ `on_conflict=overwrite` écrase le projet existant ou `name` impose un autre nom. Nom invalide ou plus long que la base (100) : `projet-import-{id}`. Renvoie le projet, `created`, `renamed` et `skipped` |
 | `GET /editor/api/load-monaco-config/` | options Monaco de l'utilisateur connecté |
 | `POST /editor/api/save-monaco-config/` | enregistre ses préférences (clés autorisées uniquement) |
 | `POST /editor/preview/` puis `GET /editor/preview/<id>/` | génère puis affiche l'aperçu (cinq derniers conservés) |

@@ -287,12 +287,19 @@ export class TsProjectManager {
      * @param {string|null} name
      */
     /**
-     * Adopte le projet renvoyé par le serveur après un import .zip (le contenu est déjà en base) et l'affiche.
-     * @param {{id: number, html: string, css: string, ts: string, compiler_options: object}} data
+     * Ouvre le projet que le serveur vient de créer (ou d'écraser) par un import .zip : contenu et options sont déjà en
+     * base. Le projet qu'on quitte est enregistré d'abord ; si c'est le projet écrasé lui-même, ses modifications en
+     * attente sont abandonnées (elles ne doivent pas remplacer l'archive importée).
+     * @param {{id: number, name: string, html: string, css: string, ts: string, compiler_options: object}} data
      */
-    static adopt(data) {
-        state.projects[state.currentProject] = this.#toState(data, data.id);
-        this.load(state.currentProject);
+    static async openImported(data) {
+        clearTimeout(state.saveTimer);
+        state.saveTimer = null;
+        if (data.name !== state.currentProject) await this.save();
+        state.projects[data.name] = this.#toState(data, data.id);
+        state.currentProject = data.name;
+        this.updateDropdown();
+        this.load(data.name);
     }
 
     static load(name) {

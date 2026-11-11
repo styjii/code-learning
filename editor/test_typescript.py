@@ -157,7 +157,7 @@ class TypeScriptProjectApiTests(TestCase):
 
 
 class TypeScriptZipTests(TestCase):
-    """Export / import .zip de codelab-ts : l'archive vient de la base et l'import y écrit directement."""
+    """Export / import .zip de codelab-ts : l'archive vient de la base ; l'import crée un nouveau projet en base."""
 
     def setUp(self):
         self.user = User.objects.create_user("alice", password=PASSWORD)
@@ -178,11 +178,15 @@ class TypeScriptZipTests(TestCase):
         return zipfile.ZipFile(io.BytesIO(response.content))
 
     def upload(self, data, name="project.zip"):
-        return self.client.post(import_url(TS, self.project.pk), {"zip_file": SimpleUploadedFile(name, data)})
+        return self.client.post(import_url(TS), {"zip_file": SimpleUploadedFile(name, data)})
+
+    def imported(self):
+        """Les projets créés par un import (tous sauf celui du départ)."""
+        return ts_projects().exclude(pk=self.project.pk)
 
     def stored(self):
-        self.project.refresh_from_db()
-        return self.project.data
+        """Le contenu du projet créé par l'import."""
+        return self.imported().latest("id").data
 
     def test_export_contains_the_four_files(self):
         archive = self.export(html="<p>Salut</p>", css="p{color:red}", ts="const a: number = 1;",
@@ -215,8 +219,10 @@ class TypeScriptZipTests(TestCase):
         source = self.make("Rond", html="<h1>Titre é</h1>", css="h1{}", ts="let x: string = 'é';",
                            compiler_options={"target": "ES2018", "strict": False, "noUnusedLocals": True})
         archive_bytes = self.client.get(export_url(TS, source.pk)).content
-        body = self.upload(archive_bytes, "Rond.zip").json()
-        self.assertEqual(body["name"], "Démo <b>")                        # le nom du projet visé ne change pas
+        body = self.upload(archive_bytes, "Copie.zip").json()
+        self.assertEqual(body["name"], "Copie")                          # nom du fichier : nouveau projet
+        self.project.refresh_from_db()
+        self.assertEqual(self.project.data, {})                           # le projet ouvert n'est pas touché
         self.assertEqual(body["html"].strip(), "<h1>Titre é</h1>")
         self.assertEqual((body["css"], body["ts"]), ("h1{}", "let x: string = 'é';"))
         expected = {**DEFAULT_COMPILER_OPTIONS, "target": "ES2018", "strict": False, "noUnusedLocals": True}
@@ -245,13 +251,11 @@ class TypeScriptZipTests(TestCase):
         self.assertEqual(self.upload(data, "proj.zip").json()["ts"], "1")
 
     def test_import_without_file_is_400(self):
-        self.assertEqual(self.client.post(import_url(TS, self.project.pk), {}).status_code, 400)
+        self.assertEqual(self.client.post(import_url(TS), {}).status_code, 400)
 
     def test_invalid_archive_is_400_and_the_project_is_untouched(self):
-        self.project.data = {"html": "", "css": "", "ts": "avant", "compiler_options": {}}
-        self.project.save()
         self.assertEqual(self.upload(b"pas un zip").status_code, 400)
-        self.assertEqual(self.stored()["ts"], "avant")
+        self.assertFalse(self.imported().exists())
 
     @override_settings(EDITOR_ZIP_MAX_UPLOAD_BYTES=64 * 1024, EDITOR_ZIP_MAX_ENTRIES=10,
                        EDITOR_ZIP_MAX_FILE_BYTES=8 * 1024, EDITOR_ZIP_MAX_TOTAL_BYTES=16 * 1024)
@@ -262,18 +266,15 @@ class TypeScriptZipTests(TestCase):
 
     def test_anonymous_gets_401(self):
         self.assertEqual(Client().get(export_url(TS, self.project.pk)).status_code, 401)
-        self.assertEqual(Client().post(import_url(TS, self.project.pk), {}).status_code, 401)
+        self.assertEqual(Client().post(import_url(TS), {}).status_code, 401)
 
     def test_a_web_project_cannot_be_reached_through_the_typescript_editor(self):
         web = Project.objects.create(owner=self.user, editor=JS, name="w", data={"html": "", "css": "", "js": ""})
         self.assertEqual(self.client.get(export_url(TS, web.pk)).status_code, 404)
-        archive = SimpleUploadedFile("w.zip", make_zip({"script.ts": "1"}))
-        self.assertEqual(self.client.post(import_url(TS, web.pk), {"zip_file": archive}).status_code, 404)
 
     def test_web_import_keeps_its_own_files(self):
-        web = Project.objects.create(owner=self.user, editor=JS, name="w", data={"html": "", "css": "", "js": ""})
         data = make_zip({"index.html": "<body>w</body>", "style.css": "a{}", "script.js": "1", "script.ts": "ignoré"})
-        body = self.client.post(import_url(JS, web.pk), {"zip_file": SimpleUploadedFile("w.zip", data)}).json()
+        body = self.client.post(import_url(JS), {"zip_file": SimpleUploadedFile("w2.zip", data)}).json()
         self.assertEqual((body["html"], body["css"], body["js"]), ("w", "a{}", "1"))
         self.assertNotIn("ts", body)
 

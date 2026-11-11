@@ -1,0 +1,15 @@
+{# Bloc de confirmation de l'import .zip : remplace #import-block quand un projet du même nom existe déjà (voir ZipImporter.js). #}
+<div id="import-conflict" class="import-conflict" role="alertdialog" aria-labelledby="import-conflict-title" aria-describedby="import-conflict-message" style="display: none;">
+    <h3 id="import-conflict-title" class="import-conflict-title">Ce projet existe déjà</h3>
+    <p id="import-conflict-message" class="import-conflict-message"></p>
+    <label class="import-conflict-label" for="import-rename-input">Importer sous un autre nom</label>
+    <div class="custom-input-row">
+        <input type="text" id="import-rename-input" maxlength="100" autocomplete="off" placeholder="Nouveau nom du projet">
+        <button type="button" class="custom-button import" id="import-rename-btn">Renommer et importer</button>
+    </div>
+    <div id="import-conflict-error" class="custom-feedback feedback-error" role="alert"></div>
+    <div class="import-conflict-actions">
+        <button type="button" class="custom-button delete" id="import-overwrite-btn">Écraser le projet existant</button>
+        <button type="button" class="custom-button export" id="import-cancel-btn">Annuler</button>
+    </div>
+</div>

@@ -103,12 +103,34 @@ export class PythonProjectManager {
     }
 
     /**
-     * Prend acte des fichiers que le serveur vient d'écrire en base (import .zip) : le cache les reprend.
-     * @param {{name: string, content: string}[]} files
+     * Ouvre le projet que le serveur vient de créer (ou d'écraser) par un import .zip : les fichiers sont déjà en base.
+     *
+     * Le projet qu'on quitte est enregistré d'abord ; si c'est le projet écrasé lui-même, ses modifications en
+     * attente sont abandonnées (elles ne doivent pas remplacer l'archive importée).
+     *
+     * @param {{id: number, name: string, files: {name: string, content: string}[]}} data
+     * @returns {Promise<{note: string, warning: string}>} complément de message pour le bloc d'import
      */
-    adopt(files) {
-        const project = this.current();
-        if (project) project.files = copyFiles(files);
+    async openImported(data) {
+        if (data.name === this.currentProject) {
+            clearTimeout(this.saveTimer);
+            this.saveTimer = null;
+        } else {
+            await this.flush();
+            await this.pending;
+        }
+        this.projects.set(data.name, { id: data.id, files: copyFiles(data.files) });
+        this.currentProject = data.name;
+        this.updateDropdown();
+        const result = this.load(data.name);
+
+        // L'exemple ajouté (pas de main.py) ou un fichier écarté côté navigateur ne sont pas encore en base.
+        if (result.sampleMain || result.skipped.length) this.app.saveNow();
+        const count = `${result.count} fichier${result.count > 1 ? "s" : ""}.`;
+        return {
+            note: result.sampleMain ? `${count} Pas de main.py dans l'archive : l'exemple de départ a été ajouté.` : count,
+            warning: result.skipped.join(" "),
+        };
     }
 
     /** Planifie un enregistrement après une courte pause de frappe. */
@@ -348,11 +370,12 @@ export class PythonProjectManager {
     /**
      * Charge les fichiers du projet dans l'éditeur.
      * @param {string|null} name
+     * @returns {{count: number, skipped: string[], sampleMain: boolean}|undefined} voir ``FileStore.replaceAll``
      */
     load(name) {
         const project = this.projects.get(name);
         if (!project) return;
         // Un projet sans fichier (créé hors de l'éditeur) reçoit main.py avec l'exemple de départ.
-        this.app.showFiles(project.files.length ? project.files : [{ name: MAIN_FILE, content: SAMPLE }]);
+        return this.app.showFiles(project.files.length ? project.files : [{ name: MAIN_FILE, content: SAMPLE }]);
     }
 }

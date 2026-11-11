@@ -102,6 +102,20 @@ label { user-select: none; }
 .custom-button.delete:hover { background: #e5484d; color: #fff; }
 
 .custom-feedback { display: none; font-size: 0.85rem; }
+
+/* Import .zip : bloc de confirmation (doublon) qui remplace le bloc d'import */
+.import-conflict {
+    display: none;
+    flex-direction: column;
+    gap: 0.7rem;
+    padding: 0.9rem;
+    border: 1px solid #e5484d;
+    background: var(--surface-2);
+}
+.import-conflict-title { margin: 0; color: var(--text-strong); font-size: 0.95rem; }
+.import-conflict-message { margin: 0; overflow-wrap: anywhere; font-size: 0.88rem; line-height: 1.45; }
+.import-conflict-label { color: var(--muted); font-size: 0.82rem; }
+.import-conflict-actions { display: grid; gap: 0.5rem; }
 .feedback-error { color: #e5484d; }
 .feedback-success { color: #2da44e; }
 .feedback-warning { color: #b7791f; }

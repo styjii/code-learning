@@ -18,5 +18,6 @@ def export_url(editor, pk):
     return projects_url(editor, pk) + "export-zip/"
 
 
-def import_url(editor, pk):
-    return projects_url(editor, pk) + "import-zip/"
+def import_url(editor):
+    """Import d'une archive : crée un nouveau projet de cet éditeur."""
+    return projects_url(editor) + "import-zip/"

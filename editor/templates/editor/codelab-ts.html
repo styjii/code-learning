@@ -226,13 +226,16 @@
             </div>
             <div class="custom-modal-body">
                 <form id="zip-form" class="custom-form" novalidate>
-                    <div class="custom-input-row">
-                        <label class="custom-file-label">Choisir un .zip<input type="file" id="zip-input" class="custom-file-input" accept=".zip"></label>
-                        <span class="custom-file-name" id="file-name">Aucun fichier</span>
-                        <button type="button" class="custom-button import" id="import-btn">Importer</button>
+                    <div id="import-block">
+                        <div class="custom-input-row">
+                            <label class="custom-file-label">Choisir un .zip<input type="file" id="zip-input" class="custom-file-input" accept=".zip"></label>
+                            <span class="custom-file-name" id="file-name">Aucun fichier</span>
+                            <button type="button" class="custom-button import" id="import-btn">Importer</button>
+                        </div>
+                        <div id="import-feedback" class="custom-feedback feedback-error">Sélectionnez un fichier .zip.</div>
+                        <div id="import-success" class="custom-feedback feedback-success">Archive importée !</div>
                     </div>
-                    <div id="import-feedback" class="custom-feedback feedback-error">Sélectionnez un fichier .zip.</div>
-                    <div id="import-success" class="custom-feedback feedback-success">Archive importée !</div>
+                    {% include "editor/_import_conflict.html" %}
                 </form>
             </div>
             <div class="custom-modal-footer">
