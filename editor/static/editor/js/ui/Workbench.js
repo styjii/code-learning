@@ -153,6 +153,7 @@ export class Workbench {
             const derive = () => {
                 const text = saveNode.textContent;
                 saveNode.dataset.state = /impossible/i.test(text) ? "error" : /…|\.\.\./.test(text) ? "pending" : "saved";
+                saveNode.title = text;
             };
             new MutationObserver(derive).observe(saveNode, { childList: true, characterData: true, subtree: true });
             derive();

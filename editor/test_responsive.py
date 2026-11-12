@@ -139,3 +139,71 @@ class EditorWorkbenchMarkupTests(TestCase):
         chrome_css = (CSS_DIR / "chrome-console.css").read_text(encoding="utf-8")
         self.assertIn(".console-dock .cc-row", editor_css)
         self.assertNotIn("data-time", chrome_css)
+
+
+class EditorNoEmojiAndHeaderTests(TestCase):
+    """Aucun emoji / glyphe-symbole dans l'interface de l'éditeur ; l'en-tête passe sur deux lignes sous 1024 px."""
+
+    GLYPHS = re.compile("[\u2190-\u21ff\u2300-\u23ff\u2460-\u27bf\u2900-\u2bff\U0001F000-\U0001FAFF\uFE0F]")
+
+    def test_editor_interface_files_contain_no_emoji_or_symbol_glyph(self):
+        root = Path(__file__).resolve().parent
+        files = list((root / "templates" / "editor").glob("*.html"))
+        files += [p for p in (root / "static" / "editor" / "css").glob("*.css")]
+        files += [p for p in (root / "static" / "editor" / "js").rglob("*.js") if "console" not in p.parts]
+        for path in files:
+            with self.subTest(file=path.name):
+                found = self.GLYPHS.findall(path.read_text(encoding="utf-8"))
+                self.assertEqual(found, [], f"{path.name} contient des glyphes : {found}")
+
+    def test_header_stacks_on_two_rows_below_1024px(self):
+        css = (CSS_DIR / "layout.css").read_text(encoding="utf-8")
+        self.assertRegex(css, r"@media \(max-width: 1023\.98px\)\s*\{\s*\.app-header\s*\{[^}]*display:\s*grid")
+
+    def test_page_never_scrolls_horizontally_and_restart_is_not_pushed_out(self):
+        layout = (CSS_DIR / "layout.css").read_text(encoding="utf-8")
+        editor = (CSS_DIR / "editor.css").read_text(encoding="utf-8")
+        self.assertIn("html:has(body.editor-app) { overflow: hidden", layout)
+        self.assertNotRegex(editor, r"\.restart\s*\{[^}]*margin-right:\s*-")
+
+
+class EditorHeaderLayoutTests(TestCase):
+    """En-tête : état d'enregistrement sans collision, paramètres et options à l'extrême droite, deux menus identiques."""
+
+    def setUp(self):
+        user = get_user_model().objects.create_user("carol", password="Mot-de-passe-solide-42")
+        self.client = Client()
+        self.client.force_login(user)
+
+    def header(self, name):
+        page = self.client.get(reverse("editor", args=[name])).content.decode()
+        return re.search(r'<header class="app-header">.*?</header>', page, re.S).group(0)
+
+    def test_settings_and_options_are_the_last_children_of_the_right_group(self):
+        for name in EDITOR_URLS:
+            with self.subTest(page=name):
+                header = self.header(name)
+                end = header[header.index('<div class="header-end">'):]
+                # ordre dans le groupe de droite : état, paramètres (engrenage), options (•••) — et rien après
+                self.assertLess(end.index('class="save-state"'), end.index('drop-project'))
+                self.assertLess(end.index('drop-project'), end.index('drop-more'))
+                self.assertNotIn('topbar-actions', end)
+                # les raccourcis (cours, thème, déconnexion) sont avant le groupe de droite
+                self.assertLess(header.index('class="topbar-actions"'), header.index('class="header-end"'))
+
+    def test_options_menu_has_the_same_structure_as_the_settings_menu(self):
+        for name in EDITOR_URLS:
+            with self.subTest(page=name):
+                header = self.header(name)
+                menus = re.findall(r'<ul class="drop-menu project-menu" role="menu">(.*?)</ul>', header, re.S)
+                self.assertEqual(len(menus), 2, "paramètres et options partagent la même classe de menu")
+                for menu in menus:
+                    for part in ('class="drop-head"', 'class="drop-sep"', 'class="drop-note"', "<svg"):
+                        self.assertIn(part, menu)
+
+    def test_the_title_truncates_instead_of_colliding_with_the_save_state(self):
+        css = (CSS_DIR / "layout.css").read_text(encoding="utf-8")
+        self.assertRegex(css, r"\.doc-title\s*\{[^}]*overflow:\s*hidden")
+        self.assertRegex(css, r"\.doc-rename\s*\{[^}]*flex-shrink:\s*0")
+        # Sous 720 px le texte d'état se réduit au point : il ne peut plus passer sous le titre.
+        self.assertRegex(css, r"@media \(max-width: 719\.98px\)[^{]*\{\s*\.save-state\s*\{[^}]*font-size:\s*0")

@@ -53,7 +53,7 @@ body.py-app #console.cc { font-size: 13px; }
     cursor: pointer;
 }
 
-.py-entry { color: #2da44e; font-size: 0.7rem; }
+.py-entry { width: 11px; height: 11px; flex-shrink: 0; background: #2da44e; -webkit-mask: var(--ico-play) center / contain no-repeat; mask: var(--ico-play) center / contain no-repeat; }
 .py-tab-label + .py-tab-close { margin-left: -0.5rem; }
 
 .py-tab-close {
@@ -65,11 +65,12 @@ body.py-app #console.cc { font-size: 13px; }
     border-radius: 4px;
     background: transparent;
     color: inherit;
-    font-size: 1.05rem;
-    line-height: 1;
     cursor: pointer;
     opacity: 0.6;
+    display: inline-grid;
+    place-items: center;
 }
+.py-tab-close::before { content: ""; width: 12px; height: 12px; background: currentColor; -webkit-mask: var(--ico-x) center / contain no-repeat; mask: var(--ico-x) center / contain no-repeat; }
 
 .py-tab-close:hover, .py-tab-close:focus-visible { background: var(--border-strong); opacity: 1; }
 
@@ -141,7 +142,7 @@ body.py-app #console.cc { font-size: 13px; }
 .py-status { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
 @media (pointer: coarse) {
-    .py-tab-close { width: 32px; height: 32px; font-size: 1.25rem; }
+    .py-tab-close { width: 32px; height: 32px; }
     .py-rename, .py-stdin textarea { font-size: max(16px, 0.88rem); }
     .py-stdin summary { display: flex; align-items: center; min-height: var(--tap); }
 }
@@ -160,9 +161,6 @@ body.py-app #console.cc { font-size: 13px; }
 .py-tab.is-active { background: transparent; }
 .py-tab.is-active::after { inset: auto 0 0 0; }
 .py-tab-label { gap: 0.6rem; padding: 0 0.6rem 0 1.1rem; font-size: 0.95rem; }
-.py-tab-label::before { content: "py"; font: 700 0.68rem/1 var(--font-mono); color: #5aa9ff; }
-.py-tab[data-name$=".json"] .py-tab-label::before { content: "{}"; color: #f2d04e; }
-.py-tab:not([data-name$=".py"]):not([data-name$=".json"]) .py-tab-label::before { content: "#"; color: var(--muted); }
 .py-add { border-right: 0; }
 .py-message { margin: 10px 14px 0; border: 1px solid var(--banner-border); border-radius: 10px; background: var(--banner-bg); }
 .py-message.is-error { border: 1px solid #5c1f24; }
@@ -171,3 +169,22 @@ body.py-app .console-dock { flex: 1 1 0; max-height: none; border-top: 0; }
 body.py-app #control-button .py-status { margin-left: auto; }
 body.py-app #run-code { border-radius: 11px; }
 .py-stdin { background: var(--surface); }
+
+/* Icônes des onglets Python (dessinées en CSS : aucun glyphe de police ni emoji) */
+:root {
+    --ico-code: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m8 7-5 5 5 5M16 7l5 5-5 5'/%3E%3C/svg%3E");
+    --ico-braces: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M8 4C6 4 5 5 5 7v2c0 1-1 3-2 3 1 0 2 2 2 3v2c0 2 1 3 3 3M16 4c2 0 3 1 3 3v2c0 1 1 3 2 3-1 0-2 2-2 3v2c0 2-1 3-3 3'/%3E%3C/svg%3E");
+    --ico-hash: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 9h14M5 15h14M10 4 8 20M16 4l-2 16'/%3E%3C/svg%3E");
+    --ico-play: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='black'%3E%3Cpath d='M7 4v16l13-8z'/%3E%3C/svg%3E");
+    --ico-x: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M18 6 6 18M6 6l12 12'/%3E%3C/svg%3E");
+    --ico-check: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6 9 17l-5-5'/%3E%3C/svg%3E");
+}
+.py-tab-label::before { content: ""; width: 16px; height: 16px; flex-shrink: 0; background: #5aa9ff; -webkit-mask: var(--ico-code) center / contain no-repeat; mask: var(--ico-code) center / contain no-repeat; }
+.py-tab[data-name$=".json"] .py-tab-label::before { background: #f2d04e; -webkit-mask-image: var(--ico-braces); mask-image: var(--ico-braces); }
+.py-tab:not([data-name$=".py"]):not([data-name$=".json"]) .py-tab-label::before { background: var(--muted); -webkit-mask-image: var(--ico-hash); mask-image: var(--ico-hash); }
+.py-entry + .py-tab-name { margin-left: -0.1rem; }
+.py-add svg { width: 16px; height: 16px; }
+
+/* État de la dernière exécution : coche ou croix dessinée en CSS */
+.py-status[data-state]:not([data-state=""])::before { content: ""; display: inline-block; width: 13px; height: 13px; margin-right: 0.4rem; vertical-align: -2px; background: var(--ok); -webkit-mask: var(--ico-check) center / contain no-repeat; mask: var(--ico-check) center / contain no-repeat; }
+.py-status[data-state="error"]::before { background: var(--danger); -webkit-mask-image: var(--ico-x); mask-image: var(--ico-x); }

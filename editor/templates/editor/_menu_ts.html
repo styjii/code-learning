@@ -1,7 +1,12 @@
-<ul class="drop-menu" role="menu">
-    <li><button class="drop-item" data-toggle="custom-modal" data-target="#ts-options">Options TypeScript…</button></li>
-    <li><button class="drop-item" id="format-document">Formater le document <kbd>Maj+Alt+F</kbd></button></li>
-    <li><button class="drop-item" id="command-palette">Palette de commandes… <kbd>Ctrl+Maj+P</kbd></button></li>
-    <li><button class="drop-item" id="text-wrap">Retour à la ligne <kbd>Ctrl+Alt+W</kbd></button></li>
-    <li><button class="drop-item" id="toggle-scroll-padding">Marge de défilement <kbd>Ctrl+Alt+L</kbd></button></li>
+<ul class="drop-menu project-menu" role="menu">
+    <li class="drop-head" role="presentation"><small>Options</small><strong>Éditeur TypeScript</strong></li>
+    <li><button type="button" class="drop-item" data-toggle="custom-modal" data-target="#ts-options"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12M20 18h0"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/></svg>Options TypeScript…</button></li>
+    <li class="drop-sep" role="separator"></li>
+    <li><button type="button" class="drop-item" id="format-document"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18M3 12h12M3 18h16"/></svg>Formater le document<kbd>Maj+Alt+F</kbd></button></li>
+    <li><button type="button" class="drop-item" id="command-palette"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m4 17 6-6-6-6M12 19h8"/></svg>Palette de commandes…<kbd>Ctrl+Maj+P</kbd></button></li>
+    <li class="drop-sep" role="separator"></li>
+    <li><button type="button" class="drop-item" id="text-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18M3 12h13a3 3 0 0 1 0 6h-4m0 0 2-2m-2 2 2 2M3 18h5"/></svg>Retour à la ligne<kbd>Ctrl+Alt+W</kbd></button></li>
+    <li><button type="button" class="drop-item" id="toggle-scroll-padding"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v16M8 8l4-4 4 4M8 16l4 4 4-4"/></svg>Marge de défilement<kbd>Ctrl+Alt+L</kbd></button></li>
+    <li class="drop-sep" role="separator"></li>
+    <li class="drop-note" role="presentation">Toutes les commandes sont aussi dans la palette de commandes.</li>
 </ul>

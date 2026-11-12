@@ -50,6 +50,8 @@
     line-height: 1;
 }
 
+.custom-modal-close { display: inline-grid; place-items: center; }
+.custom-modal-close svg { width: 18px; height: 18px; }
 .custom-modal-close:hover { background: var(--surface-2); color: var(--text-strong); }
 
 .custom-form, .custom-stack { display: flex; flex-direction: column; gap: 0.75rem; }

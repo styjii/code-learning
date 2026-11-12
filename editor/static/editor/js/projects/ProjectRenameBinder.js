@@ -1,6 +1,6 @@
 /**
  * Interface de renommage du projet courant dans la modale « Projets » : un crayon placé à côté du
- * libellé ouvre un champ de saisie (Entrée ou ✓ pour valider, Échap ou ✕ pour annuler).
+ * libellé ouvre un champ de saisie (Entrée ou la coche pour valider, Échap ou la croix pour annuler).
  *
  * Partagé par l'éditeur Web et l'éditeur TypeScript : le gestionnaire de projets passé à ``bind``
  * doit exposer ``rename(newName)`` -> ``{ ok, unchanged?, message? }``.

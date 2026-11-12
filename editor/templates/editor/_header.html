@@ -17,15 +17,15 @@
         {% include "editor/_mode_switch.html" %}
     </div>
 
-    <div class="header-end">
-        <div class="topbar-actions">
-            <a class="icon-btn" href="{% url 'index' %}" title="Retour aux cours" aria-label="Retour aux cours">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2zM4 19V5M9 7h6"/></svg>
-            </a>
-            {% include "partials/theme_toggle.html" %}
-            {% include "partials/logout.html" %}
-        </div>
+    <div class="topbar-actions">
+        <a class="icon-btn" href="{% url 'index' %}" title="Retour aux cours" aria-label="Retour aux cours">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2zM4 19V5M9 7h6"/></svg>
+        </a>
+        {% include "partials/theme_toggle.html" %}
+        {% include "partials/logout.html" %}
+    </div>
 
+    <div class="header-end">
         <span class="save-state" id="{% firstof save_id 'save-state' %}" data-state="saved" role="status" aria-live="polite">Toutes les modifications sont enregistrées</span>
 
         <div class="drop drop-project">

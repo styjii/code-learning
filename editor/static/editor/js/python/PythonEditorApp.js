@@ -182,7 +182,7 @@ export class PythonEditorApp {
             button.setAttribute("aria-selected", String(name === this.store.active));
             button.tabIndex = name === this.store.active ? 0 : -1;
             button.title = name === MAIN_FILE ? "Point d'entrée : exécuté par « Exécuter »" : "Double-clic ou F2 pour renommer";
-            if (name === MAIN_FILE) button.append(el("span", "py-entry", "▶"));
+            if (name === MAIN_FILE) { const entry = el("span", "py-entry"); entry.setAttribute("aria-hidden", "true"); button.append(entry); }
             button.append(el("span", "py-tab-name", name));
             button.addEventListener("click", () => this.activate(name));
             button.addEventListener("dblclick", () => this.startRename(name));
@@ -190,7 +190,7 @@ export class PythonEditorApp {
             tab.append(button);
 
             if (name !== MAIN_FILE) {
-                const close = el("button", "py-tab-close", "×");
+                const close = el("button", "py-tab-close");
                 close.type = "button";
                 close.setAttribute("aria-label", `Supprimer ${name}`);
                 close.title = `Supprimer ${name}`;
@@ -346,11 +346,11 @@ export class PythonEditorApp {
         const elapsed = Math.round(performance.now() - started);
         if (result.ok) {
             if (this.console.rowCount === 0) this.console.add({ type: "log", args: ["(aucune sortie)"], muted: true });
-            this.setStatus(`✓ Terminé en ${elapsed} ms`);
+            this.setStatus(`Terminé en ${elapsed} ms`, "ok");
         } else if (result.reason === "stopped") {
             this.setStatus("Exécution arrêtée");
         } else {
-            this.setStatus("✗ Échec");
+            this.setStatus("Échec", "error");
             this.markError();
         }
     }
@@ -498,7 +498,11 @@ export class PythonEditorApp {
         this.applySuggestionMode();
     }
 
-    setStatus(text) { $("py-status").textContent = text; }
+    setStatus(text, state = "") {
+        const node = $("py-status");
+        node.textContent = text;
+        node.dataset.state = state;   // "ok" | "error" : l'icône est dessinée en CSS
+    }
     setSaveState(text) { $("py-save-state").textContent = text; }
 
     notify(text, isError = false) {

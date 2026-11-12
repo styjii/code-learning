@@ -40,11 +40,12 @@
 .file-tabs .tab.active { color: var(--text-strong); }
 .file-tabs .tab.active::after { content: ""; position: absolute; inset: auto 0 0 0; height: 2px; background: var(--accent); }
 
-.file-ico { display: inline-grid; place-items: center; min-width: 1.2rem; font: 700 0.78rem/1 var(--font-mono); }
+.file-ico { display: inline-grid; place-items: center; width: 18px; height: 18px; flex-shrink: 0; }
+.file-ico svg { width: 100%; height: 100%; }
 .ico-html { color: #ff8a5b; }
-.ico-css { color: #8b9bff; font-size: 0.95rem; }
-.ico-js { color: #f2d04e; font-size: 0.68rem; }
-.ico-ts { color: #4f9dff; font-size: 0.68rem; }
+.ico-css { color: #8b9bff; }
+.ico-js { color: #f2d04e; }
+.ico-ts { color: #4f9dff; }
 
 .file-tabs-end { display: flex; align-items: center; margin-left: auto; padding: 0 0.5rem 0 0.75rem; position: sticky; right: 0; background: var(--surface); }
 .file-tabs-end .icon-btn { width: 34px; height: 34px; }
@@ -209,6 +210,7 @@
     align-items: center;
     gap: 1.4rem;
     flex-shrink: 0;
+    min-width: 0;
     min-height: calc(var(--status-h) + env(safe-area-inset-bottom, 0px));
     padding: 0 max(1rem, env(safe-area-inset-right, 0px)) env(safe-area-inset-bottom, 0px) max(1rem, env(safe-area-inset-left, 0px));
     border-top: 1px solid var(--border);
@@ -216,14 +218,14 @@
     color: var(--muted);
     font-size: 0.8rem;
 }
-.sb-item { display: inline-flex; align-items: center; gap: 0.4rem; white-space: nowrap; }
+.sb-item { display: inline-flex; align-items: center; gap: 0.4rem; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .sb-item svg { width: 14px; height: 14px; }
-.sb-spacer { flex: 1; }
+.sb-spacer { flex: 1; min-width: 0; }
 .sb-issues[data-level="ok"] svg { color: var(--ok); }
 .sb-issues[data-level="warn"] { color: var(--warn); }
 .sb-issues[data-level="error"] { color: var(--danger); }
 
-.restart { display: inline-flex; align-items: center; margin-right: -0.4rem; border: 1px solid var(--border-strong); border-radius: 999px; background: var(--surface-2); box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3); color: var(--text-strong); }
+.restart { display: inline-flex; align-items: center; flex-shrink: 0; border: 1px solid var(--border-strong); border-radius: 999px; background: var(--surface-2); box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3); color: var(--text-strong); }
 .restart button { display: inline-flex; align-items: center; gap: 0.45rem; height: 28px; padding: 0 0.7rem; border: 0; background: transparent; color: inherit; font-size: 0.85rem; cursor: pointer; }
 .restart svg { width: 15px; height: 15px; }
 .restart-main { border-radius: 999px 0 0 999px; }
@@ -267,6 +269,13 @@ body.is-focus #editor-container { border: 0; }
     .console-ro { display: none; }
 }
 
+/* Tablette et téléphone : la barre d'état garde l'essentiel (le bouton « Redémarrer » ne doit jamais sortir de l'écran). */
+@media (max-width: 1023.98px) {
+    .sb-cursor, .sb-indent { display: none; }
+    .status-bar { gap: 1rem; }
+    .restart-main span { display: inline; }
+}
+
 @media (max-width: 599.98px) {
     #control-button { gap: 0.4rem; padding: 0 0.5rem; }
     .seg button { padding: 0 0.7rem; }
@@ -275,7 +284,6 @@ body.is-focus #editor-container { border: 0; }
     .info-banner span { display: none; }
     .preview-stage { padding: 8px 8px 4px; }
     .status-bar { gap: 0.9rem; }
-    .sb-cursor, .sb-indent { display: none; }
     .restart-main span { display: none; }
     .restart-main { padding: 0 0.6rem; }
     .file-tabs .tab { padding: 0 1rem; }
@@ -289,4 +297,17 @@ body.is-focus #editor-container { border: 0; }
 @media (max-height: 600px) and (orientation: landscape) {
     .info-banner { display: none !important; }
     .browser-bar { height: 34px; }
+}
+
+/* Très petits écrans : la barre de commandes du résultat reste sur une ligne sans chevauchement. */
+@media (max-width: 479.98px) {
+    .ts-summary { display: none; }
+    #control-button { gap: 0.35rem; }
+    .seg button { padding: 0 0.6rem; font-size: 0.88rem; }
+}
+@media (max-width: 399.98px) {
+    .run-label { display: none; }
+    #run-code { padding: 0 0.85rem; }
+    .run-more { padding: 0 0.3rem; }
+    .toggle { width: 38px; }
 }
