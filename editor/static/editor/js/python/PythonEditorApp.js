@@ -1,6 +1,9 @@
 import { loadMonaco } from "../../../language/js/runner/MonacoLoader.js";
 import { PythonRunner } from "../../../language/js/runner/PythonRunner.js";
 import { ConsoleRenderer } from "../console/ConsoleRenderer.js";
+import { applyMonacoTheme } from "../ui/monaco-theme.js";
+import { StatusBar } from "../ui/StatusBar.js";
+import { Workbench } from "../ui/Workbench.js";
 import { DropdownEvents } from "../events/DropdownEvents.js";
 import { ModalEvents } from "../events/ModalEvents.js";
 import { ProjectRenameBinder } from "../projects/ProjectRenameBinder.js";
@@ -112,6 +115,9 @@ export class PythonEditorApp {
         const applyMinimap = () => this.editor.updateOptions({ minimap: { ...(prefs.minimap || {}), enabled: wantsMinimap && !narrow.matches } });
         applyMinimap();
         narrow.addEventListener("change", applyMinimap);
+
+        applyMonacoTheme(monaco);
+        StatusBar.init(monaco);
 
         this.editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.Enter, () => this.run());
         this.editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyS, () => this.saveNow());
@@ -512,6 +518,7 @@ export class PythonEditorApp {
     }
 
     bindUi() {
+        Workbench.init();
         DropdownEvents.bind();
         ModalEvents.bind();                   // fenêtre « Import / export .zip », la même que celle de l'éditeur Web
         new PythonZipManager(this).bind();

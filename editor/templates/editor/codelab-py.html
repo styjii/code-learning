@@ -20,69 +20,37 @@
 {% endblock %}
 
 {% block body %}
-<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
-    <symbol id="three-dots" viewBox="0 0 16 16"><path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"/></symbol>
-</svg>
-
-<header class="app-header">
-    <a class="brand" href="{% url 'index' %}" title="Retour à l'accueil" aria-label="Éditeur : retour à l'accueil">
-        {% include "partials/logo.html" with logo_id="codelab-py" %}
-        <span class="brand-name">Éditeur</span>
-    </a>
-
-    {% include "editor/_mode_switch.html" %}
-
-    <span class="project-chip" title="Projet en cours"><span class="dot"></span><span id="current-project">…</span></span>
-
-    <ul class="nav-bar">
-        <li class="drop">
-            <button class="navlink" aria-haspopup="true">Fichier</button>
-            <ul class="drop-menu" role="menu">
-                <li><button class="drop-item" data-toggle="custom-modal" data-target="#project-controls">Projets</button></li>
-                <li><button class="drop-item" id="py-new">Nouveau fichier</button></li>
-                <li><button class="drop-item" id="py-import">Importer des fichiers…</button></li>
-                <li><button class="drop-item" id="py-download">Télécharger le fichier actif</button></li>
-                <li><button class="drop-item" data-toggle="custom-modal" data-target="#zip-controls">Import / export .zip</button></li>
-                <li><button class="drop-item" id="py-reset">Remplacer par l'exemple…</button></li>
-            </ul>
-        </li>
-        <li class="drop">
-            <button class="navlink" aria-haspopup="true">Affichage</button>
-            <ul class="drop-menu" role="menu">
-                <li><button class="drop-item" id="py-wrap">Retour à la ligne</button></li>
-            </ul>
-        </li>
-    </ul>
-
-    <div class="topbar-actions">
-        <a class="icon-btn" href="{% url 'index' %}" title="Retour aux cours" aria-label="Retour aux cours">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2zM4 19V5M9 7h6"/></svg>
-        </a>
-        {% include "partials/theme_toggle.html" %}
-        {% include "partials/logout.html" %}
-    </div>
-</header>
+{% include "editor/_header.html" with more_menu="editor/_menu_py.html" save_id="py-save-state" %}
 
 <main class="workspace">
     <div id="main-editor">
-        <section id="editor-container" aria-label="Code Python">
-            <div class="py-tabbar">
+        <section id="editor-container" aria-label="Code Python" data-active-tab="py">
+            <div class="py-tabbar file-tabs">
                 <div id="py-tabs" role="tablist" aria-label="Fichiers du projet"></div>
                 <button id="py-add" class="py-add" type="button" aria-label="Nouveau fichier" title="Nouveau fichier">+</button>
-                <span id="py-save-state" class="py-save-state" aria-live="polite"></span>
-                <span id="py-lang-state" class="py-lang-state" aria-live="polite"></span>
+                <span class="file-tabs-end"><button type="button" class="icon-btn" id="focus-editor" aria-pressed="false" title="Agrandir l'éditeur" aria-label="Agrandir l'éditeur"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button></span>
             </div>
             <div id="py-message" class="py-message" role="alert" hidden></div>
-            <div id="py-editor"></div>
+            <div class="editor-stack"><div id="py-editor"></div></div>
+            <div class="pane-foot"><span id="pane-lang">Python</span><span id="py-lang-state" class="py-lang-state" aria-live="polite"></span><span>UTF-8</span></div>
         </section>
 
-        <section id="output-container" aria-label="Console">
+        <section id="output-container" aria-label="Console" data-view="console">
             <div id="control-button">
-                <button id="run-code" type="button" aria-label="Exécuter main.py" title="Exécuter main.py (Ctrl+Entrée)" disabled>Exécuter</button>
-                <button id="py-clear" type="button" aria-label="Effacer la console">Effacer</button>
+                <span class="pane-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m4 17 6-6-6-6M12 19h8"/></svg>Exécution</span>
                 <span id="py-status" class="py-status" role="status" aria-live="polite"></span>
+                <button id="run-code" type="button" aria-label="Exécuter main.py" title="Exécuter main.py (Ctrl+Entrée)" disabled>Exécuter</button>
             </div>
-            <div id="console" aria-label="Sortie du programme"></div>
+            <section class="console-dock" aria-label="Console">
+                <header class="console-head">
+                    <h3 class="console-title">Console</h3>
+                    <span class="count" id="console-count">0</span>
+                    <span class="console-ro">Sortie du programme</span>
+                    <span class="toolbar-spacer"></span>
+                    <button type="button" class="icon-btn" id="py-clear" title="Effacer la console" aria-label="Effacer la console"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14"/></svg></button>
+                </header>
+                <div id="console" aria-label="Sortie du programme"></div>
+            </section>
             <details id="py-stdin" class="py-stdin" hidden>
                 <summary>Entrée standard</summary>
                 <p>Ce navigateur ne permet pas de saisir pendant l'exécution : écrivez ici une ligne par appel à <code>input()</code>.</p>
@@ -93,78 +61,9 @@
     <input id="py-import-input" type="file" accept=".py,.txt,.json,.csv,.md,text/plain" multiple hidden>
 </main>
 
-<!-- Projets : même fenêtre que les éditeurs Web et TypeScript -->
-<div id="project-controls" class="custom-modal-overlay">
-    <div class="custom-modal">
-        <div class="custom-modal-header">
-            <h2 class="custom-modal-title">Projets</h2>
-            <button class="custom-modal-close" aria-label="Fermer">&times;</button>
-        </div>
-        <div class="custom-modal-body">
-            <form id="project-form" class="custom-form" novalidate>
-                <div class="project-current" id="project-current">
-                    <span class="project-current-dot" aria-hidden="true"></span>
-                    <span class="project-current-label" id="project-current-name" title="Projet en cours">…</span>
-                    <button type="button" class="project-icon-btn" id="rename-btn" title="Renommer le projet" aria-label="Renommer le projet">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>
-                    </button>
-                </div>
-                <div class="custom-input-row" id="rename-row" hidden>
-                    <input type="text" id="rename-input" maxlength="100" autocomplete="off" aria-label="Nouveau nom du projet">
-                    <button type="button" class="project-icon-btn confirm" id="rename-confirm" title="Valider le nouveau nom" aria-label="Valider le nouveau nom">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
-                    </button>
-                    <button type="button" class="project-icon-btn" id="rename-cancel" title="Annuler" aria-label="Annuler le renommage">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>
-                    </button>
-                </div>
-                <div id="rename-feedback" class="custom-feedback feedback-error" role="alert"></div>
-                <div id="rename-success" class="custom-feedback feedback-success" role="status">Projet renommé !</div>
-                <div class="custom-input-row"><select id="project-select" required aria-label="Projet"></select></div>
-                <div class="custom-input-row">
-                    <input type="text" id="create-project" placeholder="Nom du nouveau projet" autocomplete="off" aria-label="Nom du nouveau projet">
-                    <button type="button" class="custom-button" id="create-btn">Créer</button>
-                </div>
-                <div id="create-feedback" class="custom-feedback feedback-error">Nom vide ou déjà utilisé.</div>
-                <div id="create-success" class="custom-feedback feedback-success">Projet créé !</div>
-            </form>
-        </div>
-        <div class="custom-modal-footer">
-            <button type="button" class="custom-button delete" id="delete-btn">Supprimer ce projet</button>
-            <div id="delete-feedback" class="custom-feedback feedback-error">Il faut garder au moins un projet.</div>
-            <div id="delete-success" class="custom-feedback feedback-success">Projet supprimé.</div>
-        </div>
-    </div>
-</div>
+{% include "editor/_statusbar.html" with default_lang="Python" %}
 
-<!-- Zip : même fenêtre que l'éditeur Web -->
-<div id="zip-controls" class="custom-modal-overlay">
-    <div class="custom-modal">
-        <div class="custom-modal-header">
-            <h2 class="custom-modal-title">Import / export</h2>
-            <button class="custom-modal-close" aria-label="Fermer">&times;</button>
-        </div>
-        <div class="custom-modal-body">
-            <form id="zip-form" class="custom-form" novalidate>
-                <div id="import-block">
-                    <div class="custom-input-row">
-                        <label class="custom-file-label">Choisir un .zip<input type="file" id="zip-input" class="custom-file-input" accept=".zip"></label>
-                        <span class="custom-file-name" id="file-name">Aucun fichier</span>
-                        <button type="button" class="custom-button import" id="import-btn">Importer</button>
-                    </div>
-                    <div id="import-feedback" class="custom-feedback feedback-error" role="alert">Sélectionnez un fichier .zip.</div>
-                    <div id="import-success" class="custom-feedback feedback-success" role="status">Archive importée !</div>
-                    <div id="import-skipped" class="custom-feedback feedback-warning"></div>
-                </div>
-                {% include "editor/_import_conflict.html" %}
-            </form>
-        </div>
-        <div class="custom-modal-footer">
-            <button type="button" class="custom-button export" id="export-btn">Exporter le projet (.zip)</button>
-            <div id="export-feedback" class="custom-feedback feedback-error" role="alert"></div>
-        </div>
-    </div>
-</div>
+{% include "editor/_modal_projects.html" %}
 {% endblock %}
 
 {% block scripts %}

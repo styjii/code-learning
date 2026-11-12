@@ -1,6 +1,7 @@
 import { state } from "./state.js";
 import { JsSnippetLoader } from "../editors/JsSnippetLoader.js";
 import { TsOptionsManager } from "./TsOptionsManager.js";
+import { defineMonacoThemes, monacoThemeName } from "../ui/monaco-theme.js";
 
 /**
  * Initialise les trois éditeurs Monaco (html, css, ts) et gère le changement d'onglet.
@@ -23,6 +24,7 @@ export class TsEditorManager {
         });
 
         require(["vs/editor/editor.main"], async () => {
+            defineMonacoThemes(monaco);
             if (window.emmetMonaco) {
                 emmetMonaco.emmetHTML(monaco, ["html"]);
                 emmetMonaco.emmetCSS(monaco, ["css"]);
@@ -35,11 +37,11 @@ export class TsEditorManager {
                 // Le thème suit celui du site (et n'est pas une préférence enregistrée côté serveur).
                 const commonOptions = {
                     ...baseOptions,
-                    theme: document.documentElement.dataset.theme === "light" ? "vs" : "vs-dark",
+                    theme: monacoThemeName(),
                 };
 
                 document.addEventListener("themechange", (event) => {
-                    monaco.editor.setTheme(event.detail === "light" ? "vs" : "vs-dark");
+                    monaco.editor.setTheme(monacoThemeName(event.detail));
                 });
 
                 // Options du compilateur avant la création du modèle : la première vérification les utilise.

@@ -1,6 +1,7 @@
 import { state } from "../state/state.js";
 import { JsSnippetLoader } from "./JsSnippetLoader.js";
 import { EditorConfigManager } from "./EditorConfigManager.js";
+import { defineMonacoThemes, monacoThemeName } from "../ui/monaco-theme.js";
 
 /**
  * Manages initialization and interaction with Monaco Editor instances,
@@ -53,6 +54,7 @@ export class MonacoEditorManager {
         });
 
         require(["vs/editor/editor.main"], async () => {
+            defineMonacoThemes(monaco);
             if (window.emmetMonaco) {
                 emmetMonaco.emmetHTML(monaco, ["html"]);
                 emmetMonaco.emmetCSS(monaco, ["css"]);
@@ -65,12 +67,12 @@ export class MonacoEditorManager {
                 // Le thème suit celui du site (et n'est pas une préférence enregistrée côté serveur).
                 const commonOptions = {
                     ...baseOptions,
-                    theme: document.documentElement.dataset.theme === "light" ? "vs" : "vs-dark",
+                    theme: monacoThemeName(),
                 };
 
                 document.addEventListener("themechange", (event) => {
-                    const monacoTheme = event.detail === "light" ? "vs" : "vs-dark";
-                    monaco.editor.setTheme(monacoTheme);
+                    
+                    monaco.editor.setTheme(monacoThemeName(event.detail));
                 });
 
                 state.editors.html = monaco.editor.create(document.getElementById("html-editor"), {

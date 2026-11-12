@@ -1,4 +1,5 @@
 import { state } from "../state/state.js";
+import { Workbench } from "../ui/Workbench.js";
 import { PreviewStorage } from "./PreviewStorage.js";
 import { CODELAB_JS } from "./api.js";
 
@@ -59,7 +60,7 @@ export class PreviewManager {
      */
     static toggleLive(e) {
         state.autoLive = !state.autoLive;
-        e.currentTarget.textContent = `Auto : ${state.autoLive ? "activé" : "désactivé"}`;
+        Workbench.setLive(state.autoLive);
         if (state.autoLive) this.updateCdnLinks();
     }
 

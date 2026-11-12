@@ -8,6 +8,8 @@ import { SettingsBinder } from "./projects/SettingsBinder.js";
 import { ConsoleManager } from "./console/ConsoleManager.js";
 import { PreviewStorage } from "./projects/PreviewStorage.js";
 import { bindAllEvents } from "./events/index.js";
+import { Workbench } from "./ui/Workbench.js";
+import { StatusBar } from "./ui/StatusBar.js";
 
 patchPassiveTouchStart();
 
@@ -23,10 +25,12 @@ document.addEventListener("DOMContentLoaded", () => {
         EditorBinder.bindChangeListeners();
         configManager.registerCommands();
         editorManager.switchTab("html");
+        StatusBar.init(window.monaco);
     });
 
     SettingsBinder.bindListeners();
     bindAllEvents();
+    Workbench.init();
     window.addEventListener("message", ConsoleManager.handleMessage);
     window.addEventListener("message", PreviewStorage.handleMessage);
     ConsoleManager.init();

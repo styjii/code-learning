@@ -1,4 +1,5 @@
 import { state } from "./state.js";
+import { Workbench } from "../ui/Workbench.js";
 import { compileTypeScript } from "./TsCompiler.js";
 import { ConsoleManager } from "../console/ConsoleManager.js";
 import { PreviewStorage } from "../projects/PreviewStorage.js";
@@ -34,9 +35,7 @@ export class TsPreviewManager {
 
     /** Affiche la console à la place de l'aperçu. */
     static showConsole() {
-        document.getElementById("console").style.display = "block";
-        document.getElementById("output").style.display = "none";
-        document.getElementById("display-console")?.setAttribute("aria-pressed", "true");
+        Workbench.setView("console");
     }
 
     /**
@@ -93,7 +92,7 @@ export class TsPreviewManager {
      */
     static toggleLive(e) {
         state.autoLive = !state.autoLive;
-        e.currentTarget.textContent = `Auto : ${state.autoLive ? "activé" : "désactivé"}`;
+        Workbench.setLive(state.autoLive);
         if (state.autoLive) this.updateCdnLinks();
     }
 

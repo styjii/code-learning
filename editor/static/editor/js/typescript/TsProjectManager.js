@@ -1,4 +1,5 @@
 import { state } from "./state.js";
+import { Workbench } from "../ui/Workbench.js";
 import { TsPreviewManager } from "./TsPreviewManager.js";
 import { PreviewStorage } from "../projects/PreviewStorage.js";
 import { CODELAB_TS, projectsUrl } from "../projects/api.js";
@@ -78,6 +79,7 @@ export class TsProjectManager {
     static scheduleSave(delay = 600) {
         clearTimeout(state.saveTimer);
         state.saveTimer = setTimeout(() => this.save(), delay);
+        Workbench.setSaveState("Modifications non enregistrées…");
     }
 
     /** Exécute immédiatement une sauvegarde en attente. */
@@ -96,6 +98,7 @@ export class TsProjectManager {
     static async save(projectName = state.currentProject) {
         if (!projectName) return;
         state.saveTimer = null;
+        Workbench.setSaveState("Enregistrement…");
 
         const content = {
             name: projectName,
@@ -119,8 +122,10 @@ export class TsProjectManager {
             if (!res.ok) throw new Error("Failed to save project");
             const data = await res.json();
             state.projects[projectName] = this.#toState(content, data.id);
+            Workbench.setSaveState("Toutes les modifications sont enregistrées");
         } catch (err) {
             console.error("Error saving project:", err);
+            Workbench.setSaveState("Enregistrement impossible");
         }
     }
 

@@ -1,4 +1,5 @@
 import { state } from "../state/state.js";
+import { Workbench } from "../ui/Workbench.js";
 import { PreviewManager } from "./PreviewManager.js";
 import { PreviewStorage } from "./PreviewStorage.js";
 import { CODELAB_JS, projectsUrl } from "./api.js";
@@ -61,6 +62,7 @@ export class ProjectManager {
     static scheduleSave(delay = 600) {
         clearTimeout(state.saveTimer);
         state.saveTimer = setTimeout(() => this.save(), delay);
+        Workbench.setSaveState("Modifications non enregistrées…");
     }
 
     /** Exécute immédiatement une sauvegarde en attente. */
@@ -81,6 +83,7 @@ export class ProjectManager {
     static async save(projectName = state.currentProject) {
         if (!projectName) return;
         state.saveTimer = null;
+        Workbench.setSaveState("Enregistrement…");
 
         const content = {
             name: projectName,
@@ -105,8 +108,10 @@ export class ProjectManager {
             if (!res.ok) throw new Error("Failed to save project");
             const data = await res.json();
             state.projects[projectName] = { ...content, id: data.id };
+            Workbench.setSaveState("Toutes les modifications sont enregistrées");
         } catch (err) {
             console.error("Error saving project:", err);
+            Workbench.setSaveState("Enregistrement impossible");
         }
     }
 

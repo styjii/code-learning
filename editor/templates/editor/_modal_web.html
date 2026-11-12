@@ -1,0 +1,33 @@
+{# Fenêtres propres aux éditeurs à aperçu (Web et TypeScript) : délai de l'aperçu automatique, bibliothèques CDN. #}
+<div id="preview-controls" class="custom-modal-overlay">
+    <div class="custom-modal">
+        <div class="custom-modal-header">
+            <h2 class="custom-modal-title">Aperçu automatique</h2>
+            <button class="custom-modal-close" aria-label="Fermer">&times;</button>
+        </div>
+        <div class="custom-modal-body">
+            <div class="custom-stack">
+                <label for="delay">Délai avant mise à jour : <strong id="delay-value">500ms</strong></label>
+                <input type="range" id="delay" min="100" max="2000" step="100" value="500">
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="head-controls" class="custom-modal-overlay">
+    <div class="custom-modal">
+        <div class="custom-modal-header">
+            <h2 class="custom-modal-title">Bibliothèques (CDN)</h2>
+            <button class="custom-modal-close" aria-label="Fermer">&times;</button>
+        </div>
+        <div class="custom-modal-body">
+            <div class="switch-wrapper">
+                <label class="switch">
+                    <input type="checkbox" id="bootstrapCdnSwitch">
+                    <span class="slider"></span>
+                </label>
+                <label for="bootstrapCdnSwitch">Utiliser Bootstrap</label>
+            </div>
+        </div>
+    </div>
+</div>

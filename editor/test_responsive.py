@@ -84,3 +84,58 @@ class EditorStylesheetsResponsiveTests(TestCase):
 
     def test_modals_never_exceed_the_screen(self):
         self.assertRegex(self.css("modal.css"), r"\.custom-modal\s*\{[^}]*max-height:\s*100%")
+
+
+class EditorWorkbenchMarkupTests(TestCase):
+    """Nouvelle interface : onglets de fichiers, console intégrée, barre d'état et menu Projet dans les trois éditeurs."""
+
+    def setUp(self):
+        user = get_user_model().objects.create_user("bob", password="Mot-de-passe-solide-42")
+        self.client = Client()
+        self.client.force_login(user)
+
+    def html(self, name):
+        return self.client.get(reverse("editor", args=[name])).content.decode()
+
+    def test_every_editor_has_the_shared_workbench_parts(self):
+        for name in EDITOR_URLS:
+            with self.subTest(page=name):
+                page = self.html(name)
+                for needle in ('class="file-tabs', 'class="console-dock"', 'class="status-bar"', 'class="drop-menu project-menu"',
+                               'id="current-project"', 'id="focus-editor"', 'id="restart-btn"', 'id="console"', 'id="run-code"'):
+                    self.assertIn(needle, page)
+
+    def test_project_menu_reuses_the_existing_modals(self):
+        for name in EDITOR_URLS:
+            with self.subTest(page=name):
+                page = self.html(name)
+                for target in ("#project-controls", "#zip-controls"):
+                    self.assertIn(f'data-target="{target}"', page)
+                for action in ("new-project", "rename-project", "export-zip", "delete-project"):
+                    self.assertIn(f'data-action="{action}"', page)
+
+    def test_preview_editors_keep_auto_preview_and_cdn_controls(self):
+        for name in ("codelab-js", "codelab-ts"):
+            with self.subTest(page=name):
+                page = self.html(name)
+                for needle in ('id="live-code"', 'role="switch"', 'id="delay"', 'id="bootstrapCdnSwitch"', 'data-target="#head-controls"',
+                               'id="display-console"', 'id="display-preview"', 'id="reload-preview"'):
+                    self.assertIn(needle, page)
+
+    def test_python_has_no_preview_parts(self):
+        page = self.html("codelab-py")
+        for needle in ('id="live-code"', 'id="bootstrapCdnSwitch"', 'id="output"'):
+            self.assertNotIn(needle, page)
+        self.assertIn('id="py-save-state"', page)
+
+    def test_the_file_tabs_keep_the_ids_used_by_the_scripts(self):
+        self.assertIn('id="js-tab"', self.html("codelab-js"))
+        for tab in ("html-tab", "css-tab", "ts-tab"):
+            self.assertIn(f'id="{tab}"', self.html("codelab-ts"))
+
+    def test_console_rows_are_only_restyled_inside_the_editor_dock(self):
+        # chrome-console.css est partagé avec les blocs exécutables des cours : l'habillage « heure + niveau » reste confiné.
+        editor_css = (CSS_DIR / "editor.css").read_text(encoding="utf-8")
+        chrome_css = (CSS_DIR / "chrome-console.css").read_text(encoding="utf-8")
+        self.assertIn(".console-dock .cc-row", editor_css)
+        self.assertNotIn("data-time", chrome_css)

@@ -184,7 +184,7 @@ export class PythonProjectManager {
             if (res.status === 404) throw new Error("Ce projet n'existe plus. Rechargez la page.");
             if (!res.ok) throw new Error("Failed to save project");
             project.files = files;
-            this.app.setSaveState("Enregistré");
+            this.app.setSaveState("Toutes les modifications sont enregistrées");
             return true;
         } catch (err) {
             console.error("Error saving project:", err);

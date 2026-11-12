@@ -1,45 +1,92 @@
-/* Éditeur : structure générale de la page.
+/* Éditeur : palette, structure générale de la page et en-tête.
  *
  * Régimes d'affichage (les trois éditeurs partagent ce fichier) :
- *   < 600 px   téléphone portrait : en-tête sur deux lignes, barre d'onglets en bas (navigation.css)
- *   600–1023   grand téléphone / tablette : en-tête sur une ligne, code et aperçu empilés
- *   >= 1024    ordinateur : code et aperçu côte à côte
- *   paysage bas (hauteur <= 600 px) : côte à côte aussi, barre latérale à gauche, en-tête compact
+ *   < 600 px   téléphone portrait : en-tête sur deux lignes, code et résultat empilés
+ *   600–1023   grand téléphone / tablette : en-tête sur une ligne, code et résultat empilés
+ *   >= 1024    ordinateur : code et résultat côte à côte
+ *   paysage bas (hauteur <= 600 px) : côte à côte aussi, en-tête compact
  */
 
 html, body.editor-app { height: 100%; }
 
-/* ---- Jetons de taille ----
- * --hdr-h : hauteur d'une ligne d'en-tête ; --tap : côté minimal d'une cible tactile.
- * Écran tactile : 44 px (recommandation Apple / WCAG 2.5.5) ; souris : plus dense. */
+/* ---- Palette de l'éditeur : remplace les variables du site à l'intérieur de la page ---- */
+[data-theme="dark"] body.editor-app {
+    --bg: #0f0f12;
+    --surface: #131317;
+    --surface-2: #1a1a20;
+    --surface-3: #24242d;
+    --text: #dcdce5;
+    --text-strong: #f5f5f9;
+    --muted: #9c9cad;
+    --faint: #6e6e7d;
+    --border: #25252d;
+    --border-strong: #353541;
+    --accent: #b9a1f7;
+    --accent-hover: #cbb8fb;
+    --accent-soft: #2c2549;
+    --accent-contrast: #17112b;
+    --banner-bg: #1b182e;
+    --banner-border: #2e2852;
+    --ok: #4ade80;
+    --warn: #f2c14e;
+    --danger: #ff7a85;
+    --line-active: #1d1a30;
+}
+
+[data-theme="light"] body.editor-app {
+    --bg: #f6f5fa;
+    --surface: #ffffff;
+    --surface-2: #f1eff8;
+    --surface-3: #e7e4f1;
+    --text: #25222f;
+    --text-strong: #12101a;
+    --muted: #605b72;
+    --faint: #8d88a1;
+    --border: #e1deec;
+    --border-strong: #cdc9de;
+    --accent: #6a4fd8;
+    --accent-hover: #563ec0;
+    --accent-soft: #ebe6fd;
+    --accent-contrast: #ffffff;
+    --banner-bg: #f1edff;
+    --banner-border: #dcd3fb;
+    --ok: #1a9d4b;
+    --warn: #a86b00;
+    --danger: #d6313f;
+    --line-active: #f1edff;
+}
+
+/* ---- Jetons de taille ---- */
 body.editor-app {
-    --hdr-h: 48px;
+    --hdr-h: 56px;
     --tap: 40px;
-    --bar-h: 52px;          /* barre d'onglets du bas (téléphone) */
+    --tabs-h: 46px;
+    --bar-h: 56px;
+    --status-h: 30px;
     display: flex;
     flex-direction: column;
     overflow: hidden;
     /* base.css impose min-height: 100vh, qui dépasse la zone visible sur mobile (barre d'adresse) :
-     * la barre du bas passerait sous l'interface du navigateur. dvh suit la zone réellement visible. */
+     * dvh suit la zone réellement visible. */
     min-height: 0;
     height: 100vh;
     height: 100dvh;
+    background: var(--bg);
+    color: var(--text);
     font-size: 0.95rem;
     line-height: 1.5;
 }
 
 @media (pointer: coarse) {
-    body.editor-app { --hdr-h: 52px; --tap: 44px; --bar-h: 56px; }
+    body.editor-app { --hdr-h: 56px; --tap: 44px; --tabs-h: 48px; --bar-h: 58px; }
 }
 
-/* 320 px : logo + menus + 3 icônes doivent tenir sur une ligne, 40 px suffisent. */
 @media (max-width: 359.98px) {
     body.editor-app { --tap: 40px; }
 }
 
-/* Paysage bas : chaque pixel de hauteur compte. */
 @media (max-height: 600px) and (orientation: landscape) {
-    body.editor-app { --hdr-h: 44px; --tap: 40px; --bar-h: 48px; }
+    body.editor-app { --hdr-h: 48px; --tap: 40px; --tabs-h: 42px; --bar-h: 50px; --status-h: 26px; }
 }
 
 *:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
@@ -49,91 +96,87 @@ body.editor-app {
     position: relative;
     z-index: 1020;
     display: flex;
-    flex-wrap: wrap;                 /* filet de sécurité : jamais de débordement, au pire une 2e ligne */
     align-items: center;
-    gap: 0 0.5rem;
+    gap: 0.75rem;
     min-height: calc(var(--hdr-h) + env(safe-area-inset-top, 0px));
-    padding: env(safe-area-inset-top, 0px) max(0.75rem, env(safe-area-inset-right, 0px)) 0 max(0.75rem, env(safe-area-inset-left, 0px));
+    padding: env(safe-area-inset-top, 0px) max(1rem, env(safe-area-inset-right, 0px)) 0 max(1rem, env(safe-area-inset-left, 0px));
     flex-shrink: 0;
     border-bottom: 1px solid var(--border);
     background: var(--surface);
 }
 
-.app-header .brand { flex-shrink: 0; justify-content: center; min-width: var(--tap); min-height: var(--tap); padding-inline: 0.15rem; }
+.app-header .brand { flex-shrink: 0; justify-content: center; min-width: var(--tap); min-height: var(--tap); color: var(--accent); }
 .app-header .brand svg { width: 28px; height: 28px; }
 
-/* Les icônes d'action suivent la taille tactile (base.css : 38 px). */
-.app-header .icon-btn { width: var(--tap); height: var(--tap); }
-.topbar-actions { flex-shrink: 0; gap: 2px; }
+.app-header .icon-btn { width: var(--tap); height: var(--tap); flex-shrink: 0; }
+.app-header .icon-btn[aria-expanded="true"] { background: var(--accent-soft); color: var(--accent); }
+.app-header .icon-btn-filled { background: var(--surface-3); color: var(--text-strong); }
 
-.project-chip {
-    display: none;
-    align-items: center;
-    gap: 0.5rem;
-    flex: 0 1 auto;
-    min-width: 0;                    /* laisse le nom s'abréger (…) au lieu de pousser les boutons */
-    max-width: 260px;
-    padding: 0.2rem 0.7rem;
-    border: 1px solid var(--border);
-    border-radius: 999px;
-    background: var(--surface-2);
-    color: var(--muted);
-    font-size: 0.82rem;
-}
+.doc-title { display: flex; align-items: center; gap: 0.5rem; min-width: 0; flex: 0 1 auto; font-size: 1.05rem; }
+.doc-kind { color: var(--text-strong); font-weight: 500; white-space: nowrap; }
+.doc-sep { color: var(--faint); }
+.doc-name { min-width: 0; overflow: hidden; color: var(--text-strong); text-overflow: ellipsis; white-space: nowrap; max-width: 24ch; }
+.doc-rename { width: 34px !important; height: 34px !important; }
+.doc-rename svg { width: 16px; height: 16px; }
 
-.project-chip .dot { width: 7px; height: 7px; flex-shrink: 0; border-radius: 50%; background: #2da44e; }
-.project-chip #current-project { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.header-modes { display: flex; align-items: center; gap: 0.25rem; margin: 0 auto; min-width: 0; }
+.mode-label { padding: 0 0.9rem; color: var(--muted); }
 
-@media (min-width: 600px) { .project-chip { display: inline-flex; } }
-
-/* Le mot « Éditeur » n'apparaît que lorsqu'il y a la place : le logo renvoie déjà à l'accueil. */
-@media (max-width: 899.98px) { .app-header .brand-name { display: none; } }
-
-/* Commutateur Web | Python | TypeScript */
-.mode-switch {
-    display: inline-flex;
-    flex-shrink: 0;
-    padding: 2px;
-    border: 1px solid var(--border);
-    border-radius: 999px;
-    background: var(--surface-2);
-    font-size: 0.82rem;
-}
+.mode-switch { display: inline-flex; flex-shrink: 0; gap: 2px; font-size: 0.95rem; }
 .mode-switch a {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-height: 28px;
-    padding: 0 0.8rem;
-    border-radius: 999px;
+    min-height: 36px;
+    padding: 0 1rem;
+    border-radius: 9px;
     color: var(--muted);
     text-decoration: none;
     white-space: nowrap;
 }
-.mode-switch a:hover { color: var(--text-strong); }
-.mode-switch a[aria-current="page"] { background: var(--accent); color: var(--accent-contrast); }
-@media (pointer: coarse) { .mode-switch a { min-height: 36px; } }
+.mode-switch a:hover { color: var(--text-strong); background: var(--surface-2); }
+.mode-switch a[aria-current="page"] { background: var(--accent-soft); color: var(--text-strong); }
+
+.header-end { display: flex; align-items: center; gap: 0.35rem; flex-shrink: 0; margin-left: auto; }
+.header-modes + .header-end { margin-left: 0; }
+.topbar-actions { display: flex; align-items: center; gap: 2px; margin: 0; padding-right: 0.5rem; }
+
+/* « Toutes les modifications sont enregistrées » */
+.save-state { display: inline-flex; align-items: center; gap: 0.5rem; padding-right: 0.6rem; color: var(--muted); font-size: 0.88rem; white-space: nowrap; }
+.save-state::before { content: ""; width: 8px; height: 8px; flex-shrink: 0; border-radius: 50%; background: var(--ok); }
+.save-state[data-state="pending"]::before { background: var(--warn); }
+.save-state[data-state="error"]::before { background: var(--danger); }
+.save-state[data-state="error"] { color: var(--danger); }
+
+/* L'espace se resserre : le texte de l'état d'enregistrement s'efface avant le reste (le point reste). */
+@media (max-width: 1279.98px) { .mode-label { display: none; } }
+@media (max-width: 1099.98px) { .save-state { font-size: 0; gap: 0; } }
+@media (max-width: 899.98px) { .doc-kind, .doc-sep { display: none; } }
 
 /* ---- Téléphone portrait : deux lignes ----
- *   ligne 1 : logo | menus ............ actions
- *   ligne 2 : commutateur d'éditeur sur toute la largeur
- * Une seule ligne ne peut pas contenir le logo, le commutateur (~210 px), les menus et 3 icônes sur 320 px :
- * les derniers boutons sortaient de l'écran et devenaient inaccessibles. */
+ *   ligne 1 : logo | projet ........ état | engrenage | •••
+ *   ligne 2 : commutateur d'éditeur sur toute la largeur | raccourcis */
 @media (max-width: 599.98px) {
     .app-header {
         display: grid;
-        grid-template-columns: auto 1fr auto;
-        grid-template-areas: "brand nav actions" "switch switch switch";
+        grid-template-columns: auto minmax(0, 1fr) auto auto auto;
+        grid-template-areas: "brand title save project more" "modes modes modes modes actions";
         align-items: center;
         gap: 0 0.25rem;
         padding-inline: max(0.5rem, env(safe-area-inset-left, 0px)) max(0.5rem, env(safe-area-inset-right, 0px));
         padding-bottom: 6px;
     }
+    .header-end { display: contents; }
     .app-header .brand { grid-area: brand; }
-    .app-header .nav-bar { grid-area: nav; min-width: 0; }
-    .app-header .topbar-actions { grid-area: actions; }
-    .app-header .mode-switch { grid-area: switch; display: flex; width: 100%; margin-top: 2px; }
-    .app-header .mode-switch a { flex: 1; min-height: 34px; padding: 0 0.4rem; }
+    .doc-title { grid-area: title; font-size: 1rem; }
+    .doc-name { max-width: none; }
+    .save-state { grid-area: save; padding-right: 0.25rem; }
+    .drop-project { grid-area: project; }
+    .drop-more { grid-area: more; }
+    .header-modes { grid-area: modes; margin: 0; width: 100%; }
+    .topbar-actions { grid-area: actions; padding-right: 0; }
+    .mode-switch { display: flex; width: 100%; }
+    .mode-switch a { flex: 1; min-height: 36px; padding: 0 0.4rem; }
 }
 
 /* ------------------------------ Espace de travail ------------------------------ */
@@ -143,6 +186,5 @@ body.editor-app {
     flex: 1;
     min-height: 0;
     overflow: hidden;
-    padding-right: env(safe-area-inset-right, 0px);   /* encoche en paysage */
+    padding-inline: env(safe-area-inset-left, 0px) env(safe-area-inset-right, 0px);
 }
-body.py-app .workspace { padding-left: env(safe-area-inset-left, 0px); }   /* pas de barre latérale : le contenu touche le bord */

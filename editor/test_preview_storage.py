@@ -56,7 +56,9 @@ class PreviewPageTests(TestCase):
     def test_iframes_keep_their_sandbox_attribute(self):
         for template in ("editor/codelab-js.html", "editor/codelab-ts.html"):
             with self.subTest(template=template):
-                html = (Path(settings.BASE_DIR) / "editor" / "templates" / template).read_text(encoding="utf-8")
+                # L'iframe d'aperçu vit dans le partiel partagé par les deux éditeurs : on lit la page et ses partiels.
+                folder = Path(settings.BASE_DIR) / "editor" / "templates" / "editor"
+                html = "".join((folder / name).read_text(encoding="utf-8") for name in (Path(template).name, "_pane_output.html"))
                 self.assertIn('sandbox="allow-scripts allow-modals allow-forms"', html)
                 for dangerous in ("allow-same-origin", "allow-top-navigation", "allow-popups"):
                     self.assertNotIn(dangerous, html)

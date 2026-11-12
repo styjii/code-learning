@@ -9,6 +9,8 @@ import { TsEditorBinder } from "./TsEditorBinder.js";
 import { TsProjectManager } from "./TsProjectManager.js";
 import { TsSettingsBinder } from "./TsSettingsBinder.js";
 import { bindAllEvents } from "./events/index.js";
+import { Workbench } from "../ui/Workbench.js";
+import { StatusBar } from "../ui/StatusBar.js";
 
 patchPassiveTouchStart();
 
@@ -26,10 +28,12 @@ document.addEventListener("DOMContentLoaded", () => {
         TsEditorBinder.bindChangeListeners();
         configManager.registerCommands();
         editorManager.switchTab("html");
+        StatusBar.init(window.monaco);
     });
 
     TsSettingsBinder.bindListeners();
     bindAllEvents(editorManager);
+    Workbench.init();
     window.addEventListener("message", ConsoleManager.handleMessage);
     window.addEventListener("message", PreviewStorage.handleMessage);
     ConsoleManager.init();

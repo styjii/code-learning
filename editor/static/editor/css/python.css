@@ -98,7 +98,7 @@ body.py-app #console.cc { font-size: 13px; }
 .py-add:hover:not(:disabled) { background: var(--surface-3); color: var(--text-strong); }
 .py-add:disabled { opacity: 0.4; cursor: not-allowed; }
 
-.py-save-state { margin-left: auto; align-self: center; padding: 0 0.8rem; color: var(--muted); font-size: 0.75rem; white-space: nowrap; }
+
 .py-lang-state { align-self: center; padding: 0 0.8rem 0 0; color: var(--muted); font-size: 0.75rem; white-space: nowrap; }
 .py-lang-state.is-failed { color: #cf222e; cursor: help; }
 
@@ -147,7 +147,27 @@ body.py-app #console.cc { font-size: 13px; }
 }
 
 @media (max-width: 599.98px) {
-    .py-save-state, .py-lang-state { display: none; }
+    .py-lang-state { display: none; }
     .py-tab-label { padding: 0 0.6rem; }
     .py-message { padding-inline: 0.5rem; }
 }
+
+/* ===== Nouveau design : onglets alignés sur .file-tabs, console intégrée ===== */
+.py-tabbar.file-tabs { align-items: stretch; background: var(--surface); }
+#py-tabs { flex: 0 1 auto; }
+.py-tab { background: transparent; border-right: 0; }
+.py-tab:hover { background: var(--surface-2); }
+.py-tab.is-active { background: transparent; }
+.py-tab.is-active::after { inset: auto 0 0 0; }
+.py-tab-label { gap: 0.6rem; padding: 0 0.6rem 0 1.1rem; font-size: 0.95rem; }
+.py-tab-label::before { content: "py"; font: 700 0.68rem/1 var(--font-mono); color: #5aa9ff; }
+.py-tab[data-name$=".json"] .py-tab-label::before { content: "{}"; color: #f2d04e; }
+.py-tab:not([data-name$=".py"]):not([data-name$=".json"]) .py-tab-label::before { content: "#"; color: var(--muted); }
+.py-add { border-right: 0; }
+.py-message { margin: 10px 14px 0; border: 1px solid var(--banner-border); border-radius: 10px; background: var(--banner-bg); }
+.py-message.is-error { border: 1px solid #5c1f24; }
+body.py-app #output-container { background: var(--surface); }
+body.py-app .console-dock { flex: 1 1 0; max-height: none; border-top: 0; }
+body.py-app #control-button .py-status { margin-left: auto; }
+body.py-app #run-code { border-radius: 11px; }
+.py-stdin { background: var(--surface); }
