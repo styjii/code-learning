@@ -1,63 +1,43 @@
-# Cours complet de React : du premier composant aux Server Components
+# React — Cours complet
 
-> Cours structuré en 33 modules. Chaque module contient : **objectifs**, **cours détaillé** (définitions, mécanismes, exemples de code), **pièges courants**, **points à retenir** et **exercices**.
-> Le contenu couvre React jusqu'à la série **19.x** (hooks historiques, Actions, `use`, `useEffectEvent`, `<Activity>`, React Compiler, Server Components). L'API évolue : en cas de doute, la référence reste <https://react.dev>.
+*Cours magistral et module d'apprentissage exhaustif, fondé sur le plan « Cours complet de React : du premier composant aux Server Components » — React 19.x*
 
----
+## Avant de commencer : comment utiliser ce cours
 
-## Table des matières
+Ce cours développe, chapitre par chapitre, l'intégralité du plan en **34 chapitres**, regroupés en cinq parties : **Fondamentaux** (1 à 10), **Hooks et architecture des composants** (11 à 15), **Performance, rendu avancé et serveur** (16 à 24), **Données, navigation, état et styles** (25 à 28) et **Qualité et essentiels** (29 à 34).
 
-1. [Introduction](#1-introduction)
-2. [Mise en place](#2-mise-en-place)
-3. [JSX](#3-jsx)
-4. [Composants](#4-composants)
-5. [Props](#5-props)
-6. [State](#6-state)
-7. [Gestion des événements](#7-gestion-des-événements)
-8. [Rendu conditionnel](#8-rendu-conditionnel)
-9. [Listes et clés](#9-listes-et-clés)
-10. [Formulaires](#10-formulaires)
-11. [Hooks](#11-hooks)
-12. [Hooks personnalisés](#12-hooks-personnalisés)
-13. [Context API](#13-context-api)
-14. [Refs et accès au DOM](#14-refs-et-accès-au-dom)
-15. [Composition et patterns](#15-composition-et-patterns)
-16. [Performance et optimisation](#16-performance-et-optimisation)
-17. [Suspense et chargement différé](#17-suspense-et-chargement-différé)
-18. [Error Boundaries](#18-error-boundaries)
-19. [Portals](#19-portals)
-20. [Fragments](#20-fragments)
-21. [Strict Mode](#21-strict-mode)
-22. [Concurrent Rendering](#22-concurrent-rendering)
-23. [Server Components et Actions](#23-server-components-et-actions)
-24. [Composants classes (legacy)](#24-composants-classes-legacy)
-25. [Récupération de données](#25-récupération-de-données)
-26. [Routage](#26-routage)
-27. [Gestion d'état global](#27-gestion-détat-global)
-28. [Styles](#28-styles)
-29. [Tests](#29-tests)
-30. [Accessibilité](#30-accessibilité)
-31. [TypeScript avec React](#31-typescript-avec-react)
-32. [Bonnes pratiques](#32-bonnes-pratiques)
-33. [Écosystème et frameworks](#33-écosystème-et-frameworks)
-34. [Glossaire et ressources](#34-glossaire-et-ressources)
+Chaque chapitre suit la même trame : *objectifs d'apprentissage → notions et définitions → exemples de code commentés → pièges fréquents → synthèse*.
+
+**Conventions de lecture**
+
+- Les exemples sont écrits en **JavaScript moderne (JSX)** ; le chapitre 31 présente **TypeScript avec React**. Chaque exemple est volontairement **autonome** et les imports nécessaires sont indiqués.
+- Le cours enseigne le React **actuel** (composants fonctions, Hooks, Actions, `use`, Server Components, React Compiler) **et** explique l'ancien (composants classes, cycle de vie, API historiques) pour que vous sachiez lire du code existant.
+- Le contenu couvre React jusqu'à la série **19.x** (dont `useEffectEvent` et `<Activity>`). L'API évolue : en cas de doute, la référence reste <https://react.dev>.
+- Les **mises en garde** sont signalées par le terme « piège » ; les notions les plus importantes sont en **gras**.
+
+**Plan du cours**
+
+| Partie | Chapitres |
+| --- | --- |
+| **I. Fondamentaux** | 1 Introduction · 2 Mise en place · 3 JSX · 4 Composants · 5 Props · 6 State · 7 Gestion des événements · 8 Rendu conditionnel · 9 Listes et clés · 10 Formulaires |
+| **II. Hooks et architecture des composants** | 11 Hooks · 12 Hooks personnalisés · 13 Context API · 14 Refs et accès au DOM · 15 Composition et patterns |
+| **III. Performance, rendu avancé et serveur** | 16 Performance et optimisation · 17 Suspense et chargement différé · 18 Error Boundaries · 19 Portals · 20 Fragments · 21 Strict Mode · 22 Concurrent Rendering · 23 Server Components et Actions · 24 Composants classes (héritage) |
+| **IV. Données, navigation, état et styles** | 25 Récupération de données · 26 Routage · 27 Gestion d'état global · 28 Styles |
+| **V. Qualité et essentiels** | 29 Tests · 30 Accessibilité · 31 TypeScript avec React · 32 Bonnes pratiques · 33 Écosystème et frameworks · 34 Glossaire et ressources |
+
+**Parcours conseillé** : lisez les chapitres 1 à 10 dans l'ordre (ils se construisent les uns sur les autres), puis les chapitres 11 à 15 ; choisissez librement dans les parties suivantes selon vos besoins.
 
 ---
 
-# 1. Introduction
+## 1. Introduction
 
-## 🎯 Objectifs
+**Objectifs d'apprentissage.** À la fin de ce chapitre, vous saurez : définir précisément ce qu'est React et ce qu'il n'est pas ; comprendre le problème que React résout par rapport à la manipulation directe du DOM ; maîtriser le modèle mental central : **UI = f(state)**, rendu, commit, réconciliation ; connaître l'histoire, les packages et les versions majeures.
 
-- Définir précisément ce qu'est React et ce qu'il n'est pas.
-- Comprendre le problème que React résout par rapport à la manipulation directe du DOM.
-- Maîtriser le modèle mental central : **UI = f(state)**, rendu, commit, réconciliation.
-- Connaître l'histoire, les packages et les versions majeures.
-
-## 1.1 Qu'est-ce que React ?
+### 1.1 Qu'est-ce que React ?
 
 **React** est une **bibliothèque JavaScript open source** destinée à construire des **interfaces utilisateur** (UI). Elle a été créée chez Facebook (aujourd'hui Meta) par Jordan Walke, utilisée en production dès 2011 pour le fil d'actualité, puis ouverte au public en 2013.
 
-### Bibliothèque ou framework ?
+#### Bibliothèque ou framework ?
 
 | Critère | Bibliothèque (React) | Framework (Angular, par exemple) |
 |---|---|---|
@@ -68,7 +48,7 @@
 
 React seul **ne fournit pas** : de routeur, de client HTTP, de gestion d'état global, de système de styles, d'outil de build. C'est pourquoi des **méta-frameworks** (Next.js, React Router v7 en mode framework, Expo…) existent : ils assemblent React avec ces briques. Depuis la documentation officielle actuelle, React recommande d'ailleurs de démarrer un nouveau projet avec un framework ou un outil de build comme Vite.
 
-### Ce que React fait
+#### Ce que React fait
 
 1. Décrit l'UI sous forme d'un **arbre de composants**.
 2. **Calcule** la différence entre deux états de l'UI.
@@ -76,9 +56,9 @@ React seul **ne fournit pas** : de routeur, de client HTTP, de gestion d'état g
 
 React est **agnostique de la cible** : le cœur (`react`) décrit les éléments et composants ; un **renderer** (`react-dom`, `react-native`, `react-pdf`, `ink`…) les traduit en sortie concrète.
 
-## 1.2 Le problème résolu : DOM impératif vs UI déclarative
+### 1.2 Le problème résolu : DOM impératif vs UI déclarative
 
-### Approche impérative (JavaScript « vanilla »)
+#### Approche impérative (JavaScript « vanilla »)
 
 On décrit **comment** modifier l'interface, étape par étape :
 
@@ -99,7 +79,7 @@ bouton.addEventListener('click', () => {
 
 Dès que l'application grossit, il faut synchroniser **à la main** l'état et le DOM. Chaque nouvelle fonctionnalité multiplie les cas : on oublie une mise à jour, l'interface devient incohérente (bugs d'état « fantômes »).
 
-### Approche déclarative (React)
+#### Approche déclarative (React)
 
 On décrit **à quoi** doit ressembler l'UI pour un état donné ; React se charge des transitions :
 
@@ -120,17 +100,17 @@ function Like() {
 
 Il n'y a plus de « mise à jour du DOM » dans votre code : seulement une **fonction** qui, pour un nombre de likes donné, retourne la description de l'interface.
 
-## 1.3 Les principes fondamentaux
+### 1.3 Les principes fondamentaux
 
-### 1.3.1 Déclaratif
+#### 1.3.1 Déclaratif
 
 Vous décrivez l'**état cible**, pas le chemin pour y arriver. Penser en React = lister les **états visuels** possibles d'un composant (vide, chargement, erreur, succès…) et décrire l'UI de chacun.
 
-### 1.3.2 Composants
+#### 1.3.2 Composants
 
 Un **composant** est une unité d'UI **isolée, réutilisable et composable**. Une application est un **arbre** de composants : `App` contient `Header`, `Main`, `Footer`, etc., qui contiennent eux-mêmes d'autres composants.
 
-### 1.3.3 Flux de données unidirectionnel (« one-way data flow »)
+#### 1.3.3 Flux de données unidirectionnel (« one-way data flow »)
 
 Les données descendent **du parent vers l'enfant** via les **props**. Un enfant ne modifie jamais directement les données du parent ; il appelle une **fonction** reçue en prop (callback), et c'est le parent qui change son état. Conséquence : le cheminement des données est **prévisible** et le débogage plus simple.
 
@@ -141,29 +121,29 @@ Les données descendent **du parent vers l'enfant** via les **props**. Un enfant
   Header    Profil
 ```
 
-### 1.3.4 UI = f(state)
+#### 1.3.4 UI = f(state)
 
 L'interface est une **fonction pure** de l'état (et des props / du contexte). Même entrée → même sortie. C'est la formule centrale de React.
 
-### 1.3.5 Pureté du rendu
+#### 1.3.5 Pureté du rendu
 
 Pendant le rendu, un composant ne doit **ni modifier** des variables externes **ni produire d'effets de bord** (requêtes, écriture DOM, timers). Cette contrainte permet à React d'appeler un composant plusieurs fois, de l'interrompre, de le rejouer ou de l'ignorer (rendu concurrent).
 
-### 1.3.6 Immutabilité
+#### 1.3.6 Immutabilité
 
 On ne **mute** pas les données du state ; on crée de **nouvelles valeurs**. React compare les références (`Object.is`) pour savoir si quelque chose a changé.
 
-### 1.3.7 « Learn once, write anywhere »
+#### 1.3.7 « Learn once, write anywhere »
 
 Les concepts (composants, props, state, hooks) sont identiques sur le web, le mobile (React Native), le serveur, etc.
 
-## 1.4 Virtual DOM, réconciliation et Fiber
+### 1.4 Virtual DOM, réconciliation et Fiber
 
-### Le coût du DOM
+#### Le coût du DOM
 
 Manipuler le DOM réel est relativement coûteux (recalcul de styles, layout, peinture). Les opérations isolées sont rapides, mais en faire beaucoup de façon non coordonnée dégrade les performances.
 
-### Le Virtual DOM
+#### Le Virtual DOM
 
 Le **Virtual DOM** est un **arbre d'objets JavaScript légers** (les « React elements ») décrivant l'UI désirée :
 
@@ -176,7 +156,7 @@ Le **Virtual DOM** est un **arbre d'objets JavaScript légers** (les « React el
 }
 ```
 
-### La réconciliation (« diffing »)
+#### La réconciliation (« diffing »)
 
 À chaque rendu, React obtient un **nouvel arbre** et le compare à l'**ancien** pour déterminer le **minimum de changements** à appliquer au DOM. Un algorithme général de comparaison d'arbres serait en O(n³) ; React utilise deux **heuristiques** pour obtenir du O(n) :
 
@@ -185,21 +165,21 @@ Le **Virtual DOM** est un **arbre d'objets JavaScript légers** (les « React el
 
 Si le type est identique, React **réutilise le nœud existant** et ne met à jour que les attributs qui ont changé.
 
-### React Fiber
+#### React Fiber
 
 **Fiber** est la réécriture du moteur de réconciliation (React 16). Chaque composant correspond à une **unité de travail** (un « fiber »). Le travail peut être **découpé, mis en pause, repris ou abandonné**, et chaque mise à jour reçoit une **priorité** (une saisie clavier est plus urgente qu'un graphique). C'est le socle du **rendu concurrent** (React 18+).
 
-## 1.5 Le cycle : déclencher, rendre, valider (commit)
+### 1.5 Le cycle : déclencher, rendre, valider (commit)
 
 React met à jour l'écran en **trois étapes**, que l'on compare souvent à un restaurant : le client **passe commande** (déclenchement), la cuisine **prépare** (rendu), le serveur **apporte le plat** (commit).
 
-### Étape 1 : Déclenchement (trigger)
+#### Étape 1 : Déclenchement (trigger)
 
 Deux causes :
 1. Le **rendu initial** (`root.render(<App />)`).
 2. Une **mise à jour d'état** (un `setState`, `dispatch`, etc.) du composant ou d'un de ses ancêtres.
 
-### Étape 2 : Rendu (render)
+#### Étape 2 : Rendu (render)
 
 React **appelle vos composants** pour obtenir leur JSX.
 - Au rendu initial : appel du composant racine, puis récursivement de tous les enfants.
@@ -207,17 +187,17 @@ React **appelle vos composants** pour obtenir leur JSX.
 
 Cette phase doit être **pure** : aucun effet de bord. Elle ne touche pas le DOM.
 
-### Étape 3 : Commit
+#### Étape 3 : Commit
 
 - Au rendu initial : React crée les nœuds DOM (`appendChild`).
 - Aux rendus suivants : React applique le **minimum d'opérations** pour que le DOM corresponde à la sortie du rendu.
 - React **ne modifie le DOM que si la sortie du rendu a changé** entre deux rendus.
 
-### Étape 4 (après le commit) : Effets et peinture
+#### Étape 4 (après le commit) : Effets et peinture
 
 Après le commit, le navigateur **peint** l'écran. Les **effets** (`useEffect`) s'exécutent généralement **après** la peinture ; `useLayoutEffect` s'exécute **avant** la peinture, juste après la mise à jour du DOM.
 
-### Le state comme « instantané » (snapshot)
+#### Le state comme « instantané » (snapshot)
 
 Chaque rendu est une **photo figée** : les valeurs de props, state et variables locales y sont **constantes**. Appeler `setCount(count + 1)` ne change pas `count` dans le rendu en cours ; cela **planifie** un nouveau rendu avec une nouvelle valeur.
 
@@ -232,7 +212,7 @@ function Exemple() {
 }
 ```
 
-## 1.6 Les packages et l'architecture
+### 1.6 Les packages et l'architecture
 
 | Package | Rôle |
 |---|---|
@@ -245,7 +225,7 @@ function Exemple() {
 | `scheduler` | Planificateur interne des tâches (priorités). |
 | `react-reconciler` | Pour écrire son **propre renderer**. |
 
-## 1.7 Historique et versions majeures
+### 1.7 Historique et versions majeures
 
 | Version | Date (approx.) | Apport principal |
 |---|---|---|
@@ -260,42 +240,28 @@ function Exemple() {
 
 > **Mise en garde** : Create React App est officiellement **déprécié** (2025). Les projets neufs utilisent Vite ou un framework.
 
-## ⚠️ Pièges courants
+### 1.8 Pièges fréquents
 
 - Croire que React est un framework complet (le routage, le fetch, etc. ne sont pas inclus).
 - Croire que le Virtual DOM est « toujours plus rapide » que le DOM : il apporte surtout un **modèle de programmation** déclaratif avec des performances suffisantes.
 - Penser que `setState` modifie immédiatement la variable.
 - Confondre **rendu** (appeler le composant) et **mise à jour du DOM** (commit) : un composant peut être rendu sans que le DOM change.
 
-## ✅ À retenir
+### Synthèse du chapitre 1
 
-- React = bibliothèque d'UI **déclarative**, basée sur des **composants**, avec un flux **unidirectionnel**.
-- **UI = f(state)** ; le rendu doit être **pur**.
-- Cycle : **déclenchement → rendu → commit**, puis effets.
-- Le **state est un instantané** par rendu.
-- La réconciliation s'appuie sur le **type** des éléments et les **clés**.
-
-## 🏋️ Exercices
-
-1. Écrivez en JavaScript impératif un compteur avec bouton +/−, puis comparez avec la version React : listez les lignes de synchronisation DOM supprimées.
-2. Prédisez ce qu'affichent `console.log` et l'écran après trois clics sur le bouton de l'exemple « snapshot ».
-3. Expliquez, avec vos mots, pourquoi un rendu doit être pur.
+React = bibliothèque d'UI **déclarative**, basée sur des **composants**, avec un flux **unidirectionnel** ; **UI = f(state)** ; le rendu doit être **pur** ; Cycle : **déclenchement → rendu → commit**, puis effets ; Le **state est un instantané** par rendu ; La réconciliation s'appuie sur le **type** des éléments et les **clés**.
 
 ---
 
-# 2. Mise en place
+## 2. Mise en place
 
-## 🎯 Objectifs
+**Objectifs d'apprentissage.** À la fin de ce chapitre, vous saurez : disposer des **prérequis JavaScript** indispensables ; créer, lancer et comprendre la structure d'un projet React moderne ; savoir initialiser React (`createRoot`, `hydrateRoot`) et configurer l'outillage de base.
 
-- Disposer des **prérequis JavaScript** indispensables.
-- Créer, lancer et comprendre la structure d'un projet React moderne.
-- Savoir initialiser React (`createRoot`, `hydrateRoot`) et configurer l'outillage de base.
-
-## 2.1 Prérequis JavaScript
+### 2.1 Prérequis JavaScript
 
 React demande une solide maîtrise du JavaScript moderne (ES2015+). Rappel des notions utilisées en permanence.
 
-### Variables et portée
+#### Variables et portée
 
 ```js
 const PI = 3.14;        // constante (référence non réassignable)
@@ -303,7 +269,7 @@ let compteur = 0;       // variable réassignable, portée de bloc
 // var : à éviter (portée de fonction, hoisting)
 ```
 
-### Fonctions fléchées et closures
+#### Fonctions fléchées et closures
 
 ```js
 const double = (x) => x * 2;
@@ -315,7 +281,7 @@ const creerCompteur = () => {
 
 > Les **closures** sont au cœur du fonctionnement des hooks et de la notion de snapshot.
 
-### Destructuration
+#### Destructuration
 
 ```js
 const { nom, age = 18, ...reste } = utilisateur;   // objets
@@ -323,7 +289,7 @@ const [premier, , troisieme] = liste;              // tableaux
 function Carte({ titre, children }) {}             // dans les paramètres
 ```
 
-### Spread et rest
+#### Spread et rest
 
 ```js
 const copie = { ...utilisateur, nom: 'Bob' };       // copie d'objet avec modification
@@ -331,7 +297,7 @@ const fusion = [...tableauA, ...tableauB];          // copie / concaténation de
 function somme(...nombres) {}                       // rest : collecte les arguments
 ```
 
-### Méthodes de tableaux (essentielles)
+#### Méthodes de tableaux (essentielles)
 
 ```js
 [1, 2, 3].map(x => x * 2);            // transforme : [2, 4, 6]
@@ -343,7 +309,7 @@ function somme(...nombres) {}                       // rest : collecte les argum
 [3, 1, 2].toSorted();                 // copie triée (ES2023) — sort() MUTE le tableau
 ```
 
-### Modules ES
+#### Modules ES
 
 ```js
 // math.js
@@ -355,7 +321,7 @@ import aire, { PI } from './math.js';
 import * as math from './math.js';
 ```
 
-### Opérateurs modernes
+#### Opérateurs modernes
 
 ```js
 utilisateur?.adresse?.ville     // optional chaining
@@ -365,7 +331,7 @@ a ||= b;  a &&= b;  a ??= b;    // assignations logiques
 `Bonjour ${nom}`                // template literals
 ```
 
-### Asynchronisme
+#### Asynchronisme
 
 ```js
 async function charger() {
@@ -380,7 +346,7 @@ async function charger() {
 Promise.all([charger(), autreAppel()]);  // en parallèle
 ```
 
-### Égalité et références
+#### Égalité et références
 
 ```js
 Object.is(a, b)      // utilisé par React pour comparer
@@ -390,20 +356,20 @@ const o = {}; o === o // true : même référence
 
 > **Valeurs primitives** (nombre, chaîne, booléen, `null`, `undefined`, `bigint`, `symbol`) sont comparées par valeur ; **objets, tableaux, fonctions** par **référence**. C'est fondamental pour comprendre `useEffect`, `useMemo` et `memo`.
 
-### Valeurs « falsy »
+#### Valeurs « falsy »
 
 `false`, `0`, `-0`, `0n`, `''`, `null`, `undefined`, `NaN`. Tout le reste est « truthy » (y compris `[]`, `{}`, `'0'`).
 
-## 2.2 Environnement de développement
+### 2.2 Environnement de développement
 
 1. **Node.js** (version LTS) + gestionnaire de paquets : `npm` (inclus), `pnpm`, `yarn` ou `bun`.
 2. Un **éditeur** (VS Code recommandé) avec les extensions ESLint, Prettier, ES7+ React snippets.
 3. **Navigateur** + extension **React Developer Tools** (onglets *Components* et *Profiler*).
 4. **Git** pour le versionnage.
 
-## 2.3 Créer un projet
+### 2.3 Créer un projet
 
-### Option A : Vite (SPA)
+#### Option A : Vite (SPA)
 
 ```bash
 npm create vite@latest mon-app -- --template react        # JavaScript
@@ -417,7 +383,7 @@ npm run preview    # prévisualiser le build
 
 **Vite** utilise des modules ES natifs en développement (démarrage quasi instantané) et Rollup (ou Rolldown selon les versions) pour la production. Le **HMR** (Hot Module Replacement) met à jour le module modifié sans recharger la page, en préservant l'état quand c'est possible (*React Fast Refresh*).
 
-### Option B : Framework
+#### Option B : Framework
 
 ```bash
 npx create-next-app@latest          # Next.js
@@ -427,7 +393,7 @@ npx create-expo-app@latest          # Mobile (React Native / Expo)
 
 À choisir si vous avez besoin de **SSR/SSG**, de **routage par fichiers**, de **Server Components**, de SEO.
 
-### Option C : Sans outil de build (démonstration seulement)
+#### Option C : Sans outil de build (démonstration seulement)
 
 ```html
 <script type="importmap">
@@ -437,7 +403,7 @@ npx create-expo-app@latest          # Mobile (React Native / Expo)
 
 Utile pour apprendre, **inadapté** à la production.
 
-## 2.4 Anatomie d'un projet Vite
+### 2.4 Anatomie d'un projet Vite
 
 ```
 mon-app/
@@ -486,9 +452,9 @@ createRoot(document.getElementById('root')).render(
 );
 ```
 
-## 2.5 Initialiser React : les « roots »
+### 2.5 Initialiser React : les « roots »
 
-### `createRoot` : rendu côté client
+#### `createRoot` : rendu côté client
 
 ```jsx
 import { createRoot } from 'react-dom/client';
@@ -506,7 +472,7 @@ root.render(<App />);
 // root.unmount();             // démonte tout l'arbre
 ```
 
-### `hydrateRoot` : « hydrater » du HTML généré par le serveur
+#### `hydrateRoot` : « hydrater » du HTML généré par le serveur
 
 ```jsx
 import { hydrateRoot } from 'react-dom/client';
@@ -515,11 +481,11 @@ hydrateRoot(document.getElementById('root'), <App />);
 
 L'**hydratation** attache les gestionnaires d'événements et l'état React à un HTML **déjà présent**. Le rendu client doit produire **exactement le même HTML** que le serveur, sinon : erreur d'hydratation (*hydration mismatch*).
 
-### Plusieurs roots
+#### Plusieurs roots
 
 On peut monter plusieurs applications React indépendantes dans une même page (intégration progressive dans un site existant). Chaque root a son propre arbre et son propre état.
 
-### Migration depuis les API historiques
+#### Migration depuis les API historiques
 
 | Ancienne API (supprimée en 19) | Remplacement |
 |---|---|
@@ -530,9 +496,9 @@ On peut monter plusieurs applications React indépendantes dans une même page (
 | `propTypes` / `defaultProps` (fonctions) | TypeScript / paramètres par défaut |
 | refs en chaîne de caractères | refs d'objet / callback |
 
-## 2.6 Configuration utile
+### 2.6 Configuration utile
 
-### Variables d'environnement (Vite)
+#### Variables d'environnement (Vite)
 
 ```bash
 # .env
@@ -546,7 +512,7 @@ const url = import.meta.env.VITE_API_URL;
 
 > Tout ce qui est préfixé `VITE_` est **embarqué dans le bundle** et donc **public**. Ne mettez jamais de secret côté client.
 
-### Alias d'import
+#### Alias d'import
 
 ```js
 // vite.config.js
@@ -565,71 +531,58 @@ export default defineConfig({
 import Header from '@/components/Header';
 ```
 
-### Outils de qualité
+#### Outils de qualité
 
 - **ESLint** + `eslint-plugin-react-hooks` : détecte les violations des règles des hooks et les dépendances manquantes.
 - **Prettier** : formatage automatique.
-- **TypeScript** : typage statique (module 31).
+- **TypeScript** : typage statique (chapitre 31).
 - **Husky + lint-staged** : vérifications avant commit.
 
-### Les React DevTools
+#### Les React DevTools
 
 - **Components** : arbre des composants, inspection/modification des props, du state et des hooks.
 - **Profiler** : enregistrement des rendus, durée, cause de chaque rendu (« why did this render? »).
 
-## 2.7 Fil rouge du cours
+### 2.7 Fil rouge du cours
 
-Pour fixer les notions, imaginez une application de **gestion de tâches** (*Todo*) que l'on enrichit module après module : liste (module 9), formulaire (10), persistance via hook personnalisé (12), thème via Context (13), chargement via API (25), routage (26), tests (29).
+Pour fixer les notions, imaginez une application de **gestion de tâches** (*Todo*) que l'on enrichit module après module : liste (chapitre 9), formulaire (10), persistance via hook personnalisé (12), thème via Context (13), chargement via API (25), routage (26), tests (29).
 
-## ⚠️ Pièges courants
+### 2.8 Pièges fréquents
 
 - Importer React inutilement : depuis la **transformation JSX automatique** (React 17+), `import React from 'react'` n'est plus nécessaire pour écrire du JSX.
 - Oublier `type="module"` sur le script d'entrée.
 - Exposer des secrets via `VITE_…`.
 - Mélanger **extension `.js`** et JSX : avec Vite, utilisez `.jsx` / `.tsx` pour les fichiers contenant du JSX.
 
-## ✅ À retenir
+### Synthèse du chapitre 2
 
-- Utilisez **Vite** pour une SPA, un **framework** pour du SSR/SEO.
-- `createRoot` (client), `hydrateRoot` (HTML serveur).
-- `StrictMode` à la racine en développement.
-- Variables d'environnement côté client = **publiques**.
-
-## 🏋️ Exercices
-
-1. Créez un projet Vite React, supprimez le contenu de `App.jsx` et affichez « Bonjour React ».
-2. Ajoutez une variable `VITE_TITRE` dans `.env` et affichez-la dans l'interface.
-3. Montez deux roots indépendants dans un même `index.html` (deux `div`) et observez leurs états séparés.
+Utilisez **Vite** pour une SPA, un **framework** pour du SSR/SEO ; `createRoot` (client), `hydrateRoot` (HTML serveur) ; `StrictMode` à la racine en développement ; Variables d'environnement côté client = **publiques**.
 
 ---
-# 3. JSX
 
-## 🎯 Objectifs
+## 3. JSX
 
-- Comprendre ce qu'est JSX et comment il est compilé.
-- Maîtriser toutes les règles de syntaxe (attributs, enfants, expressions, fragments).
-- Savoir ce que React affiche (ou non) pour chaque type de valeur.
-- Connaître les mécanismes de sécurité et les différences avec HTML.
+**Objectifs d'apprentissage.** À la fin de ce chapitre, vous saurez : comprendre ce qu'est JSX et comment il est compilé ; maîtriser toutes les règles de syntaxe (attributs, enfants, expressions, fragments) ; savoir ce que React affiche (ou non) pour chaque type de valeur ; connaître les mécanismes de sécurité et les différences avec HTML.
 
-## 3.1 Définition
+### 3.1 Définition
 
 **JSX** (*JavaScript XML*) est une **extension de syntaxe de JavaScript** qui permet d'écrire des structures ressemblant à du HTML directement dans le code. Ce n'est **ni du HTML, ni une chaîne de caractères, ni un langage de template** : c'est du **sucre syntaxique** qui est **compilé** (par Babel, SWC, esbuild/Oxc, TypeScript) en appels de fonctions JavaScript.
 
 Pourquoi JSX ? Parce que la **logique de rendu** et le **balisage** sont intrinsèquement liés (un clic modifie ce qui s'affiche). React les regroupe par **composant** plutôt que de séparer artificiellement « HTML d'un côté, JS de l'autre ».
 
-## 3.2 Compilation : ce que devient JSX
+### 3.2 Compilation : ce que devient JSX
 
 ```jsx
 const element = <h1 className="titre">Bonjour, {nom} !</h1>;
 ```
 
-### Ancienne transformation (« classic runtime »)
+#### Ancienne transformation (« classic runtime »)
 
 ```js
 const element = React.createElement('h1', { className: 'titre' }, 'Bonjour, ', nom, ' !');
 ```
 
-### Transformation actuelle (« automatic runtime », React 17+)
+#### Transformation actuelle (« automatic runtime », React 17+)
 
 ```js
 import { jsx as _jsx, jsxs as _jsxs } from 'react/jsx-runtime';
@@ -638,7 +591,7 @@ const element = _jsxs('h1', { className: 'titre', children: ['Bonjour, ', nom, '
 
 L'import est **injecté automatiquement** : plus besoin d'écrire `import React from 'react'`.
 
-### Ce que retourne ce code : un « React element »
+#### Ce que retourne ce code : un « React element »
 
 Un **élément React** est un **objet JavaScript simple, immuable**, qui **décrit** ce que l'on veut voir à l'écran :
 
@@ -656,9 +609,9 @@ Un **élément React** est un **objet JavaScript simple, immuable**, qui **décr
 > - **Élément** : l'objet de **description** (léger, jetable).
 > - **Instance** : l'entité interne que React gère pour conserver l'état d'un composant monté (invisible pour le développeur).
 
-## 3.3 Règles de syntaxe
+### 3.3 Règles de syntaxe
 
-### Règle 1 : un seul nœud racine
+#### Règle 1 : un seul nœud racine
 
 Une expression JSX ne peut retourner **qu'un seul élément parent**. Pour regrouper sans ajouter de nœud DOM : **Fragment**.
 
@@ -680,7 +633,7 @@ return (
 
 > Pourquoi ? Une fonction ne retourne qu'**une seule valeur** ; JSX est compilé en un appel de fonction unique.
 
-### Règle 2 : fermer toutes les balises
+#### Règle 2 : fermer toutes les balises
 
 ```jsx
 <img src="a.png" alt="" />   // auto-fermante obligatoire
@@ -689,7 +642,7 @@ return (
 <MonComposant />
 ```
 
-### Règle 3 : attributs en camelCase
+#### Règle 3 : attributs en camelCase
 
 JSX est plus proche de JavaScript que de HTML ; les attributs deviennent des **propriétés d'objet**, et certains noms sont des mots réservés JS.
 
@@ -713,7 +666,7 @@ JSX est plus proche de JavaScript que de HTML ; les attributs deviennent des **p
 <div data-testid="carte" aria-label="Fermer" role="dialog" />
 ```
 
-### Règle 4 : les expressions JavaScript entre accolades
+#### Règle 4 : les expressions JavaScript entre accolades
 
 Les **accolades** `{}` ouvrent une « fenêtre » vers JavaScript. On peut y mettre **toute expression** (qui produit une valeur), **pas** des instructions (`if`, `for`, `const`…).
 
@@ -737,7 +690,7 @@ Deux endroits possibles :
 <p>{ok ? 'oui' : 'non'}</p>
 ```
 
-### Règle 5 : « double accolades » = objet dans des accolades
+#### Règle 5 : « double accolades » = objet dans des accolades
 
 ```jsx
 <div style={{ backgroundColor: 'tomato', fontSize: 16, marginTop: '1rem' }} />
@@ -747,7 +700,7 @@ Deux endroits possibles :
 - Les propriétés de `style` sont en **camelCase** (`backgroundColor`).
 - Les nombres sont convertis en `px` (sauf propriétés sans unité comme `opacity`, `zIndex`, `flex`, `lineHeight`).
 
-### Règle 6 : commentaires
+#### Règle 6 : commentaires
 
 ```jsx
 <div>
@@ -759,7 +712,7 @@ Deux endroits possibles :
 </div>
 ```
 
-### Règle 7 : parenthèses pour le multi-ligne
+#### Règle 7 : parenthèses pour le multi-ligne
 
 ```jsx
 function Carte() {
@@ -769,9 +722,9 @@ function Carte() {
 }
 ```
 
-## 3.4 Attributs en détail
+### 3.4 Attributs en détail
 
-### Valeurs d'attributs
+#### Valeurs d'attributs
 
 ```jsx
 <input value="texte" />           {/* chaîne littérale */}
@@ -780,11 +733,11 @@ function Carte() {
 <input disabled={false} />        {/* attribut absent */}
 ```
 
-### Attributs booléens
+#### Attributs booléens
 
 `disabled`, `checked`, `readOnly`, `required`, `hidden`, `autoFocus`, `multiple`, `selected`… : `true` ajoute l'attribut, `false`/`null`/`undefined` le retire.
 
-### `className` dynamique
+#### `className` dynamique
 
 ```jsx
 <div className={`carte ${actif ? 'carte--actif' : ''}`} />
@@ -793,7 +746,7 @@ function Carte() {
 <div className={clsx('carte', { 'carte--actif': actif }, taille && `carte--${taille}`)} />
 ```
 
-### Spread d'attributs
+#### Spread d'attributs
 
 ```jsx
 const props = { id: 'btn', type: 'button', disabled: false };
@@ -802,21 +755,21 @@ const props = { id: 'btn', type: 'button', disabled: false };
 
 > L'**ordre** compte : `<Comp {...a} x="1" />` → `x` écrase `a.x` ; `<Comp x="1" {...a} />` → `a.x` écrase `x`.
 
-### Valeurs par défaut des champs de formulaire
+#### Valeurs par défaut des champs de formulaire
 
-`defaultValue` / `defaultChecked` : valeur **initiale** (champ non contrôlé) ; `value` / `checked` : champ **contrôlé** (module 10).
+`defaultValue` / `defaultChecked` : valeur **initiale** (champ non contrôlé) ; `value` / `checked` : champ **contrôlé** (chapitre 10).
 
-### Attributs spéciaux de React
+#### Attributs spéciaux de React
 
 | Attribut | Rôle |
 |---|---|
-| `key` | Identité stable dans une liste (module 9). Non transmis au composant. |
-| `ref` | Référence vers un nœud DOM ou une instance (module 14). Prop normale depuis React 19. |
+| `key` | Identité stable dans une liste (chapitre 9). Non transmis au composant. |
+| `ref` | Référence vers un nœud DOM ou une instance (chapitre 14). Prop normale depuis React 19. |
 | `dangerouslySetInnerHTML` | Injection de HTML brut (`{{ __html: '...' }}`). |
 | `suppressHydrationWarning` | Désactive l'avertissement pour une différence volontaire serveur/client (dates, par exemple). |
 | `children` | Contenu entre les balises. |
 
-## 3.5 Les enfants (children)
+### 3.5 Les enfants (children)
 
 Entre balises ouvrante et fermante, on peut placer :
 
@@ -824,7 +777,7 @@ Entre balises ouvrante et fermante, on peut placer :
 2. des **éléments** JSX (hôtes `<div>` ou composants `<Carte>`) ;
 3. des **expressions** `{...}` ;
 4. des **tableaux** d'éléments (chaque élément doit avoir une `key`) ;
-5. des **fonctions** (si le composant les attend : *render props*, module 15).
+5. des **fonctions** (si le composant les attend : *render props*, chapitre 15).
 
 ```jsx
 <ul>
@@ -834,7 +787,7 @@ Entre balises ouvrante et fermante, on peut placer :
 </ul>
 ```
 
-### Ce que React affiche, selon la valeur
+#### Ce que React affiche, selon la valeur
 
 | Valeur | Rendu |
 |---|---|
@@ -857,7 +810,7 @@ Entre balises ouvrante et fermante, on peut placer :
 <p>{String(true)}</p> {/* affiche "true" */}
 ```
 
-### Gestion des espaces et sauts de ligne
+#### Gestion des espaces et sauts de ligne
 
 JSX **supprime** les espaces en début/fin de ligne et les lignes vides ; plusieurs espaces/sauts de ligne **entre deux mots** sont condensés en un seul espace. Pour forcer un espace : `{' '}`.
 
@@ -873,7 +826,7 @@ JSX **supprime** les espaces en début/fin de ligne et les lignes vides ; plusie
 </p>
 ```
 
-## 3.6 Composants dans JSX : majuscule obligatoire
+### 3.6 Composants dans JSX : majuscule obligatoire
 
 JSX distingue **balises natives** (minuscule) et **composants** (majuscule ou notation pointée) :
 
@@ -884,7 +837,7 @@ JSX distingue **balises natives** (minuscule) et **composants** (majuscule ou no
 <Menu.Item />    // → propriété d'objet : composant Menu.Item (composants « composés »)
 ```
 
-### Type d'élément choisi dynamiquement
+#### Type d'élément choisi dynamiquement
 
 ```jsx
 const composants = { photo: PhotoStory, video: VideoStory };
@@ -901,7 +854,7 @@ function Titre({ niveau, children }) {
 }
 ```
 
-## 3.7 JSX est une expression
+### 3.7 JSX est une expression
 
 Comme JSX produit un objet, on peut l'**affecter**, le **passer**, le **retourner**, le **stocker** :
 
@@ -919,7 +872,7 @@ function Page({ avecEntete }) {
 <Carte titre={<strong>Important</strong>} />   // JSX comme prop
 ```
 
-## 3.8 Sécurité : échappement automatique et XSS
+### 3.8 Sécurité : échappement automatique et XSS
 
 React **échappe** toute valeur insérée via `{}` avant de la placer dans le DOM : `<`, `>`, `&`, `"`, `'` sont neutralisés.
 
@@ -928,7 +881,7 @@ const saisie = '<img src=x onerror="alert(1)">';
 <p>{saisie}</p>   // affiche le TEXTE littéral ; aucun script exécuté
 ```
 
-### `dangerouslySetInnerHTML`
+#### `dangerouslySetInnerHTML`
 
 Nom volontairement alarmant : il **contourne la protection**.
 
@@ -938,7 +891,7 @@ Nom volontairement alarmant : il **contourne la protection**.
 
 > N'injectez **jamais** du HTML provenant d'une source non fiable sans **assainissement** (par exemple avec **DOMPurify**). Notez aussi que des URLs `javascript:` dans `href` restent un vecteur : validez les URLs provenant des utilisateurs.
 
-## 3.9 Différences JSX / HTML (synthèse)
+### 3.9 Différences JSX / HTML (synthèse)
 
 | Sujet | HTML | JSX |
 |---|---|---|
@@ -952,7 +905,7 @@ Nom volontairement alarmant : il **contourne la protection**.
 | Entités | `&nbsp;` `&copy;` | Fonctionnent aussi, ou caractères Unicode/`{'\u00A0'}` |
 | Casse | Insensible | **Sensible** |
 
-## 3.10 API associées (cas avancés)
+### 3.10 API associées (cas avancés)
 
 ```jsx
 import { createElement, cloneElement, isValidElement, Children } from 'react';
@@ -963,9 +916,9 @@ cloneElement(element, { extra: 1 });                         // ⚠ patterns fra
 Children.map(children, enfant => ...);                       // ⚠ utilitaires hérités, peu recommandés
 ```
 
-> L'API `Children` et `cloneElement` rendent le code fragile (dépendance à la forme exacte des enfants). Préférez la **composition explicite**, les **props** ou le **Context** (module 15).
+> L'API `Children` et `cloneElement` rendent le code fragile (dépendance à la forme exacte des enfants). Préférez la **composition explicite**, les **props** ou le **Context** (chapitre 15).
 
-## ⚠️ Pièges courants
+### 3.11 Pièges fréquents
 
 - `return` suivi d'un saut de ligne sans parenthèses → `undefined`.
 - Afficher un **objet** directement : `{utilisateur}` → erreur. Affichez ses champs.
@@ -974,31 +927,17 @@ Children.map(children, enfant => ...);                       // ⚠ utilitaires 
 - Oublier la majuscule d'un composant.
 - Écrire `onClick={fonction()}` qui **appelle** la fonction pendant le rendu, au lieu de `onClick={fonction}`.
 
-## ✅ À retenir
+### Synthèse du chapitre 3
 
-- JSX est compilé en **appels de fonctions** qui produisent des **objets** (éléments).
-- `{}` = expression JavaScript ; `{{}}` = objet dans une expression.
-- Un seul parent, balises fermées, attributs en camelCase.
-- `true/false/null/undefined` ne rendent **rien**, `0` rend « 0 ».
-- Le contenu inséré est **échappé** : protection XSS par défaut.
-
-## 🏋️ Exercices
-
-1. Convertissez un fragment HTML (formulaire avec `label`, `input`, `style` inline) en JSX valide.
-2. Écrivez une fonction `Titre({ niveau, children })` qui rend `h1`…`h6` dynamiquement.
-3. Trouvez pourquoi `{items.length && <Liste />}` affiche `0` et corrigez-le de trois façons différentes.
+JSX est compilé en **appels de fonctions** qui produisent des **objets** (éléments) ; `{}` = expression JavaScript ; `{{}}` = objet dans une expression ; Un seul parent, balises fermées, attributs en camelCase ; `true/false/null/undefined` ne rendent **rien**, `0` rend « 0 » ; Le contenu inséré est **échappé** : protection XSS par défaut.
 
 ---
 
-# 4. Composants
+## 4. Composants
 
-## 🎯 Objectifs
+**Objectifs d'apprentissage.** À la fin de ce chapitre, vous saurez : définir un composant, ses règles de nommage, d'export et de structuration ; comprendre la **pureté**, l'**identité** d'un composant et la préservation de son état ; savoir découper une interface en composants.
 
-- Définir un composant, ses règles de nommage, d'export et de structuration.
-- Comprendre la **pureté**, l'**identité** d'un composant et la préservation de son état.
-- Savoir découper une interface en composants.
-
-## 4.1 Définition
+### 4.1 Définition
 
 Un **composant** est une **fonction JavaScript** (ou, historiquement, une classe) qui :
 1. reçoit un unique argument : l'objet **`props`** ;
@@ -1012,18 +951,18 @@ function Salutation({ nom }) {
 const Salutation2 = ({ nom }) => <h1>Bonjour {nom} !</h1>;   // flèche
 ```
 
-### Valeurs de retour possibles
+#### Valeurs de retour possibles
 
 JSX, `null` (rien), chaînes, nombres, **tableaux** (avec clés), `undefined` (autorisé depuis React 18), **Promesses** (composants serveur), éléments `<Fragment>`.
 
-## 4.2 Règles de nommage et de définition
+### 4.2 Règles de nommage et de définition
 
 1. **Nom en PascalCase** (`MaCarte`), sinon JSX le traite comme une balise native.
 2. **Définir au niveau supérieur du module**, **jamais à l'intérieur d'un autre composant**.
 3. Un composant par responsabilité ; généralement **un composant principal par fichier**.
 4. Utiliser le **même nom** pour le fichier et le composant (`Carte.jsx` → `Carte`).
 
-### ❌ Piège : composant défini dans un composant
+#### Piège : composant défini dans un composant
 
 ```jsx
 function Parent() {
@@ -1041,7 +980,7 @@ function Enfant() { return <input />; }
 function Parent() { return <Enfant />; }
 ```
 
-## 4.3 Exports et imports
+### 4.3 Exports et imports
 
 ```jsx
 // Export par défaut : un seul par fichier ; nom libre à l'import
@@ -1056,7 +995,7 @@ import { Bouton, Lien as LienUI } from './UI';
 
 > Conseil : les **exports nommés** facilitent la refactorisation, l'autocomplétion et évitent les noms incohérents ; les **exports par défaut** sont requis par certains outils (`React.lazy`, routage par fichiers de frameworks).
 
-### Fichier « barrel »
+#### Fichier « barrel »
 
 ```js
 // components/index.js
@@ -1066,7 +1005,7 @@ export { default as Bouton } from './Bouton';
 
 ⚠ Les barrels peuvent nuire au *tree-shaking* et aux temps de build dans de grandes bases de code.
 
-## 4.4 Composer des composants : l'arbre
+### 4.4 Composer des composants : l'arbre
 
 Les composants s'**imbriquent**. Un composant parent peut en utiliser d'autres :
 
@@ -1082,12 +1021,12 @@ function Profil({ utilisateur }) {
 }
 ```
 
-### Les arbres de React
+#### Les arbres de React
 
 - **Arbre de rendu** : qui rend qui, à un instant donné (varie selon les conditions).
 - **Arbre de dépendances de modules** : qui importe qui (statique), utile pour le *bundle splitting*.
 
-## 4.5 La pureté, en profondeur
+### 4.5 La pureté, en profondeur
 
 Un composant **pur** respecte :
 
@@ -1109,7 +1048,7 @@ function Tasse({ numero }) {
 }
 ```
 
-### Mutation locale : autorisée
+#### Mutation locale : autorisée
 
 On peut créer et modifier des variables **créées pendant le rendu** :
 
@@ -1121,11 +1060,11 @@ function ListeTasses({ nombre }) {
 }
 ```
 
-### Entrées interdites à la mutation
+#### Entrées interdites à la mutation
 
 `props`, `state`, valeurs de `context` : **lecture seule**, même pour les objets imbriqués.
 
-### Où placer les effets de bord ?
+#### Où placer les effets de bord ?
 
 | Besoin | Endroit |
 |---|---|
@@ -1134,15 +1073,15 @@ function ListeTasses({ nombre }) {
 | Lire/mesurer le DOM avant la peinture | `useLayoutEffect` |
 | Mutation locale pendant le rendu | Autorisé (variables créées dans le rendu) |
 
-### Pourquoi la pureté ?
+#### Pourquoi la pureté ?
 
 - Permet le **rendu concurrent** (React peut interrompre/rejouer).
 - Permet de **sauter** des rendus (mémoïsation sûre).
 - Permet le **rendu serveur** (mêmes résultats).
 - Facilite les tests.
-- **StrictMode** (module 21) appelle vos composants **deux fois** en développement pour révéler les impuretés.
+- **StrictMode** (chapitre 21) appelle vos composants **deux fois** en développement pour révéler les impuretés.
 
-## 4.6 Identité et état des composants
+### 4.6 Identité et état des composants
 
 React identifie un composant par son **type** et sa **position** dans l'arbre.
 
@@ -1156,13 +1095,13 @@ React identifie un composant par son **type** et sa **position** dans l'arbre.
 {estPremier ? <div><Compteur /></div> : <section><Compteur /></section>}
 ```
 
-### Cycle de vie conceptuel d'un composant (fonction)
+#### Cycle de vie conceptuel d'un composant (fonction)
 
 1. **Montage** : première apparition dans l'arbre ; l'état initial est créé, les effets s'exécutent.
 2. **Mise à jour** : nouveaux rendus suite à des changements de state/props/context.
 3. **Démontage** : disparition de l'arbre ; les fonctions de nettoyage d'effets s'exécutent, l'état est détruit.
 
-## 4.7 Découper une interface en composants (« Penser en React »)
+### 4.7 Découper une interface en composants (« Penser en React »)
 
 Méthode en 5 étapes recommandée par la documentation :
 
@@ -1174,21 +1113,21 @@ Méthode en 5 étapes recommandée par la documentation :
 
 Critères pour créer un composant : réutilisation, lisibilité, taille (≈ une page), isolation des responsabilités, besoins de performance (frontière de `memo`).
 
-## 4.8 Typologie des composants
+### 4.8 Typologie des composants
 
 | Type | Description | Remarque |
 |---|---|---|
 | **Fonction** | Fonction + hooks | Standard actuel |
-| **Classe** | `extends React.Component` | Legacy ; indispensable pour les *Error Boundaries* (module 24) |
+| **Classe** | `extends React.Component` | Legacy ; indispensable pour les *Error Boundaries* (chapitre 24) |
 | **Présentation** | Reçoit des props, affiche | Facile à tester/réutiliser |
 | **Conteneur** | Gère données et logique | Largement remplacé par les hooks |
-| **Contrôlé / non contrôlé** | Piloté par le parent ou autonome | Module 10 |
-| **Layout / Page** | Squelette, route | Module 26 |
-| **HOC** | Fonction `(Comp) => Comp` | Module 15 |
-| **Serveur** | Rendu uniquement côté serveur | Module 23 |
-| **Client** | Interactif, directive `'use client'` | Module 23 |
+| **Contrôlé / non contrôlé** | Piloté par le parent ou autonome | Chapitre 10 |
+| **Layout / Page** | Squelette, route | Chapitre 26 |
+| **HOC** | Fonction `(Comp) => Comp` | Chapitre 15 |
+| **Serveur** | Rendu uniquement côté serveur | Chapitre 23 |
+| **Client** | Interactif, directive `'use client'` | Chapitre 23 |
 
-## 4.9 Exemple fil rouge
+### 4.9 Exemple fil rouge
 
 ```jsx
 // TodoItem.jsx
@@ -1218,7 +1157,65 @@ export function TodoList({ taches, onBasculer, onSupprimer }) {
 }
 ```
 
-## ⚠️ Pièges courants
+### 4.10 Quand un composant est-il rendu à nouveau ?
+
+Un composant fonction est **rappelé** (« re-rendu ») dans quatre cas :
+
+1. **Premier rendu** : montage initial de l'arbre ou apparition du composant.
+2. **Son propre state change** (`setState`, `dispatch`) : React rappelle **ce composant** et, par défaut, **tous ses descendants**.
+3. **Le composant parent se re-rend** : les enfants sont rappelés **même si leurs props n'ont pas changé**. C'est le comportement par défaut ; `memo` (chapitre 16) permet de l'éviter quand les props sont identiques.
+4. **Un contexte qu'il lit change** (chapitre 13).
+
+**Idées fausses courantes**
+
+- *« Un composant ne se re-rend que si ses props changent »* : faux. Le re-rendu d'un parent suffit.
+- *« Re-rendre, c'est modifier le DOM »* : faux. Le **rendu** (appeler la fonction) est distinct du **commit** (appliquer les différences au DOM) ; un re-rendu qui produit le même JSX ne change rien dans le DOM.
+- *« Il faut éviter tous les re-rendus »* : faux. Un rendu **rapide et pur** est bon marché ; n'optimisez qu'après **mesure** (chapitre 16).
+
+Pour comprendre pourquoi un composant s'est rendu, utilisez l'onglet **Profiler** de React DevTools, qui indique la cause (state, props, parent, contexte) pour chaque rendu.
+
+### 4.11 Organiser les fichiers d'un composant
+
+- **Un composant principal par fichier**, nommé comme lui : `BoutonAchat.jsx` exporte `BoutonAchat`. Des petits composants **privés** (non exportés) peuvent cohabiter dans le même fichier s'ils ne servent que là.
+- **Extensions** : `.jsx` (ou `.tsx`) pour les fichiers contenant du JSX, `.js` / `.ts` pour la logique pure. Les outils modernes acceptent JSX dans `.js`, mais l'extension explicite aide l'éditeur et les linters.
+- **Colocation** : gardez à côté du composant ce qui lui est propre.
+
+```text
+BoutonAchat/
+├── BoutonAchat.jsx          ← le composant
+├── BoutonAchat.module.css   ← ses styles
+├── BoutonAchat.test.jsx     ← ses tests
+├── useAchat.js              ← son hook spécifique
+└── index.js                 ← export public : export { BoutonAchat } from './BoutonAchat';
+```
+
+- **Nommage** : composants en **PascalCase** ; hooks en `useXxx` ; fichiers de composants dans la même casse que le composant (convention répandue) ; dossiers en `kebab-case` ou PascalCase, mais **de façon cohérente**.
+- **Export nommé** de préférence : il facilite le renommage automatique, la recherche et les imports explicites ; réservez l'export par défaut aux cas où l'outil l'exige (`lazy`, routes de certains frameworks).
+
+### 4.12 Un composant est d'abord du HTML sémantique
+
+Un composant ne doit pas faire oublier le HTML qu'il produit. Avant d'écrire un `<div onClick>`, demandez-vous quel **élément natif** convient.
+
+| Intention | Élément à utiliser | Ce que vous obtenez gratuitement |
+| --- | --- | --- |
+| Action | `<button type="button">` | Focus au clavier, Entrée et Espace, rôle annoncé |
+| Navigation | `<a href>` (ou `<Link>` du routeur) | Ouverture dans un nouvel onglet, clic milieu, URL partageable |
+| Liste | `<ul>` / `<ol>` + `<li>` | Nombre d'éléments annoncé |
+| Titre | `<h1>`…`<h6>` dans l'ordre | Navigation par titres |
+| Région de page | `<header>`, `<nav>`, `<main>`, `<footer>` | Points de repère pour les lecteurs d'écran |
+| Champ de saisie | `<input>` + `<label>` | Association, zone de clic élargie |
+
+Un composant générique (`Bouton`, `Carte`) doit **laisser passer** les attributs natifs (`type`, `disabled`, `aria-*`, `className`) via les rest props (chapitre 5) pour ne pas bloquer l'accessibilité.
+
+### 4.13 Outils pour travailler avec les composants
+
+- **React DevTools**, onglet *Components* : arbre des composants, props, state, hooks ; recherche par nom ; sélection d'un élément du DOM pour retrouver son composant.
+- **Noms lisibles** : une fonction anonyme (`export default () => …`) apparaît comme `Anonymous` dans les outils. Nommez toujours la fonction du composant.
+- **ESLint** : `eslint-plugin-react-hooks` (règles des Hooks), `react/no-unstable-nested-components` (composant défini dans un composant), `react/jsx-key` (clés manquantes).
+- **Storybook** : documentation et développement de composants **isolés**, avec leurs états (chargement, erreur, vide).
+- **TypeScript** : types des props vérifiés à la compilation (chapitre 31).
+
+### 4.14 Pièges fréquents
 
 - Définir un composant dans un autre composant (perte d'état, performances).
 - Muter les props ou une variable globale pendant le rendu.
@@ -1226,30 +1223,17 @@ export function TodoList({ taches, onBasculer, onSupprimer }) {
 - Noms en minuscule.
 - Mélanger logique métier, appels API et affichage dans un même composant sans extraire de hook.
 
-## ✅ À retenir
+### Synthèse du chapitre 4
 
-- Composant = **fonction pure** `props → JSX`, nom en **PascalCase**, défini au **niveau module**.
-- L'**identité** (type + position + clé) détermine la préservation de l'état.
-- Effets de bord : **événements** ou **`useEffect`**, jamais dans le corps du rendu.
-- « Penser en React » : hiérarchie → version statique → état minimal → emplacement de l'état → flux inverse.
-
-## 🏋️ Exercices
-
-1. Découpez une maquette (carte produit avec image, titre, prix, bouton) en composants et dessinez l'arbre.
-2. Créez un composant impur volontairement, activez `StrictMode` et observez le symptôme.
-3. Montrez, avec un `Compteur`, dans quels cas l'état est conservé ou réinitialisé lorsqu'on change de `key`.
+Composant = **fonction pure** `props → JSX`, nom en **PascalCase**, défini au **niveau module** ; L'**identité** (type + position + clé) détermine la préservation de l'état ; Effets de bord : **événements** ou **`useEffect`**, jamais dans le corps du rendu ; « Penser en React » : hiérarchie → version statique → état minimal → emplacement de l'état → flux inverse.
 
 ---
-# 5. Props
 
-## 🎯 Objectifs
+## 5. Props
 
-- Définir les props et comprendre leur nature (lecture seule, instantané).
-- Maîtriser toutes les formes de transmission : valeurs, fonctions, JSX, `children`, `ref`, spread.
-- Éviter le prop drilling et l'anti-pattern « copier une prop dans le state ».
-- Savoir valider et typer les props.
+**Objectifs d'apprentissage.** À la fin de ce chapitre, vous saurez : définir les props et comprendre leur nature (lecture seule, instantané) ; maîtriser toutes les formes de transmission : valeurs, fonctions, JSX, `children`, `ref`, spread ; éviter le prop drilling et l'anti-pattern « copier une prop dans le state » ; savoir valider et typer les props.
 
-## 5.1 Définition
+### 5.1 Définition
 
 Les **props** (abréviation de *properties*) sont les **paramètres d'un composant** : un **objet unique** passé comme premier argument de la fonction. Elles permettent à un **parent de configurer un enfant**.
 
@@ -1271,9 +1255,9 @@ function Avatar(props) {
 
 > Les props sont l'**unique canal** par lequel les données descendent explicitement dans l'arbre (hors Context). Ce sont les « arguments » de votre fonction de rendu.
 
-## 5.2 Passer des props
+### 5.2 Passer des props
 
-### Selon le type de valeur
+#### Selon le type de valeur
 
 ```jsx
 <Composant
@@ -1289,7 +1273,7 @@ function Avatar(props) {
 />
 ```
 
-### Props de fonction (callbacks) : remonter l'information
+#### Props de fonction (callbacks) : remonter l'information
 
 Un enfant **ne modifie pas** l'état du parent ; il **notifie** le parent via une fonction reçue en prop.
 
@@ -1308,7 +1292,7 @@ function Parent() {
 - côté **prop** : `onXxx` (`onSelect`, `onChange`, `onSubmit`) ;
 - côté **gestionnaire** défini dans le composant : `handleXxx` (`handleSelect`).
 
-### Passer des props avec le spread
+#### Passer des props avec le spread
 
 ```jsx
 function Profil(props) {
@@ -1318,7 +1302,7 @@ function Profil(props) {
 
 ⚠ À utiliser avec modération : cela masque ce que le composant utilise réellement et peut propager des props inutiles.
 
-### Rest props : séparer « mes » props des props transmises
+#### Rest props : séparer « mes » props des props transmises
 
 ```jsx
 function Bouton({ variante = 'primaire', className = '', ...reste }) {
@@ -1327,7 +1311,7 @@ function Bouton({ variante = 'primaire', className = '', ...reste }) {
 <Bouton variante="danger" onClick={fn} disabled aria-label="Supprimer" />
 ```
 
-## 5.3 Valeurs par défaut
+### 5.3 Valeurs par défaut
 
 ```jsx
 // ✅ Paramètre par défaut JavaScript (standard)
@@ -1337,7 +1321,7 @@ function Bouton({ taille = 'moyenne', type = 'button' }) {}
 - Le défaut s'applique **uniquement** quand la prop vaut **`undefined`** (absente ou `undefined` explicite) — **pas** pour `null`, `0`, `''`, `false`.
 - `Composant.defaultProps` est **supprimé pour les composants fonctions en React 19** ; utilisez les paramètres par défaut.
 
-## 5.4 La prop spéciale `children`
+### 5.4 La prop spéciale `children`
 
 Le contenu placé **entre les balises** devient la prop `children`.
 
@@ -1358,7 +1342,7 @@ function Carte({ titre, children }) {
 ```
 
 - `children` peut être : texte, élément, tableau, fonction (render prop), `undefined`.
-- C'est le fondement de la **composition** (module 15) : le parent « ne sait pas » ce que contiendra l'enfant.
+- C'est le fondement de la **composition** (chapitre 15) : le parent « ne sait pas » ce que contiendra l'enfant.
 - **Plusieurs « emplacements »** (*slots*) : utilisez des props nommées contenant du JSX.
 
 ```jsx
@@ -1367,7 +1351,7 @@ function Carte({ titre, children }) {
 </Layout>
 ```
 
-## 5.5 Les props sont en lecture seule
+### 5.5 Les props sont en lecture seule
 
 ```jsx
 function Mauvais(props) {
@@ -1380,11 +1364,11 @@ Un composant **ne modifie jamais** ses props (ni les objets/tableaux imbriqués)
 - ou il demande au **parent**, via un callback, de changer ce qui est passé ;
 - ou il possède son **propre state** (initialisé à partir d'une prop, voir 5.8).
 
-### Les props changent dans le temps
+#### Les props changent dans le temps
 
 Un composant peut recevoir **différentes props à chaque rendu**. Chaque rendu voit **ses** props comme un **instantané**. Si un parent passe de nouvelles props, React rappelle le composant avec elles ; l'ancien objet n'est pas modifié.
 
-## 5.6 `ref` comme prop (React 19)
+### 5.6 `ref` comme prop (React 19)
 
 ```jsx
 // React 19 : `ref` est une prop ordinaire pour les composants fonctions
@@ -1398,7 +1382,7 @@ const Champ = forwardRef((props, ref) => <input ref={ref} {...props} />);
 
 `forwardRef` reste fonctionnel mais sera déprécié. `key` n'est, lui, **jamais** transmis comme prop.
 
-## 5.7 Le prop drilling
+### 5.7 Le prop drilling
 
 **Prop drilling** : transmettre une donnée à travers de nombreux **niveaux intermédiaires** qui ne l'utilisent pas, juste pour atteindre un descendant profond.
 
@@ -1409,7 +1393,7 @@ const Champ = forwardRef((props, ref) => <input ref={ref} {...props} />);
       <Avatar utilisateur={u} />   {/* seul consommateur réel */}
 ```
 
-### Solutions, par ordre de préférence
+#### Solutions, par ordre de préférence
 
 1. **Extraire des composants et passer du JSX en `children`** (inversion) : souvent suffisant et sous-estimé.
 
@@ -1422,13 +1406,13 @@ const Champ = forwardRef((props, ref) => <input ref={ref} {...props} />);
 </Layout>
 ```
 
-2. **Context** pour les données « globales » (thème, langue, utilisateur courant) — module 13.
-3. **Bibliothèque d'état** (Zustand, Redux, Jotai) pour un état partagé complexe — module 27.
+2. **Context** pour les données « globales » (thème, langue, utilisateur courant) — chapitre 13.
+3. **Bibliothèque d'état** (Zustand, Redux, Jotai) pour un état partagé complexe — chapitre 27.
 4. **Composition par slots** (props contenant du JSX).
 
 > Le drilling sur 2-3 niveaux est normal et **explicite** (traçabilité). Ne recourez à Context que lorsque cela devient réellement lourd.
 
-## 5.8 Props et state : différences et relations
+### 5.8 Props et state : différences et relations
 
 | | **Props** | **State** |
 |---|---|---|
@@ -1437,7 +1421,7 @@ const Champ = forwardRef((props, ref) => <input ref={ref} {...props} />);
 | Déclenche un rendu | Quand le parent re-rend avec d'autres valeurs | Quand on appelle le setter |
 | Analogie | Arguments d'une fonction | Variables locales **persistantes** |
 
-### Anti-pattern : copier une prop dans le state
+#### Anti-pattern : copier une prop dans le state
 
 ```jsx
 // ❌ Le state est initialisé UNE fois ; il ignorera les changements ultérieurs de la prop
@@ -1456,9 +1440,9 @@ Corrections selon l'intention :
 <Formulaire key={utilisateur.id} utilisateur={utilisateur} />
 ```
 
-## 5.9 Validation et typage
+### 5.9 Validation et typage
 
-### TypeScript (recommandé)
+#### TypeScript (recommandé)
 
 ```tsx
 type BoutonProps = {
@@ -1469,21 +1453,21 @@ type BoutonProps = {
 function Bouton({ variante = 'primaire', onClick, children }: BoutonProps) {}
 ```
 
-### `PropTypes` (JavaScript)
+#### `PropTypes` (JavaScript)
 
 Le package `prop-types` reste utilisable, mais **React 19 n'exécute plus la vérification des `propTypes`** (la propriété est ignorée). Pour du JavaScript pur, utilisez JSDoc + TypeScript en mode `checkJs`, ou une validation à l'exécution (**Zod**) aux frontières du système (API, formulaires).
 
-## 5.10 Bonnes pratiques de conception d'API de composant
+### 5.10 Bonnes pratiques de conception d'API de composant
 
 - Garder une **API petite** : peu de props, noms explicites.
 - Préférer des **props sémantiques** (`variante="danger"`) aux props de style (`couleur="red"`).
 - Éviter l'**explosion de props booléennes** (`primaire`, `secondaire`, `danger`…) → un enum `variante`.
 - Préférer **`children` / slots** à des props de configuration de contenu (`texteBouton`, `iconeGauche`…).
 - Transmettre `...rest` à l'élément racine pour permettre `className`, `aria-*`, `data-*`.
-- Ne **pas** passer des objets/fonctions inline si l'enfant est mémoïsé (nouvelle référence à chaque rendu → `memo` inefficace, module 16).
+- Ne **pas** passer des objets/fonctions inline si l'enfant est mémoïsé (nouvelle référence à chaque rendu → `memo` inefficace, chapitre 16).
 - Nommer les callbacks `onXxx`, les booléens `estXxx` / `aXxx` / adjectifs (`disabled`, `actif`).
 
-## ⚠️ Pièges courants
+### 5.11 Pièges fréquents
 
 - Muter une prop.
 - `useState(prop)` en attendant la synchronisation automatique.
@@ -1492,32 +1476,17 @@ Le package `prop-types` reste utilisable, mais **React 19 n'exécute plus la vé
 - Écrire `<Comp prop="{variable}" />` (chaîne littérale `"{variable}"` !) au lieu de `prop={variable}`.
 - S'attendre à ce que `key` soit disponible dans `props.key`.
 
-## ✅ À retenir
+### Synthèse du chapitre 5
 
-- Props = **arguments** d'un composant, **immuables** du point de vue de l'enfant.
-- Les données descendent (props), les événements remontent (callbacks).
-- `children` + slots = base de la composition.
-- N'initialisez pas du state avec une prop en espérant la synchronisation ; dérivez ou utilisez `key`.
-- Typage avec TypeScript ; `propTypes` est ignoré en React 19.
-
-## 🏋️ Exercices
-
-1. Créez un composant `Bouton` avec `variante`, `taille`, `...rest` et `children`.
-2. Refactorez un exemple de prop drilling sur 4 niveaux en utilisant la composition par `children`.
-3. Reproduisez le bug « `useState(prop)` ne suit pas la prop » puis corrigez-le avec `key`.
+Props = **arguments** d'un composant, **immuables** du point de vue de l'enfant ; Les données descendent (props), les événements remontent (callbacks) ; `children` + slots = base de la composition ; N'initialisez pas du state avec une prop en espérant la synchronisation ; dérivez ou utilisez `key` ; Typage avec TypeScript ; `propTypes` est ignoré en React 19.
 
 ---
 
-# 6. State
+## 6. State
 
-## 🎯 Objectifs
+**Objectifs d'apprentissage.** À la fin de ce chapitre, vous saurez : comprendre pourquoi les variables locales ne suffisent pas et ce qu'apporte le state ; maîtriser le fonctionnement interne : snapshot, file d'attente de mises à jour, batching ; mettre à jour objets et tableaux **sans mutation** ; structurer correctement l'état et savoir où le faire vivre.
 
-- Comprendre pourquoi les variables locales ne suffisent pas et ce qu'apporte le state.
-- Maîtriser le fonctionnement interne : snapshot, file d'attente de mises à jour, batching.
-- Mettre à jour objets et tableaux **sans mutation**.
-- Structurer correctement l'état et savoir où le faire vivre.
-
-## 6.1 Pourquoi le state ?
+### 6.1 Pourquoi le state ?
 
 Un composant a souvent besoin de **se souvenir** d'informations (saisie, compteur, onglet actif). Les variables locales ne conviennent pas :
 
@@ -1535,7 +1504,7 @@ Le **state** (`useState`) apporte deux choses :
 1. **Persistance** : la valeur est **conservée par React** entre les rendus.
 2. **Déclenchement** : appeler le **setter** **planifie un nouveau rendu**.
 
-## 6.2 `useState` : syntaxe
+### 6.2 `useState` : syntaxe
 
 ```jsx
 import { useState } from 'react';
@@ -1546,7 +1515,7 @@ const [valeur, setValeur] = useState(valeurInitiale);
 - Retourne un **tableau de deux éléments** (destructuré) : la valeur courante et la **fonction de mise à jour**.
 - La valeur initiale n'est utilisée **qu'au premier rendu** ; ensuite elle est **ignorée**.
 - Les noms sont libres, convention : `[xxx, setXxx]`.
-- Un composant peut avoir **plusieurs** appels à `useState`. React les associe **par ordre d'appel** (d'où la règle « pas de hooks conditionnels », module 11).
+- Un composant peut avoir **plusieurs** appels à `useState`. React les associe **par ordre d'appel** (d'où la règle « pas de hooks conditionnels », chapitre 11).
 
 ```jsx
 function Galerie() {
@@ -1567,18 +1536,18 @@ function Galerie() {
 }
 ```
 
-### Ce qui se passe quand on appelle le setter
+#### Ce qui se passe quand on appelle le setter
 
 1. React **enregistre** la nouvelle valeur dans une **file d'attente**.
 2. React **planifie** un nouveau rendu du composant.
 3. Au rendu suivant, `useState` **retourne la nouvelle valeur**.
 4. React compare le JSX obtenu à l'ancien et **met à jour le DOM** si nécessaire.
 
-### Sortie anticipée (« bail out »)
+#### Sortie anticipée (« bail out »)
 
 Si la nouvelle valeur est identique à l'actuelle selon **`Object.is`**, React **ne re-rend pas** (ou re-rend le composant une fois sans toucher aux enfants).
 
-## 6.3 Le state est un instantané (snapshot)
+### 6.3 Le state est un instantané (snapshot)
 
 Dans un rendu, la valeur du state est **fixée**. Les gestionnaires d'événements « capturent » les valeurs de **leur** rendu (closures).
 
@@ -1603,7 +1572,7 @@ function Compteur() {
 }} />
 ```
 
-## 6.4 Mises à jour fonctionnelles (« updater functions »)
+### 6.4 Mises à jour fonctionnelles (« updater functions »)
 
 Pour calculer le nouvel état **à partir de l'état précédent**, passez une **fonction** :
 
@@ -1615,7 +1584,7 @@ setN(n => n + 1);   // résultat : +3
 
 React place ces fonctions dans la **file d'attente** et les applique **en séquence** au rendu suivant, chacune recevant le résultat de la précédente.
 
-### Règles de la file d'attente
+#### Règles de la file d'attente
 
 Pour `setN(5); setN(n => n + 1); setN(42);` à partir de `n = 0` :
 
@@ -1627,11 +1596,11 @@ Pour `setN(5); setN(n => n + 1); setN(42);` à partir de `n = 0` :
 
 Les fonctions « updater » doivent être **pures** (StrictMode les exécute deux fois en dev) et **ne pas déclencher d'effets**.
 
-### Convention
+#### Convention
 
 On nomme souvent l'argument par la première lettre : `setPanier(p => ...)`, ou `précédent`/`prev`.
 
-### Quand utiliser quelle forme ?
+#### Quand utiliser quelle forme ?
 
 | Situation | Forme |
 |---|---|
@@ -1640,7 +1609,7 @@ On nomme souvent l'argument par la première lettre : `setPanier(p => ...)`, ou 
 | Plusieurs mises à jour successives dans le même événement | Forme fonctionnelle |
 | Dans un `setTimeout` / intervalle / promesse | Forme fonctionnelle (évite les valeurs obsolètes) |
 
-## 6.5 Le batching (regroupement automatique)
+### 6.5 Le batching (regroupement automatique)
 
 React **regroupe** plusieurs mises à jour d'état dans **un seul rendu** (pour les performances et la cohérence).
 
@@ -1663,9 +1632,9 @@ import { flushSync } from 'react-dom';
 flushSync(() => setN(1));   // rendu immédiat ; usage exceptionnel
 ```
 
-## 6.6 Mettre à jour des objets
+### 6.6 Mettre à jour des objets
 
-### Règle : traiter le state comme **immuable** (lecture seule)
+#### Règle : traiter le state comme **immuable** (lecture seule)
 
 Un objet dans le state **ne doit jamais être muté** : on crée une **copie** avec les changements.
 
@@ -1679,7 +1648,7 @@ setPosition({ ...position, x: 5 });          // ✅ avec spread (copie superfici
 
 > **Mutation vs. variable locale** : muter un objet **que l'on vient de créer** pendant le rendu est correct ; muter un objet **du state** ne l'est pas.
 
-### Objets imbriqués
+#### Objets imbriqués
 
 La copie par spread est **superficielle** (*shallow*). Il faut copier **chaque niveau** modifié :
 
@@ -1690,7 +1659,7 @@ setPersonne({
 });
 ```
 
-### Propriétés calculées (clés dynamiques)
+#### Propriétés calculées (clés dynamiques)
 
 ```jsx
 function handleChange(e) {
@@ -1698,7 +1667,7 @@ function handleChange(e) {
 }
 ```
 
-### Immer (mises à jour « mutantes » sans mutation)
+#### Immer (mises à jour « mutantes » sans mutation)
 
 ```jsx
 import { useImmer } from 'use-immer';
@@ -1709,14 +1678,14 @@ mettreAJour(brouillon => { brouillon.adresse.ville = 'Lyon'; });   // le brouill
 
 Immer produit un nouvel objet immuable derrière la scène. Utile pour des structures très imbriquées.
 
-### Pourquoi ne pas muter ?
+#### Pourquoi ne pas muter ?
 
 1. **Détection du changement** : React compare les références ; une mutation conserve la même référence.
 2. **Optimisations** (`memo`, `useMemo`, dépendances d'effets) reposent sur cette comparaison.
 3. **Fonctionnalités** : rendu concurrent, annulation, historique d'états (undo/redo), débogage.
 4. **Prévisibilité** : les snapshots passés ne sont pas altérés.
 
-## 6.7 Mettre à jour des tableaux
+### 6.7 Mettre à jour des tableaux
 
 Les méthodes qui **mutent** (`push`, `pop`, `shift`, `unshift`, `splice`, `sort`, `reverse`, affectation par index) sont **interdites** sur le state. Utilisez des méthodes **non mutantes** ou **copiez d'abord**.
 
@@ -1744,7 +1713,7 @@ setTaches(prev => prev.map(t => (t.id === id ? { ...t, faite: !t.faite } : t)));
 const triees = [...taches].sort((a, b) => a.titre.localeCompare(b.titre));
 ```
 
-### Tableaux d'objets : le piège de la copie superficielle
+#### Tableaux d'objets : le piège de la copie superficielle
 
 ```jsx
 const copie = [...taches];
@@ -1753,7 +1722,7 @@ copie[0].faite = true;   // ❌ MUTE l'objet partagé avec le state d'origine !
 
 Les éléments restent **les mêmes objets** ; modifiez-les en créant un nouvel objet (`{...t, faite: true}`).
 
-## 6.8 Structurer l'état : 5 principes
+### 6.8 Structurer l'état : 5 principes
 
 1. **Regrouper les états liés** : si deux variables changent toujours ensemble, fusionnez-les en un objet (ou utilisez `useReducer`).
 2. **Éviter les contradictions** : `estEnvoi` + `estEnvoye` peuvent être simultanément `true` ; préférez `statut: 'saisie' | 'envoi' | 'envoye'`.
@@ -1779,7 +1748,7 @@ const [selectionId, setSelectionId] = useState(articles[0].id);
 const selection = articles.find(a => a.id === selectionId);
 ```
 
-## 6.9 Remonter l'état (« lifting state up »)
+### 6.9 Remonter l'état (« lifting state up »)
 
 Quand **deux composants** doivent refléter les mêmes données, **déplacez l'état dans leur plus proche ancêtre commun** et passez-le en props (+ callbacks).
 
@@ -1795,19 +1764,19 @@ function Accordeon() {
 }
 ```
 
-### Composant contrôlé vs non contrôlé
+#### Composant contrôlé vs non contrôlé
 
 - **Contrôlé** : l'information importante est portée par les **props** (le parent décide).
 - **Non contrôlé** : l'information est dans le **state local**.
 Un bon composant réutilisable supporte souvent les deux (ex. `value`/`onChange` **ou** `defaultValue`).
 
-### « Source unique de vérité »
+#### « Source unique de vérité »
 
 Chaque donnée doit avoir **un seul propriétaire**. Les autres composants la reçoivent en props.
 
-## 6.10 Préserver et réinitialiser l'état
+### 6.10 Préserver et réinitialiser l'état
 
-### L'état est lié à la position dans l'arbre
+#### L'état est lié à la position dans l'arbre
 
 L'état n'est pas stocké **dans** le composant mais **par React**, associé à la **position** du composant dans l'arbre de rendu.
 
@@ -1816,7 +1785,7 @@ L'état n'est pas stocké **dans** le composant mais **par React**, associé à 
 {estJoueurA ? <Compteur personne="Alice" /> : <Compteur personne="Bob" />}
 ```
 
-### Réinitialiser
+#### Réinitialiser
 
 Deux méthodes :
 1. **Rendre à des positions différentes** (éléments distincts dans le JSX).
@@ -1826,18 +1795,18 @@ Deux méthodes :
 <Compteur key={personne} personne={personne} />
 ```
 
-### Les composants imbriqués dans un composant perdent leur état à chaque rendu (rappel module 4).
+#### Les composants imbriqués dans un composant perdent leur état à chaque rendu (rappel chapitre 4).
 
-### Conserver l'état d'un composant « masqué »
+#### Conserver l'état d'un composant « masqué »
 
 - Le rendre toujours, mais le masquer par **CSS** (`display: none`) ;
 - ou **remonter** l'état dans le parent ;
 - ou utiliser un stockage (localStorage via hook personnalisé) ;
-- ou **`<Activity mode="hidden">`** (React 19.2) : cache le sous-arbre en **préservant son état** et en suspendant ses effets (module 22).
+- ou **`<Activity mode="hidden">`** (React 19.2) : cache le sous-arbre en **préservant son état** et en suspendant ses effets (chapitre 22).
 
-## 6.11 Cas particuliers
+### 6.11 Cas particuliers
 
-### Stocker une fonction dans le state
+#### Stocker une fonction dans le state
 
 ```jsx
 const [rappel, setRappel] = useState(() => maFonction);   // ✅ fonction de init qui retourne la fonction
@@ -1845,14 +1814,14 @@ setRappel(() => autreFonction);                             // ✅ updater qui r
 setRappel(autreFonction);                                   // ❌ React l'appelle comme un updater !
 ```
 
-### Initialisation « paresseuse »
+#### Initialisation « paresseuse »
 
 ```jsx
 const [donnees, setDonnees] = useState(creerGrandeListe());     // ❌ appelée à CHAQUE rendu (résultat ignoré après le 1er)
 const [donnees, setDonnees] = useState(() => creerGrandeListe()); // ✅ appelée une seule fois
 ```
 
-### Ajuster l'état en réaction à une prop (pendant le rendu)
+#### Ajuster l'état en réaction à une prop (pendant le rendu)
 
 Cas rare (ex. réinitialiser une sélection quand la liste change). Mieux vaut **`key`** ou un **calcul dérivé**. À défaut, on peut appeler un `setState` **pendant le rendu** du **même composant** avec une condition de garde ; React relance immédiatement le rendu sans afficher le résultat intermédiaire :
 
@@ -1864,18 +1833,18 @@ if (articles !== precedente) {
 }
 ```
 
-### État d'un composant non monté
+#### État d'un composant non monté
 
 Appeler un setter après le démontage n'a aucun effet (l'ancien avertissement a été supprimé).
 
-### Autres outils d'état
+#### Autres outils d'état
 
-- **`useReducer`** : logique de transition centralisée (module 11).
+- **`useReducer`** : logique de transition centralisée (chapitre 11).
 - **`useRef`** : valeur mutable qui **ne déclenche pas** de rendu.
-- **Context** : état partagé dans un sous-arbre (module 13).
-- **Stores externes** : Zustand, Redux, Jotai (module 27).
+- **Context** : état partagé dans un sous-arbre (chapitre 13).
+- **Stores externes** : Zustand, Redux, Jotai (chapitre 27).
 
-## ⚠️ Pièges courants
+### 6.12 Pièges fréquents
 
 - **Muter** le state (objet/tableau) → pas de rendu ou rendu incohérent.
 - Lire la valeur juste après le setter en pensant qu'elle a changé.
@@ -1886,33 +1855,17 @@ Appeler un setter après le démontage n'a aucun effet (l'ancien avertissement a
 - Copie superficielle d'objets imbriqués.
 - Utiliser `useState(valeurCouteuse())` sans fonction d'initialisation.
 
-## ✅ À retenir
+### Synthèse du chapitre 6
 
-- **State = mémoire** d'un composant ; le setter **planifie** un rendu.
-- Le state est un **instantané** ; le setter ne le modifie pas dans le rendu courant.
-- **Forme fonctionnelle** quand le nouvel état dépend de l'ancien.
-- **Immuabilité** : copiez, ne mutez pas.
-- État **minimal**, sans redondance ; on stocke un **ID** plutôt qu'un objet dupliqué.
-- **Remontez l'état** dans l'ancêtre commun ; **`key`** pour réinitialiser.
-
-## 🏋️ Exercices
-
-1. Implémentez un compteur « +3 » qui ajoute réellement 3, puis expliquez la différence entre les deux écritures.
-2. Gérez une liste de tâches (ajout, suppression, bascule `faite`) sans aucune mutation.
-3. Refactorez `estEnvoi` / `estEnvoye` / `erreur` en un seul état `statut`.
-4. Construisez deux composants synchronisés (°C ↔ °F) en remontant l'état.
+**State = mémoire** d'un composant ; le setter **planifie** un rendu ; Le state est un **instantané** ; le setter ne le modifie pas dans le rendu courant ; **Forme fonctionnelle** quand le nouvel état dépend de l'ancien ; **Immuabilité** : copiez, ne mutez pas ; État **minimal**, sans redondance ; on stocke un **ID** plutôt qu'un objet dupliqué ; **Remontez l'état** dans l'ancêtre commun ; **`key`** pour réinitialiser.
 
 ---
-# 7. Gestion des événements
 
-## 🎯 Objectifs
+## 7. Gestion des événements
 
-- Attacher et écrire correctement des gestionnaires d'événements.
-- Comprendre `SyntheticEvent`, la propagation (bubbling / capture) et la délégation.
-- Connaître les familles d'événements et leurs spécificités React.
-- Distinguer gestionnaires d'événements et effets.
+**Objectifs d'apprentissage.** À la fin de ce chapitre, vous saurez : attacher et écrire correctement des gestionnaires d'événements ; comprendre `SyntheticEvent`, la propagation (bubbling / capture) et la délégation ; connaître les familles d'événements et leurs spécificités React ; distinguer gestionnaires d'événements et effets.
 
-## 7.1 Principe
+### 7.1 Principe
 
 Un **gestionnaire d'événement** (*event handler*) est une **fonction** que React appelle en réponse à une interaction (clic, saisie, soumission…). On le passe via une prop en **camelCase** sur un élément **natif** (`onClick`, `onChange`…).
 
@@ -1925,7 +1878,7 @@ function Bouton() {
 }
 ```
 
-### Trois façons de définir un gestionnaire
+#### Trois façons de définir un gestionnaire
 
 ```jsx
 // 1. Fonction nommée définie dans le composant (conseillée si >1 ligne)
@@ -1938,7 +1891,7 @@ function Bouton() {
 <button onClick={props.onClick} />
 ```
 
-### ⚠️ Passer, ne pas appeler
+#### Passer, ne pas appeler
 
 ```jsx
 <button onClick={handleClick} />       // ✅ passe la fonction
@@ -1946,7 +1899,7 @@ function Bouton() {
 <button onClick={() => handleClick()} />// ✅ fonction fléchée qui appelle au clic
 ```
 
-### Les composants personnalisés n'ont pas d'événements « magiques »
+#### Les composants personnalisés n'ont pas d'événements « magiques »
 
 `<MonBouton onClick={…} />` ne fait que **passer une prop** nommée `onClick`. C'est au composant `MonBouton` de la brancher sur un élément natif :
 
@@ -1964,7 +1917,7 @@ function Recherche({ onRecherche }) {
 }
 ```
 
-## 7.2 L'objet événement : `SyntheticEvent`
+### 7.2 L'objet événement : `SyntheticEvent`
 
 React fournit à chaque gestionnaire un **objet événement synthétique** (*SyntheticEvent*) : un **wrapper cross-navigateur** autour de l'événement natif, avec la même interface que les événements DOM standard.
 
@@ -1982,7 +1935,7 @@ React fournit à chaque gestionnaire un **objet événement synthétique** (*Syn
 
 > Depuis **React 17**, l'ancien mécanisme de « pooling » d'événements a été supprimé : on peut lire `e` dans du code asynchrone sans `e.persist()`.
 
-### Propriétés selon la famille
+#### Propriétés selon la famille
 
 - **Souris** : `clientX/Y`, `pageX/Y`, `screenX/Y`, `button`, `buttons`, `ctrlKey`, `shiftKey`, `altKey`, `metaKey`.
 - **Clavier** : `key` (valeur lisible : `'Enter'`, `'Escape'`, `'a'`), `code` (touche physique : `'KeyA'`), `repeat`, modificateurs.
@@ -1990,7 +1943,7 @@ React fournit à chaque gestionnaire un **objet événement synthétique** (*Syn
 - **Focus** : `relatedTarget`.
 - **Pointeur** : `pointerId`, `pointerType`, `pressure`.
 
-## 7.3 Catalogue des événements courants
+### 7.3 Catalogue des événements courants
 
 | Famille | Événements |
 |---|---|
@@ -2009,7 +1962,7 @@ React fournit à chaque gestionnaire un **objet événement synthétique** (*Syn
 | **Composition (IME)** | `onCompositionStart`, `onCompositionUpdate`, `onCompositionEnd` |
 | **Dialogue / détails** | `onToggle`, `onClose`, `onCancel` |
 
-### Particularités de React
+#### Particularités de React
 
 - **`onChange` sur `<input>` / `<textarea>`** : se déclenche à **chaque modification** (comportement de l'événement DOM `input`), pas seulement au blur comme l'événement `change` natif.
 - **`onFocus` / `onBlur`** utilisent `focusin` / `focusout` : ils **se propagent**, ce qui facilite la détection de focus dans un conteneur.
@@ -2017,9 +1970,9 @@ React fournit à chaque gestionnaire un **objet événement synthétique** (*Syn
 - **`onMouseEnter` / `onMouseLeave`** ne se propagent pas ; **`onMouseOver` / `onMouseOut`** si.
 - Certains événements « bloquants » (`touchstart`, `wheel`) sont enregistrés comme **passifs** : `preventDefault()` y est **sans effet** ; pour cela, utilisez `addEventListener` avec `{ passive: false }` dans un effet.
 
-## 7.4 Propagation des événements
+### 7.4 Propagation des événements
 
-### Bubbling (remontée)
+#### Bubbling (remontée)
 
 Par défaut, un événement **remonte** de l'élément ciblé vers ses **ancêtres** : tous les gestionnaires du même type rencontrés sont appelés (hors `onScroll`).
 
@@ -2030,7 +1983,7 @@ Par défaut, un événement **remonte** de l'élément ciblé vers ses **ancêtr
 // Clic sur le bouton : alerte "bouton", PUIS "div"
 ```
 
-### Arrêter la propagation
+#### Arrêter la propagation
 
 ```jsx
 function Bouton({ onClick, children }) {
@@ -2045,7 +1998,7 @@ function Bouton({ onClick, children }) {
 
 > Préférez, quand c'est possible, une **conception** qui évite `stopPropagation` (qui casse d'autres écouteurs, comme les analytics). Si un parent doit réagir à tous les clics, laissez-les remonter.
 
-### Capture (descente)
+#### Capture (descente)
 
 Ajoutez le suffixe **`Capture`** pour intercepter **avant** que l'événement n'atteigne la cible :
 
@@ -2057,11 +2010,11 @@ Ajoutez le suffixe **`Capture`** pour intercepter **avant** que l'événement n'
 
 Ordre : capture (racine → cible), puis bubbling (cible → racine).
 
-### Délégation d'événements
+#### Délégation d'événements
 
 React n'attache pas un écouteur DOM par élément : il attache **quelques écouteurs sur le conteneur racine** (celui passé à `createRoot`) et **dispatche** lui-même. Cela réduit la mémoire et simplifie la gestion des éléments dynamiques. (Avant React 17, c'était sur `document`.) Conséquence : un `addEventListener` natif sur `document` s'exécute **après** les gestionnaires React, et `e.stopPropagation()` natif n'arrête pas les gestionnaires React situés plus haut dans la même racine, d'où la prudence lors de mélanges.
 
-### Comportement par défaut
+#### Comportement par défaut
 
 ```jsx
 function Formulaire() {
@@ -2077,7 +2030,7 @@ function Formulaire() {
 
 > `preventDefault` ≠ `stopPropagation` : l'un arrête l'**action du navigateur**, l'autre arrête la **remontée**. Ils sont indépendants.
 
-## 7.5 Gestionnaires d'événements et effets de bord
+### 7.5 Gestionnaires d'événements et effets de bord
 
 Contrairement au **rendu**, un gestionnaire **n'a pas besoin d'être pur** : c'est **l'endroit naturel** pour les effets de bord déclenchés par l'utilisateur (changer le state, envoyer une requête, naviguer, écrire dans `localStorage`, appeler `focus()`).
 
@@ -2089,9 +2042,9 @@ function handleEnvoyer() {
 }
 ```
 
-> Règle : si le code doit s'exécuter **parce que l'utilisateur a fait quelque chose**, il va dans un **gestionnaire**. S'il doit s'exécuter **parce que le composant est affiché / une valeur a changé**, c'est un **effet** (module 11).
+> Règle : si le code doit s'exécuter **parce que l'utilisateur a fait quelque chose**, il va dans un **gestionnaire**. S'il doit s'exécuter **parce que le composant est affiché / une valeur a changé**, c'est un **effet** (chapitre 11).
 
-## 7.6 Gestionnaires et state : snapshots et closures
+### 7.6 Gestionnaires et state : snapshots et closures
 
 Un gestionnaire voit les **valeurs du rendu où il a été créé** :
 
@@ -2105,9 +2058,9 @@ function Message() {
 }
 ```
 
-Pour toujours lire la **dernière** valeur, utilisez une **ref** ou `useEffectEvent` (module 11).
+Pour toujours lire la **dernière** valeur, utilisez une **ref** ou `useEffectEvent` (chapitre 11).
 
-## 7.7 Événements dans les listes : transmettre des arguments
+### 7.7 Événements dans les listes : transmettre des arguments
 
 ```jsx
 {taches.map(t => (
@@ -2129,7 +2082,7 @@ Alternative avec attributs `data-*` et un seul gestionnaire (**délégation manu
 </ul>
 ```
 
-## 7.8 Clavier et accessibilité
+### 7.8 Clavier et accessibilité
 
 ```jsx
 function Champ({ onValider, onAnnuler }) {
@@ -2148,7 +2101,7 @@ function Champ({ onValider, onAnnuler }) {
 - Pendant une saisie avec **IME** (japonais, chinois…), vérifiez `e.nativeEvent.isComposing` avant de traiter `Enter`.
 - **Éléments interactifs** : utilisez de vrais `<button>` / `<a>` plutôt que `<div onClick>`. Si c'est inévitable, ajoutez `role="button"`, `tabIndex={0}` et la gestion de `Enter`/`Space`.
 
-## 7.9 Écouteurs natifs dans des effets
+### 7.9 Écouteurs natifs dans des effets
 
 Pour `window`, `document`, `ResizeObserver`, ou des événements non gérés par React (ex. `resize`, `beforeunload`, écouteur non passif) :
 
@@ -2160,9 +2113,9 @@ useEffect(() => {
 }, []);
 ```
 
-## 7.10 Techniques usuelles
+### 7.10 Techniques usuelles
 
-### Debounce et throttle
+#### Debounce et throttle
 
 ```jsx
 // Debounce d'une recherche : attendre 300 ms après la dernière frappe
@@ -2174,9 +2127,9 @@ useEffect(() => {
 }, [terme]);
 ```
 
-Ou `useDeferredValue` (module 11) quand il s'agit d'alléger un rendu coûteux.
+Ou `useDeferredValue` (chapitre 11) quand il s'agit d'alléger un rendu coûteux.
 
-### Éviter le double envoi
+#### Éviter le double envoi
 
 ```jsx
 async function handleSubmit(e) {
@@ -2188,7 +2141,7 @@ async function handleSubmit(e) {
 <button disabled={envoi}>Envoyer</button>
 ```
 
-## ⚠️ Pièges courants
+### 7.11 Pièges fréquents
 
 - `onClick={fn()}` : appel immédiat.
 - Oublier `e.preventDefault()` dans un `onSubmit` (rechargement de la page).
@@ -2198,37 +2151,23 @@ async function handleSubmit(e) {
 - Utiliser `onKeyPress` (déprécié) ou `keyCode`.
 - Rendre cliquable un `<div>` sans clavier/ARIA.
 
-## ✅ À retenir
+### Synthèse du chapitre 7
 
-- Passez **une fonction**, ne l'appelez pas.
-- L'événement est un **SyntheticEvent** ; `target` ≠ `currentTarget`.
-- Les événements **remontent** ; `Capture` pour intercepter en descente ; `preventDefault` ≠ `stopPropagation`.
-- Les gestionnaires peuvent avoir des **effets de bord**.
-- `onChange` se déclenche **à chaque frappe** en React.
-
-## 🏋️ Exercices
-
-1. Créez un `<Bouton onClick>` réutilisable et un `<Toolbar>` qui l'utilise avec deux actions différentes.
-2. Démontrez l'ordre capture → cible → bubbling avec trois `div` imbriquées.
-3. Implémentez un champ « éditer en place » : Enter valide, Escape annule, blur valide.
+Passez **une fonction**, ne l'appelez pas ; L'événement est un **SyntheticEvent** ; `target` ≠ `currentTarget` ; Les événements **remontent** ; `Capture` pour intercepter en descente ; `preventDefault` ≠ `stopPropagation` ; Les gestionnaires peuvent avoir des **effets de bord** ; `onChange` se déclenche **à chaque frappe** en React.
 
 ---
 
-# 8. Rendu conditionnel
+## 8. Rendu conditionnel
 
-## 🎯 Objectifs
+**Objectifs d'apprentissage.** À la fin de ce chapitre, vous saurez : maîtriser toutes les techniques de rendu conditionnel et savoir laquelle choisir ; éviter les pièges (`&&` et `0`, ternaires imbriqués) ; comprendre l'impact sur l'état et le DOM (monter/démonter vs masquer).
 
-- Maîtriser toutes les techniques de rendu conditionnel et savoir laquelle choisir.
-- Éviter les pièges (`&&` et `0`, ternaires imbriqués).
-- Comprendre l'impact sur l'état et le DOM (monter/démonter vs masquer).
-
-## 8.1 Principe
+### 8.1 Principe
 
 Le rendu conditionnel utilise **le JavaScript ordinaire** (`if`, `?:`, `&&`, `switch`) pour décider **quel JSX** retourner. Il n'existe pas de directive spéciale (`v-if`, `*ngIf`) en React.
 
-## 8.2 Techniques
+### 8.2 Techniques
 
-### 8.2.1 `if` avec retour anticipé (« early return »)
+#### 8.2.1 `if` avec retour anticipé (« early return »)
 
 ```jsx
 function Element({ nom, emballe }) {
@@ -2248,7 +2187,7 @@ function Page({ chargement, erreur, donnees }) {
 
 Excellent pour les **cas limites** (chargement, erreur, vide) : le « cas heureux » reste lisible.
 
-### 8.2.2 Opérateur ternaire `condition ? A : B`
+#### 8.2.2 Opérateur ternaire `condition ? A : B`
 
 ```jsx
 <li>{emballe ? <del>{nom} ✔</del> : nom}</li>
@@ -2257,7 +2196,7 @@ Excellent pour les **cas limites** (chargement, erreur, vide) : le « cas heureu
 
 À éviter quand **imbriqué** (illisible) : extraire un composant ou utiliser `if`.
 
-### 8.2.3 Opérateur logique ET `&&`
+#### 8.2.3 Opérateur logique ET `&&`
 
 ```jsx
 <li>{nom} {emballe && '✔'}</li>
@@ -2274,7 +2213,7 @@ Excellent pour les **cas limites** (chargement, erreur, vide) : le « cas heureu
 {messages.length ? <Liste /> : null}  // ✅
 ```
 
-### 8.2.4 `null` : ne rien afficher
+#### 8.2.4 `null` : ne rien afficher
 
 ```jsx
 function Notification({ message }) {
@@ -2283,7 +2222,7 @@ function Notification({ message }) {
 }
 ```
 
-### 8.2.5 Affecter du JSX à une variable
+#### 8.2.5 Affecter du JSX à une variable
 
 ```jsx
 function Element({ nom, emballe }) {
@@ -2293,14 +2232,14 @@ function Element({ nom, emballe }) {
 }
 ```
 
-### 8.2.6 Fallback avec `||` et `??`
+#### 8.2.6 Fallback avec `||` et `??`
 
 ```jsx
 <p>{utilisateur.surnom || utilisateur.nom}</p>   // falsy → fallback (attention à 0 et '')
 <p>{compteur ?? 'N/A'}</p>                       // seulement null/undefined → fallback
 ```
 
-### 8.2.7 `switch` / tables de correspondance (lookup)
+#### 8.2.7 `switch` / tables de correspondance (lookup)
 
 ```jsx
 function Statut({ etat }) {
@@ -2320,14 +2259,14 @@ function Statut({ etat }) {
 }
 ```
 
-### 8.2.8 Attributs, classes et styles conditionnels
+#### 8.2.8 Attributs, classes et styles conditionnels
 
 ```jsx
 <button disabled={!valide} className={`btn ${valide ? 'btn--ok' : ''}`} style={{ opacity: valide ? 1 : 0.5 }} />
 <input aria-invalid={erreur ? 'true' : undefined} />      {/* undefined → attribut absent */}
 ```
 
-### 8.2.9 Enveloppe conditionnelle
+#### 8.2.9 Enveloppe conditionnelle
 
 ```jsx
 function Lien({ href, children }) {
@@ -2338,7 +2277,7 @@ const contenu = <Texte />;
 return href ? <a href={href}>{contenu}</a> : contenu;
 ```
 
-## 8.3 Monter/démonter ou simplement masquer ?
+### 8.3 Monter/démonter ou simplement masquer ?
 
 | Approche | Effet | À utiliser quand |
 |---|---|---|
@@ -2353,7 +2292,7 @@ return href ? <a href={href}>{contenu}</a> : contenu;
 
 > Un composant démonté perd son **état** : placez l'état dans le **parent** si vous voulez le garder.
 
-## 8.4 Le pattern « chargement / erreur / vide / succès »
+### 8.4 Le pattern « chargement / erreur / vide / succès »
 
 Toute interface qui dépend de données asynchrones a **quatre états** à gérer :
 
@@ -2369,7 +2308,178 @@ function ListeUtilisateurs() {
 
 Préférez un **état énuméré** (`'idle' | 'loading' | 'success' | 'error'`) à plusieurs booléens susceptibles de se contredire.
 
-## ⚠️ Pièges courants
+### 8.5 Évaluer la condition : valeurs vraies et fausses
+
+En JavaScript, toute valeur est évaluée comme **vraie** (*truthy*) ou **fausse** (*falsy*) dans un contexte booléen. Les valeurs fausses sont : `false`, `0`, `-0`, `0n`, `""`, `null`, `undefined` et `NaN`. **Tout le reste est vrai**, y compris `"0"`, `"false"`, `[]` et `{}`.
+
+React ajoute une seconde règle, **indépendante** : certaines valeurs sont **ignorées au rendu** (rien n'est inséré dans le DOM) alors que d'autres sont **affichées**.
+
+| Valeur placée dans le JSX | Rendu |
+| --- | --- |
+| `true`, `false`, `null`, `undefined` | **Rien** |
+| `""` (chaîne vide) | Rien (nœud texte vide) |
+| `0`, `NaN`, `0n` | **Affichés** (`0`, `NaN`, `0`) |
+| `"texte"`, `42` | Affichés |
+| Tableau (`[<li/>, <li/>]`) | Chaque élément est rendu (clés requises) |
+| Objet quelconque (hors élément React) | **Erreur** (*Objects are not valid as a React child*) |
+
+C'est la combinaison de ces deux règles qui explique le piège le plus célèbre du rendu conditionnel :
+
+```jsx
+// ❌ Si messages.length vaut 0, le nombre 0 est affiché à l'écran
+{messages.length && <Liste messages={messages} />}
+
+// ✅ Condition explicitement booléenne
+{messages.length > 0 && <Liste messages={messages} />}
+{Boolean(messages.length) && <Liste messages={messages} />}
+
+// ✅ Ou un ternaire avec null
+{messages.length ? <Liste messages={messages} /> : null}
+```
+
+**Règle pratique.** À gauche d'un `&&`, mettez toujours une expression dont le résultat est un **booléen** (`> 0`, `!== null`, `Boolean(...)`, `!!`), jamais un nombre ou une chaîne brute. En React Native, la règle est encore plus stricte : une chaîne vide ou un texte hors composant `<Text>` provoque une **erreur**, pas seulement un affichage indésirable.
+
+### 8.6 Rendu conditionnel et identité : ce que devient l'état
+
+React identifie un composant par son **type** et sa **position** dans l'arbre (chapitre 9 pour le rôle des clés). Le rendu conditionnel agit donc directement sur la **conservation de l'état** local.
+
+**Cas 1 : même type, même position → l'état est conservé.**
+
+```jsx
+function Page({ estAdmin }) {
+  return estAdmin
+    ? <Formulaire titre="Administration" />
+    : <Formulaire titre="Profil" />;   // même composant, même position
+}
+// Le texte saisi dans le formulaire survit au changement de estAdmin.
+```
+
+**Cas 2 : type différent à la même position → l'état est détruit.**
+
+```jsx
+return estAdmin
+  ? <section><Formulaire /></section>
+  : <div><Formulaire /></div>;          // <section> ≠ <div> : tout est remonté
+```
+
+**Cas 3 : composant rendu ou non → monté / démonté.** Quand `{cond && <Panneau />}` passe de vrai à faux, `Panneau` est **démonté** : son état est perdu et ses effets sont nettoyés. Quand la condition redevient vraie, il est **remonté à neuf**.
+
+**Réinitialiser volontairement** : donnez une `key` différente, ce qui force React à considérer qu'il s'agit d'un autre composant.
+
+```jsx
+<Formulaire key={utilisateur.id} utilisateur={utilisateur} />
+```
+
+**Conserver volontairement** un état malgré l'absence d'affichage : (a) **remontez l'état** dans un parent qui reste monté ; (b) **masquez** avec du CSS ou l'attribut `hidden` ; (c) utilisez `<Activity mode="hidden">` (chapitre 22), qui garde l'état tout en suspendant les effets.
+
+> **Ne définissez jamais un composant à l'intérieur d'un autre composant.** À chaque rendu du parent, la fonction interne est une **nouvelle fonction**, donc un **nouveau type** : React démonte et remonte l'enfant à chaque fois, et son état est perdu.
+
+### 8.7 Rendu conditionnel et Hooks
+
+Les Hooks doivent être appelés **à chaque rendu, dans le même ordre** (chapitre 11). Un `return` anticipé placé **avant** un Hook viole cette règle.
+
+```jsx
+// ❌ useState n'est pas appelé quand chargement est vrai
+function Profil({ chargement, utilisateur }) {
+  if (chargement) return <Spinner />;
+  const [edition, setEdition] = useState(false);   // erreur : nombre de Hooks variable
+  return <Fiche utilisateur={utilisateur} edition={edition} />;
+}
+
+// ✅ Tous les Hooks d'abord, les retours anticipés ensuite
+function Profil({ chargement, utilisateur }) {
+  const [edition, setEdition] = useState(false);
+  if (chargement) return <Spinner />;
+  return <Fiche utilisateur={utilisateur} edition={edition} />;
+}
+
+// ✅✅ Ou : extraire la partie conditionnelle dans un composant dédié
+function Profil({ chargement, utilisateur }) {
+  if (chargement) return <Spinner />;
+  return <FicheEditable utilisateur={utilisateur} />;  // porte son propre useState
+}
+```
+
+Le message d'erreur typique est *Rendered fewer hooks than expected* (ou *more*). La règle de lint `react-hooks/rules-of-hooks` la détecte à l'écriture.
+
+### 8.8 Masquer, démonter ou suspendre : récapitulatif
+
+| Technique | État local | Effets | DOM | Accessibilité | Usage typique |
+| --- | --- | --- | --- | --- | --- |
+| `{cond && <X />}` (démontage) | Perdu | Nettoyés | Absent | Absent | Cas général, contenu léger ou sans état à garder |
+| CSS `display: none` / attribut `hidden` | Conservé | **Toujours actifs** | Présent | Masqué aux lecteurs d'écran | Onglets, menus : bascule fréquente et état à préserver |
+| CSS `visibility: hidden` | Conservé | Actifs | Présent (occupe l'espace) | Masqué | Réserver la place pour éviter un décalage de mise en page |
+| `<Activity mode="hidden">` | **Conservé** | **Suspendus** (nettoyés) | Présent mais masqué | Masqué | Pages/onglets « en veille » dont on veut garder l'état sans coût d'effets |
+| Remontée de l'état dans un parent | Conservé (dans le parent) | Selon l'enfant | Absent | Absent | État à conserver sans garder le DOM |
+
+Le critère de choix est double : **faut-il conserver l'état ?** et **le composant doit-il continuer à travailler en arrière-plan ?** (abonnements, minuteurs, requêtes). Avec `display: none`, un `setInterval` continue de tourner ; avec `<Activity mode="hidden">`, les effets sont nettoyés et recréés à l'affichage.
+
+### 8.9 Composants de garde et conditions d'accès
+
+Quand la même condition se répète (utilisateur connecté, droit particulier, fonctionnalité activée), encapsulez-la dans un **composant de garde** (*guard*) plutôt que de dupliquer des `&&` partout.
+
+```jsx
+function Garde({ autorise, secours = null, children }) {
+  return autorise ? children : secours;
+}
+
+function PageAdmin() {
+  const { utilisateur } = useSession();
+  return (
+    <Garde autorise={utilisateur?.role === 'admin'} secours={<AccesRefuse />}>
+      <TableauDeBord />
+    </Garde>
+  );
+}
+```
+
+Pour les **fonctionnalités activées par drapeau** (*feature flags*), le même principe s'applique :
+
+```jsx
+function Fonctionnalite({ nom, children, repli = null }) {
+  const drapeaux = useDrapeaux();
+  return drapeaux[nom] ? children : repli;
+}
+```
+
+> Une garde **côté interface** ne protège **pas** les données : l'autorisation doit toujours être **revérifiée côté serveur**. Elle sert l'expérience utilisateur, pas la sécurité.
+
+### 8.10 Accessibilité du contenu qui apparaît et disparaît
+
+Afficher ou masquer du contenu n'est pas qu'un sujet visuel.
+
+- **Annoncer les changements** : un message d'erreur ou de confirmation inséré dynamiquement n'est lu que s'il est dans une **région vivante** (*live region*) présente **dès le départ** dans le DOM : `<div role="status" aria-live="polite">{message}</div>` pour une information, `role="alert"` pour une erreur urgente.
+- **Gérer le focus** : si un clic ouvre un panneau ou une modale, déplacez le focus dedans ; à la fermeture, **restituez** le focus à l'élément déclencheur. Si l'élément qui a le focus disparaît, le focus retombe sur `<body>`, et l'utilisateur au clavier est perdu.
+- **Exposer l'état** : `aria-expanded` sur le bouton d'un panneau dépliable, `aria-controls` vers son identifiant, `aria-busy="true"` pendant un chargement.
+- **Masquer correctement** : `display: none` et l'attribut `hidden` retirent l'élément de l'arbre d'accessibilité **et** de l'ordre de tabulation ; `aria-hidden="true"` ne masque qu'aux technologies d'assistance mais laisse l'élément **focalisable** (à éviter sur du contenu interactif). L'attribut `inert` désactive à la fois le focus, les clics et l'exposition aux lecteurs d'écran.
+- **Squelettes de chargement** : indiquez l'état de chargement par un texte alternatif ou `aria-busy`, pas seulement par une animation.
+
+### 8.11 Lisibilité : choisir la bonne écriture
+
+| Situation | Écriture recommandée |
+| --- | --- |
+| Deux branches, rendu court | Ternaire `cond ? <A /> : <B />` |
+| Afficher ou ne rien afficher | `cond && <A />` (condition **booléenne**) |
+| Cas d'erreur, de chargement ou de vide avant le rendu principal | **Retour anticipé** |
+| Trois cas ou plus, mutuellement exclusifs | **Table de correspondance** ou `switch` dans une fonction |
+| Branche longue ou logique complexe | **Extraire un composant** (`<Resultat />`, `<Erreur />`) |
+| Même condition répétée | **Composant de garde** ou variable nommée (`const peutEditer = …`) |
+
+Évitez les **ternaires imbriqués** : au-delà d'un niveau, ils deviennent illisibles. Remplacez-les par une table :
+
+```jsx
+const vues = {
+  chargement: <Spinner />,
+  erreur: <Erreur />,
+  vide: <EtatVide />,
+  succes: <Liste elements={elements} />,
+};
+return vues[statut] ?? null;
+```
+
+Nommer les conditions améliore la lecture : `const afficherBanniere = !abonne && essaiTermine;` est plus clair que la même expression écrite dans le JSX.
+
+### 8.12 Pièges fréquents
 
 - `{nombre && <X />}` affichant `0`.
 - **Ternaires imbriqués** illisibles.
@@ -2377,30 +2487,17 @@ Préférez un **état énuméré** (`'idle' | 'loading' | 'success' | 'error'`) 
 - Démonter un formulaire pour le « masquer » et perdre la saisie.
 - Rendre `undefined` dans un composant hérité d'une ancienne version (erreur avant React 18).
 
-## ✅ À retenir
+### Synthèse du chapitre 8
 
-- C'est du **JavaScript pur** : `if`, `?:`, `&&`, `switch`.
-- **Early return** pour les cas limites ; **ternaire** pour deux branches ; **`&&`** pour « afficher ou rien » (avec condition booléenne).
-- Monter/démonter **détruit l'état** ; masquer le **conserve**.
-- Gérez toujours **chargement, erreur, vide**.
-
-## 🏋️ Exercices
-
-1. Créez un composant `Statut` utilisant une table de correspondance pour 4 états.
-2. Corrigez trois variantes boguées de `&&` avec `0`, `''` et `NaN`.
-3. Comparez le comportement d'un champ texte dans un panneau conditionnel et dans un panneau masqué par CSS.
+C'est du **JavaScript pur** : `if`, `?:`, `&&`, `switch` ; **Early return** pour les cas limites ; **ternaire** pour deux branches ; **`&&`** pour « afficher ou rien » (avec condition booléenne) ; Monter/démonter **détruit l'état** ; masquer le **conserve** ; Gérez toujours **chargement, erreur, vide**.
 
 ---
 
-# 9. Listes et clés
+## 9. Listes et clés
 
-## 🎯 Objectifs
+**Objectifs d'apprentissage.** À la fin de ce chapitre, vous saurez : afficher des collections avec `map`, `filter` et leurs dérivés ; comprendre le rôle exact des `key` dans la réconciliation ; choisir des clés correctes et éviter les bugs liés à l'index.
 
-- Afficher des collections avec `map`, `filter` et leurs dérivés.
-- Comprendre le rôle exact des `key` dans la réconciliation.
-- Choisir des clés correctes et éviter les bugs liés à l'index.
-
-## 9.1 Afficher une liste
+### 9.1 Afficher une liste
 
 On **transforme un tableau de données en tableau d'éléments JSX** avec `map`, que React sait rendre :
 
@@ -2421,7 +2518,7 @@ function ListePersonnes() {
 }
 ```
 
-### Filtrer puis afficher
+#### Filtrer puis afficher
 
 ```jsx
 const mathematiciennes = personnes.filter(p => p.metier === 'mathématicienne');
@@ -2430,7 +2527,7 @@ return <ul>{mathematiciennes.map(p => <li key={p.id}>{p.nom}</li>)}</ul>;
 
 > Le tri, le filtre et les regroupements sont des **valeurs dérivées** : calculez-les **pendant le rendu** (éventuellement avec `useMemo`), ne les stockez **pas** dans un state.
 
-### Fonction fléchée avec corps
+#### Fonction fléchée avec corps
 
 ```jsx
 {personnes.map(p => {
@@ -2439,7 +2536,7 @@ return <ul>{mathematiciennes.map(p => <li key={p.id}>{p.nom}</li>)}</ul>;
 })}
 ```
 
-### Objets : `Object.entries`
+#### Objets : `Object.entries`
 
 ```jsx
 {Object.entries(stocks).map(([produit, quantite]) => (
@@ -2447,13 +2544,13 @@ return <ul>{mathematiciennes.map(p => <li key={p.id}>{p.nom}</li>)}</ul>;
 ))}
 ```
 
-### Aplatir : `flatMap`
+#### Aplatir : `flatMap`
 
 ```jsx
 {groupes.flatMap(g => g.membres).map(m => <Membre key={m.id} membre={m} />)}
 ```
 
-### Listes imbriquées
+#### Listes imbriquées
 
 ```jsx
 {categories.map(cat => (
@@ -2466,13 +2563,13 @@ return <ul>{mathematiciennes.map(p => <li key={p.id}>{p.nom}</li>)}</ul>;
 
 Chaque niveau a ses propres `key` (unicité requise **parmi les frères uniquement**).
 
-### Liste vide
+#### Liste vide
 
 ```jsx
 {items.length === 0 ? <p>Aucun résultat</p> : <ul>{items.map(…)}</ul>}
 ```
 
-## 9.2 Les clés (`key`) : définition
+### 9.2 Les clés (`key`) : définition
 
 La **`key`** est un **identifiant spécial** que React utilise pour **reconnaître chaque élément d'une liste** d'un rendu à l'autre. Elle permet à React de :
 
@@ -2482,7 +2579,7 @@ La **`key`** est un **identifiant spécial** que React utilise pour **reconnaît
 
 Sans `key`, React avertit (« Each child in a list should have a unique key prop ») et se rabat sur l'**index** (position).
 
-## 9.3 Règles des clés
+### 9.3 Règles des clés
 
 1. **Uniques parmi les frères** (même tableau) ; pas besoin d'être globalement uniques.
 2. **Stables** : une clé ne doit **pas changer** entre les rendus pour un même élément (pas de `Math.random()` ou `crypto.randomUUID()` **pendant le rendu**).
@@ -2499,7 +2596,7 @@ Sans `key`, React avertit (« Each child in a list should have a unique key prop
 
 > La syntaxe courte `<>…</>` **n'accepte pas de `key`** : utilisez `<Fragment key={…}>`.
 
-## 9.4 D'où viennent les clés ?
+### 9.4 D'où viennent les clés ?
 
 | Source | Exemple | Remarque |
 |---|---|---|
@@ -2514,7 +2611,7 @@ function ajouter(titre) {
 }
 ```
 
-## 9.5 Pourquoi l'index est dangereux
+### 9.5 Pourquoi l'index est dangereux
 
 Si l'on **insère, supprime ou réordonne**, les index se **décalent** : React associe l'état/DOM à la mauvaise donnée.
 
@@ -2528,7 +2625,7 @@ Symptômes : champs non contrôlés qui gardent la mauvaise valeur, **focus** d�
 
 > Utiliser l'index **supprime l'avertissement**, mais **ne corrige pas** le problème d'identité.
 
-## 9.6 Clés et réconciliation (fonctionnement)
+### 9.6 Clés et réconciliation (fonctionnement)
 
 Lorsqu'une liste change, React compare les anciens et nouveaux enfants :
 
@@ -2537,7 +2634,7 @@ Lorsqu'une liste change, React compare les anciens et nouveaux enfants :
 - **Clé disparue** → élément **détruit** (démonté).
 - **Clé déplacée** → nœud **déplacé** dans le DOM, sans recréation.
 
-## 9.7 Utiliser `key` en dehors des listes : réinitialiser un composant
+### 9.7 Utiliser `key` en dehors des listes : réinitialiser un composant
 
 Changer la `key` d'un composant force React à le **recréer** (état remis à zéro) :
 
@@ -2547,7 +2644,7 @@ Changer la `key` d'un composant force React à le **recréer** (état remis à z
 
 Plus propre et plus fiable que de synchroniser manuellement l'état avec des effets.
 
-## 9.8 Séparer les responsabilités : extraire l'élément de liste
+### 9.8 Séparer les responsabilités : extraire l'élément de liste
 
 ```jsx
 function Tache({ tache, onBasculer }) {          // pas de `key` ici : elle est posée par le parent
@@ -2556,7 +2653,7 @@ function Tache({ tache, onBasculer }) {          // pas de `key` ici : elle est 
 {taches.map(t => <Tache key={t.id} tache={t} onBasculer={onBasculer} />)}
 ```
 
-## 9.9 Performance sur de grandes listes
+### 9.9 Performance sur de grandes listes
 
 - Éviter de recalculer `filter/sort` à chaque rendu si la liste est volumineuse : `useMemo`.
 - Mémoïser l'élément enfant (`memo`) et stabiliser les callbacks (`useCallback`) — **après mesure**.
@@ -2564,7 +2661,7 @@ function Tache({ tache, onBasculer }) {          // pas de `key` ici : elle est 
 - **Virtualisation** (windowing) : ne rendre que les éléments visibles : `react-window`, `react-virtuoso`, `@tanstack/react-virtual`. Indispensable à partir de plusieurs centaines/milliers de lignes.
 - `useDeferredValue` / `useTransition` pour garder la saisie fluide lors du filtrage.
 
-## 9.10 Exemple complet : liste de tâches avec filtre
+### 9.10 Exemple complet : liste de tâches avec filtre
 
 ```jsx
 function TodoApp() {
@@ -2596,7 +2693,115 @@ function TodoApp() {
 }
 ```
 
-## ⚠️ Pièges courants
+### 9.11 Trier, filtrer, paginer sans muter
+
+`Array.prototype.sort`, `reverse` et `splice` **modifient** le tableau d'origine : si ce tableau est un état ou une prop, c'est une mutation interdite (chapitres 4 et 6). Travaillez sur une **copie**.
+
+```jsx
+// ✅ Copie puis tri
+const tries = [...produits].sort((a, b) => a.prix - b.prix);
+
+// ✅ Méthodes non mutantes (ES2023)
+const tries2 = produits.toSorted((a, b) => a.prix - b.prix);
+const inverses = produits.toReversed();
+const sans = produits.toSpliced(2, 1);        // retire l'élément d'indice 2
+const modifie = produits.with(0, nouveau);    // remplace l'élément d'indice 0
+```
+
+**Tri, filtre, pagination : valeurs dérivées.** Ne stockez pas la liste affichée dans un état ; stockez les **critères** (tri, filtre, page) et **calculez** la liste pendant le rendu :
+
+```jsx
+function Catalogue({ produits }) {
+  const [filtre, setFiltre] = useState('');
+  const [tri, setTri] = useState('nom');
+  const [page, setPage] = useState(0);
+  const TAILLE = 20;
+
+  const affiches = produits
+    .filter(p => p.nom.toLowerCase().includes(filtre.toLowerCase()))
+    .toSorted((a, b) => (a[tri] > b[tri] ? 1 : -1))
+    .slice(page * TAILLE, (page + 1) * TAILLE);
+
+  return <ul>{affiches.map(p => <li key={p.id}>{p.nom}</li>)}</ul>;
+}
+```
+
+Si le calcul devient **mesurablement** coûteux, mémoïsez-le avec `useMemo` (chapitre 16). Pour le tri **textuel** en français, utilisez `localeCompare('fr')` (ou `Intl.Collator`) afin de respecter accents et casse.
+
+### 9.12 Cas particuliers des clés
+
+- **Clé composite** : quand l'unicité vient de plusieurs champs, concaténez-les : `key={`${commande.id}-${ligne.produitId}`}`.
+- **Clé sur un fragment** : `<Fragment key={id}>…</Fragment>` (chapitre 20), jamais sur les éléments internes seuls.
+- **Unicité parmi les frères** : une clé doit être unique **dans sa liste**, pas globalement. Deux listes différentes peuvent réutiliser les mêmes valeurs.
+- **`key` n'est pas une prop** : le composant enfant ne la reçoit pas (`props.key` est `undefined`). Si l'enfant a besoin de l'identifiant, passez-le **aussi** sous un autre nom (`id`).
+- **Données sans identifiant** : générez l'identifiant **à la création** de l'élément (dans le gestionnaire d'ajout, avec `crypto.randomUUID()`), pas pendant le rendu. Un identifiant produit à chaque rendu change à chaque fois et fait **remonter** tous les éléments.
+- **Clé stable ≠ clé significative pour l'utilisateur** : ne réutilisez pas un libellé modifiable (nom saisi par l'utilisateur) comme clé, car la modification changerait l'identité de l'élément.
+- **Liste statique** (jamais réordonnée, jamais filtrée, jamais modifiée) : l'index est acceptable, mais un identifiant reste préférable.
+
+### 9.13 Sélection, drapeaux et état dérivé dans une liste
+
+Pour mémoriser **l'élément sélectionné**, stockez son **identifiant**, pas l'objet :
+
+```jsx
+const [idSelectionne, setIdSelectionne] = useState(null);
+const selectionne = taches.find(t => t.id === idSelectionne);   // toujours à jour
+```
+
+Stocker l'objet lui-même crée une **copie obsolète** dès que la liste est mise à jour (immutabilité : l'objet de la liste est remplacé). Pour une **sélection multiple**, utilisez un `Set` d'identifiants (copié à chaque modification) ou un tableau d'identifiants.
+
+Pour des modifications **ciblées** dans une liste, utilisez `map` :
+
+```jsx
+setTaches(taches.map(t => (t.id === id ? { ...t, faite: !t.faite } : t)));
+```
+
+### 9.14 Accessibilité des listes interactives
+
+- Utilisez `<ul>` / `<ol>` et `<li>` : les lecteurs d'écran annoncent « liste de N éléments ». Si une règle CSS retire les puces (`list-style: none`), certains navigateurs ne l'annoncent plus comme liste : ajoutez `role="list"`.
+- **Suppression d'un élément** : déplacez le focus vers l'élément suivant (ou précédent, ou le titre de la liste) ; sinon le focus retombe sur `<body>` et l'utilisateur au clavier perd sa position.
+- **Annoncer les changements** (ajout, suppression, tri) dans une région `role="status"` : « Tâche supprimée. 4 tâches restantes. »
+- **Boutons explicites** : `aria-label={`Supprimer ${tache.titre}`}` plutôt qu'une série de boutons « Supprimer » indistincts.
+- **Listes virtualisées** (seul un sous-ensemble est dans le DOM) : exposez la position avec `aria-setsize` et `aria-posinset`.
+- **Réordonnancement par glisser-déposer** : prévoyez une **alternative clavier** (boutons « Monter » / « Descendre ») ; des bibliothèques comme dnd-kit fournissent le comportement accessible.
+
+### 9.15 Pagination, « charger plus » et défilement infini
+
+| Approche | Avantages | Inconvénients |
+| --- | --- | --- |
+| **Pagination** numérotée | Position repérable, URL par page, accessible | Clic supplémentaire |
+| **Bouton « Charger plus »** | Contrôle de l'utilisateur, simple, accessible | Liste qui s'allonge |
+| **Défilement infini** | Fluidité d'exploration | Pied de page inatteignable, focus et retour arrière difficiles, accessibilité délicate |
+| **Virtualisation** | Peu de nœuds DOM, très grandes listes | Complexité, recherche native du navigateur limitée |
+
+Un défilement infini s'implémente avec un **élément sentinelle** observé par un `IntersectionObserver` (chapitre 14) : quand il devient visible, on charge la page suivante. Les bibliothèques de données (TanStack Query : `useInfiniteQuery`) gèrent la pagination, le cache et les doublons. Conservez l'état (page, filtres) dans l'**URL** pour permettre le retour arrière et le partage.
+
+### 9.16 Animer l'entrée, la sortie et le déplacement
+
+Les **clés stables** sont indispensables aux animations de liste, car elles permettent de suivre un élément d'un rendu à l'autre. Un élément **supprimé** disparaît du DOM immédiatement : pour l'animer en sortie, utilisez une bibliothèque qui retarde le démontage (**Motion** / Framer Motion avec `AnimatePresence`, **React Transition Group**) ou une animation CSS avec un état de sortie intermédiaire. Pour animer un **déplacement** (réordonnancement), les techniques FLIP (mesurer avant et après, puis animer la différence) ou la propriété `layout` de Motion s'appuient toutes sur l'identité par clé. Respectez **`prefers-reduced-motion`**.
+
+### 9.17 Typer un composant de liste générique
+
+```tsx
+import type { ReactNode } from 'react';
+
+type ListeProps<T> = {
+  elements: readonly T[];
+  getCle: (element: T) => string | number;
+  rendu: (element: T, index: number) => ReactNode;
+  vide?: ReactNode;
+};
+
+export function Liste<T>({ elements, getCle, rendu, vide = <p>Aucun élément.</p> }: ListeProps<T>) {
+  if (elements.length === 0) return vide;
+  return <ul>{elements.map((e, i) => <li key={getCle(e)}>{rendu(e, i)}</li>)}</ul>;
+}
+
+// <Liste elements={produits} getCle={p => p.id} rendu={p => <Produit {...p} />} />
+```
+
+Le **générique** `T` est inféré à partir de `elements` : `rendu` reçoit un `Produit` correctement typé, sans conversion. La **clé** est demandée à l'appelant, ce qui oblige à y penser.
+
+### 9.18 Pièges fréquents
 
 - Oublier la `key` (avertissement + comportements imprévisibles).
 - `key={Math.random()}` : recrée tous les éléments à chaque rendu.
@@ -2606,34 +2811,19 @@ function TodoApp() {
 - Stocker la liste filtrée dans le state au lieu de la dériver.
 - Muter le tableau (`sort()`) en le triant avant l'affichage.
 
-## ✅ À retenir
+### Synthèse du chapitre 9
 
-- `map` transforme **données → éléments** ; la **`key`** donne l'**identité**.
-- Clés **uniques entre frères, stables, issues des données**.
-- L'**index** n'est valable que pour des listes **statiques**.
-- Changer la `key` d'un composant = le **réinitialiser**.
-- Filtrer/trier = **calculs dérivés**, pas du state ; **virtualisez** les très grandes listes.
-
-## 🏋️ Exercices
-
-1. Reproduisez le bug de l'index comme clé avec une liste d'inputs non contrôlés, puis corrigez-le.
-2. Affichez un tableau groupé par catégorie avec listes imbriquées et clés correctes.
-3. Implémentez un filtre de recherche avec `useDeferredValue` sur 10 000 éléments et comparez avec/sans.
+`map` transforme **données → éléments** ; la **`key`** donne l'**identité** ; Clés **uniques entre frères, stables, issues des données** ; L'**index** n'est valable que pour des listes **statiques** ; Changer la `key` d'un composant = le **réinitialiser** ; Filtrer/trier = **calculs dérivés**, pas du state ; **virtualisez** les très grandes listes.
 
 ---
-# 10. Formulaires
 
-## 🎯 Objectifs
+## 10. Formulaires
 
-- Distinguer composants **contrôlés** et **non contrôlés** et savoir choisir.
-- Gérer chaque type de champ (texte, case, radio, liste, fichier…).
-- Implémenter validation, messages d'erreur et accessibilité.
-- Utiliser les **Actions de formulaire** de React 19 (`action`, `useActionState`, `useFormStatus`, `useOptimistic`).
-- Connaître les bibliothèques de formulaires et leurs compromis.
+**Objectifs d'apprentissage.** À la fin de ce chapitre, vous saurez : distinguer composants **contrôlés** et **non contrôlés** et savoir choisir ; gérer chaque type de champ (texte, case, radio, liste, fichier…) ; implémenter validation, messages d'erreur et accessibilité ; utiliser les **Actions de formulaire** de React 19 (`action`, `useActionState`, `useFormStatus`, `useOptimistic`) ; connaître les bibliothèques de formulaires et leurs compromis.
 
-## 10.1 Deux modèles : contrôlé et non contrôlé
+### 10.1 Deux modèles : contrôlé et non contrôlé
 
-### Composant **contrôlé**
+#### Composant **contrôlé**
 
 La **valeur affichée** est **pilotée par le state React** ; chaque modification passe par un gestionnaire. React est la **source unique de vérité**.
 
@@ -2649,7 +2839,7 @@ function Recherche() {
 }
 ```
 
-### Composant **non contrôlé**
+#### Composant **non contrôlé**
 
 Le **DOM** garde la valeur ; React la lit **à la demande** (via `ref` ou `FormData`). On fournit une valeur **initiale** avec `defaultValue` / `defaultChecked`.
 
@@ -2669,7 +2859,7 @@ function Recherche() {
 }
 ```
 
-### Comparatif
+#### Comparatif
 
 | Critère | Contrôlé | Non contrôlé |
 |---|---|---|
@@ -2683,15 +2873,15 @@ function Recherche() {
 
 > Règle pratique : **non contrôlé + `FormData` + Actions** pour les formulaires simples ; **contrôlé** quand l'UI réagit à la saisie (validation en direct, champs dépendants, masques, aperçu).
 
-### Avertissements fréquents
+#### Avertissements fréquents
 
 - **« You provided a `value` prop to a form field without an `onChange` handler »** : champ en lecture seule involontaire. Ajoutez `onChange`, ou `readOnly`, ou `defaultValue`.
 - **« A component is changing an uncontrolled input to be controlled »** : `value` est passé de `undefined`/`null` à une chaîne. Initialisez le state avec `''`, jamais `undefined`/`null`.
 - Ne **jamais** donner à la fois `value` et `defaultValue`.
 
-## 10.2 Chaque type de champ
+### 10.2 Chaque type de champ
 
-### Texte, e-mail, mot de passe, nombre, date, couleur, recherche, URL, tel
+#### Texte, e-mail, mot de passe, nombre, date, couleur, recherche, URL, tel
 
 ```jsx
 <input type="text" value={nom} onChange={e => setNom(e.target.value)} />
@@ -2703,7 +2893,7 @@ function Recherche() {
 
 > Pour un `type="number"`, convertissez : `e.target.valueAsNumber` (NaN si vide) ou `Number(e.target.value)`. Conservez la **chaîne** dans le state tant que la saisie n'est pas terminée (sinon `''`, `-`, `1.` posent problème).
 
-### `<textarea>`
+#### `<textarea>`
 
 En React, `<textarea>` utilise `value` (et non son contenu enfant) :
 
@@ -2711,7 +2901,7 @@ En React, `<textarea>` utilise `value` (et non son contenu enfant) :
 <textarea value={message} onChange={e => setMessage(e.target.value)} rows={4} />
 ```
 
-### `<select>`
+#### `<select>`
 
 La valeur est placée sur le **`<select>`**, pas sur `<option selected>` :
 
@@ -2731,7 +2921,7 @@ Sélection **multiple** : `value` est un **tableau**.
 }>…</select>
 ```
 
-### Case à cocher (`checkbox`) : on utilise `checked`
+#### Case à cocher (`checkbox`) : on utilise `checked`
 
 ```jsx
 <input type="checkbox" checked={accepte} onChange={e => setAccepte(e.target.checked)} />
@@ -2750,7 +2940,7 @@ function toggle(valeur) {
 ))}
 ```
 
-### Boutons radio
+#### Boutons radio
 
 ```jsx
 {['S', 'M', 'L'].map(t => (
@@ -2761,13 +2951,13 @@ function toggle(valeur) {
 ))}
 ```
 
-### Curseur (`range`)
+#### Curseur (`range`)
 
 ```jsx
 <input type="range" min="0" max="100" value={volume} onChange={e => setVolume(Number(e.target.value))} />
 ```
 
-### Fichiers : toujours non contrôlé
+#### Fichiers : toujours non contrôlé
 
 ```jsx
 function Upload() {
@@ -2783,9 +2973,9 @@ function Upload() {
 // Envoi : const fd = new FormData(); fd.append('fichier', fichier); fetch('/upload', { method: 'POST', body: fd });
 ```
 
-## 10.3 Gérer plusieurs champs
+### 10.3 Gérer plusieurs champs
 
-### Un seul gestionnaire avec `name`
+#### Un seul gestionnaire avec `name`
 
 ```jsx
 const [form, setForm] = useState({ nom: '', email: '', newsletter: false });
@@ -2800,7 +2990,7 @@ function handleChange(e) {
 <input name="newsletter" type="checkbox" checked={form.newsletter} onChange={handleChange} />
 ```
 
-### Avec `useReducer` pour des formulaires complexes
+#### Avec `useReducer` pour des formulaires complexes
 
 ```jsx
 function reducer(state, action) {
@@ -2814,7 +3004,7 @@ function reducer(state, action) {
 }
 ```
 
-## 10.4 Soumission
+### 10.4 Soumission
 
 ```jsx
 function Formulaire() {
@@ -2847,15 +3037,15 @@ function Formulaire() {
 - **Réinitialiser** : `e.currentTarget.reset()` (non contrôlé) ou remettre le state initial (contrôlé) ; ou changer la `key` du formulaire.
 - **FormData** → objet : `Object.fromEntries(new FormData(form))` (attention aux champs multiples : utilisez `getAll`).
 
-## 10.5 Validation
+### 10.5 Validation
 
-### Niveaux de validation
+#### Niveaux de validation
 
 1. **Natif HTML** : `required`, `minLength`, `maxLength`, `min`, `max`, `pattern`, `type="email"`. Le navigateur bloque la soumission et affiche un message. `noValidate` sur `<form>` pour désactiver et gérer soi-même.
 2. **Côté client personnalisé** : fonctions de validation.
 3. **Côté serveur** : **indispensable** (la validation client est contournable) et source de vérité.
 
-### Validation personnalisée
+#### Validation personnalisée
 
 ```jsx
 function valider({ email, mdp }) {
@@ -2869,7 +3059,7 @@ const erreurs = valider(form);                        // dérivé pendant le ren
 const estValide = Object.keys(erreurs).length === 0;
 ```
 
-### Quand afficher les erreurs ?
+#### Quand afficher les erreurs ?
 
 | Stratégie | Description |
 |---|---|
@@ -2887,7 +3077,7 @@ const [touches, setTouches] = useState({});
 {touches.email && erreurs.email && <p id="err-email" role="alert">{erreurs.email}</p>}
 ```
 
-### Accessibilité des formulaires
+#### Accessibilité des formulaires
 
 - Chaque champ a un **`<label>`** associé : `htmlFor` + `id` (utiliser `useId`) ou champ **imbriqué** dans le `<label>`.
 - Signaler les erreurs avec `aria-invalid`, `aria-describedby`, et un message avec `role="alert"` ou une région `aria-live`.
@@ -2909,7 +3099,7 @@ function ChampTexte({ label, erreur, ...props }) {
 }
 ```
 
-## 10.6 Formatage et masques
+### 10.6 Formatage et masques
 
 ```jsx
 function ChampTelephone({ valeur, onChange }) {
@@ -2923,7 +3113,7 @@ function ChampTelephone({ valeur, onChange }) {
 
 > Les champs formatés peuvent déplacer le **curseur** : pour des masques complexes, utilisez une bibliothèque dédiée (`react-imask`, `react-number-format`).
 
-## 10.7 Actions de formulaire (React 19)
+### 10.7 Actions de formulaire (React 19)
 
 React 19 permet de passer **une fonction (éventuellement asynchrone)** à la prop **`action`** d'un `<form>`. React :
 
@@ -2947,7 +3137,7 @@ function Inscription() {
 }
 ```
 
-### `useFormStatus` (de `react-dom`) : lire l'état du formulaire parent
+#### `useFormStatus` (de `react-dom`) : lire l'état du formulaire parent
 
 À appeler depuis un composant **enfant** d'un `<form>` (pas dans le composant qui rend le `<form>`).
 
@@ -2960,7 +3150,7 @@ function BoutonEnvoi() {
 }
 ```
 
-### `useActionState` : état de l'action (résultat, erreur, pending)
+#### `useActionState` : état de l'action (résultat, erreur, pending)
 
 ```jsx
 import { useActionState } from 'react';
@@ -2992,7 +3182,7 @@ function Connexion() {
 - Les actions d'un même `useActionState` sont **mises en file** et exécutées **séquentiellement**.
 - (Anciennement `ReactDOM.useFormState`.)
 
-### `useOptimistic` : mise à jour optimiste
+#### `useOptimistic` : mise à jour optimiste
 
 Afficher **immédiatement** le résultat attendu pendant que l'action asynchrone s'exécute ; revient à l'état réel quand l'action se termine (ou échoue).
 
@@ -3020,7 +3210,7 @@ function Messages({ messages, envoyerMessage }) {
 }
 ```
 
-### Boutons avec `formAction`
+#### Boutons avec `formAction`
 
 ```jsx
 <form action={enregistrer}>
@@ -3030,7 +3220,7 @@ function Messages({ messages, envoyerMessage }) {
 </form>
 ```
 
-### Transitions asynchrones (`useTransition` avec fonctions async)
+#### Transitions asynchrones (`useTransition` avec fonctions async)
 
 Depuis React 19, `startTransition` accepte une **fonction asynchrone** : c'est la base des « Actions » (pending, erreurs, mises à jour optimistes).
 
@@ -3045,11 +3235,11 @@ function enregistrer() {
 }
 ```
 
-### Réinitialisation automatique
+#### Réinitialisation automatique
 
 Après une action `<form action={fn}>` **réussie**, React réinitialise les **champs non contrôlés** (équivalent de `form.reset()`). Pour conserver les valeurs, utilisez des champs **contrôlés** ou renvoyez les valeurs dans l'état (`defaultValue={etat.valeurs.email}`). Vous pouvez aussi utiliser `requestFormReset`.
 
-## 10.8 Bibliothèques de formulaires
+### 10.8 Bibliothèques de formulaires
 
 | Bibliothèque | Approche | Points forts |
 |---|---|---|
@@ -3087,13 +3277,13 @@ function Connexion() {
 
 > Réutilisez le **même schéma** côté serveur pour valider les données reçues.
 
-## 10.9 Patterns avancés
+### 10.9 Patterns avancés
 
-### Formulaire multi-étapes (« wizard »)
+#### Formulaire multi-étapes (« wizard »)
 
 Un state `etape` + un state `donnees` **remonté** dans le parent ; chaque étape reçoit ses valeurs et un `onSuivant`. Conservez les données entre étapes (ne démontez pas l'état), validez à chaque étape.
 
-### Champs dépendants / conditionnels
+#### Champs dépendants / conditionnels
 
 ```jsx
 {form.pays === 'fr' && <ChampCodePostal valeur={form.cp} onChange={…} />}
@@ -3101,24 +3291,24 @@ Un state `etape` + un state `donnees` **remonté** dans le parent ; chaque étap
 function changerPays(pays) { setForm(f => ({ ...f, pays, region: '' })); }
 ```
 
-### Enregistrement automatique (autosave)
+#### Enregistrement automatique (autosave)
 
 Combiner un état local, un `useEffect` avec **debounce**, et un nettoyage pour annuler les requêtes obsolètes (`AbortController`).
 
-### Performance
+#### Performance
 
 Un champ **contrôlé** re-rend le composant à chaque frappe. Si le formulaire est volumineux :
 - isoler chaque champ dans un **composant** avec son propre state ;
 - utiliser un **formulaire non contrôlé** / React Hook Form ;
 - `memo` pour les sections coûteuses ; `useDeferredValue` pour les aperçus.
 
-### Réinitialiser par `key`
+#### Réinitialiser par `key`
 
 ```jsx
 <Formulaire key={versionFormulaire} />    {/* incrémenter versionFormulaire pour tout remettre à zéro */}
 ```
 
-## ⚠️ Pièges courants
+### 10.10 Pièges fréquents
 
 - `value` sans `onChange` (champ figé).
 - Valeur initiale `undefined`/`null` → passage non contrôlé → contrôlé.
@@ -3131,39 +3321,23 @@ Un champ **contrôlé** re-rend le composant à chaque frappe. Si le formulaire 
 - `useFormStatus` appelé dans le même composant que le `<form>` (retourne toujours `pending: false`).
 - `<label>` non associé au champ.
 
-## ✅ À retenir
+### Synthèse du chapitre 10
 
-- **Contrôlé** (state) vs **non contrôlé** (DOM + `FormData`) : choisissez selon le besoin d'interaction avec la saisie.
-- `checked` pour cases/radios, `value` pour le reste ; `select` et `textarea` utilisent `value`.
-- Valeurs de `input` = **chaînes** ; fichiers = non contrôlé.
-- Validation **client ET serveur**, erreurs accessibles (`aria-*`, `role="alert"`).
-- React 19 : `<form action>`, **`useActionState`**, **`useFormStatus`**, **`useOptimistic`**, transitions async.
-- Pour les formulaires complexes : **React Hook Form** (+ **Zod**).
-
-## 🏋️ Exercices
-
-1. Créez un formulaire d'inscription contrôlé (nom, e-mail, mot de passe, pays, conditions) avec validation au blur et messages accessibles.
-2. Réécrivez-le en version non contrôlée avec `action`, `useActionState` et `useFormStatus`.
-3. Ajoutez une mise à jour optimiste à une liste de commentaires avec `useOptimistic`.
-4. Implémentez un wizard en 3 étapes qui conserve les données.
+**Contrôlé** (state) vs **non contrôlé** (DOM + `FormData`) : choisissez selon le besoin d'interaction avec la saisie ; `checked` pour cases/radios, `value` pour le reste ; `select` et `textarea` utilisent `value` ; Valeurs de `input` = **chaînes** ; fichiers = non contrôlé ; Validation **client ET serveur**, erreurs accessibles (`aria-*`, `role="alert"`) ; React 19 : `<form action>`, **`useActionState`**, **`useFormStatus`**, **`useOptimistic`**, transitions async ; Pour les formulaires complexes : **React Hook Form** (+ **Zod**).
 
 ---
-# 11. Hooks
 
-## 🎯 Objectifs
+# Partie II — Hooks et architecture des composants
 
-- Comprendre ce qu'est un Hook, pourquoi ils existent et comment ils fonctionnent en interne.
-- Appliquer sans erreur les **règles des Hooks**.
-- Maîtriser **tous** les hooks intégrés de React : `useState`, `useEffect`, `useEffectEvent`, `useContext`, `useReducer`, `useRef`, `useMemo`, `useCallback`, `useLayoutEffect`, `useImperativeHandle`, `useId`, `useTransition`, `useDeferredValue`, `useSyncExternalStore`, `useInsertionEffect`, `useDebugValue`, `use`, `useActionState`, `useFormStatus`, `useOptimistic`.
-- Savoir choisir le bon hook et éviter les erreurs classiques (dépendances, boucles infinies, valeurs obsolètes).
+## 11. Hooks
 
-> Ce module est découpé en deux parties : **11.A** (règles, `useState`, `useEffect`, `useEffectEvent`, `useContext`, `useReducer`) puis **11.B** (les autres hooks).
+**Objectifs d'apprentissage.** À la fin de ce chapitre, vous saurez : comprendre ce qu'est un Hook, pourquoi ils existent et comment ils fonctionnent en interne ; appliquer sans erreur les **règles des Hooks** ; maîtriser **tous** les hooks intégrés de React : `useState`, `useEffect`, `useEffectEvent`, `useContext`, `useReducer`, `useRef`, `useMemo`, `useCallback`, `useLayoutEffect`, `useImperativeHandle`, `useId`, `useTransition`, `useDeferredValue`, `useSyncExternalStore`, `useInsertionEffect`, `useDebugValue`, `use`, `useActionState`, `useFormStatus`, `useOptimistic` ; savoir choisir le bon hook et éviter les erreurs classiques (dépendances, boucles infinies, valeurs obsolètes). > Ce module est découpé en deux parties : **11.A** (règles, `useState`, `useEffect`, `useEffectEvent`, `useContext`, `useReducer`) puis **11.B** (les autres hooks).
 
-## 11.1 Qu'est-ce qu'un Hook ?
+### 11.1 Qu'est-ce qu'un Hook ?
 
 Un **Hook** est une **fonction spéciale**, dont le nom commence par `use`, qui permet à un **composant fonction** de **se « brancher »** sur des fonctionnalités de React : état, cycle de vie, contexte, références, optimisations, etc.
 
-### Pourquoi les Hooks ont été introduits (React 16.8, 2019)
+#### Pourquoi les Hooks ont été introduits (React 16.8, 2019)
 
 Avant, partager de la logique avec état entre composants imposait des **HOC** et des **render props** (« wrapper hell »), et les **classes** posaient des problèmes :
 - logique **éclatée** entre `componentDidMount`, `componentDidUpdate`, `componentWillUnmount` ;
@@ -3173,7 +3347,7 @@ Avant, partager de la logique avec état entre composants imposait des **HOC** e
 
 Les Hooks permettent de **regrouper la logique par préoccupation** (et non par moment du cycle de vie) et de la **réutiliser** via des **hooks personnalisés**.
 
-### Catégories
+#### Catégories
 
 | Catégorie | Hooks |
 |---|---|
@@ -3185,7 +3359,7 @@ Les Hooks permettent de **regrouper la logique par préoccupation** (et non par 
 | **Autres** | `useId`, `useDebugValue`, `useSyncExternalStore` |
 | **Ressources / Actions (React 19)** | `use`, `useActionState`, `useOptimistic`, `useFormStatus` (de `react-dom`) |
 
-## 11.2 Comment les Hooks fonctionnent (modèle mental)
+### 11.2 Comment les Hooks fonctionnent (modèle mental)
 
 React conserve, **pour chaque composant monté**, une **liste ordonnée** (liste chaînée) de « cases mémoire » : une par appel de Hook. À chaque rendu, React **rejoue** les appels **dans le même ordre** et associe chaque appel à sa case **par sa position**.
 
@@ -3200,7 +3374,7 @@ function Exemple() {
 
 Cela explique les règles ci-dessous : si l'ordre ou le nombre d'appels varie, **les cases sont décalées** et l'état est attribué au mauvais hook.
 
-## 11.3 Règles des Hooks
+### 11.3 Règles des Hooks
 
 1. **Appelez les Hooks uniquement au niveau supérieur** d'un composant ou d'un hook personnalisé : **jamais** dans des conditions, des boucles, des fonctions imbriquées, des `try/catch/finally`, après un `return` anticipé, ni dans des gestionnaires d'événements.
 2. **Appelez les Hooks uniquement depuis** des **composants fonctions React** ou des **hooks personnalisés** (pas depuis des fonctions JavaScript ordinaires ni des classes).
@@ -3229,11 +3403,11 @@ if (chargement) return <Spinner />;
 
 ---
 
-# 11.A Les hooks d'état, d'effet et de contexte
+**Partie 11.A — Les hooks d'état, d'effet et de contexte**
 
-## 11.4 `useState`
+### 11.4 `useState`
 
-Détaillé au module 6. Rappel de la signature :
+Détaillé au chapitre 6. Rappel de la signature :
 
 ```jsx
 const [etat, setEtat] = useState(initial);          // valeur
@@ -3244,9 +3418,9 @@ setEtat(prev => nouveau);                            // mise à jour fonctionnel
 
 Points clés : instantané, batching, immutabilité, bail-out via `Object.is`.
 
-## 11.5 `useEffect`
+### 11.5 `useEffect`
 
-### 11.5.1 Définition et philosophie
+#### 11.5.1 Définition et philosophie
 
 `useEffect` permet de **synchroniser un composant avec un système externe** : serveur, API du navigateur (`document.title`, `localStorage`, `IntersectionObserver`), bibliothèque non-React (carte, graphique), WebSocket, minuteur, etc.
 
@@ -3265,7 +3439,7 @@ useEffect(() => {
 }, [serveur, salon]);   // 3. DÉPENDANCES : quand re-synchroniser
 ```
 
-### 11.5.2 Cycle de vie d'un effet
+#### 11.5.2 Cycle de vie d'un effet
 
 Chaque effet décrit **un cycle** « démarrer → arrêter ». React :
 
@@ -3281,7 +3455,7 @@ rendu(voyage)  → commit → cleanup(general) → setup(voyage)
 démontage      →          cleanup(voyage)
 ```
 
-### 11.5.3 Le tableau de dépendances
+#### 11.5.3 Le tableau de dépendances
 
 | Forme | Quand l'effet s'exécute |
 |---|---|
@@ -3289,13 +3463,13 @@ démontage      →          cleanup(voyage)
 | `useEffect(fn, [])` | **Au montage** seulement (cleanup au démontage) |
 | `useEffect(fn, [a, b])` | Au montage, puis à chaque fois que `a` ou `b` change (comparaison `Object.is`) |
 
-#### Valeurs réactives
+##### Valeurs réactives
 
 Sont **réactives** : les **props**, le **state**, et toute variable/fonction **déclarée dans le corps du composant** (elles sont recréées à chaque rendu). **Toute valeur réactive lue dans l'effet doit figurer dans les dépendances** (le linter le vérifie). Ne sont **pas** réactives : les variables **hors composant** (module), les **refs** (`ref.current` n'est pas réactif), les setters d'état et `dispatch` (stables).
 
 > Vous **ne choisissez pas** les dépendances : elles sont **déterminées par le code** de l'effet. Si une dépendance ne vous convient pas, modifiez **le code** (déplacer la valeur hors du composant, la dériver autrement, ou utiliser `useEffectEvent`), jamais le linter.
 
-#### Dépendances de type objet/fonction : le piège de la référence
+##### Dépendances de type objet/fonction : le piège de la référence
 
 ```jsx
 function Salon({ id }) {
@@ -3313,14 +3487,14 @@ useEffect(() => {
 
 Solutions : primitives en dépendances ; créer l'objet/la fonction **dans** l'effet ; la déplacer **hors** du composant si elle est constante ; `useMemo`/`useCallback` en dernier recours.
 
-### 11.5.4 Quand l'effet s'exécute-t-il ?
+#### 11.5.4 Quand l'effet s'exécute-t-il ?
 
 - **Après** que React a mis à jour le DOM **et** que le navigateur a **peint** l'écran (généralement).
 - Si l'effet est la conséquence d'une **interaction discrète** (clic), React peut l'exécuter **avant la peinture**.
 - Pour mesurer/modifier le layout **avant la peinture** (éviter un scintillement) : `useLayoutEffect` (11.B).
 - Les effets **ne s'exécutent pas** pendant le rendu **côté serveur**.
 
-### 11.5.5 Le cleanup en détail
+#### 11.5.5 Le cleanup en détail
 
 Le nettoyage doit **annuler** ce que le setup a fait : se désabonner, `clearTimeout`, `removeEventListener`, fermer connexion, annuler requête.
 
@@ -3346,7 +3520,7 @@ useEffect(() => {
 }, [zoom]);
 ```
 
-### 11.5.6 Récupération de données et conditions de course
+#### 11.5.6 Récupération de données et conditions de course
 
 Cas classique : une requête qui dépend d'une prop. Si la prop change rapidement, les **réponses peuvent arriver dans le désordre** (*race condition*). Solutions : **drapeau « ignorer »** ou **`AbortController`**.
 
@@ -3370,13 +3544,13 @@ useEffect(() => {
 }, [id]);
 ```
 
-> En pratique, préférez **TanStack Query / SWR** ou les mécanismes du **framework** (loaders, Server Components, `use` + Suspense) : cache, déduplication, retries, revalidation (module 25).
+> En pratique, préférez **TanStack Query / SWR** ou les mécanismes du **framework** (loaders, Server Components, `use` + Suspense) : cache, déduplication, retries, revalidation (chapitre 25).
 
-### 11.5.7 StrictMode : le « double montage » en développement
+#### 11.5.7 StrictMode : le « double montage » en développement
 
 En développement, `StrictMode` exécute **setup → cleanup → setup** au montage initial pour vérifier que votre cleanup est correct. Si l'effet se comporte mal (double requête, double abonnement), **c'est un bug** à corriger par un **cleanup symétrique**, pas à contourner avec un drapeau « déjà exécuté ».
 
-### 11.5.8 « Vous n'avez peut-être pas besoin d'un effet »
+#### 11.5.8 « Vous n'avez peut-être pas besoin d'un effet »
 
 Les effets sont une **échappatoire** pour sortir de React. Les cas où **il ne faut pas** en utiliser :
 
@@ -3410,7 +3584,7 @@ useEffect(() => { if (achete) { api.acheter(); } }, [achete]);
 function handleAcheter() { api.acheter(); }
 ```
 
-### 11.5.9 Erreurs fréquentes
+#### 11.5.9 Erreurs fréquentes
 
 - **Boucle infinie** : l'effet modifie un état qui figure dans ses dépendances (ou une dépendance est recréée à chaque rendu).
 - **Valeur obsolète (« stale closure »)** : dépendance omise → l'effet lit d'anciennes valeurs.
@@ -3418,7 +3592,7 @@ function handleAcheter() { api.acheter(); }
 - **Effet `async`** : `useEffect(async () => …)` est invalide (la fonction retourne une promesse, pas un cleanup). Définir une fonction `async` **à l'intérieur** et l'appeler.
 - **Supprimer des dépendances pour « faire taire » le linter** (`// eslint-disable-line`).
 
-### 11.5.10 Exemple : synchroniser `document.title` et `localStorage`
+#### 11.5.10 Exemple : synchroniser `document.title` et `localStorage`
 
 ```jsx
 useEffect(() => { document.title = `(${nonLus}) Messagerie`; }, [nonLus]);
@@ -3426,9 +3600,9 @@ useEffect(() => { document.title = `(${nonLus}) Messagerie`; }, [nonLus]);
 useEffect(() => { localStorage.setItem('theme', theme); }, [theme]);
 ```
 
-## 11.6 `useEffectEvent` (React 19.2)
+### 11.6 `useEffectEvent` (React 19.2)
 
-### Le problème
+#### Le problème
 
 Certains effets doivent **lire la dernière valeur** d'une variable **sans** que cette variable **relance** l'effet.
 
@@ -3443,7 +3617,7 @@ function Salon({ id, theme }) {
 }
 ```
 
-### La solution : extraire une « fonction d'événement d'effet »
+#### La solution : extraire une « fonction d'événement d'effet »
 
 ```jsx
 import { useEffect, useEffectEvent } from 'react';
@@ -3462,14 +3636,14 @@ function Salon({ id, theme }) {
 }
 ```
 
-### Règles
+#### Règles
 
 - Une *Effect Event* **ne doit être appelée que depuis l'intérieur d'un effet** (ou d'une autre Effect Event), **jamais** pendant le rendu ni transmise à d'autres composants/hooks.
 - Elle **n'est pas déclarée** dans les dépendances de l'effet (le plugin ESLint à jour le sait).
 - Elle exprime : *« cette partie du code est un **événement** (non réactif), même si elle vit dans un **effet** »*.
 - À réserver aux cas où la logique est **conceptuellement un événement** ; ne l'utilisez pas pour masquer une vraie dépendance.
 
-## 11.7 `useContext`
+### 11.7 `useContext`
 
 Lit la valeur du **contexte** le plus proche au-dessus dans l'arbre.
 
@@ -3480,11 +3654,11 @@ const theme = useContext(ThemeContext);
 - Le composant est **re-rendu** chaque fois que la valeur du contexte change (comparaison `Object.is`).
 - Si aucun fournisseur n'existe au-dessus, la **valeur par défaut** de `createContext(defaut)` est utilisée.
 - Peut se lire **après** un `return` conditionnel via **`use(Contexte)`** (React 19).
-- Voir le **module 13** pour la création, les fournisseurs, les optimisations et les patterns.
+- Voir le **chapitre 13** pour la création, les fournisseurs, les optimisations et les patterns.
 
-## 11.8 `useReducer`
+### 11.8 `useReducer`
 
-### Définition
+#### Définition
 
 `useReducer` gère un **état complexe** via une **fonction de réduction** (*reducer*) qui calcule **le nouvel état à partir de l'état courant et d'une action**. C'est `useState` + une **logique de transition centralisée**.
 
@@ -3497,7 +3671,7 @@ const [etat, dispatch] = useReducer(reducer, etatInitial, init?);
 - `init(etatInitial)` (facultatif) : calcul **paresseux** de l'état initial.
 - `dispatch` est **stable** (même identité entre les rendus) : on peut l'omettre des dépendances.
 
-### Exemple complet : liste de tâches
+#### Exemple complet : liste de tâches
 
 ```jsx
 const initial = { taches: [], filtre: 'toutes' };
@@ -3532,14 +3706,14 @@ function TodoApp() {
 }
 ```
 
-### Initialisation paresseuse
+#### Initialisation paresseuse
 
 ```jsx
 function init(utilisateurId) { return { taches: chargerTaches(utilisateurId), filtre: 'toutes' }; }
 const [etat, dispatch] = useReducer(reducer, utilisateurId, init);
 ```
 
-### `useState` ou `useReducer` ?
+#### `useState` ou `useReducer` ?
 
 | Critère | `useState` | `useReducer` |
 |---|---|---|
@@ -3551,14 +3725,14 @@ const [etat, dispatch] = useReducer(reducer, utilisateurId, init);
 | Débogage (journalisation des actions) | Moins direct | **Facile** (voir toutes les actions) |
 | Partage via Context (dispatch stable) | Moyen | **Excellent** |
 
-### Règles de reducers
+#### Règles de reducers
 
 1. **Purs** : mêmes entrées → même sortie ; pas de requêtes, pas de timers.
 2. **Immuables** : retourner un **nouvel objet** ; ne jamais muter `etat` (ou utiliser **`useImmerReducer`**).
 3. **Une action = une interaction** utilisateur décrite (`'formulaire_reinitialise'`) plutôt qu'une série de mises à jour techniques.
 4. En StrictMode, le reducer est exécuté **deux fois** : une impureté se verra.
 
-### Pattern Context + Reducer (état partagé sans bibliothèque)
+#### Pattern Context + Reducer (état partagé sans bibliothèque)
 
 ```jsx
 const TachesContext = createContext(null);
@@ -3578,7 +3752,7 @@ const useTachesDispatch = () => useContext(TachesDispatchContext);
 
 Séparer l'**état** du **dispatch** évite des rendus inutiles pour les composants qui ne font qu'envoyer des actions.
 
-## 11.9 Comparaison synthétique des hooks d'état et d'effet
+### 11.9 Comparaison synthétique des hooks d'état et d'effet
 
 | Besoin | Hook |
 |---|---|
@@ -3590,37 +3764,9 @@ Séparer l'**état** du **dispatch** évite des rendus inutiles pour les composa
 | Mesurer/modifier le DOM **avant** la peinture | `useLayoutEffect` |
 | S'abonner à une source externe lisible de façon synchrone | `useSyncExternalStore` |
 
-## ⚠️ Pièges courants (partie A)
+### 11.10 `useRef`
 
-- Appeler un hook dans une condition ou après un `return`.
-- Dépendances d'effet manquantes ou recréées à chaque rendu.
-- Utiliser un effet pour dériver des données ou réagir à un clic.
-- Cleanup absent ou asymétrique (fuites, double abonnement en StrictMode).
-- `setState` dans un effet **sans condition** qui dépend de cet état → boucle infinie.
-- Muter l'état dans un reducer.
-- Mettre une valeur **non réactive** (`ref.current`) dans les dépendances en pensant qu'elle déclenchera l'effet.
-
-## ✅ À retenir (partie A)
-
-- Les Hooks s'appellent **au niveau supérieur**, **dans le même ordre** à chaque rendu.
-- **`useEffect` = synchronisation** avec l'extérieur ; setup + cleanup + dépendances **dictées par le code**.
-- **Calculez** les données dérivées pendant le rendu ; **gestionnaires** pour les actions ; **`key`** pour réinitialiser.
-- **`useEffectEvent`** : logique d'événement lisant les dernières valeurs sans relancer l'effet.
-- **`useReducer`** : reducer **pur** + `dispatch` stable.
-
-## 🏋️ Exercices (partie A)
-
-1. Écrivez un effet qui récupère un utilisateur par `id` avec `AbortController` et gérez chargement/erreur ; puis déclenchez le double montage de `StrictMode` et vérifiez qu'une seule réponse est utilisée.
-2. Convertissez un effet « dérivation d'état » en calcul pendant le rendu.
-3. Créez un chat simulé où un changement de `theme` ne reconnecte pas le salon, grâce à `useEffectEvent`.
-4. Réécrivez un état à 4 `useState` de formulaire en un `useReducer` avec actions nommées.
-
----
-# 11.B Les autres hooks
-
-## 11.10 `useRef`
-
-### Définition
+#### Définition
 
 `useRef(valeurInitiale)` retourne un **objet mutable unique** `{ current: valeurInitiale }` dont l'**identité est stable** pendant toute la vie du composant. **Modifier `ref.current` ne déclenche pas de nouveau rendu.**
 
@@ -3629,7 +3775,7 @@ const ref = useRef(0);
 ref.current = ref.current + 1;    // pas de rendu
 ```
 
-### Deux usages
+#### Deux usages
 
 **1. Référencer un nœud DOM**
 
@@ -3659,7 +3805,7 @@ function usePrecedent(valeur) {
 }
 ```
 
-### `useRef` vs `useState`
+#### `useRef` vs `useState`
 
 | | `useRef` | `useState` |
 |---|---|---|
@@ -3669,7 +3815,7 @@ function usePrecedent(valeur) {
 | Lisible pendant le rendu | ❌ (déconseillé) | ✅ |
 | Usage | Infos **non affichées**, accès DOM | Données qui **influencent l'affichage** |
 
-### Règles
+#### Règles
 
 - **Ne lisez ni n'écrivez `ref.current` pendant le rendu** (sauf initialisation paresseuse) : cela rend le composant impur et imprévisible.
 - Lisez/écrivez dans des **gestionnaires d'événements** ou des **effets**.
@@ -3680,7 +3826,7 @@ const ref = useRef(null);
 if (ref.current === null) ref.current = new ObjetCouteux();   // seule exception admise
 ```
 
-### Refs de callback
+#### Refs de callback
 
 Une fonction peut servir de `ref`. Elle est appelée avec le nœud au montage ; en **React 19**, elle peut **retourner une fonction de nettoyage** (appelée au démontage). Utile pour des listes de refs ou un observateur.
 
@@ -3694,11 +3840,11 @@ Une fonction peut servir de `ref`. Elle est appelée avec le nœud au montage ; 
 
 > Les refs de callback **inline** sont recréées à chaque rendu (cleanup + setup à chaque fois) : mémoïsez-les (`useCallback`) si c'est coûteux.
 
-Détails complets au **module 14**.
+Détails complets au **chapitre 14**.
 
-## 11.11 `useMemo`
+### 11.11 `useMemo`
 
-### Définition
+#### Définition
 
 `useMemo(calcul, dependances)` **mémorise le résultat** d'un calcul entre les rendus ; il n'est **recalculé** que si une dépendance change.
 
@@ -3706,7 +3852,7 @@ Détails complets au **module 14**.
 const visibles = useMemo(() => filtrer(taches, filtre), [taches, filtre]);
 ```
 
-### Usages légitimes
+#### Usages légitimes
 
 1. **Éviter un calcul réellement coûteux** (le mesurer : console.time > ~1 ms de façon notable).
 2. **Stabiliser la référence** d'un objet/tableau passé à un composant **mémoïsé** (`memo`) ou utilisé comme **dépendance** d'un hook.
@@ -3717,7 +3863,7 @@ const options = useMemo(() => ({ langue, devise }), [langue, devise]);
 <Tableau options={options} />       // Tableau est enveloppé par memo
 ```
 
-### Règles et limites
+#### Règles et limites
 
 - Le calcul doit être **pur** ; en StrictMode il est exécuté **deux fois** en dev.
 - `useMemo` est une **optimisation de performance**, **pas une garantie sémantique** : React peut **jeter le cache** (ex. hors écran, remontage, évolutions futures). Votre code doit fonctionner **sans** lui.
@@ -3725,9 +3871,9 @@ const options = useMemo(() => ({ langue, devise }), [langue, devise]);
 - Ne **pas** mémoïser quand le calcul est trivial.
 - Peut être **sauté** par le **React Compiler** qui mémoïse automatiquement.
 
-## 11.12 `useCallback`
+### 11.12 `useCallback`
 
-### Définition
+#### Définition
 
 `useCallback(fn, dependances)` **mémorise la fonction elle-même** (même référence tant que les dépendances sont identiques). Équivalent à `useMemo(() => fn, deps)`.
 
@@ -3739,24 +3885,24 @@ const supprimer = useCallback((id) => {
 <TodoItem onSupprimer={supprimer} />     // TodoItem est enveloppé par memo
 ```
 
-### Quand l'utiliser
+#### Quand l'utiliser
 
 - Passer une fonction à un composant **`memo`** pour ne pas casser sa mémoïsation.
 - Fonction utilisée comme **dépendance** d'un `useEffect` / `useMemo` pour éviter de relancer l'effet.
 - Fonction passée à un hook personnalisé qui en dépend.
 
-### Quand ne pas l'utiliser
+#### Quand ne pas l'utiliser
 
 - Fonctions passées à des éléments natifs ou à des composants non mémoïsés : **aucun gain**.
 - Partout « par précaution » : cela alourdit le code sans bénéfice mesuré.
 
 > Astuce : réduisez les dépendances avec la **forme fonctionnelle** de `setState` ou un **reducer** ; sinon l'identité change et `useCallback` perd tout intérêt.
 
-## 11.13 `useLayoutEffect`
+### 11.13 `useLayoutEffect`
 
 Identique à `useEffect` dans sa forme, mais s'exécute **de façon synchrone après les mutations du DOM et avant la peinture** du navigateur. React **attend** la fin de l'effet (et de ses éventuelles mises à jour d'état) avant de laisser le navigateur peindre.
 
-### Quand l'utiliser
+#### Quand l'utiliser
 
 - **Mesurer** un élément (`getBoundingClientRect`, `offsetHeight`) puis **ajuster** l'affichage (position d'un tooltip, hauteur) **sans scintillement**.
 - Restaurer une position de défilement.
@@ -3773,15 +3919,15 @@ function Tooltip({ ancre, children }) {
 }
 ```
 
-### Précautions
+#### Précautions
 
 - **Bloque la peinture** : à utiliser **uniquement** si nécessaire (sinon `useEffect`).
 - N'a **aucun effet côté serveur** (le code ne s'exécute pas) : prévoir un rendu initial cohérent.
 - Évitez les mises à jour d'état coûteuses à l'intérieur.
 
-## 11.14 `useImperativeHandle`
+### 11.14 `useImperativeHandle`
 
-### Définition
+#### Définition
 
 Personnalise la **valeur exposée** à un parent via une `ref` : au lieu d'exposer le nœud DOM complet, on expose une **API restreinte** (`focus`, `scrollIntoView`, `reset`…).
 
@@ -3808,7 +3954,7 @@ function Parent() {
 
 > Avant React 19, il fallait envelopper le composant dans `forwardRef`. N'utilisez `useImperativeHandle` que pour des **actions impératives** (focus, défilement, lecture/pause) ; pour tout le reste, utilisez des **props**.
 
-## 11.15 `useId`
+### 11.15 `useId`
 
 Génère un **identifiant unique et stable**, **identique côté serveur et client** (évite les erreurs d'hydratation). Idéal pour relier `label` ↔ `input`, ou les attributs `aria-*`.
 
@@ -3830,9 +3976,9 @@ function Champ({ label }) {
 - Un appel par **élément racine** ; dérivez des suffixes pour les sous-éléments.
 - `identifierPrefix` de `createRoot`/`hydrateRoot` évite les collisions entre plusieurs roots.
 
-## 11.16 `useTransition`
+### 11.16 `useTransition`
 
-### Définition
+#### Définition
 
 Permet de marquer une mise à jour d'état comme **transition** (**non urgente**, interruptible), pour que l'interface reste **réactive** pendant que le rendu lourd se prépare.
 
@@ -3854,21 +4000,21 @@ return (
 );
 ```
 
-### Fonctionnement
+#### Fonctionnement
 
 - Les mises à jour **à l'intérieur** de `startTransition` ont une **priorité basse** : si l'utilisateur déclenche une action **urgente** (frappe, clic), React **abandonne** le rendu en cours et traite l'urgent d'abord.
 - Une transition **n'affiche pas** de fallback Suspense **déjà visible** : l'ancienne interface reste à l'écran (avec `enAttente = true`) jusqu'à ce que la nouvelle soit prête.
 - Depuis React 19, la fonction passée peut être **asynchrone** (Actions) : `enAttente` reste `true` pendant toute l'exécution. ⚠ Les mises à jour d'état effectuées **après un `await`** doivent être à nouveau enveloppées dans `startTransition`.
 
-### Limites
+#### Limites
 
 - **Ne pas** l'utiliser pour **contrôler la valeur d'un `<input>`** (la saisie doit rester urgente).
 - Elle ne s'applique qu'aux **mises à jour d'état**, pas au code synchrone de la fonction passée.
 - `startTransition` (importé de `react`) existe aussi **sans** `isPending`, pour les bibliothèques.
 
-## 11.17 `useDeferredValue`
+### 11.17 `useDeferredValue`
 
-### Définition
+#### Définition
 
 Retourne une **version « retardée »** d'une valeur. Pendant une mise à jour urgente, React réutilise l'**ancienne valeur** ; ensuite, **en arrière-plan**, il re-rend avec la nouvelle (interruptible).
 
@@ -3893,7 +4039,7 @@ function Recherche() {
 - Pour que ce soit utile, le composant coûteux doit être **`memo`** (afin qu'il ne se re-rende pas avec l'ancienne valeur identique).
 - **Différence avec le debounce** : pas de délai fixe, pas de temps mort inutile ; React s'adapte aux performances de l'appareil et le rendu est **interruptible**. Le debounce reste utile pour **limiter les requêtes réseau**.
 
-### `useTransition` ou `useDeferredValue` ?
+#### `useTransition` ou `useDeferredValue` ?
 
 | | `useTransition` | `useDeferredValue` |
 |---|---|---|
@@ -3901,9 +4047,9 @@ function Recherche() {
 | Fournit `isPending` | ✅ | ❌ (comparer valeur et valeur différée) |
 | Cas typique | Navigation, changement d'onglet | Filtrage/recherche, valeur venant d'un parent ou d'une bibliothèque |
 
-## 11.18 `useSyncExternalStore`
+### 11.18 `useSyncExternalStore`
 
-### Définition
+#### Définition
 
 Permet de **s'abonner à une source de données externe** (store, API navigateur) de façon **sûre avec le rendu concurrent** (pas de « tearing » : incohérence visuelle entre composants).
 
@@ -3931,7 +4077,7 @@ function useEnLigne() {
 
 > À réserver aux **auteurs de bibliothèques** (Redux, Zustand… l'utilisent en interne) et aux sources externes mutables (`matchMedia`, `navigator.onLine`, `localStorage` avec événement `storage`).
 
-## 11.19 `useInsertionEffect`
+### 11.19 `useInsertionEffect`
 
 S'exécute **avant** toute mutation du DOM par React (donc **avant** `useLayoutEffect`). Réservé aux **bibliothèques CSS-in-JS** qui doivent **injecter des règles `<style>`** avant le calcul du layout.
 
@@ -3939,7 +4085,7 @@ S'exécute **avant** toute mutation du DOM par React (donc **avant** `useLayoutE
 - Les **refs** ne sont pas encore attachées.
 - Sans usage de votre part dans une application classique.
 
-## 11.20 `useDebugValue`
+### 11.20 `useDebugValue`
 
 Ajoute une **étiquette** visible dans les **React DevTools** pour un **hook personnalisé**.
 
@@ -3954,9 +4100,9 @@ function useEnLigne() {
 
 À réserver aux hooks **partagés** (bibliothèques).
 
-## 11.21 Hooks et API de React 19
+### 11.21 Hooks et API de React 19
 
-### 11.21.1 `use`
+#### 11.21.1 `use`
 
 `use(ressource)` **lit** la valeur d'une **ressource** : une **Promise** ou un **Context**. Particularités :
 
@@ -3990,28 +4136,28 @@ function Panneau({ afficher }) {
 
 > **Attention** : ne créez pas une **nouvelle** promesse à chaque rendu d'un composant client (elle serait recréée à l'infini). Passez-la depuis un **Server Component**, ou utilisez un **cache** (TanStack Query, `cache`, bibliothèque compatible Suspense).
 
-### 11.21.2 `useActionState`
+#### 11.21.2 `useActionState`
 
-Gère l'**état retourné par une action** (souvent d'un formulaire) : `const [etat, action, enAttente] = useActionState(fn, etatInitial)`. Voir le **module 10**.
+Gère l'**état retourné par une action** (souvent d'un formulaire) : `const [etat, action, enAttente] = useActionState(fn, etatInitial)`. Voir le **chapitre 10**.
 
-### 11.21.3 `useFormStatus` (`react-dom`)
+#### 11.21.3 `useFormStatus` (`react-dom`)
 
-Lit l'état du `<form>` **parent** : `{ pending, data, method, action }`. Voir le **module 10**.
+Lit l'état du `<form>` **parent** : `{ pending, data, method, action }`. Voir le **chapitre 10**.
 
-### 11.21.4 `useOptimistic`
+#### 11.21.4 `useOptimistic`
 
-Affiche un **état optimiste** temporaire pendant une action asynchrone, puis **revient** à l'état réel. Voir le **module 10**.
+Affiche un **état optimiste** temporaire pendant une action asynchrone, puis **revient** à l'état réel. Voir le **chapitre 10**.
 
-### 11.21.5 Autres nouveautés utiles liées aux hooks
+#### 11.21.5 Autres nouveautés utiles liées aux hooks
 
 - `ref` comme prop ; cleanup des **refs de callback**.
 - `<Context value>` à la place de `<Context.Provider>`.
 - `useDeferredValue` avec valeur initiale.
 - `useEffectEvent` (19.2), composant `<Activity>` (19.2).
 - **`cache`** (Server Components) : mémoïse une fonction asynchrone **le temps d'une requête serveur**.
-- **React Compiler** : mémoïsation automatique (module 16).
+- **React Compiler** : mémoïsation automatique (chapitre 16).
 
-## 11.22 Tableau de décision : quel hook choisir ?
+### 11.22 Tableau de décision : quel hook choisir ?
 
 | Question | Réponse |
 |---|---|
@@ -4030,7 +4176,7 @@ Affiche un **état optimiste** temporaire pendant une action asynchrone, puis **
 | État d'un formulaire/action ? | `useActionState`, `useFormStatus`, `useOptimistic` |
 | Exposer une API impérative à un parent ? | `useImperativeHandle` |
 
-## 11.23 Récapitulatif : ordre d'exécution lors d'un rendu avec mise à jour
+### 11.23 Récapitulatif : ordre d'exécution lors d'un rendu avec mise à jour
 
 1. **Rendu** : appel du composant (et de ses hooks dans l'ordre) → `useMemo`, `useCallback`, `useReducer` (calcul) sont évalués.
 2. **Commit** : React met à jour le DOM ; les **refs** sont attachées.
@@ -4039,7 +4185,7 @@ Affiche un **état optimiste** temporaire pendant une action asynchrone, puis **
 5. **Peinture** par le navigateur.
 6. **`useEffect`** : cleanup des anciens, puis setup des nouveaux.
 
-## ⚠️ Pièges courants (partie B)
+### 11.24 Pièges fréquents
 
 - `useRef` pour une donnée affichée → l'écran ne se met pas à jour.
 - Lire/écrire `ref.current` pendant le rendu.
@@ -4050,33 +4196,17 @@ Affiche un **état optimiste** temporaire pendant une action asynchrone, puis **
 - Utiliser `useId` pour des `key`.
 - `startTransition` autour de la valeur d'un `<input>` contrôlé.
 
-## ✅ À retenir (partie B)
+### Synthèse du chapitre 11
 
-- `useRef` : **valeur mutable hors rendu** ou **accès DOM**.
-- `useMemo` / `useCallback` : **optimisations**, jamais une obligation fonctionnelle.
-- `useLayoutEffect` : mesures avant peinture ; `useInsertionEffect` : CSS-in-JS.
-- `useTransition` / `useDeferredValue` : **prioriser** les mises à jour.
-- `useSyncExternalStore` : sources externes sans « tearing ».
-- `use` : lire **promesses et contextes**, même conditionnellement.
-
-## 🏋️ Exercices (partie B)
-
-1. Construisez un hook `usePrecedent(valeur)` et affichez l'ancienne et la nouvelle valeur d'un compteur.
-2. Mesurez avec le Profiler l'effet de `memo` + `useCallback` sur une liste de 2 000 éléments.
-3. Implémentez `useMediaQuery(query)` avec `useSyncExternalStore`.
-4. Créez un champ de recherche fluide sur 20 000 lignes avec `useDeferredValue` et comparez avec `useTransition`.
-5. Exposez `focus()` et `vider()` d'un champ riche avec `useImperativeHandle`.
+`useRef` : **valeur mutable hors rendu** ou **accès DOM** ; `useMemo` / `useCallback` : **optimisations**, jamais une obligation fonctionnelle ; `useLayoutEffect` : mesures avant peinture ; `useInsertionEffect` : CSS-in-JS ; `useTransition` / `useDeferredValue` : **prioriser** les mises à jour ; `useSyncExternalStore` : sources externes sans « tearing » ; `use` : lire **promesses et contextes**, même conditionnellement.
 
 ---
-# 12. Hooks personnalisés
 
-## 🎯 Objectifs
+## 12. Hooks personnalisés
 
-- Comprendre ce qu'est un hook personnalisé et ce qu'il partage (la logique, pas l'état).
-- Savoir en extraire, nommer, typer et tester.
-- Connaître une bibliothèque de hooks courants et les bonnes pratiques de conception.
+**Objectifs d'apprentissage.** À la fin de ce chapitre, vous saurez : comprendre ce qu'est un hook personnalisé et ce qu'il partage (la logique, pas l'état) ; savoir en extraire, nommer, typer et tester ; connaître une bibliothèque de hooks courants et les bonnes pratiques de conception.
 
-## 12.1 Définition
+### 12.1 Définition
 
 Un **hook personnalisé** (*custom hook*) est une **fonction JavaScript dont le nom commence par `use`** et qui **appelle d'autres hooks**. Il permet d'**extraire et de réutiliser de la logique avec état** (état + effets + refs…) entre plusieurs composants.
 
@@ -4097,13 +4227,13 @@ function BarreStatut()  { return <h1>{useEnLigne() ? '✅ En ligne' : '❌ Hors 
 function BoutonEnvoyer() { const enLigne = useEnLigne(); return <button disabled={!enLigne}>Envoyer</button>; }
 ```
 
-### Ce qui est partagé, et ce qui ne l'est pas
+#### Ce qui est partagé, et ce qui ne l'est pas
 
 - La **logique** est partagée (le code du hook).
 - L'**état n'est pas partagé** : **chaque appel** du hook crée **son propre état** isolé. Deux composants qui appellent `useEnLigne()` ont chacun leur `useState`.
 - Pour **partager l'état lui-même** : Context, store externe, ou remontée d'état.
 
-## 12.2 Règles et conventions
+### 12.2 Règles et conventions
 
 1. Nom **`useXxx`** (le linter applique les règles de hooks aux fonctions ainsi nommées).
 2. Respecte les **règles des hooks** : niveau supérieur, même ordre.
@@ -4112,14 +4242,14 @@ function BoutonEnvoyer() { const enLigne = useEnLigne(); return <button disabled
 5. Chaque hook doit avoir **un but précis** (principe de responsabilité unique) : `useDebounce`, pas `useTout`.
 6. Un hook **re-rend** le composant qui l'appelle quand **son état interne** change.
 
-### Valeur de retour : tableau ou objet ?
+#### Valeur de retour : tableau ou objet ?
 
 | Forme | Avantage | Cas |
 |---|---|---|
 | **Tableau** `[valeur, setValeur]` | Renommage facile à l'appel (`const [a, setA] = …`) | 2-3 valeurs, à l'image de `useState` |
 | **Objet** `{ data, erreur, chargement }` | Valeurs **nommées**, ordre indifférent, extensible | Plus de 3 valeurs |
 
-## 12.3 Quand extraire un hook ?
+### 12.3 Quand extraire un hook ?
 
 - **Duplication** : la même combinaison `useState` + `useEffect` apparaît dans plusieurs composants.
 - **Complexité** : un composant mélange affichage et logique technique (abonnements, requêtes).
@@ -4128,9 +4258,9 @@ function BoutonEnvoyer() { const enLigne = useEnLigne(); return <button disabled
 
 > Ne créez pas de hook pour **chaque** `useEffect` : seulement pour réduire la duplication ou clarifier une **préoccupation** réelle. Évitez les hooks de « cycle de vie » génériques (`useMount`, `useEffectOnce`) qui masquent la logique de synchronisation.
 
-## 12.4 Recueil de hooks courants
+### 12.4 Recueil de hooks courants
 
-### `useLocalStorage`
+#### `useLocalStorage`
 
 ```jsx
 function useLocalStorage(cle, valeurInitiale) {
@@ -4151,7 +4281,7 @@ function useLocalStorage(cle, valeurInitiale) {
 
 > En **SSR**, `localStorage` n'existe pas : la valeur initiale diffère entre serveur et client → risque d'erreur d'hydratation. Utilisez `useSyncExternalStore` ou lisez après le montage.
 
-### `useDebounce`
+#### `useDebounce`
 
 ```jsx
 function useDebounce(valeur, delai = 300) {
@@ -4164,7 +4294,7 @@ function useDebounce(valeur, delai = 300) {
 }
 ```
 
-### `useFetch` (version pédagogique)
+#### `useFetch` (version pédagogique)
 
 ```jsx
 function useFetch(url) {
@@ -4186,7 +4316,7 @@ function useFetch(url) {
 
 > En production, préférez **TanStack Query** / **SWR** (cache, déduplication, revalidation).
 
-### `useToggle`
+#### `useToggle`
 
 ```jsx
 function useToggle(initial = false) {
@@ -4196,7 +4326,7 @@ function useToggle(initial = false) {
 }
 ```
 
-### `useEventListener`
+#### `useEventListener`
 
 ```jsx
 function useEventListener(cible, type, gestionnaire) {
@@ -4211,7 +4341,7 @@ function useEventListener(cible, type, gestionnaire) {
 }
 ```
 
-### `useClickOutside`
+#### `useClickOutside`
 
 ```jsx
 function useClickOutside(ref, onOutside) {
@@ -4223,7 +4353,7 @@ function useClickOutside(ref, onOutside) {
 }
 ```
 
-### `useMediaQuery`
+#### `useMediaQuery`
 
 ```jsx
 function useMediaQuery(requete) {
@@ -4235,7 +4365,7 @@ function useMediaQuery(requete) {
 }
 ```
 
-### `useInterval` (Dan Abramov)
+#### `useInterval` (Dan Abramov)
 
 ```jsx
 function useInterval(rappel, delai) {
@@ -4249,9 +4379,9 @@ function useInterval(rappel, delai) {
 }
 ```
 
-### `usePrevious`, `useWindowSize`, `useOnScreen` (IntersectionObserver), `useCopyToClipboard`, `useAsync`, `useForm`, `useUndoRedo`… sont d'autres exemples courants ; des bibliothèques comme **usehooks-ts**, **react-use**, **ahooks** ou **@uidotdev/usehooks** en fournissent des versions éprouvées.
+#### `usePrevious`, `useWindowSize`, `useOnScreen` (IntersectionObserver), `useCopyToClipboard`, `useAsync`, `useForm`, `useUndoRedo`… sont d'autres exemples courants ; des bibliothèques comme **usehooks-ts**, **react-use**, **ahooks** ou **@uidotdev/usehooks** en fournissent des versions éprouvées.
 
-## 12.5 Composition de hooks
+### 12.5 Composition de hooks
 
 Un hook peut appeler **d'autres hooks personnalisés** :
 
@@ -4264,11 +4394,11 @@ function useRecherche(url) {
 }
 ```
 
-## 12.6 Passer des gestionnaires à un hook
+### 12.6 Passer des gestionnaires à un hook
 
 Si le hook appelle un **callback fourni par le composant**, ce callback change à chaque rendu. Options : **ref du dernier callback** (comme dans `useInterval`), **`useEffectEvent`**, ou exiger que l'appelant le mémoïse. N'incluez pas un callback instable dans les dépendances d'un effet.
 
-## 12.7 Hooks et TypeScript
+### 12.7 Hooks et TypeScript
 
 ```tsx
 function useLocalStorage<T>(cle: string, initial: T): readonly [T, React.Dispatch<React.SetStateAction<T>>] {
@@ -4281,7 +4411,7 @@ function useLocalStorage<T>(cle: string, initial: T): readonly [T, React.Dispatc
 }
 ```
 
-## 12.8 Tester un hook
+### 12.8 Tester un hook
 
 ```jsx
 import { renderHook, act } from '@testing-library/react';
@@ -4296,7 +4426,7 @@ test('useToggle bascule', () => {
 
 Pour les hooks dépendant d'un contexte : option `wrapper` de `renderHook`.
 
-## ⚠️ Pièges courants
+### 12.9 Pièges fréquents
 
 - Croire que deux composants partagent l'état d'un même hook.
 - Nommer `useXxx` une fonction qui n'utilise aucun hook (ou l'inverse : appeler des hooks dans `fetchXxx`).
@@ -4305,36 +4435,23 @@ Pour les hooks dépendant d'un contexte : option `wrapper` de `renderHook`.
 - Oublier de nettoyer (abonnements, minuteurs).
 - Retourner de nouveaux objets à chaque rendu quand le consommateur les utilise en dépendances.
 
-## ✅ À retenir
+### Synthèse du chapitre 12
 
-- Hook personnalisé = **fonction `useXxx`** qui compose des hooks ; **logique partagée, état isolé**.
-- Extrayez pour **clarté** et **réutilisation**, pas par principe.
-- Tableau pour 2-3 valeurs, **objet** au-delà.
-- Testez avec **`renderHook`**.
-
-## 🏋️ Exercices
-
-1. Créez `useLocalStorage` robuste (JSON invalide, quota) et utilisez-le pour le thème.
-2. Créez `useOnScreen` avec `IntersectionObserver` pour du chargement paresseux d'images.
-3. Écrivez `useUndoRedo(initial)` retournant `{ etat, set, undo, redo, peutUndo, peutRedo }` et testez-le.
+Hook personnalisé = **fonction `useXxx`** qui compose des hooks ; **logique partagée, état isolé** ; Extrayez pour **clarté** et **réutilisation**, pas par principe ; Tableau pour 2-3 valeurs, **objet** au-delà ; Testez avec **`renderHook`**.
 
 ---
 
-# 13. Context API
+## 13. Context API
 
-## 🎯 Objectifs
+**Objectifs d'apprentissage.** À la fin de ce chapitre, vous saurez : comprendre le problème résolu (prop drilling) et le fonctionnement du Context ; créer, fournir et consommer un contexte, avec les patterns recommandés ; maîtriser les implications de performance et les alternatives.
 
-- Comprendre le problème résolu (prop drilling) et le fonctionnement du Context.
-- Créer, fournir et consommer un contexte, avec les patterns recommandés.
-- Maîtriser les implications de performance et les alternatives.
+### 13.1 Le problème et la solution
 
-## 13.1 Le problème et la solution
-
-Le **prop drilling** (module 5) consiste à transmettre une donnée à travers de nombreux composants intermédiaires. Le **Context** permet à un composant parent de **« diffuser »** une valeur à **tous ses descendants**, **quelle que soit la profondeur**, sans la passer explicitement via les props.
+Le **prop drilling** (chapitre 5) consiste à transmettre une donnée à travers de nombreux composants intermédiaires. Le **Context** permet à un composant parent de **« diffuser »** une valeur à **tous ses descendants**, **quelle que soit la profondeur**, sans la passer explicitement via les props.
 
 Cas d'usage typiques : **thème** (clair/sombre), **langue** (i18n), **utilisateur authentifié**, **configuration**, **état de routage**, **état d'un composant composé** (Tabs, Accordion).
 
-## 13.2 Les trois étapes
+### 13.2 Les trois étapes
 
 ```jsx
 import { createContext, useContext, useState } from 'react';
@@ -4364,7 +4481,7 @@ function Bouton() {
 }
 ```
 
-### Fonctionnement
+#### Fonctionnement
 
 - `useContext(Ctx)` lit la valeur du **fournisseur le plus proche** au-dessus de l'appelant.
 - Sans fournisseur : valeur par défaut passée à `createContext`.
@@ -4374,7 +4491,7 @@ function Bouton() {
 - `Ctx.Consumer` (ancienne API) existe mais n'est plus utilisé.
 - `displayName` : `Ctx.displayName = 'Theme'` aide dans les DevTools.
 
-## 13.3 Pattern recommandé : fournisseur + hook de consommation
+### 13.3 Pattern recommandé : fournisseur + hook de consommation
 
 ```jsx
 const AuthContext = createContext(null);
@@ -4400,11 +4517,11 @@ export function useAuth() {
 
 Avantages : **encapsulation** (les consommateurs n'importent pas le contexte brut), **erreur explicite** si le fournisseur manque, **API** cohérente.
 
-## 13.4 Performance : le point clé
+### 13.4 Performance : le point clé
 
 **Tous les consommateurs** d'un contexte se **re-rendent** quand sa valeur change. Pièges et remèdes :
 
-### 1. Valeur objet recréée à chaque rendu du fournisseur
+#### 1. Valeur objet recréée à chaque rendu du fournisseur
 
 ```jsx
 <Ctx value={{ a, b }}>…</Ctx>        // ❌ nouvel objet à chaque rendu du parent → tous les consommateurs re-rendent
@@ -4413,7 +4530,7 @@ const valeur = useMemo(() => ({ a, b }), [a, b]);    // ✅
 
 > Si le fournisseur ne se re-rend que quand l'état change réellement, ce problème est moindre ; il apparaît surtout quand le parent du fournisseur se re-rend souvent.
 
-### 2. Un seul contexte « fourre-tout »
+#### 2. Un seul contexte « fourre-tout »
 
 Un contexte qui regroupe des données qui changent à des fréquences différentes force des rendus inutiles. **Découpez** :
 
@@ -4425,7 +4542,7 @@ Un contexte qui regroupe des données qui changent à des fréquences différent
 </UtilisateurContext>
 ```
 
-### 3. Séparer **état** et **actions**
+#### 3. Séparer **état** et **actions**
 
 ```jsx
 <EtatContext value={etat}>
@@ -4435,15 +4552,15 @@ Un contexte qui regroupe des données qui changent à des fréquences différent
 
 Les composants qui ne font que **déclencher** des actions ne se re-rendent pas quand l'état change.
 
-### 4. Éviter qu'un fournisseur re-rende ses enfants
+#### 4. Éviter qu'un fournisseur re-rende ses enfants
 
 Passez les enfants via **`children`** : si l'état du fournisseur change, les `children` (même référence créée plus haut) ne sont pas re-rendus (sauf consommateurs).
 
-### 5. Pas de sélecteur natif
+#### 5. Pas de sélecteur natif
 
 `useContext` ne permet pas de s'abonner à **une partie** de la valeur. Pour des **mises à jour fines et fréquentes**, préférez **Zustand**, **Jotai**, **Redux Toolkit** ou la bibliothèque `use-context-selector`.
 
-## 13.5 Context et mise à jour : où met-on l'état ?
+### 13.5 Context et mise à jour : où met-on l'état ?
 
 Le Context **ne gère pas l'état** : il **transporte** une valeur. L'état vit dans un `useState`/`useReducer` du fournisseur (ou ailleurs).
 
@@ -4455,7 +4572,7 @@ function ThemeProvider({ children }) {
 }
 ```
 
-## 13.6 Alternatives et compléments
+### 13.6 Alternatives et compléments
 
 | Besoin | Alternative |
 |---|---|
@@ -4465,7 +4582,7 @@ function ThemeProvider({ children }) {
 | Valeur lue rarement et statique (config) | Context ✅ (idéal) |
 | Valeur changeant souvent, nombreux consommateurs | Store externe avec sélecteurs |
 
-## 13.7 Contexte et composants composés
+### 13.7 Contexte et composants composés
 
 Les composants **composés** partagent un état implicite via un contexte privé :
 
@@ -4487,17 +4604,168 @@ Onglets.Panneau = function Panneau({ id, children }) {
 // <Onglets defaut="a"><Onglets.Bouton id="a">A</Onglets.Bouton>…</Onglets>
 ```
 
-## 13.8 Contexte et Server Components
+### 13.8 Contexte et Server Components
 
 Les contextes **ne fonctionnent pas dans les Server Components** (pas de `useContext`). Le fournisseur doit être un **composant client** (`'use client'`) qui reçoit `children` (pouvant être des Server Components). Placez-le **le plus bas possible** pour limiter le JavaScript envoyé au client.
 
-## 13.9 Tester
+### 13.9 Tester
 
 ```jsx
 render(<ThemeContext value={{ theme: 'sombre', setTheme: vi.fn() }}><Bouton /></ThemeContext>);
 ```
 
-## ⚠️ Pièges courants
+### 13.10 Comment le Context fonctionne réellement
+
+- **Lecture pendant le rendu.** `useContext(Ctx)` (ou `use(Ctx)`) retourne la valeur du **fournisseur le plus proche au-dessus** de l'appelant dans l'arbre **React** (pas dans le DOM : un portail conserve ses contextes, chapitre 19). Aucun abonnement manuel n'est nécessaire : React enregistre, lors du rendu, que ce composant **dépend** de ce contexte.
+- **Mise à jour.** Quand la `value` d'un fournisseur change (comparaison par `Object.is`), React **parcourt le sous-arbre**, repère les composants qui lisent ce contexte et **planifie leur re-rendu**, même si un parent intermédiaire est protégé par `memo` ou `shouldComponentUpdate`. Les composants qui **ne lisent pas** le contexte ne sont pas touchés (sauf s'ils re-rendent pour une autre raison).
+- **Valeur par défaut.** L'argument de `createContext(valeurParDefaut)` n'est utilisé **que lorsqu'aucun fournisseur** n'entoure le consommateur. Ce n'est **pas** un état initial. Elle sert aux **tests isolés** et aux composants autonomes ; pour imposer la présence d'un fournisseur, passez `null` et levez une erreur dans le hook de consommation (13.3).
+- **Identité de la valeur.** Seule la **référence** compte : un objet reconstruit à chaque rendu est une « nouvelle valeur », même à contenu identique (13.4).
+- **Contexte et `children`.** Un fournisseur qui reçoit ses enfants en `children` ne les re-rend pas quand son propre état change : seuls les **consommateurs** sont mis à jour.
+
+> Le Context est un mécanisme de **transport**, pas un moteur de gestion d'état : il ne sait ni stocker, ni calculer, ni sélectionner une partie de la valeur.
+
+### 13.11 Exemple complet : `useReducer` + Context
+
+Pour un état partagé qui évolue selon des actions (liste de tâches, panier), combinez `useReducer` et **deux contextes** : un pour l'**état**, un pour le **`dispatch`** (stable, donc sans re-rendu inutile).
+
+```jsx
+import { createContext, useContext, useReducer } from 'react';
+
+function reducteur(taches, action) {
+  switch (action.type) {
+    case 'ajouter':   return [...taches, { id: action.id, texte: action.texte, faite: false }];
+    case 'basculer':  return taches.map(t => (t.id === action.id ? { ...t, faite: !t.faite } : t));
+    case 'supprimer': return taches.filter(t => t.id !== action.id);
+    default: throw new Error(`Action inconnue : ${action.type}`);
+  }
+}
+
+const TachesContext = createContext(null);
+const TachesDispatchContext = createContext(null);
+
+export function TachesProvider({ children }) {
+  const [taches, dispatch] = useReducer(reducteur, []);
+  return (
+    <TachesContext value={taches}>
+      <TachesDispatchContext value={dispatch}>{children}</TachesDispatchContext>
+    </TachesContext>
+  );
+}
+
+export function useTaches() {
+  const v = useContext(TachesContext);
+  if (v === null) throw new Error('useTaches doit être utilisé dans <TachesProvider>');
+  return v;
+}
+export function useTachesDispatch() {
+  const v = useContext(TachesDispatchContext);
+  if (v === null) throw new Error('useTachesDispatch doit être utilisé dans <TachesProvider>');
+  return v;
+}
+```
+
+Un bouton « Supprimer » qui n'appelle que `useTachesDispatch()` **ne re-rend pas** quand la liste change. Le **reducer est pur** : il retourne un nouvel état sans muter l'ancien (chapitre 6).
+
+### 13.12 Composer plusieurs fournisseurs
+
+Une application réelle empile souvent de nombreux fournisseurs (thème, session, i18n, notifications, données). Regroupez-les dans **un seul composant** pour garder la racine lisible :
+
+```jsx
+export function Fournisseurs({ children }) {
+  return (
+    <ThemeProvider>
+      <I18nProvider>
+        <AuthProvider>
+          <NotificationsProvider>{children}</NotificationsProvider>
+        </AuthProvider>
+      </I18nProvider>
+    </ThemeProvider>
+  );
+}
+```
+
+**Ordre des fournisseurs.** Un fournisseur ne peut lire que les contextes situés **au-dessus** de lui : si `NotificationsProvider` a besoin de la session, il doit être **à l'intérieur** de `AuthProvider`. Placez les contextes **les plus généraux** (thème, langue) vers l'extérieur.
+
+**Portée.** Un fournisseur n'a pas à être à la racine : limitez-le au **sous-arbre qui en a besoin**. Cela réduit les rendus et permet de **surcharger** localement (un panneau en thème sombre dans une page claire).
+
+### 13.13 Le Context comme injection de dépendances et pour les tests
+
+Le Context sert aussi à **injecter des services** (client HTTP, horloge, journalisation) sans les importer en dur dans les composants.
+
+```jsx
+const ApiContext = createContext(apiReelle);
+
+// En production : valeur par défaut. Dans un test ou une démonstration : remplacement.
+render(
+  <ApiContext value={{ chargerProduits: async () => [{ id: 1, nom: 'Test' }] }}>
+    <Catalogue />
+  </ApiContext>
+);
+```
+
+Pour les tests, créez une fonction `renderAvecFournisseurs(ui, options)` qui entoure automatiquement les composants des fournisseurs nécessaires : tous les tests partagent alors la même configuration, et chacun peut surcharger une valeur.
+
+### 13.14 Un store dans le Context : abonnements ciblés
+
+Pour obtenir des **mises à jour fines** tout en gardant la diffusion par Context, placez dans le contexte un **objet store stable** (jamais recréé) et abonnez chaque composant **uniquement à la partie qui l'intéresse** avec `useSyncExternalStore` (chapitre 22).
+
+```jsx
+function creerStore(etatInitial) {
+  let etat = etatInitial;
+  const ecouteurs = new Set();
+  return {
+    lire: () => etat,
+    modifier(partiel) { etat = { ...etat, ...partiel }; ecouteurs.forEach(l => l()); },
+    abonner(l) { ecouteurs.add(l); return () => ecouteurs.delete(l); },
+  };
+}
+
+const StoreContext = createContext(null);
+
+function useSelecteur(selecteur) {
+  const store = useContext(StoreContext);
+  return useSyncExternalStore(store.abonner, () => selecteur(store.lire()));
+}
+// useSelecteur(e => e.theme) ne re-rend que si le thème change.
+```
+
+Le sélecteur doit retourner une valeur **primitive ou stable** ; un sélecteur qui crée un nouvel objet à chaque appel provoque une boucle de rendus. Dans la pratique, **Zustand**, **Jotai** et **Redux Toolkit** font exactement cela, avec les protections nécessaires : préférez-les à une version maison.
+
+### 13.15 Context, props, composition ou store : que choisir ?
+
+| Situation | Solution |
+| --- | --- |
+| Donnée utilisée par **un ou deux niveaux** de composants | **Props** |
+| Les composants intermédiaires ne font que **relayer** | **Composition** (`children`, slots) : passez le JSX déjà construit |
+| Donnée **globale à un sous-arbre**, qui change **rarement** (thème, langue, utilisateur) | **Context** |
+| État **partagé**, modifié **souvent** par des composants **éloignés** | **Store externe** (Zustand, Jotai, Redux Toolkit) |
+| Données **venant du serveur** (listes, détails, cache) | **Bibliothèque de données** (TanStack Query, SWR) ou framework |
+| État **reflété dans l'URL** (filtre, page, onglet) | **Paramètres de l'URL** (routeur) |
+
+Le premier réflexe n'est pas le Context mais la **composition** : souvent, le prop drilling disparaît en remontant la construction du JSX au niveau où se trouve la donnée.
+
+### 13.16 Lire un contexte conditionnellement avec `use`
+
+Contrairement à `useContext`, **`use(Ctx)`** peut être appelé **après un `return` anticipé** ou à l'intérieur d'une condition ou d'une boucle :
+
+```jsx
+function Message({ afficher }) {
+  if (!afficher) return null;
+  const theme = use(ThemeContext);     // autorisé ici
+  return <p className={theme}>Bonjour</p>;
+}
+```
+
+Les deux lectures créent la même dépendance ; `use` offre simplement plus de souplesse. Pour tout le reste (règles de Hooks, performance), le comportement est identique.
+
+### 13.17 Déboguer un contexte
+
+- Dans **React DevTools**, un fournisseur apparaît sous le nom `Context.Provider` (ou le `displayName` que vous lui avez donné) ; sélectionnez un consommateur pour voir la **valeur lue**.
+- Donnez un `displayName` : `ThemeContext.displayName = 'Theme'`.
+- Activez dans le Profiler l'option « **Pourquoi ce composant a-t-il été rendu ?** » : elle indique « Le contexte a changé » le cas échéant.
+- Si **trop** de composants se re-rendent, vérifiez dans l'ordre : l'identité de la valeur (13.4-1), le découpage du contexte (13.4-2), la séparation état / actions (13.4-3).
+
+### 13.18 Pièges fréquents
 
 - Valeur objet recréée à chaque rendu sans `useMemo`.
 - Contexte unique géant pour tout l'état de l'application.
@@ -4506,30 +4774,17 @@ render(<ThemeContext value={{ theme: 'sombre', setTheme: vi.fn() }}><Bouton /></
 - Croire que `memo` bloque la propagation d'un changement de contexte (non : le consommateur est re-rendu).
 - Utiliser Context pour remplacer des props ordinaires dans tous les cas (perte de traçabilité).
 
-## ✅ À retenir
+### Synthèse du chapitre 13
 
-- **createContext → Provider (`<Ctx value>`) → `useContext` / `use`**.
-- Le consommateur se re-rend à **tout changement** de valeur ; **mémoïsez** la valeur et **découpez** les contextes.
-- Pattern : **Provider + hook `useXxx`** avec garde d'erreur.
-- Pour des états globaux dynamiques et fins → **stores externes**.
-
-## 🏋️ Exercices
-
-1. Implémentez un thème clair/sombre persistant avec `ThemeProvider` + `useTheme`.
-2. Mesurez avec le Profiler les rendus d'un contexte unique vs deux contextes séparés (état/dispatch).
-3. Construisez un composant `Accordion` composé via Context.
+**createContext → Provider (`<Ctx value>`) → `useContext` / `use`** ; Le consommateur se re-rend à **tout changement** de valeur ; **mémoïsez** la valeur et **découpez** les contextes ; Pattern : **Provider + hook `useXxx`** avec garde d'erreur ; Pour des états globaux dynamiques et fins → **stores externes**.
 
 ---
 
-# 14. Refs et accès au DOM
+## 14. Refs et accès au DOM
 
-## 🎯 Objectifs
+**Objectifs d'apprentissage.** À la fin de ce chapitre, vous saurez : comprendre quand et pourquoi sortir du modèle déclaratif avec les refs ; maîtriser `useRef`, les refs de callback, le transfert de refs et `useImperativeHandle` ; manipuler le DOM de façon sûre (focus, scroll, mesure) et intégrer des bibliothèques externes.
 
-- Comprendre quand et pourquoi sortir du modèle déclaratif avec les refs.
-- Maîtriser `useRef`, les refs de callback, le transfert de refs et `useImperativeHandle`.
-- Manipuler le DOM de façon sûre (focus, scroll, mesure) et intégrer des bibliothèques externes.
-
-## 14.1 Définition et rôle
+### 14.1 Définition et rôle
 
 Une **ref** est une **« échappatoire »** (*escape hatch*) qui permet à un composant de :
 1. **accéder à un nœud DOM** (ou à une instance de composant classe) ;
@@ -4537,7 +4792,7 @@ Une **ref** est une **« échappatoire »** (*escape hatch*) qui permet à un co
 
 React gère le DOM pour vous ; n'utilisez les refs que pour des actions que React **ne peut pas exprimer de façon déclarative** : **focus**, **sélection de texte**, **défilement**, **mesure**, **lecture/pause** de média, **intégration** de bibliothèques tierces (cartes, graphiques, éditeurs), **animations impératives**, **APIs navigateur** (Canvas, Web Audio, Fullscreen).
 
-## 14.2 Obtenir une ref sur un nœud DOM
+### 14.2 Obtenir une ref sur un nœud DOM
 
 ```jsx
 import { useRef } from 'react';
@@ -4561,20 +4816,20 @@ function Formulaire() {
 - `ref.current` vaut **`null`** au premier rendu ; React y place le **nœud DOM** **pendant le commit** et le remet à **`null`** au démontage.
 - En TypeScript : `useRef<HTMLInputElement>(null)`.
 
-## 14.3 Valeurs mutables sans rendu
+### 14.3 Valeurs mutables sans rendu
 
-Voir le module 11 (`useRef`). Cas : identifiants de minuteurs, instances d'objets externes, compteurs de rendus, état « mémoïsé » non affiché, valeur précédente, « dernier callback ».
+Voir le chapitre 11 (`useRef`). Cas : identifiants de minuteurs, instances d'objets externes, compteurs de rendus, état « mémoïsé » non affiché, valeur précédente, « dernier callback ».
 
-## 14.4 Règles d'utilisation
+### 14.4 Règles d'utilisation
 
 1. **Pas de lecture/écriture de `ref.current` pendant le rendu** (sauf initialisation paresseuse).
 2. **Ne modifiez pas, par une ref, un nœud DOM géré par React** (ajouter/supprimer des enfants, changer le texte) : cela désynchronise React. Autorisé : `focus()`, `scrollIntoView()`, mesures, lecture.
 3. Si vous devez modifier le DOM géré par React, vous le faites **sur des propriétés que React n'utilise pas** (par exemple la classe d'un élément dont `className` n'est pas contrôlé), ou vous recourez à une **clé** pour recréer l'élément.
 4. Utilisez les refs avec **parcimonie** : privilégiez props et state.
 
-## 14.5 Refs vers plusieurs éléments (listes)
+### 14.5 Refs vers plusieurs éléments (listes)
 
-### Ref de callback + `Map`
+#### Ref de callback + `Map`
 
 ```jsx
 function Galerie({ images }) {
@@ -4600,7 +4855,7 @@ function Galerie({ images }) {
 
 > On ne peut pas appeler `useRef` dans une boucle ni dans un `map` (règles des hooks). D'où la **ref de callback** ou une **`Map`** dans une seule ref.
 
-## 14.6 Refs de callback
+### 14.6 Refs de callback
 
 Au lieu d'un objet, on passe **une fonction** à `ref` :
 
@@ -4618,7 +4873,7 @@ Au lieu d'un objet, on passe **une fonction** à `ref` :
 
 Une ref de callback **inline** est recréée à chaque rendu → React l'appelle à nouveau (cleanup puis setup). Stabilisez-la avec `useCallback` si nécessaire.
 
-## 14.7 Transmettre une ref à un composant
+### 14.7 Transmettre une ref à un composant
 
 Par défaut, une ref sur un composant personnalisé ne donne **pas** accès à son DOM interne.
 
@@ -4635,9 +4890,9 @@ const Champ = forwardRef(function Champ(props, ref) {
 });
 ```
 
-### Exposer une API limitée : `useImperativeHandle`
+#### Exposer une API limitée : `useImperativeHandle`
 
-Pour **ne pas** exposer tout le DOM, exposez seulement certaines méthodes (module 11) :
+Pour **ne pas** exposer tout le DOM, exposez seulement certaines méthodes (chapitre 11) :
 
 ```jsx
 function Champ({ ref }) {
@@ -4649,7 +4904,7 @@ function Champ({ ref }) {
 }
 ```
 
-## 14.8 Quand React attache les refs : synchronisation et `flushSync`
+### 14.8 Quand React attache les refs : synchronisation et `flushSync`
 
 React met à jour `ref.current` **pendant le commit**, avant les effets. Lorsque vous devez accéder au **DOM mis à jour immédiatement après un `setState`** (ex. défiler jusqu'à l'élément qui vient d'être ajouté), le DOM n'est pas encore à jour dans le gestionnaire. Solutions :
 
@@ -4664,7 +4919,7 @@ function ajouter() {
 
 ⚠ `flushSync` nuit aux performances : alternative = effet réagissant au changement, ou ref de callback.
 
-## 14.9 Exemples d'usage
+### 14.9 Exemples d'usage
 
 ```jsx
 // Focus automatique au montage
@@ -4692,7 +4947,7 @@ useEffect(() => {
 }, []);
 ```
 
-## 14.10 Refs vs state, récapitulatif
+### 14.10 Refs vs state, récapitulatif
 
 | | Ref | State |
 |---|---|---|
@@ -4703,7 +4958,187 @@ useEffect(() => {
 | Accès au DOM | ✅ | ❌ |
 | Prévisibilité / testabilité | Moindre | Meilleure |
 
-## ⚠️ Pièges courants
+### 14.11 Quand lire et écrire `ref.current`
+
+`ref.current` est une **valeur mutable hors du cycle de rendu** : React ne la surveille pas. D'où une règle essentielle : **ne lisez ni n'écrivez `ref.current` pendant le rendu**, sauf pour une **initialisation paresseuse**. Lisez et écrivez dans :
+
+- les **gestionnaires d'événements** ;
+- les **effets** (`useEffect`, `useLayoutEffect`) ;
+- les **callbacks de ref**.
+
+```jsx
+// ❌ Lecture pendant le rendu : le résultat dépend d'une valeur que React ne suit pas
+function Compteur() {
+  const rendus = useRef(0);
+  rendus.current += 1;                     // mutation pendant le rendu (impure)
+  return <p>{rendus.current}</p>;
+}
+```
+
+**Initialisation paresseuse** : l'écriture est tolérée **une seule fois**, pour éviter de recréer un objet coûteux à chaque rendu.
+
+```jsx
+function Lecteur() {
+  const moteur = useRef(null);
+  if (moteur.current === null) moteur.current = new MoteurAudio();   // créé une seule fois
+  // ...
+}
+```
+
+`useRef(new MoteurAudio())` appellerait le constructeur à **chaque rendu** (le résultat serait simplement ignoré après le premier).
+
+### 14.12 Manipuler le DOM : cas d'usage courants
+
+Les refs servent aux opérations qui n'ont **pas d'équivalent déclaratif** :
+
+| Besoin | API du DOM | Où l'appeler |
+| --- | --- | --- |
+| Donner le **focus** | `ref.current.focus()` | Gestionnaire ou effet |
+| **Faire défiler** vers un élément | `ref.current.scrollIntoView({ behavior: 'smooth', block: 'nearest' })` | Gestionnaire ou effet |
+| **Mesurer** une taille ou une position | `getBoundingClientRect()`, `offsetHeight` | `useLayoutEffect` (avant la peinture) |
+| Contrôler un **média** | `video.play()`, `video.pause()` | Gestionnaire d'événement |
+| Sélectionner du **texte** | `input.select()`, `setSelectionRange()` | Gestionnaire |
+| Déclencher une **animation** impérative | `element.animate(...)` (Web Animations) | Effet, avec nettoyage |
+| Intégrer une bibliothèque tierce | Constructeur de la bibliothèque sur le nœud | Effet, avec nettoyage |
+
+```jsx
+function Video({ src }) {
+  const ref = useRef(null);
+  const [lecture, setLecture] = useState(false);
+
+  function basculer() {
+    const v = ref.current;
+    if (lecture) v.pause(); else v.play();
+    setLecture(!lecture);
+  }
+
+  return (
+    <>
+      <video ref={ref} src={src} onPlay={() => setLecture(true)} onPause={() => setLecture(false)} />
+      <button onClick={basculer}>{lecture ? 'Pause' : 'Lecture'}</button>
+    </>
+  );
+}
+```
+
+> Ne modifiez pas par ref un nœud **géré par React** (`textContent`, ajout ou suppression d'enfants) : vous créeriez un désaccord entre l'arbre React et le DOM, et la prochaine mise à jour pourrait échouer. Limitez-vous à des opérations **non destructrices** (focus, défilement, mesure, lecture/écriture de propriétés impératives).
+
+### 14.13 Fonction de nettoyage des refs de callback (React 19)
+
+Depuis React 19, un **callback de ref peut retourner une fonction de nettoyage**, appelée quand l'élément est détaché. Cela remplace l'ancien motif « appelé avec `null` » :
+
+```jsx
+<div
+  ref={noeud => {
+    const observateur = new ResizeObserver(([entree]) => setLargeur(entree.contentRect.width));
+    observateur.observe(noeud);
+    return () => observateur.disconnect();      // nettoyage à la fin de la vie du nœud
+  }}
+/>
+```
+
+Conséquences :
+
+- Quand une fonction de nettoyage est retournée, React **n'appelle plus** le callback avec `null`.
+- Un callback écrit en **flèche à expression** (`ref={n => (this.x = n)}`) **retourne** la valeur assignée, ce qui est interprété comme un nettoyage : écrivez-le avec des **accolades** (`ref={n => { this.x = n; }}`). TypeScript signale cette erreur.
+- Le callback est **recréé à chaque rendu** s'il est défini en ligne : React l'appelle alors en nettoyage puis en configuration. Stabilisez-le avec `useCallback` si le coût est notable.
+
+### 14.14 Observer le DOM : `ResizeObserver` et `IntersectionObserver`
+
+Mesurer la taille d'un élément ou savoir s'il est visible nécessite des **observateurs** du navigateur. Encapsulez-les dans un **Hook personnalisé** (chapitre 12) :
+
+```jsx
+function useTaille() {
+  const [taille, setTaille] = useState({ largeur: 0, hauteur: 0 });
+  const ref = useCallback(noeud => {
+    if (!noeud) return;
+    const obs = new ResizeObserver(([e]) =>
+      setTaille({ largeur: e.contentRect.width, hauteur: e.contentRect.height })
+    );
+    obs.observe(noeud);
+    return () => obs.disconnect();
+  }, []);
+  return [ref, taille];
+}
+
+function Panneau() {
+  const [ref, { largeur }] = useTaille();
+  return <section ref={ref}>{largeur > 600 ? <Large /> : <Etroit />}</section>;
+}
+```
+
+```jsx
+function useVisible(options) {
+  const [visible, setVisible] = useState(false);
+  const ref = useCallback(noeud => {
+    if (!noeud) return;
+    const obs = new IntersectionObserver(([e]) => setVisible(e.isIntersecting), options);
+    obs.observe(noeud);
+    return () => obs.disconnect();
+  }, []);
+  return [ref, visible];
+}
+// Usages : chargement paresseux d'images, défilement infini, animations à l'apparition.
+```
+
+Pour des besoins de **mise en page**, privilégiez d'abord le CSS (**requêtes de conteneur** `@container`, `clamp()`, grid) : un observateur n'est justifié que si la logique JavaScript dépend de la taille.
+
+### 14.15 Intégrer une bibliothèque non React
+
+Pour une carte, un graphique ou un éditeur riche, le schéma est toujours le même :
+
+1. un **conteneur** rendu par React, repéré par une ref ;
+2. **création** de l'instance dans un effet (`setup`) ;
+3. **mise à jour** de l'instance quand les props changent (effet distinct) ;
+4. **destruction** dans le nettoyage.
+
+```jsx
+function Graphique({ donnees, type }) {
+  const conteneur = useRef(null);
+  const instance = useRef(null);
+
+  useEffect(() => {                                   // création et destruction
+    instance.current = new Chart(conteneur.current, { type, data: donnees });
+    return () => { instance.current.destroy(); instance.current = null; };
+  }, [type]);
+
+  useEffect(() => {                                   // synchronisation des données
+    instance.current.data = donnees;
+    instance.current.update();
+  }, [donnees]);
+
+  return <canvas ref={conteneur} />;
+}
+```
+
+Strict Mode (chapitre 21) vérifie que ce couple création/destruction est **symétrique** : si deux graphiques apparaissent en développement, le nettoyage est incomplet. Le conteneur ne doit **pas** recevoir d'enfants React que la bibliothèque modifierait.
+
+### 14.16 Refs, rendu serveur et Strict Mode
+
+- **Avant le montage**, `ref.current` vaut `null` (ou la valeur initiale) : testez-le (`ref.current?.focus()`).
+- **Rendu serveur** : il n'y a pas de DOM, donc aucun `ref.current` ; toute logique qui l'utilise doit se situer dans des **effets** ou des **gestionnaires**, jamais dans le corps du composant.
+- **Strict Mode** appelle les callbacks de ref **deux fois** au montage (*setup → cleanup → setup*) pour vérifier le nettoyage.
+- Une ref ne **déclenche pas** de rendu : si l'interface doit réagir à la valeur, utilisez le **state**.
+
+### 14.17 Accessibilité et refs
+
+- Pour **déplacer le focus** vers un élément non interactif (titre de page, message d'erreur), donnez-lui `tabIndex={-1}` : il devient focalisable par programme sans entrer dans l'ordre de tabulation.
+- Après une **navigation** ou l'ouverture d'un panneau, déplacez le focus vers le **nouveau contenu** ; à la fermeture, **restituez-le** au déclencheur (mémorisez-le avec une ref).
+- Associez `<label>` et champ avec **`useId`** et `htmlFor`, **pas** avec des refs.
+- `aria-live`, `aria-expanded` et les autres attributs ARIA se pilotent par **props et state**, pas par `ref.current.setAttribute(...)`.
+
+### 14.18 Tester le DOM sans refs
+
+Les tests doivent interroger l'interface **comme un utilisateur** : `getByRole`, `getByLabelText`, `getByText`. Vérifiez l'effet d'une ref par son **résultat observable** :
+
+```jsx
+await userEvent.click(screen.getByRole('button', { name: /modifier/i }));
+expect(screen.getByRole('textbox', { name: /nom/i })).toHaveFocus();
+```
+
+N'inspectez pas directement `ref.current` depuis le test : cela lierait le test à l'implémentation.
+
+### 14.19 Pièges fréquents
 
 - Lire `ref.current` pendant le rendu (valeur `null` au 1ᵉʳ rendu).
 - Afficher une donnée stockée dans une ref (l'écran ne se met pas à jour).
@@ -4713,34 +5148,21 @@ useEffect(() => {
 - Utiliser `document.getElementById` au lieu d'une ref.
 - Utiliser `forwardRef` en React 19 sans nécessité (la prop `ref` suffit).
 
-## ✅ À retenir
+### Synthèse du chapitre 14
 
-- Ref = **conteneur mutable** `{ current }` **hors rendu** ; moyen d'accéder au **DOM**.
-- Utilisez-les **seulement** pour focus, scroll, mesures, médias, bibliothèques externes.
-- **Ne touchez pas** à `ref.current` pendant le rendu ; **ne modifiez pas** le DOM géré par React.
-- React 19 : **`ref` est une prop** ; cleanup dans les refs de callback.
-- Listes : **callback ref** + `Map`.
-
-## 🏋️ Exercices
-
-1. Créez un champ de recherche qui prend le focus avec la touche `/`.
-2. Implémentez une liste de messages qui défile automatiquement vers le dernier message ajouté (avec `flushSync` puis avec un effet).
-3. Encapsulez une bibliothèque de graphiques dans un composant React avec création/destruction propres.
+Ref = **conteneur mutable** `{ current }` **hors rendu** ; moyen d'accéder au **DOM** ; Utilisez-les **seulement** pour focus, scroll, mesures, médias, bibliothèques externes ; **Ne touchez pas** à `ref.current` pendant le rendu ; **ne modifiez pas** le DOM géré par React ; React 19 : **`ref` est une prop** ; cleanup dans les refs de callback ; Listes : **callback ref** + `Map`.
 
 ---
-# 15. Composition et patterns
 
-## 🎯 Objectifs
+## 15. Composition et patterns
 
-- Comprendre pourquoi React favorise la **composition** plutôt que l'**héritage**.
-- Maîtriser les patterns de conception : children/slots, render props, HOC, composants composés, headless, polymorphes, contrôlé/non contrôlé, state reducer.
-- Savoir choisir le pattern adapté et connaître ses compromis.
+**Objectifs d'apprentissage.** À la fin de ce chapitre, vous saurez : comprendre pourquoi React favorise la **composition** plutôt que l'**héritage** ; maîtriser les patterns de conception : children/slots, render props, HOC, composants composés, headless, polymorphes, contrôlé/non contrôlé, state reducer ; savoir choisir le pattern adapté et connaître ses compromis.
 
-## 15.1 Composition plutôt qu'héritage
+### 15.1 Composition plutôt qu'héritage
 
 Dans la POO classique, on réutilise du code par **héritage** (`class B extends A`). React recommande l'inverse : **composer** des composants, c'est-à-dire en **assembler** de petits pour en construire de plus grands, en leur passant des **props** (y compris du JSX). L'équipe React n'a trouvé **aucun cas** où l'héritage entre composants soit nécessaire : props + composition offrent toute la flexibilité voulue, de manière **explicite et sûre**.
 
-## 15.2 Confinement (*containment*) : `children` et slots
+### 15.2 Confinement (*containment*) : `children` et slots
 
 Quand un composant **ne connaît pas à l'avance** son contenu (boîtes, panneaux, modales, mises en page), il reçoit des **enfants**.
 
@@ -4751,7 +5173,7 @@ function Carte({ children }) {
 <Carte><h2>Titre</h2><p>Contenu</p></Carte>
 ```
 
-### Plusieurs emplacements (*slots*) via des props nommées
+#### Plusieurs emplacements (*slots*) via des props nommées
 
 ```jsx
 function Layout({ entete, barreLaterale, children, pied }) {
@@ -4769,11 +5191,11 @@ function Layout({ entete, barreLaterale, children, pied }) {
 </Layout>
 ```
 
-### Inversion de contrôle et prop drilling
+#### Inversion de contrôle et prop drilling
 
 Au lieu de faire descendre des données à travers des composants intermédiaires, **créez le JSX là où la donnée existe** et passez-le comme `children`/prop. Les intermédiaires deviennent **génériques et réutilisables**.
 
-## 15.3 Spécialisation
+### 15.3 Spécialisation
 
 Un composant « spécifique » est une version **configurée** d'un composant « générique » :
 
@@ -4786,7 +5208,7 @@ function DialogueBienvenue() {
 }
 ```
 
-## 15.4 Render props
+### 15.4 Render props
 
 Un composant reçoit une **fonction** qui **retourne du JSX** et l'appelle en lui donnant ses données internes. Le composant **gère la logique** ; l'appelant **décide de l'affichage**.
 
@@ -4805,7 +5227,7 @@ function Souris({ children }) {
 - Évitez d'imbriquer plusieurs render props (« callback hell ») ; si besoin, préférez des hooks.
 - Si le composant parent est `memo`, une fonction inline casse la mémoïsation.
 
-## 15.5 Composants d'ordre supérieur (HOC)
+### 15.5 Composants d'ordre supérieur (HOC)
 
 Un **HOC** est une **fonction qui prend un composant et retourne un nouveau composant** enrichi.
 
@@ -4821,7 +5243,7 @@ function avecChargement(Composant) {
 const ListeAvecChargement = avecChargement(Liste);
 ```
 
-### Règles et pièges
+#### Règles et pièges
 
 - **Ne jamais appeler un HOC dans le rendu** : cela crée un **nouveau type de composant** à chaque rendu (démontage/remontage et perte d'état). Créez la version enrichie **au niveau module**.
 - **Copier les statiques** (`hoist-non-react-statics`) si besoin.
@@ -4829,7 +5251,7 @@ const ListeAvecChargement = avecChargement(Liste);
 - **Collision de noms de props** possible ; HOC **opaques** (on ignore l'origine des props) ; imbrication difficile à lire dans les DevTools.
 - Usages restants : bibliothèques (Redux `connect`, React Router `withRouter` historiques), **intégrations legacy**, ajout de comportements transversaux (erreurs, analytics). Pour du code neuf : **hooks**.
 
-## 15.6 Composants composés (*compound components*)
+### 15.6 Composants composés (*compound components*)
 
 Un **ensemble de composants qui coopèrent** en partageant un **état implicite** (souvent via **Context**), offrant une API déclarative et flexible (`<Select><Select.Option /></Select>`).
 
@@ -4856,7 +5278,7 @@ Menu.Element = function ({ onSelect, children }) {
 
 Avantages : **flexibilité de la structure**, **peu de props**, état encapsulé. C'est le modèle de **Radix UI**, **Headless UI**, **Reach UI**, **shadcn/ui**.
 
-## 15.7 Composants contrôlés et non contrôlés (réutilisables)
+### 15.7 Composants contrôlés et non contrôlés (réutilisables)
 
 Un bon composant de bibliothèque supporte **les deux modes** :
 
@@ -4875,7 +5297,7 @@ function Interrupteur({ checked, defaultChecked = false, onChange }) {
 }
 ```
 
-## 15.8 Pattern « State reducer » (inversion du contrôle de l'état)
+### 15.8 Pattern « State reducer » (inversion du contrôle de l'état)
 
 Le composant expose son **reducer interne** : le consommateur peut **intercepter** ou **modifier** les transitions.
 
@@ -4892,7 +5314,7 @@ const reducerPlafonne = (etat, action) => {
 const c = useCompteur({ reducer: reducerPlafonne });
 ```
 
-## 15.9 Composants « headless » et props getters
+### 15.9 Composants « headless » et props getters
 
 **Headless** : logique et accessibilité **sans style** ; vous apportez le rendu. Souvent fournis sous forme de **hooks** retournant des **props getters** (objets de props à étaler sur vos éléments).
 
@@ -4913,7 +5335,7 @@ const d = useDisclosure();
 
 Exemples : **TanStack Table / Form / Virtual**, **Downshift**, **React Aria**, **Radix Primitives**.
 
-## 15.10 Composants polymorphes (`as` / `asChild`)
+### 15.10 Composants polymorphes (`as` / `asChild`)
 
 Permettre à l'appelant de **choisir l'élément rendu** tout en gardant le style/comportement.
 
@@ -4925,11 +5347,11 @@ function Texte({ as: Balise = 'span', ...props }) { return <Balise {...props} />
 
 Variante `asChild` (Radix) : le composant **fusionne** ses props sur son **unique enfant** (via `Slot`).
 
-## 15.11 Container / présentation
+### 15.11 Container / présentation
 
 Découpage historique : **conteneur** (récupère données, état) → **présentation** (affiche des props). Les **hooks** remplacent aujourd'hui le conteneur : le composant appelle un hook (`useUtilisateurs`) et délègue l'affichage à des composants simples.
 
-## 15.12 Autres techniques
+### 15.12 Autres techniques
 
 - **`cloneElement` et `Children.map`** pour injecter des props dans des enfants : **fragile** (dépend de la structure exacte). Préférez Context ou la prop render.
 - **Composition de fournisseurs** : un composant `AppProviders` regroupe `ThemeProvider`, `AuthProvider`, `QueryClientProvider`…
@@ -4937,7 +5359,7 @@ Découpage historique : **conteneur** (récupère données, état) → **présen
 - **Slots nommés avec des composants** : `<Carte.Entete />`, `<Carte.Corps />`.
 - **Composition avec des hooks** : combiner `useAuth`, `usePermissions` → `useCanEdit`.
 
-## 15.13 Tableau comparatif
+### 15.13 Tableau comparatif
 
 | Pattern | Réutilise | Avantage | Inconvénient |
 |---|---|---|---|
@@ -4950,7 +5372,7 @@ Découpage historique : **conteneur** (récupère données, état) → **présen
 | Polymorphe | Style/comportement | Souplesse sémantique | Typage TypeScript complexe |
 | State reducer | Logique extensible | Contrôle fin | Complexité |
 
-## ⚠️ Pièges courants
+### 15.14 Pièges fréquents
 
 - Créer un HOC dans le corps d'un composant.
 - Dépendre de la forme exacte de `children` (Children.map / cloneElement).
@@ -4958,36 +5380,25 @@ Découpage historique : **conteneur** (récupère données, état) → **présen
 - Surcharger l'API d'un composant (30 props) plutôt que le découper.
 - Passer des fonctions inline à des composants `memo` sans `useCallback`.
 
-## ✅ À retenir
+### Synthèse du chapitre 15
 
-- **Composition > héritage**. `children` + slots + hooks couvrent la majorité des besoins.
-- **Hooks** pour réutiliser de la **logique** ; **composition/render props** pour déléguer le **rendu**.
-- **Composés + Context** pour des API riches ; **headless** pour des bibliothèques UI.
-- HOC : héritage de l'ère des classes, à éviter dans le code neuf.
-
-## 🏋️ Exercices
-
-1. Construisez un composant `Tabs` composé (Tabs, Tabs.List, Tabs.Tab, Tabs.Panel) accessible au clavier.
-2. Écrivez un `Bouton` polymorphe (`as="a"` ou `as="button"`).
-3. Réécrivez un HOC `avecAuth` sous forme de hook `useAuth` + composant `<Protege>`.
+**Composition > héritage**. `children` + slots + hooks couvrent la majorité des besoins ; **Hooks** pour réutiliser de la **logique** ; **composition/render props** pour déléguer le **rendu** ; **Composés + Context** pour des API riches ; **headless** pour des bibliothèques UI ; HOC : héritage de l'ère des classes, à éviter dans le code neuf.
 
 ---
 
-# 16. Performance et optimisation
+# Partie III — Performance, rendu avancé et serveur
 
-## 🎯 Objectifs
+## 16. Performance et optimisation
 
-- Comprendre **quand et pourquoi** React re-rend, et ce qui est (ou non) un vrai problème.
-- Mesurer avec les bons outils avant d'optimiser.
-- Maîtriser les techniques : colocation d'état, `memo`, `useMemo`, `useCallback`, virtualisation, code splitting, transitions, React Compiler.
+**Objectifs d'apprentissage.** À la fin de ce chapitre, vous saurez : comprendre **quand et pourquoi** React re-rend, et ce qui est (ou non) un vrai problème ; mesurer avec les bons outils avant d'optimiser ; maîtriser les techniques : colocation d'état, `memo`, `useMemo`, `useCallback`, virtualisation, code splitting, transitions, React Compiler.
 
-## 16.1 Principe directeur
+### 16.1 Principe directeur
 
 > **Mesurez d'abord, optimisez ensuite.** La plupart des applications React sont suffisamment rapides sans optimisation manuelle. Les problèmes se concentrent sur : **listes longues**, **calculs lourds**, **rendus en cascade**, **gros bundles**, **animations**, **réseau**.
 
 Trois types de coûts : **rendu** (CPU), **chargement** (réseau/bundle), **interaction** (latence perçue).
 
-## 16.2 Quand React re-rend-il un composant ?
+### 16.2 Quand React re-rend-il un composant ?
 
 Un composant est re-rendu quand :
 1. **Son state** change (`useState` / `useReducer`).
@@ -4999,9 +5410,9 @@ Un composant est re-rendu quand :
 
 La **mise à jour est récursive** : re-rendre un parent re-rend **tout son sous-arbre** par défaut.
 
-## 16.3 Mesurer
+### 16.3 Mesurer
 
-### React DevTools Profiler
+#### React DevTools Profiler
 
 1. Onglet **Profiler** → **Record** → interagir → **Stop**.
 2. Vues **Flamegraph** / **Ranked** : durée de rendu par composant.
@@ -5009,7 +5420,7 @@ La **mise à jour est récursive** : re-rendre un parent re-rend **tout son sous
 4. Option **« Highlight updates when components render »** dans les DevTools.
 5. Les DevTools récents affichent des **pistes de performance** dans le panneau Performance de Chrome (React 19.2).
 
-### Autres outils
+#### Autres outils
 
 - `<Profiler id="x" onRender={callback}>` : mesures programmatiques.
 - **Chrome Performance** / **Lighthouse** / **Web Vitals** (LCP, INP, CLS).
@@ -5017,7 +5428,7 @@ La **mise à jour est récursive** : re-rendre un parent re-rend **tout son sous
 - **Bundle analyzer** (`rollup-plugin-visualizer`, `@next/bundle-analyzer`, `source-map-explorer`).
 - Toujours profiler en **build de production** (le mode développement et StrictMode sont plus lents).
 
-## 16.4 Technique n°1 : colocaliser l'état
+### 16.4 Technique n°1 : colocaliser l'état
 
 Placer l'état **le plus bas possible** limite la portée des rendus.
 
@@ -5033,7 +5444,7 @@ function Champ() { const [texte, setTexte] = useState(''); return <input value={
 function Page() { return <><Champ /><GrosTableau /></>; }
 ```
 
-## 16.5 Technique n°2 : « remonter le contenu » (children)
+### 16.5 Technique n°2 : « remonter le contenu » (children)
 
 Passer le sous-arbre en **`children`** : sa référence est créée **au-dessus**, donc **inchangée** quand l'état du composant enveloppant change.
 
@@ -5045,7 +5456,7 @@ function ConteneurSouris({ children }) {
 <ConteneurSouris><ComposantLourd /></ConteneurSouris>   // ne se re-rend pas quand pos change
 ```
 
-## 16.6 Technique n°3 : `React.memo`
+### 16.6 Technique n°3 : `React.memo`
 
 `memo(Composant)` **saute le rendu** si **les props sont identiques** au rendu précédent (comparaison **superficielle** `Object.is` de chaque prop).
 
@@ -5058,12 +5469,12 @@ const Ligne = memo(function Ligne({ item, onSelect }) {
 const Graphique = memo(Composant, (anciennes, nouvelles) => anciennes.donnees.version === nouvelles.donnees.version);
 ```
 
-### Quand `memo` est utile
+#### Quand `memo` est utile
 
 - Composant **coûteux** à rendre **et** qui reçoit souvent les **mêmes props** alors que son parent se re-rend.
 - Éléments d'une **longue liste**.
 
-### Quand `memo` est inefficace
+#### Quand `memo` est inefficace
 
 - **Props instables** : objets/tableaux/fonctions **créés à chaque rendu** (`style={{…}}`, `onClick={() => …}`, `options={[…]}`) → nouvelle référence → `memo` ne protège plus.
 - **`children`** JSX (nouvel élément à chaque rendu).
@@ -5075,31 +5486,31 @@ const Graphique = memo(Composant, (anciennes, nouvelles) => anciennes.donnees.ve
 const onSelect = useCallback((id) => selectionner(id), []);     // ✅ + memo sur Ligne
 ```
 
-## 16.7 Technique n°4 : `useMemo` et `useCallback`
+### 16.7 Technique n°4 : `useMemo` et `useCallback`
 
-Voir module 11. Règle d'or : les employer **là où ils servent** (valeurs/fonctions passées à des composants `memo`, dépendances d'effets, calculs lourds **mesurés**). Réduire d'abord les dépendances (forme fonctionnelle de `setState`, reducers).
+Voir chapitre 11. Règle d'or : les employer **là où ils servent** (valeurs/fonctions passées à des composants `memo`, dépendances d'effets, calculs lourds **mesurés**). Réduire d'abord les dépendances (forme fonctionnelle de `setState`, reducers).
 
 ```jsx
 const resultats = useMemo(() => rechercher(index, requete), [index, requete]);   // calcul lourd
 ```
 
-## 16.8 Technique n°5 : listes — virtualisation et pagination
+### 16.8 Technique n°5 : listes — virtualisation et pagination
 
 - **Virtualisation** (*windowing*) : ne monter dans le DOM que les lignes **visibles** : `@tanstack/react-virtual`, `react-window`, `react-virtuoso`. Passe de dizaines de milliers de nœuds DOM à quelques dizaines.
 - **Pagination** ou **défilement infini** (chargement progressif).
-- **Clés stables** (module 9) ; éviter de recréer les éléments.
+- **Clés stables** (chapitre 9) ; éviter de recréer les éléments.
 - `content-visibility: auto` (CSS) pour différer le rendu hors écran.
 
-## 16.9 Technique n°6 : prioriser avec la concurrence
+### 16.9 Technique n°6 : prioriser avec la concurrence
 
 - **`useTransition`** pour marquer un changement lourd comme non urgent ;
 - **`useDeferredValue`** pour retarder une valeur coûteuse à afficher ;
 - **`<Suspense>`** pour ne pas bloquer l'interface en attendant du code/des données ;
 - **`<Activity>`** (19.2) pour préparer en arrière-plan des vues masquées.
 
-(Détails : modules 11, 17, 22.)
+(Détails : chapitre 11, 17, 22.)
 
-## 16.10 Technique n°7 : réduire le coût du chargement
+### 16.10 Technique n°7 : réduire le coût du chargement
 
 | Levier | Description |
 |---|---|
@@ -5113,7 +5524,7 @@ const resultats = useMemo(() => rechercher(index, requete), [index, requete]);  
 | **Server Components** | Moins de JavaScript envoyé au client |
 | **Cache & CDN** | Hash dans les noms de fichiers, `Cache-Control`, compression Brotli |
 
-## 16.11 Technique n°8 : bonnes pratiques de rendu
+### 16.11 Technique n°8 : bonnes pratiques de rendu
 
 - **Calculs dérivés** pendant le rendu plutôt que state + effet (évite des rendus en cascade).
 - **Éviter les effets qui mettent à jour l'état** en chaîne.
@@ -5124,7 +5535,7 @@ const resultats = useMemo(() => rechercher(index, requete), [index, requete]);  
 - **État externe avec sélecteurs** (Zustand, Redux) pour éviter les rendus liés à un contexte large.
 - **Éviter de définir des composants dans des composants.**
 
-## 16.12 React Compiler
+### 16.12 React Compiler
 
 Le **React Compiler** (stable depuis fin 2025, plugin Babel/SWC/Vite) **analyse votre code à la compilation** et **ajoute automatiquement la mémoïsation** (composants, valeurs, fonctions) à une granularité plus fine que `memo`/`useMemo`/`useCallback` manuels.
 
@@ -5144,14 +5555,14 @@ react({ babel: { plugins: [['babel-plugin-react-compiler', {}]] } })
 - Compatible React 17+ (avec `react-compiler-runtime`), optimal en 19.
 - Vérifiez dans les **DevTools** (badge « Memo ✨ ») et **mesurez** avant/après.
 
-## 16.13 Performance du rendu serveur et de l'hydratation
+### 16.13 Performance du rendu serveur et de l'hydratation
 
 - **Streaming SSR** avec `Suspense` : le shell s'affiche tôt, le reste suit.
 - **Hydratation sélective** : les parties interactives s'hydratent par priorité (celles cliquées en premier).
 - Réduire la taille du **JS client** (Server Components, îlots).
 - Éviter les **différences serveur/client** (dates, `Math.random`, `window`).
 
-## 16.14 Checklist d'optimisation
+### 16.14 Checklist d'optimisation
 
 1. **Mesurer** (Profiler, Lighthouse) en production.
 2. **Colocaliser** l'état / remonter le contenu en `children`.
@@ -5163,7 +5574,7 @@ react({ babel: { plugins: [['babel-plugin-react-compiler', {}]] } })
 8. **Images, polices, cache** et **SSR/streaming**.
 9. **Re-mesurer** pour confirmer le gain.
 
-## ⚠️ Pièges courants
+### 16.15 Pièges fréquents
 
 - Optimiser **sans mesurer** ; `memo` partout.
 - `memo` neutralisé par des **props inline**.
@@ -5173,31 +5584,17 @@ react({ babel: { plugins: [['babel-plugin-react-compiler', {}]] } })
 - Stocker en state des données **dérivées** (double rendu).
 - Importer des bibliothèques entières (`import _ from 'lodash'`) au lieu d'imports ciblés.
 
-## ✅ À retenir
+### Synthèse du chapitre 16
 
-- Un rendu ≠ une mise à jour du DOM ; la plupart des rendus sont peu coûteux.
-- **Mesurer → corriger la structure (état local, children) → mémoïser → virtualiser → charger moins.**
-- `memo` ne marche qu'avec des **props stables**.
-- **React Compiler** automatise la mémoïsation pour du code conforme aux règles de React.
-- Pensez **chargement** (bundle, réseau) autant que **rendu**.
-
-## 🏋️ Exercices
-
-1. Profilez une liste de 5 000 éléments, appliquez virtualisation puis comparez les durées.
-2. Cassez volontairement `memo` avec une fonction inline, constatez avec « Why did this render? », puis corrigez.
-3. Divisez une application en routes `lazy` et mesurez la réduction du bundle initial.
-4. Activez le React Compiler sur un petit projet et comparez le nombre de rendus.
+Un rendu ≠ une mise à jour du DOM ; la plupart des rendus sont peu coûteux ; **Mesurer → corriger la structure (état local, children) → mémoïser → virtualiser → charger moins.** ; `memo` ne marche qu'avec des **props stables** ; **React Compiler** automatise la mémoïsation pour du code conforme aux règles de React ; Pensez **chargement** (bundle, réseau) autant que **rendu**.
 
 ---
-# 17. Suspense et chargement différé
 
-## 🎯 Objectifs
+## 17. Suspense et chargement différé
 
-- Comprendre ce que « suspendre » signifie et comment `<Suspense>` orchestre les états d'attente.
-- Utiliser `lazy` pour le **code splitting** et `use` / sources compatibles pour les **données**.
-- Combiner Suspense avec les **transitions**, les **Error Boundaries** et le **streaming SSR**.
+**Objectifs d'apprentissage.** À la fin de ce chapitre, vous saurez : comprendre ce que « suspendre » signifie et comment `<Suspense>` orchestre les états d'attente ; utiliser `lazy` pour le **code splitting** et `use` / sources compatibles pour les **données** ; combiner Suspense avec les **transitions**, les **Error Boundaries** et le **streaming SSR**.
 
-## 17.1 Définition
+### 17.1 Définition
 
 **`<Suspense>`** permet d'**afficher une interface de repli (`fallback`)** pendant que ses enfants **ne sont pas encore prêts** (code en cours de chargement, données en cours de récupération). Un composant **« suspend »** quand, pendant son rendu, il signale à React qu'il **attend une ressource** (une promesse).
 
@@ -5216,7 +5613,7 @@ Mécanisme :
 
 > Suspense **ne détecte pas** les requêtes lancées dans un `useEffect` ou un gestionnaire d'événement : seules les sources **intégrées à Suspense** fonctionnent.
 
-## 17.2 `lazy` : chargement différé de composants (code splitting)
+### 17.2 `lazy` : chargement différé de composants (code splitting)
 
 ```jsx
 import { lazy, Suspense } from 'react';
@@ -5244,7 +5641,7 @@ function Page() {
 - **Découper par route** est le meilleur gain initial ; ensuite par composants lourds (éditeur, graphiques, cartes, PDF).
 - Le chargement échoué (réseau) lève une **erreur** : associez un **Error Boundary** avec option « réessayer ».
 
-## 17.3 Suspense pour les données
+### 17.3 Suspense pour les données
 
 Sources compatibles :
 - **Frameworks** (Next.js App Router, React Router, Remix) : loaders, Server Components `async`.
@@ -5270,7 +5667,7 @@ function Commentaires({ promesse }) {
 
 > Ne créez **pas** de promesse dans le corps d'un composant client à chaque rendu : elle serait recréée sans fin. Utilisez un **cache** ou passez-la depuis un **Server Component** / une bibliothèque.
 
-## 17.4 Granularité et imbrication
+### 17.4 Granularité et imbrication
 
 On place **plusieurs frontières Suspense** pour contrôler **ce qui s'affiche** pendant l'attente :
 
@@ -5290,7 +5687,7 @@ On place **plusieurs frontières Suspense** pour contrôler **ce qui s'affiche**
 - Frontière **trop haute** : tout disparaît derrière un spinner ; **trop basse** : « effet pop-corn » (nombreux spinners). Alignez les frontières sur des **zones fonctionnelles** de l'interface.
 - Les enfants **déjà visibles** ne sont **pas** masqués quand un frère suspend plus bas, sauf nouvelle frontière franchie.
 
-## 17.5 Transitions : éviter de réafficher le fallback
+### 17.5 Transitions : éviter de réafficher le fallback
 
 Quand une mise à jour **déclenche** une suspension **dans une zone déjà affichée**, React remplace par le fallback (clignotement). Si la mise à jour est enveloppée dans une **transition**, React **conserve l'ancienne interface** jusqu'à ce que la nouvelle soit prête :
 
@@ -5304,7 +5701,7 @@ function aller(url) {
 
 Le **routage** des frameworks utilise des transitions par défaut. **`useDeferredValue`** offre un effet comparable pour une **valeur** (affiche l'ancienne valeur pendant que la nouvelle charge).
 
-## 17.6 Réinitialiser une frontière : `key`
+### 17.6 Réinitialiser une frontière : `key`
 
 ```jsx
 <Suspense key={idArticle} fallback={<Squelette />}>
@@ -5314,28 +5711,154 @@ Le **routage** des frameworks utilise des transitions par défaut. **`useDeferre
 
 Changer la `key` force le **retour au fallback** pour chaque nouvel article (au lieu de conserver l'ancien contenu).
 
-## 17.7 Éviter les cascades (« waterfalls »)
+### 17.7 Éviter les cascades (« waterfalls »)
 
 Si un composant enfant ne démarre sa requête **qu'après** que le parent a fini la sienne, les attentes **s'additionnent**. Remèdes : **lancer les requêtes en parallèle** le plus tôt possible (au niveau de la route / du loader), **précharger**, regrouper côté serveur, **`Promise.all`**.
 
-## 17.8 Suspense et rendu serveur
+### 17.8 Suspense et rendu serveur
 
 - **Streaming** : le serveur envoie d'abord le **shell** (HTML avec les fallbacks), puis **diffuse** chaque portion au fur et à mesure qu'elle est prête (`renderToPipeableStream` / `renderToReadableStream`).
 - **Hydratation sélective** : chaque frontière Suspense s'hydrate **indépendamment** ; si l'utilisateur interagit avec une partie non encore hydratée, React **la priorise**.
 - Les **erreurs** serveur dans une frontière peuvent **basculer** cette partie en rendu client sans casser la page.
 
-## 17.9 Effets et Suspense
+### 17.9 Effets et Suspense
 
 - Les **effets** d'un sous-arbre suspendu **ne s'exécutent pas** tant qu'il n'est pas révélé.
 - Si un sous-arbre déjà affiché est de nouveau masqué par un fallback, ses **effets de layout** sont nettoyés puis relancés à la réapparition (l'état est conservé).
 
-## 17.10 Concevoir de bons fallbacks
+### 17.10 Concevoir de bons fallbacks
 
 - Préférer des **squelettes** (même gabarit que le contenu) à des spinners génériques (réduit le **CLS**).
 - Éviter les **flashs** : pour des attentes brèves, laisser les transitions masquer le fallback.
 - **Accessibilité** : annoncer l'état de chargement (`aria-busy`, région `aria-live="polite"`).
 
-## ⚠️ Pièges courants
+### 17.11 Comment une source « suspend » : le mécanisme
+
+React ne sait rien des requêtes réseau : il comprend seulement une **promesse** (plus exactement un *thenable*) lancée ou lue pendant le rendu.
+
+1. Pendant le rendu, `use(promesse)` examine l'état de la promesse.
+2. **En attente** : React **interrompt** le rendu du composant (c'est la « suspension ») et cherche le `<Suspense>` le plus proche pour afficher son `fallback`.
+3. **Résolue** : `use` retourne la valeur, le rendu continue.
+4. **Rejetée** : `use` **lève l'erreur**, interceptée par le **Error Boundary** le plus proche (chapitre 18).
+5. Quand la promesse se résout, React **retente** le rendu de la frontière.
+
+**Condition essentielle** : React identifie la ressource par l'**identité de la promesse**. Si le composant crée une **nouvelle** promesse à chaque tentative, il ne verra jamais de résultat stable et recommencera sans fin. D'où la règle : **la promesse vient d'un cache** (bibliothèque de données, framework) ou d'un **parent** (notamment un Server Component) ; elle n'est jamais créée dans le rendu d'un composant client.
+
+### 17.12 Mettre en cache les promesses
+
+Un cache minimal, pour comprendre le principe (en production, utilisez TanStack Query, SWR, Relay ou les chargeurs de votre routeur) :
+
+```jsx
+const cache = new Map();
+
+export function chargerUtilisateur(id) {
+  if (!cache.has(id)) {
+    cache.set(id, fetch(`/api/utilisateurs/${id}`).then(r => r.json()));
+  }
+  return cache.get(id);                    // même promesse tant que la clé est connue
+}
+
+function Profil({ id }) {
+  const utilisateur = use(chargerUtilisateur(id));
+  return <h2>{utilisateur.nom}</h2>;
+}
+```
+
+Un tel cache pose des questions que les bibliothèques résolvent : **invalidation** (quand rafraîchir ?), **expiration**, **déduplication** des requêtes simultanées, **gestion des erreurs** (ne pas garder une promesse rejetée), **mémoire** (suppression des entrées inutilisées).
+
+Côté serveur, la fonction **`cache`** de React (réservée aux Server Components) **mémoïse un appel pendant la durée d'une requête** : plusieurs composants appelant `getUtilisateur(id)` partagent un seul résultat.
+
+```jsx
+import { cache } from 'react';
+export const getUtilisateur = cache(async id => db.utilisateurs.trouver(id));
+```
+
+### 17.13 Précharger : code, données et ressources
+
+Plus on **anticipe**, moins l'utilisateur voit de fallback.
+
+- **Code** : lancer `import('./Editeur')` au **survol** ou à la **prise de focus** d'un lien/bouton ; le module est alors en cache quand `lazy` en a besoin.
+- **Données** : démarrer la requête **avant** le rendu qui en a besoin (au clic, dans le chargeur de la route, au survol d'un lien) et **passer la promesse** au composant.
+- **Ressources** : React 19 expose, dans `react-dom`, des fonctions d'indication au navigateur : **`preload`** (télécharger une ressource tôt : police, image, script), **`preinit`** (la charger et l'exécuter), **`preconnect`** et **`prefetchDNS`** (préparer la connexion).
+
+```jsx
+import { preload, preconnect } from 'react-dom';
+
+function Galerie() {
+  preconnect('https://cdn.exemple.org');
+  preload('https://cdn.exemple.org/hero.avif', { as: 'image' });
+  return <Hero />;
+}
+```
+
+Les **routeurs** et méta-frameworks proposent un préchargement automatique des routes visibles ou survolées (`prefetch`) : exploitez-le avant d'écrire votre propre logique.
+
+### 17.14 Streaming du rendu serveur et hydratation sélective
+
+Avec le rendu serveur en **flux** (`renderToPipeableStream`, `renderToReadableStream`), les frontières Suspense deviennent des **points de livraison** progressive :
+
+1. le serveur envoie d'abord la **coquille** (*shell*) : tout ce qui n'est pas suspendu, avec les `fallback` à la place des zones en attente ;
+2. quand les données d'une zone sont prêtes, le serveur envoie **ce bloc HTML** et un petit script qui le **substitue** au fallback ;
+3. côté client, React **hydrate** les frontières **indépendamment** (hydratation sélective) : une zone déjà prête peut devenir interactive pendant qu'une autre charge encore.
+
+Si l'utilisateur interagit avec une zone **pas encore hydratée**, React **hydrate cette zone en priorité**.
+
+Côté serveur, deux callbacks pilotent le moment d'envoi : `onShellReady` (coquille prête, flux de lecture **progressive**, idéal pour les utilisateurs) et `onAllReady` (tout est prêt, adapté aux **robots d'indexation** ou à la génération statique). Une erreur survenue **après** l'envoi de la coquille ne peut plus changer le **code de statut HTTP** : prévoyez un repli côté client.
+
+### 17.15 Ordre d'apparition et stabilité visuelle
+
+- **Séquence de révélation.** Quand plusieurs frontières sœurs se résolvent à des moments différents, elles apparaissent **dans l'ordre d'arrivée**, ce qui peut produire un affichage désordonné. Pour réduire cet effet, **regroupez** dans une même frontière les zones qui doivent apparaître ensemble.
+- **Limitation des fallbacks.** React **espace** légèrement l'apparition de fallbacks successifs pour éviter le scintillement : vous n'avez pas à ajouter vous-même de délais artificiels.
+- **Décalages de mise en page** (*layout shift*). Donnez au squelette les **dimensions** du contenu final (hauteur minimale, ratio d'image) pour que l'arrivée des données ne déplace rien : l'indicateur Core Web Vitals **CLS** s'en trouve amélioré.
+- **Liste ordonnée de frontières** : une API de coordination (`SuspenseList`) a été explorée mais reste **expérimentale** ; ne l'utilisez pas en production sans vérifier la documentation de votre version.
+
+### 17.16 Accessibilité et expérience de chargement
+
+- Signalez le chargement par un texte ou **`aria-busy="true"`** sur la zone concernée, pas seulement par une animation.
+- Pour un chargement long, placez un **message textuel** (« Chargement des résultats… ») dans une **région vivante** (`role="status"`) présente dès le départ.
+- Respectez **`prefers-reduced-motion`** : désactivez ou atténuez les animations de squelette.
+- Quand le contenu remplace le fallback, **ne déplacez pas le focus** sans raison ; si l'élément ayant le focus disparaît, replacez-le sur un élément pertinent.
+
+### 17.17 Récupérer d'un échec de chargement de code
+
+Un `lazy` peut échouer (réseau coupé, **nouvelle version** déployée dont les fichiers de l'ancienne ont disparu). Une enveloppe de **nouvelle tentative**, associée à un Error Boundary, améliore la robustesse :
+
+```jsx
+function lazyAvecReprise(importer, tentatives = 3) {
+  return lazy(async () => {
+    for (let i = 0; ; i++) {
+      try { return await importer(); }
+      catch (e) {
+        if (i + 1 >= tentatives) throw e;
+        await new Promise(r => setTimeout(r, 500 * (i + 1)));   // attente croissante
+      }
+    }
+  });
+}
+
+const Editeur = lazyAvecReprise(() => import('./Editeur'));
+```
+
+Après plusieurs échecs, proposez à l'utilisateur de **recharger la page** : c'est la réponse habituelle à un décalage de version.
+
+### 17.18 Tester Suspense
+
+```jsx
+render(
+  <Suspense fallback={<p>Chargement…</p>}>
+    <Profil id={1} />
+  </Suspense>
+);
+expect(screen.getByText('Chargement…')).toBeInTheDocument();
+expect(await screen.findByRole('heading', { name: 'Alice' })).toBeInTheDocument();
+```
+
+- Utilisez les requêtes **asynchrones** (`findBy…`, `waitFor`) : le contenu final arrive après la résolution.
+- Fournissez des **promesses contrôlées** (résolues ou rejetées à la demande) pour tester chacun des trois états.
+- Entourez le composant d'un **Error Boundary** de test pour vérifier le chemin d'erreur.
+- Un composant `lazy` demande un `await` avant d'apparaître : pas de `getBy…` immédiat.
+
+### 17.19 Pièges fréquents
 
 - Attendre que `Suspense` détecte une requête faite dans `useEffect`.
 - Définir `lazy` à l'intérieur d'un composant.
@@ -5344,40 +5867,27 @@ Si un composant enfant ne démarre sa requête **qu'après** que le parent a fin
 - Promesse recréée à chaque rendu avec `use`.
 - Oublier l'**Error Boundary** autour de `lazy`/`use` (une promesse rejetée remonte en erreur).
 
-## ✅ À retenir
+### Synthèse du chapitre 17
 
-- **Suspense = fallback pendant l'attente** de code ou de données **compatibles**.
-- **`lazy`** pour le code, **`use` / frameworks / bibliothèques** pour les données.
-- **Transitions** : conserver l'ancienne UI ; **`key`** : réinitialiser.
-- Placer les frontières selon l'**expérience** ; **paralléliser** les requêtes ; **streaming** + **hydratation sélective** côté serveur.
-
-## 🏋️ Exercices
-
-1. Chargez paresseusement un composant lourd au clic avec skeleton.
-2. Construisez une page avec trois zones indépendantes chacune dans sa frontière Suspense.
-3. Utilisez `useTransition` pour conserver l'ancienne page lors d'un changement de route simulé (promesse retardée).
+**Suspense = fallback pendant l'attente** de code ou de données **compatibles** ; **`lazy`** pour le code, **`use` / frameworks / bibliothèques** pour les données ; **Transitions** : conserver l'ancienne UI ; **`key`** : réinitialiser ; Placer les frontières selon l'**expérience** ; **paralléliser** les requêtes ; **streaming** + **hydratation sélective** côté serveur.
 
 ---
 
-# 18. Error Boundaries
+## 18. Error Boundaries
 
-## 🎯 Objectifs
+**Objectifs d'apprentissage.** À la fin de ce chapitre, vous saurez : comprendre comment React propage les erreurs de rendu et comment les contenir ; écrire (ou utiliser) des Error Boundaries et savoir ce qu'ils capturent ou non ; mettre en place une stratégie : granularité, réinitialisation, journalisation.
 
-- Comprendre comment React propage les erreurs de rendu et comment les contenir.
-- Écrire (ou utiliser) des Error Boundaries et savoir ce qu'ils capturent ou non.
-- Mettre en place une stratégie : granularité, réinitialisation, journalisation.
-
-## 18.1 Problème
+### 18.1 Problème
 
 Par défaut, **une erreur levée pendant le rendu** (dans le corps d'un composant, un hook, un reducer, un constructeur) **fait planter l'application entière** : React **démonte tout l'arbre** (écran blanc).
 
-## 18.2 Définition
+### 18.2 Définition
 
 Un **Error Boundary** (« frontière d'erreur ») est un **composant** qui **intercepte les erreurs** survenant **dans ses descendants** pendant le rendu, les cycles de vie et les constructeurs, **journalise** l'erreur et affiche une **interface de secours** (*fallback*), au lieu de laisser tout l'arbre se démonter.
 
 > Il **doit être un composant classe** (aucun équivalent en hook n'existe), mais il est possible d'utiliser une **bibliothèque** pour éviter d'écrire la classe.
 
-## 18.3 Écriture d'une frontière
+### 18.3 Écriture d'une frontière
 
 ```jsx
 import { Component } from 'react';
@@ -5421,7 +5931,7 @@ class ErrorBoundary extends Component {
 | `static getDerivedStateFromError(error)` | Appelée pendant le **rendu** ; retourne le **nouvel état** pour afficher le fallback. Doit être **pure**. |
 | `componentDidCatch(error, info)` | Appelée au **commit** ; pour **journaliser** (`info.componentStack`). |
 
-## 18.4 La bibliothèque `react-error-boundary`
+### 18.4 La bibliothèque `react-error-boundary`
 
 ```jsx
 import { ErrorBoundary, useErrorBoundary } from 'react-error-boundary';
@@ -5451,9 +5961,9 @@ function Bouton() {
 }
 ```
 
-## 18.5 Ce qu'une frontière capture… et ne capture pas
+### 18.5 Ce qu'une frontière capture… et ne capture pas
 
-### ✅ Capturé
+#### Capturé
 
 - Erreurs **pendant le rendu** des descendants.
 - Erreurs dans les **méthodes de cycle de vie** et **constructeurs** des composants classes enfants.
@@ -5461,7 +5971,7 @@ function Bouton() {
 - Promesses **rejetées lues par `use`** (renvoyées comme erreurs de rendu).
 - Erreurs d'un composant `lazy` dont le chargement échoue.
 
-### ❌ Non capturé
+#### Non capturé
 
 | Cas | Traitement recommandé |
 |---|---|
@@ -5474,7 +5984,7 @@ function Bouton() {
 > Un « truc » : lancer l'erreur depuis un **setState** pour la faire remonter comme erreur de rendu :
 > `setEtat(() => { throw erreur; })`.
 
-## 18.6 Stratégie de placement (granularité)
+### 18.6 Stratégie de placement (granularité)
 
 | Niveau | Rôle |
 |---|---|
@@ -5485,14 +5995,14 @@ function Bouton() {
 
 Évitez la frontière unique à la racine seulement : l'expérience utilisateur sera brutale.
 
-## 18.7 Réinitialisation (*reset*)
+### 18.7 Réinitialisation (*reset*)
 
 Après une erreur, la frontière garde son état d'erreur. Pour réessayer :
 - **bouton** « Réessayer » appelant `reset` ;
 - **`resetKeys`** (react-error-boundary) ou **`key`** sur la frontière lorsque les entrées changent (navigation) ;
 - combiner avec la **réinitialisation du cache** de requêtes (`QueryErrorResetBoundary` de TanStack Query).
 
-## 18.8 Journalisation et observabilité
+### 18.8 Journalisation et observabilité
 
 - Envoyez `error`, `componentStack`, l'**utilisateur**, la **version** et la **route** à un service (**Sentry**, **Datadog**, **LogRocket**…).
 - Activez les **source maps** en production.
@@ -5508,12 +6018,130 @@ createRoot(racine, {
 
 > React 19 **ne journalise plus deux fois** la même erreur (suppression des doublons).
 
-## 18.9 Interaction avec Suspense
+### 18.9 Interaction avec Suspense
 
 - Une **promesse rejetée** (`lazy`, `use`) devient une **erreur de rendu** : elle est interceptée par la **frontière d'erreur la plus proche**.
 - Schéma courant : `<ErrorBoundary><Suspense fallback={…}><Composant /></Suspense></ErrorBoundary>` (erreur **autour** de l'attente).
 
-## ⚠️ Pièges courants
+### 18.10 Les options d'erreur de la racine (React 19)
+
+`createRoot` et `hydrateRoot` acceptent trois **callbacks globaux** qui centralisent le signalement des erreurs :
+
+```jsx
+import { createRoot } from 'react-dom/client';
+
+createRoot(document.getElementById('root'), {
+  onCaughtError(erreur, infos) {
+    // Capturée par un Error Boundary
+    journaliser('capturée', erreur, infos.componentStack);
+  },
+  onUncaughtError(erreur, infos) {
+    // Aucune frontière : l'arbre entier est démonté
+    journaliser('non capturée', erreur, infos.componentStack);
+  },
+  onRecoverableError(erreur, infos) {
+    // Erreur dont React s'est remis seul (ex. incohérence d'hydratation)
+    journaliser('récupérable', erreur, infos.componentStack);
+  },
+}).render(<App />);
+```
+
+Depuis React 19, une erreur de rendu n'est **plus relancée en double** : elle est signalée **une fois**, par l'un de ces callbacks. Cela simplifie la connexion à un service de supervision.
+
+### 18.11 Faire remonter ce que les frontières ne voient pas
+
+Les frontières ne capturent que les erreurs levées **pendant le rendu** (et dans les méthodes de cycle de vie). Pour les erreurs survenant dans un **gestionnaire d'événement** ou du code **asynchrone**, deux stratégies existent.
+
+**1. Gérer localement** : `try/catch` et état d'erreur affiché dans l'interface (adapté à un envoi de formulaire, par exemple).
+
+**2. Déléguer à la frontière la plus proche** : relancer l'erreur pendant un rendu.
+
+```jsx
+function useLancerErreur() {
+  const [, setEtat] = useState();
+  return erreur => setEtat(() => { throw erreur; });   // l'erreur est levée pendant le rendu
+}
+
+function Bouton() {
+  const lancer = useLancerErreur();
+  return <button onClick={() => charger().catch(lancer)}>Charger</button>;
+}
+```
+
+La bibliothèque `react-error-boundary` fournit ce mécanisme prêt à l'emploi : `const { showBoundary } = useErrorBoundary();`.
+
+**Filets globaux** (en complément, pas en remplacement) : `window.addEventListener('error', …)` et `window.addEventListener('unhandledrejection', …)` pour journaliser ce qui échappe à tout le reste.
+
+### 18.12 Concevoir un bon écran d'erreur
+
+Un repli utile répond à trois questions de l'utilisateur : **que s'est-il passé ? est-ce grave ? que puis-je faire ?**
+
+- **Message clair, sans jargon**, sans trace technique ni détail sensible.
+- **Action de reprise** : « Réessayer » (réinitialise la frontière), « Retour à l'accueil », « Recharger la page ».
+- **Identifiant d'incident** affichable pour le support (le même que celui envoyé au service de supervision).
+- **Différencier** les cas : réseau indisponible (réessayer plus tard), accès refusé (se reconnecter), ressource introuvable (lien de retour), erreur inattendue (signalement).
+- **Accessibilité** : donnez au conteneur `role="alert"` pour que l'erreur soit annoncée, et déplacez le focus sur le message ou sur le bouton de reprise.
+
+```jsx
+function RepliErreur({ error, resetErrorBoundary }) {
+  return (
+    <div role="alert">
+      <h2>Un problème est survenu</h2>
+      <p>Cette section n'a pas pu s'afficher. Vos autres données ne sont pas affectées.</p>
+      <button onClick={resetErrorBoundary}>Réessayer</button>
+    </div>
+  );
+}
+```
+
+### 18.13 Stratégies de reprise
+
+| Situation | Reprise recommandée |
+| --- | --- |
+| Erreur transitoire (réseau, délai dépassé) | Bouton « Réessayer » qui appelle `resetErrorBoundary`, éventuellement avec **attente croissante** |
+| Erreur liée à des données précises | `resetKeys={[id]}` : la frontière se réinitialise quand l'identifiant change |
+| Erreur dans une page de routeur | Placer la frontière **par route** : la navigation vers une autre route la remet à zéro |
+| Chargement de code échoué (nouvelle version déployée) | **Recharger la page** |
+| Erreur de rendu permanente (bug) | Afficher le repli, **journaliser**, ne pas boucler sur les tentatives |
+
+Une réinitialisation **remonte** le sous-arbre : l'état local de ses composants est **perdu**. Remontez dans un parent l'état qui doit survivre.
+
+### 18.14 Frontières dans les frameworks
+
+Les méta-frameworks intègrent la notion de frontière **par route**, ce qui évite d'écrire la classe à la main :
+
+- **Next.js (App Router)** : un fichier `error.js` définit le repli d'un segment (composant client recevant `error` et `reset`) ; `global-error.js` gère les erreurs de la racine ; `not-found.js` traite les ressources absentes. Les erreurs levées dans un Server Component reçoivent un **identifiant (`digest`)** : le détail reste dans les journaux serveur et n'est pas envoyé au navigateur.
+- **React Router (mode framework / data router)** : chaque route peut exporter un composant `ErrorBoundary` ; les erreurs des chargeurs et des actions y sont acheminées.
+
+Dans tous les cas, ces mécanismes **s'ajoutent** aux frontières que vous placez autour de **zones fonctionnelles** (widget, panneau, éditeur).
+
+### 18.15 Supervision et confidentialité
+
+- Envoyez à un service de supervision (Sentry, Datadog, Rollbar…) : le **message**, la **pile**, la **pile de composants** (`componentStack`), la **version** de l'application, la **route** et un identifiant de session **anonymisé**.
+- **Filtrez les données personnelles** (identifiants, jetons, contenu de formulaires) avant l'envoi.
+- Utilisez les **cartes de sources** (*source maps*) pour lire des piles lisibles, en les **réservant** à l'outil de supervision plutôt qu'en les exposant publiquement.
+- Évitez le **bruit** : regroupez les erreurs identiques, ignorez celles des extensions de navigateur, échantillonnez si nécessaire.
+
+### 18.16 Tester une frontière
+
+```jsx
+function Bombe() { throw new Error('boum'); }
+
+test('affiche le repli quand un enfant lève une erreur', () => {
+  const espion = vi.spyOn(console, 'error').mockImplementation(() => {});   // masque le bruit attendu
+  render(
+    <ErrorBoundary fallback={<p role="alert">Erreur</p>}>
+      <Bombe />
+    </ErrorBoundary>
+  );
+  expect(screen.getByRole('alert')).toHaveTextContent('Erreur');
+  espion.mockRestore();
+});
+```
+
+Testez aussi : la **réinitialisation** (le bouton « Réessayer » restitue le contenu après correction), l'**appel du journal** (le callback `onError` reçoit l'erreur) et le fait qu'un composant **hors** de la frontière n'est pas affecté.
+
+### 18.17 Pièges fréquents
 
 - Compter sur une frontière pour les erreurs dans `onClick` ou `fetch`.
 - Une seule frontière à la racine.
@@ -5522,30 +6150,17 @@ createRoot(racine, {
 - Afficher `error.message` brut à l'utilisateur final (fuite d'informations) : l'afficher en développement seulement.
 - Oublier de **réinitialiser** après navigation (la page suivante reste en erreur).
 
-## ✅ À retenir
+### Synthèse du chapitre 18
 
-- Erreur de rendu non capturée = **écran blanc** ; **Error Boundary** = confinement + fallback.
-- **Classe** requise → utilisez **`react-error-boundary`**.
-- Ne capture **pas** événements, async, SSR → `try/catch` + état.
-- Frontières **granulaires**, **réinitialisables**, **journalisées**.
-
-## 🏋️ Exercices
-
-1. Écrivez une `ErrorBoundary` classe avec fallback et bouton « Réessayer ».
-2. Provoquez une erreur dans un `onClick`, constatez qu'elle n'est pas capturée, puis redirigez-la vers la frontière avec `showBoundary`.
-3. Ajoutez des frontières par route et par widget et vérifiez l'isolement.
+Erreur de rendu non capturée = **écran blanc** ; **Error Boundary** = confinement + fallback ; **Classe** requise → utilisez **`react-error-boundary`** ; Ne capture **pas** événements, async, SSR → `try/catch` + état ; Frontières **granulaires**, **réinitialisables**, **journalisées**.
 
 ---
 
-# 19. Portals
+## 19. Portals
 
-## 🎯 Objectifs
+**Objectifs d'apprentissage.** À la fin de ce chapitre, vous saurez : comprendre pourquoi et comment rendre du contenu **hors** de la hiérarchie DOM du parent ; maîtriser la propagation des événements et du contexte à travers un portail ; implémenter modales et popovers accessibles.
 
-- Comprendre pourquoi et comment rendre du contenu **hors** de la hiérarchie DOM du parent.
-- Maîtriser la propagation des événements et du contexte à travers un portail.
-- Implémenter modales et popovers accessibles.
-
-## 19.1 Définition
+### 19.1 Définition
 
 Un **Portal** permet de rendre des enfants dans **un nœud DOM situé ailleurs** dans le document (typiquement `document.body`), tout en conservant leur **place logique** dans l'arbre React.
 
@@ -5570,7 +6185,7 @@ function Modale({ ouvert, onFermer, children }) {
 }
 ```
 
-## 19.2 Pourquoi un portail ?
+### 19.2 Pourquoi un portail ?
 
 Les éléments qui doivent **sortir visuellement** de leur conteneur sont gênés par le CSS des ancêtres : `overflow: hidden`, `transform`, `z-index`/contexte d'empilement, `position`. Cas d'usage :
 
@@ -5580,7 +6195,7 @@ Les éléments qui doivent **sortir visuellement** de leur conteneur sont gêné
 - **Menus contextuels**, **lightbox** ;
 - Rendu dans un **autre document/iframe** ou un nœud géré hors React.
 
-## 19.3 Comportement : le DOM sort, l'arbre React reste
+### 19.3 Comportement : le DOM sort, l'arbre React reste
 
 Même si le nœud est ailleurs dans le DOM :
 
@@ -5589,7 +6204,7 @@ Même si le nœud est ailleurs dans le DOM :
 - **L'état** et les **effets** suivent le cycle normal du composant.
 - Le CSS **hérité** du parent **ne s'applique pas** (le DOM est ailleurs) : style via classes globales/variables CSS.
 
-## 19.4 Cible du portail
+### 19.4 Cible du portail
 
 - `document.body` (le plus simple) ;
 - un conteneur **dédié** `<div id="modales">` dans `index.html` ;
@@ -5605,7 +6220,7 @@ function PortailClient({ children }) {
 
 > Ne pas utiliser comme cible un nœud **rendu par React** que React pourrait mettre à jour/supprimer.
 
-## 19.5 Accessibilité d'une modale (indispensable)
+### 19.5 Accessibilité d'une modale (indispensable)
 
 1. **Rôle** : `role="dialog"` (ou `alertdialog`), `aria-modal="true"`, `aria-labelledby` (titre), `aria-describedby`.
 2. **Gestion du focus** : déplacer le focus **dans** la modale à l'ouverture ; **piéger** le focus (Tab/Shift+Tab bouclent) ; **restaurer** le focus sur l'élément déclencheur à la fermeture.
@@ -5614,7 +6229,7 @@ function PortailClient({ children }) {
 5. **Bloquer le défilement** du `body` pendant l'ouverture.
 6. Cliquer sur la **surcouche** ferme (si approprié).
 
-### Alternatives natives
+#### Alternatives natives
 
 - **`<dialog>`** avec `showModal()` : focus piégé, Échap, couche supérieure (*top layer*), arrière-plan inerte **fournis par le navigateur** — souvent **sans portail** nécessaire.
 - **Popover API** (`popover`, `popovertarget`) pour tooltips/menus.
@@ -5632,7 +6247,142 @@ function Dialogue({ ouvert, onFermer, children }) {
 }
 ```
 
-## ⚠️ Pièges courants
+### 19.6 Signature complète et règles de l'API
+
+```jsx
+import { createPortal } from 'react-dom';
+
+createPortal(children, domNode, key?)
+```
+
+- **`children`** : tout ce que React sait rendre (élément JSX, fragment, chaîne, tableau, composant instancié).
+- **`domNode`** : un **nœud DOM existant** (`document.body`, un conteneur, un élément d'un autre document). Il doit exister **au moment du rendu** ; pour un nœud qui dépend d'une `ref`, attendez le montage.
+- **`key`** (facultatif) : identifiant de la clé du portail, utile quand on en rend plusieurs au même niveau.
+- Valeur de retour : un **nœud React** à placer dans le JSX comme n'importe quel élément.
+
+`createPortal` n'est **pas** un Hook ni un composant : on l'appelle pendant le rendu. Il vit dans **`react-dom`** (et non dans `react`) parce qu'il dépend du DOM du navigateur ; React Native possède son propre équivalent de rendu hors hiérarchie.
+
+> **Ne ciblez pas un nœud géré par React.** Si `domNode` est un élément que React rend lui-même et peut supprimer ou mettre à jour, vous obtiendrez des erreurs de réconciliation. Ciblez `document.body` ou un conteneur **statique** défini dans `index.html`.
+
+### 19.7 Les événements à travers un portail, en détail
+
+React 17 et suivants attachent leurs écouteurs d'événements à la **racine** (le conteneur passé à `createRoot`) et rejouent la propagation selon l'**arbre de composants React**. Pour un portail, cela produit deux comportements qu'il faut distinguer.
+
+| Mécanisme | Suit quel arbre ? | Conséquence |
+| --- | --- | --- |
+| Événements **React** (`onClick`, `onKeyDown`…) | Arbre **React** | Un clic dans la modale remonte au `onClick` du composant parent, même si le DOM est ailleurs |
+| Événements **natifs** (`addEventListener` sur un ancêtre DOM) | Arbre **DOM** | Un écouteur posé sur le conteneur du parent **ne reçoit pas** les événements de la modale |
+| **Contexte** | Arbre React | Les valeurs de contexte du parent sont visibles dans le portail |
+| **CSS hérité** (`color`, `font-family`) | Arbre DOM | Le portail n'hérite **pas** des styles du parent |
+
+**Application : détecter un clic « à l'extérieur ».** Le motif courant `ref.current.contains(event.target)` échoue avec un portail : le contenu du portail n'est **pas** dans le sous-arbre DOM de `ref.current`.
+
+```jsx
+function useClicExterieur(refs, rappel) {
+  useEffect(() => {
+    function gerer(e) {
+      const dedans = refs.some(r => r.current?.contains(e.target));
+      if (!dedans) rappel(e);
+    }
+    document.addEventListener('pointerdown', gerer);
+    return () => document.removeEventListener('pointerdown', gerer);
+  }, [refs, rappel]);
+}
+// On passe la ref du déclencheur ET celle du contenu du portail.
+```
+
+**Arrêter la propagation à bon escient.** `e.stopPropagation()` dans le portail empêche le clic de remonter aux ancêtres React (par exemple un parent cliquable). Réservez-le aux cas où le comportement est réellement indésirable : il peut gêner d'autres écouteurs (analytique, fermeture de menus).
+
+### 19.8 Positionner une info-bulle ou un menu
+
+Un tooltip rendu dans `document.body` doit être **positionné manuellement** par rapport à son déclencheur, puisque le CSS du parent ne s'applique plus. La démarche :
+
+1. mesurer le déclencheur avec `getBoundingClientRect()` ;
+2. calculer les coordonnées (`top`, `left`) de la bulle, en tenant compte du défilement de la page (`window.scrollX` / `scrollY` si position `absolute`) ;
+3. mesurer **avant la peinture** pour éviter un « saut » visuel : `useLayoutEffect` ;
+4. recalculer au redimensionnement et au défilement.
+
+```jsx
+function InfoBulle({ cible, children }) {
+  const ref = useRef(null);
+  const [pos, setPos] = useState({ top: 0, left: 0 });
+
+  useLayoutEffect(() => {
+    const r = cible.current.getBoundingClientRect();
+    setPos({ top: r.bottom + window.scrollY + 8, left: r.left + window.scrollX });
+  }, [cible]);
+
+  return createPortal(
+    <div ref={ref} role="tooltip" style={{ position: 'absolute', ...pos }}>
+      {children}
+    </div>,
+    document.body
+  );
+}
+```
+
+Dans un projet réel, **ne réécrivez pas** la logique de positionnement : collisions avec le bord de l'écran, retournement automatique, flèche, défilement dans des conteneurs imbriqués sont délicats. Utilisez **Floating UI** (ou les composants Radix UI / React Aria / Headless UI qui l'emploient).
+
+### 19.9 Conteneurs dédiés, empilement et notifications
+
+- **Conteneur dédié.** Ajoutez dans `index.html` un nœud `<div id="portails"></div>` et ciblez-le avec `document.getElementById('portails')`. Cela isole les couches flottantes, facilite le style et évite de polluer `body`.
+- **Empilement** (*stacking*). Plusieurs modales ouvertes simultanément doivent s'empiler dans le bon ordre. Maintenez une **pile** (dans un contexte ou un store) et n'appliquez le piégeage du focus et l'inertie qu'à la **modale du dessus**. Les éléments en **couche supérieure** (`<dialog>` modal, API Popover) s'empilent d'eux-mêmes sans `z-index`.
+- **Notifications** (*toasts*). Rendez-les dans une **région vivante** persistante (`role="status"` ou `aria-live="polite"`), présente dès le chargement de la page, afin que les lecteurs d'écran annoncent chaque nouveau message. Prévoyez une durée suffisante et un moyen de les fermer au clavier.
+- **Défilement.** Pendant qu'une modale est ouverte, bloquez le défilement de l'arrière-plan (`overflow: hidden` sur `body`, en compensant la disparition de la barre de défilement) et **rétablissez-le** dans le nettoyage de l'effet.
+
+### 19.10 Portails, rendu serveur et hydratation
+
+Le serveur n'a pas de `document` : les portails ne sont **pas pris en charge** par le rendu serveur (`renderToString`, `renderToPipeableStream`). Rendez-les **uniquement côté client**, après le montage. Outre le motif `useState` + `useEffect` vu en 19.4, le Hook `useSyncExternalStore` fournit une détection **sûre pour l'hydratation** :
+
+```jsx
+const vide = () => () => {};
+function useEstClient() {
+  return useSyncExternalStore(vide, () => true, () => false);  // client, client, serveur
+}
+
+function PortailClient({ children }) {
+  return useEstClient() ? createPortal(children, document.body) : null;
+}
+```
+
+Une modale **fermée** n'a de toute façon rien à rendre : le problème ne se pose que pour un portail **ouvert dès le premier rendu**.
+
+### 19.11 Rendre dans une iframe ou un autre document
+
+Un portail peut cibler le `body` du document d'une **iframe** (`iframe.contentDocument.body`). Cela sert à l'**aperçu isolé** (éditeur de gabarits, prévisualisation responsive, widgets embarqués). Précautions :
+
+- les **feuilles de style** de la page parente ne sont pas disponibles dans l'iframe : copiez-les ou injectez les vôtres ;
+- l'iframe doit être **chargée** avant de lire son `contentDocument` ;
+- les événements restent gérés par React, mais le `window` et le `document` de référence changent : utilisez `e.target.ownerDocument` plutôt que le `document` global.
+
+### 19.12 Tester un portail
+
+React Testing Library interroge par défaut `document.body` : le contenu d'un portail est donc **trouvable** comme le reste.
+
+```jsx
+render(<Page />);
+await userEvent.click(screen.getByRole('button', { name: /ouvrir/i }));
+expect(screen.getByRole('dialog', { name: /confirmation/i })).toBeInTheDocument();
+
+await userEvent.keyboard('{Escape}');
+expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+```
+
+Vérifiez aussi le **focus** (`expect(document.activeElement)`), la **restitution du focus** après fermeture et l'absence de fuite : après le démontage, le nœud du portail ne doit plus être dans le document.
+
+### 19.13 Portail, `<dialog>`, Popover : que choisir ?
+
+| Besoin | Meilleur choix | Raison |
+| --- | --- | --- |
+| Modale bloquante | `<dialog>` + `showModal()` | Focus piégé, Échap, arrière-plan inerte, couche supérieure, natifs |
+| Menu ou info-bulle ancré à un élément | **Popover API** + positionnement (CSS Anchor Positioning ou Floating UI) | Fermeture par clic extérieur et Échap natives |
+| Contenu qui doit échapper à `overflow` / `transform` d'un ancêtre | **`createPortal`** | Sort du contexte d'empilement et de rognage |
+| Toasts globaux | Portail vers une **région vivante** dédiée | Ordre et annonces maîtrisés |
+| Composant accessible complet sans effort | Radix UI, React Aria, Headless UI | Focus, clavier et ARIA déjà gérés |
+
+Règle de décision : **commencez par l'élément natif** ; recourez à un portail quand la hiérarchie DOM du parent pose un problème de rognage ou d'empilement que le natif ne résout pas.
+
+### 19.14 Pièges fréquents
 
 - Portail sans gestion du **focus** et du clavier.
 - Oublier que les événements remontent selon l'**arbre React**.
@@ -5641,28 +6391,17 @@ function Dialogue({ ouvert, onFermer, children }) {
 - Style qui dépend de sélecteurs d'ancêtres (ne s'applique plus).
 - Cible de portail supprimée avant le démontage du composant.
 
-## ✅ À retenir
+### Synthèse du chapitre 19
 
-- `createPortal(enfants, noeud)` : DOM **ailleurs**, arbre React **inchangé** (contexte, événements, état).
-- Cas d'usage : **modales, tooltips, menus, toasts**.
-- **Accessibilité** : rôle, focus, Échap, inert ; envisagez **`<dialog>`** ou une **bibliothèque**.
-
-## 🏋️ Exercices
-
-1. Construisez une modale par portail avec focus piégé, Échap et restauration du focus.
-2. Réimplémentez-la avec `<dialog>` et comparez le code.
-3. Démontrez la propagation d'un clic de portail vers un parent React.
+`createPortal(enfants, noeud)` : DOM **ailleurs**, arbre React **inchangé** (contexte, événements, état) ; Cas d'usage : **modales, tooltips, menus, toasts** ; **Accessibilité** : rôle, focus, Échap, inert ; envisagez **`<dialog>`** ou une **bibliothèque**.
 
 ---
 
-# 20. Fragments
+## 20. Fragments
 
-## 🎯 Objectifs
+**Objectifs d'apprentissage.** À la fin de ce chapitre, vous saurez : savoir grouper des éléments sans nœud DOM supplémentaire ; utiliser les `key` avec des fragments, et comprendre l'impact sur le DOM et le CSS.
 
-- Savoir grouper des éléments sans nœud DOM supplémentaire.
-- Utiliser les `key` avec des fragments, et comprendre l'impact sur le DOM et le CSS.
-
-## 20.1 Définition
+### 20.1 Définition
 
 Un **Fragment** (`<Fragment>`) permet de **retourner plusieurs éléments frères** depuis un composant **sans ajouter de nœud** au DOM.
 
@@ -5679,7 +6418,7 @@ function Colonnes() {
 }
 ```
 
-## 20.2 Pourquoi pas une `<div>` ?
+### 20.2 Pourquoi pas une `<div>` ?
 
 Un `<div>` supplémentaire peut **casser** :
 
@@ -5687,7 +6426,7 @@ Un `<div>` supplémentaire peut **casser** :
 - une mise en page **flexbox / grid** (les éléments ne sont plus enfants directs du conteneur) ;
 - les **sélecteurs CSS** (`>`), la sémantique/accessibilité, le **poids du DOM**.
 
-## 20.3 Deux syntaxes
+### 20.3 Deux syntaxes
 
 | Syntaxe | Accepte `key` ? | Usage |
 |---|---|---|
@@ -5703,40 +6442,156 @@ Un `<div>` supplémentaire peut **casser** :
 ))}
 ```
 
-## 20.4 Autres équivalents
+### 20.4 Autres équivalents
 
 - **Retourner un tableau** (avec clés) : `return [<li key="a" />, <li key="b" />]`.
 - **`null`** pour ne rien rendre.
 
-## 20.5 Détails
+### 20.5 Détails
 
 - Un fragment **n'accepte pas d'autres props** que `key` (et, dans certaines versions expérimentales, des refs de fragment).
 - Il **n'affecte pas** l'état : placer un composant dans un fragment ou le rendre directement dans la même position ne change pas son identité, mais **ajouter/retirer un niveau d'imbrication** (`<><A/></>` vs `<A/>` au même endroit) **peut** modifier la position structurelle dans certains cas de listes de frères (l'état est associé à la **position**).
 
-## ⚠️ Pièges courants
+### 20.6 Un peu d'histoire et de compatibilité
+
+- **React 16.0** a permis de **retourner des tableaux et des chaînes** depuis un composant (avec clés pour les tableaux).
+- **React 16.2** a introduit `<Fragment>` et la **syntaxe courte** `<>…</>`.
+- La syntaxe courte nécessite un compilateur qui la comprend : **Babel 7+**, **TypeScript 2.6.2+**, **esbuild**, **SWC** ; elle est donc disponible dans tous les outils actuels. Avec l'**ancien** runtime JSX (`React.createElement`), elle est transformée en `React.Fragment` ; avec le **nouveau** runtime (`react/jsx-runtime`), l'import explicite de `React` n'est plus nécessaire.
+- En TypeScript, les options `jsxFragmentFactory` (ancien runtime, pour Preact par exemple) et `jsx: "react-jsx"` (nouveau runtime) pilotent cette transformation.
+
+### 20.7 Fragments, clés et listes
+
+Un `Fragment` est le **seul** moyen d'attribuer une `key` à un **groupe** d'éléments retourné par un `map`. Sans clé, React avertit (*Each child in a list should have a unique key*) et ne peut pas réconcilier correctement les groupes lors des insertions, suppressions ou réordonnancements.
+
+```jsx
+function Tableau({ lignes }) {
+  return (
+    <table>
+      <tbody>
+        {lignes.map(l => (
+          <Fragment key={l.id}>
+            <tr><th scope="row">{l.nom}</th><td>{l.valeur}</td></tr>
+            {l.detail && <tr className="detail"><td colSpan={2}>{l.detail}</td></tr>}
+          </Fragment>
+        ))}
+      </tbody>
+    </table>
+  );
+}
+```
+
+La clé appartient au **Fragment**, pas aux éléments intérieurs : les enfants du fragment n'ont pas besoin de clé tant qu'ils sont en nombre fixe.
+
+### 20.8 Fragments et structure HTML valide
+
+Le HTML impose des **relations parent-enfant strictes**. Un fragment permet de **découper** un tableau, une liste ou une liste de définitions en composants sans casser la structure.
+
+| Parent | Enfants autorisés | Composant qui retourne un fragment |
+| --- | --- | --- |
+| `<table>` / `<tbody>` | `<tr>` | `<LigneAvecDetail />` → `<><tr/><tr/></>` |
+| `<tr>` | `<td>`, `<th>` | `<Colonnes />` → `<><td/><td/></>` |
+| `<ul>` / `<ol>` | `<li>` | `<Elements />` → `<><li/><li/></>` |
+| `<dl>` | `<dt>`, `<dd>` | `<Terme />` → `<><dt/><dd/></>` |
+| `<select>` | `<option>`, `<optgroup>` | `<Options />` → `<><option/><option/></>` |
+
+Si un composant enveloppait ces éléments dans une `<div>`, le navigateur corrigerait le DOM de façon inattendue, et React signalerait un avertissement d'**imbrication invalide** (*validateDOMNesting*).
+
+### 20.9 Fragments, CSS et mise en page
+
+- **Flexbox et Grid.** Les propriétés `display: flex` ou `grid` s'appliquent aux **enfants directs** du conteneur. Un wrapper `<div>` inutile devient l'unique enfant et casse la disposition ; un fragment laisse les éléments **enfants directs**.
+- **Sélecteurs enfants** (`ul > li`, `.liste > .carte`) cessent de fonctionner si un wrapper s'intercale.
+- **`display: contents`** fait « disparaître » visuellement une boîte pour ses enfants, mais l'élément **reste dans le DOM** (et dans l'arbre d'accessibilité selon les navigateurs). Ce n'est pas un équivalent d'un fragment : préférez le fragment quand aucun élément n'est nécessaire.
+- **Quand une vraie balise est préférable** : dès que vous devez appliquer un **style**, un **identifiant**, un attribut ARIA, un gestionnaire d'événement ou une **`ref`** à l'ensemble du groupe, un fragment ne convient pas (il n'a pas de nœud DOM).
+
+### 20.10 Fragments et position dans l'arbre
+
+React rattache l'état d'un composant à sa **position** dans l'arbre. Le fragment intervient dans cette règle de deux façons.
+
+- **Fragment sans clé retourné directement par un composant** (au sommet du `return`) : React le traite comme s'il s'agissait de la **liste de ses enfants**. Passer de `return <A />` à `return <><A /></>` ne crée donc pas, en pratique, un niveau supplémentaire.
+- **Fragment imbriqué dans un élément parent** : il constitue un **niveau supplémentaire** dans l'arbre. Passer de `<div><A /></div>` à `<div><><A /></></div>` change la position de `A` (il devient l'enfant d'un fragment) et **réinitialise** son état.
+
+```jsx
+// L'état de <Compteur /> est perdu quand on bascule entre ces deux formes
+<div>{enveloppe ? <><Compteur /></> : <Compteur />}</div>
+```
+
+Règle pratique : **ne faites pas apparaître ou disparaître un fragment autour d'un composant dont l'état doit survivre**. Les fragments à clé (`<Fragment key>`) suivent la règle des clés : changer la clé réinitialise le sous-arbre.
+
+### 20.11 Fragments, `children` et composition
+
+Le fragment est aussi un outil de **composition** : il permet de retourner `children` accompagnés d'éléments supplémentaires sans wrapper.
+
+```jsx
+function AvecAide({ children, aide }) {
+  return (
+    <>
+      {children}
+      <p className="aide" role="note">{aide}</p>
+    </>
+  );
+}
+```
+
+Combiné avec `React.Children` ou `Children.toArray`, il faut savoir que **les fragments ne sont pas aplatis** : `Children.toArray(<><A/><B/></>)` retourne **un seul** enfant (le fragment). Si vous parcourez les enfants pour les transformer, un fragment passé par l'appelant sera traité comme un bloc unique.
+
+### 20.12 Fragments et TypeScript
+
+- Le type de retour d'un composant est `ReactNode` (ou, implicitement, `JSX.Element | null`). Un fragment est un `JSX.Element` valide.
+- Les **chaînes**, **nombres** et **tableaux** de nœuds sont aussi des `ReactNode` valides, ce qui autorise `return "texte"` ou `return items.map(...)`.
+- Pour typer la prop `children` : `children: ReactNode`.
+
+```tsx
+import { Fragment, type ReactNode } from 'react';
+
+type Props = { elements: { id: number; titre: string; texte: string }[]; pied?: ReactNode };
+
+export function Liste({ elements, pied }: Props) {
+  return (
+    <dl>
+      {elements.map(e => (
+        <Fragment key={e.id}>
+          <dt>{e.titre}</dt>
+          <dd>{e.texte}</dd>
+        </Fragment>
+      ))}
+      {pied}
+    </dl>
+  );
+}
+```
+
+### 20.13 Fragments et refs (fonctionnalité récente)
+
+Un fragment n'a **pas de nœud DOM** : on ne peut donc pas lui attacher une `ref` classique. React expérimente des **refs de fragment** (une instance de fragment qui représente le groupe d'éléments : focus, observation, écouteurs sur l'ensemble). Cette API évolue ; consultez la documentation de votre version avant de l'utiliser. En attendant, enveloppez le groupe dans un élément réel ou utilisez une **ref de callback** sur chaque élément.
+
+### 20.14 Choisir entre fragment, tableau et wrapper
+
+| Besoin | Solution |
+| --- | --- |
+| Retourner plusieurs frères sans nœud supplémentaire | **`<>…</>`** |
+| Même chose, avec une clé (dans un `map`) | **`<Fragment key>`** |
+| Appliquer style, id, ARIA, `ref` ou événement au groupe | **Un élément réel** (`div`, `section`, `ul`…) |
+| Ne rien rendre | **`null`** |
+| Retourner une liste d'éléments déjà keyés | Un **tableau** (équivalent), le fragment étant plus lisible |
+
+Règle de lecture : si un wrapper n'a **ni style, ni sémantique, ni comportement**, remplacez-le par un fragment.
+
+### 20.15 Pièges fréquents
 
 - Oublier la `key` sur un fragment dans un `map` (syntaxe courte invalide).
 - Ajouter une `div` par réflexe, cassant tableaux/listes/flex.
 
-## ✅ À retenir
+### Synthèse du chapitre 20
 
-- `<>…</>` pour regrouper sans DOM ; `<Fragment key>` dans les listes.
-
-## 🏋️ Exercices
-
-1. Créez une liste de définitions (`dl`) à partir d'un tableau avec fragments à clés.
-2. Montrez le bug de mise en page flex provoqué par un `div` superflu puis corrigez-le.
+`<>…</>` pour regrouper sans DOM ; `<Fragment key>` dans les listes.
 
 ---
 
-# 21. Strict Mode
+## 21. Strict Mode
 
-## 🎯 Objectifs
+**Objectifs d'apprentissage.** À la fin de ce chapitre, vous saurez : comprendre ce que `<StrictMode>` vérifie et pourquoi il double les appels ; corriger les problèmes qu'il révèle plutôt que de le désactiver.
 
-- Comprendre ce que `<StrictMode>` vérifie et pourquoi il double les appels.
-- Corriger les problèmes qu'il révèle plutôt que de le désactiver.
-
-## 21.1 Définition
+### 21.1 Définition
 
 **`<StrictMode>`** est un composant d'aide au développement : il active des **vérifications supplémentaires** et des **avertissements** pour son sous-arbre. **Aucun effet en production** (pas de double rendu, pas d'interface visible).
 
@@ -5748,19 +6603,19 @@ Un `<div>` supplémentaire peut **casser** :
 
 Peut être appliqué à **toute l'application** (recommandé) ou à **une partie**.
 
-## 21.2 Ce qu'il fait (en développement)
+### 21.2 Ce qu'il fait (en développement)
 
 1. **Double rendu** : appelle **deux fois** les corps de composants, **initialiseurs** de `useState`, fonctions de mise à jour d'état, **`useMemo`**, **`useReducer`** (reducers), constructeurs/`render` des classes → révèle les **impuretés**. (Une des deux exécutions est ignorée.) Depuis React 19, les résultats mémoïsés du premier rendu sont **réutilisés** pendant le second.
 2. **Double exécution des effets** : au **montage initial**, simule *montage → démontage → remontage* : **setup → cleanup → setup** de chaque `useEffect`/`useLayoutEffect` → révèle les **cleanups manquants**.
 3. **Double invocation des refs de callback** (React 19) : **setup → cleanup → setup** pour vérifier le nettoyage des refs.
 4. **Avertissements sur les API dépréciées** (méthodes de cycle de vie `UNSAFE_`, `findDOMNode`, refs en chaîne, contexte hérité…).
 
-## 21.3 Pourquoi ces doubles appels ?
+### 21.3 Pourquoi ces doubles appels ?
 
 - **Pureté** : un composant pur donne le **même résultat** s'il est appelé plusieurs fois.
 - **Résilience** : React doit pouvoir **détruire et recréer** l'état d'un composant (Suspense, `<Activity>`, navigation avec préservation d'état, fast refresh, futures fonctionnalités). Un effet qui ne supporte pas « démontage/remontage » est **fragile**.
 
-## 21.4 Problèmes typiques révélés et corrections
+### 21.4 Problèmes typiques révélés et corrections
 
 | Symptôme | Cause | Correction |
 |---|---|---|
@@ -5774,49 +6629,172 @@ Peut être appliqué à **toute l'application** (recommandé) ou à **une partie
 
 > **Ne contournez pas** le double montage avec un `useRef` « déjà exécuté » : cela masque le bug et casse le comportement attendu avec Suspense/Activity.
 
-## 21.5 Désactivation
+### 21.5 Désactivation
 
 Il n'y a **pas** d'option pour désactiver StrictMode par composant : il suffit de **ne pas l'envelopper**. Désactiver globalement est possible mais **déconseillé**.
 
-## ⚠️ Pièges courants
+### 21.6 Ce qui est exactement doublé
+
+Les doubles invocations ne concernent que le **développement** et que le sous-arbre enveloppé par `<StrictMode>`.
+
+| Élément | Comportement en développement | Ce que cela révèle |
+| --- | --- | --- |
+| Corps d'un composant (fonction) | Appelé **deux fois** par rendu | Mutations de variables externes, valeurs aléatoires ou dates dans le rendu |
+| Initialiseur de `useState` / `useReducer` | Appelé **deux fois** | Initialiseurs impurs ou coûteux |
+| Fonction passée à `setState` (mise à jour fonctionnelle) | Appelée **deux fois** | Mutation de l'état précédent |
+| Fonction de `useMemo`, reducer | Appelés **deux fois** | Calculs non purs |
+| Effets (`useEffect`, `useLayoutEffect`) | **Setup → cleanup → setup** au montage initial | Nettoyage absent ou asymétrique |
+| Refs de callback | **Setup → cleanup → setup** au montage initial (React 19) | Nettoyage de ref manquant |
+| Méthodes de classe (`render`, constructeur, `getDerivedStateFromProps`, `shouldComponentUpdate`) | Appelées deux fois | Idem pour les composants classes |
+
+La double exécution d'un **effet** n'a lieu qu'**au montage initial** d'un composant, pas à chaque mise à jour. Les résultats de `useMemo` et `useCallback` du **premier** rendu sont réutilisés au second appel (React 19), pour limiter l'écart avec le comportement de production.
+
+### 21.7 Écrire des effets symétriques
+
+Un effet correct est **réversible** : exécuter *setup → cleanup → setup* doit laisser l'application dans le **même état** qu'un seul *setup*. Voici les motifs courants.
+
+**Connexion (WebSocket, SSE, abonnement externe).**
+
+```jsx
+useEffect(() => {
+  const connexion = creerConnexion(salon);
+  connexion.ouvrir();
+  return () => connexion.fermer();        // symétrique de ouvrir()
+}, [salon]);
+```
+
+**Requête réseau.** Annulez ou ignorez la réponse obsolète.
+
+```jsx
+useEffect(() => {
+  const ctrl = new AbortController();
+  fetch(`/api/produits/${id}`, { signal: ctrl.signal })
+    .then(r => r.json())
+    .then(setProduit)
+    .catch(e => { if (e.name !== 'AbortError') setErreur(e); });
+  return () => ctrl.abort();
+}, [id]);
+```
+
+**Écouteur d'événement.**
+
+```jsx
+useEffect(() => {
+  const gerer = e => { if (e.key === 'Escape') onFermer(); };
+  window.addEventListener('keydown', gerer);
+  return () => window.removeEventListener('keydown', gerer);
+}, [onFermer]);
+```
+
+**Bibliothèque non React** (carte, graphique, éditeur). Créez l'instance dans l'effet, détruisez-la dans le nettoyage ; sinon deux cartes se superposent au double montage.
+
+```jsx
+useEffect(() => {
+  const carte = L.map(ref.current).setView(centre, 13);
+  return () => carte.remove();
+}, []);
+```
+
+**Animation ou minuteur.** Le nettoyage **annule** (`clearTimeout`, `cancelAnimationFrame`) et ramène l'élément à son état initial.
+
+**Analytique.** Un « envoi de page vue » placé dans un effet est exécuté deux fois en développement seulement. Ne le contournez pas avec un drapeau : placez-le dans un **gestionnaire** (action de l'utilisateur) ou acceptez le doublon de développement, la production n'envoyant qu'un appel.
+
+> Si votre effet ne peut **pas** être rendu symétrique, c'est souvent le signe qu'il n'aurait pas dû être un effet : une action déclenchée par l'utilisateur (achat, envoi de message) doit vivre dans un **gestionnaire d'événement**.
+
+### 21.8 La pureté du rendu en pratique
+
+Un composant est **pur** s'il retourne le **même JSX pour les mêmes props, état et contexte**, et s'il ne modifie rien d'extérieur pendant le rendu. Ce que le double rendu détecte :
+
+```jsx
+// ❌ Mutation d'une variable externe : le compteur augmente de 2 par rendu
+let nbAffichages = 0;
+function Entete() {
+  nbAffichages++;
+  return <h1>Affichage n°{nbAffichages}</h1>;
+}
+
+// ❌ Valeur instable dans le rendu : deux appels, deux résultats différents
+function Carte() {
+  return <div id={Math.random()}>{new Date().toLocaleTimeString()}</div>;
+}
+
+// ❌ Mutation d'une prop ou de l'état
+function Liste({ elements }) {
+  elements.sort();                // modifie le tableau du parent
+  return <ul>{elements.map(...)}</ul>;
+}
+
+// ✅ Copie avant tri, valeur aléatoire créée une seule fois
+function Liste({ elements }) {
+  const tries = [...elements].sort();
+  const [id] = useState(() => crypto.randomUUID());
+  return <ul id={id}>{tries.map(...)}</ul>;
+}
+```
+
+**Mutation locale acceptée** : créer un objet ou un tableau **pendant** le rendu puis le modifier est parfaitement pur, tant qu'il ne survit pas au rendu (`const lignes = []; for (...) lignes.push(<li/>)`).
+
+### 21.9 Strict Mode, Fast Refresh et mode développement
+
+- **Fast Refresh** (rechargement à chaud) réexécute les **effets** d'un composant modifié pour refléter votre édition : c'est un comportement distinct, mais il produit des effets visuellement similaires (un effet joué à nouveau). Un effet symétrique résiste aux deux.
+- Les **DevTools** affichent les logs du **second** appel en **grisé** ; une option permet de masquer les logs du second rendu.
+- Dans les méta-frameworks, Strict Mode est **souvent activé par défaut** (par exemple l'option `reactStrictMode` de Next.js, active par défaut avec le routeur d'applications).
+- Il ne change **pas** le résultat final affiché : si l'interface diffère entre développement et production, la cause est une **impureté** ou un effet asymétrique.
+
+### 21.10 Application partielle et bibliothèques tierces
+
+Vous pouvez envelopper **seulement une partie** de l'application dans `<StrictMode>` pour migrer progressivement : activez-le sur un sous-arbre, corrigez, puis étendez.
+
+```jsx
+<Layout>
+  <StrictMode>
+    <NouvelleFonctionnalite />
+  </StrictMode>
+  <ModuleHeritage />      {/* pas encore vérifié */}
+</Layout>
+```
+
+Une bibliothèque tierce qui échoue sous Strict Mode a généralement une **initialisation non réversible** (singleton, état global, abonnement sans désabonnement). Mettez-la à jour, signalez le problème, ou isolez son initialisation dans un composant qui la crée et la détruit proprement.
+
+### 21.11 Méthode de diagnostic
+
+1. **Reproduire** : l'anomalie n'apparaît qu'en développement ? Soupçonnez Strict Mode.
+2. **Identifier** quel doublon est en cause : rendu (log dans le corps du composant) ou effet (log dans `setup` et dans `cleanup`).
+3. **Lire le cycle** : en cas d'effet, vérifiez que le *cleanup* annule **tout** ce que le *setup* a créé.
+4. **Corriger à la source** : rendre le calcul pur, symétriser l'effet, ou déplacer l'opération dans un gestionnaire.
+5. **Vérifier en production** : un seul appel doit se produire, et le comportement doit être identique.
+6. **Ne jamais** masquer le doublon avec une ref « déjà fait » ni retirer `<StrictMode>`.
+
+### 21.12 Pièges fréquents
 
 - Désactiver StrictMode au lieu de corriger le bug.
 - Croire que la production double aussi les rendus (faux).
 - Placer des **effets de bord** (requêtes, écriture de `localStorage`) dans le corps du composant ou dans un initialiseur de `useState`.
 
-## ✅ À retenir
+### Synthèse du chapitre 21
 
-- StrictMode = **filet de sécurité** en développement : double rendu + double effets + double refs.
-- Un composant **pur** et des effets **symétriques (setup/cleanup)** passent le test sans modification.
-
-## 🏋️ Exercices
-
-1. Écrivez un effet qui ouvre une connexion simulée sans cleanup ; constatez le doublon, puis corrigez.
-2. Rendez volontairement un composant impur (variable globale) et observez le résultat.
+StrictMode = **filet de sécurité** en développement : double rendu + double effets + double refs ; Un composant **pur** et des effets **symétriques (setup/cleanup)** passent le test sans modification.
 
 ---
 
-# 22. Concurrent Rendering
+## 22. Concurrent Rendering
 
-## 🎯 Objectifs
+**Objectifs d'apprentissage.** À la fin de ce chapitre, vous saurez : comprendre le **rendu concurrent** : interruptible, priorisé, non bloquant ; connaître les fonctionnalités qui s'y appuient et les contraintes pour votre code.
 
-- Comprendre le **rendu concurrent** : interruptible, priorisé, non bloquant.
-- Connaître les fonctionnalités qui s'y appuient et les contraintes pour votre code.
-
-## 22.1 Définition
+### 22.1 Définition
 
 Le **rendu concurrent** est un **mode de fonctionnement interne** de React (activé par `createRoot`, React 18+) dans lequel **le rendu peut être préparé en arrière-plan, mis en pause, repris ou abandonné**, **sans bloquer le thread principal**. Il ne s'agit pas de multithreading : c'est de la **planification coopérative** (*time slicing*) : React **cède régulièrement la main** au navigateur (≈ toutes les 5 ms) pour traiter les entrées utilisateur et peindre.
 
 Avant React 18, un rendu était **synchrone et ininterruptible** : un rendu lourd gelait l'interface (saisie bloquée, animations saccadées).
 
-## 22.2 Modèle mental
+### 22.2 Modèle mental
 
 - React maintient **deux arbres** : l'arbre **courant** (affiché) et l'arbre **« work in progress »** (en préparation).
 - Les mises à jour sont **classées par priorité** (*lanes*) : **discrète/urgente** (clic, frappe) > **continue** (survol, défilement) > **transition** (non urgente) > **inactif/différé**.
 - Si une mise à jour urgente arrive pendant le rendu d'une transition, React **abandonne** le travail en cours, traite l'urgent, puis **reprend** la transition avec l'état le plus récent.
 - Rien n'est **commis** au DOM tant que le rendu n'est pas **terminé et cohérent** : l'utilisateur ne voit **jamais d'état intermédiaire**.
 
-## 22.3 Fonctionnalités reposant sur la concurrence
+### 22.3 Fonctionnalités reposant sur la concurrence
 
 | Fonctionnalité | Description |
 |---|---|
@@ -5829,7 +6807,7 @@ Avant React 18, un rendu était **synchrone et ininterruptible** : un rendu lour
 | **`<Activity>`** (19.2) | Masquer un sous-arbre en **préservant son état**, effets suspendus, rendu à basse priorité |
 | **`useSyncExternalStore`** | Lecture sûre de stores externes (évite le tearing) |
 
-### `<Activity>` (React 19.2)
+#### `<Activity>` (React 19.2)
 
 ```jsx
 import { Activity } from 'react';
@@ -5843,7 +6821,7 @@ import { Activity } from 'react';
 - `mode="visible"` : affichage normal, effets recréés.
 - Cas d'usage : onglets/pages qui conservent saisies et scroll, **pré-rendu** de la vue suivante probable.
 
-## 22.4 Conséquences pour votre code
+### 22.4 Conséquences pour votre code
 
 Comme React peut **appeler un rendu plusieurs fois, l'interrompre ou l'abandonner**, il faut :
 
@@ -5854,7 +6832,7 @@ Comme React peut **appeler un rendu plusieurs fois, l'interrompre ou l'abandonne
 5. **Effets symétriques** (setup/cleanup) — vérifiés par StrictMode.
 6. **Éviter `flushSync`** sauf nécessité (il force un rendu synchrone urgent).
 
-## 22.5 Mise en pratique
+### 22.5 Mise en pratique
 
 ```jsx
 function Recherche() {
@@ -5879,13 +6857,139 @@ function Recherche() {
 }
 ```
 
-## 22.6 Ce que la concurrence ne fait pas
+### 22.6 Ce que la concurrence ne fait pas
 
 - Elle **ne rend pas** un calcul lent plus rapide : elle le **rend interruptible**. Un calcul synchrone de 500 ms **à l'intérieur d'un seul composant** reste bloquant (déplacez-le dans un Worker, découpez-le, ou mémoïsez-le).
 - Elle n'est **pas du parallélisme** (un seul thread JS).
 - Elle ne dispense pas de réduire la **taille de l'arbre** ou le **coût des rendus**.
 
-## ⚠️ Pièges courants
+### 22.7 Priorités et planification
+
+Le rendu concurrent repose sur des **niveaux de priorité** : toutes les mises à jour ne se valent pas.
+
+| Priorité | Exemples | Comportement |
+| --- | --- | --- |
+| **Urgente** (discrète) | Clic, frappe clavier, appui sur une touche | Traitée **immédiatement**, jamais interrompue |
+| **Continue** | Défilement, survol, glissement | Traitée rapidement, après les événements discrets |
+| **Transition** | Mise à jour marquée par `startTransition` / `useTransition` | **Interruptible** et reprise ; cède le pas aux mises à jour urgentes |
+| **Différée** | Valeur lue via `useDeferredValue` | Calculée après la valeur urgente |
+| **Inactive** (*idle*) | Contenu masqué par `<Activity>`, préchargements | Traitée quand le navigateur est libre |
+
+Principe : si une mise à jour **urgente** arrive pendant qu'un rendu de transition est en cours, React **abandonne** (ou met en pause) ce rendu, traite l'urgence, puis **reprend** la transition avec l'état à jour. Résultat : la saisie reste fluide pendant qu'un gros rendu se prépare en arrière-plan.
+
+### 22.8 Le traitement par lots automatique (*automatic batching*)
+
+Depuis React 18, plusieurs mises à jour d'état déclenchées **dans la même tâche** sont regroupées en **un seul rendu**, quelle que soit leur origine (gestionnaire d'événement, `setTimeout`, promesse, callback natif).
+
+```jsx
+setTimeout(() => {
+  setCompteur(c => c + 1);
+  setDrapeau(f => !f);
+  // Un seul rendu (avant React 18 : deux)
+}, 1000);
+```
+
+Pour **forcer** un rendu synchrone immédiat (cas rare : lire le DOM juste après une mise à jour), on utilise `flushSync` de `react-dom` :
+
+```jsx
+import { flushSync } from 'react-dom';
+flushSync(() => setOuvert(true));
+// Le DOM est à jour à cet endroit
+```
+
+`flushSync` annule les bénéfices de la concurrence pour cette mise à jour : réservez-le aux synchronisations avec du code non React (focus, mesure, défilement).
+
+### 22.9 Les transitions en détail
+
+Une **transition** déclare qu'une mise à jour est **non urgente**.
+
+```jsx
+function Recherche() {
+  const [saisie, setSaisie] = useState('');
+  const [requete, setRequete] = useState('');
+  const [enAttente, demarrerTransition] = useTransition();
+
+  function surChangement(e) {
+    setSaisie(e.target.value);                         // urgent : le champ répond tout de suite
+    demarrerTransition(() => setRequete(e.target.value)); // non urgent : filtrage lourd
+  }
+
+  return (
+    <>
+      <input value={saisie} onChange={surChangement} />
+      {enAttente && <Indicateur />}
+      <Resultats requete={requete} />
+    </>
+  );
+}
+```
+
+Points à connaître :
+
+- `isPending` (ici `enAttente`) vaut `true` tant que la transition n'est pas validée : utile pour un indicateur discret.
+- Les mises à jour d'une transition sont **interruptibles** et ne provoquent **pas** de retour au `fallback` d'un `Suspense` déjà affiché : l'ancien contenu reste visible pendant le chargement du nouveau.
+- Une transition ne peut **pas** contrôler la valeur d'un `<input>` : la saisie doit rester une mise à jour **urgente**.
+- Depuis React 19, la fonction passée à une transition peut être **asynchrone** : c'est la base des **Actions** (chapitres 10 et 23), avec gestion automatique de l'état en attente.
+- `startTransition` (importé de `react`) existe aussi hors Hook, sans `isPending`.
+
+### 22.10 `useDeferredValue` : différer plutôt que planifier
+
+`useDeferredValue(valeur)` retourne une version **retardée** de `valeur` : au rendu urgent, elle conserve l'**ancienne** valeur ; React prépare ensuite en arrière-plan un rendu avec la **nouvelle**.
+
+```jsx
+function Page() {
+  const [texte, setTexte] = useState('');
+  const differe = useDeferredValue(texte);          // React 19 : useDeferredValue(texte, '') valeur initiale
+  return (
+    <>
+      <input value={texte} onChange={e => setTexte(e.target.value)} />
+      <ListeLourde filtre={differe} />               {/* enveloppée dans memo */}
+    </>
+  );
+}
+```
+
+Condition d'efficacité : l'enfant coûteux doit être **mémoïsé** (`memo`) ; sinon il re-rend à chaque frappe avec l'ancienne valeur et l'on ne gagne rien. Contrairement au *debounce* (attente d'un délai fixe), le report est **adaptatif** : sur une machine rapide il est quasi instantané, sur une machine lente il laisse respirer l'interface, et il est **interruptible**.
+
+### 22.11 Quel outil choisir ?
+
+| Situation | Outil | Pourquoi |
+| --- | --- | --- |
+| Vous contrôlez le `setState` qui déclenche le rendu coûteux | **`useTransition`** | Marque la mise à jour comme non urgente ; fournit `isPending` |
+| Vous recevez la valeur en **prop** ou d'un Hook tiers | **`useDeferredValue`** | Pas d'accès au `setState` à marquer |
+| Données ou code en cours de chargement | **`Suspense`** (+ transition) | Fallback précis, ancien contenu conservé |
+| Limiter les **appels réseau** pendant la frappe | **Debounce** (ou annulation de requête) | La concurrence n'évite pas les requêtes inutiles |
+| Rendu très long de milliers de lignes | **Virtualisation** | La concurrence rend interruptible, mais ne réduit pas le travail |
+| Écran ou onglet « en veille » | **`<Activity>`** | Conserve l'état, suspend les effets |
+
+### 22.12 Concurrence et magasins externes : le *tearing*
+
+Comme le rendu peut être **interrompu puis repris**, une lecture d'une donnée **externe** modifiable (variable globale, store maison) peut donner, au sein d'un même rendu, des valeurs **incohérentes** entre composants : on parle de **déchirure** (*tearing*).
+
+Le Hook **`useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot?)`** garantit une lecture **cohérente** : il force un rendu **synchrone** quand le store change.
+
+```jsx
+function useStore(store) {
+  return useSyncExternalStore(store.subscribe, store.getSnapshot);
+}
+```
+
+`getSnapshot` doit retourner une valeur **stable** (la même référence tant que rien n'a changé), sinon React boucle. Les bibliothèques d'état modernes (Redux Toolkit, Zustand, Jotai) l'utilisent déjà : vous n'avez à l'écrire vous-même que pour intégrer une source externe (API du navigateur, store maison).
+
+### 22.13 Observer et diagnostiquer
+
+- **React DevTools, onglet Profiler** : identifie les composants lents et la cause de chaque rendu.
+- **Panneau Performance de Chrome** : les pistes **React Performance Tracks** (React 19.2) montrent les phases de planification (*Scheduler*) et le temps par composant, ce qui permet de voir quand un rendu est interrompu, repris ou abandonné.
+- **Journalisation** : un `console.log` dans le corps d'un composant peut s'afficher **plus souvent** que le nombre de mises à jour validées (rendus abandonnés, Strict Mode) : n'en déduisez pas de fuite.
+- **Indicateur `isPending`** : vérifiez que l'état d'attente s'affiche bien et que l'ancien contenu reste visible.
+
+### 22.14 Adoption et compatibilité
+
+- La concurrence est **activée par `createRoot`**. L'ancien `ReactDOM.render` utilise le mode **historique** (synchrone) et ne bénéficie ni du traitement par lots automatique ni des transitions.
+- Elle est **opt-in par fonctionnalité** : tant que vous n'utilisez ni transitions, ni `useDeferredValue`, ni Suspense avancé, le comportement perçu ressemble à l'ancien, hormis le traitement par lots.
+- Points de vigilance lors de la migration : effets exécutés **deux fois** en Strict Mode, rendus **abandonnés**, bibliothèques qui lisent un état externe pendant le rendu (voir *tearing*), code qui supposait un rendu **synchrone** après un `setState`.
+
+### 22.15 Pièges fréquents
 
 - Mutations/effets de bord dans le rendu → comportements non déterministes.
 - Lire un store externe sans `useSyncExternalStore`.
@@ -5893,31 +6997,17 @@ function Recherche() {
 - Attendre qu'une transition s'exécute **immédiatement**.
 - Utiliser abusivement `flushSync`.
 
-## ✅ À retenir
+### Synthèse du chapitre 22
 
-- Rendu **interruptible**, **priorisé** et **non bloquant** ; commit **atomique**.
-- Fonctionnalités : **transitions, valeurs différées, Suspense, hydratation sélective, Activity**.
-- Exigences : **pureté, idempotence, effets symétriques, stores externes via `useSyncExternalStore`**.
-
-## 🏋️ Exercices
-
-1. Comparez la fluidité d'une saisie avec/sans `useTransition` sur un filtrage de 20 000 lignes.
-2. Utilisez `<Activity>` pour conserver le contenu d'un formulaire entre deux onglets.
-3. Expliquez pourquoi un rendu peut être appelé sans qu'un commit ait lieu.
+Rendu **interruptible**, **priorisé** et **non bloquant** ; commit **atomique** ; Fonctionnalités : **transitions, valeurs différées, Suspense, hydratation sélective, Activity** ; Exigences : **pureté, idempotence, effets symétriques, stores externes via `useSyncExternalStore`**.
 
 ---
-# 23. Server Components et Actions
 
-## 🎯 Objectifs
+## 23. Server Components et Actions
 
-- Situer les stratégies de rendu (CSR, SSR, SSG, ISR, streaming) et l'hydratation.
-- Comprendre les **React Server Components** (RSC), la frontière **`'use client'`** et les règles de composition.
-- Maîtriser les **Server Functions / Actions** (`'use server'`), leurs usages et leurs risques de sécurité.
-- Connaître les API de document de React 19 (métadonnées, feuilles de style, préchargement).
+**Objectifs d'apprentissage.** À la fin de ce chapitre, vous saurez : situer les stratégies de rendu (CSR, SSR, SSG, ISR, streaming) et l'hydratation ; comprendre les **React Server Components** (RSC), la frontière **`'use client'`** et les règles de composition ; maîtriser les **Server Functions / Actions** (`'use server'`), leurs usages et leurs risques de sécurité ; connaître les API de document de React 19 (métadonnées, feuilles de style, préchargement). > Les RSC nécessitent un **framework ou un bundler compatible** (Next.js App Router, React Router en mode RSC, Waku, Parcel…). React fournit la spécification et les primitives ; l'intégration (routage, bundling, mise en cache) est assurée par le framework. Les détails de configuration varient selon l'outil et évoluent : consultez sa documentation.
 
-> Les RSC nécessitent un **framework ou un bundler compatible** (Next.js App Router, React Router en mode RSC, Waku, Parcel…). React fournit la spécification et les primitives ; l'intégration (routage, bundling, mise en cache) est assurée par le framework. Les détails de configuration varient selon l'outil et évoluent : consultez sa documentation.
-
-## 23.1 Les stratégies de rendu
+### 23.1 Les stratégies de rendu
 
 | Stratégie | Où et quand le HTML est produit | Forces | Limites |
 |---|---|---|---|
@@ -5928,13 +7018,13 @@ function Recherche() {
 | **Streaming SSR** | Serveur, **par morceaux** (Suspense) | Shell rapide, contenu lent différé | Complexité |
 | **RSC** | Serveur/build, **sans JS client** pour ces composants | Moins de JS, accès direct aux données | Modèle mental à apprendre, framework requis |
 
-### Hydratation
+#### Hydratation
 
 Après un rendu serveur, le navigateur reçoit du **HTML** puis le **JS**. **`hydrateRoot`** « hydrate » ce HTML : React reconstruit l'arbre en mémoire, **attache les gestionnaires** et l'état, sans recréer le DOM. Le rendu **client initial** doit produire **le même HTML** que le serveur.
 
 **Erreurs d'hydratation** (*mismatch*) typiques : `Date.now()`, `Math.random()`, `window`/`localStorage` dans le rendu, locale/fuseau différents, HTML invalide (`<div>` dans `<p>`), extensions de navigateur. Correctifs : lire ces valeurs **après montage** (`useEffect`), utiliser `useSyncExternalStore` avec `getServerSnapshot`, `suppressHydrationWarning` (pour une différence **assumée**, un seul niveau), générer les ID avec `useId`.
 
-### API serveur de `react-dom`
+#### API serveur de `react-dom`
 
 | API | Usage |
 |---|---|
@@ -5944,15 +7034,15 @@ Après un rendu serveur, le navigateur reçoit du **HTML** puis le **JS**. **`hy
 | `prerender` / `prerenderToNodeStream` (`react-dom/static`) | Pré-rendu statique en **attendant** toutes les données (SSG) |
 | `resume` / `resumeAndPrerender` | Reprendre un pré-rendu partiel (base du **Partial Prerendering** des frameworks) |
 
-## 23.2 React Server Components (RSC)
+### 23.2 React Server Components (RSC)
 
-### Définition
+#### Définition
 
 Un **Server Component** est un composant qui **s'exécute uniquement dans un environnement serveur** (au **build** ou à **chaque requête**), **avant** que le résultat ne soit envoyé au navigateur. Son **code n'est jamais envoyé au client** : seul son **résultat rendu** (une description sérialisée de l'UI, le **payload RSC**) l'est.
 
 > **Ne pas confondre** avec le **SSR** : le SSR rend **tous** les composants (qui seront ensuite hydratés côté client) en HTML ; les RSC sont une **catégorie de composants** qui **ne s'hydratent pas** et ne sont **jamais** inclus dans le bundle client. Les deux se combinent.
 
-### Ce qu'un Server Component peut faire
+#### Ce qu'un Server Component peut faire
 
 - Être **`async`** et utiliser **`await`** directement dans le rendu.
 - Accéder **directement** aux **bases de données**, au **système de fichiers**, aux **secrets/variables d'environnement**, à des **services internes**.
@@ -5973,7 +7063,7 @@ export default async function Articles() {
 }
 ```
 
-### Ce qu'il ne peut pas faire
+#### Ce qu'il ne peut pas faire
 
 - **State et effets** : `useState`, `useReducer`, `useEffect`, `useLayoutEffect`, `useRef` pour des effets, etc.
 - **Gestionnaires d'événements** (`onClick`…).
@@ -5981,7 +7071,7 @@ export default async function Articles() {
 - **Context** (`createContext`/`useContext`) : un contexte se **fournit et consomme côté client**.
 - Les hooks dépendant de ces fonctionnalités.
 
-### Client Components : la directive `'use client'`
+#### Client Components : la directive `'use client'`
 
 ```jsx
 'use client';                     // en TOUT PREMIER du fichier (avant les imports)
@@ -6008,7 +7098,7 @@ export function BoutonLike({ initial }) {
 | API navigateur | ❌ | ✅ |
 | Accès direct DB/secrets | ✅ | ❌ |
 
-### Règles de composition
+#### Règles de composition
 
 1. **Un Server Component peut importer et rendre des Client Components.**
 2. **Un Client Component ne peut pas importer un Server Component**… mais il peut **recevoir un Server Component en `children`/props** (déjà rendu côté serveur) :
@@ -6025,7 +7115,7 @@ export function BoutonLike({ initial }) {
 5. Les **bibliothèques tierces** utilisant état/effets doivent être enveloppées dans un petit **composant client** (`'use client'`).
 6. Paquet **`server-only`** : `import 'server-only'` fait **échouer le build** si du code serveur (secrets) est importé côté client ; **`client-only`** pour l'inverse.
 
-### Récupération de données avec RSC
+#### Récupération de données avec RSC
 
 ```jsx
 // Requêtes parallèles (évite les cascades)
@@ -6065,7 +7155,7 @@ export default function Page() {
 export function Commentaires({ promesse }) { const data = use(promesse); … }
 ```
 
-### Avantages
+#### Avantages
 
 - **Moins de JavaScript client** (temps de chargement, INP).
 - **Proximité des données** (moins d'allers-retours réseau).
@@ -6073,16 +7163,16 @@ export function Commentaires({ promesse }) { const data = use(promesse); … }
 - **Streaming** et **SEO** naturels.
 - **Composition** flexible avec des composants interactifs ciblés.
 
-### Limites et points d'attention
+#### Limites et points d'attention
 
 - Modèle mental **plus complexe** (frontière, sérialisation, deux environnements).
 - **Framework requis** ; écosystème de bibliothèques en adaptation (`'use client'` nécessaire).
 - **Débogage** réparti serveur/client ; **coûts serveur**.
 - **Contexte** non utilisable dans les Server Components (fournisseurs côté client).
 
-## 23.3 Server Functions et Actions
+### 23.3 Server Functions et Actions
 
-### Définition
+#### Définition
 
 Une **Server Function** est une **fonction asynchrone exécutée sur le serveur**, mais **appelable depuis le client**, comme une fonction ordinaire (React gère l'appel réseau et la sérialisation). Elles sont marquées par la directive **`'use server'`**. Quand elles sont passées à une prop **`action`** (formulaire) ou appelées dans une **transition**, on parle de **Server Actions**.
 
@@ -6127,7 +7217,7 @@ export function FormulaireArticle() {
 }
 ```
 
-### Deux façons de déclarer
+#### Deux façons de déclarer
 
 ```jsx
 // Niveau fonction (dans un Server Component)
@@ -6139,14 +7229,14 @@ async function enregistrer(formData) {
 // Niveau fichier : 'use server' en tête d'un module d'actions
 ```
 
-### Appels possibles
+#### Appels possibles
 
 1. **`<form action={serverFunction}>`** (avec **amélioration progressive** : fonctionne avant l'hydratation dans les frameworks compatibles).
 2. **`formAction`** sur un bouton.
 3. Depuis un gestionnaire d'événement, dans **`startTransition`** (mutation avec `isPending`).
-4. Depuis `useActionState`, `useOptimistic` (modules 10 et 11).
+4. Depuis `useActionState`, `useOptimistic` (chapitre 10 et 11).
 
-### Sécurité : **règles impératives**
+#### Sécurité : **règles impératives**
 
 > Une Server Function est un **point d'accès HTTP public** : n'importe qui peut l'appeler avec **n'importe quelles données**, même sans passer par votre interface.
 
@@ -6158,16 +7248,16 @@ async function enregistrer(formData) {
 6. Éviter de **capturer par closure** des secrets/valeurs sensibles dans une fonction inline (ils seraient sérialisés dans le payload, chiffrés par le framework mais à manipuler avec prudence).
 7. Les fonctions de fichiers `'use server'` **exportées** sont **toutes** exposées : ne placez pas d'utilitaires internes dans ces modules.
 
-### Comportement
+#### Comportement
 
 - Les appels à des Server Functions depuis un même client sont **mis en file** et exécutés **séquentiellement** (pas de parallélisme garanti) ; pour de la **lecture de données**, privilégiez RSC/loaders.
 - Les erreurs non gérées remontent à l'**Error Boundary** ; pour des erreurs **attendues** (validation), **retournez** un résultat plutôt que de lever.
 
-## 23.4 API de document de React 19
+### 23.4 API de document de React 19
 
 React 19 permet de déclarer **dans les composants** des éléments qui appartiennent au **document**.
 
-### Métadonnées
+#### Métadonnées
 
 ```jsx
 function Article({ article }) {
@@ -6183,20 +7273,20 @@ function Article({ article }) {
 // React hisse automatiquement <title>, <meta>, <link> dans <head>
 ```
 
-### Feuilles de style avec précédence
+#### Feuilles de style avec précédence
 
 ```jsx
 <link rel="stylesheet" href="/theme.css" precedence="default" />
 // React gère l'ordre, la déduplication et attend le chargement avant de révéler le contenu (Suspense).
 ```
 
-### Scripts asynchrones dédupliqués
+#### Scripts asynchrones dédupliqués
 
 ```jsx
 <script async src="https://exemple.com/widget.js" />   // inséré une seule fois même s'il apparaît dans plusieurs composants
 ```
 
-### Préchargement de ressources (`react-dom`)
+#### Préchargement de ressources (`react-dom`)
 
 ```jsx
 import { prefetchDNS, preconnect, preload, preinit } from 'react-dom';
@@ -6206,11 +7296,11 @@ preload('/police.woff2', { as: 'font', type: 'font/woff2', crossOrigin: 'anonymo
 preinit('/script.js', { as: 'script' });
 ```
 
-### Éléments personnalisés (Web Components)
+#### Éléments personnalisés (Web Components)
 
 React 19 supporte pleinement les **custom elements** : les props non primitives sont transmises comme **propriétés**, les événements personnalisés sont écoutables.
 
-## 23.5 Choisir son architecture
+### 23.5 Choisir son architecture
 
 | Besoin | Option |
 |---|---|
@@ -6220,7 +7310,7 @@ React 19 supporte pleinement les **custom elements** : les props non primitives 
 | Mobile | **React Native / Expo** |
 | Intégrer du React dans un site existant | **Plusieurs roots** / îlots |
 
-## ⚠️ Pièges courants
+### 23.6 Pièges fréquents
 
 - Confondre **SSR** et **RSC**, ou `'use client'` (frontière de bundle) et « rendu uniquement côté client ».
 - Mettre `'use client'` **trop haut** (tout l'arbre devient client).
@@ -6232,37 +7322,23 @@ React 19 supporte pleinement les **custom elements** : les props non primitives 
 - Erreurs d'hydratation causées par des valeurs non déterministes.
 - Importer du code serveur (secrets) dans un module client (utiliser `server-only`).
 
-## ✅ À retenir
+### Synthèse du chapitre 23
 
-- **RSC** = composants **exécutés sur le serveur**, **0 JS client** ; **`'use client'`** = frontière vers l'interactivité.
-- Composition : **Server → Client** par import, **Client → Server** par `children`/props.
-- **Server Functions (`'use server'`)** = **endpoints publics** : **authentifiez, autorisez, validez**.
-- **Streaming + Suspense**, **`cache`**, **`use`** pour des données progressives.
-- React 19 : **métadonnées**, **feuilles de style**, **préchargement** déclaratifs.
-
-## 🏋️ Exercices
-
-1. Dans un projet Next.js App Router, créez une page Server Component qui liste des données puis ajoutez un bouton « like » en Client Component minimal.
-2. Écrivez une Server Function de création validée par Zod, protégée par une vérification de session, utilisée avec `useActionState`.
-3. Provoquez une erreur d'hydratation (`Date.now()`), puis corrigez-la de deux façons.
+**RSC** = composants **exécutés sur le serveur**, **0 JS client** ; **`'use client'`** = frontière vers l'interactivité ; Composition : **Server → Client** par import, **Client → Server** par `children`/props ; **Server Functions (`'use server'`)** = **endpoints publics** : **authentifiez, autorisez, validez** ; **Streaming + Suspense**, **`cache`**, **`use`** pour des données progressives ; React 19 : **métadonnées**, **feuilles de style**, **préchargement** déclaratifs.
 
 ---
 
-# 24. Composants classes (legacy)
+## 24. Composants classes (legacy)
 
-## 🎯 Objectifs
+**Objectifs d'apprentissage.** À la fin de ce chapitre, vous saurez : savoir lire, maintenir et migrer du code à base de **classes** ; connaître le cycle de vie et les équivalences avec les Hooks ; identifier les cas où une classe reste nécessaire (Error Boundaries).
 
-- Savoir lire, maintenir et migrer du code à base de **classes**.
-- Connaître le cycle de vie et les équivalences avec les Hooks.
-- Identifier les cas où une classe reste nécessaire (Error Boundaries).
-
-## 24.1 Contexte
+### 24.1 Contexte
 
 Les **composants classes** sont l'API d'origine de React. Ils sont **toujours supportés** et **non dépréciés**, mais **les Hooks sont recommandés** pour le code neuf. Vous les rencontrerez dans des bases de code existantes, des bibliothèques, et **obligatoirement** pour les **Error Boundaries**.
 
 > Limites : pas de Hooks ni de `use`, logique réutilisable via HOC/render props, `this` à gérer, API moins propice à la compilation/optimisation.
 
-## 24.2 Structure d'une classe
+### 24.2 Structure d'une classe
 
 ```jsx
 import { Component } from 'react';
@@ -6287,7 +7363,7 @@ class Compteur extends Component {
 }
 ```
 
-### Le constructeur (rarement nécessaire)
+#### Le constructeur (rarement nécessaire)
 
 ```jsx
 constructor(props) {
@@ -6297,16 +7373,16 @@ constructor(props) {
 }
 ```
 
-### La liaison de `this`
+#### La liaison de `this`
 
 Les méthodes passées comme callbacks **perdent leur `this`**. Solutions : **fonction fléchée en class field** (recommandé), `bind` dans le constructeur, ou fonction fléchée inline (nouvelle fonction à chaque rendu).
 
-## 24.3 Props et state dans une classe
+### 24.3 Props et state dans une classe
 
 - Props : `this.props` (lecture seule).
 - État : `this.state` ; **ne jamais l'assigner** directement hors constructeur/field initial ; **toujours `setState`**.
 
-### `setState`
+#### `setState`
 
 ```jsx
 this.setState({ nom: 'Alice' });                     // FUSION superficielle avec l'état existant
@@ -6318,16 +7394,16 @@ this.setState({ x: 1 }, () => { /* callback après mise à jour du DOM */ });
 - Les mises à jour sont **groupées (batching)** et **asynchrones** : `this.state` n'est pas à jour juste après l'appel.
 - `forceUpdate()` force un rendu (à éviter).
 
-## 24.4 Le cycle de vie
+### 24.4 Le cycle de vie
 
-### Montage
+#### Montage
 
 1. `constructor(props)`
 2. `static getDerivedStateFromProps(props, state)`
 3. `render()`
 4. **`componentDidMount()`** : après insertion dans le DOM → requêtes, abonnements, timers, mesures.
 
-### Mise à jour (nouvelles props, `setState`, `forceUpdate`)
+#### Mise à jour (nouvelles props, `setState`, `forceUpdate`)
 
 1. `static getDerivedStateFromProps(props, state)`
 2. `shouldComponentUpdate(nextProps, nextState)` → `false` évite le rendu
@@ -6335,19 +7411,19 @@ this.setState({ x: 1 }, () => { /* callback après mise à jour du DOM */ });
 4. `getSnapshotBeforeUpdate(prevProps, prevState)` : lire le DOM **avant** mise à jour (ex. position de scroll) ; la valeur retournée est transmise à `componentDidUpdate`
 5. **`componentDidUpdate(prevProps, prevState, snapshot)`** : après mise à jour du DOM ; **comparer** les props/état avant d'agir (sinon boucle infinie)
 
-### Démontage
+#### Démontage
 
 - **`componentWillUnmount()`** : **nettoyage** (désabonnements, timers, annulation de requêtes).
 
-### Gestion d'erreurs
+#### Gestion d'erreurs
 
-- `static getDerivedStateFromError(error)` et `componentDidCatch(error, info)` (voir module 18).
+- `static getDerivedStateFromError(error)` et `componentDidCatch(error, info)` (voir chapitre 18).
 
-### Méthodes dépréciées (préfixe `UNSAFE_`)
+#### Méthodes dépréciées (préfixe `UNSAFE_`)
 
 `componentWillMount`, `componentWillReceiveProps`, `componentWillUpdate` : **à ne plus utiliser** (peu sûres avec le rendu concurrent). Les remplacer par `componentDidMount`, `componentDidUpdate`, `getDerivedStateFromProps`.
 
-### Exemple complet
+#### Exemple complet
 
 ```jsx
 class Profil extends Component {
@@ -6380,7 +7456,7 @@ class Profil extends Component {
 }
 ```
 
-## 24.5 Optimisation : `PureComponent` et `shouldComponentUpdate`
+### 24.5 Optimisation : `PureComponent` et `shouldComponentUpdate`
 
 - **`PureComponent`** : implémente `shouldComponentUpdate` avec une **comparaison superficielle** des props et du state (équivalent de `memo`).
 - **`shouldComponentUpdate`** : contrôle manuel (rarement nécessaire).
@@ -6389,7 +7465,7 @@ class Profil extends Component {
 class Ligne extends PureComponent { render() { return <li>{this.props.texte}</li>; } }
 ```
 
-## 24.6 Refs et contexte dans les classes
+### 24.6 Refs et contexte dans les classes
 
 ```jsx
 class Formulaire extends Component {
@@ -6405,7 +7481,7 @@ class Bouton extends Component {
 // Plusieurs contextes : <Ctx.Consumer>{valeur => …}</Ctx.Consumer>
 ```
 
-## 24.7 Valeurs par défaut et validation (classes)
+### 24.7 Valeurs par défaut et validation (classes)
 
 ```jsx
 class Bouton extends Component {
@@ -6415,7 +7491,7 @@ class Bouton extends Component {
 
 > En React 19, `defaultProps` n'est supporté que pour les classes ; les composants fonctions utilisent les paramètres par défaut. La vérification `propTypes` n'est plus exécutée.
 
-## 24.8 Équivalences Classes ↔ Hooks
+### 24.8 Équivalences Classes ↔ Hooks
 
 | Classe | Composant fonction + Hooks |
 |---|---|
@@ -6436,7 +7512,7 @@ class Bouton extends Component {
 | Méthode d'instance | Fonction dans le corps (ou `useCallback`) |
 | Instance (`this.xxx` mutable) | `useRef` |
 
-## 24.9 Migrer une classe vers une fonction
+### 24.9 Migrer une classe vers une fonction
 
 1. Transformer la classe en **fonction** ; `render` → corps de la fonction.
 2. `state` → un ou plusieurs **`useState`** (ou `useReducer`).
@@ -6447,7 +7523,85 @@ class Bouton extends Component {
 7. Conserver les **Error Boundaries** en classe (ou `react-error-boundary`).
 8. Tester **avant/après** ; migrer **progressivement** (classes et fonctions cohabitent).
 
-## ⚠️ Pièges courants
+### 24.10 Statut des classes aujourd'hui
+
+- Les composants classes **ne sont pas dépréciés** : l'équipe React indique ne pas prévoir de les retirer, et ils restent **pleinement fonctionnels**.
+- Toutes les **nouvelles fonctionnalités** (Hooks, `use`, Actions, `useOptimistic`, `useEffectEvent`, React Compiler) ciblent les **composants fonctions**.
+- Une classe **ne peut pas** être un **Server Component** (chapitre 23) ; elle ne peut exister que côté client.
+- La seule raison technique d'écrire une classe aujourd'hui est l'**Error Boundary** (chapitre 18), pour laquelle il n'existe pas encore d'équivalent en Hook. Même là, la bibliothèque `react-error-boundary` vous évite de l'écrire.
+
+Conclusion : **écrivez des fonctions**, **sachez lire des classes**, et **migrez au rythme** de vos modifications.
+
+### 24.11 Lire du code existant : motifs fréquents
+
+| Motif | Signification | Équivalent moderne |
+| --- | --- | --- |
+| `this.setState(prev => ({ n: prev.n + 1 }))` | Mise à jour fonctionnelle | `setN(n => n + 1)` |
+| `this.setState({ a: 1 }, () => …)` | Callback exécuté **après** la mise à jour | `useEffect` dépendant de la valeur |
+| `componentDidUpdate(prevProps) { if (prevProps.id !== this.props.id) … }` | Réagir à un changement de prop | `useEffect(..., [id])` ou calcul pendant le rendu |
+| `static getDerivedStateFromProps` | Dériver l'état des props | Calculer pendant le rendu, ou `key` pour réinitialiser |
+| `getSnapshotBeforeUpdate` | Lire le DOM avant le commit | `useLayoutEffect` (cas rare) |
+| `static contextType = Ctx` | Lire **un** contexte | `useContext(Ctx)` |
+| `defaultProps` | Valeurs par défaut | Paramètres par défaut dans la signature |
+| `connect(mapState)(Composant)` (Redux), `withRouter(Composant)` | **Composant d'ordre supérieur** (HOC) | `useSelector`, `useNavigate`, `useParams` |
+| `React.createRef()` / `this.ref = React.createRef()` | Ref d'instance | `useRef` |
+| `this.interval = setInterval(...)` | Valeur d'instance hors état | `useRef` ou variable d'effet, avec nettoyage |
+
+### 24.12 Migrer progressivement, sans tout réécrire
+
+1. **Sécurisez** d'abord : écrivez ou complétez des **tests** de comportement (chapitre 29) qui passeront avant et après la migration.
+2. **Migrez les feuilles** de l'arbre en premier (composants sans enfants complexes), puis remontez.
+3. **Migrez à l'occasion** : un composant modifié pour une évolution est converti ; les autres restent en l'état.
+4. **Faites coexister** les deux styles : une classe peut rendre une fonction, et une fonction peut rendre une classe. Pour utiliser un Hook dans un composant classe, **enveloppez-le** dans un composant fonction qui lit le Hook et passe le résultat en props :
+
+```jsx
+function AvecTheme(Composant) {
+  return function Enveloppe(props) {
+    const theme = useContext(ThemeContext);      // Hook dans une fonction
+    return <Composant {...props} theme={theme} />;
+  };
+}
+export default AvecTheme(ClasseExistante);
+```
+
+5. **Outillez-vous** : les *codemods* du dépôt `react-codemod` automatisent certaines transformations (renommage de cycles de vie dépréciés, par exemple) ; ils ne convertissent pas une classe en fonction à votre place, la logique des effets demandant un jugement humain.
+6. **Vérifiez** chaque étape : comportement identique, pas de double effet révélé par Strict Mode, pas de régression de performance.
+
+### 24.13 Ce qui ne se traduit pas mot à mot
+
+- **`this.setState` fusionne** l'objet passé avec l'état existant ; **`useState` remplace** la valeur : si l'état est un objet, recopiez les champs (`{ ...ancien, a: 1 }`) ou séparez en plusieurs `useState`.
+- **`componentDidMount` + `componentDidUpdate` + `componentWillUnmount`** correspondent à **un seul** `useEffect` avec **dépendances** et **nettoyage** : ne traduisez pas chaque méthode en un effet distinct, regroupez par **responsabilité** (une synchronisation = un effet).
+- **Un `useEffect` s'exécute après la peinture** ; `componentDidMount` s'exécutait avant. Pour les mesures qui doivent précéder la peinture, utilisez `useLayoutEffect`.
+- **Variables d'instance** (`this.timer`) deviennent des **refs** ; elles ne déclenchent pas de rendu.
+- **`shouldComponentUpdate` / `PureComponent`** deviennent `memo` (avec comparateur si nécessaire) ; la comparaison par défaut est **superficielle** dans les deux cas.
+- **Fermetures** : dans une fonction, un gestionnaire voit les valeurs **du rendu qui l'a créé** (*instantané*), alors que `this.state` dans une classe est **toujours la dernière valeur**. Un code asynchrone qui dépendait de `this.state` doit être adapté (mise à jour fonctionnelle, ref vers la dernière valeur, `useEffectEvent`).
+- **`forceUpdate`** n'a pas d'équivalent recommandé : cherchez quel **état** manque plutôt que de forcer un rendu.
+
+### 24.14 Exemple de conversion commentée
+
+```jsx
+// AVANT : classe
+class Horloge extends React.Component {
+  state = { heure: new Date() };
+  componentDidMount()  { this.id = setInterval(() => this.setState({ heure: new Date() }), 1000); }
+  componentWillUnmount() { clearInterval(this.id); }
+  render() { return <time>{this.state.heure.toLocaleTimeString()}</time>; }
+}
+
+// APRÈS : fonction
+function Horloge() {
+  const [heure, setHeure] = useState(() => new Date());
+  useEffect(() => {
+    const id = setInterval(() => setHeure(new Date()), 1000);
+    return () => clearInterval(id);               // remplace componentWillUnmount
+  }, []);                                         // [] : une seule synchronisation au montage
+  return <time>{heure.toLocaleTimeString()}</time>;
+}
+```
+
+Observez : l'état initial est une **fonction d'initialisation paresseuse** ; la variable d'instance `this.id` devient une **constante locale à l'effet** (inutile de la conserver puisque le nettoyage est dans le même scope) ; les trois méthodes de cycle de vie tiennent dans **un effet**.
+
+### 24.15 Pièges fréquents
 
 - Oublier `super(props)` ou lier `this`.
 - Modifier `this.state` directement.
@@ -6456,29 +7610,19 @@ class Bouton extends Component {
 - Oublier de nettoyer dans `componentWillUnmount`.
 - Utiliser des méthodes `UNSAFE_`.
 
-## ✅ À retenir
+### Synthèse du chapitre 24
 
-- Les classes fonctionnent toujours, mais on écrit du **neuf avec des fonctions + Hooks**.
-- `setState` **fusionne** ; `useState` **remplace**.
-- **Error Boundaries** = seul cas où la **classe est requise**.
-- Connaître le **cycle de vie** et ses équivalents facilite la **migration**.
-
-## 🏋️ Exercices
-
-1. Convertissez la classe `Profil` ci-dessus en composant fonction avec `useEffect` + `AbortController`.
-2. Écrivez une classe avec `getSnapshotBeforeUpdate` pour conserver la position de scroll d'une liste de messages, puis son équivalent avec `useLayoutEffect`.
-3. Dressez le tableau des méthodes de cycle de vie d'un vieux composant et leur transposition en hooks.
+Les classes fonctionnent toujours, mais on écrit du **neuf avec des fonctions + Hooks** ; `setState` **fusionne** ; `useState` **remplace** ; **Error Boundaries** = seul cas où la **classe est requise** ; Connaître le **cycle de vie** et ses équivalents facilite la **migration**.
 
 ---
-# 25. Récupération de données
 
-## 🎯 Objectifs
+# Partie IV — Données, navigation, état et styles
 
-- Comprendre les approches de récupération de données en React et leurs compromis.
-- Distinguer **état serveur** et **état client**.
-- Maîtriser `fetch`, la gestion d'erreurs, les conditions de course, TanStack Query, SWR, Suspense, les mutations et les mises à jour optimistes.
+## 25. Récupération de données
 
-## 25.1 État serveur vs état client
+**Objectifs d'apprentissage.** À la fin de ce chapitre, vous saurez : comprendre les approches de récupération de données en React et leurs compromis ; distinguer **état serveur** et **état client** ; maîtriser `fetch`, la gestion d'erreurs, les conditions de course, TanStack Query, SWR, Suspense, les mutations et les mises à jour optimistes.
+
+### 25.1 État serveur vs état client
 
 | | **État client** | **État serveur** |
 |---|---|---|
@@ -6490,7 +7634,7 @@ class Bouton extends Component {
 
 > L'état serveur exige : **cache**, **déduplication**, **revalidation**, **gestion des échecs**, **pagination**, **mutations**, **synchronisation**. Les traiter avec `useState` + `useEffect` est source de bugs.
 
-## 25.2 `fetch` : les bases (et ses pièges)
+### 25.2 `fetch` : les bases (et ses pièges)
 
 ```js
 async function getUtilisateur(id, signal) {
@@ -6517,7 +7661,7 @@ await fetch('/api/users', {
 - **Axios / ky / ofetch** : clients HTTP avec intercepteurs, erreurs automatiques sur 4xx/5xx, annulation.
 - **Typage / validation des réponses** : **Zod** (`schema.parse(json)`) pour ne pas faire confiance aux données externes.
 
-## 25.3 Approche 1 : `useEffect` + `useState`
+### 25.3 Approche 1 : `useEffect` + `useState`
 
 ```jsx
 function Utilisateur({ id }) {
@@ -6542,7 +7686,7 @@ function Utilisateur({ id }) {
 }
 ```
 
-### Limites
+#### Limites
 
 - Pas de **cache** (rechargement à chaque montage), pas de **déduplication** (deux composants = deux requêtes).
 - **Cascades** (*waterfalls*) : l'enfant ne commence qu'après le parent.
@@ -6550,7 +7694,7 @@ function Utilisateur({ id }) {
 - **Rien côté serveur** (les effets ne s'exécutent pas en SSR) : pas de HTML initial utile.
 - Beaucoup de code répétitif à maintenir.
 
-## 25.4 Approche 2 : TanStack Query (React Query)
+### 25.4 Approche 2 : TanStack Query (React Query)
 
 Bibliothèque de référence pour l'état serveur.
 
@@ -6564,7 +7708,7 @@ const queryClient = new QueryClient({
 <QueryClientProvider client={queryClient}><App /></QueryClientProvider>
 ```
 
-### Lecture : `useQuery`
+#### Lecture : `useQuery`
 
 ```jsx
 function Utilisateurs() {
@@ -6581,7 +7725,7 @@ function Utilisateurs() {
 }
 ```
 
-### Concepts clés
+#### Concepts clés
 
 | Concept | Description |
 |---|---|
@@ -6598,7 +7742,7 @@ function Utilisateurs() {
 | **Préchargement** | `queryClient.prefetchQuery(...)` (au survol, dans un loader). |
 | **DevTools** | `@tanstack/react-query-devtools`. |
 
-### Écriture : `useMutation`
+#### Écriture : `useMutation`
 
 ```jsx
 function AjouterTache() {
@@ -6616,7 +7760,7 @@ function AjouterTache() {
 }
 ```
 
-### Mise à jour optimiste
+#### Mise à jour optimiste
 
 ```jsx
 const mutation = useMutation({
@@ -6633,7 +7777,7 @@ const mutation = useMutation({
 });
 ```
 
-### Pagination et défilement infini
+#### Pagination et défilement infini
 
 ```jsx
 // Pagination par pages (offset/curseur) : placeholderData: keepPreviousData
@@ -6646,12 +7790,12 @@ const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = useInfiniteQuer
 });
 ```
 
-### Suspense et SSR
+#### Suspense et SSR
 
 - `useSuspenseQuery` : `data` toujours défini ; l'attente est gérée par `<Suspense>`, les erreurs par un **Error Boundary**.
 - **Hydratation/préchargement** serveur : `dehydrate` / `HydrationBoundary`, ou intégration native des frameworks.
 
-## 25.5 Approche 3 : SWR
+### 25.5 Approche 3 : SWR
 
 ```jsx
 import useSWR from 'swr';
@@ -6668,9 +7812,9 @@ function Profil() {
 
 Philosophie **stale-while-revalidate** : afficher le cache, revalider en arrière-plan. Plus léger et minimaliste que TanStack Query.
 
-## 25.6 Approche 4 : Suspense, `use` et Server Components
+### 25.6 Approche 4 : Suspense, `use` et Server Components
 
-- **Server Components** : `await` directement dans le composant (module 23) ; **meilleure** option quand le framework le permet.
+- **Server Components** : `await` directement dans le composant (chapitre 23) ; **meilleure** option quand le framework le permet.
 - **`use(promesse)`** + `<Suspense>` côté client avec une promesse **mise en cache/créée côté serveur**.
 - **Loaders** des routeurs (React Router, TanStack Router) : récupération **avant** le rendu de la route, en **parallèle**.
 
@@ -6685,7 +7829,7 @@ function Profil() {
 }
 ```
 
-## 25.7 Autres sources et protocoles
+### 25.7 Autres sources et protocoles
 
 | Besoin | Solution |
 |---|---|
@@ -6697,22 +7841,22 @@ function Profil() {
 | **Hors ligne / PWA** | Service workers, persistance du cache (`persistQueryClient`), `networkMode` |
 | **Fichiers** | `FormData`, uploads avec progression (`XMLHttpRequest`/`axios`), URLs signées |
 
-## 25.8 Authentification des requêtes
+### 25.8 Authentification des requêtes
 
 - **Cookies `HttpOnly`** + `SameSite` (recommandé, résistants au XSS) ; protéger du **CSRF**.
 - **Jetons Bearer** : à éviter dans `localStorage` (vulnérables au XSS) ; préférer mémoire + rafraîchissement via cookie.
 - **Intercepteur** (axios/ky) pour ajouter l'en-tête, **rafraîchir** le jeton et **rejouer** la requête sur 401.
 - Redirection vers la connexion en cas de 401/403 (via la couche de requêtes, pas dans chaque composant).
 
-## 25.9 Gestion des erreurs et états d'interface
+### 25.9 Gestion des erreurs et états d'interface
 
-Toujours gérer les **quatre états** : **chargement**, **erreur**, **vide**, **succès** (module 8). Pour les erreurs :
+Toujours gérer les **quatre états** : **chargement**, **erreur**, **vide**, **succès** (chapitre 8). Pour les erreurs :
 - **Locales** (message + « Réessayer ») ;
 - **Globales** (Error Boundary, toasts) ;
 - **Typage des erreurs** (statut HTTP, code métier) ;
 - **Rapports** (Sentry) sans exposer de détails internes.
 
-## 25.10 Pièges et bonnes pratiques
+### 25.10 Pièges et bonnes pratiques
 
 - **Cascades** : démarrer les requêtes **le plus tôt** et **en parallèle** (loaders, `Promise.all`, préchargement).
 - **Conditions de course** : annulation / `ignore` / bibliothèque.
@@ -6724,7 +7868,7 @@ Toujours gérer les **quatre états** : **chargement**, **erreur**, **vide**, **
 - **Mocks de tests** : **MSW** (Mock Service Worker) intercepte au niveau réseau.
 - **Ne stockez pas de secrets** dans le code client.
 
-## ⚠️ Pièges courants
+### 25.11 Pièges fréquents
 
 - `fetch` sans vérification de `response.ok`.
 - `useEffect(async () => …)` invalide.
@@ -6734,30 +7878,17 @@ Toujours gérer les **quatre états** : **chargement**, **erreur**, **vide**, **
 - Confondre `isPending` et `isFetching`.
 - Cascades de requêtes.
 
-## ✅ À retenir
+### Synthèse du chapitre 25
 
-- **État serveur ≠ état client** : utilisez un outil dédié (**TanStack Query**, SWR, loaders, RSC).
-- `fetch` ne rejette pas sur 4xx/5xx ; **annulez** les requêtes obsolètes.
-- **Cache + revalidation + déduplication + mutations optimistes** = ce que vous n'avez pas à réécrire.
-- **Parallélisez**, **préchargez**, **gérez les 4 états**.
-
-## 🏋️ Exercices
-
-1. Récupérez une liste paginée d'une API publique avec TanStack Query et `keepPreviousData`.
-2. Implémentez une bascule de tâche **optimiste** avec rollback en cas d'erreur.
-3. Reproduisez une condition de course avec `useEffect`, puis corrigez-la (annulation).
+**État serveur ≠ état client** : utilisez un outil dédié (**TanStack Query**, SWR, loaders, RSC) ; `fetch` ne rejette pas sur 4xx/5xx ; **annulez** les requêtes obsolètes ; **Cache + revalidation + déduplication + mutations optimistes** = ce que vous n'avez pas à réécrire ; **Parallélisez**, **préchargez**, **gérez les 4 états**.
 
 ---
 
-# 26. Routage
+## 26. Routage
 
-## 🎯 Objectifs
+**Objectifs d'apprentissage.** À la fin de ce chapitre, vous saurez : comprendre le routage côté client et ses mécanismes (History API) ; maîtriser React Router : routes, imbrication, paramètres, navigation, loaders/actions, routes protégées ; connaître les alternatives (TanStack Router, routage par fichiers).
 
-- Comprendre le routage côté client et ses mécanismes (History API).
-- Maîtriser React Router : routes, imbrication, paramètres, navigation, loaders/actions, routes protégées.
-- Connaître les alternatives (TanStack Router, routage par fichiers).
-
-## 26.1 Pourquoi un routeur ?
+### 26.1 Pourquoi un routeur ?
 
 Dans une **SPA** (*Single Page Application*), le serveur renvoie **une seule page HTML**. Le **routeur côté client** :
 1. **Associe l'URL** à une **arborescence de composants** ;
@@ -6766,7 +7897,7 @@ Dans une **SPA** (*Single Page Application*), le serveur renvoie **une seule pag
 
 > React **n'inclut pas** de routeur. Solutions : **React Router**, **TanStack Router**, ou un **framework** (Next.js, Remix/React Router v7 framework mode, Expo Router).
 
-## 26.2 React Router : installation et modes
+### 26.2 React Router : installation et modes
 
 ```bash
 npm install react-router-dom        # (v7 : les API sont aussi exportées par `react-router`)
@@ -6778,7 +7909,7 @@ npm install react-router-dom        # (v7 : les API sont aussi exportées par `r
 
 > Les noms d'import peuvent varier selon la version (v6 : `react-router-dom` ; v7 : `react-router`, avec `react-router-dom` conservé en réexportation). Référez-vous à la documentation de votre version.
 
-### Types de routeurs
+#### Types de routeurs
 
 | Routeur | URL | Usage |
 |---|---|---|
@@ -6789,7 +7920,7 @@ npm install react-router-dom        # (v7 : les API sont aussi exportées par `r
 
 > **Déploiement SPA** : configurez le serveur/CDN pour renvoyer **`index.html`** pour toute route inconnue (sinon 404 au rechargement d'une URL profonde).
 
-## 26.3 Routes de base
+### 26.3 Routes de base
 
 ```jsx
 import { BrowserRouter, Routes, Route, Link, NavLink, Navigate } from 'react-router-dom';
@@ -6820,7 +7951,7 @@ function App() {
 - **Correspondance** : classement par spécificité (pas besoin d'`exact`).
 - **Segments** : statiques (`/a`), dynamiques (`:id`), optionnels (`:lang?`), **splat** (`files/*`).
 
-## 26.4 Routes imbriquées et layouts
+### 26.4 Routes imbriquées et layouts
 
 ```jsx
 <Routes>
@@ -6844,7 +7975,7 @@ function Layout() {
 }
 ```
 
-## 26.5 Hooks de navigation et d'URL
+### 26.5 Hooks de navigation et d'URL
 
 ```jsx
 import { useParams, useNavigate, useLocation, useSearchParams, useMatch } from 'react-router-dom';
@@ -6868,7 +7999,7 @@ function Article() {
 
 > **L'URL comme état** : filtres, tri, pagination, onglet actif → **paramètres de recherche** (partageables, rechargeables, historique du navigateur).
 
-## 26.6 Mode données : loaders, actions, erreurs, `lazy`
+### 26.6 Mode données : loaders, actions, erreurs, `lazy`
 
 ```jsx
 import { createBrowserRouter, RouterProvider, redirect, useLoaderData, Form, useNavigation } from 'react-router-dom';
@@ -6916,7 +8047,7 @@ function Article() {
 
 Avantages : **chargement en parallèle** (pas de cascade), **revalidation automatique** après actions, **gestion d'erreurs/404** par route, **états de navigation**, **préchargement** (`<Link prefetch>` en mode framework).
 
-## 26.7 Routes protégées (authentification / autorisation)
+### 26.7 Routes protégées (authentification / autorisation)
 
 ```jsx
 function RouteProtegee({ role }) {
@@ -6938,7 +8069,7 @@ function RouteProtegee({ role }) {
 
 > La protection côté client est une **commodité d'interface** : **l'autorisation réelle doit toujours être vérifiée côté serveur**.
 
-## 26.8 Autres fonctionnalités importantes
+### 26.8 Autres fonctionnalités importantes
 
 - **Restauration du défilement** (`<ScrollRestoration />`) et défilement vers le haut à chaque navigation.
 - **Titre de page** par route (métadonnées React 19 `<title>`, `handle`, ou `react-helmet-async`).
@@ -6947,7 +8078,7 @@ function RouteProtegee({ role }) {
 - **Accessibilité** : après navigation, **déplacer le focus**/annoncer le changement de page (région `aria-live`), titre de document mis à jour.
 - **Liens externes** : `<a href target="_blank" rel="noopener noreferrer">`.
 
-## 26.9 Alternatives
+### 26.9 Alternatives
 
 | Outil | Particularité |
 |---|---|
@@ -6957,7 +8088,7 @@ function RouteProtegee({ role }) {
 | **Expo Router** | Routage par fichiers pour React Native |
 | **Wouter / Reach Router (obsolète)** | Routeurs minimalistes |
 
-## ⚠️ Pièges courants
+### 26.10 Pièges fréquents
 
 - Oublier la **réécriture serveur** (404 au rafraîchissement).
 - `<a href>` au lieu de `<Link>` (rechargement complet).
@@ -6967,31 +8098,17 @@ function RouteProtegee({ role }) {
 - Cascades de requêtes dans des composants imbriqués au lieu de **loaders**.
 - Oublier `end` sur `NavLink` de la racine (toujours actif).
 
-## ✅ À retenir
+### Synthèse du chapitre 26
 
-- Le routeur **synchronise URL ↔ UI** via la History API.
-- **Imbrication + `Outlet`** pour les layouts ; **`useParams` / `useSearchParams`** pour l'URL ; **loaders/actions** pour les données.
-- **L'URL est un état** : filtres, pagination, onglets.
-- **Sécurité côté serveur**, **accessibilité** de la navigation.
-
-## 🏋️ Exercices
-
-1. Construisez un blog : liste, détail `/articles/:id`, 404, layout avec `Outlet`.
-2. Stockez la pagination et le tri dans les `searchParams`.
-3. Ajoutez des loaders et `errorElement`, puis une route `lazy`.
-4. Créez une route admin protégée avec redirection post-connexion.
+Le routeur **synchronise URL ↔ UI** via la History API ; **Imbrication + `Outlet`** pour les layouts ; **`useParams` / `useSearchParams`** pour l'URL ; **loaders/actions** pour les données ; **L'URL est un état** : filtres, pagination, onglets ; **Sécurité côté serveur**, **accessibilité** de la navigation.
 
 ---
 
-# 27. Gestion d'état global
+## 27. Gestion d'état global
 
-## 🎯 Objectifs
+**Objectifs d'apprentissage.** À la fin de ce chapitre, vous saurez : savoir **quand** un état global est nécessaire et **quel type d'état** on gère ; connaître Redux Toolkit, Zustand, Jotai, MobX, XState et leurs philosophies ; choisir et structurer un état global (sélecteurs, normalisation, persistance).
 
-- Savoir **quand** un état global est nécessaire et **quel type d'état** on gère.
-- Connaître Redux Toolkit, Zustand, Jotai, MobX, XState et leurs philosophies.
-- Choisir et structurer un état global (sélecteurs, normalisation, persistance).
-
-## 27.1 Un état global est-il nécessaire ?
+### 27.1 Un état global est-il nécessaire ?
 
 Avant d'ajouter une bibliothèque, vérifiez :
 
@@ -7004,7 +8121,7 @@ Avant d'ajouter une bibliothèque, vérifiez :
 
 Un store global se justifie pour un état **client** partagé par **de nombreux composants éloignés**, **fréquemment mis à jour**, avec une **logique** non triviale (panier, préférences, brouillon d'éditeur, sélection, notifications, état d'une session de jeu).
 
-### Typologie
+#### Typologie
 
 | Type d'état | Outil recommandé |
 |---|---|
@@ -7016,7 +8133,7 @@ Un store global se justifie pour un état **client** partagé par **de nombreux 
 | Formulaire | **React Hook Form** |
 | Machines à états / flux complexes | **XState** |
 
-## 27.2 Principes communs (architecture Flux)
+### 27.2 Principes communs (architecture Flux)
 
 - **Source unique de vérité** : un store (ou des atomes) par domaine.
 - **Flux unidirectionnel** : **action → mise à jour → état → vue**.
@@ -7026,7 +8143,7 @@ Un store global se justifie pour un état **client** partagé par **de nombreux 
 - **Normalisation** : `{ byId: {…}, allIds: […] }` pour les collections.
 - **Séparation** logique métier / composants.
 
-## 27.3 Redux Toolkit (RTK)
+### 27.3 Redux Toolkit (RTK)
 
 L'approche **officielle** moderne de Redux : moins de code répétitif, Immer intégré, bonnes pratiques par défaut.
 
@@ -7074,7 +8191,7 @@ function Panier() {
 }
 ```
 
-### Éléments clés
+#### Éléments clés
 
 | Notion | Description |
 |---|---|
@@ -7091,7 +8208,7 @@ function Panier() {
 
 **Quand l'utiliser** : grandes équipes, logique complexe, besoin de **traçabilité** (DevTools), conventions strictes. **Coût** : plus de cérémonie que Zustand.
 
-## 27.4 Zustand
+### 27.4 Zustand
 
 Store **minimaliste** basé sur des hooks, sans Provider.
 
@@ -7125,7 +8242,7 @@ function Actions() {
 
 Points forts : API **très simple**, **peu de code**, **sélecteurs** par défaut, **middleware** (persist, devtools, immer), utilisable **hors React** (`usePanier.getState()`).
 
-## 27.5 Jotai (état atomique)
+### 27.5 Jotai (état atomique)
 
 L'état est constitué de petits **atomes** ; les composants s'abonnent à **ceux qu'ils lisent** (rendus minimaux).
 
@@ -7145,7 +8262,7 @@ function C() {
 
 Idéal pour un état **fin**, **dérivé**, **localisé** (formulaires riches, éditeurs, canevas). Voisin : **Recoil** (dépôt archivé en 2025, à éviter pour un nouveau projet).
 
-## 27.6 Autres approches
+### 27.6 Autres approches
 
 | Outil | Philosophie |
 |---|---|
@@ -7156,7 +8273,7 @@ Idéal pour un état **fin**, **dérivé**, **localisé** (formulaires riches, �
 | **`use-context-selector`** | Sélecteurs sur Context |
 | **Nanostores / Legend-State / Effector** | Alternatives spécialisées |
 
-## 27.7 Comparatif
+### 27.7 Comparatif
 
 | | **Context + Reducer** | **Redux Toolkit** | **Zustand** | **Jotai** | **MobX** | **XState** |
 |---|---|---|---|---|---|---|
@@ -7167,7 +8284,7 @@ Idéal pour un état **fin**, **dérivé**, **localisé** (formulaires riches, �
 | Hors React | ❌ | ✅ | ✅ | ⚠ | ✅ | ✅ |
 | Idéal pour | Thème, utilisateur | Grandes applis, équipes | Applis moyennes, simplicité | État fin et dérivé | Modèles objet réactifs | Workflows complexes |
 
-## 27.8 Bonnes pratiques
+### 27.8 Bonnes pratiques
 
 1. **Ne mettez pas tout** dans le store : seulement l'état **réellement partagé**.
 2. **Gardez l'état serveur hors du store** (TanStack Query/RTK Query).
@@ -7180,7 +8297,7 @@ Idéal pour un état **fin**, **dérivé**, **localisé** (formulaires riches, �
 9. **Persistance** : whitelist des clés, versionnage/migration (`persist` `version`/`migrate`).
 10. **SSR** : instanciez un store **par requête** (pas de singleton partagé entre utilisateurs).
 
-## ⚠️ Pièges courants
+### 27.9 Pièges fréquents
 
 - Mettre **tout** l'état dans Redux par défaut.
 - Dupliquer l'état serveur dans le store.
@@ -7189,29 +8306,17 @@ Idéal pour un état **fin**, **dérivé**, **localisé** (formulaires riches, �
 - Store singleton partagé entre requêtes en SSR (fuite de données entre utilisateurs).
 - Abonner un composant au store entier.
 
-## ✅ À retenir
+### Synthèse du chapitre 27
 
-- **Trouvez d'abord la nature de l'état**, puis l'outil.
-- **Zustand** pour la simplicité, **Redux Toolkit** pour la structure et la traçabilité, **Jotai** pour l'état atomique, **XState** pour les machines à états.
-- **Sélecteurs**, **immutabilité**, **normalisation**, **état serveur séparé**.
-
-## 🏋️ Exercices
-
-1. Implémentez un panier avec Zustand (ajout, quantité, total, persistance).
-2. Refaites-le avec Redux Toolkit et comparez volumétrie de code et DevTools.
-3. Modélisez un processus de paiement (panier → adresse → paiement → confirmation) avec XState.
+**Trouvez d'abord la nature de l'état**, puis l'outil ; **Zustand** pour la simplicité, **Redux Toolkit** pour la structure et la traçabilité, **Jotai** pour l'état atomique, **XState** pour les machines à états ; **Sélecteurs**, **immutabilité**, **normalisation**, **état serveur séparé**.
 
 ---
 
-# 28. Styles
+## 28. Styles
 
-## 🎯 Objectifs
+**Objectifs d'apprentissage.** À la fin de ce chapitre, vous saurez : connaître toutes les approches de style dans React et leurs compromis ; mettre en œuvre thématisation (clair/sombre), variants, responsive et animations ; choisir une stratégie adaptée au contexte (SSR/RSC, équipe, performance, accessibilité).
 
-- Connaître toutes les approches de style dans React et leurs compromis.
-- Mettre en œuvre thématisation (clair/sombre), variants, responsive et animations.
-- Choisir une stratégie adaptée au contexte (SSR/RSC, équipe, performance, accessibilité).
-
-## 28.1 Panorama
+### 28.1 Panorama
 
 React **ne prescrit pas** de solution de style. Les options :
 
@@ -7226,7 +8331,7 @@ React **ne prescrit pas** de solution de style. Les options :
 | **CSS-in-JS (zero-runtime)** | vanilla-extract, Panda CSS, StyleX, Linaria | Typage + **CSS statique** à la compilation | Configuration, contraintes de dynamisme |
 | **Bibliothèques UI** | MUI, Chakra, Mantine, Ant Design, shadcn/ui, Radix Themes | Composants prêts, accessibilité | Poids, personnalisation, dépendance |
 
-## 28.2 CSS global et classes
+### 28.2 CSS global et classes
 
 ```jsx
 import './Bouton.css';
@@ -7235,14 +8340,14 @@ import './Bouton.css';
 
 Mitiger les collisions : **BEM** (`bloc__element--modificateur`), préfixes, `@layer`, `:where()` pour réduire la spécificité.
 
-### Classes conditionnelles
+#### Classes conditionnelles
 
 ```jsx
 import clsx from 'clsx';
 <button className={clsx('bouton', { 'bouton--actif': actif }, taille && `bouton--${taille}`)} />
 ```
 
-## 28.3 CSS Modules
+### 28.3 CSS Modules
 
 ```css
 /* Bouton.module.css */
@@ -7257,7 +8362,7 @@ import styles from './Bouton.module.css';
 
 Les noms (`bouton`) sont **hachés** à la compilation (`Bouton_bouton__x7Ab`) → **pas de collision**. Support natif dans Vite et Next.js.
 
-## 28.4 Style inline
+### 28.4 Style inline
 
 ```jsx
 <div style={{ width: `${progression}%`, transform: `translateX(${x}px)` }} />
@@ -7267,7 +8372,7 @@ Les noms (`bouton`) sont **hachés** à la compilation (`Bouton_bouton__x7Ab`) �
 
 Réservez-le aux **valeurs dynamiques**. Utilisez les **variables CSS** pour passer des valeurs au CSS statique.
 
-## 28.5 Tailwind CSS
+### 28.5 Tailwind CSS
 
 ```jsx
 <button className="rounded-lg bg-blue-600 px-4 py-2 font-medium text-white hover:bg-blue-700 focus-visible:outline focus-visible:outline-2 disabled:opacity-50">
@@ -7292,7 +8397,7 @@ const bouton = cva('rounded font-medium', {
 <button className={bouton({ variante: 'secondaire', taille: 'sm' })} />
 ```
 
-## 28.6 CSS-in-JS
+### 28.6 CSS-in-JS
 
 ```jsx
 import styled from 'styled-components';
@@ -7309,9 +8414,9 @@ const Bouton = styled.button`
 - **Zero-runtime** (vanilla-extract, Panda CSS, StyleX, Linaria) : **CSS extrait au build**, compatible RSC.
 - `useInsertionEffect` est le hook conçu pour les auteurs de ces bibliothèques.
 
-## 28.7 Thématisation et mode sombre
+### 28.7 Thématisation et mode sombre
 
-### Variables CSS (recommandé)
+#### Variables CSS (recommandé)
 
 ```css
 :root {
@@ -7339,7 +8444,7 @@ function useTheme() {
 - Évitez le **flash** (FOUC) : appliquer le thème par un **script inline** dans `<head>` avant le premier rendu.
 - Jetons de conception (**design tokens**) : couleurs, espacements, rayons, typographies, ombres → variables CSS ou fichier de configuration.
 
-## 28.8 Responsive et CSS moderne
+### 28.8 Responsive et CSS moderne
 
 - **Mobile-first**, unités relatives (`rem`, `%`, `clamp()`, `vw`).
 - **Flexbox**, **Grid**, **gap**, `aspect-ratio`.
@@ -7348,7 +8453,7 @@ function useTheme() {
 - Hook **`useMediaQuery`** uniquement quand le **JS** doit réagir (sinon CSS pur).
 - **Images** responsives : `srcset`, `sizes`, `<picture>`.
 
-## 28.9 Animations
+### 28.9 Animations
 
 | Besoin | Outil |
 |---|---|
@@ -7369,7 +8474,7 @@ Bonnes pratiques :
 
 - Ne **pas** piloter une animation 60 fps via `setState` ; utiliser CSS ou une bibliothèque dédiée.
 
-## 28.10 Accessibilité des styles
+### 28.10 Accessibilité des styles
 
 - **Contraste** suffisant (WCAG : 4,5:1 pour le texte normal).
 - **Indicateur de focus visible** (`:focus-visible`) : ne jamais supprimer `outline` sans équivalent.
@@ -7377,7 +8482,7 @@ Bonnes pratiques :
 - Tailles de cibles tactiles suffisantes (≈ 44×44 px).
 - Texte **redimensionnable** (unités relatives), `prefers-reduced-motion`, `prefers-contrast`, `forced-colors`.
 
-## 28.11 Choix d'une stratégie
+### 28.11 Choix d'une stratégie
 
 | Contexte | Recommandation |
 |---|---|
@@ -7389,7 +8494,7 @@ Bonnes pratiques :
 | **Server Components** / Next.js App Router | CSS Modules, Tailwind, zero-runtime ; **éviter** CSS-in-JS runtime |
 | Délais courts, UI standard | **Bibliothèque UI** (MUI, Mantine, shadcn/ui) |
 
-## ⚠️ Pièges courants
+### 28.12 Pièges fréquents
 
 - CSS global sans convention (collisions, spécificité).
 - Abuser de `style={{…}}` pour du statique.
@@ -7400,30 +8505,19 @@ Bonnes pratiques :
 - Supprimer l'outline de focus.
 - Animer des propriétés qui déclenchent le layout.
 
-## ✅ À retenir
+### Synthèse du chapitre 28
 
-- **CSS Modules / Tailwind / zero-runtime** : bon équilibre aujourd'hui ; **variables CSS** pour thèmes.
-- **Style inline** : valeurs dynamiques uniquement ; **variables CSS** pour passer des valeurs au CSS.
-- **Accessibilité** : contraste, focus visible, mouvement réduit.
-- Adaptez votre choix à **RSC/SSR**, à l'**équipe**, à la **performance**.
-
-## 🏋️ Exercices
-
-1. Implémentez un bouton à **variants** (primaire/secondaire/danger, tailles) avec CSS Modules puis avec Tailwind + `cva`.
-2. Créez un thème clair/sombre/système sans flash au chargement.
-3. Animez l'apparition d'une liste avec CSS, puis avec Motion, et respectez `prefers-reduced-motion`.
+**CSS Modules / Tailwind / zero-runtime** : bon équilibre aujourd'hui ; **variables CSS** pour thèmes ; **Style inline** : valeurs dynamiques uniquement ; **variables CSS** pour passer des valeurs au CSS ; **Accessibilité** : contraste, focus visible, mouvement réduit ; Adaptez votre choix à **RSC/SSR**, à l'**équipe**, à la **performance**.
 
 ---
-# 29. Tests
 
-## 🎯 Objectifs
+# Partie V — Qualité et essentiels
 
-- Définir une stratégie de tests adaptée à une application React (pyramide, outils).
-- Écrire des tests de composants centrés sur le **comportement utilisateur** avec React Testing Library.
-- Tester hooks, formulaires, asynchronisme, contexte, routage, erreurs et appels réseau.
-- Éviter les tests fragiles.
+## 29. Tests
 
-## 29.1 Stratégie : la pyramide (ou le « trophée ») de tests
+**Objectifs d'apprentissage.** À la fin de ce chapitre, vous saurez : définir une stratégie de tests adaptée à une application React (pyramide, outils) ; écrire des tests de composants centrés sur le **comportement utilisateur** avec React Testing Library ; tester hooks, formulaires, asynchronisme, contexte, routage, erreurs et appels réseau ; éviter les tests fragiles.
+
+### 29.1 Stratégie : la pyramide (ou le « trophée ») de tests
 
 | Niveau | Cible | Outils | Vitesse | Quantité |
 |---|---|---|---|---|
@@ -7436,7 +8530,7 @@ Bonnes pratiques :
 
 > **Principe directeur** (Testing Library) : *« Plus vos tests ressemblent à la manière dont votre logiciel est utilisé, plus ils vous donnent confiance. »* Testez ce que **voit et fait l'utilisateur**, pas l'implémentation interne (state, noms de méthodes).
 
-## 29.2 Mise en place (Vitest + Testing Library)
+### 29.2 Mise en place (Vitest + Testing Library)
 
 ```bash
 npm i -D vitest jsdom @testing-library/react @testing-library/user-event @testing-library/jest-dom
@@ -7460,7 +8554,7 @@ afterEach(cleanup);
 
 (Avec **Jest** : `jest-environment-jsdom`, `babel-jest` ou `ts-jest`/SWC.)
 
-## 29.3 Premier test de composant
+### 29.3 Premier test de composant
 
 ```jsx
 import { render, screen } from '@testing-library/react';
@@ -7480,9 +8574,9 @@ test('incrémente le compteur au clic', async () => {
 
 Structure **Arrange – Act – Assert** : préparer (`render`), agir (`user.click`), vérifier (`expect`).
 
-## 29.4 Les requêtes (queries)
+### 29.4 Les requêtes (queries)
 
-### Priorité recommandée (de la plus à la moins souhaitable)
+#### Priorité recommandée (de la plus à la moins souhaitable)
 
 1. **`getByRole`** (avec `name`) : reflète l'arbre d'accessibilité → **à privilégier**.
 2. **`getByLabelText`** (champs de formulaire).
@@ -7490,7 +8584,7 @@ Structure **Arrange – Act – Assert** : préparer (`render`), agir (`user.cli
 4. `getByAltText`, `getByTitle`.
 5. **`getByTestId`** (`data-testid`) : **en dernier recours** (ce que l'utilisateur ne perçoit pas).
 
-### Variantes selon le besoin
+#### Variantes selon le besoin
 
 | Préfixe | 0 résultat | 1 résultat | >1 | Asynchrone |
 |---|---|---|---|---|
@@ -7504,7 +8598,7 @@ Structure **Arrange – Act – Assert** : préparer (`render`), agir (`user.cli
 - **`within(element)`** : requêtes limitées à une zone.
 - **`screen.debug()`**, **`logRoles`**, **Testing Playground** pour trouver la bonne requête.
 
-## 29.5 Interactions : `user-event`
+### 29.5 Interactions : `user-event`
 
 ```jsx
 const user = userEvent.setup();
@@ -7519,7 +8613,7 @@ await user.hover(el);
 
 `user-event` simule le **comportement réel** (focus, frappe touche par touche, événements enchaînés) bien mieux que `fireEvent`.
 
-## 29.6 Asynchronisme et `act`
+### 29.6 Asynchronisme et `act`
 
 - Les interactions de `user-event` et `findBy`/`waitFor` **enveloppent déjà** les mises à jour dans `act`.
 - **`waitFor(() => expect(…))`** : réessaie jusqu'à réussite (assertions seulement, pas d'effets de bord).
@@ -7528,7 +8622,7 @@ await user.hover(el);
 - `act` est exporté par `react` (React 19) ; rarement utilisé à la main.
 - **Minuteurs** : `vi.useFakeTimers()` / `vi.advanceTimersByTime()` (avec `userEvent.setup({ advanceTimers: vi.advanceTimersByTime })`).
 
-## 29.7 Tester un formulaire
+### 29.7 Tester un formulaire
 
 ```jsx
 test('soumet le formulaire avec les valeurs saisies', async () => {
@@ -7552,7 +8646,7 @@ test('affiche une erreur si l’e-mail est invalide', async () => {
 });
 ```
 
-## 29.8 Tester les hooks
+### 29.8 Tester les hooks
 
 ```jsx
 import { renderHook, act } from '@testing-library/react';
@@ -7568,7 +8662,7 @@ test('useToggle', () => {
 - Option `wrapper` pour fournir contexte/Providers.
 - Préférez tester le hook **à travers un composant** si son comportement dépend fortement du rendu.
 
-## 29.9 Contexte, fournisseurs et routeur : `render` personnalisé
+### 29.9 Contexte, fournisseurs et routeur : `render` personnalisé
 
 ```jsx
 // test-utils.jsx
@@ -7589,7 +8683,7 @@ export function renderAvecProviders(ui, { route = '/', ...options } = {}) {
 }
 ```
 
-## 29.10 Simuler le réseau : MSW (Mock Service Worker)
+### 29.10 Simuler le réseau : MSW (Mock Service Worker)
 
 Intercepte les requêtes **au niveau réseau** : le code testé fait de vrais `fetch`, sans mock de module.
 
@@ -7610,7 +8704,7 @@ export const handlers = [
 
 Réutilisable dans le navigateur (développement, Storybook).
 
-## 29.11 Mocks, espions, modules
+### 29.11 Mocks, espions, modules
 
 ```js
 const fn = vi.fn();                       // fonction espion
@@ -7620,7 +8714,7 @@ vi.mock('./api', () => ({ getUser: vi.fn().mockResolvedValue({ nom: 'Ada' }) }))
 
 > Évitez de **trop mocker** : plus vous mockez de l'implémentation, moins le test est fiable. Préférez MSW pour le réseau, de vrais composants enfants, de vrais Providers.
 
-## 29.12 Cas particuliers
+### 29.12 Cas particuliers
 
 | Cas | Technique |
 |---|---|
@@ -7634,7 +8728,7 @@ vi.mock('./api', () => ({ getUser: vi.fn().mockResolvedValue({ nom: 'Ada' }) }))
 | **Server Actions** | Tester la fonction comme une fonction async ; validation/permissions ; E2E pour l'intégration |
 | **Instantanés (snapshots)** | À utiliser **avec parcimonie** (fragiles, peu significatifs) |
 
-## 29.13 E2E avec Playwright
+### 29.13 E2E avec Playwright
 
 ```js
 import { test, expect } from '@playwright/test';
@@ -7650,7 +8744,7 @@ test('un utilisateur peut ajouter une tâche', async ({ page }) => {
 - Auto-attente, traces, vidéos, multi-navigateurs, **tests de composants**, captures visuelles, **accessibilité** (`@axe-core/playwright`).
 - Limiter les E2E aux **parcours critiques** (connexion, paiement, création de contenu) ; données de test isolées.
 
-## 29.14 Accessibilité automatisée
+### 29.14 Accessibilité automatisée
 
 ```jsx
 import { axe, toHaveNoViolations } from 'jest-axe';
@@ -7664,7 +8758,7 @@ test('pas de violation a11y', async () => {
 
 Ne détecte qu'une **partie** des problèmes (~30-40 %) : complétez avec la navigation clavier et lecteurs d'écran.
 
-## 29.15 Bonnes pratiques
+### 29.15 Bonnes pratiques
 
 1. **Tester le comportement**, pas l'implémentation (pas d'accès à `state`, pas de `instance()`).
 2. **Requêtes accessibles** (`getByRole`) ; `data-testid` en dernier recours.
@@ -7676,7 +8770,7 @@ Ne détecte qu'une **partie** des problèmes (~30-40 %) : complétez avec la nav
 8. **Intégration continue** : lint + types + tests + build à chaque PR.
 9. **ESLint** : `eslint-plugin-testing-library`, `eslint-plugin-jest-dom`.
 
-## ⚠️ Pièges courants
+### 29.16 Pièges fréquents
 
 - Tester l'état interne ou les noms de fonctions → tests cassés au moindre refactoring.
 - `getByTestId` partout.
@@ -7686,34 +8780,21 @@ Ne détecte qu'une **partie** des problèmes (~30-40 %) : complétez avec la nav
 - Snapshots énormes jamais relus.
 - Retries de requêtes actifs en test (lenteur et fausses attentes).
 
-## ✅ À retenir
+### Synthèse du chapitre 29
 
-- **Testez comme l'utilisateur** : `render` → `user.*` → `expect(screen.getByRole…)`.
-- **Vitest/Jest + RTL + MSW** pour 90 % des cas ; **Playwright** pour les parcours critiques.
-- **Types + lint** détectent beaucoup avant l'exécution.
-- Évitez snapshots et mocks excessifs.
-
-## 🏋️ Exercices
-
-1. Testez un compteur, un formulaire de connexion et une liste de tâches (ajout/suppression).
-2. Mockez une API avec MSW et testez les états chargement/succès/erreur.
-3. Écrivez un test E2E Playwright du parcours « ajouter une tâche et la cocher ».
+**Testez comme l'utilisateur** : `render` → `user.*` → `expect(screen.getByRole…)` ; **Vitest/Jest + RTL + MSW** pour 90 % des cas ; **Playwright** pour les parcours critiques ; **Types + lint** détectent beaucoup avant l'exécution ; Évitez snapshots et mocks excessifs.
 
 ---
 
-# 30. Accessibilité
+## 30. Accessibilité
 
-## 🎯 Objectifs
+**Objectifs d'apprentissage.** À la fin de ce chapitre, vous saurez : comprendre les principes d'accessibilité (WCAG, POUR) et leur mise en œuvre en React ; utiliser le HTML sémantique, ARIA, la gestion du focus et les régions live à bon escient ; savoir tester et auditer l'accessibilité.
 
-- Comprendre les principes d'accessibilité (WCAG, POUR) et leur mise en œuvre en React.
-- Utiliser le HTML sémantique, ARIA, la gestion du focus et les régions live à bon escient.
-- Savoir tester et auditer l'accessibilité.
-
-## 30.1 Pourquoi ?
+### 30.1 Pourquoi ?
 
 L'accessibilité (**a11y**) garantit que l'application est utilisable par **tous** : handicaps visuels, auditifs, moteurs, cognitifs, situations temporaires (bras cassé, soleil, bruit) ou contextes (clavier seul, lecteur d'écran, zoom, mobile). C'est aussi une **obligation légale** dans de nombreux pays (en Europe : **Directive européenne sur l'accessibilité**, RGAA en France) et un **plus pour le SEO et l'UX**.
 
-### Les principes **POUR** (WCAG)
+#### Les principes **POUR** (WCAG)
 
 1. **Perceptible** : alternatives textuelles, contrastes, sous-titres.
 2. **Utilisable** : clavier, temps suffisant, pas de contenu clignotant, navigation claire.
@@ -7722,7 +8803,7 @@ L'accessibilité (**a11y**) garantit que l'application est utilisable par **tous
 
 Niveaux de conformité : **A**, **AA** (cible courante), **AAA**.
 
-## 30.2 HTML sémantique d'abord
+### 30.2 HTML sémantique d'abord
 
 > **Première règle d'ARIA** : si un élément HTML natif fournit déjà la sémantique et le comportement, **utilisez-le** plutôt que d'ajouter des rôles ARIA.
 
@@ -7744,7 +8825,7 @@ Niveaux de conformité : **A**, **AA** (cible courante), **AAA**.
 <button type="button" onClick={ouvrir}>Ouvrir</button>
 ```
 
-## 30.3 Structure du document
+### 30.3 Structure du document
 
 - **Un seul `<h1>`** par page/vue ; hiérarchie sans saut (`h2` → `h3`).
 - **Repères** (*landmarks*) : `<header>`, `<nav>`, `<main>`, `<footer>` ; libellés distincts si plusieurs `<nav>` (`aria-label="Principale"`).
@@ -7757,17 +8838,17 @@ Niveaux de conformité : **A**, **AA** (cible courante), **AAA**.
 <main id="contenu" tabIndex={-1}>…</main>
 ```
 
-## 30.4 ARIA : quand et comment
+### 30.4 ARIA : quand et comment
 
 ARIA (*Accessible Rich Internet Applications*) **complète** la sémantique ; il **ne change ni le comportement ni le focus**.
 
-### Les trois familles
+#### Les trois familles
 
 - **Rôles** : `role="dialog"`, `tablist`, `tab`, `tabpanel`, `alert`, `status`, `menu`, `switch`…
 - **États/propriétés** : `aria-expanded`, `aria-selected`, `aria-checked`, `aria-pressed`, `aria-current`, `aria-disabled`, `aria-invalid`, `aria-required`, `aria-busy`, `aria-controls`, `aria-hidden`.
 - **Relations/étiquettes** : `aria-label`, `aria-labelledby`, `aria-describedby`.
 
-### Syntaxe en JSX
+#### Syntaxe en JSX
 
 Les attributs ARIA gardent leur **forme kebab-case** : `aria-label`, `aria-expanded={ouvert}`, `role="alert"`.
 
@@ -7779,7 +8860,7 @@ Les attributs ARIA gardent leur **forme kebab-case** : `aria-label`, `aria-expan
 <nav aria-label="Fil d'Ariane"><ol>…<li aria-current="page">Article</li></ol></nav>
 ```
 
-### Règles d'or
+#### Règles d'or
 
 1. **Natif d'abord**, ARIA ensuite.
 2. **Ne changez pas la sémantique native** sans nécessité (`<h2 role="button">` ✗).
@@ -7788,7 +8869,7 @@ Les attributs ARIA gardent leur **forme kebab-case** : `aria-label`, `aria-expan
 5. Tout élément interactif a un **nom accessible**.
 6. Respectez les **patterns de conception** du **WAI-ARIA Authoring Practices Guide (APG)** pour les widgets complexes (onglets, menus, combobox, dialogues, arbres).
 
-## 30.5 Noms accessibles et étiquettes
+### 30.5 Noms accessibles et étiquettes
 
 Ordre de calcul simplifié : `aria-labelledby` > `aria-label` > contenu/étiquette native (`<label>`, `alt`, `<legend>`) > `title`.
 
@@ -7806,9 +8887,9 @@ Ordre de calcul simplifié : `aria-labelledby` > `aria-label` > contenu/étiquet
 .sr-only { position:absolute; width:1px; height:1px; margin:-1px; padding:0; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
 ```
 
-## 30.6 Navigation au clavier et focus
+### 30.6 Navigation au clavier et focus
 
-### Exigences
+#### Exigences
 
 - **Tout** ce qui est interactif est atteignable **au clavier** (`Tab`/`Shift+Tab`) et activable (**Entrée** pour liens/boutons, **Espace** pour boutons/cases).
 - **Ordre de tabulation logique** = ordre du DOM (évitez `tabIndex > 0`).
@@ -7817,7 +8898,7 @@ Ordre de calcul simplifié : `aria-labelledby` > `aria-label` > contenu/étiquet
 - **Pas de piège clavier**.
 - **Raccourcis** : permettre de les désactiver/remapper ; ne pas entrer en conflit avec les lecteurs d'écran.
 
-### Gestion du focus en React
+#### Gestion du focus en React
 
 ```jsx
 // 1. Dialogue : focus au titre/premier champ à l'ouverture, restauration à la fermeture
@@ -7837,7 +8918,7 @@ premierChampInvalideRef.current?.focus();
 - **Pattern « roving tabindex »** (listes, barres d'outils, onglets) : un seul élément a `tabIndex={0}`, les autres `-1` ; les **flèches** déplacent le focus.
 - **`inert`** sur le contenu d'arrière-plan d'une modale (ou `<dialog>.showModal()`).
 
-## 30.7 Annonces dynamiques : régions *live*
+### 30.7 Annonces dynamiques : régions *live*
 
 Les changements de contenu non liés au focus doivent être **annoncés** :
 
@@ -7851,7 +8932,7 @@ Les changements de contenu non liés au focus doivent être **annoncés** :
 - Changement de route : annoncer le nouveau titre (région live ou déplacement du focus).
 - Évitez de sur-annoncer (frappes, mises à jour fréquentes).
 
-## 30.8 Formulaires accessibles (rappel module 10)
+### 30.8 Formulaires accessibles (rappel chapitre 10)
 
 - Champ ↔ `<label>` ; consignes via `aria-describedby`.
 - Champs requis : `required` / `aria-required` + indication visuelle **non uniquement colorée**.
@@ -7859,7 +8940,7 @@ Les changements de contenu non liés au focus doivent être **annoncés** :
 - `autoComplete` approprié (WCAG 1.3.5), `type`/`inputMode` adaptés.
 - Pas de **placeholder** comme unique étiquette.
 
-## 30.9 Couleurs, contrastes, mouvement
+### 30.9 Couleurs, contrastes, mouvement
 
 - **Contraste** : **4,5:1** (texte normal), **3:1** (grand texte, composants UI, focus).
 - Information **jamais transmise uniquement par la couleur**.
@@ -7867,9 +8948,9 @@ Les changements de contenu non liés au focus doivent être **annoncés** :
 - **`prefers-reduced-motion`**, `prefers-contrast`, `prefers-color-scheme`, `forced-colors` (mode contraste élevé).
 - Évitez le contenu clignotant (> 3 fois/s), les médias lus automatiquement ; fournissez **sous-titres/transcriptions**.
 
-## 30.10 Patterns de composants courants
+### 30.10 Patterns de composants courants
 
-### Onglets (tabs)
+#### Onglets (tabs)
 
 ```jsx
 <div role="tablist" aria-label="Sections">
@@ -7884,11 +8965,11 @@ Les changements de contenu non liés au focus doivent être **annoncés** :
 ))}
 ```
 
-### Accordéon, menu, combobox, tooltip, dialogue
+#### Accordéon, menu, combobox, tooltip, dialogue
 
 Suivre les patterns **APG** ou **utiliser des primitives accessibles** : **Radix UI**, **React Aria / React Aria Components**, **Headless UI**, **Ariakit**, **Reach UI**. Elles gèrent clavier, focus, rôles et lecteurs d'écran, que l'on réimplémente difficilement à la main.
 
-## 30.11 Spécificités React
+### 30.11 Spécificités React
 
 - `htmlFor` (et non `for`), `tabIndex`, `readOnly`, `autoFocus` (à utiliser avec discernement).
 - **`useId`** pour relier `label`/`aria-describedby` sans collisions (SSR).
@@ -7898,7 +8979,7 @@ Suivre les patterns **APG** ou **utiliser des primitives accessibles** : **Radix
 - **Rendu conditionnel** : retirer un contenu **retire** aussi son sémantique (OK) ; masquer visuellement uniquement avec `display:none`/`hidden` (retire de l'arbre d'accessibilité) vs `.sr-only` (reste lu).
 - **Animations d'entrée/sortie** : conserver le focus et la logique clavier.
 
-## 30.12 Tester et auditer
+### 30.12 Tester et auditer
 
 | Outil | Rôle |
 |---|---|
@@ -7912,7 +8993,7 @@ Suivre les patterns **APG** ou **utiliser des primitives accessibles** : **Radix
 
 > L'automatisation détecte seulement une **fraction** des problèmes : le **test manuel** reste indispensable. Idéalement, **impliquez des utilisateurs en situation de handicap**.
 
-## ⚠️ Pièges courants
+### 30.13 Pièges fréquents
 
 - `<div onClick>` sans rôle, focus ni clavier.
 - Supprimer l'outline de focus (`outline: none`).
@@ -7924,31 +9005,17 @@ Suivre les patterns **APG** ou **utiliser des primitives accessibles** : **Radix
 - Placeholder utilisé comme label.
 - Dépendre de la **couleur seule**.
 
-## ✅ À retenir
+### Synthèse du chapitre 30
 
-- **HTML sémantique d'abord**, **ARIA en complément**, **clavier partout**, **focus géré**.
-- **Noms accessibles** pour tout contrôle ; **alt** adapté ; **contrastes**.
-- **Annoncer** les changements dynamiques (`role="status"`/`alert`).
-- **Bibliothèques headless accessibles** pour les widgets complexes.
-- **Linter + axe + test clavier + lecteur d'écran**.
-
-## 🏋️ Exercices
-
-1. Auditez une page avec axe, corrigez les problèmes détectés et vérifiez au clavier.
-2. Implémentez un composant `Onglets` conforme APG (flèches, Home/End, rôles).
-3. Ajoutez à une SPA l'annonce du titre de page et le déplacement du focus à chaque navigation.
+**HTML sémantique d'abord**, **ARIA en complément**, **clavier partout**, **focus géré** ; **Noms accessibles** pour tout contrôle ; **alt** adapté ; **contrastes** ; **Annoncer** les changements dynamiques (`role="status"`/`alert`) ; **Bibliothèques headless accessibles** pour les widgets complexes ; **Linter + axe + test clavier + lecteur d'écran**.
 
 ---
 
-# 31. TypeScript avec React
+## 31. TypeScript avec React
 
-## 🎯 Objectifs
+**Objectifs d'apprentissage.** À la fin de ce chapitre, vous saurez : configurer TypeScript pour React et typer composants, props, hooks, événements, contextes ; utiliser génériques, unions discriminées et types utilitaires pour des API de composants robustes ; connaître les changements de typage de React 19.
 
-- Configurer TypeScript pour React et typer composants, props, hooks, événements, contextes.
-- Utiliser génériques, unions discriminées et types utilitaires pour des API de composants robustes.
-- Connaître les changements de typage de React 19.
-
-## 31.1 Mise en place
+### 31.1 Mise en place
 
 ```bash
 npm create vite@latest mon-app -- --template react-ts
@@ -7974,7 +9041,7 @@ npm create vite@latest mon-app -- --template react-ts
 
 Paquets de types : `@types/react`, `@types/react-dom` (versionnés comme React).
 
-## 31.2 Typer les props
+### 31.2 Typer les props
 
 ```tsx
 // `type` ou `interface` : les deux conviennent ; type pour unions/intersections, interface pour extension d'objets
@@ -7990,7 +9057,7 @@ function Bouton({ variante = 'primaire', taille = 'md', onClick, children }: Bou
 }
 ```
 
-### Étendre les props natives
+#### Étendre les props natives
 
 ```tsx
 type BoutonProps = React.ComponentPropsWithoutRef<'button'> & { variante?: 'primaire' | 'danger' };
@@ -8000,7 +9067,7 @@ function Bouton({ variante = 'primaire', className, ...reste }: BoutonProps) {
 // ComponentProps<typeof MonComposant> pour réutiliser les props d'un composant existant
 ```
 
-### `ReactNode`, `ReactElement`, `JSX.Element`
+#### `ReactNode`, `ReactElement`, `JSX.Element`
 
 | Type | Contient |
 |---|---|
@@ -8012,7 +9079,7 @@ function Bouton({ variante = 'primaire', className, ...reste }: BoutonProps) {
 
 > **`React.FC`** n'est **plus recommandé** : typez les **props en paramètre** et laissez l'inférence gérer le retour.
 
-### Unions discriminées (props mutuellement exclusives)
+#### Unions discriminées (props mutuellement exclusives)
 
 ```tsx
 type Props =
@@ -8024,7 +9091,7 @@ function Action(props: Props) {
 }
 ```
 
-## 31.3 Typer les hooks
+### 31.3 Typer les hooks
 
 ```tsx
 // useState : inférence, ou générique pour null / unions
@@ -8053,7 +9120,7 @@ const total = useMemo<number>(() => calculer(items), [items]);
 const onChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => setTexte(e.target.value), []);
 ```
 
-## 31.4 Typer les événements
+### 31.4 Typer les événements
 
 | Événement | Type |
 |---|---|
@@ -8071,7 +9138,7 @@ function handleSubmit(e: React.FormEvent<HTMLFormElement>) { e.preventDefault();
 const donnees = new FormData(e.currentTarget);
 ```
 
-## 31.5 Typer Context et hooks personnalisés
+### 31.5 Typer Context et hooks personnalisés
 
 ```tsx
 type AuthContextType = { utilisateur: Utilisateur | null; connexion: (e: string, m: string) => Promise<void>; deconnexion: () => void };
@@ -8091,7 +9158,7 @@ function useLocalStorage<T>(cle: string, initial: T) {
 }
 ```
 
-## 31.6 Composants génériques
+### 31.6 Composants génériques
 
 ```tsx
 type ListeProps<T> = {
@@ -8105,7 +9172,7 @@ function Liste<T>({ items, getCle, rendu }: ListeProps<T>) {
 <Liste items={utilisateurs} getCle={u => u.id} rendu={u => u.nom} />     // T inféré = Utilisateur
 ```
 
-## 31.7 Composants polymorphes (`as`)
+### 31.7 Composants polymorphes (`as`)
 
 ```tsx
 type TexteProps<E extends React.ElementType> = { as?: E; children: React.ReactNode } &
@@ -8118,7 +9185,7 @@ function Texte<E extends React.ElementType = 'span'>({ as, children, ...reste }:
 <Texte as="a" href="/x">Lien</Texte>        // `href` accepté car E = 'a'
 ```
 
-## 31.8 Types utilitaires utiles
+### 31.8 Types utilitaires utiles
 
 ```ts
 Partial<T>   Required<T>   Readonly<T>   Pick<T, K>   Omit<T, K>   Record<K, V>
@@ -8134,7 +9201,7 @@ type Couleur = keyof typeof couleurs;           // 'primaire' | 'danger'
 const routes = { accueil: '/', profil: '/profil' } satisfies Record<string, string>;
 ```
 
-## 31.9 Types, API et validation à l'exécution
+### 31.9 Types, API et validation à l'exécution
 
 - TypeScript **n'existe plus à l'exécution** : les données **externes** (API, formulaires, `localStorage`) ne sont **pas** garanties.
 - **Zod / Valibot** : **un schéma = validation + type inféré**.
@@ -8148,7 +9215,7 @@ const utilisateur = UtilisateurSchema.parse(await rep.json());      // lève si 
 
 - **tRPC**, **OpenAPI → client typé** (`openapi-typescript`, `orval`) pour des types partagés client/serveur.
 
-## 31.10 Server Components et Actions
+### 31.10 Server Components et Actions
 
 ```tsx
 // Composant serveur asynchrone
@@ -8163,7 +9230,7 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
 export async function creer(etat: Etat, formData: FormData): Promise<Etat> { … }
 ```
 
-## 31.11 Changements de types avec React 19
+### 31.11 Changements de types avec React 19
 
 - **`useRef`** exige désormais un **argument** (`useRef<T>(undefined)`).
 - Les **refs** : `RefObject<T | null>` ; les refs de callback **ne doivent pas retourner autre chose** qu'une fonction de cleanup/`void` (attention aux arrow implicites retournant une valeur).
@@ -8172,7 +9239,7 @@ export async function creer(etat: Etat, formData: FormData): Promise<Etat> { …
 - Suppression des types de **fonctionnalités retirées** (`propTypes`, `defaultProps` pour fonctions, `ReactDOM.render`…).
 - Codemods : `npx types-react-codemod@latest preset-19 ./src`.
 
-## 31.12 Bonnes pratiques
+### 31.12 Bonnes pratiques
 
 1. **`strict: true`** toujours ; éviter `any` (préférer `unknown` + affinage).
 2. **Ne pas sur-annoter** : laisser l'inférence faire son travail.
@@ -8183,7 +9250,7 @@ export async function creer(etat: Etat, formData: FormData): Promise<Etat> { …
 7. **ESLint** (`typescript-eslint`) pour détecter promesses non gérées, `any` implicite, etc.
 8. Typer les **frontières** (API, props publiques) rigoureusement ; l'intérieur de l'implémentation peut être plus léger.
 
-## ⚠️ Pièges courants
+### 31.13 Pièges fréquents
 
 - `React.FC` avec `children` implicite (obsolète).
 - Typer `children` en `JSX.Element` (refuse les chaînes, `null`…) au lieu de `ReactNode`.
@@ -8192,30 +9259,17 @@ export async function creer(etat: Etat, formData: FormData): Promise<Etat> { …
 - Oublier de valider les données externes (le type est un mensonge si l'API change).
 - Événements typés trop génériques (`any`).
 
-## ✅ À retenir
+### Synthèse du chapitre 31
 
-- Props typées en paramètre, **`ReactNode`** pour `children`, **`ComponentProps`** pour étendre.
-- **Génériques** pour hooks/composants réutilisables ; **unions discriminées** pour props exclusives.
-- Types d'événements précis ; **Context** avec garde de `null`.
-- **Validation à l'exécution (Zod)** aux frontières.
-- React 19 : `useRef(undefined)`, `React.JSX`, `ref` comme prop.
-
-## 🏋️ Exercices
-
-1. Typez un composant `Select<T>` générique (options, valeur, onChange).
-2. Écrivez un `Bouton` polymorphe typé (`as`).
-3. Modélisez un état de formulaire avec `useReducer` et union discriminée d'actions exhaustive.
+Props typées en paramètre, **`ReactNode`** pour `children`, **`ComponentProps`** pour étendre ; **Génériques** pour hooks/composants réutilisables ; **unions discriminées** pour props exclusives ; Types d'événements précis ; **Context** avec garde de `null` ; **Validation à l'exécution (Zod)** aux frontières ; React 19 : `useRef(undefined)`, `React.JSX`, `ref` comme prop.
 
 ---
 
-# 32. Bonnes pratiques
+## 32. Bonnes pratiques
 
-## 🎯 Objectifs
+**Objectifs d'apprentissage.** À la fin de ce chapitre, vous saurez : synthétiser les règles de conception, de code, de sécurité et d'organisation ; disposer d'une checklist de revue de code et d'une liste d'anti-patterns.
 
-- Synthétiser les règles de conception, de code, de sécurité et d'organisation.
-- Disposer d'une checklist de revue de code et d'une liste d'anti-patterns.
-
-## 32.1 Conception des composants
+### 32.1 Conception des composants
 
 1. **Responsabilité unique** : un composant fait **une** chose bien (afficher, orchestrer, ou fournir un contexte).
 2. **Composition** plutôt que configuration par props nombreuses.
@@ -8228,7 +9282,7 @@ export async function creer(etat: Etat, formData: FormData): Promise<Etat> { …
 9. **Accessibilité** dès la conception (sémantique, clavier, labels).
 10. Penser **les 4 états** d'une vue : chargement, erreur, vide, succès.
 
-## 32.2 Code
+### 32.2 Code
 
 - **Nommage** : composants en `PascalCase`, hooks `useXxx`, handlers `handleXxx`, props de callback `onXxx`, booléens `est/a/peut…` (`isOpen`, `hasError`).
 - **Immuabilité** : jamais de mutation du state/props.
@@ -8243,9 +9297,9 @@ export async function creer(etat: Etat, formData: FormData): Promise<Etat> { …
 - **Constantes** et chaînes de caractères externalisées (i18n).
 - **Commentaires** : expliquer le **pourquoi**, pas le **quoi**.
 
-## 32.3 Organisation du projet
+### 32.3 Organisation du projet
 
-### Par fonctionnalité (*feature-based*) : recommandé pour les projets moyens/grands
+#### Par fonctionnalité (*feature-based*) : recommandé pour les projets moyens/grands
 
 ```
 src/
@@ -8272,7 +9326,7 @@ src/
 - **Flux de dépendances** : `app → pages → features → components/lib` (jamais l'inverse).
 - Éviter les dossiers **fourre-tout** (`utils/` de 80 fichiers).
 
-## 32.4 Sécurité front-end
+### 32.4 Sécurité front-end
 
 | Risque | Mesures |
 |---|---|
@@ -8287,11 +9341,11 @@ src/
 | **Iframes / liens externes** | `rel="noopener noreferrer"`, `sandbox`, `X-Frame-Options`/`frame-ancestors` |
 | **Server Functions** | Authentifier, autoriser, valider, limiter le débit |
 
-## 32.5 Performance (rappel)
+### 32.5 Performance (rappel)
 
-Mesurer d'abord ; **colocaliser l'état** ; **virtualiser** ; **code splitting** ; **images optimisées** ; **transitions** ; **Compiler** ; **cache de données** ; **SSR/streaming** (module 16).
+Mesurer d'abord ; **colocaliser l'état** ; **virtualiser** ; **code splitting** ; **images optimisées** ; **transitions** ; **Compiler** ; **cache de données** ; **SSR/streaming** (chapitre 16).
 
-## 32.6 Internationalisation (i18n) et localisation
+### 32.6 Internationalisation (i18n) et localisation
 
 - Bibliothèques : **react-i18next**, **FormatJS/react-intl**, **Lingui**, **next-intl**.
 - **Pas de chaînes en dur** ; clés de traduction ; **pluriels** et **genres** gérés par la bibliothèque (ICU MessageFormat).
@@ -8299,7 +9353,7 @@ Mesurer d'abord ; **colocaliser l'état** ; **virtualiser** ; **code splitting**
 - Prévoir l'**expansion du texte** (allemand), le **RTL** (`dir="rtl"`, propriétés logiques CSS).
 - **`lang`** du document à jour.
 
-## 32.7 Qualité, outillage et processus
+### 32.7 Qualité, outillage et processus
 
 - **TypeScript strict**, **ESLint** (`react-hooks`, `jsx-a11y`, `typescript-eslint`), **Prettier**.
 - **Husky + lint-staged** : vérifier avant commit.
@@ -8309,7 +9363,7 @@ Mesurer d'abord ; **colocaliser l'état** ; **virtualiser** ; **code splitting**
 - **Documentation** : README, décisions d'architecture (**ADR**), commentaires de composants (TSDoc).
 - **Feature flags** pour des déploiements progressifs.
 
-## 32.8 Anti-patterns : tableau récapitulatif
+### 32.8 Anti-patterns : tableau récapitulatif
 
 | Anti-pattern | Conséquence | Correction |
 |---|---|---|
@@ -8332,7 +9386,7 @@ Mesurer d'abord ; **colocaliser l'état** ; **virtualiser** ; **code splitting**
 | Aucun Error Boundary | Écran blanc | Frontières par zone |
 | Requêtes en cascade | Lenteur | Parallélisme, loaders, RSC |
 
-## 32.9 Checklist de revue de code
+### 32.9 Checklist de revue de code
 
 **Fonctionnel**
 - [ ] Les 4 états (chargement/erreur/vide/succès) sont gérés.
@@ -8360,30 +9414,17 @@ Mesurer d'abord ; **colocaliser l'état** ; **virtualiser** ; **code splitting**
 **Performance**
 - [ ] Pas de rendus/requêtes inutiles évidents ; code splitting ; images optimisées.
 
-## ✅ À retenir
+### Synthèse du chapitre 32
 
-- **Simplicité** : composants petits, purs, composables ; état local et minimal.
-- **Rigueur** : effets symétriques, immuabilité, types, tests.
-- **Responsabilité** : accessibilité, sécurité et performance sont des exigences de base.
-- **Mesurez** avant d'optimiser ; **automatisez** la qualité (lint, CI).
-
-## 🏋️ Exercices
-
-1. Réalisez une revue de code d'un composant volontairement mal écrit à l'aide de la checklist.
-2. Réorganisez un petit projet en structure par fonctionnalités avec frontières ESLint.
-3. Auditez un projet : sécurité (dépendances, CSP, stockage de jetons) et a11y.
+**Simplicité** : composants petits, purs, composables ; état local et minimal ; **Rigueur** : effets symétriques, immuabilité, types, tests ; **Responsabilité** : accessibilité, sécurité et performance sont des exigences de base ; **Mesurez** avant d'optimiser ; **automatisez** la qualité (lint, CI).
 
 ---
 
-# 33. Écosystème et frameworks
+## 33. Écosystème et frameworks
 
-## 🎯 Objectifs
+**Objectifs d'apprentissage.** À la fin de ce chapitre, vous saurez : cartographier l'écosystème React par besoin ; savoir choisir un framework/outil selon le contexte ; se donner une feuille de route d'apprentissage.
 
-- Cartographier l'écosystème React par besoin.
-- Savoir choisir un framework/outil selon le contexte.
-- Se donner une feuille de route d'apprentissage.
-
-## 33.1 Frameworks et méta-frameworks
+### 33.1 Frameworks et méta-frameworks
 
 | Outil | Description | Quand le choisir |
 |---|---|---|
@@ -8397,7 +9438,7 @@ Mesurer d'abord ; **colocaliser l'état** ; **virtualiser** ; **code splitting**
 | **Expo / React Native** | Applications **mobiles natives** (iOS/Android) avec React | Mobile ; Expo Router pour le routage |
 | **Electron / Tauri** | Applications **desktop** avec React en interface | Desktop multiplateforme |
 
-## 33.2 Outils de build
+### 33.2 Outils de build
 
 | Outil | Remarques |
 |---|---|
@@ -8407,7 +9448,7 @@ Mesurer d'abord ; **colocaliser l'état** ; **virtualiser** ; **code splitting**
 | **Babel** | Transformations et plugins (React Compiler) |
 | **tsup / unbuild / Rollup** | Packaging de **bibliothèques** |
 
-## 33.3 Par catégorie
+### 33.3 Par catégorie
 
 | Catégorie | Outils |
 |---|---|
@@ -8437,7 +9478,7 @@ Mesurer d'abord ; **colocaliser l'état** ; **virtualiser** ; **code splitting**
 | **ORM / BD (côté serveur)** | Prisma, Drizzle, Kysely |
 | **Outils de développement** | React DevTools, React Scan, why-did-you-render, React Compiler Playground |
 
-## 33.4 Choisir une stack : arbres de décision
+### 33.4 Choisir une stack : arbres de décision
 
 ```
 Besoin de SEO / contenu public dynamique ?
@@ -8461,7 +9502,7 @@ UI :
 
 > **Principe** : choisissez des outils **mainstream**, **maintenus**, adaptés à **votre équipe** ; évitez d'ajouter une dépendance sans besoin avéré. Vérifiez : maintenance, taille du bundle, compatibilité React 19 / RSC, TypeScript, accessibilité, licence.
 
-## 33.5 Feuille de route d'apprentissage
+### 33.5 Feuille de route d'apprentissage
 
 1. **Prérequis** : HTML/CSS, **JavaScript moderne**, Git, terminal.
 2. **Fondamentaux React** : JSX, composants, props, state, événements, listes/clés, formulaires.
@@ -8474,7 +9515,7 @@ UI :
 9. **Approfondissement** : architecture, design system, micro-frontends, monorepos, lecture du code source de React.
 10. **Pratique** : projets réels (to-do → blog → e-commerce → tableau de bord → application collaborative).
 
-### Projets suggérés
+#### Projets suggérés
 
 | Niveau | Projet | Notions travaillées |
 |---|---|---|
@@ -8486,9 +9527,73 @@ UI :
 
 ---
 
-# 34. Glossaire et ressources
+### 33.6 Comparer les méta-frameworks
 
-## 34.1 Glossaire
+| Critère | Next.js | React Router (mode framework) | TanStack Start | Astro + React | Expo (React Native) |
+| --- | --- | --- | --- | --- | --- |
+| **Cible** | Sites et applications web | Applications web | Applications web | Sites orientés contenu | Applications **mobiles** (iOS, Android) et web |
+| **Rendu** | SSR, SSG, ISR, rendu partiel | SSR, SPA, pré-rendu | SSR, SPA | HTML statique, **îlots** React hydratés | Natif |
+| **Server Components** | Oui (App Router) | Évolution en cours : consultez la documentation | À vérifier | Non (îlots client) | Selon la version |
+| **Routage** | Fichiers (dossiers) | Fichiers ou configuration | Fichiers, typé de bout en bout | Fichiers (pages) | Fichiers (Expo Router) |
+| **Points forts** | Écosystème, intégrations, déploiement | Standards du web, formulaires, chargeurs et actions | Typage, intégration TanStack | Peu de JavaScript envoyé | Un seul code pour plusieurs plateformes |
+| **À surveiller** | Complexité et rythme des évolutions | Maturité du support RSC | Jeunesse du projet | Interactivité complexe entre îlots | Limites par rapport au natif pur |
+
+> Ce tableau est **volontairement qualitatif** : l'écosystème évolue vite. Avant de décider, relisez la documentation et les notes de version de chaque outil.
+
+### 33.7 Évaluer une dépendance avant de l'adopter
+
+Chaque bibliothèque ajoutée est un **engagement** (maintenance, sécurité, taille). Vérifiez :
+
+| Critère | Question à se poser |
+| --- | --- |
+| **Maintenance** | Dernière version, fréquence des publications, tickets ouverts, nombre de mainteneurs |
+| **Compatibilité** | Fonctionne avec **votre version** de React (19, rendu concurrent, Strict Mode, RSC) ? |
+| **Taille** | Poids dans le *bundle* (analyseur de bundle), arborescence (*tree-shaking*) possible ? |
+| **TypeScript** | Types fournis et à jour ? |
+| **Accessibilité** | Composants conformes aux modèles WAI-ARIA, clavier géré ? |
+| **Licence** | Compatible avec votre usage commercial ? |
+| **Sécurité** | Historique de vulnérabilités, dépendances transitives, audit (`npm audit`) |
+| **Sortie de secours** | Si le projet s'arrête, quel est le coût de remplacement (API standard, abstraction locale) ? |
+| **Alternative native** | Le navigateur ou React fait-il déjà l'essentiel (`<dialog>`, CSS, `useReducer`) ? |
+
+Une **couche d'abstraction locale** (un module de votre code qui encapsule la bibliothèque) limite le coût d'un remplacement futur.
+
+### 33.8 React au-delà du navigateur
+
+Le modèle de React (composants, state, rendu déclaratif) se retrouve sur de nombreuses **cibles**, grâce à des *renderers* distincts :
+
+- **React Native** et **Expo** : interfaces mobiles natives.
+- **React Email** : messages électroniques générés en HTML compatible clients de messagerie.
+- **react-pdf** : documents PDF.
+- **react-three-fiber** : scènes 3D (Three.js).
+- **Ink** : interfaces en ligne de commande.
+- **Remotion** : vidéos programmatiques.
+
+Ce que l'on **réutilise** d'une cible à l'autre : le modèle mental, les Hooks, la logique métier. Ce qui **change** : les éléments de base (pas de `div` en natif), le style, la navigation, l'accessibilité propre à chaque plateforme.
+
+### 33.9 Se tenir à jour
+
+- **Sources officielles** : le blog de React (<https://react.dev/blog>), les notes de version du dépôt, la page des versions de la documentation.
+- **Canaux de publication** : *Stable* (production), *Canary* (fonctionnalités validées par l'équipe, destinées aux frameworks), *Experimental* (à ne pas utiliser en production).
+- **Mises à jour** : lisez les **guides de migration**, exécutez les **codemods** proposés, mettez à jour par **versions majeures** plutôt que par grands sauts, et vérifiez la compatibilité de vos dépendances avant.
+- **Automatisation** : un outil de mise à jour automatique (Renovate, Dependabot) ouvre des demandes de modification régulières, relues et testées par votre intégration continue.
+- **Veille raisonnée** : suivez peu de sources fiables ; une nouveauté n'est adoptable qu'après **stabilité** et **bénéfice démontré** pour votre contexte.
+
+### 33.10 Documenter ses choix techniques
+
+Un choix de stack se justifie par des **critères explicites** et se retrouve dans un **document d'architecture** (*Architecture Decision Record*, ADR) court : contexte, options étudiées, décision, conséquences, date. Quand le contexte change (équipe, charge, nouveautés), l'ADR permet de **réviser** la décision en connaissance de cause plutôt que par effet de mode.
+
+### Synthèse du chapitre 33
+
+L'écosystème React est **modulaire** : React fournit le **rendu**, tout le reste se choisit. Pour un **nouveau projet**, partez d'un **méta-framework** (Next.js, React Router en mode framework) ou d'une **SPA Vite** ; ajoutez une bibliothèque de **données serveur** (TanStack Query), un **routeur**, un état global **seulement si nécessaire**, puis des outils de **test**, de **style** et d'**accessibilité**. Choisissez selon vos **contraintes** (SEO, rendu serveur, équipe, durée de vie du projet) et vérifiez la **maintenance** de chaque dépendance avant de l'adopter.
+
+---
+
+## 34. Glossaire et ressources
+
+**Objectifs d'apprentissage.** À la fin de ce chapitre, vous saurez : .
+
+### 34.1 Glossaire
 
 | Terme | Définition |
 |---|---|
@@ -8542,7 +9647,7 @@ UI :
 | **Virtual DOM** | Représentation légère en mémoire de l'UI désirée. |
 | **Virtualisation** | Rendu des seuls éléments visibles d'une longue liste. |
 
-## 34.2 Aide-mémoire des Hooks
+### 34.2 Aide-mémoire des Hooks
 
 | Hook | Rôle en une ligne |
 |---|---|
@@ -8567,7 +9672,7 @@ UI :
 | `useFormStatus` | Statut du formulaire parent |
 | `useOptimistic` | État optimiste temporaire |
 
-## 34.3 Ressources officielles et recommandées
+### 34.3 Ressources officielles et recommandées
 
 - **Documentation React** : <https://react.dev> (Learn, Reference, Blog, « You Might Not Need an Effect », « Thinking in React »).
 - **Référence des API** : <https://react.dev/reference/react>
@@ -8584,7 +9689,7 @@ UI :
 
 > L'écosystème évolue vite : vérifiez toujours la **version** de la documentation correspondant à votre projet.
 
-## 34.4 Carte mentale : l'essentiel en 15 phrases
+### 34.4 Carte mentale : l'essentiel en 15 phrases
 
 1. **UI = f(state)** : l'interface est une fonction de l'état.
 2. Un **composant** est une **fonction pure** qui retourne du **JSX**.
@@ -8605,3 +9710,43 @@ UI :
 ---
 
 *Fin du cours.*
+
+### 34.5 Index des API par chapitre
+
+| API | Rôle en une phrase | Chapitre(s) |
+| --- | --- | --- |
+| `createRoot`, `hydrateRoot` | Démarrer React dans le navigateur / hydrater du HTML serveur | 2, 22 |
+| JSX, `createElement` | Décrire l'interface | 3 |
+| `useState`, `useReducer` | État local | 6, 11 |
+| `useEffect`, `useLayoutEffect`, `useEffectEvent` | Synchroniser avec l'extérieur | 11, 21 |
+| `useContext`, `createContext`, `use(Context)` | Diffuser une valeur dans un sous-arbre | 13 |
+| `useRef`, `useImperativeHandle`, `ref` en prop | Valeurs hors rendu, accès au DOM | 14 |
+| `Children`, `cloneElement`, composants composés | Composition avancée | 15 |
+| `memo`, `useMemo`, `useCallback`, React Compiler | Éviter le travail inutile | 16 |
+| `lazy`, `Suspense`, `use(promesse)` | Chargement différé, données asynchrones | 17 |
+| Error Boundary (classe), `react-error-boundary` | Contenir les erreurs de rendu | 18 |
+| `createPortal` | Rendre hors de la hiérarchie DOM | 19 |
+| `Fragment`, `<>…</>` | Regrouper sans nœud DOM | 20 |
+| `StrictMode` | Vérifications en développement | 21 |
+| `useTransition`, `startTransition`, `useDeferredValue`, `Activity`, `useSyncExternalStore` | Rendu concurrent | 11, 22 |
+| `'use client'`, `'use server'`, Actions, `useActionState`, `useFormStatus`, `useOptimistic` | Serveur, formulaires, mutations | 10, 23 |
+| `Component`, `PureComponent` | Composants classes | 24 |
+| `useId`, `useDebugValue`, `useInsertionEffect` | Utilitaires et bibliothèques | 11 |
+
+Cet index renvoie au chapitre où chaque API est **principalement** expliquée ; plusieurs sont **reprises** dans d'autres chapitres (par exemple les transitions en 17, 22 et 23).
+
+### 34.6 Parcours de relecture par objectif
+
+| Objectif | Chapitres à relire |
+| --- | --- |
+| Écrire un premier composant fiable | 1 à 6 |
+| Comprendre pourquoi « ça se re-rend » | 4, 6, 11, 13, 16, 22 |
+| Gérer des formulaires et des données | 10, 23, 25, 27 |
+| Rendre une application rapide | 16, 17, 22, 28 |
+| Fiabiliser (erreurs, tests, accessibilité) | 18, 21, 29, 30 |
+| Travailler sur un projet existant | 24, 31, 32 |
+| Choisir une stack | 26, 27, 33 |
+
+---
+
+*Fin du cours. Bon développement avec React !*

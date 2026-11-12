@@ -230,6 +230,23 @@ code-learning/
 └── .env.example
 ```
 
+### Arborescence des cours (`language/topics/`)
+
+```text
+language/topics/
+├── css.md, javascript.md, typescript.md, python.md, php.md, git.md, algorithm.md,
+│   language-c.md, language-cpp.md                     catégorie « topics »
+├── frameworks/    angular, django, laravel, react, vuejs
+├── modules/       python, bs4, c-module, cpp-module, flask, pandas, numpy
+├── database/      sqlite3, mysql, postgresql
+├── system/        linux-commands, windows-commands, bash-scripts, zsh-scripts
+├── exercises/     énoncés par langage
+├── solutions/     corrigés commentés
+└── projects/      projets guidés
+```
+
+Chaque dossier correspond à une catégorie de `CATEGORIES` dans `language/config.py` ; les icônes SVG associées sont dans `static/icons/`.
+
 ### Comment un cours devient une page
 
 1. `language/config.py` est la **source unique de vérité** : il alimente les routes, l'accueil, le sélecteur de cours et la conversion.
@@ -267,6 +284,20 @@ L'API répond `401` (JSON) aux utilisateurs non connectés.
 
    Les arguments sont : clé d'URL, fichier, titre, catégorie, icône, couleur d'accent, phrase d'accroche.
 4. Rechargez l'accueil : la route `/language/rust/` et la carte du catalogue existent.
+
+**En-tête type d'une nouvelle page** (le convertisseur ne lit pas de frontmatter YAML : un bloc `---` en tête serait rendu comme du contenu) :
+
+```markdown
+# Titre — Guide complet
+
+**Phrase d'accroche de la page**
+
+*Page en cours de rédaction : le contenu détaillé sera complété ultérieurement.*
+
+## Introduction
+
+*À compléter.*
+```
 
 **Format Markdown attendu**
 
