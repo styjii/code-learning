@@ -1,16 +1,14 @@
 {# Panneau de droite des éditeurs à aperçu : barre de commandes, aperçu en cadre de navigateur, console intégrée. #}
-<section id="output-container" aria-label="Résultat" data-view="preview">
+{# La console est masquée au chargement (data-console="closed") : seuls le bouton #toggle-console et la croix #console-close la montrent ou la cachent. #}
+<section id="output-container" aria-label="Résultat" data-view="preview" data-console="closed">
     <div id="control-button">
-        <div class="seg" role="group" aria-label="Affichage">
-            <button type="button" id="display-preview" class="is-active" aria-pressed="true">Aperçu</button>
-            <button type="button" id="display-console" aria-pressed="false" aria-controls="console">Console</button>
-        </div>
         <span class="toolbar-spacer"></span>
         {% if ts %}<span id="ts-summary" class="ts-summary" role="status" aria-live="polite" title="Options du compilateur (menu « Options TypeScript »)"></span>{% endif %}
         <div class="auto-toggle">
             <label for="live-code" id="live-label">Aperçu auto : non</label>
             <button type="button" id="live-code" class="toggle" role="switch" aria-checked="false" aria-labelledby="live-label"></button>
         </div>
+        <button type="button" class="icon-btn console-toggle" id="toggle-console" aria-pressed="false" aria-controls="console-dock" title="Afficher la console" aria-label="Afficher la console"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="m7 9 3 3-3 3M13 15h4"/></svg></button>
         <div class="run-split">
             <button type="button" id="run-code" aria-label="Exécuter le code" title="Exécuter (Ctrl+Entrée)"><svg viewBox="0 0 16 16" width="16" height="16" fill="currentColor" aria-hidden="true"><path d="m11.596 8.697-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393z"/></svg><span class="run-label">Exécuter</span></button>
             <div class="drop">
@@ -42,7 +40,7 @@
         <div class="preview-meta"><span id="preview-size">0 • 0</span><span id="preview-updated">En attente d'exécution</span></div>
     </div>
 
-    <section class="console-dock" aria-label="Console">
+    <section class="console-dock" id="console-dock" aria-label="Console">
         <header class="console-head">
             <h3 class="console-title">Console</h3>
             <span class="count" id="console-count">0</span>

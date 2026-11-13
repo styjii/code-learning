@@ -103,17 +103,15 @@
 }
 .toolbar-spacer { flex: 1; }
 
-.seg { display: inline-flex; flex-shrink: 0; padding: 3px; border: 1px solid var(--border); border-radius: 11px; background: var(--surface-2); }
-.seg button { min-height: 32px; padding: 0 1rem; border: 0; border-radius: 8px; background: transparent; color: var(--muted); font-size: 0.92rem; }
-.seg button:hover { color: var(--text-strong); }
-.seg button.is-active { background: var(--accent-soft); color: var(--text-strong); }
-@media (pointer: coarse) { .seg button { min-height: 38px; } }
-
 .pane-title { display: inline-flex; align-items: center; gap: 0.6rem; color: var(--text-strong); font-weight: 500; }
 .pane-title svg { width: 18px; height: 18px; color: var(--muted); }
 
 .auto-toggle { display: inline-flex; align-items: center; gap: 0.7rem; flex-shrink: 0; color: var(--muted); font-size: 0.88rem; }
 .auto-toggle label { cursor: pointer; white-space: nowrap; }
+
+#control-button .console-toggle { width: 36px; height: 36px; flex-shrink: 0; }
+#control-button .console-toggle svg { width: 19px; height: 19px; }
+#control-button .console-toggle[aria-pressed="true"] { background: var(--accent-soft); color: var(--accent); }
 
 .toggle { position: relative; width: 42px; height: 24px; flex-shrink: 0; padding: 0; border: 1px solid var(--border-strong); border-radius: 999px; background: var(--surface-3); cursor: pointer; transition: background-color 0.2s, border-color 0.2s; }
 .toggle::after { content: ""; position: absolute; top: 3px; left: 3px; width: 16px; height: 16px; border-radius: 50%; background: var(--muted); transition: transform 0.2s var(--ease), background-color 0.2s; }
@@ -197,10 +195,12 @@
 .console-dock .cc-error > .cc-content::before { content: "[error]"; color: var(--danger); }
 .console-dock .cc-badge { position: absolute; right: 12px; top: 6px; margin: 0; }
 
-/* Affichage « Console » : la console prend toute la place ; « réduite » : elle disparaît. */
+/* Python : la console occupe tout le panneau (data-view="console", pas de bouton pour la masquer).
+ * Web et TypeScript : la console est masquée tant que data-console="closed" (état initial) ; seuls #toggle-console et
+ * #console-close changent cet attribut (Workbench.js). */
 #output-container[data-view="console"] .preview-stage { display: none; }
 #output-container[data-view="console"] .console-dock { flex: 1 1 0; max-height: none; border-top: 0; }
-#output-container[data-console="closed"]:not([data-view="console"]) .console-dock { display: none; }
+#output-container[data-console="closed"] .console-dock { display: none; }
 
 /* ---------------------------------- Barre d'état ---------------------------------- */
 .status-bar {
@@ -278,7 +278,6 @@ body.is-focus #editor-container { border: 0; }
 
 @media (max-width: 599.98px) {
     #control-button { gap: 0.4rem; padding: 0 0.5rem; }
-    .seg button { padding: 0 0.7rem; }
     #run-code { padding: 0 1rem; }
     .info-banner { margin: 8px 8px 0; padding: 0.6rem 0.75rem; }
     .info-banner span { display: none; }
@@ -303,7 +302,6 @@ body.is-focus #editor-container { border: 0; }
 @media (max-width: 479.98px) {
     .ts-summary { display: none; }
     #control-button { gap: 0.35rem; }
-    .seg button { padding: 0 0.6rem; font-size: 0.88rem; }
 }
 @media (max-width: 399.98px) {
     .run-label { display: none; }

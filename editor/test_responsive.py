@@ -119,8 +119,29 @@ class EditorWorkbenchMarkupTests(TestCase):
             with self.subTest(page=name):
                 page = self.html(name)
                 for needle in ('id="live-code"', 'role="switch"', 'id="delay"', 'id="bootstrapCdnSwitch"', 'data-target="#head-controls"',
-                               'id="display-console"', 'id="display-preview"', 'id="reload-preview"'):
+                               'id="toggle-console"', 'id="console-close"', 'id="reload-preview"'):
                     self.assertIn(needle, page)
+                self.assertNotIn('id="display-console"', page)
+                self.assertNotIn('id="display-preview"', page)
+
+    def test_console_is_hidden_by_default_and_driven_by_its_own_button(self):
+        for name in ("codelab-js", "codelab-ts"):
+            with self.subTest(page=name):
+                page = self.html(name)
+                self.assertIn('id="output-container" aria-label="Résultat" data-view="preview" data-console="closed"', page)
+                self.assertIn('id="toggle-console"', page)
+                self.assertIn('aria-controls="console-dock"', page)
+                self.assertIn('id="console-dock"', page)
+        # Aucun autre module n'ouvre la console : seul Workbench.js touche à data-console.
+        js_dir = CSS_DIR.parent / "js"
+        for path in js_dir.rglob("*.js"):
+            if path.name == "Workbench.js":
+                continue
+            source = path.read_text(encoding="utf-8")
+            with self.subTest(script=path.name):
+                self.assertNotIn("dataset.console", source)
+                self.assertNotIn("showConsole", source)
+                self.assertNotIn("setView(", source)
 
     def test_python_has_no_preview_parts(self):
         page = self.html("codelab-py")

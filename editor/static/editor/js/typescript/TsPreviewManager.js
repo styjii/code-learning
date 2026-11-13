@@ -33,14 +33,9 @@ export class TsPreviewManager {
         return this.run();
     }
 
-    /** Affiche la console à la place de l'aperçu. */
-    static showConsole() {
-        Workbench.setView("console");
-    }
-
     /**
      * Compile puis lance l'aperçu. Avec « noEmitOnError », une erreur de type empêche l'exécution :
-     * les erreurs s'affichent alors dans la console, ouverte automatiquement.
+     * les erreurs sont écrites dans la console, qui n'est jamais ouverte automatiquement (bouton « Console »).
      */
     static async run() {
         const output = document.getElementById("output");
@@ -56,15 +51,11 @@ export class TsPreviewManager {
             const result = await compileTypeScript(window.monaco, editor.getModel());
             if (runId !== this.#runId) return;
             this.#report(result.errors);
-            if (result.errors.length && state.compilerOptions.noEmitOnError) {
-                this.showConsole();
-                return;
-            }
+            if (result.errors.length && state.compilerOptions.noEmitOnError) return;
             js = result.js;
         } catch (err) {
             if (runId !== this.#runId) return;
             this.#log("error", `Erreur du compilateur : ${err.message}`);
-            this.showConsole();
             return;
         }
 

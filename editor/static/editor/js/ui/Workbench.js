@@ -1,6 +1,6 @@
 /**
- * Comportements de l'interface commune aux trois éditeurs (Web, TypeScript, Python) : menus, vues du panneau de
- * résultat, console intégrée, aperçu, état d'enregistrement. Aucune logique métier ici : tout passe par les
+ * Comportements de l'interface commune aux trois éditeurs (Web, TypeScript, Python) : menus, panneau de
+ * résultat, console intégrée (masquée par défaut), aperçu, état d'enregistrement. Aucune logique métier ici : tout passe par les
  * boutons et les modules existants (projets, import/export, aperçu).
  */
 const $ = (id) => document.getElementById(id);
@@ -23,17 +23,31 @@ export class Workbench {
 
     /* ------------------------- API utilisée par les autres modules ------------------------- */
 
-    /** Vue du panneau de résultat : "preview" (aperçu + console réduite ou non) ou "console" (console seule). */
-    static setView(view) {
+    /**
+     * Affiche ou masque le panneau de console (éditeurs Web et TypeScript). Appelée uniquement par le bouton
+     * #toggle-console et par la croix #console-close : aucun autre événement (exécution, erreur de compilation,
+     * changement d'onglet) n'ouvre la console. Elle est masquée au chargement (data-console="closed" dans le gabarit).
+     */
+    static setConsoleOpen(open) {
         const container = $("output-container");
         if (!container) return;
-        container.dataset.view = view;
-        if (view === "console") delete container.dataset.console;
-        $("display-preview")?.classList.toggle("is-active", view === "preview");
-        $("display-console")?.classList.toggle("is-active", view === "console");
-        $("display-preview")?.setAttribute("aria-pressed", String(view === "preview"));
-        $("display-console")?.setAttribute("aria-pressed", String(view === "console"));
-        $("console")?.dispatchEvent(new Event("workbench:view"));
+        if (open) delete container.dataset.console; else container.dataset.console = "closed";
+        const button = $("toggle-console");
+        if (button) {
+            const label = open ? "Masquer la console" : "Afficher la console";
+            button.setAttribute("aria-pressed", String(open));
+            button.setAttribute("aria-label", label);
+            button.title = label;
+        }
+        if (open) {
+            const consoleEl = $("console");
+            if (consoleEl) consoleEl.scrollTop = consoleEl.scrollHeight;
+        }
+        Workbench.#relayout();
+    }
+
+    static isConsoleOpen() {
+        return $("output-container")?.dataset.console !== "closed";
     }
 
     /** Reflète l'état de l'aperçu automatique dans l'interrupteur, son libellé et le menu Projet. */
@@ -85,13 +99,8 @@ export class Workbench {
     /* ------------------------------ Panneau de résultat ------------------------------ */
 
     static #views() {
-        $("display-preview")?.addEventListener("click", () => Workbench.setView("preview"));
-        $("display-console")?.addEventListener("click", () => Workbench.setView("console"));
-        $("console-close")?.addEventListener("click", () => {
-            const container = $("output-container");
-            if (container?.dataset.view === "console") Workbench.setView("preview");
-            container.dataset.console = "closed";
-        });
+        $("toggle-console")?.addEventListener("click", () => Workbench.setConsoleOpen(!Workbench.isConsoleOpen()));
+        $("console-close")?.addEventListener("click", () => Workbench.setConsoleOpen(false));
         $("focus-editor")?.addEventListener("click", (event) => {
             const on = document.body.classList.toggle("is-focus");
             event.currentTarget.setAttribute("aria-pressed", String(on));
