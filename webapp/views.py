@@ -5,6 +5,7 @@ from django.views.decorators.http import require_GET
 from accounts.decorators import api_endpoint
 from language.catalog import grouped_catalog
 from language.services import stale_keys
+from .home import home_context
 from .services import process_language_entry
 
 
@@ -30,4 +31,5 @@ def index(request):
         "catalog": catalog,
         "total_pages": sum(len(group["pages"]) for group in catalog),
         "is_populating": bool(stale_keys()),
+        **home_context(),
     })

@@ -1,11 +1,18 @@
 /**
- * Point d'entrée de l'accueil : filtre du catalogue + préparation du contenu.
+ * Point d'entrée de l'accueil : navigation, catalogue à onglets, animations d'apparition,
+ * éditeur de démonstration et préparation du contenu.
  */
-import { CourseFilter } from "./filter/CourseFilter.js";
+import { CatalogTabs } from "./catalog/CatalogTabs.js";
+import { HeroEditor } from "./effects/HeroEditor.js";
+import { ScrollReveal } from "./effects/ScrollReveal.js";
+import { NavMenu } from "./ui/NavMenu.js";
 import { ProgressMain } from "./progress/ProgressMain.js";
 
 document.addEventListener("DOMContentLoaded", () => {
-    CourseFilter.init();
+    NavMenu.init();
+    CatalogTabs.init();
+    HeroEditor.init();
+    ScrollReveal.init();
 
     const container = document.getElementById("progress-container");
     if (container) {

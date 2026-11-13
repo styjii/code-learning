@@ -1,126 +1,308 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}Langage Learning · Apprendre à programmer en français{% endblock %}
+{% block title %}CodeLearn · Apprendre à coder, concrétiser vos idées{% endblock %}
+{% block description %}CodeLearn : des cours, exercices et projets de programmation en français, avec un éditeur en ligne pour pratiquer.{% endblock %}
+{% block body_attrs %}class="home"{% endblock %}
 {% block styles %}<link rel="stylesheet" href="{% static 'webapp/css/style.css' %}">{% endblock %}
 
 {% block body %}
-<a class="skip-link" href="#courses">Aller aux cours</a>
+{# Pictogrammes vectoriels de la page (aucun emoji). #}
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+    <defs>
+        <linearGradient id="g-brand" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffb02e"/><stop offset="1" stop-color="#ff5a3c"/></linearGradient>
+        <linearGradient id="g-sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3b1d6e"/><stop offset=".55" stop-color="#c0476a"/><stop offset="1" stop-color="#ff9a3c"/></linearGradient>
+        <symbol id="i-code" viewBox="0 0 24 24"><path d="M8 7 3 12l5 5M16 7l5 5-5 5M14 4l-4 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+        <symbol id="i-home" viewBox="0 0 24 24"><path d="M3 11 12 3l9 8M5 10v10h5v-6h4v6h5V10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+        <symbol id="i-book" viewBox="0 0 24 24"><path d="M2 5.5C4.5 4 8 4 12 6c4-2 7.5-2 10-.5V19c-2.5-1.5-6-1.5-10 .5-4-2-7.5-2-10-.5zM12 6v13.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+        <symbol id="i-target" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3" fill="none" stroke="currentColor" stroke-width="2"/><path d="M3 9h18M9 21V9" fill="none" stroke="currentColor" stroke-width="2"/></symbol>
+        <symbol id="i-folder" viewBox="0 0 24 24"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></symbol>
+        <symbol id="i-users" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M3 20c0-3.3 2.7-5.5 6-5.5s6 2.2 6 5.5M16 5.2a3.2 3.2 0 0 1 0 5.6M18 14.8c2 .6 3.4 2.4 3.4 5.2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+        <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2"/><path d="m20 20-3.5-3.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+        <symbol id="i-chevron" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+        <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+        <symbol id="i-play" viewBox="0 0 24 24"><path d="M7 4.5v15a1 1 0 0 0 1.5.9l12-7.5a1 1 0 0 0 0-1.8l-12-7.5A1 1 0 0 0 7 4.5z" fill="currentColor"/></symbol>
+        <symbol id="i-rocket" viewBox="0 0 24 24"><path d="M14 4c3.5-.5 6 0 6 0s.5 2.5 0 6c-.6 3.8-4 6.5-7 8l-6-6c1.500-3 4.200-6.400 7-8zM9 15l-4 1 1-4M9 18l-2 3M6 15l-3 .5M15.500 8.500h.01" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+        <symbol id="i-layers" viewBox="0 0 24 24"><path d="m12 3 9 5-9 5-9-5zM3 13l9 5 9-5M3 17.500l9 5 9-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+        <symbol id="i-server" viewBox="0 0 24 24"><rect x="3" y="3.500" width="18" height="7" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><rect x="3" y="13.500" width="18" height="7" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M7 7h.01M7 17h.01" stroke="currentColor" stroke-width="2.600" stroke-linecap="round"/></symbol>
+        <symbol id="i-cap" viewBox="0 0 32 32"><path d="m16 5 14 7-14 7L2 12z" fill="none" stroke="currentColor" stroke-width="1.800" stroke-linejoin="round"/><path d="M8 16.500v5.500c0 1.700 3.600 3.500 8 3.500s8-1.800 8-3.500v-5.500M30 12v8" fill="none" stroke="currentColor" stroke-width="1.800" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+        <symbol id="i-team" viewBox="0 0 32 32"><circle cx="16" cy="9" r="4" fill="none" stroke="currentColor" stroke-width="1.800"/><circle cx="6.500" cy="13" r="3" fill="none" stroke="currentColor" stroke-width="1.800"/><circle cx="25.500" cy="13" r="3" fill="none" stroke="currentColor" stroke-width="1.800"/><path d="M9 26c0-4.400 3.100-7.500 7-7.500s7 3.100 7 7.500zM2 22c0-2.800 1.900-4.800 4.500-4.800M30 22c0-2.800-1.900-4.800-4.500-4.800" fill="none" stroke="currentColor" stroke-width="1.800" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+        <symbol id="i-bolt" viewBox="0 0 32 32"><path d="M18 3 6 18h8l-2 11 12-15h-8z" fill="none" stroke="currentColor" stroke-width="1.800" stroke-linejoin="round"/></symbol>
+        <symbol id="i-chart" viewBox="0 0 32 32"><path d="M4 28h24M7 28v-7M13 28V16M19 28v-9M25 28V11M6 13l7-5 5 3 9-7M21 4h6v6" fill="none" stroke="currentColor" stroke-width="1.800" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+        <symbol id="i-star" viewBox="0 0 24 24"><path d="m12 2.500 2.900 6 6.600.9-4.800 4.600 1.200 6.500L12 17.300 6.100 20.500l1.200-6.500L2.500 9.400l6.600-.9z" fill="currentColor"/></symbol>
+        <symbol id="i-youtube" viewBox="0 0 24 24"><path d="M21.600 7.200a2.500 2.500 0 0 0-1.800-1.800C18.200 5 12 5 12 5s-6.200 0-7.800.4A2.500 2.500 0 0 0 2.400 7.200C2 8.800 2 12 2 12s0 3.200.4 4.800a2.500 2.500 0 0 0 1.800 1.800C5.800 19 12 19 12 19s6.200 0 7.800-.4a2.500 2.500 0 0 0 1.800-1.800c.4-1.600.4-4.800.4-4.800s0-3.200-.4-4.800zM10 15V9l5.200 3z" fill="currentColor"/></symbol>
+        <symbol id="i-github" viewBox="0 0 24 24"><path d="M12 2a10 10 0 0 0-3.200 19.500c.5.100.7-.2.7-.5v-1.800c-2.800.6-3.400-1.200-3.400-1.200-.5-1.200-1.100-1.500-1.100-1.500-.9-.6.100-.6.100-.6 1 .1 1.500 1 1.500 1 .9 1.500 2.300 1.100 2.900.8.1-.6.3-1.100.6-1.300-2.200-.3-4.600-1.100-4.600-5 0-1.100.4-2 1-2.700-.1-.3-.4-1.300.1-2.700 0 0 .8-.3 2.800 1a9.600 9.600 0 0 1 5 0c1.900-1.300 2.800-1 2.800-1 .5 1.400.2 2.400.1 2.700.6.700 1 1.600 1 2.700 0 3.900-2.400 4.700-4.600 5 .4.300.7.900.7 1.800v2.700c0 .3.200.6.700.5A10 10 0 0 0 12 2z" fill="currentColor"/></symbol>
+        <symbol id="i-discord" viewBox="0 0 24 24"><path d="M19.500 5.400A16 16 0 0 0 15.600 4l-.5 1a14.800 14.800 0 0 0-4.200 0l-.5-1a16 16 0 0 0-3.900 1.400C4 9.200 3.300 12.900 3.600 16.500a16.200 16.200 0 0 0 4.900 2.500l1-1.600c-.6-.2-1.100-.5-1.600-.8l.4-.3a11.500 11.500 0 0 0 9.400 0l.4.300c-.5.300-1 .6-1.600.8l1 1.600a16.200 16.200 0 0 0 4.900-2.500c.4-4.200-.6-7.800-2.800-11.100zM9.200 14.300c-.9 0-1.600-.8-1.600-1.800s.7-1.800 1.600-1.800 1.600.8 1.600 1.800-.7 1.800-1.600 1.800zm5.600 0c-.9 0-1.600-.8-1.600-1.800s.7-1.800 1.600-1.800 1.600.8 1.600 1.800-.7 1.800-1.600 1.800z" fill="currentColor"/></symbol>
+        <symbol id="i-linkedin" viewBox="0 0 24 24"><path d="M4.500 3A1.800 1.800 0 1 0 4.500 6.600 1.800 1.800 0 0 0 4.500 3zM3 8.500h3V21H3zM9 8.500h2.900v1.700c.5-.9 1.700-2 3.600-2 3.600 0 4.500 2.400 4.500 5.500V21h-3v-6.500c0-1.600-.1-3.500-2.200-3.500s-2.300 1.600-2.300 3.400V21H9z" fill="currentColor"/></symbol>
+        <symbol id="i-files" viewBox="0 0 24 24"><path d="M14 3H8a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V7zM14 3v4h4M4 7v12a2 2 0 0 0 2 2h9" fill="none" stroke="currentColor" stroke-width="1.700" stroke-linejoin="round" stroke-linecap="round"/></symbol>
+        <symbol id="i-branch" viewBox="0 0 24 24"><circle cx="6" cy="5.500" r="2.200" fill="none" stroke="currentColor" stroke-width="1.700"/><circle cx="6" cy="18.500" r="2.200" fill="none" stroke="currentColor" stroke-width="1.700"/><circle cx="18" cy="9" r="2.200" fill="none" stroke="currentColor" stroke-width="1.700"/><path d="M6 8v8M18 11.200c0 3.300-3 4.300-8 5.500" fill="none" stroke="currentColor" stroke-width="1.700" stroke-linecap="round"/></symbol>
+        <symbol id="i-run" viewBox="0 0 24 24"><path d="M6 4v16l12-8zM3 17l2 3" fill="none" stroke="currentColor" stroke-width="1.700" stroke-linejoin="round" stroke-linecap="round"/></symbol>
+        <symbol id="i-ext" viewBox="0 0 24 24"><rect x="3" y="3" width="8" height="8" rx="1.500" fill="none" stroke="currentColor" stroke-width="1.700"/><rect x="13" y="13" width="8" height="8" rx="1.500" fill="none" stroke="currentColor" stroke-width="1.700"/><rect x="3" y="13" width="8" height="8" rx="1.500" fill="none" stroke="currentColor" stroke-width="1.700"/><path d="M17 3v6M14 6h6" stroke="currentColor" stroke-width="1.700" stroke-linecap="round"/></symbol>
+        <symbol id="i-react" viewBox="-12 -12 24 24"><g fill="none" stroke="currentColor" stroke-width="1.100"><ellipse rx="10" ry="4"/><ellipse rx="10" ry="4" transform="rotate(60)"/><ellipse rx="10" ry="4" transform="rotate(120)"/></g><circle r="1.800" fill="currentColor"/></symbol>
+        <symbol id="i-logout" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+        <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+        <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4" fill="none" stroke="currentColor" stroke-width="2"/><path d="M4 21c0-4 3.600-6.500 8-6.500s8 2.500 8 6.500" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+        <symbol id="av-1" viewBox="0 0 40 40"><rect width="40" height="40" fill="#3a2a22"/><ellipse cx="20" cy="40" rx="15" ry="11" fill="#1f2a44"/><circle cx="20" cy="17" r="7.500" fill="#e0a982"/><path d="M12.500 16c0-6 3.500-8.500 7.500-8.500s7.500 2.500 7.500 8.500c-1.500-3-4-4.500-7.500-4.500S14 13 12.500 16z" fill="#2b1b12"/></symbol>
+        <symbol id="av-2" viewBox="0 0 40 40"><rect width="40" height="40" fill="#2c3a4a"/><ellipse cx="20" cy="40" rx="15" ry="11" fill="#e8e8ee"/><circle cx="20" cy="17" r="7.500" fill="#f0c9a8"/><path d="M12 18c-1-8 4-11 8.500-11S29 10 28 18c-1-4-3-6-8-6s-7 2-8 6z" fill="#5b3a1e"/></symbol>
+        <symbol id="av-3" viewBox="0 0 40 40"><rect width="40" height="40" fill="#4a2c3e"/><ellipse cx="20" cy="40" rx="15" ry="11" fill="#7a3b52"/><circle cx="20" cy="17" r="7.500" fill="#c88f6a"/><path d="M11 24c-2-10 1-17 9-17s11 7 9 17c-1-6-2-10-3-10-1.500 3-5 4-9 4-2 0-3 0-4-1-1 2-1.500 5-2 7z" fill="#171012"/></symbol>
+        <symbol id="av-4" viewBox="0 0 40 40"><rect width="40" height="40" fill="#25384a"/><ellipse cx="20" cy="40" rx="15" ry="11" fill="#2f2f38"/><circle cx="20" cy="17" r="7.500" fill="#8a5a3c"/><path d="M12.800 15c.5-5 3.500-7 7.200-7s6.700 2 7.200 7c-2-2-4.500-3-7.200-3s-5.200 1-7.200 3z" fill="#0f0d0d"/></symbol>
+    </defs>
+</svg>
 
-<header class="topbar">
-    <a class="brand" href="{% url 'index' %}">
-        {% include "partials/logo.html" with logo_id="home" %}
-        <span>Langage Learning</span>
-    </a>
-    <nav class="topnav" aria-label="Navigation principale">
-        <a href="#courses">Cours</a>
-        <a href="{% url 'editor' 'codelab-js' %}">Éditeur</a>
-        <a href="{% url 'editor' 'codelab-py' %}">Éditeur Python</a>
-        <a href="{% url 'editor' 'codelab-ts' %}">Éditeur TypeScript</a>
-    </nav>
-    <div class="topbar-actions">
-        {% include "partials/theme_toggle.html" %}
-        {% include "partials/logout.html" %}
+<a class="skip-link" href="#courses">Aller aux cours</a>
+<div class="home-bg" aria-hidden="true"><i class="blob blob-a"></i><i class="blob blob-b"></i></div>
+<span id="top-sentinel" aria-hidden="true"></span>
+
+{# ============================ Barre de navigation ============================ #}
+<header class="site-nav" id="site-nav">
+    <div class="nav-inner">
+        <a class="brand-mark" href="{% url 'index' %}" aria-label="CodeLearn, accueil">
+            <svg class="brand-ico" aria-hidden="true"><use href="#i-code"/></svg>
+            <span>Code<b>Learn</b></span>
+        </a>
+
+        <button type="button" class="nav-burger icon-pill" id="nav-burger" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="nav-panel">
+            <svg aria-hidden="true"><use href="#i-menu"/></svg>
+        </button>
+
+        <div class="nav-panel" id="nav-panel">
+            <nav class="nav-links" aria-label="Navigation principale">
+                <a class="nav-link is-current" href="{% url 'index' %}" aria-current="page"><svg aria-hidden="true"><use href="#i-home"/></svg>Accueil</a>
+                <div class="nav-drop" id="nav-drop">
+                    <button type="button" class="nav-link" id="nav-drop-btn" aria-haspopup="true" aria-expanded="false" aria-controls="nav-menu">
+                        <svg aria-hidden="true"><use href="#i-book"/></svg>Cours<svg class="chev" aria-hidden="true"><use href="#i-chevron"/></svg>
+                    </button>
+                    <div class="nav-menu" id="nav-menu">
+                        {% for tab in tabs %}
+                        <a href="#courses" data-open-tab="{{ tab.key }}"><svg aria-hidden="true"><use href="#{{ tab.icon }}"/></svg>{{ tab.title }}<small>{{ tab.count }}</small></a>
+                        {% endfor %}
+                    </div>
+                </div>
+                <a class="nav-link" href="#courses" data-open-tab="exercices"><svg aria-hidden="true"><use href="#i-target"/></svg>Exercices</a>
+                <a class="nav-link" href="#courses" data-open-tab="projets"><svg aria-hidden="true"><use href="#i-folder"/></svg>Projets</a>
+                <a class="nav-link" href="#community"><svg aria-hidden="true"><use href="#i-users"/></svg>Communauté</a>
+            </nav>
+            <label class="nav-search">
+                <svg aria-hidden="true"><use href="#i-search"/></svg>
+                <input type="search" id="course-search" placeholder="Rechercher…" autocomplete="off" aria-label="Rechercher un cours" aria-keyshortcuts="Control+K Meta+K">
+                <kbd aria-hidden="true">Ctrl K</kbd>
+            </label>
+        </div>
+
+        <div class="nav-actions">
+            <button type="button" id="toggle-theme" class="icon-pill" aria-label="Changer de thème" title="Changer de thème">
+                <svg class="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.930 4.930l1.410 1.410M17.660 17.660l1.410 1.410M2 12h2M20 12h2M4.930 19.070l1.410-1.410M17.660 6.340l1.410-1.410"/></svg>
+                <svg class="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.800A9 9 0 1 1 11.200 3a7 7 0 0 0 9.800 9.800z"/></svg>
+            </button>
+            {% if user.is_authenticated %}
+            <form method="post" action="{% url 'logout' %}" class="logout-form">
+                {% csrf_token %}
+                <button type="submit" class="pill-btn" title="Se déconnecter ({{ user.get_username }})"><svg aria-hidden="true"><use href="#i-logout"/></svg><span>Déconnexion</span></button>
+            </form>
+            {% else %}
+            <a class="pill-btn" href="{% url 'login' %}"><svg aria-hidden="true"><use href="#i-user"/></svg><span>Connexion</span></a>
+            {% endif %}
+        </div>
     </div>
 </header>
 
-<main>
-    <section class="hero">
-        <div class="hero-text">
-            <p class="eyebrow">Apprendre à coder, en français</p>
-            <h1>Des guides complets pour <span class="gradient-text">maîtriser la programmation</span></h1>
-            <p class="lead">
-                {{ total_pages }} cours, exercices et projets, du premier « Hello World » aux notions avancées,
-                avec des exemples de code à copier et un éditeur en ligne pour les essayer.
-            </p>
-            <div class="hero-actions">
-                <a class="btn btn-primary" href="#courses">Explorer les cours</a>
-                <a class="btn btn-ghost" href="{% url 'editor' 'codelab-js' %}">Ouvrir l'éditeur</a>
-                <a class="btn btn-ghost" href="{% url 'editor' 'codelab-py' %}">Éditeur Python</a>
-                <a class="btn btn-ghost" href="{% url 'editor' 'codelab-ts' %}">Éditeur TypeScript</a>
+<main id="main">
+    {# ================================ Hero ================================ #}
+    <section class="hero" aria-labelledby="hero-title">
+        <div class="hero-copy">
+            <p class="eyebrow-pill" data-reveal><svg aria-hidden="true"><use href="#i-rocket"/></svg>Apprendre <i></i> Pratiquer <i></i> Réussir</p>
+            <h1 id="hero-title" data-reveal style="--d:.06s">Maîtrisez le code,<br>
+                <span class="swoosh-word"><span class="grad-text">concrétisez</span><svg class="swoosh" viewBox="0 0 240 14" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M3 9C70 2 160 2 237 8"/></svg></span> vos idées</h1>
+            <p class="hero-lead" data-reveal style="--d:.12s">Une plateforme d'apprentissage moderne, avec une communauté passionnée et un accompagnement humain.</p>
+            <div class="hero-cta" data-reveal style="--d:.18s">
+                <a class="btn-cta" href="#courses" data-open-tab="langages"><svg aria-hidden="true"><use href="#i-play"/></svg>Commencer à apprendre<svg class="arrow" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+                <a class="btn-outline" href="{% url 'editor' 'codelab-js' %}"><svg aria-hidden="true"><use href="#i-code"/></svg>Explorer les codes</a>
+            </div>
+            <div class="proof" data-reveal style="--d:.24s">
+                <div class="proof-people">
+                    <ul class="avatars" aria-hidden="true">
+                        <li><svg viewBox="0 0 40 40"><use href="#av-1"/></svg></li>
+                        <li><svg viewBox="0 0 40 40"><use href="#av-2"/></svg></li>
+                        <li><svg viewBox="0 0 40 40"><use href="#av-3"/></svg></li>
+                        <li><svg viewBox="0 0 40 40"><use href="#av-4"/></svg></li>
+                    </ul>
+                    <p>Rejoignez plus de {{ social_proof.developers }} développeurs qui apprennent avec nous !</p>
+                </div>
+                <div class="proof-rating">
+                    <p class="stars" role="img" aria-label="Note de {{ social_proof.rating }} sur 5">
+                        <svg aria-hidden="true"><use href="#i-star"/></svg><svg aria-hidden="true"><use href="#i-star"/></svg><svg aria-hidden="true"><use href="#i-star"/></svg><svg aria-hidden="true"><use href="#i-star"/></svg><svg aria-hidden="true"><use href="#i-star"/></svg>
+                        <b>{{ social_proof.rating }}/5</b>
+                    </p>
+                    <small>{{ social_proof.rating_label }}</small>
+                </div>
             </div>
         </div>
 
-        <div class="hero-visual" aria-hidden="true">
-            <div class="code-window">
-                <div class="code-window-bar"><i></i><i></i><i></i><span>bonjour.py</span></div>
-<pre><span class="c"># Votre première fonction</span>
-<span class="k">def</span> <span class="f">bonjour</span>(nom):
-    <span class="k">return</span> <span class="s">f"Bonjour </span>{nom}<span class="s"> !"</span>
-
-<span class="b">print</span>(<span class="f">bonjour</span>(<span class="s">"monde"</span>))</pre>
+        {# Éditeur de démonstration : lévitation + halo au survol, aperçu cliquable (HeroEditor.js) #}
+        <div class="ide-stage" data-reveal style="--d:.15s">
+            <div class="ide" data-ide>
+                <i class="ide-glow" aria-hidden="true"></i>
+                <div class="ide-window">
+                    <div class="ide-bar" aria-hidden="true"><i class="d-r"></i><i class="d-y"></i><i class="d-g"></i></div>
+                    <div class="ide-body">
+                        <div class="ide-activity" aria-hidden="true">
+                            <svg class="is-on"><use href="#i-files"/></svg><svg><use href="#i-search"/></svg><svg><use href="#i-branch"/></svg><svg><use href="#i-run"/></svg><svg><use href="#i-ext"/></svg>
+                        </div>
+                        <div class="ide-explorer" aria-hidden="true">
+                            <p>Explorer</p>
+                            <ul>
+                                <li class="d0"><i class="tw open"></i><i class="fold"></i>mon-projet</li>
+                                <li class="d1"><i class="tw open"></i><i class="fold"></i>src</li>
+                                <li class="d2"><i class="tw open"></i><i class="fold"></i>components</li>
+                                <li class="d3 is-on"><svg><use href="#i-react"/></svg>App.jsx</li>
+                                <li class="d3"><svg><use href="#i-react"/></svg>Header.jsx</li>
+                                <li class="d2"><i class="tw"></i><i class="fold"></i>styles</li>
+                                <li class="d3"><svg class="css"><use href="#i-react"/></svg>App.css</li>
+                                <li class="d1"><span class="json">{ }</span>package.json</li>
+                                <li class="d1"><span class="info">i</span>README.md</li>
+                            </ul>
+                        </div>
+                        <div class="ide-main">
+                            <div class="ide-tab" aria-hidden="true"><svg><use href="#i-react"/></svg>App.jsx<b>&times;</b></div>
+                            <pre class="ide-code" aria-label="Exemple de composant React"><code><span class="ln">1</span><span class="k">import</span> React <span class="k">from</span> <span class="s">'react'</span>;
+<span class="ln">2</span><span class="k">import</span> { useState } <span class="k">from</span> <span class="s">'react'</span>;
+<span class="ln">3</span>
+<span class="ln">4</span><span class="k">export default function</span> <span class="f">App</span>() {
+<span class="ln">5</span>  <span class="k">const</span> [count, setCount] = <span class="f">useState</span>(<span class="n">0</span>);
+<span class="ln">6</span>
+<span class="ln">7</span>  <span class="k">return</span> (
+<span class="ln">8</span>    <span class="t">&lt;div</span> <span class="a">className</span>=<span class="s">"container"</span><span class="t">&gt;</span>
+<span class="ln">9</span>      <span class="t">&lt;h1&gt;</span>Apprendre à coder<span class="t">&lt;/h1&gt;</span>
+<span class="ln">10</span>      <span class="t">&lt;p&gt;</span>Ensemble, construisons demain !<span class="t">&lt;/p&gt;</span>
+<span class="ln">11</span>      <span class="t">&lt;button</span> <span class="a">onClick</span>={() =&gt; <span class="f">setCount</span>(c =&gt; c + <span class="n">1</span>)}<span class="t">&gt;</span>
+<span class="ln">12</span>        Compteur : {count}<span class="caret"></span>
+<span class="ln">13</span>      <span class="t">&lt;/button&gt;</span>
+<span class="ln">14</span>    <span class="t">&lt;/div&gt;</span>
+<span class="ln">15</span>  );
+<span class="ln">16</span>}</code></pre>
+                        </div>
+                        <div class="ide-preview">
+                            <p class="ide-preview-head"><i></i>Prévisualisation</p>
+                            <div class="ide-scene">
+                                <svg class="ide-mountains" viewBox="0 0 200 120" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
+                                    <rect width="200" height="120" fill="url(#g-sky)"/>
+                                    <circle cx="150" cy="62" r="20" fill="#ffd9a0" opacity=".9"/>
+                                    <path d="M0 90 55 48l30 28 24-18 91 50v14H0z" fill="#3d2466"/>
+                                    <path d="M0 104 40 76l36 24 40-30 84 52v-4H0z" fill="#241446"/>
+                                </svg>
+                                <div class="ide-card">
+                                    <h2>Apprendre<br>à coder</h2>
+                                    <p>Ensemble,<br>construisons demain !</p>
+                                    <button type="button" class="ide-cta" data-ide-cta>Découvrir<svg aria-hidden="true"><use href="#i-arrow"/></svg></button>
+                                    <small class="ide-count" data-ide-count hidden>Compteur : 0</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <ul class="ide-try" aria-label="Ouvrir un éditeur">
+                    <li><a href="{% url 'editor' 'codelab-js' %}">Web</a></li>
+                    <li><a href="{% url 'editor' 'codelab-ts' %}">TypeScript</a></li>
+                    <li><a href="{% url 'editor' 'codelab-py' %}">Python</a></li>
+                </ul>
             </div>
-            <ul class="floating-icons">
-                <li style="--i:0"><img src="{% static 'icons/python.svg' %}" alt=""></li>
-                <li style="--i:1"><img src="{% static 'icons/javascript.svg' %}" alt=""></li>
-                <li style="--i:2"><img src="{% static 'icons/typescript.svg' %}" alt=""></li>
-                <li style="--i:3"><img src="{% static 'icons/css.svg' %}" alt=""></li>
-            </ul>
         </div>
     </section>
 
+    {# ======================= Langages et Frameworks ======================= #}
     <section id="courses" class="catalog" aria-labelledby="catalog-title">
-        <div class="section-head">
-            <h2 id="catalog-title">Tous les cours</h2>
-            <p>Choisissez un langage, un framework, des exercices ou un projet.</p>
-        </div>
-
-        <div class="catalog-tools">
-            <label class="search">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
-                <input type="search" id="course-search" placeholder="Rechercher un cours…" autocomplete="off" aria-label="Rechercher un cours">
-            </label>
-            <div class="chips" role="group" aria-label="Filtrer par catégorie">
-                <button type="button" class="chip is-active" data-filter="all">Tous</button>
-                {% for group in catalog %}
-                <button type="button" class="chip" data-filter="{{ group.key }}">{{ group.title }}</button>
+        <div class="catalog-head" data-reveal>
+            <div class="section-title">
+                <h2 id="catalog-title">Langages et Frameworks</h2>
+                <p>Explorez les technologies les plus populaires et apprenez à les maîtriser.</p>
+            </div>
+            <div class="tabs" role="tablist" aria-label="Catégories de cours" id="catalog-tabs">
+                {% for tab in tabbar %}
+                <button type="button" class="tab{% if forloop.first %} is-active{% endif %}" role="tab" id="tab-{{ tab.key }}" data-tab="{{ tab.key }}" aria-controls="panel-{{ tab.key }}" aria-selected="{% if forloop.first %}true{% else %}false{% endif %}" tabindex="{% if forloop.first %}0{% else %}-1{% endif %}">
+                    <svg aria-hidden="true"><use href="#{{ tab.icon }}"/></svg><span>{{ tab.title }}</span>
+                </button>
                 {% endfor %}
             </div>
         </div>
 
-        {% for group in catalog %}
-        <div class="catalog-group" data-category="{{ group.key }}">
-            <h3>{{ group.title }} <small>{{ group.description }}</small></h3>
-            <div class="cards">
-                {% for page in group.pages %}
-                <a class="card" href="{{ page.url }}" style="--lang: {{ page.color }}"
-                   data-search="{{ page.title|lower }} {{ page.description|lower }}">
-                    <span class="card-icon"><img src="{{ page.icon }}" alt="" width="28" height="28" loading="lazy"></span>
-                    <span class="card-title">{{ page.title }}</span>
-                    <span class="card-desc">{{ page.description }}</span>
-                    <span class="card-cta">Ouvrir
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-                    </span>
-                </a>
+        <div class="catalog-body" data-reveal style="--d:.08s">
+            {% for tab in tabs %}
+            <div class="catalog-panel" role="tabpanel" id="panel-{{ tab.key }}" data-panel="{{ tab.key }}"{% if tab.in_tabbar %} aria-labelledby="tab-{{ tab.key }}"{% else %} aria-label="{{ tab.title }}"{% endif %}{% if not forloop.first %} hidden{% endif %}>
+                {% if not tab.in_tabbar %}<p class="panel-title"><svg aria-hidden="true"><use href="#{{ tab.icon }}"/></svg>{{ tab.title }}</p>{% endif %}
+                {% for group in tab.groups %}
+                <div class="panel-group" data-group="{{ group.key }}">
+                    {% if tab.groups|length > 1 %}<h3 class="panel-sub">{{ group.title }} <small>{{ group.description }}</small></h3>{% endif %}
+                    <div class="cards">
+                        {% for page in group.pages %}
+                        <a class="lang-card" href="{{ page.url }}" style="--lang: {{ page.color }}; --i: {{ forloop.counter0 }}"
+                           data-search="{{ page.title|lower }} {{ page.description|lower }} {{ group.title|lower }}">
+                            <span class="lang-top">
+                                <span class="lang-icon"><img src="{{ page.icon }}" alt="" width="36" height="36" loading="lazy"></span>
+                                <span class="lang-text">
+                                    <span class="lang-title">{{ page.title }}</span>
+                                    <span class="lang-desc">{{ page.description }}</span>
+                                </span>
+                            </span>
+                            <span class="lang-foot">
+                                <span class="lang-stats"><svg aria-hidden="true"><use href="#i-book"/></svg>{% if page.sections %}{{ page.sections }} section{{ page.sections|pluralize }} <i aria-hidden="true">&bull;</i> {{ page.examples }} exemple{{ page.examples|pluralize }}{% else %}Ouvrir{% endif %}</span>
+                                <span class="lang-go" aria-hidden="true"><svg><use href="#i-arrow"/></svg></span>
+                            </span>
+                        </a>
+                        {% endfor %}
+                    </div>
+                </div>
                 {% endfor %}
             </div>
+            {% endfor %}
+            <p id="no-results" class="empty" hidden>Aucun cours ne correspond à votre recherche.</p>
         </div>
-        {% endfor %}
-
-        <p id="no-results" class="empty" hidden>Aucun cours ne correspond à votre recherche.</p>
     </section>
 
-    <section class="editor-promo">
-        <div class="promo-text">
-            <p class="eyebrow">Éditeur en ligne</p>
-            <h2>Écrivez, prévisualisez, expérimentez</h2>
-            <p>
-                Un éditeur HTML, CSS et JavaScript avec aperçu en direct, console intégrée,
-                projets sauvegardés et export en .zip. Idéal pour tester les exemples des cours.
-            </p>
-            <a class="btn btn-primary" href="{% url 'editor' 'codelab-js' %}">Lancer l'éditeur</a>
-        </div>
-        <div class="promo-image">
-            <div class="browser-frame">
-                <div class="browser-bar"><i></i><i></i><i></i></div>
-                <img src="{% static 'images/editor.png' %}" alt="Aperçu de l'éditeur de code" loading="lazy">
+    {# ============================ Pourquoi nous ============================ #}
+    <section id="why" class="why" aria-labelledby="why-title">
+        <div class="section-title" data-reveal><h2 id="why-title">Pourquoi nous choisir ?</h2></div>
+        <ul class="why-grid">
+            <li data-reveal style="--d:.04s"><svg class="why-ico" aria-hidden="true"><use href="#i-cap"/></svg><div><h3>Apprentissage pratique</h3><p>Apprenez par la pratique avec des exercices concrets.</p></div></li>
+            <li data-reveal style="--d:.10s"><svg class="why-ico" aria-hidden="true"><use href="#i-team"/></svg><div><h3>Accompagnement humain</h3><p>Une communauté bienveillante pour vous soutenir.</p></div></li>
+            <li data-reveal style="--d:.16s"><svg class="why-ico" aria-hidden="true"><use href="#i-bolt"/></svg><div><h3>Projets réels</h3><p>Appliquez vos connaissances sur des projets passionnants.</p></div></li>
+            <li data-reveal style="--d:.22s"><svg class="why-ico" aria-hidden="true"><use href="#i-chart"/></svg><div><h3>Suivi de progression</h3><p>Visualisez vos progrès et atteignez vos objectifs.</p></div></li>
+        </ul>
+    </section>
+
+    {# ============================== Communauté ============================== #}
+    <section id="community" class="community" aria-labelledby="community-title" data-reveal>
+        <div class="community-photo"><img src="{% static 'webapp/img/community.svg' %}" alt="" width="640" height="380" loading="lazy"></div>
+        <div class="community-body">
+            <svg class="community-ico" aria-hidden="true"><use href="#i-team"/></svg>
+            <div>
+                <h2 id="community-title">Rejoignez notre communauté de développeurs !</h2>
+                <p>Échangez, posez vos questions et partagez votre passion du code.</p>
+                <a class="btn-cta" href="{{ community_url }}">Rejoignez la communauté<svg class="arrow" aria-hidden="true"><use href="#i-arrow"/></svg></a>
             </div>
         </div>
+        <p class="community-quote" aria-hidden="true"><span>Ensemble,<br>allons plus loin !</span><svg viewBox="0 0 260 14" preserveAspectRatio="none"><path pathLength="1" d="M4 10C70 3 170 3 256 6"/></svg></p>
     </section>
 </main>
 
+{# ============================== Pied de page ============================== #}
 <footer class="site-footer">
-    <p>Langage Learning · Cours, exercices et projets de programmation</p>
+    <div class="footer-inner">
+        <div class="footer-brand">
+            <a class="brand-mark" href="{% url 'index' %}" aria-label="CodeLearn, accueil">
+                <svg class="brand-ico" aria-hidden="true"><use href="#i-code"/></svg>
+                <span>Code<b>Learn</b></span>
+            </a>
+            <p>Apprendre aujourd'hui. Créer demain.</p>
+        </div>
+        <nav class="footer-links" aria-label="Pied de page">
+            {% for link in footer_links %}<a href="{{ link.url }}"{% if link.tab %} data-open-tab="{{ link.tab }}"{% endif %}>{{ link.label }}</a>{% endfor %}
+        </nav>
+        <ul class="footer-social" aria-label="Réseaux">
+            {% for social in social_links %}
+            <li><a href="{{ social.url }}" aria-label="{{ social.label }}" title="{{ social.label }}"{% if social.url != '#' %} target="_blank" rel="noopener noreferrer"{% endif %}><svg aria-hidden="true"><use href="#{{ social.icon }}"/></svg></a></li>
+            {% endfor %}
+        </ul>
+    </div>
 </footer>
 
 {% if is_populating %}
