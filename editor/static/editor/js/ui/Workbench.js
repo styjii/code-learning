@@ -3,6 +3,8 @@
  * résultat, console intégrée (masquée par défaut), aperçu, état d'enregistrement. Aucune logique métier ici : tout passe par les
  * boutons et les modules existants (projets, import/export, aperçu).
  */
+import { Splitters } from "./Splitters.js";
+
 const $ = (id) => document.getElementById(id);
 const isPython = () => document.body.classList.contains("py-app");
 const stamp = () => new Date().toLocaleTimeString("fr-FR", { hour12: false });
@@ -17,6 +19,7 @@ export class Workbench {
         Workbench.#preview();
         Workbench.#observers();
         Workbench.#layout();
+        Splitters.init();
         Workbench.#restart();
         Workbench.#shortcuts();
     }
@@ -32,6 +35,7 @@ export class Workbench {
         const container = $("output-container");
         if (!container) return;
         if (open) delete container.dataset.console; else container.dataset.console = "closed";
+        if (!open) Workbench.setConsoleMaximized(false);
         const button = $("toggle-console");
         if (button) {
             const label = open ? "Masquer la console" : "Afficher la console";
@@ -42,6 +46,24 @@ export class Workbench {
         if (open) {
             const consoleEl = $("console");
             if (consoleEl) consoleEl.scrollTop = consoleEl.scrollHeight;
+        }
+        Workbench.#relayout();
+    }
+
+    /**
+     * Agrandit la console à tout le panneau de résultat (true) ou la ramène à sa taille précédente (false).
+     * La taille réglée avec le séparateur n'est pas touchée : elle revient telle quelle.
+     */
+    static setConsoleMaximized(maximized) {
+        const container = $("output-container");
+        if (!container) return;
+        container.toggleAttribute("data-console-max", maximized);
+        const button = $("console-maximize");
+        if (button) {
+            const label = maximized ? "Rétablir la taille de la console" : "Agrandir la console";
+            button.setAttribute("aria-pressed", String(maximized));
+            button.setAttribute("aria-label", label);
+            button.title = label;
         }
         Workbench.#relayout();
     }
@@ -100,6 +122,9 @@ export class Workbench {
 
     static #views() {
         $("toggle-console")?.addEventListener("click", () => Workbench.setConsoleOpen(!Workbench.isConsoleOpen()));
+        $("console-maximize")?.addEventListener("click", () => {
+            Workbench.setConsoleMaximized($("output-container")?.hasAttribute("data-console-max") === false);
+        });
         $("console-close")?.addEventListener("click", () => Workbench.setConsoleOpen(false));
         $("focus-editor")?.addEventListener("click", (event) => {
             const on = document.body.classList.toggle("is-focus");

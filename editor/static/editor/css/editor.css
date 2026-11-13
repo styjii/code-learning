@@ -162,7 +162,7 @@
 .preview-meta { display: flex; justify-content: space-between; gap: 1rem; flex-shrink: 0; padding: 0.5rem 0.25rem 0; color: var(--faint); font: 0.74rem var(--font-mono); }
 
 /* --------------------------------- Console intégrée --------------------------------- */
-.console-dock { display: flex; flex: 0 0 34%; flex-direction: column; min-height: 130px; max-height: 50%; border-top: 1px solid var(--border); background: var(--bg); }
+.console-dock { display: flex; flex: 0 0 var(--console-size, 34%); flex-direction: column; min-height: 130px; max-height: calc(100% - 160px); border-top: 1px solid var(--border); background: var(--bg); }
 .console-head { display: flex; align-items: center; gap: 0.6rem; flex-shrink: 0; min-height: 46px; padding: 0 0.6rem 0 1rem; border-bottom: 1px solid var(--border); }
 .console-title { margin: 0; color: var(--text-strong); font-size: 0.95rem; font-weight: 600; }
 .count { min-width: 24px; padding: 0 0.45rem; border-radius: 7px; background: var(--surface-3); color: var(--muted); font-size: 0.76rem; line-height: 22px; text-align: center; }
@@ -201,6 +201,47 @@
 #output-container[data-view="console"] .preview-stage { display: none; }
 #output-container[data-view="console"] .console-dock { flex: 1 1 0; max-height: none; border-top: 0; }
 #output-container[data-console="closed"] .console-dock { display: none; }
+
+/* Console agrandie (bouton #console-maximize) : elle prend tout le panneau de résultat, l'aperçu est masqué. La taille
+ * choisie avec le séparateur (--console-size) est conservée et revient au clic suivant. */
+#output-container[data-console-max] .preview-stage { display: none; }
+#output-container[data-console-max] .console-dock { flex: 1 1 0; max-height: none; border-top: 0; }
+#console-maximize[aria-pressed="false"] .ico-restore, #console-maximize[aria-pressed="true"] .ico-maximize { display: none; }
+#console-maximize[aria-pressed="true"] { background: var(--accent-soft); color: var(--accent); }
+
+/* ------------------------------ Séparateurs ajustables ------------------------------ */
+/* Épaisseur nulle : la poignée ne décale rien ; sa zone de prise (::before) déborde de part et d'autre. */
+.splitter { position: relative; z-index: 6; flex: 0 0 auto; touch-action: none; outline: none; }
+.splitter:not([data-axis]) { display: none; }
+.splitter[data-axis="x"] { align-self: stretch; width: 0; cursor: col-resize; }
+.splitter[data-axis="y"] { align-self: stretch; height: 0; cursor: row-resize; }
+.splitter::before { content: ""; position: absolute; }
+.splitter[data-axis="x"]::before { inset: 0 -6px; }
+.splitter[data-axis="y"]::before { inset: -6px 0; }
+@media (pointer: coarse) {
+    .splitter[data-axis="x"]::before { inset: 0 -12px; }
+    .splitter[data-axis="y"]::before { inset: -12px 0; }
+}
+/* Trait d'accent au survol, au focus clavier et pendant le glissement */
+.splitter::after { content: ""; position: absolute; background: var(--accent); opacity: 0; transition: opacity 0.15s; pointer-events: none; }
+.splitter[data-axis="x"]::after { inset: 0 -1px; }
+.splitter[data-axis="y"]::after { inset: -1px 0; }
+.splitter:hover::after, .splitter:focus-visible::after, .splitter[data-dragging]::after { opacity: 1; }
+/* Poignée visible en permanence (repère pour le doigt) */
+.splitter-grip { position: absolute; left: 50%; top: 50%; border-radius: 999px; background: var(--border-strong); transform: translate(-50%, -50%); pointer-events: none; transition: opacity 0.15s; }
+.splitter[data-axis="x"] .splitter-grip { width: 4px; height: 36px; }
+.splitter[data-axis="y"] .splitter-grip { width: 36px; height: 4px; }
+.splitter:hover .splitter-grip, .splitter[data-dragging] .splitter-grip { opacity: 0; }
+/* Verrouillé : plus de prise, plus de poignée */
+.splitter[aria-disabled="true"] { pointer-events: none; }
+.splitter[aria-disabled="true"] .splitter-grip { opacity: 0; }
+/* Rien à séparer : console masquée ou agrandie, éditeur agrandi */
+#output-container[data-console="closed"] #split-console, #output-container[data-console-max] #split-console, body.is-focus .splitter { display: none; }
+/* Pendant le glissement : curseur fixe, pas de sélection, et l'aperçu (iframe) ne capte pas le pointeur */
+body[data-resizing] { user-select: none; -webkit-user-select: none; }
+body[data-resizing="x"] { cursor: col-resize; }
+body[data-resizing="y"] { cursor: row-resize; }
+body[data-resizing] #output { pointer-events: none; }
 
 /* ---------------------------------- Barre d'état ---------------------------------- */
 .status-bar {
@@ -244,7 +285,7 @@
 @media (max-width: 767.98px) and (orientation: portrait) {
     #editor-container { flex: 11 1 0; }
     #output-container { flex: 9 1 0; }
-    .console-dock { flex-basis: 38%; }
+    #output-container { --console-size: 38%; }
 }
 
 /* Ordinateur, tablette en paysage, téléphone en paysage : côte à côte. */
@@ -258,6 +299,10 @@
 #main-editor[data-layout="side"] #editor-container { border-bottom: 0; border-right: 1px solid var(--border); }
 #main-editor[data-layout="stack"] { flex-direction: column; }
 #main-editor[data-layout="stack"] #editor-container { border-right: 0; border-bottom: 1px solid var(--border); }
+
+/* Taille choisie avec le séparateur (Splitters.js) : le panneau de code garde cette part, le résultat prend le reste. */
+#main-editor[data-sized] #editor-container { flex: 0 0 var(--editor-size); }
+#main-editor[data-sized] #output-container { flex: 1 1 0; }
 
 /* Éditeur agrandi : le résultat disparaît */
 body.is-focus #output-container { display: none; }

@@ -143,6 +143,28 @@ class EditorWorkbenchMarkupTests(TestCase):
                 self.assertNotIn("showConsole", source)
                 self.assertNotIn("setView(", source)
 
+    def test_panels_have_resizable_splitters_and_a_lock(self):
+        for name in ("codelab-js", "codelab-ts"):
+            with self.subTest(page=name):
+                page = self.html(name)
+                for needle in ('id="split-main"', 'id="split-console"', 'role="separator"', 'id="lock-resize"',
+                               'role="menuitemcheckbox"', 'data-lock-indicator'):
+                    self.assertIn(needle, page)
+                # Le splitter principal est entre le code et le résultat ; celui de la console entre l'aperçu et la console.
+                self.assertLess(page.index('id="editor-container"'), page.index('id="split-main"'))
+                self.assertLess(page.index('id="split-main"'), page.index('id="output-container"'))
+                self.assertLess(page.index('class="preview-stage"'), page.index('id="split-console"'))
+                self.assertLess(page.index('id="split-console"'), page.index('id="console-dock"'))
+
+    def test_maximize_button_sits_between_clear_and_close(self):
+        for name in ("codelab-js", "codelab-ts"):
+            with self.subTest(page=name):
+                page = self.html(name)
+                clear, maximize, close = (page.index(f'id="{i}"') for i in ("console-clear", "console-maximize", "console-close"))
+                self.assertLess(clear, maximize)
+                self.assertLess(maximize, close)
+                self.assertIn('aria-pressed="false" aria-controls="console-dock" title="Agrandir la console"', page)
+
     def test_python_has_no_preview_parts(self):
         page = self.html("codelab-py")
         for needle in ('id="live-code"', 'id="bootstrapCdnSwitch"', 'id="output"'):

@@ -1,4 +1,6 @@
 {# Panneau de droite des éditeurs à aperçu : barre de commandes, aperçu en cadre de navigateur, console intégrée. #}
+{# Séparateur entre le code et le résultat (Splitters.js : glisser, flèches, double clic = taille par défaut). Sans JavaScript il reste masqué. #}
+<div class="splitter" id="split-main" role="separator" tabindex="0" aria-label="Redimensionner le code et le résultat" aria-orientation="vertical" aria-valuemin="10" aria-valuemax="90"><span class="splitter-grip" aria-hidden="true"></span></div>
 {# La console est masquée au chargement (data-console="closed") : seuls le bouton #toggle-console et la croix #console-close la montrent ou la cachent. #}
 <section id="output-container" aria-label="Résultat" data-view="preview" data-console="closed">
     <div id="control-button">
@@ -22,6 +24,7 @@
                     <li><button type="button" class="drop-item" role="menuitemradio" data-layout="side" aria-checked="false">Côte à côte</button></li>
                     <li><button type="button" class="drop-item" role="menuitemradio" data-layout="stack" aria-checked="false">Empilé</button></li>
                     <li class="drop-sep" role="separator"></li>
+                    <li><button type="button" class="drop-item" id="lock-resize" role="menuitemcheckbox" aria-checked="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>Verrouiller le redimensionnement<span class="pill" data-lock-indicator>Non</span></button></li>
                     <li><button type="button" class="drop-item" data-toggle="custom-modal" data-target="#preview-controls">Délai de l'aperçu…</button></li>
                 </ul>
             </div>
@@ -40,6 +43,8 @@
         <div class="preview-meta"><span id="preview-size">0 • 0</span><span id="preview-updated">En attente d'exécution</span></div>
     </div>
 
+    <div class="splitter" id="split-console" role="separator" tabindex="0" data-axis="y" aria-label="Redimensionner l'aperçu et la console" aria-orientation="horizontal" aria-valuemin="10" aria-valuemax="90"><span class="splitter-grip" aria-hidden="true"></span></div>
+
     <section class="console-dock" id="console-dock" aria-label="Console">
         <header class="console-head">
             <h3 class="console-title">Console</h3>
@@ -47,6 +52,7 @@
             <span class="console-ro">Sortie en lecture seule</span>
             <span class="toolbar-spacer"></span>
             <button type="button" class="icon-btn" id="console-clear" title="Effacer la console" aria-label="Effacer la console"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14"/></svg></button>
+            <button type="button" class="icon-btn" id="console-maximize" aria-pressed="false" aria-controls="console-dock" title="Agrandir la console" aria-label="Agrandir la console"><svg class="ico-maximize" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3H5a2 2 0 0 0-2 2v3M21 8V5a2 2 0 0 0-2-2h-3M16 21h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg><svg class="ico-restore" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3v3a2 2 0 0 1-2 2H3M21 8h-3a2 2 0 0 1-2-2V3M16 21v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3"/></svg></button>
             <button type="button" class="icon-btn" id="console-close" title="Réduire la console" aria-label="Réduire la console"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
         </header>
         <div id="console"></div>
