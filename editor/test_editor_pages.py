@@ -87,7 +87,7 @@ class EditorPageViewTests(TestCase):
             self.assertIn("/accounts/login/", response["Location"])
 
     def test_the_page_sets_the_csrf_cookie(self):
-        self.assertIn("csrftoken", self.client.get("/editor/codelab-py/").cookies)
+        self.assertIn("cl_csrftoken", self.client.get("/editor/codelab-py/").cookies)
 
     def test_every_editor_has_a_choice_in_the_model(self):
         self.assertEqual([value for value, _ in Project._meta.get_field("editor").choices], list(editors.EDITORS))

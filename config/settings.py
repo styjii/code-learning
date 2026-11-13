@@ -61,6 +61,13 @@ BEHIND_PROXY = env_bool("DJANGO_BEHIND_PROXY", False)
 if BEHIND_PROXY:
     SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
+# Noms de cookies propres à ce projet. Les cookies sont isolés par hôte et NON par port : sans nom dédié, ce projet
+# (HTTPS, cookies « Secure ») et d'autres projets Django en HTTP sur la même IP se disputeraient « csrftoken » et
+# « sessionid ». Un cookie « Secure » n'est jamais envoyé en HTTP et ne peut pas y être écrasé : les formulaires des
+# autres projets échoueraient alors avec « CSRF cookie not set ». Si vous renommez le cookie CSRF, adaptez aussi
+# editor/static/editor/js/utils/csrf.js.
+CSRF_COOKIE_NAME = "cl_csrftoken"
+SESSION_COOKIE_NAME = "cl_sessionid"
 SESSION_COOKIE_HTTPONLY = True
 SESSION_COOKIE_SAMESITE = "Lax"
 SESSION_COOKIE_AGE = env_int("DJANGO_SESSION_HOURS", 168) * 3600

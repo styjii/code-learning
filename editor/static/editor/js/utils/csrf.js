@@ -1,13 +1,13 @@
 /**
  * Ajoute automatiquement le jeton CSRF de Django aux requêtes d'écriture vers le même site.
  *
- * Le cookie « csrftoken » est posé par la page de l'éditeur (ensure_csrf_cookie). Les appels
+ * Le cookie « cl_csrftoken » (CSRF_COOKIE_NAME) est posé par la page de l'éditeur (ensure_csrf_cookie). Les appels
  * fetch() existants n'ont ainsi pas besoin d'être modifiés un par un.
  */
 const SAFE_METHODS = new Set(["GET", "HEAD", "OPTIONS", "TRACE"]);
 
 function csrfToken() {
-    const cookie = document.cookie.split("; ").find((row) => row.startsWith("csrftoken="));
+    const cookie = document.cookie.split("; ").find((row) => row.startsWith("cl_csrftoken="));
     return cookie ? decodeURIComponent(cookie.split("=")[1]) : "";
 }
 
