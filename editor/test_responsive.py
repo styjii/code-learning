@@ -165,6 +165,17 @@ class EditorWorkbenchMarkupTests(TestCase):
                 self.assertLess(maximize, close)
                 self.assertIn('aria-pressed="false" aria-controls="console-dock" title="Agrandir la console"', page)
 
+    def test_console_logs_persist_between_runs(self):
+        js_dir = CSS_DIR.parent / "js"
+        for relative in ("projects/PreviewManager.js", "typescript/TsPreviewManager.js"):
+            source = (js_dir / relative).read_text(encoding="utf-8")
+            with self.subTest(script=relative):
+                self.assertNotIn('consoleEl.innerHTML = ""', source)
+                self.assertNotIn("replaceChildren", source)
+        workbench = (js_dir / "ui" / "Workbench.js").read_text(encoding="utf-8")
+        # Le bouton « Redémarrer » du Web/TypeScript relance sans appeler clear() avant run-code.
+        self.assertNotIn('clear();\n                $("run-code")', workbench.replace("\r\n", "\n"))
+
     def test_python_has_no_preview_parts(self):
         page = self.html("codelab-py")
         for needle in ('id="live-code"', 'id="bootstrapCdnSwitch"', 'id="output"'):

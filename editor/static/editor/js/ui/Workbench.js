@@ -144,7 +144,8 @@ export class Workbench {
         };
         new MutationObserver(update).observe(consoleEl, { childList: true, subtree: true });
         update();
-        // Web / TypeScript : la corbeille vide la console (Python a son propre bouton, #py-clear).
+        // Web / TypeScript : la console ne se vide que par la corbeille (ou « Effacer la console » du menu Redémarrer) ;
+        // une exécution n'efface jamais les logs précédents. Python a son propre bouton, #py-clear.
         $("console-clear")?.addEventListener("click", () => consoleEl.replaceChildren());
     }
 
@@ -258,7 +259,7 @@ export class Workbench {
                 if (app?.running) app.stop();
                 clear();
             } else {
-                clear();
+                // Web / TypeScript : on relance sans vider la console (seul « Effacer » la vide).
                 $("run-code")?.click();
             }
         });

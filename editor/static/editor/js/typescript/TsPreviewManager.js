@@ -44,7 +44,7 @@ export class TsPreviewManager {
         if (!output || !consoleEl || !editor) return;
 
         const runId = ++this.#runId;
-        consoleEl.innerHTML = "";
+        // La console n'est jamais vidée ici : elle garde les logs des exécutions précédentes (bouton « Effacer »).
 
         let js = "";
         try {

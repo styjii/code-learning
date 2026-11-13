@@ -33,8 +33,8 @@ export class PreviewManager {
         const consoleEl = document.getElementById("console");
         if (!output || !consoleEl) return;
 
-        consoleEl.innerHTML = "";
-
+        // La console persiste d'une exécution à l'autre, comme celle d'un navigateur : seul le bouton « Effacer »
+        // (ou console.clear() dans le code) la vide.
         const formData = new FormData();
         formData.append("html", this.#sanitizeHTML(state.editors.html?.getValue() ?? ""));
         formData.append("css", state.editors.css?.getValue() ?? "");
