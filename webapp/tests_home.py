@@ -70,20 +70,44 @@ class HomePageTests(TestCase):
             self.assertIn(text, self.page)
         self.assertEqual(len(re.findall(r'<li><svg viewBox="0 0 40 40"><use href="#av-\d"', self.page)), 4)
 
-    def test_demo_editor_matches_the_mockup(self):
-        for text in ("Explorer", "mon-projet", "components", "App.jsx", "Header.jsx", "package.json", "README.md",
-                     "Prévisualisation", "Apprendre à coder", "Découvrir", "data-ide"):
+    def test_demo_editor_matches_the_web_editor_model(self):
+        # Barre supérieure, onglets de fichiers TypeScript + HTML + CSS, aperçu, barre d'état ; plus aucune trace de React.
+        for text in ("Éditeur", "Default", "Web", "Python", "TypeScript", "Enregistré", "index.html", "style.css", "script.ts",
+                     "Mode web : contenu de &lt;body&gt; uniquement", "Aperçu", "Exécuter", "Apprendre à coder",
+                     "Découvrir", "Aucun problème", "Espaces : 4", "data-ide"):
             self.assertIn(text, self.page)
+        for text in ("App.jsx", "Header.jsx", "package.json", "mon-projet", "useState", "className"):
+            self.assertNotIn(text, self.page)
+
+    def test_no_template_comment_leaks_into_the_page(self):
+        self.assertNotIn("{#", self.page)
+        self.assertNotIn("#}", self.page)
+
+    def test_demo_editor_tabs_are_accessible(self):
+        self.assertEqual(len(re.findall(r'role="tab" id="ide-tab-(?:html|css|ts)"', self.page)), 3)
+        self.assertEqual(len(re.findall(r'role="tabpanel" id="ide-file-(?:html|css|ts)"', self.page)), 3)
+        self.assertEqual(self.page.count('aria-selected="true" tabindex="0"><svg class="ico-'), 1)
+        # Un seul panneau visible au chargement : les deux autres sont masqués.
+        self.assertEqual(len(re.findall(r'id="ide-file-(?:css|ts)"[^>]* hidden>', self.page)), 2)
+        # La barre d'état annonce les valeurs du premier fichier.
+        self.assertRegex(self.page, r'data-ide-lang>HTML</span><span data-ide-pos>Ln \d+, Col \d+</span>')
+
+    def test_demo_editor_code_is_typescript_html_css(self):
+        self.assertIn('<span class="k">interface</span>', self.page)
+        self.assertIn('<span class="ty">number</span>', self.page)
+        self.assertIn("getElementById", self.page)
+        self.assertIn("linear-gradient", self.page)
+        self.assertIn('<span class="t">#cta</span>', self.page)
 
     def test_editor_links_are_kept(self):
         for name in ("codelab-js", "codelab-ts", "codelab-py"):
             self.assertContains(self.client.get(reverse("index")), f'href="{reverse("editor", args=[name])}"')
 
     def test_tabs_are_accessible_and_filter_real_courses(self):
-        self.assertEqual(self.page.count('role="tab"'), 3)
+        self.assertEqual(len(re.findall(r'role="tab" id="tab-', self.page)), 3)
         self.assertIn('role="tablist"', self.page)
         self.assertIn('aria-selected="true"', self.page)
-        self.assertEqual(self.page.count('role="tabpanel"'), 5)
+        self.assertEqual(len(re.findall(r'role="tabpanel" id="panel-', self.page)), 5)
         for title in ("JavaScript", "TypeScript", "Python", "Django", "PostgreSQL", "Commandes Linux"):
             self.assertIn(f'<span class="lang-title">{title}</span>', self.page)
         self.assertRegex(self.page, r"\d+ sections? <i[^>]*>&bull;</i> \d+ exemples?")
