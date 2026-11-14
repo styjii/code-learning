@@ -63,6 +63,8 @@ _PAGES: List[Page] = [
          "Le framework Python « batteries included » pour le web."),
     Page("frameworks/laravel", "frameworks/laravel.md", "Laravel", "frameworks", "icons/laravel.svg", "#ff2d20",
          "Le framework PHP élégant pour des applications web modernes."),
+    Page("frameworks/nextjs", "frameworks/nextjs.md", "Next.js", "frameworks", "icons/nextjs.svg", "#8b949e",
+         "Le framework React full-stack : App Router, Server Components, cache et Server Actions."),
     Page("frameworks/react", "frameworks/react.md", "React", "frameworks", "icons/react.svg", "#61dafb",
          "La bibliothèque pour créer des interfaces : du premier composant aux Server Components."),
     Page("frameworks/vuejs", "frameworks/vuejs.md", "Vue.js", "frameworks", "icons/vue.svg", "#41b883",

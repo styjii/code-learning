@@ -236,7 +236,7 @@ code-learning/
 language/topics/
 ├── css.md, javascript.md, typescript.md, python.md, php.md, git.md, algorithm.md,
 │   language-c.md, language-cpp.md                     catégorie « topics »
-├── frameworks/    angular, django, laravel, react, vuejs
+├── frameworks/    angular, django, laravel, nextjs, react, vuejs
 ├── modules/       python, bs4, c-module, cpp-module, flask, pandas, numpy
 ├── database/      sqlite3, mysql, postgresql
 ├── system/        linux-commands, windows-commands, bash-scripts, zsh-scripts
