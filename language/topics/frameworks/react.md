@@ -90,9 +90,9 @@ function Like() {
   return (
     <>
       <button className={likes > 0 ? 'actif' : ''} onClick={() => setLikes(likes + 1)}>
-        👍 {likes}
+        {likes}
       </button>
-      {likes >= 10 && <span>Badge 🏅</span>}
+      {likes >= 10 && <span>Badge</span>}
     </>
   );
 }
@@ -616,13 +616,13 @@ Un **élément React** est un **objet JavaScript simple, immuable**, qui **décr
 Une expression JSX ne peut retourner **qu'un seul élément parent**. Pour regrouper sans ajouter de nœud DOM : **Fragment**.
 
 ```jsx
-// ❌ Erreur : deux éléments adjacents
+// Erreur : deux éléments adjacents
 return (
   <h1>Titre</h1>
   <p>Texte</p>
 );
 
-// ✅ Fragment (syntaxe courte)
+// Fragment (syntaxe courte)
 return (
   <>
     <h1>Titre</h1>
@@ -684,9 +684,9 @@ Deux endroits possibles :
 ```
 
 ```jsx
-// ❌ Une instruction n'est pas une expression
+// Une instruction n'est pas une expression
 <p>{if (ok) 'oui'}</p>
-// ✅ Utiliser un ternaire ou &&
+// Utiliser un ternaire ou &&
 <p>{ok ? 'oui' : 'non'}</p>
 ```
 
@@ -799,7 +799,7 @@ Entre balises ouvrante et fermante, on peut placer :
 | `[]` (tableau vide) | Rien |
 | Tableau d'éléments | Chacun est rendu (clés requises) |
 | Élément React | Rendu |
-| Objet simple `{}` | ❌ **Erreur** « Objects are not valid as a React child » |
+| Objet simple `{}` | **Erreur** « Objects are not valid as a React child » |
 | Fonction | Avertissement, rien affiché |
 | `Promise` | Uniquement dans un composant serveur/avec `use` (sinon erreur) |
 
@@ -843,8 +843,8 @@ JSX distingue **balises natives** (minuscule) et **composants** (majuscule ou no
 const composants = { photo: PhotoStory, video: VideoStory };
 
 function Story({ type, ...props }) {
-  // ❌ <composants[type] {...props} />   (syntaxe invalide)
-  const Composant = composants[type];     // ✅ variable en MAJUSCULE
+  // <composants[type] {...props} />   (syntaxe invalide)
+  const Composant = composants[type];     // variable en MAJUSCULE
   return <Composant {...props} />;
 }
 
@@ -912,8 +912,8 @@ import { createElement, cloneElement, isValidElement, Children } from 'react';
 
 createElement('button', { onClick: fn }, 'Clic');           // équivalent bas niveau de JSX
 isValidElement(valeur);                                      // true si élément React
-cloneElement(element, { extra: 1 });                         // ⚠ patterns fragiles, déconseillé
-Children.map(children, enfant => ...);                       // ⚠ utilitaires hérités, peu recommandés
+cloneElement(element, { extra: 1 });                         // patterns fragiles, déconseillé
+Children.map(children, enfant => ...);                       // utilitaires hérités, peu recommandés
 ```
 
 > L'API `Children` et `cloneElement` rendent le code fragile (dépendance à la forme exacte des enfants). Préférez la **composition explicite**, les **props** ou le **Context** (chapitre 15).
@@ -968,14 +968,14 @@ JSX, `null` (rien), chaînes, nombres, **tableaux** (avec clés), `undefined` (a
 function Parent() {
   const [n, setN] = useState(0);
 
-  // ❌ Nouvelle fonction (donc nouveau « type ») à CHAQUE rendu de Parent :
+  // Nouvelle fonction (donc nouveau « type ») à CHAQUE rendu de Parent :
   //    React détruit et recrée Enfant (perte d'état, lenteur, perte de focus)
   function Enfant() { return <input />; }
 
   return <Enfant />;
 }
 
-// ✅ Défini en dehors
+// Défini en dehors
 function Enfant() { return <input />; }
 function Parent() { return <Enfant />; }
 ```
@@ -1003,7 +1003,7 @@ export { default as Carte } from './Carte';
 export { default as Bouton } from './Bouton';
 ```
 
-⚠ Les barrels peuvent nuire au *tree-shaking* et aux temps de build dans de grandes bases de code.
+Les barrels peuvent nuire au *tree-shaking* et aux temps de build dans de grandes bases de code.
 
 ### 4.4 Composer des composants : l'arbre
 
@@ -1034,7 +1034,7 @@ Un composant **pur** respecte :
 2. **Mêmes entrées, même sortie** : mêmes props/state/context → même JSX.
 
 ```jsx
-// ❌ Impur : dépend d'une variable externe modifiée à chaque appel
+// Impur : dépend d'une variable externe modifiée à chaque appel
 let tasse = 0;
 function Tasse() {
   tasse = tasse + 1;
@@ -1042,7 +1042,7 @@ function Tasse() {
 }
 // <Tasse /><Tasse /> → résultat dépend de l'ordre/nombre d'appels
 
-// ✅ Pur : tout passe par les props
+// Pur : tout passe par les props
 function Tasse({ numero }) {
   return <h2>Tasse n° {numero}</h2>;
 }
@@ -1138,7 +1138,7 @@ export function TodoItem({ tache, onBasculer, onSupprimer }) {
         <input type="checkbox" checked={tache.faite} onChange={() => onBasculer(tache.id)} />
         {tache.titre}
       </label>
-      <button onClick={() => onSupprimer(tache.id)} aria-label={`Supprimer ${tache.titre}`}>✕</button>
+      <button onClick={() => onSupprimer(tache.id)} aria-label={`Supprimer ${tache.titre}`}>X</button>
     </li>
   );
 }
@@ -1146,7 +1146,7 @@ export function TodoItem({ tache, onBasculer, onSupprimer }) {
 // TodoList.jsx
 import { TodoItem } from './TodoItem';
 export function TodoList({ taches, onBasculer, onSupprimer }) {
-  if (taches.length === 0) return <p>Aucune tâche 🎉</p>;
+  if (taches.length === 0) return <p>Aucune tâche</p>;
   return (
     <ul>
       {taches.map(t => (
@@ -1300,7 +1300,7 @@ function Profil(props) {
 }
 ```
 
-⚠ À utiliser avec modération : cela masque ce que le composant utilise réellement et peut propager des props inutiles.
+À utiliser avec modération : cela masque ce que le composant utilise réellement et peut propager des props inutiles.
 
 #### Rest props : séparer « mes » props des props transmises
 
@@ -1314,7 +1314,7 @@ function Bouton({ variante = 'primaire', className = '', ...reste }) {
 ### 5.3 Valeurs par défaut
 
 ```jsx
-// ✅ Paramètre par défaut JavaScript (standard)
+// Paramètre par défaut JavaScript (standard)
 function Bouton({ taille = 'moyenne', type = 'button' }) {}
 ```
 
@@ -1355,7 +1355,7 @@ function Carte({ titre, children }) {
 
 ```jsx
 function Mauvais(props) {
-  props.titre = 'modifié';   // ❌ mutation interdite (l'objet est figé en développement)
+  props.titre = 'modifié';   // mutation interdite (l'objet est figé en développement)
 }
 ```
 
@@ -1417,14 +1417,14 @@ const Champ = forwardRef((props, ref) => <input ref={ref} {...props} />);
 | | **Props** | **State** |
 |---|---|---|
 | Propriétaire | Le **parent** | Le **composant lui-même** |
-| Modifiable par le composant ? | ❌ Non | ✅ Oui (via le setter) |
+| Modifiable par le composant ? | Non | Oui (via le setter) |
 | Déclenche un rendu | Quand le parent re-rend avec d'autres valeurs | Quand on appelle le setter |
 | Analogie | Arguments d'une fonction | Variables locales **persistantes** |
 
 #### Anti-pattern : copier une prop dans le state
 
 ```jsx
-// ❌ Le state est initialisé UNE fois ; il ignorera les changements ultérieurs de la prop
+// Le state est initialisé UNE fois ; il ignorera les changements ultérieurs de la prop
 function Message({ messageInitial }) {
   const [message, setMessage] = useState(messageInitial);
 }
@@ -1492,7 +1492,7 @@ Un composant a souvent besoin de **se souvenir** d'informations (saisie, compteu
 
 ```jsx
 function Galerie() {
-  let index = 0;                               // ❌
+  let index = 0;                               // 
   function suivant() { index = index + 1; }    // 1. la variable change mais…
   return <button onClick={suivant}>{index}</button>;
   // 1. Les variables locales sont RÉINITIALISÉES à chaque rendu (la fonction est ré-appelée)
@@ -1641,9 +1641,9 @@ Un objet dans le state **ne doit jamais être muté** : on crée une **copie** a
 ```jsx
 const [position, setPosition] = useState({ x: 0, y: 0 });
 
-position.x = 5;                              // ❌ mutation : pas de rendu, bugs
-setPosition({ x: 5, y: position.y });        // ✅ nouvel objet
-setPosition({ ...position, x: 5 });          // ✅ avec spread (copie superficielle)
+position.x = 5;                              // mutation : pas de rendu, bugs
+setPosition({ x: 5, y: position.y });        // nouvel objet
+setPosition({ ...position, x: 5 });          // avec spread (copie superficielle)
 ```
 
 > **Mutation vs. variable locale** : muter un objet **que l'on vient de créer** pendant le rendu est correct ; muter un objet **du state** ne l'est pas.
@@ -1689,7 +1689,7 @@ Immer produit un nouvel objet immuable derrière la scène. Utile pour des struc
 
 Les méthodes qui **mutent** (`push`, `pop`, `shift`, `unshift`, `splice`, `sort`, `reverse`, affectation par index) sont **interdites** sur le state. Utilisez des méthodes **non mutantes** ou **copiez d'abord**.
 
-| Opération | ❌ À éviter (mute) | ✅ À préférer (nouveau tableau) |
+| Opération | À éviter (mute) | À préférer (nouveau tableau) |
 |---|---|---|
 | Ajouter | `push`, `unshift` | `[...liste, x]`, `[x, ...liste]` |
 | Supprimer | `pop`, `shift`, `splice` | `filter(el => el.id !== id)`, `slice` |
@@ -1717,7 +1717,7 @@ const triees = [...taches].sort((a, b) => a.titre.localeCompare(b.titre));
 
 ```jsx
 const copie = [...taches];
-copie[0].faite = true;   // ❌ MUTE l'objet partagé avec le state d'origine !
+copie[0].faite = true;   // MUTE l'objet partagé avec le state d'origine !
 ```
 
 Les éléments restent **les mêmes objets** ; modifiez-les en créant un nouvel objet (`{...t, faite: true}`).
@@ -1731,19 +1731,19 @@ Les éléments restent **les mêmes objets** ; modifiez-les en créant un nouvel
 5. **Éviter les structures profondément imbriquées** : **normalisez** (par ID) ou aplatissez.
 
 ```jsx
-// ❌ Redondant
+// Redondant
 const [prenom, setPrenom] = useState('');
 const [nom, setNom] = useState('');
 const [nomComplet, setNomComplet] = useState('');   // à synchroniser à la main !
 
-// ✅ Dérivé pendant le rendu
+// Dérivé pendant le rendu
 const nomComplet = `${prenom} ${nom}`;
 ```
 
 ```jsx
-// ❌ Copie de l'objet : devient obsolète quand la liste change
+// Copie de l'objet : devient obsolète quand la liste change
 const [selection, setSelection] = useState(articles[0]);
-// ✅ Identifiant
+// Identifiant
 const [selectionId, setSelectionId] = useState(articles[0].id);
 const selection = articles.find(a => a.id === selectionId);
 ```
@@ -1809,16 +1809,16 @@ Deux méthodes :
 #### Stocker une fonction dans le state
 
 ```jsx
-const [rappel, setRappel] = useState(() => maFonction);   // ✅ fonction de init qui retourne la fonction
-setRappel(() => autreFonction);                             // ✅ updater qui retourne la fonction
-setRappel(autreFonction);                                   // ❌ React l'appelle comme un updater !
+const [rappel, setRappel] = useState(() => maFonction);   // fonction de init qui retourne la fonction
+setRappel(() => autreFonction);                             // updater qui retourne la fonction
+setRappel(autreFonction);                                   // React l'appelle comme un updater !
 ```
 
 #### Initialisation « paresseuse »
 
 ```jsx
-const [donnees, setDonnees] = useState(creerGrandeListe());     // ❌ appelée à CHAQUE rendu (résultat ignoré après le 1er)
-const [donnees, setDonnees] = useState(() => creerGrandeListe()); // ✅ appelée une seule fois
+const [donnees, setDonnees] = useState(creerGrandeListe());     // appelée à CHAQUE rendu (résultat ignoré après le 1er)
+const [donnees, setDonnees] = useState(() => creerGrandeListe()); // appelée une seule fois
 ```
 
 #### Ajuster l'état en réaction à une prop (pendant le rendu)
@@ -1894,9 +1894,9 @@ function Bouton() {
 #### Passer, ne pas appeler
 
 ```jsx
-<button onClick={handleClick} />       // ✅ passe la fonction
-<button onClick={handleClick()} />     // ❌ l'APPELLE pendant le rendu (et passe son résultat)
-<button onClick={() => handleClick()} />// ✅ fonction fléchée qui appelle au clic
+<button onClick={handleClick} />       // passe la fonction
+<button onClick={handleClick()} />     // l'APPELLE pendant le rendu (et passe son résultat)
+<button onClick={() => handleClick()} />// fonction fléchée qui appelle au clic
 ```
 
 #### Les composants personnalisés n'ont pas d'événements « magiques »
@@ -2066,7 +2066,7 @@ Pour toujours lire la **dernière** valeur, utilisez une **ref** ou `useEffectEv
 {taches.map(t => (
   <li key={t.id}>
     {t.titre}
-    <button onClick={() => supprimer(t.id)}>✕</button>      {/* closure : t.id capturé */}
+    <button onClick={() => supprimer(t.id)}>X</button>      {/* closure : t.id capturé */}
   </li>
 ))}
 ```
@@ -2172,7 +2172,7 @@ Le rendu conditionnel utilise **le JavaScript ordinaire** (`if`, `?:`, `&&`, `sw
 ```jsx
 function Element({ nom, emballe }) {
   if (emballe) {
-    return <li>{nom} ✔</li>;
+    return <li>{nom}</li>;
   }
   return <li>{nom}</li>;
 }
@@ -2190,7 +2190,7 @@ Excellent pour les **cas limites** (chargement, erreur, vide) : le « cas heureu
 #### 8.2.2 Opérateur ternaire `condition ? A : B`
 
 ```jsx
-<li>{emballe ? <del>{nom} ✔</del> : nom}</li>
+<li>{emballe ? <del>{nom}</del> : nom}</li>
 <p className={actif ? 'actif' : 'inactif'}>…</p>
 ```
 
@@ -2199,7 +2199,7 @@ Excellent pour les **cas limites** (chargement, erreur, vide) : le « cas heureu
 #### 8.2.3 Opérateur logique ET `&&`
 
 ```jsx
-<li>{nom} {emballe && '✔'}</li>
+<li>{nom} {emballe && ''}</li>
 {utilisateur && <Profil utilisateur={utilisateur} />}
 ```
 
@@ -2207,10 +2207,10 @@ Excellent pour les **cas limites** (chargement, erreur, vide) : le « cas heureu
 - **Piège du `0`** : `{nombre && <X />}` rend **`0`** quand `nombre === 0`.
 
 ```jsx
-{messages.length && <Liste />}        // ❌ affiche "0"
-{messages.length > 0 && <Liste />}    // ✅ condition booléenne
-{!!messages.length && <Liste />}      // ✅
-{messages.length ? <Liste /> : null}  // ✅
+{messages.length && <Liste />}        // affiche "0"
+{messages.length > 0 && <Liste />}    // condition booléenne
+{!!messages.length && <Liste />}      // 
+{messages.length ? <Liste /> : null}  // 
 ```
 
 #### 8.2.4 `null` : ne rien afficher
@@ -2227,7 +2227,7 @@ function Notification({ message }) {
 ```jsx
 function Element({ nom, emballe }) {
   let contenu = nom;
-  if (emballe) contenu = <del>{nom} ✔</del>;
+  if (emballe) contenu = <del>{nom}</del>;
   return <li>{contenu}</li>;
 }
 ```
@@ -2326,14 +2326,14 @@ React ajoute une seconde règle, **indépendante** : certaines valeurs sont **ig
 C'est la combinaison de ces deux règles qui explique le piège le plus célèbre du rendu conditionnel :
 
 ```jsx
-// ❌ Si messages.length vaut 0, le nombre 0 est affiché à l'écran
+// Si messages.length vaut 0, le nombre 0 est affiché à l'écran
 {messages.length && <Liste messages={messages} />}
 
-// ✅ Condition explicitement booléenne
+// Condition explicitement booléenne
 {messages.length > 0 && <Liste messages={messages} />}
 {Boolean(messages.length) && <Liste messages={messages} />}
 
-// ✅ Ou un ternaire avec null
+// Ou un ternaire avec null
 {messages.length ? <Liste messages={messages} /> : null}
 ```
 
@@ -2379,21 +2379,21 @@ return estAdmin
 Les Hooks doivent être appelés **à chaque rendu, dans le même ordre** (chapitre 11). Un `return` anticipé placé **avant** un Hook viole cette règle.
 
 ```jsx
-// ❌ useState n'est pas appelé quand chargement est vrai
+// useState n'est pas appelé quand chargement est vrai
 function Profil({ chargement, utilisateur }) {
   if (chargement) return <Spinner />;
   const [edition, setEdition] = useState(false);   // erreur : nombre de Hooks variable
   return <Fiche utilisateur={utilisateur} edition={edition} />;
 }
 
-// ✅ Tous les Hooks d'abord, les retours anticipés ensuite
+// Tous les Hooks d'abord, les retours anticipés ensuite
 function Profil({ chargement, utilisateur }) {
   const [edition, setEdition] = useState(false);
   if (chargement) return <Spinner />;
   return <Fiche utilisateur={utilisateur} edition={edition} />;
 }
 
-// ✅✅ Ou : extraire la partie conditionnelle dans un composant dédié
+// Ou : extraire la partie conditionnelle dans un composant dédié
 function Profil({ chargement, utilisateur }) {
   if (chargement) return <Spinner />;
   return <FicheEditable utilisateur={utilisateur} />;  // porte son propre useState
@@ -2588,9 +2588,9 @@ Sans `key`, React avertit (« Each child in a list should have a unique key prop
 5. **Type** : chaîne ou nombre.
 
 ```jsx
-// ❌ La clé doit être sur l'élément externe du map
+// La clé doit être sur l'élément externe du map
 {items.map(i => <Fragment><dt key={i.id}>…</dt></Fragment>)}
-// ✅
+// 
 {items.map(i => <Fragment key={i.id}><dt>{i.terme}</dt><dd>{i.def}</dd></Fragment>)}
 ```
 
@@ -2698,10 +2698,10 @@ function TodoApp() {
 `Array.prototype.sort`, `reverse` et `splice` **modifient** le tableau d'origine : si ce tableau est un état ou une prop, c'est une mutation interdite (chapitres 4 et 6). Travaillez sur une **copie**.
 
 ```jsx
-// ✅ Copie puis tri
+// Copie puis tri
 const tries = [...produits].sort((a, b) => a.prix - b.prix);
 
-// ✅ Méthodes non mutantes (ES2023)
+// Méthodes non mutantes (ES2023)
 const tries2 = produits.toSorted((a, b) => a.prix - b.prix);
 const inverses = produits.toReversed();
 const sans = produits.toSpliced(2, 1);        // retire l'élément d'indice 2
@@ -2864,11 +2864,11 @@ function Recherche() {
 | Critère | Contrôlé | Non contrôlé |
 |---|---|---|
 | Source de vérité | State React | DOM |
-| Valeur disponible à chaque frappe | ✅ | ❌ (à la demande) |
-| Validation en direct / formatage / désactivation du bouton | ✅ facile | ⚠ plus laborieux |
+| Valeur disponible à chaque frappe | Oui | Non (à la demande) |
+| Validation en direct / formatage / désactivation du bouton | Oui, facile | Partiel, plus laborieux |
 | Re-rendu à chaque frappe | Oui | Non |
 | Code | Plus verbeux | Plus concis |
-| `<input type="file">` | ❌ impossible (lecture seule) | ✅ obligatoire |
+| `<input type="file">` | impossible (lecture seule) | obligatoire |
 | Intégration de bibliothèques non React | Plus difficile | Plus simple |
 
 > Règle pratique : **non contrôlé + `FormData` + Actions** pour les formulaires simples ; **contrôlé** quand l'UI réagit à la saisie (validation en direct, champs dépendants, masques, aperçu).
@@ -3381,18 +3381,18 @@ Cela explique les règles ci-dessous : si l'ordre ou le nombre d'appels varie, *
 3. **Les hooks personnalisés** doivent commencer par **`use`** (convention que le linter exploite).
 
 ```jsx
-// ❌ Conditionnel
+// Conditionnel
 if (connecte) { const [x, setX] = useState(0); }
 
-// ❌ Après un return anticipé
+// Après un return anticipé
 if (chargement) return <Spinner />;
 const [x, setX] = useState(0);
 
-// ❌ Dans une boucle / callback
+// Dans une boucle / callback
 liste.forEach(() => useState(0));
 onClick={() => { const v = useContext(Ctx); }}
 
-// ✅ Toujours au niveau supérieur ; mettre la condition DANS le hook ou après
+// Toujours au niveau supérieur ; mettre la condition DANS le hook ou après
 const [x, setX] = useState(0);
 if (chargement) return <Spinner />;
 ```
@@ -3474,10 +3474,10 @@ Sont **réactives** : les **props**, le **state**, et toute variable/fonction **
 ```jsx
 function Salon({ id }) {
   const options = { serveur: 'x', id };        // NOUVEL objet à chaque rendu !
-  useEffect(() => { connecter(options); }, [options]);   // ❌ se relance à CHAQUE rendu
+  useEffect(() => { connecter(options); }, [options]);   // se relance à CHAQUE rendu
 }
 
-// ✅ Déplacer la création DANS l'effet et dépendre des primitives
+// Déplacer la création DANS l'effet et dépendre des primitives
 useEffect(() => {
   const options = { serveur: 'x', id };
   const c = connecter(options);
@@ -3568,19 +3568,19 @@ Les effets sont une **échappatoire** pour sortir de React. Les cas où **il ne 
 | **Récupérer des données** | Effet nu | Bibliothèque de requêtes / framework |
 
 ```jsx
-// ❌ État redondant + effet
+// État redondant + effet
 const [nomComplet, setNomComplet] = useState('');
 useEffect(() => { setNomComplet(`${prenom} ${nom}`); }, [prenom, nom]);
 
-// ✅ Calcul pendant le rendu
+// Calcul pendant le rendu
 const nomComplet = `${prenom} ${nom}`;
 ```
 
 ```jsx
-// ❌ Effet pour réagir à un clic
+// Effet pour réagir à un clic
 useEffect(() => { if (achete) { api.acheter(); } }, [achete]);
 
-// ✅ Gestionnaire
+// Gestionnaire
 function handleAcheter() { api.acheter(); }
 ```
 
@@ -3613,7 +3613,7 @@ function Salon({ id, theme }) {
     c.on('connecte', () => afficherNotification('Connecté !', theme));   // utilise `theme`
     c.connecter();
     return () => c.deconnecter();
-  }, [id, theme]);   // ❌ changer le thème RECONNECTE le salon : indésirable
+  }, [id, theme]);   // changer le thème RECONNECTE le salon : indésirable
 }
 ```
 
@@ -3810,9 +3810,9 @@ function usePrecedent(valeur) {
 | | `useRef` | `useState` |
 |---|---|---|
 | Retourne | `{ current }` | `[valeur, setter]` |
-| Modifier déclenche un rendu | ❌ | ✅ |
-| Mutable | ✅ (`ref.current = …`) | ❌ (immuable) |
-| Lisible pendant le rendu | ❌ (déconseillé) | ✅ |
+| Modifier déclenche un rendu | Non | Oui |
+| Mutable | Oui (`ref.current = …`) | Non (immuable) |
+| Lisible pendant le rendu | Non (déconseillé) | Oui |
 | Usage | Infos **non affichées**, accès DOM | Données qui **influencent l'affichage** |
 
 #### Règles
@@ -4004,7 +4004,7 @@ return (
 
 - Les mises à jour **à l'intérieur** de `startTransition` ont une **priorité basse** : si l'utilisateur déclenche une action **urgente** (frappe, clic), React **abandonne** le rendu en cours et traite l'urgent d'abord.
 - Une transition **n'affiche pas** de fallback Suspense **déjà visible** : l'ancienne interface reste à l'écran (avec `enAttente = true`) jusqu'à ce que la nouvelle soit prête.
-- Depuis React 19, la fonction passée peut être **asynchrone** (Actions) : `enAttente` reste `true` pendant toute l'exécution. ⚠ Les mises à jour d'état effectuées **après un `await`** doivent être à nouveau enveloppées dans `startTransition`.
+- Depuis React 19, la fonction passée peut être **asynchrone** (Actions) : `enAttente` reste `true` pendant toute l'exécution. Les mises à jour d'état effectuées **après un `await`** doivent être à nouveau enveloppées dans `startTransition`.
 
 #### Limites
 
@@ -4044,7 +4044,7 @@ function Recherche() {
 | | `useTransition` | `useDeferredValue` |
 |---|---|---|
 | Vous contrôlez | Le **code qui met à jour** l'état | Une **valeur reçue** (prop, state) |
-| Fournit `isPending` | ✅ | ❌ (comparer valeur et valeur différée) |
+| Fournit `isPending` | Oui | Non (comparer valeur et valeur différée) |
 | Cas typique | Navigation, changement d'onglet | Filtrage/recherche, valeur venant d'un parent ou d'une bibliothèque |
 
 ### 11.18 `useSyncExternalStore`
@@ -4119,7 +4119,7 @@ function Commentaires({ promesseCommentaires }) {
 }
 
 function Page({ id }) {
-  const promesse = chargerCommentaires(id);     // ⚠ idéalement créée côté serveur ou mise en cache
+  const promesse = chargerCommentaires(id);     // idéalement créée côté serveur ou mise en cache
   return (
     <Suspense fallback={<Squelette />}>
       <Commentaires promesseCommentaires={promesse} />
@@ -4129,7 +4129,7 @@ function Page({ id }) {
 
 function Panneau({ afficher }) {
   if (!afficher) return null;
-  const theme = use(ThemeContext);              // ✅ lecture conditionnelle de contexte
+  const theme = use(ThemeContext);              // lecture conditionnelle de contexte
   return <div className={theme} />;
 }
 ```
@@ -4223,7 +4223,7 @@ function useEnLigne() {
   return enLigne;
 }
 
-function BarreStatut()  { return <h1>{useEnLigne() ? '✅ En ligne' : '❌ Hors ligne'}</h1>; }
+function BarreStatut()  { return <h1>{useEnLigne() ? 'En ligne' : 'Hors ligne'}</h1>; }
 function BoutonEnvoyer() { const enLigne = useEnLigne(); return <button disabled={!enLigne}>Envoyer</button>; }
 ```
 
@@ -4524,8 +4524,8 @@ Avantages : **encapsulation** (les consommateurs n'importent pas le contexte bru
 #### 1. Valeur objet recréée à chaque rendu du fournisseur
 
 ```jsx
-<Ctx value={{ a, b }}>…</Ctx>        // ❌ nouvel objet à chaque rendu du parent → tous les consommateurs re-rendent
-const valeur = useMemo(() => ({ a, b }), [a, b]);    // ✅
+<Ctx value={{ a, b }}>…</Ctx>        // nouvel objet à chaque rendu du parent → tous les consommateurs re-rendent
+const valeur = useMemo(() => ({ a, b }), [a, b]);    // 
 ```
 
 > Si le fournisseur ne se re-rend que quand l'état change réellement, ce problème est moindre ; il apparaît surtout quand le parent du fournisseur se re-rend souvent.
@@ -4579,7 +4579,7 @@ function ThemeProvider({ children }) {
 | Éviter le drilling sur 2-3 niveaux | **Composition** (`children`, slots) |
 | Données serveur | **TanStack Query / SWR** (pas de Context) |
 | État global très dynamique | **Zustand / Jotai / Redux Toolkit** |
-| Valeur lue rarement et statique (config) | Context ✅ (idéal) |
+| Valeur lue rarement et statique (config) | Context (idéal) |
 | Valeur changeant souvent, nombreux consommateurs | Store externe avec sélecteurs |
 
 ### 13.7 Contexte et composants composés
@@ -4917,7 +4917,7 @@ function ajouter() {
 }
 ```
 
-⚠ `flushSync` nuit aux performances : alternative = effet réagissant au changement, ou ref de callback.
+`flushSync` nuit aux performances : alternative = effet réagissant au changement, ou ref de callback.
 
 ### 14.9 Exemples d'usage
 
@@ -4951,11 +4951,11 @@ useEffect(() => {
 
 | | Ref | State |
 |---|---|---|
-| Donnée affichée | ❌ | ✅ |
-| Déclenche un rendu | ❌ | ✅ |
-| Mutable directement | ✅ | ❌ |
-| Persiste entre rendus | ✅ | ✅ |
-| Accès au DOM | ✅ | ❌ |
+| Donnée affichée | Non | Oui |
+| Déclenche un rendu | Non | Oui |
+| Mutable directement | Oui | Non |
+| Persiste entre rendus | Oui | Oui |
+| Accès au DOM | Oui | Non |
 | Prévisibilité / testabilité | Moindre | Meilleure |
 
 ### 14.11 Quand lire et écrire `ref.current`
@@ -4967,7 +4967,7 @@ useEffect(() => {
 - les **callbacks de ref**.
 
 ```jsx
-// ❌ Lecture pendant le rendu : le résultat dépend d'une valeur que React ne suit pas
+// Lecture pendant le rendu : le résultat dépend d'une valeur que React ne suit pas
 function Compteur() {
   const rendus = useRef(0);
   rendus.current += 1;                     // mutation pendant le rendu (impure)
@@ -5433,13 +5433,13 @@ La **mise à jour est récursive** : re-rendre un parent re-rend **tout son sous
 Placer l'état **le plus bas possible** limite la portée des rendus.
 
 ```jsx
-// ❌ La saisie re-rend ToUTE la page à chaque frappe
+// La saisie re-rend ToUTE la page à chaque frappe
 function Page() {
   const [texte, setTexte] = useState('');
   return <><input value={texte} onChange={e => setTexte(e.target.value)} /><GrosTableau /></>;
 }
 
-// ✅ L'état est isolé dans son composant
+// L'état est isolé dans son composant
 function Champ() { const [texte, setTexte] = useState(''); return <input value={texte} onChange={e => setTexte(e.target.value)} />; }
 function Page() { return <><Champ /><GrosTableau /></>; }
 ```
@@ -5482,8 +5482,8 @@ const Graphique = memo(Composant, (anciennes, nouvelles) => anciennes.donnees.ve
 - Composants **légers** : le coût de comparaison dépasse le gain.
 
 ```jsx
-<Ligne item={item} onSelect={(id) => selectionner(id)} />       // ❌ nouvelle fonction à chaque rendu
-const onSelect = useCallback((id) => selectionner(id), []);     // ✅ + memo sur Ligne
+<Ligne item={item} onSelect={(id) => selectionner(id)} />       // nouvelle fonction à chaque rendu
+const onSelect = useCallback((id) => selectionner(id), []);     // + memo sur Ligne
 ```
 
 ### 16.7 Technique n°4 : `useMemo` et `useCallback`
@@ -5553,7 +5553,7 @@ react({ babel: { plugins: [['babel-plugin-react-compiler', {}]] } })
 - **Directives** : `"use no memo"` (exclure un composant/hook), mode **`annotation`** avec `"use memo"` (adoption progressive).
 - **Résultat** : moins de `useMemo`/`useCallback`/`memo` à écrire ; vous gardez ces API pour des **cas précis** (contrôle d'identité dans les dépendances d'effets).
 - Compatible React 17+ (avec `react-compiler-runtime`), optimal en 19.
-- Vérifiez dans les **DevTools** (badge « Memo ✨ ») et **mesurez** avant/après.
+- Vérifiez dans les **DevTools** (badge « Memo ») et **mesurez** avant/après.
 
 ### 16.13 Performance du rendu serveur et de l'hydratation
 
@@ -6430,8 +6430,8 @@ Un `<div>` supplémentaire peut **casser** :
 
 | Syntaxe | Accepte `key` ? | Usage |
 |---|---|---|
-| `<>…</>` | ❌ | Cas général |
-| `<Fragment>…</Fragment>` | ✅ | **Listes** d'éléments multiples par item |
+| `<>…</>` | Non | Cas général |
+| `<Fragment>…</Fragment>` | Oui | **Listes** d'éléments multiples par item |
 
 ```jsx
 {glossaire.map(el => (
@@ -6706,25 +6706,25 @@ useEffect(() => {
 Un composant est **pur** s'il retourne le **même JSX pour les mêmes props, état et contexte**, et s'il ne modifie rien d'extérieur pendant le rendu. Ce que le double rendu détecte :
 
 ```jsx
-// ❌ Mutation d'une variable externe : le compteur augmente de 2 par rendu
+// Mutation d'une variable externe : le compteur augmente de 2 par rendu
 let nbAffichages = 0;
 function Entete() {
   nbAffichages++;
   return <h1>Affichage n°{nbAffichages}</h1>;
 }
 
-// ❌ Valeur instable dans le rendu : deux appels, deux résultats différents
+// Valeur instable dans le rendu : deux appels, deux résultats différents
 function Carte() {
   return <div id={Math.random()}>{new Date().toLocaleTimeString()}</div>;
 }
 
-// ❌ Mutation d'une prop ou de l'état
+// Mutation d'une prop ou de l'état
 function Liste({ elements }) {
   elements.sort();                // modifie le tableau du parent
   return <ul>{elements.map(...)}</ul>;
 }
 
-// ✅ Copie avant tri, valeur aléatoire créée une seule fois
+// Copie avant tri, valeur aléatoire créée une seule fois
 function Liste({ elements }) {
   const tries = [...elements].sort();
   const [id] = useState(() => crypto.randomUUID());
@@ -7080,7 +7080,7 @@ import { useState } from 'react';
 
 export function BoutonLike({ initial }) {
   const [likes, setLikes] = useState(initial);
-  return <button onClick={() => setLikes(l => l + 1)}>👍 {likes}</button>;
+  return <button onClick={() => setLikes(l => l + 1)}>{likes}</button>;
 }
 ```
 
@@ -7092,11 +7092,11 @@ export function BoutonLike({ initial }) {
 |---|---|---|
 | Directive | (aucune par défaut) | `'use client'` |
 | S'exécute | Serveur/build uniquement | Serveur (SSR) **et** navigateur |
-| Dans le bundle client | ❌ | ✅ |
-| `async/await` dans le composant | ✅ | ❌ (utiliser `use`/bibliothèques) |
-| State / effets / événements | ❌ | ✅ |
-| API navigateur | ❌ | ✅ |
-| Accès direct DB/secrets | ✅ | ❌ |
+| Dans le bundle client | Non | Oui |
+| `async/await` dans le composant | Oui | Non (utiliser `use`/bibliothèques) |
+| State / effets / événements | Non | Oui |
+| API navigateur | Non | Oui |
+| Accès direct DB/secrets | Oui | Non |
 
 #### Règles de composition
 
@@ -8279,9 +8279,9 @@ Idéal pour un état **fin**, **dérivé**, **localisé** (formulaires riches, �
 |---|---|---|---|---|---|---|
 | Courbe d'apprentissage | Faible | Moyenne | **Faible** | Faible | Moyenne | Élevée |
 | Code répétitif | Moyen | Moyen | **Faible** | Faible | Faible | Élevé |
-| Rendus ciblés (sélecteurs) | ❌ | ✅ | ✅ | ✅ (atomes) | ✅ (auto) | ✅ |
+| Rendus ciblés (sélecteurs) | Non | Oui | Oui | Oui (atomes) | Oui (auto) | Oui |
 | DevTools / traçabilité | Limitée | **Excellente** | Bonne | Bonne | Bonne | **Excellente** (visualiseur) |
-| Hors React | ❌ | ✅ | ✅ | ⚠ | ✅ | ✅ |
+| Hors React | Non | Oui | Oui | Partiel | Oui | Oui |
 | Idéal pour | Thème, utilisateur | Grandes applis, équipes | Applis moyennes, simplicité | État fin et dérivé | Modèles objet réactifs | Workflows complexes |
 
 ### 27.8 Bonnes pratiques
@@ -8588,9 +8588,9 @@ Structure **Arrange – Act – Assert** : préparer (`render`), agir (`user.cli
 
 | Préfixe | 0 résultat | 1 résultat | >1 | Asynchrone |
 |---|---|---|---|---|
-| `getBy…` | ❌ erreur | ✅ | ❌ erreur | Non |
-| `queryBy…` | `null` | ✅ | ❌ erreur | Non |
-| `findBy…` | ❌ erreur (après timeout) | ✅ | ❌ erreur | **Oui** (attend) |
+| `getBy…` | erreur | Oui | erreur | Non |
+| `queryBy…` | `null` | Oui | erreur | Non |
+| `findBy…` | erreur (après timeout) | Oui | erreur | **Oui** (attend) |
 | `getAllBy…` / `queryAllBy…` / `findAllBy…` | — | tableaux | — | `findAll` asynchrone |
 
 - **Vérifier l'absence** : `expect(screen.queryByText('x')).not.toBeInTheDocument()`.
@@ -8819,9 +8819,9 @@ Niveaux de conformité : **A**, **AA** (cible courante), **AAA**.
 | Boîte modale maison | `<dialog>` |
 
 ```jsx
-// ❌
+// 
 <div className="bouton" onClick={ouvrir}>Ouvrir</div>
-// ✅
+// 
 <button type="button" onClick={ouvrir}>Ouvrir</button>
 ```
 
@@ -8863,7 +8863,7 @@ Les attributs ARIA gardent leur **forme kebab-case** : `aria-label`, `aria-expan
 #### Règles d'or
 
 1. **Natif d'abord**, ARIA ensuite.
-2. **Ne changez pas la sémantique native** sans nécessité (`<h2 role="button">` ✗).
+2. **Ne changez pas la sémantique native** sans nécessité (`<h2 role="button">`).
 3. **Tous les contrôles ARIA** doivent être **utilisables au clavier** (vous implémentez le comportement !).
 4. **Pas de `role="presentation"`/`aria-hidden="true"` sur un élément focalisable**.
 5. Tout élément interactif a un **nom accessible**.
