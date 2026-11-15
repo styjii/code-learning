@@ -1,61 +1,22 @@
-<div align="center">
-
-# Algorithmique — Guide complet
+# Algorithmique : cours complet
 
 **Des fondements à la programmation dynamique, aux graphes et aux flots**
 
-*Exemples en Python 3.12+ · Mis à jour en octobre 2026*
+Exemples en Python 3.12 et versions ultérieures. Les idées présentées sont indépendantes du langage.
 
-</div>
+## Avant-propos : comment utiliser ce cours
 
----
+Ce document développe, section par section, le plan « Algorithmique, guide complet ». Il est organisé en trois niveaux.
 
-## Outils
+| Niveau | Chapitres | Objectif |
+| --- | --- | --- |
+| Débutant | 1 à 7 | Comprendre ce qu'est un algorithme, mesurer son coût, maîtriser les structures de données de base, la récursivité, les tris simples, la recherche et les algorithmes mathématiques élémentaires |
+| Intermédiaire | 8 à 17 | Maîtriser les grands schémas de conception : tris avancés, diviser pour régner, glouton, retour sur trace, deux pointeurs, fenêtre glissante, préfixes, recherche binaire sur la réponse, théorie des nombres, hachage |
+| Avancé | 18 à 25 | Programmation dynamique, graphes, plus courts chemins, composantes fortement connexes, flots, structures d'intervalles, chaînes de caractères, ouverture vers la complexité et la compétition |
 
-| Ressource | Lien |
-| --- | --- |
-| Exercices | [exercise](/language/exercises/algorithm) |
-| Solutions | [solutions](/language/solutions/algorithm) |
+Chaque chapitre suit la même logique : définitions précises, principes, démonstrations ou justifications, code commenté, analyse de complexité, erreurs fréquentes, puis points à retenir et exercices. Il est recommandé de lire le code en l'exécutant, et de refaire à la main les petits exemples avant de les programmer.
 
----
-
-## Sommaire
-
-**Niveau débutant**
-
-1. [Introduction aux algorithmes](#1-introduction-aux-algorithmes)
-2. [Analyse des algorithmes](#2-analyse-des-algorithmes)
-3. [Structures de données essentielles](#3-structures-de-données-essentielles)
-4. [Récursivité de base](#4-récursivité-de-base)
-5. [Algorithmes de tri simples](#5-algorithmes-de-tri-simples)
-6. [Algorithmes de recherche](#6-algorithmes-de-recherche)
-7. [Algorithmes mathématiques de base](#7-algorithmes-mathématiques-de-base)
-
-**Niveau intermédiaire**
-
-8. [Algorithmes de tri avancés](#8-algorithmes-de-tri-avancés)
-9. [Diviser pour régner](#9-diviser-pour-régner)
-10. [Algorithmes gloutons](#10-algorithmes-gloutons)
-11. [Retour sur trace (*backtracking*)](#11-retour-sur-trace-backtracking)
-12. [Technique des deux pointeurs](#12-technique-des-deux-pointeurs)
-13. [Fenêtre glissante](#13-fenêtre-glissante)
-14. [Sommes préfixes et tableaux de différences](#14-sommes-préfixes-et-tableaux-de-différences)
-15. [Recherche binaire sur la réponse](#15-recherche-binaire-sur-la-réponse)
-16. [Algorithmes de théorie des nombres](#16-algorithmes-de-théorie-des-nombres)
-17. [Hachage](#17-hachage)
-
-**Niveau avancé**
-
-18. [Programmation dynamique](#18-programmation-dynamique)
-19. [Algorithmes sur les graphes](#19-algorithmes-sur-les-graphes)
-20. [Plus courts chemins dans les graphes pondérés](#20-plus-courts-chemins-dans-les-graphes-pondérés)
-21. [Composantes fortement connexes](#21-composantes-fortement-connexes)
-22. [Flots dans les réseaux](#22-flots-dans-les-réseaux)
-23. [Arbres de segments et arbres de Fenwick](#23-arbres-de-segments-et-arbres-de-fenwick)
-24. [Algorithmes sur les chaînes](#24-algorithmes-sur-les-chaînes)
-25. [Aller plus loin](#25-aller-plus-loin)
-
-> **Légende** : *(ajout)* = notion absente du guide d'origine ; *(à jour)* = correction ou mise à jour ; les exemples utilisent Python, mais les idées s'appliquent à tout langage.
+**Convention de notation.** Dans tout le cours, `n` désigne la taille de l'entrée, `log` désigne le logarithme en base 2 sauf mention contraire (la base ne change rien aux classes de complexité), et les intervalles d'indices suivent la convention de Python : `t[a:b]` contient les indices de `a` inclus à `b` exclu.
 
 ---
 
@@ -65,22 +26,37 @@
 
 # 1. Introduction aux algorithmes
 
-*Comprendre les fondements de l'informatique et de la résolution de problèmes.*
-
 ## 1.1 Qu'est-ce qu'un algorithme ?
 
-Un **algorithme** est une **suite finie d'instructions précises et non ambiguës** qui transforme des **données d'entrée** en un **résultat** (sortie) pour résoudre un problème donné.
+### Définition
 
-| Propriété | Signification |
+Un **algorithme** est une suite **finie** d'instructions **précises** et **non ambiguës** qui, appliquée à des **données d'entrée**, produit un **résultat** (la sortie) et permet de résoudre un **problème** donné.
+
+Le mot vient du nom du mathématicien perse Muhammad ibn Musa al-Khwarizmi (IXe siècle), dont les traités de calcul décimal ont popularisé les procédés de calcul systématiques. L'exemple le plus ancien d'algorithme encore utilisé est celui d'Euclide pour le plus grand commun diviseur (vers 300 avant notre ère), que nous étudierons au chapitre 7.
+
+### Problème et instance
+
+Il faut distinguer deux notions souvent confondues :
+
+- un **problème** est une question générale, décrite par un ensemble d'entrées possibles et la relation que la sortie doit vérifier avec l'entrée. Exemple : « trier une liste d'entiers » ;
+- une **instance** est un cas particulier du problème, c'est-à-dire une entrée concrète. Exemple : la liste `[5, 2, 9, 1]`.
+
+Un algorithme résout un **problème** : il doit fonctionner pour **toutes** les instances valides, pas seulement pour quelques exemples.
+
+### Les six propriétés fondamentales
+
+| Propriété | Signification détaillée |
 | --- | --- |
-| **Entrée** | Zéro, une ou plusieurs données |
-| **Sortie** | Au moins un résultat |
-| **Précision** | Chaque étape est définie sans ambiguïté |
-| **Finitude** | L'algorithme se termine après un nombre fini d'étapes |
-| **Efficacité** | Chaque étape est réalisable (assez simple pour être exécutée) |
-| **Correction** | Il donne le résultat attendu pour **toute** entrée valide |
+| **Entrée** | L'algorithme reçoit zéro, une ou plusieurs données, appartenant à un domaine défini à l'avance (par exemple « une liste non vide d'entiers »). Ce domaine constitue la **précondition** |
+| **Sortie** | L'algorithme produit au moins un résultat, lié de façon précise à l'entrée. La relation attendue constitue la **postcondition** |
+| **Précision** | Chaque étape est définie sans ambiguïté : deux exécutants différents doivent faire exactement la même chose. « Ajouter un peu de sel » n'est pas une instruction algorithmique |
+| **Finitude** | L'exécution s'arrête après un nombre fini d'étapes, pour toute entrée valide. On parle de **terminaison** |
+| **Effectivité** | Chaque instruction est réalisable en pratique, avec des moyens finis, par exemple une addition ou une comparaison |
+| **Correction** | Pour toute entrée valide, la sortie vérifie la postcondition. Un algorithme rapide mais faux est inutile |
 
-> **Analogie** : une **recette de cuisine**. Les ingrédients sont l'entrée, les étapes sont l'algorithme, le plat est la sortie. Une recette imprécise ou infinie n'est pas un algorithme.
+> **Analogie.** Une recette de cuisine : les ingrédients sont l'entrée, les étapes sont l'algorithme, le plat est la sortie. Une recette imprécise (« cuire jusqu'à ce que ce soit bon ») ou qui ne s'arrête jamais n'est pas un algorithme au sens strict.
+
+### Premier exemple complet
 
 ```python
 def maximum(valeurs):
@@ -94,96 +70,178 @@ def maximum(valeurs):
 print(maximum([3, 8, 2, 9, 4]))   # 9
 ```
 
-## 1.2 Pourquoi les algorithmes sont-ils importants ?
+- **Entrée** : une liste non vide de nombres (précondition).
+- **Sortie** : un élément `m` de la liste tel que `m >= x` pour tout `x` de la liste (postcondition).
+- **Finitude** : la boucle `for` parcourt une liste finie.
+- **Correction** : voir la section suivante.
 
-- **Efficacité** : le bon algorithme peut faire passer un calcul de **plusieurs jours à quelques secondes**.
-- **Résolution de problèmes** : ils structurent la pensée (décomposer, généraliser, prouver).
-- **Fondement de tout logiciel** : moteurs de recherche, GPS, compression, chiffrement, recommandations, intelligence artificielle…
-- **Entretiens techniques** et compétitions de programmation.
+## 1.2 Corriger et terminer : démontrer qu'un algorithme est juste
+
+Tester un algorithme sur quelques exemples ne prouve rien : un test réussi n'établit pas la correction. Deux outils théoriques permettent de raisonner.
+
+### L'invariant de boucle
+
+Un **invariant de boucle** est une propriété qui est vraie **avant la première itération** et qui reste vraie **après chaque itération**. Une preuve par invariant comporte trois étapes :
+
+1. **Initialisation** : l'invariant est vrai avant la boucle.
+2. **Conservation** : si l'invariant est vrai avant une itération, il l'est encore après.
+3. **Conclusion** : à la sortie de la boucle, l'invariant joint à la condition d'arrêt entraîne la postcondition.
+
+**Application à `maximum`.** Invariant : « après avoir traité les `k` premiers éléments, `meilleur` est le maximum de ces `k` éléments ».
+
+- Initialisation : avant la boucle, `meilleur = valeurs[0]` est le maximum du seul premier élément.
+- Conservation : si `meilleur` est le maximum des `k` premiers, alors après comparaison avec `v`, le nouveau `meilleur` est le maximum de `k+1` éléments.
+- Conclusion : à la fin, `k = n`, donc `meilleur` est le maximum de toute la liste.
+
+### Le variant de boucle (preuve de terminaison)
+
+Un **variant** est une quantité entière, positive, qui **décroît strictement** à chaque itération. Comme il n'existe pas de suite d'entiers naturels strictement décroissante infinie, la boucle s'arrête.
+
+- Dans une boucle `while b != 0: a, b = b, a % b` (algorithme d'Euclide), le variant est `b`, car `a % b < b` : il décroît strictement et reste positif.
+- Dans une boucle `for`, le nombre d'itérations restantes est le variant.
+
+Pour un algorithme récursif, on raisonne de la même façon : la **taille du problème** doit décroître à chaque appel et atteindre un cas de base (chapitre 4).
+
+### Une illustration de ce qui peut mal tourner
+
+La **suite de Syracuse** (diviser par 2 si pair, sinon remplacer par 3n+1) est un procédé parfaitement précis, mais personne ne sait démontrer qu'il se termine pour tout entier de départ : on ne peut donc pas affirmer qu'il constitue un algorithme au sens strict pour tout entier.
+
+```python
+def syracuse(n):
+    etapes = 0
+    while n != 1:
+        n = n // 2 if n % 2 == 0 else 3 * n + 1
+        etapes += 1
+    return etapes
+
+print(syracuse(27))   # 111
+```
+
+## 1.3 Pourquoi les algorithmes sont-ils importants ?
+
+- **Efficacité** : le choix de l'algorithme peut faire passer un calcul de plusieurs jours à quelques secondes, bien plus que le choix du langage ou de la machine.
+- **Résolution de problèmes** : étudier les algorithmes apprend à décomposer, généraliser et prouver.
+- **Fondement des logiciels** : moteurs de recherche, GPS, compression de données, chiffrement, bases de données, recommandations, intelligence artificielle.
+- **Évaluation professionnelle** : les entretiens techniques et les compétitions de programmation reposent sur ces compétences.
+
+L'écart entre deux algorithmes devient énorme lorsque `n` grandit :
 
 | Taille `n` | Algorithme en O(n²) | Algorithme en O(n log n) |
 | --- | --- | --- |
-| 1 000 | ~1 million d'opérations | ~10 000 |
-| 1 000 000 | ~10¹² (des heures) | ~2 × 10⁷ (une fraction de seconde en C++) |
+| 1 000 | environ 1 million d'opérations | environ 10 000 |
+| 1 000 000 | environ 10¹² (plusieurs heures) | environ 2 × 10⁷ (une fraction de seconde en langage compilé) |
 
-## 1.3 Représenter un algorithme
+Le rapport entre les deux est de l'ordre de `n / log n` : plus l'entrée est grande, plus le bon algorithme est décisif. Aucune amélioration matérielle ne compense une mauvaise complexité asymptotique.
 
-| Mode | Description |
-| --- | --- |
-| **Langage naturel** | Étapes décrites en français |
-| **Pseudo-code** | Structure proche d'un langage, sans syntaxe stricte |
-| **Organigramme** | Schéma (début, actions, décisions, fin) |
-| **Code** | Implémentation dans un langage |
+## 1.4 Représenter un algorithme
+
+| Mode | Description | Usage |
+| --- | --- | --- |
+| **Langage naturel** | Étapes décrites en français | Première approche, communication |
+| **Pseudo-code** | Structure proche d'un langage de programmation, sans syntaxe stricte | Le plus courant dans les cours et publications |
+| **Organigramme** | Schéma avec boîtes de début, d'actions, de décisions et de fin | Algorithmes courts, pédagogie |
+| **Code** | Implémentation dans un langage précis | Exécution réelle |
+
+Les briques de toute représentation sont les mêmes :
+
+- **variables et affectation** : `max ← tableau[0]` ;
+- **séquence** : instructions exécutées l'une après l'autre ;
+- **alternative (conditionnelle)** : `SI condition ALORS … SINON …` ;
+- **itération** : `POUR … FAIRE`, `TANT QUE … FAIRE` ;
+- **appel de sous-algorithme** (fonction, procédure), éventuellement récursif.
+
+Ces quelques constructions suffisent à exprimer n'importe quel algorithme (c'est le contenu du théorème de programmation structurée).
 
 ```text
 ALGORITHME TrouverMaximum(tableau)
   Entrée : un tableau non vide de nombres
-  Sortie : le plus grand nombre
+  Sortie : le plus grand nombre du tableau
   max ← tableau[0]
   POUR chaque x DANS tableau FAIRE
       SI x > max ALORS max ← x
   RETOURNER max
 ```
 
-```text
-   ┌───────┐    ┌──────────────┐    ┌────────────┐  non   ┌───────────┐
-   │ Début │───▶│ max ← t[0]   │───▶│ x > max ?  │───────▶│ Suivant   │
-   └───────┘    └──────────────┘    └────────────┘        └───────────┘
-                                          │ oui
-                                    ┌─────▼─────┐
-                                    │ max ← x   │
-                                    └───────────┘
-```
-
-## 1.4 Écrire son premier algorithme
+## 1.5 Écrire son premier algorithme pas à pas
 
 **Problème** : calculer la moyenne de trois notes.
 
-1. Lire les trois notes `a`, `b`, `c`.
+1. Lire les trois notes `a`, `b`, `c` (entrée).
 2. Calculer `somme ← a + b + c`.
 3. Calculer `moyenne ← somme / 3`.
-4. Afficher `moyenne`.
+4. Afficher `moyenne` (sortie).
 
 ```python
 a, b, c = 12, 15, 9
 print((a + b + c) / 3)    # 12.0
 ```
 
-## 1.5 Méthode pour résoudre un problème algorithmique *(ajout)*
+Cet exemple ne contient ni boucle ni test : c'est une **séquence** pure. Il se termine toujours et est correct pour toute entrée numérique.
 
-| Étape | Question à se poser |
+## 1.6 Méthode pour résoudre un problème algorithmique
+
+| Étape | Questions à se poser |
 | --- | --- |
-| 1. **Comprendre** | Quelles sont les entrées, les sorties, les contraintes (taille de `n`) ? |
-| 2. **Exemples** | Petits cas, cas limites (liste vide, un seul élément, doublons, valeurs négatives) |
-| 3. **Solution naïve** | Une approche *brute force*, même lente, qui est correcte |
-| 4. **Optimiser** | Quelle structure de données ? Quel schéma (voir ci-dessous) ? |
-| 5. **Analyser** | Complexité en temps et en espace |
-| 6. **Coder et tester** | Jeux de tests, cas limites, comparaison avec la solution naïve |
+| 1. **Comprendre** | Quelles sont les entrées, les sorties, les contraintes (taille de `n`, plage de valeurs) ? Que se passe-t-il si l'entrée est vide ? |
+| 2. **Exemples** | Écrire des petits cas à la main, ainsi que les **cas limites** : liste vide, un seul élément, doublons, valeurs négatives, tout identique, déjà trié |
+| 3. **Solution naïve** | Une approche par force brute, même lente, mais correcte. Elle sert de référence pour les tests |
+| 4. **Optimiser** | Quelle structure de données ? Quel schéma de conception (glouton, diviser pour régner, DP…) ? |
+| 5. **Analyser** | Complexité en temps et en espace, dans le pire cas |
+| 6. **Coder et tester** | Jeux de tests, cas limites, comparaison automatique avec la solution naïve sur des entrées aléatoires |
 
-> Les contraintes **guident** le choix : `n ≤ 20` → exponentiel acceptable ; `n ≤ 5 000` → O(n²) ; `n ≤ 10⁵` à `10⁶` → O(n log n) ou O(n).
+Les **contraintes guident le choix de l'algorithme**. Avec une limite d'environ 10⁸ opérations simples par seconde en langage compilé :
 
-## 1.6 Grandes familles d'algorithmes
+| Taille maximale `n` | Complexité visée |
+| --- | --- |
+| n ≤ 10 à 12 | O(n!) acceptable (permutations) |
+| n ≤ 20 à 25 | O(2ⁿ) acceptable (sous-ensembles) |
+| n ≤ 500 | O(n³) |
+| n ≤ 5 000 | O(n²) |
+| n ≤ 10⁵ à 10⁶ | O(n log n) ou O(n) |
+| n ≤ 10⁹ et plus | O(log n) ou formule fermée |
 
-| Famille | Idée | Exemples |
+## 1.7 Les grandes familles d'algorithmes
+
+| Famille | Idée directrice | Exemples (chapitre) |
 | --- | --- | --- |
-| **Force brute** | Tout essayer | Recherche linéaire, mot de passe |
-| **Diviser pour régner** | Diviser, résoudre, combiner | Tri fusion, recherche binaire |
-| **Glouton** | Meilleur choix local à chaque étape | Huffman, Dijkstra, Kruskal |
-| **Programmation dynamique** | Mémoriser les sous-problèmes | Sac à dos, plus longue sous-séquence |
-| **Retour sur trace** | Explorer + revenir en arrière | N reines, Sudoku |
-| **Algorithmes sur les graphes** | Parcours, chemins, flots | BFS, Dijkstra |
-| **Algorithmes probabilistes** | Utilisent le hasard | Quicksort aléatoire, Miller-Rabin |
-| **Séparation et évaluation** (*branch & bound*) | Élagage avec bornes | Voyageur de commerce exact |
+| **Force brute** | Tout essayer | Recherche linéaire (6) |
+| **Diviser pour régner** | Diviser, résoudre récursivement, combiner | Tri fusion, recherche binaire (8, 9) |
+| **Glouton** | Meilleur choix local à chaque étape, sans retour | Huffman, Kruskal, Dijkstra (10, 19, 20) |
+| **Programmation dynamique** | Mémoriser les sous-problèmes qui se chevauchent | Sac à dos, plus longue sous-séquence commune (18) |
+| **Retour sur trace** | Explorer, annuler en cas d'impasse | N reines, Sudoku (11) |
+| **Algorithmes sur les graphes** | Parcours, chemins, flots | BFS, Dijkstra (19 à 22) |
+| **Algorithmes probabilistes** | Utilisent le hasard | Quicksort aléatoire, Miller-Rabin (8, 16) |
+| **Séparation et évaluation** | Élagage par bornes | Voyageur de commerce exact (25) |
 
-## 1.7 Algorithme ou programme ?
+## 1.8 Algorithme ou programme ?
 
-| | Algorithme | Programme |
+|  | Algorithme | Programme |
 | --- | --- | --- |
 | Nature | **Idée** abstraite, indépendante du langage | **Implémentation** concrète |
-| Forme | Pseudo-code, schéma, texte | Code source dans un langage |
+| Forme | Pseudo-code, schéma, texte | Code source |
 | Dépend de la machine | Non | Oui |
-| Finitude | Obligatoire | Peut tourner indéfiniment (serveur, jeu) |
+| Finitude | Obligatoire | Facultative (serveur, jeu vidéo, système d'exploitation) |
 | Exemple | « Trier par fusion » | `sorted(liste)` en Python |
+
+## 1.9 Limites : ce que les algorithmes ne peuvent pas tout faire
+
+Tout problème n'admet pas d'algorithme. Alan Turing a démontré en 1936 que le **problème de l'arrêt** (décider si un programme donné s'arrête sur une entrée donnée) est **indécidable** : aucun algorithme ne le résout pour tous les programmes. Par ailleurs, certains problèmes décidables sont **intraitables en pratique** car tout algorithme connu exige un temps exponentiel (classe NP-difficile, chapitre 25).
+
+## 1.10 Points à retenir et exercices
+
+**À retenir.**
+
+- Un algorithme est fini, précis, efficace (au sens d'effectif) et correct.
+- Les preuves reposent sur l'invariant (correction) et le variant (terminaison).
+- Pour résoudre un problème : comprendre, exemples, version naïve, optimisation, analyse, tests.
+- Les contraintes sur `n` indiquent la complexité à viser.
+
+**Exercices.**
+
+1. Écrire en pseudo-code puis en Python un algorithme qui renvoie le deuxième plus grand élément distinct d'une liste. Quels cas limites faut-il traiter ?
+2. Énoncer un invariant de boucle pour le calcul de la somme d'une liste et démontrer la correction.
+3. Donner un exemple de procédé précis dont on ne sait pas démontrer la terminaison.
+4. Pourquoi la recette « mélanger jusqu'à homogénéité » n'est-elle pas un algorithme au sens de la définition ?
 
 ---
 
@@ -191,12 +249,26 @@ print((a + b + c) / 3)    # 12.0
 
 ## 2.1 Pourquoi analyser ?
 
-Mesurer un temps d'exécution dépend de la machine, du langage et des données. On préfère étudier **comment le coût croît avec la taille `n` de l'entrée**, indépendamment du matériel.
+Mesurer un temps d'exécution en secondes dépend de la machine, du langage, du compilateur, de la charge système et des données. Pour comparer des algorithmes de façon **objective et reproductible**, on étudie plutôt **comment le coût croît avec la taille `n` de l'entrée**.
 
 | Ressource | Mesure |
 | --- | --- |
 | **Complexité en temps** | Nombre d'opérations élémentaires en fonction de `n` |
 | **Complexité en espace** | Mémoire supplémentaire utilisée en fonction de `n` |
+
+### Le modèle de calcul : la machine RAM
+
+On raisonne sur un modèle simplifié, la **machine RAM** (*Random Access Machine*) :
+
+- la mémoire est un tableau de cases accessibles en **temps constant** ;
+- les **opérations élémentaires** (addition, comparaison, affectation, accès à une case, branchement) coûtent chacune **une unité de temps** ;
+- les entiers manipulés tiennent dans un « mot » machine.
+
+Ce modèle est une approximation. Elle devient fausse quand les entiers sont gigantesques (la multiplication de nombres de milliers de chiffres n'est plus en temps constant) ou quand la hiérarchie des caches de la mémoire domine. Il reste excellent pour comparer des algorithmes.
+
+### La taille de l'entrée
+
+La **taille** `n` est la quantité de données : nombre d'éléments d'un tableau, nombre de sommets et d'arêtes d'un graphe, longueur d'une chaîne. Pour un nombre entier `N`, la taille naturelle est le nombre de chiffres, soit environ `log N` : un algorithme en `O(N)` est donc **exponentiel en la taille de la donnée** `N` (on parle de complexité **pseudo-polynomiale**, notion qui réapparaîtra avec le sac à dos).
 
 ## 2.2 Compter les opérations
 
@@ -206,50 +278,94 @@ def somme(t):
     for x in t:            # n itérations
         total += x         # 1 opération chacune
     return total           # 1 opération
-# T(n) = n + 2  → O(n)
+# T(n) = n + 2, donc O(n)
 ```
 
-| Structure | Complexité |
+Règles de dénombrement :
+
+| Structure | Coût |
 | --- | --- |
 | Instruction simple | O(1) |
-| Boucle de `n` itérations | O(n) |
-| Deux boucles imbriquées (chacune en `n`) | O(n²) |
-| Boucle qui **divise** le problème par 2 à chaque tour (`while n > 1: n //= 2`) | O(log n) |
-| Deux boucles successives | O(n) + O(n) = O(n) (on garde le terme dominant) |
-| Appel récursif qui divise en 2 + travail linéaire | O(n log n) |
+| Séquence de blocs | Somme des coûts, donc le plus grand domine |
+| Boucle de `n` itérations de coût constant | O(n) |
+| Deux boucles imbriquées de `n` itérations | O(n²) |
+| Boucle qui divise par 2 à chaque tour (`while n > 1: n //= 2`) | O(log n) |
+| Boucle qui double à chaque tour (`i *= 2` jusqu'à `n`) | O(log n) |
+| Appel récursif divisant en deux + travail linéaire | O(n log n) |
 
-Règles : on **ignore les constantes** (`3n + 5` → `n`) et on garde le **terme dominant** (`n² + n` → `n²`).
+### Boucles imbriquées à bornes dépendantes
 
-## 2.3 Notations asymptotiques *(à jour : correction d'une erreur fréquente)*
+```python
+for i in range(n):
+    for j in range(i):
+        travail()          # exécuté 0 + 1 + 2 + ... + (n-1) fois
+```
 
-Ces notations décrivent la **croissance d'une fonction** `f(n)` :
+Le nombre d'exécutions vaut `0 + 1 + … + (n-1) = n(n-1)/2`, qui est en `Θ(n²)`. Contrairement à l'intuition, une boucle intérieure plus courte ne change pas la classe de complexité ici.
+
+### Pourquoi une boucle qui divise par deux est en O(log n)
+
+Si la variable vaut `n` au départ et est divisée par 2 à chaque tour, après `k` tours elle vaut `n / 2^k`. La boucle s'arrête quand `n / 2^k < 1`, c'est-à-dire pour `k > log₂ n`. Il y a donc environ `log₂ n` itérations. Pour `n = 10⁹`, cela fait environ 30 tours.
+
+**Règles de simplification.**
+
+1. On **ignore les constantes multiplicatives** : `3n + 5` est « en `n` ».
+2. On **garde le terme dominant** : `n² + n` est « en `n²` ».
+3. Pour deux étapes successives, on **additionne** ; pour des étapes imbriquées, on **multiplie**.
+
+## 2.3 Les notations asymptotiques
+
+Ces notations décrivent la **croissance d'une fonction** `f(n)` quand `n` tend vers l'infini. Toutes les fonctions considérées sont à valeurs positives.
 
 | Notation | Définition formelle | Lecture |
 | --- | --- | --- |
-| **O(g(n))** | ∃ c > 0, n₀ : `f(n) ≤ c·g(n)` pour tout `n ≥ n₀` | `f` croît **au plus** aussi vite que `g` (**borne supérieure**) |
-| **Ω(g(n))** | ∃ c > 0, n₀ : `f(n) ≥ c·g(n)` pour tout `n ≥ n₀` | `f` croît **au moins** aussi vite que `g` (**borne inférieure**) |
-| **Θ(g(n))** | `f` est à la fois O(g) et Ω(g) | `f` croît **exactement** comme `g` (**borne serrée**) |
-| **o(g(n))** | `f(n)/g(n) → 0` | `f` croît **strictement moins vite** |
+| **O(g(n))** | Il existe `c > 0` et `n₀` tels que `f(n) ≤ c·g(n)` pour tout `n ≥ n₀` | `f` croît **au plus** aussi vite que `g` (borne supérieure) |
+| **Ω(g(n))** | Il existe `c > 0` et `n₀` tels que `f(n) ≥ c·g(n)` pour tout `n ≥ n₀` | `f` croît **au moins** aussi vite que `g` (borne inférieure) |
+| **Θ(g(n))** | `f` est à la fois `O(g)` et `Ω(g)` | `f` croît **exactement** comme `g` (borne serrée) |
+| **o(g(n))** | `f(n)/g(n)` tend vers 0 | `f` croît **strictement moins vite** que `g` |
+| **ω(g(n))** | `f(n)/g(n)` tend vers l'infini | `f` croît **strictement plus vite** que `g` |
 
-> **Idée reçue à éviter** : « O = pire cas, Ω = meilleur cas, Θ = cas moyen ». **C'est faux.**
-> `O`, `Ω` et `Θ` sont des **bornes sur une fonction**, pas des « cas ». Les **cas** (pire, meilleur, moyen) sont **trois fonctions différentes** de `n`, et pour **chacune** on peut donner une borne `O`, `Ω` ou `Θ`.
+### Exemple de démonstration
+
+Montrons que `3n² + 5n ∈ Θ(n²)`.
+
+- Borne supérieure : pour `n ≥ 1`, `5n ≤ 5n²`, donc `3n² + 5n ≤ 8n²`. On prend `c = 8` et `n₀ = 1`.
+- Borne inférieure : pour tout `n ≥ 1`, `3n² + 5n ≥ 3n²`. On prend `c = 3` et `n₀ = 1`.
+
+Donc `3n² + 5n` est `Θ(n²)`. Il est aussi `O(n³)` et `O(2ⁿ)` (bornes supérieures de moins en moins précises), et `Ω(n)`, `Ω(1)` (bornes inférieures de moins en moins précises).
+
+### Critère pratique par la limite
+
+Si `L = lim f(n)/g(n)` existe quand `n → ∞` :
+
+- `L = 0` implique `f ∈ o(g)`, donc `f ∈ O(g)` ;
+- `0 < L < ∞` implique `f ∈ Θ(g)` ;
+- `L = ∞` implique `f ∈ ω(g)`, donc `f ∈ Ω(g)`.
+
+### Propriétés utiles
+
+- **Transitivité** : `f ∈ O(g)` et `g ∈ O(h)` impliquent `f ∈ O(h)`.
+- **Somme** : `O(f) + O(g) = O(max(f, g))`.
+- **Produit** : `O(f) · O(g) = O(f · g)`.
+- **Constantes** : `O(c·f) = O(f)`.
+- **Logarithmes** : `log_a n` et `log_b n` diffèrent d'une constante, donc la base est sans importance.
+- **Hiérarchie** : pour tout `k` et tout `ε > 0`, `(log n)^k ∈ o(n^ε)`, et `n^k ∈ o(2ⁿ)`.
+
+### Une idée reçue à éviter
+
+> **Idée fausse** : « O désigne le pire cas, Ω le meilleur cas, Θ le cas moyen ».
 >
-> *Exemple (recherche linéaire)* : pire cas `T(n) = n` → Θ(n) ; meilleur cas `T(n) = 1` → Θ(1) ; cas moyen `T(n) ≈ n/2` → Θ(n). On dit couramment « la recherche linéaire est en O(n) » : c'est une **garantie valable dans tous les cas**.
+> `O`, `Ω` et `Θ` sont des **bornes sur une fonction**, pas des « cas ». Les **cas** (pire, meilleur, moyen) sont **trois fonctions différentes** de `n`, et pour chacune on peut donner une borne `O`, `Ω` ou `Θ`.
+>
+> *Exemple (recherche linéaire)* : pire cas `T(n) = n`, qui est `Θ(n)` ; meilleur cas `T(n) = 1`, qui est `Θ(1)` ; cas moyen `T(n) ≈ n/2`, qui est `Θ(n)`. Dire « la recherche linéaire est en `O(n)` » est une garantie valable pour **tous** les cas.
 
-```text
-Exemple : f(n) = 3n² + 5n
-   f ∈ Θ(n²)                (borne serrée)
-   f ∈ O(n²), O(n³), O(2ⁿ)  (bornes supérieures, de moins en moins précises)
-   f ∈ Ω(n²), Ω(n), Ω(1)    (bornes inférieures)
-```
-
-## 2.4 Pire, meilleur et cas moyen
+## 2.4 Pire cas, meilleur cas, cas moyen
 
 | Cas | Définition | Utilité |
 | --- | --- | --- |
-| **Pire cas** | Coût maximal sur toutes les entrées de taille `n` | **Garanties** de performance |
+| **Pire cas** | Coût maximal sur toutes les entrées de taille `n` | Fournit des **garanties** de performance |
 | **Meilleur cas** | Coût minimal | Rarement informatif |
-| **Cas moyen** | Espérance du coût sur une distribution d'entrées | Comportement typique (hypothèses nécessaires) |
+| **Cas moyen** | Espérance du coût selon une distribution des entrées | Comportement typique, mais exige des hypothèses sur la distribution |
 
 | Algorithme | Meilleur | Moyen | Pire |
 | --- | --- | --- | --- |
@@ -259,116 +375,221 @@ Exemple : f(n) = 3n² + 5n
 | Quicksort | Θ(n log n) | Θ(n log n) | Θ(n²) |
 | Tri fusion | Θ(n log n) | Θ(n log n) | Θ(n log n) |
 
+Le **cas moyen** est lié à la notion d'**algorithme probabiliste** : quand l'algorithme choisit lui-même au hasard (pivot aléatoire), on parle de complexité **en espérance**, valable pour toute entrée, sans hypothèse sur la distribution des données.
+
 ## 2.5 Classes de complexité usuelles
 
-| Classe | Nom | Exemple | `n = 10⁶` (ordre de grandeur) |
+| Classe | Nom | Exemple | Ordre de grandeur pour `n = 10⁶` |
 | --- | --- | --- | --- |
 | O(1) | Constante | Accès à un indice | 1 |
-| O(log n) | Logarithmique | Recherche binaire | ~20 |
+| O(log n) | Logarithmique | Recherche binaire | environ 20 |
 | O(√n) | Racine carrée | Test de primalité naïf | 1 000 |
 | O(n) | Linéaire | Parcours | 10⁶ |
-| O(n log n) | Quasi-linéaire | Tri efficace | 2 × 10⁷ |
+| O(n log n) | Quasi-linéaire | Tris efficaces | 2 × 10⁷ |
 | O(n²) | Quadratique | Deux boucles imbriquées | 10¹² (trop lent) |
 | O(n³) | Cubique | Floyd-Warshall | trop lent |
-| O(2ⁿ) | Exponentielle | Sous-ensembles | trop lent dès `n ≈ 40` |
-| O(n!) | Factorielle | Permutations | trop lent dès `n ≈ 12` |
+| O(2ⁿ) | Exponentielle | Énumération des sous-ensembles | trop lent dès n ≈ 40 |
+| O(n!) | Factorielle | Énumération des permutations | trop lent dès n ≈ 12 |
 
 ```text
-Ordre de croissance :  1  <  log n  <  √n  <  n  <  n log n  <  n²  <  n³  <  2ⁿ  <  n!
+Ordre de croissance :  1 < log n < √n < n < n log n < n² < n³ < 2ⁿ < n!
 ```
 
-> **Règle pratique** : un ordinateur moderne effectue environ **10⁸ opérations simples par seconde** en langage compilé (C++), et **~10⁷** en Python pur. Cela permet d'estimer si une solution passera dans un délai donné.
+> **Règle pratique.** Un ordinateur moderne exécute environ 10⁸ opérations simples par seconde en langage compilé, et environ 10⁷ en Python pur. Cela permet d'estimer immédiatement si une solution passera dans le temps imparti.
 
 ## 2.6 Complexité en espace
+
+On compte la mémoire **supplémentaire** utilisée par l'algorithme, sans compter l'entrée elle-même.
 
 ```python
 def somme_liste(t):          # O(1) espace supplémentaire
     total = 0
-    for x in t: total += x
+    for x in t:
+        total += x
     return total
 
 def doubles(t):              # O(n) espace supplémentaire
     return [2 * x for x in t]
 ```
 
-Pensez à la **pile d'appels** : une récursion de profondeur `n` consomme O(n) d'espace (et Python limite la profondeur à ~1000 par défaut).
+Il faut penser à la **pile d'appels** : une récursion de profondeur `n` consomme O(n) d'espace, même sans tableau explicite. En Python, la profondeur est limitée à environ 1000 par défaut.
 
-## 2.7 Compromis temps / espace
+## 2.7 Compromis temps et espace
 
-On peut souvent **gagner du temps en utilisant plus de mémoire** (tables de hachage, mémoïsation, tableaux de sommes préfixes) ou l'inverse.
+On peut souvent gagner du temps en utilisant plus de mémoire, ou l'inverse.
 
 | Technique | Gagne | Coûte |
 | --- | --- | --- |
-| Mémoïsation / DP | Temps (évite les recalculs) | Mémoire |
-| Table de hachage | Temps (recherche O(1)) | Mémoire |
+| Mémoïsation, programmation dynamique | Temps (évite les recalculs) | Mémoire |
+| Table de hachage | Temps (recherche en O(1)) | Mémoire |
+| Sommes préfixes | Temps de requête | Mémoire O(n) et précalcul |
 | Calcul à la volée | Mémoire | Temps |
 
-## 2.8 Analyse amortie *(ajout)*
+## 2.8 Analyse amortie
 
-Le **coût amorti** est le coût **moyen par opération sur une suite d'opérations** dans le **pire cas** (≠ cas moyen probabiliste).
+Le **coût amorti** d'une opération est le coût moyen **par opération sur une suite d'opérations**, calculé dans le **pire cas** de la suite. Cela diffère du cas moyen probabiliste : aucune hypothèse aléatoire n'est faite.
 
-*Exemple : `list.append` en Python.* Une insertion est en O(1) la plupart du temps, mais coûte O(n) quand le tableau doit être **agrandi** (copie). Comme la capacité est multipliée par un facteur constant, `n` ajouts coûtent O(n) au total : **O(1) amorti** par ajout. De même, l'union-find avec compression de chemins, ou `dict` pour l'insertion.
+### Exemple : le tableau dynamique (`list.append`)
+
+Un tableau dynamique double sa capacité quand il est plein : l'insertion qui déclenche l'agrandissement coûte O(n) (copie), mais les suivantes coûtent O(1). Pour `n` insertions, les copies coûtent au total `1 + 2 + 4 + … + n < 2n`, donc le coût total est inférieur à `3n` : **O(1) amorti** par insertion.
+
+Trois méthodes classiques justifient un coût amorti :
+
+1. **Agrégat** : calculer le coût total de `n` opérations et diviser par `n`.
+2. **Comptable** : faire « payer » à chaque opération bon marché un crédit qui financera les opérations coûteuses.
+3. **Potentiel** : définir une fonction de potentiel sur l'état de la structure, qui augmente lors des opérations peu coûteuses et diminue lors des coûteuses.
+
+Autres exemples : l'union-find avec compression de chemins (chapitre 19), l'insertion dans une table de hachage avec redimensionnement (chapitre 17), la file monotone (chapitre 13).
 
 ## 2.9 Récurrences
 
-Les algorithmes récursifs s'analysent via une **relation de récurrence** :
+Les algorithmes récursifs s'analysent par une **relation de récurrence** sur le coût `T(n)`.
 
 | Récurrence | Solution | Exemple |
 | --- | --- | --- |
 | `T(n) = T(n−1) + O(1)` | O(n) | Factorielle |
+| `T(n) = T(n−1) + O(n)` | O(n²) | Tri par sélection récursif |
 | `T(n) = T(n/2) + O(1)` | O(log n) | Recherche binaire |
 | `T(n) = 2T(n/2) + O(n)` | O(n log n) | Tri fusion |
-| `T(n) = 2T(n−1) + O(1)` | O(2ⁿ) | Fibonacci naïf, tours de Hanoï |
+| `T(n) = 2T(n−1) + O(1)` | O(2ⁿ) | Tours de Hanoï, Fibonacci naïf |
 
-Voir le **théorème maître** [section 9.5](#95-le-théorème-maître).
+Trois méthodes de résolution :
 
-## 2.10 Conseils pratiques
+- **Dépliage** : développer `T(n)` en fonction de `T(n−1)`, `T(n−2)`… jusqu'au cas de base. Pour `T(n) = T(n−1) + 1`, on obtient `T(n) = T(0) + n`.
+- **Arbre de récursion** : dessiner les appels niveau par niveau et sommer le travail de chaque niveau. Pour le tri fusion, il y a `log n` niveaux de coût `n` chacun.
+- **Substitution** : deviner la forme de la solution et la vérifier par récurrence.
 
-- **Mesurez** avant d'optimiser (`timeit`, `cProfile`) : la complexité théorique ignore les constantes.
-- Un algorithme O(n log n) avec une grosse constante peut perdre contre un O(n²) sur de petites entrées (c'est pourquoi Timsort utilise l'insertion pour les petits blocs).
-- Attention aux **opérations cachées** : `x in liste` est O(n), `liste.insert(0, x)` est O(n), `s += "a"` en boucle peut être O(n²).
-- Vérifiez l'**espace** : un tableau `n × n` pour `n = 10⁵` est impossible.
+Le **théorème maître** (chapitre 9) donne directement la solution des récurrences de type diviser pour régner.
+
+## 2.10 Une borne inférieure célèbre
+
+Tout algorithme de tri **par comparaisons** exige `Ω(n log n)` comparaisons dans le pire cas. Justification : l'arbre de décision d'un tel algorithme possède au moins `n!` feuilles (une par permutation possible), donc une hauteur au moins `log₂(n!)`, qui est `Θ(n log n)` d'après la formule de Stirling. Cette borne prouve que le tri fusion est asymptotiquement optimal parmi les tris par comparaisons.
+
+## 2.11 Conseils pratiques
+
+- **Mesurer avant d'optimiser** (`timeit`, `cProfile`) : la complexité asymptotique ignore les constantes.
+- Un algorithme en O(n log n) à grosse constante peut perdre contre un O(n²) sur de petites entrées ; c'est pourquoi Timsort utilise l'insertion sur de petits blocs.
+- Attention aux **opérations cachées** : `x in liste` est O(n), `liste.insert(0, x)` est O(n), `s += "a"` en boucle peut être O(n²), les tranches `t[a:b]` copient leurs éléments.
+- Vérifier l'**espace** : un tableau `n × n` pour `n = 10⁵` est impossible en mémoire.
 
 ```python
 import timeit
 print(timeit.timeit("sorted(t)", setup="import random; t=[random.random() for _ in range(10**5)]", number=10))
 ```
 
+## 2.12 Points à retenir et exercices
+
+**À retenir.**
+
+- On mesure la croissance du coût en fonction de la taille de l'entrée, pas un temps en secondes.
+- `O` borne par le haut, `Ω` par le bas, `Θ` des deux côtés ; pire, meilleur et moyen sont des fonctions distinctes.
+- Les récurrences traduisent les algorithmes récursifs ; l'analyse amortie moyenne sur une suite d'opérations.
+
+**Exercices.**
+
+1. Donner la complexité d'une boucle `i = 1; while i < n: i *= 3`.
+2. Montrer que `n log n ∈ O(n²)` mais `n² ∉ O(n log n)`.
+3. Résoudre `T(n) = T(n−1) + n` avec `T(0) = 0` par dépliage.
+4. Expliquer pourquoi `list.pop(0)` dans une boucle de `n` éléments est O(n²) et proposer une alternative en O(n).
+
 ---
 
 # 3. Structures de données essentielles
 
-*(Section ajoutée : les algorithmes s'appuient sur des structures de données ; en voici l'essentiel.)*
+Un algorithme manipule des données ; la **structure de données** choisie pour les organiser détermine le coût de chaque opération. Une même idée algorithmique peut passer de O(n²) à O(n log n) simplement en changeant de structure. Ce chapitre présente les structures indispensables, leur fonctionnement interne, leurs coûts et leurs usages.
 
-## 3.1 Aperçu et complexités
+## 3.1 Notions préalables
+
+Une **structure de données** est une manière d'organiser des données en mémoire, accompagnée des **opérations** autorisées sur elles (accès, recherche, insertion, suppression, parcours). Un **type abstrait de données** (TAD) décrit **ce que** font les opérations (l'interface) sans dire **comment** elles sont réalisées (l'implémentation). Par exemple, le TAD *pile* peut être implémenté par un tableau ou par une liste chaînée.
+
+Deux grandes familles d'implémentation s'opposent :
+
+- **Contiguë** : les éléments sont côte à côte en mémoire (tableau). L'accès par indice est immédiat, mais l'insertion au milieu oblige à décaler.
+- **Chaînée** : chaque élément contient un lien vers le suivant. L'insertion est locale, mais l'accès par indice exige de parcourir la chaîne.
+
+## 3.2 Aperçu des complexités
 
 | Structure | Accès | Recherche | Insertion | Suppression | Remarques |
 | --- | --- | --- | --- | --- | --- |
-| **Tableau / `list`** | O(1) | O(n) | O(1) amorti en fin, O(n) ailleurs | O(n) | Contigu en mémoire |
-| **Liste chaînée** | O(n) | O(n) | O(1) en tête / avec nœud connu | O(1) avec nœud connu | Pas d'accès direct |
-| **Pile** (LIFO) | — | — | O(1) | O(1) | `list.append` / `pop` |
-| **File** (FIFO) | — | — | O(1) | O(1) | `collections.deque` |
-| **Table de hachage** (`dict`, `set`) | — | O(1) moyen | O(1) moyen | O(1) moyen | Pas d'ordre de tri |
-| **Tas** (*heap*) | min/max en O(1) | O(n) | O(log n) | O(log n) | `heapq` |
-| **Arbre binaire de recherche équilibré** | — | O(log n) | O(log n) | O(log n) | Non fourni nativement en Python (`sortedcontainers`) |
-| **Graphe** | — | — | — | — | Listes d'adjacence |
+| Tableau, `list` | O(1) | O(n) | O(1) amorti en fin, O(n) ailleurs | O(n) | Contigu en mémoire, très bon pour le cache |
+| Liste chaînée | O(n) | O(n) | O(1) en tête ou avec nœud connu | O(1) avec nœud connu | Pas d'accès direct |
+| Pile (LIFO) | sommet seulement |  | O(1) | O(1) | `list.append` et `pop` |
+| File (FIFO) | tête seulement |  | O(1) | O(1) | `collections.deque` |
+| Table de hachage (`dict`, `set`) |  | O(1) en moyenne | O(1) en moyenne | O(1) en moyenne | Pas d'ordre de tri |
+| Tas (*heap*) | min ou max en O(1) | O(n) | O(log n) | O(log n) | `heapq` |
+| Arbre binaire de recherche équilibré |  | O(log n) | O(log n) | O(log n) | Non natif en Python (`sortedcontainers`) |
+| Graphe |  |  |  |  | Listes d'adjacence (chapitre 19) |
 
-## 3.2 Pile, file et file à double entrée
+## 3.3 Tableaux et listes Python
+
+La `list` de Python est un **tableau dynamique** : un bloc contigu de références, agrandi par un facteur constant quand il est plein (d'où le O(1) amorti de `append`, voir 2.8).
+
+| Opération | Coût | Commentaire |
+| --- | --- | --- |
+| `t[i]` | O(1) | Adresse calculée directement |
+| `t.append(x)` | O(1) amorti |  |
+| `t.pop()` | O(1) | Retire le dernier |
+| `t.pop(0)`, `t.insert(0, x)` | O(n) | Tous les éléments sont décalés |
+| `x in t` | O(n) | Parcours séquentiel |
+| `t[a:b]` | O(b - a) | **Copie** de la tranche |
+| `t.sort()` | O(n log n) | Timsort |
+| `len(t)` | O(1) | Longueur stockée |
+
+Une erreur classique concerne la création de tableaux à deux dimensions :
+
+```python
+grille_fausse = [[0] * 3] * 3      # trois fois LA MÊME ligne (même objet)
+grille_fausse[0][0] = 1
+print(grille_fausse)               # [[1, 0, 0], [1, 0, 0], [1, 0, 0]]
+
+grille = [[0] * 3 for _ in range(3)]   # trois lignes indépendantes
+grille[0][0] = 1
+print(grille)                      # [[1, 0, 0], [0, 0, 0], [0, 0, 0]]
+```
+
+## 3.4 Piles, files et files à double entrée
+
+Une **pile** (*stack*) suit la règle **dernier entré, premier sorti** (LIFO) : on empile et on dépile du même côté. Usages : pile d'appels, annulation (*undo*), vérification de parenthèses, parcours en profondeur, évaluation d'expressions.
+
+Une **file** (*queue*) suit la règle **premier entré, premier sorti** (FIFO) : on ajoute d'un côté, on retire de l'autre. Usages : parcours en largeur, ordonnancement de tâches, tampons.
+
+Une **deque** (file à double entrée) autorise l'ajout et le retrait aux deux extrémités en O(1).
 
 ```python
 from collections import deque
 
 pile = []
 pile.append(1); pile.append(2)
-pile.pop()                      # 2 (dernier entré, premier sorti)
+print(pile.pop())                # 2 (dernier entré, premier sorti)
 
 file = deque()
 file.append(1); file.append(2)
-file.popleft()                  # 1 (premier entré, premier sorti) — O(1)
-# Attention : list.pop(0) est en O(n) : utilisez deque pour une file
+print(file.popleft())            # 1 (premier entré, premier sorti), en O(1)
+# Attention : list.pop(0) est en O(n) ; utiliser deque pour une file.
 ```
 
-## 3.3 Liste chaînée
+**Application : parenthèses bien formées.** On empile chaque ouvrante ; à chaque fermante, la sommet de la pile doit être l'ouvrante correspondante.
+
+```python
+def bien_parenthese(s):
+    paires = {')': '(', ']': '[', '}': '{'}
+    pile = []
+    for c in s:
+        if c in '([{':
+            pile.append(c)
+        elif c in paires:
+            if not pile or pile.pop() != paires[c]:
+                return False
+    return not pile            # la pile doit être vide à la fin
+
+print(bien_parenthese("{[()]}"), bien_parenthese("([)]"))   # True False
+```
+
+## 3.5 Listes chaînées
+
+Une **liste chaînée** est une suite de **nœuds** ; chaque nœud contient une valeur et une référence vers le nœud suivant (liste **simplement chaînée**), et éventuellement vers le précédent (liste **doublement chaînée**). On conserve la **tête** (premier nœud).
+
+Avantages : insertion et suppression en O(1) quand on dispose du nœud ; pas de redimensionnement. Inconvénients : pas d'accès direct, mauvaise localité mémoire, surcoût de mémoire par nœud.
 
 ```python
 class Noeud:
@@ -382,7 +603,7 @@ def inverser(tete):
         tete.suivant, precedent, tete = precedent, tete, tete.suivant
     return precedent
 
-# Démonstration : 1 → 2 → 3 devient 3 → 2 → 1
+# 1 -> 2 -> 3 devient 3 -> 2 -> 1
 tete = Noeud(1, Noeud(2, Noeud(3)))
 tete = inverser(tete)
 valeurs = []
@@ -392,9 +613,27 @@ while tete:
 print(valeurs)                   # [3, 2, 1]
 ```
 
-## 3.4 Tas et file de priorité
+L'inversion fonctionne par une boucle à trois variables : à chaque tour, on retourne le lien du nœud courant vers le précédent. Complexité O(n) en temps et O(1) en espace.
 
-Un **tas binaire** donne accès à l'**élément minimal** en O(1) et supporte l'insertion / l'extraction en O(log n). Python propose un **tas-min** :
+## 3.6 Tables de hachage (aperçu)
+
+Un `dict` ou un `set` Python offre insertion, recherche et suppression en **O(1) en moyenne**. Le principe (fonction de hachage, collisions) est détaillé au chapitre 17. Retenir pour l'instant : pour tester une appartenance ou compter, un `set` ou un `dict` remplace une recherche linéaire coûteuse.
+
+## 3.7 Tas et files de priorité
+
+Une **file de priorité** est un TAD qui permet d'insérer des éléments et d'extraire à chaque fois celui de **plus haute priorité**. Le **tas binaire** en est l'implémentation standard.
+
+### Définition d'un tas binaire
+
+Un **tas-min** est un arbre binaire **complet** (tous les niveaux sont pleins sauf éventuellement le dernier, rempli de gauche à droite) vérifiant la **propriété de tas** : la valeur de chaque nœud est inférieure ou égale à celles de ses enfants. Le minimum est donc à la racine.
+
+Grâce à sa forme complète, un tas se stocke dans un **tableau** : le nœud d'indice `i` a pour enfants `2i+1` et `2i+2`, et pour parent `(i-1)//2`.
+
+### Opérations
+
+- **Insertion** : ajouter à la fin, puis **remonter** l'élément en l'échangeant avec son parent tant qu'il est plus petit. Coût O(log n), car la hauteur est `log n`.
+- **Extraction du minimum** : remplacer la racine par le dernier élément, puis le **descendre** en l'échangeant avec le plus petit de ses enfants. Coût O(log n).
+- **Construction** (`heapify`) : en O(n) en descendant les nœuds internes depuis le bas, et non O(n log n) comme `n` insertions successives.
 
 ```python
 import heapq
@@ -405,61 +644,91 @@ for x in [5, 1, 8, 3]:
 print(heapq.heappop(tas))        # 1 (le plus petit)
 
 liste = [9, 4, 7, 1, 8]
-heapq.heapify(liste)             # transforme une liste en tas en O(n)
+heapq.heapify(liste)             # transforme la liste en tas, en O(n)
 print(liste[0])                  # 1 : le minimum est toujours en tête
-print(heapq.nsmallest(3, [9, 4, 7, 1, 8]))    # [1, 4, 7] : les 3 plus petits
+print(heapq.nsmallest(3, [9, 4, 7, 1, 8]))    # [1, 4, 7]
 
 taches = []                      # file de priorité avec des tuples (priorité, élément)
 heapq.heappush(taches, (2, "écrire"))
 heapq.heappush(taches, (1, "lire"))
 print(heapq.heappop(taches))     # (1, 'lire')
 
-tas_max = []                     # astuce tas-max : stocker l'opposé
+tas_max = []                     # astuce du tas-max : stocker l'opposé
 for x in [5, 1, 8, 3]:
     heapq.heappush(tas_max, -x)
 print(-heapq.heappop(tas_max))   # 8 (le plus grand)
 ```
 
-## 3.5 Arbres
+Usages : Dijkstra, Prim, tri par tas, fusion de listes triées, « k plus grands éléments », simulation d'événements. Avec des tuples, si deux priorités sont égales, Python compare l'élément suivant du tuple : il faut parfois insérer un compteur pour éviter de comparer des objets non comparables.
+
+## 3.8 Arbres
+
+Un **arbre** est une structure hiérarchique : une **racine**, et des **nœuds** ayant chacun des **enfants**. Vocabulaire : **feuille** (nœud sans enfant), **hauteur** (longueur du plus long chemin de la racine à une feuille), **profondeur** d'un nœud (distance à la racine), **sous-arbre**. Un **arbre binaire** a au plus deux enfants par nœud (gauche et droit).
 
 ```python
 class NoeudArbre:
     def __init__(self, valeur):
         self.valeur, self.gauche, self.droite = valeur, None, None
 
-def parcours_infixe(n):                    # gauche, racine, droite (trié pour un ABR)
+def parcours_infixe(n):                    # gauche, racine, droite
     if n:
         yield from parcours_infixe(n.gauche)
         yield n.valeur
         yield from parcours_infixe(n.droite)
 
-# Démonstration : arbre de recherche  2 ← 4 → 6
 racine = NoeudArbre(4)
 racine.gauche, racine.droite = NoeudArbre(2), NoeudArbre(6)
-print(list(parcours_infixe(racine)))    # [2, 4, 6] : ordre trié
+print(list(parcours_infixe(racine)))       # [2, 4, 6]
 ```
 
-| Parcours | Ordre |
-| --- | --- |
-| **Préfixe** | racine → gauche → droite |
-| **Infixe** | gauche → racine → droite |
-| **Suffixe** | gauche → droite → racine |
-| **Largeur** | niveau par niveau (file) |
+### Les quatre parcours
 
-Un **arbre binaire de recherche** (ABR) maintient `gauche < racine < droite` : recherche en O(h), où `h` est la hauteur (O(log n) s'il est équilibré — AVL, arbre rouge-noir ; O(n) dégénéré).
+| Parcours | Ordre de visite | Usage typique |
+| --- | --- | --- |
+| **Préfixe** | racine, gauche, droite | Copier un arbre, sérialiser |
+| **Infixe** | gauche, racine, droite | Obtenir les valeurs triées d'un ABR |
+| **Suffixe** | gauche, droite, racine | Supprimer un arbre, évaluer une expression |
+| **En largeur** | niveau par niveau (avec une file) | Distances à la racine |
 
-## 3.6 Choisir la bonne structure
+### Arbre binaire de recherche (ABR)
+
+Un **ABR** vérifie, pour chaque nœud : toutes les valeurs du sous-arbre gauche sont **strictement inférieures** à la sienne, toutes celles du sous-arbre droit sont **supérieures**. La recherche, l'insertion et la suppression coûtent **O(h)**, où `h` est la hauteur.
+
+- Si l'arbre est **équilibré**, `h = O(log n)` : c'est le cas des **arbres AVL** et **rouge-noir**, qui se rééquilibrent par rotations.
+- Si l'arbre est **dégénéré** (insertion de valeurs déjà triées), `h = O(n)` et l'ABR devient une liste chaînée.
+
+## 3.9 Ensembles et dictionnaires triés
+
+Quand on a besoin de données triées **avec insertions et suppressions fréquentes**, la liste triée avec `bisect.insort` coûte O(n) par insertion (décalage). Pour de gros volumes, on utilise un arbre équilibré (bibliothèque `sortedcontainers` en Python, `std::set` et `std::map` en C++, `TreeMap` en Java).
+
+## 3.10 Choisir la bonne structure
 
 | Besoin | Structure |
 | --- | --- |
 | Accès par indice | `list` |
-| Appartenance / comptage rapide | `set`, `dict`, `Counter` |
+| Appartenance ou comptage rapide | `set`, `dict`, `Counter` |
 | Dernier entré, premier sorti | pile (`list`) |
-| Premier entré, premier sorti, BFS | `deque` |
-| Toujours extraire le min / max | `heapq` |
+| Premier entré, premier sorti, parcours en largeur | `deque` |
+| Toujours extraire le minimum ou le maximum | `heapq` |
 | Données triées avec insertions | `bisect.insort` (petit `n`) ou arbre équilibré |
-| Union / appartenance à un groupe | Union-Find (section 19) |
-| Préfixes de chaînes | Trie (section 24) |
+| Union et appartenance à un groupe | Union-Find (chapitre 19) |
+| Préfixes de chaînes | Trie (chapitre 24) |
+
+## 3.11 Points à retenir et exercices
+
+**À retenir.**
+
+- Le choix de la structure détermine la complexité : ce chapitre est la boîte à outils de tous les suivants.
+- `list.pop(0)` et `insert(0, x)` sont O(n) ; utiliser `deque`.
+- Un tas donne le minimum en O(1) et l'insertion ou l'extraction en O(log n).
+- Un ABR n'est efficace que s'il est équilibré.
+
+**Exercices.**
+
+1. Implémenter une file avec deux piles et analyser le coût amorti.
+2. Écrire une fonction qui fusionne `k` listes triées en utilisant un tas, en O(N log k).
+3. Vérifier si un arbre binaire est un ABR (indice : transmettre un intervalle de valeurs autorisées).
+4. Pourquoi `heapify` est-il en O(n) alors que `n` insertions coûtent O(n log n) ?
 
 ---
 
@@ -467,9 +736,9 @@ Un **arbre binaire de recherche** (ABR) maintient `gauche < racine < droite` : r
 
 ## 4.1 Qu'est-ce que la récursivité ?
 
-Une fonction est **récursive** quand elle **s'appelle elle-même** pour résoudre une version plus petite du même problème.
+Une fonction est **récursive** quand elle **s'appelle elle-même**, directement ou indirectement, pour résoudre une version **plus petite** du même problème. C'est la traduction informatique du raisonnement par récurrence en mathématiques.
 
-> **Analogie** : des poupées russes : on ouvre chacune jusqu'à la plus petite.
+> **Analogie.** Des poupées russes : pour ouvrir la première, on ouvre une poupée plus petite, et ainsi de suite jusqu'à la plus petite, qui ne contient plus rien.
 
 ```python
 def factorielle(n):
@@ -480,36 +749,49 @@ def factorielle(n):
 print(factorielle(5))   # 120
 ```
 
+La définition mathématique correspondante est `0! = 1` et `n! = n × (n-1)!` pour `n ≥ 1`. La récursivité permet d'écrire presque mot pour mot une définition inductive.
+
 ## 4.2 Structure d'une fonction récursive
 
-1. **Cas de base** : la situation la plus simple, résolue directement.
-2. **Appel récursif** sur un problème **strictement plus petit**.
-3. **Combinaison** des résultats.
+Toute fonction récursive correcte possède trois éléments :
+
+1. **Cas de base** : la situation la plus simple, résolue directement, sans appel récursif. Il en faut au moins un.
+2. **Appel récursif** sur un problème **strictement plus petit**, de façon à converger vers un cas de base.
+3. **Combinaison** des résultats des appels pour construire le résultat du problème courant.
+
+**Preuve de correction par récurrence.** On montre que la fonction est correcte sur les cas de base, puis que, si elle est correcte sur les problèmes plus petits (hypothèse de récurrence), elle l'est sur le problème courant. Pour `factorielle` : correcte pour `n ≤ 1` ; si `factorielle(n-1) = (n-1)!`, alors `factorielle(n) = n × (n-1)! = n!`.
+
+**Preuve de terminaison.** La taille (ici `n`) décroît strictement à chaque appel et ne peut pas descendre indéfiniment sous le cas de base.
 
 ## 4.3 Fonctionnement : la pile d'appels
 
+Chaque appel de fonction crée un **cadre d'exécution** (paramètres, variables locales, point de retour) empilé dans la **pile d'appels**. Quand un appel se termine, son cadre est dépilé et le résultat remonte à l'appelant.
+
 ```text
 factorielle(3)
- └─ 3 * factorielle(2)
-         └─ 2 * factorielle(1)
-                 └─ 1          ← cas de base
-Remontée : 1 → 2×1 = 2 → 3×2 = 6
+  attend 3 * factorielle(2)
+      attend 2 * factorielle(1)
+          renvoie 1            (cas de base)
+      renvoie 2 * 1 = 2
+  renvoie 3 * 2 = 6
 ```
 
-Chaque appel crée un **cadre** (paramètres, variables locales) empilé en mémoire.
+Il y a donc deux phases : une **phase de descente** (les appels s'empilent) et une **phase de remontée** (les résultats se combinent). La mémoire occupée est proportionnelle à la **profondeur maximale** de récursion.
 
 ## 4.4 Erreurs courantes
 
 | Erreur | Conséquence |
 | --- | --- |
-| **Pas de cas de base** | Récursion infinie → `RecursionError` |
-| **Le problème ne diminue pas** | Idem |
+| **Absence de cas de base** | Récursion infinie, `RecursionError` en Python |
+| **Le problème ne diminue pas** (appel sur la même taille) | Idem |
+| **Cas de base inatteignable** (par exemple `n` négatif avec test `n == 0`) | Idem |
 | **Recalculs inutiles** (Fibonacci naïf) | Complexité exponentielle |
-| **Profondeur trop grande** | Dépassement de pile (limite Python ≈ 1000) |
+| **Profondeur trop grande** | Dépassement de pile (limite Python : environ 1000) |
+| **Oublier de renvoyer le résultat de l'appel** | La fonction renvoie `None` |
 
 ```python
 import sys
-sys.setrecursionlimit(10**6)        # possible, mais risqué : préférez une version itérative
+sys.setrecursionlimit(10**6)        # possible mais risqué : préférer une version itérative
 ```
 
 ## 4.5 Exemples classiques
@@ -525,17 +807,19 @@ def est_palindrome(s):
     return len(s) < 2 or (s[0] == s[-1] and est_palindrome(s[1:-1]))
 
 def puissance(x, n):                          # exponentiation rapide : O(log n)
-    if n == 0: return 1
+    if n == 0:
+        return 1
     moitie = puissance(x, n // 2)
     return moitie * moitie * (x if n % 2 else 1)
 
-def hanoi(n, source, cible, aide):            # O(2ⁿ)
-    if n == 0: return
+def hanoi(n, source, cible, aide):            # O(2^n)
+    if n == 0:
+        return
     hanoi(n - 1, source, aide, cible)
-    print(f"Déplacer le disque {n} : {source} → {cible}")
+    print(f"Déplacer le disque {n} : {source} -> {cible}")
     hanoi(n - 1, aide, cible, source)
 
-def fib(n):                                   # O(2ⁿ) : à ne pas utiliser tel quel
+def fib(n):                                   # O(2^n) : à ne pas utiliser tel quel
     return n if n < 2 else fib(n - 1) + fib(n - 2)
 
 print(somme([1, 2, 3]), inverser_chaine("abc"), est_palindrome("kayak"), puissance(2, 10))   # 6 cba True 1024
@@ -543,118 +827,215 @@ hanoi(2, "A", "C", "B")                       # 3 déplacements
 print(fib(10))                                # 55
 ```
 
-### Corriger Fibonacci : mémoïsation
+### Analyse de l'exponentiation rapide
+
+L'idée est que `x^n = (x^(n/2))²` si `n` est pair, et `x × (x^((n-1)/2))²` sinon. On ne calcule la puissance de la moitié **qu'une seule fois** (variable `moitie`), d'où la récurrence `T(n) = T(n/2) + O(1)` et la complexité **O(log n)**, contre O(n) pour la méthode naïve. Cette idée est centrale en arithmétique modulaire (chapitre 16).
+
+### Analyse des tours de Hanoï
+
+Pour déplacer `n` disques, on déplace `n-1` disques, puis le plus grand, puis de nouveau `n-1` disques : `T(n) = 2T(n-1) + 1`, dont la solution est `T(n) = 2^n - 1`. Ce nombre de déplacements est **optimal** : la complexité exponentielle est inhérente au problème, pas à l'algorithme.
+
+### Corriger Fibonacci : la mémoïsation
+
+L'arbre d'appels de `fib(n)` recalcule les mêmes valeurs un nombre exponentiel de fois (`fib(n-2)` est calculé dans `fib(n)` et dans `fib(n-1)`). La **mémoïsation** consiste à stocker chaque résultat dès qu'il est calculé.
 
 ```python
 from functools import cache
 
-@cache                                         # Python 3.9+
+@cache                                         # Python 3.9 et ultérieur
 def fib(n):
     return n if n < 2 else fib(n - 1) + fib(n - 2)
-# O(n) temps et espace
+# O(n) en temps et en espace
 ```
 
-## 4.6 Récursivité ou itération ?
+C'est le point de départ de la **programmation dynamique** (chapitre 18).
 
-| | Récursivité | Itération |
+## 4.6 Les différents types de récursion
+
+| Type | Description | Exemple |
 | --- | --- | --- |
-| Lisibilité | Très naturelle (arbres, diviser pour régner) | Parfois plus lourde |
+| **Linéaire** | Un seul appel récursif par exécution | Factorielle, somme |
+| **Binaire (ou multiple)** | Plusieurs appels par exécution | Fibonacci, tri fusion |
+| **Terminale** | L'appel récursif est la **dernière** opération (rien à faire au retour) | `pgcd(a, b)` récursif |
+| **Mutuelle** | Deux fonctions s'appellent l'une l'autre | `est_pair` et `est_impair` |
+| **Imbriquée** | Un appel dans les arguments d'un appel | Fonction d'Ackermann |
+
+Python **n'optimise pas la récursion terminale** : même une récursion terminale consomme de la pile. D'autres langages (Scheme, certains compilateurs C ou Scala) transforment ces appels en boucles.
+
+## 4.7 Récursivité ou itération ?
+
+Toute fonction récursive peut s'écrire de façon itérative, en gérant soi-même une **pile explicite**.
+
+|  | Récursivité | Itération |
+| --- | --- | --- |
+| Lisibilité | Très naturelle pour les arbres et diviser pour régner | Parfois plus lourde |
 | Mémoire | O(profondeur) | O(1) souvent |
 | Vitesse | Surcoût des appels | Plus rapide |
-| Limite | Profondeur de pile | Aucune |
+| Limite | Profondeur de la pile | Aucune |
 
-> Python **n'optimise pas la récursion terminale** : une boucle ou une pile explicite est préférable pour de grandes profondeurs.
+```python
+def factorielle_iterative(n):          # même résultat, sans pile d'appels
+    r = 1
+    for k in range(2, n + 1):
+        r *= k
+    return r
+```
 
-## 4.7 Quand l'utiliser ?
+## 4.8 Quand utiliser la récursivité ?
 
-Structures **récursives par nature** (arbres, graphes, listes chaînées), **diviser pour régner**, **retour sur trace**, **programmation dynamique** descendante.
+- Structures **récursives par nature** : arbres, graphes, listes chaînées, expressions imbriquées.
+- Algorithmes **diviser pour régner** (chapitre 9).
+- **Retour sur trace** (chapitre 11).
+- **Programmation dynamique** descendante (chapitre 18).
+
+À éviter quand la profondeur peut atteindre des dizaines de milliers d'appels en Python, ou quand la version itérative est tout aussi claire.
+
+## 4.9 Points à retenir et exercices
+
+**À retenir.**
+
+- Cas de base, appel sur un problème plus petit, combinaison.
+- La pile d'appels coûte de la mémoire proportionnelle à la profondeur.
+- La mémoïsation transforme une récursion exponentielle à sous-problèmes répétés en récursion polynomiale.
+
+**Exercices.**
+
+1. Écrire récursivement la somme des chiffres d'un entier, puis le nombre de chiffres.
+2. Générer toutes les chaînes binaires de longueur `n` par récursivité.
+3. Écrire la recherche du `k`-ième terme de la suite de Fibonacci en O(n) sans mémoïsation, avec une fonction récursive terminale à accumulateurs.
+4. Donner la récurrence et la complexité du calcul récursif de `x^n` par `x * puissance(x, n-1)`.
 
 ---
 
 # 5. Algorithmes de tri simples
 
-## 5.1 Introduction
+## 5.1 Introduction au problème du tri
 
-**Trier** consiste à ordonner les éléments selon un critère. Un tri est :
+**Trier** une séquence consiste à réordonner ses éléments selon une **relation d'ordre** (croissant, décroissant, selon une clé). Le tri est l'un des problèmes les plus étudiés de l'informatique, car il facilite ensuite la recherche, la détection de doublons, la fusion et de nombreux autres traitements.
 
-- **en place** (*in-place*) s'il utilise O(1) mémoire supplémentaire ;
-- **stable** s'il conserve l'ordre relatif des éléments égaux.
+**Spécification.** Entrée : une suite `(a₁, …, aₙ)`. Sortie : une permutation `(b₁, …, bₙ)` de cette suite telle que `b₁ ≤ b₂ ≤ … ≤ bₙ`. La sortie doit donc être **triée** et être **une permutation** de l'entrée (on ne perd ni n'invente d'éléments).
+
+### Propriétés d'un tri
+
+- **En place** (*in-place*) : le tri n'utilise qu'une mémoire supplémentaire O(1) (ou O(log n) pour la pile de récursion) en plus du tableau.
+- **Stable** : deux éléments égaux (au sens de la clé) conservent leur ordre relatif initial. La stabilité est précieuse pour les tris successifs sur plusieurs critères : si on trie d'abord par nom puis, de façon stable, par âge, les personnes de même âge restent classées par nom.
+- **Par comparaisons** : le tri ne s'appuie que sur des comparaisons entre éléments. Il est alors soumis à la borne inférieure `Ω(n log n)` (voir 2.10).
+- **Adaptatif** : le tri est plus rapide sur une entrée déjà presque triée.
+
+### Notions : inversions
+
+Une **inversion** est une paire d'indices `i < j` telle que `t[i] > t[j]`. Un tableau trié a 0 inversion ; un tableau trié à l'envers en a `n(n-1)/2`. Les tris simples échangeant des voisins ne suppriment qu'**une** inversion par échange : ils exigent donc de l'ordre de `n²` échanges dans le pire cas, ce qui explique leur complexité quadratique.
 
 ## 5.2 Tri à bulles (*Bubble Sort*)
 
-On compare les voisins et on **échange** s'ils sont mal ordonnés ; les plus grands « remontent » en fin de tableau.
+**Principe.** On parcourt le tableau en comparant les voisins `t[j]` et `t[j+1]` ; s'ils sont mal ordonnés, on les échange. À l'issue de la première passe, le **plus grand élément** a « remonté » comme une bulle jusqu'à la dernière case. À l'issue de la `i`-ième passe, les `i` plus grands éléments sont à leur place définitive.
 
 ```python
 def tri_bulles(t):
     n = len(t)
     for i in range(n - 1):
         echange = False
-        for j in range(n - 1 - i):
+        for j in range(n - 1 - i):        # la fin du tableau est déjà triée
             if t[j] > t[j + 1]:
                 t[j], t[j + 1] = t[j + 1], t[j]
                 echange = True
-        if not echange:          # déjà trié : arrêt anticipé → meilleur cas O(n)
+        if not echange:                   # aucun échange : tableau trié, arrêt anticipé
             break
     return t
 
 print(tri_bulles([5, 2, 9, 1]))          # [1, 2, 5, 9]
 ```
 
-Complexité : **O(n²)** pire et moyen, **O(n)** meilleur cas (avec arrêt anticipé) · espace O(1) · **stable**.
+**Invariant.** Après la passe `i`, les `i+1` derniers éléments sont les plus grands du tableau, rangés dans l'ordre.
+
+**Complexité.** Pire et moyen : `O(n²)` comparaisons. Meilleur cas (tableau déjà trié, grâce au drapeau `echange`) : `O(n)`. Espace `O(1)`. Le tri est **stable**, car on n'échange que si `t[j] > t[j+1]` strictement. Il est très lent en pratique et réservé à l'enseignement.
 
 ## 5.3 Tri par sélection (*Selection Sort*)
 
-On cherche le **minimum** du reste du tableau et on le place en tête.
+**Principe.** À l'étape `i`, on cherche le **minimum** dans la partie non triée `t[i:]` et on l'échange avec `t[i]`. La partie gauche `t[:i]` est alors constituée des `i` plus petits éléments, dans l'ordre.
 
 ```python
 def tri_selection(t):
     for i in range(len(t)):
-        m = min(range(i, len(t)), key=t.__getitem__)
+        m = min(range(i, len(t)), key=t.__getitem__)    # indice du minimum de t[i:]
         t[i], t[m] = t[m], t[i]
     return t
 
 print(tri_selection([5, 2, 9, 1]))        # [1, 2, 5, 9]
 ```
 
-**Θ(n²)** dans tous les cas · espace O(1) · **non stable** · fait **peu d'échanges** (au plus n − 1).
+**Complexité.** `Θ(n²)` comparaisons **dans tous les cas** (la recherche du minimum parcourt toujours tout le reste), mais seulement `n - 1` échanges au plus. Espace `O(1)`. Le tri est **non stable** : l'échange à longue distance peut faire passer un élément égal devant un autre (exemple : `[2a, 2b, 1]` devient `[1, 2b, 2a]`). Utile quand les écritures sont coûteuses.
 
 ## 5.4 Tri par insertion (*Insertion Sort*)
 
-On construit une partie triée en **insérant** chaque élément à sa place (comme trier des cartes en main).
+**Principe.** Comme pour trier des cartes à jouer en main : on maintient une partie gauche **déjà triée** `t[:i]` ; on prend l'élément suivant `t[i]` (la **clé**) et on l'**insère** à sa place en décalant vers la droite les éléments plus grands.
 
 ```python
 def tri_insertion(t):
     for i in range(1, len(t)):
         cle = t[i]
         j = i - 1
-        while j >= 0 and t[j] > cle:
+        while j >= 0 and t[j] > cle:      # décaler les éléments plus grands
             t[j + 1] = t[j]
             j -= 1
-        t[j + 1] = cle
+        t[j + 1] = cle                    # placer la clé
     return t
 
 print(tri_insertion([5, 2, 9, 1]))        # [1, 2, 5, 9]
 ```
 
-**O(n²)** pire et moyen, **O(n)** si presque trié · espace O(1) · **stable** · **excellent sur de petites listes ou des listes presque triées** (utilisé comme brique dans Timsort).
+**Invariant.** Au début de l'itération `i`, `t[:i]` contient les `i` premiers éléments de l'entrée, triés.
+
+**Complexité.** Le nombre de décalages est égal au nombre d'**inversions** du tableau. Pire cas (tableau décroissant) : `Θ(n²)`. Cas moyen : `Θ(n²)`. Meilleur cas (déjà trié) : `Θ(n)`. En général `Θ(n + I)` où `I` est le nombre d'inversions, d'où son caractère **adaptatif**. Espace `O(1)`, **stable** (le test est strict). Il est excellent sur les petits tableaux (moins de 20 éléments environ) et les tableaux presque triés, et sert de brique dans les tris hybrides comme Timsort.
 
 ## 5.5 Comparaison
 
 | Tri | Meilleur | Moyen | Pire | Espace | Stable | Remarque |
 | --- | --- | --- | --- | --- | --- | --- |
 | **Bulles** | O(n) | O(n²) | O(n²) | O(1) | Oui | Pédagogique uniquement |
-| **Sélection** | O(n²) | O(n²) | O(n²) | O(1) | Non | Peu d'échanges |
-| **Insertion** | O(n) | O(n²) | O(n²) | O(1) | Oui | Rapide sur petites / presque triées |
+| **Sélection** | O(n²) | O(n²) | O(n²) | O(1) | Non | Au plus n-1 échanges |
+| **Insertion** | O(n) | O(n²) | O(n²) | O(1) | Oui | Rapide sur petits ou presque triés |
 
-> **En pratique** : utilisez `sorted(t)` ou `t.sort()` (**Timsort**, stable, O(n log n) pire cas, O(n) si déjà trié). Voir [section 8](#8-algorithmes-de-tri-avancés).
+> **En pratique**, on utilise `sorted(t)` ou `t.sort()` (Timsort, stable, `O(n log n)` au pire, `O(n)` si déjà trié). Les tris efficaces sont vus au chapitre 8.
+
+## 5.6 Tri avec clé et ordre personnalisé
+
+```python
+livres = [("Zola", 1885), ("Hugo", 1862), ("Balzac", 1835)]
+print(sorted(livres, key=lambda l: l[1]))                # par année
+print(sorted(livres, key=lambda l: l[0], reverse=True))  # par auteur décroissant
+```
+
+L'argument `key` calcule **une fois par élément** la valeur de comparaison, ce qui est plus efficace qu'une fonction de comparaison appelée à chaque test.
+
+## 5.7 Points à retenir et exercices
+
+**À retenir.**
+
+- Les trois tris simples sont quadratiques ; l'insertion est le plus utile (stable, adaptatif).
+- Stabilité et caractère en place sont deux propriétés indépendantes à vérifier.
+- Le nombre d'inversions mesure la « distance » à l'état trié.
+
+**Exercices.**
+
+1. Calculer le nombre d'inversions de `[3, 1, 2, 5, 4]` et vérifier que le tri par insertion fait ce nombre de décalages.
+2. Modifier le tri par sélection pour le rendre stable (indice : décaler au lieu d'échanger).
+3. Montrer qu'un tri qui n'échange que des éléments voisins fait au moins `I` échanges, où `I` est le nombre d'inversions.
+4. Écrire un tri par insertion qui utilise la recherche binaire pour trouver la position. Quelle est alors la complexité en nombre de comparaisons ? En nombre de décalages ?
 
 ---
 
 # 6. Algorithmes de recherche
 
-## 6.1 Recherche linéaire
+## 6.1 Le problème de la recherche
 
-Parcourt les éléments un par un. Fonctionne sur **toute** liste, triée ou non.
+**Spécification.** Entrée : une collection d'éléments et une **cible**. Sortie : la **position** de la cible dans la collection, ou une valeur sentinelle (par exemple -1) si elle est absente.
+
+Le coût de la recherche dépend de l'organisation des données : sur des données non ordonnées, il faut tout examiner ; sur des données **triées**, on peut éliminer de grandes zones d'un coup.
+
+## 6.2 Recherche linéaire (séquentielle)
+
+On parcourt les éléments un par un jusqu'à trouver la cible. Elle fonctionne sur **toute** liste, triée ou non, et sur toute structure parcourable.
 
 ```python
 def recherche_lineaire(t, cible):
@@ -666,17 +1047,21 @@ def recherche_lineaire(t, cible):
 print(recherche_lineaire([4, 8, 15], 15), recherche_lineaire([4, 8, 15], 3))   # 2 -1
 ```
 
-**O(n)** pire cas, O(1) meilleur cas · O(1) espace.
+**Complexité.** Pire cas (cible en dernière position ou absente) : `n` comparaisons, soit `Θ(n)`. Meilleur cas : 1 comparaison. Cas moyen, si la cible est présente et équiprobable à chaque position : `(n+1)/2` comparaisons. Espace `O(1)`.
 
-## 6.2 Recherche binaire (dichotomique)
+## 6.3 Recherche binaire (dichotomique)
 
-Sur une liste **triée**, on compare avec le **milieu** et on élimine **la moitié** des candidats à chaque étape.
+### Principe
+
+Sur une liste **triée**, on compare la cible avec l'élément du **milieu**. Selon le résultat, on élimine la moitié gauche ou la moitié droite, puis on recommence sur la moitié restante.
+
+### Algorithme
 
 ```python
 def recherche_binaire(t, cible):
     bas, haut = 0, len(t) - 1
     while bas <= haut:
-        milieu = bas + (haut - bas) // 2        # évite le dépassement d'entier dans d'autres langages
+        milieu = bas + (haut - bas) // 2      # évite le dépassement d'entier dans d'autres langages
         if t[milieu] == cible:
             return milieu
         if t[milieu] < cible:
@@ -688,41 +1073,90 @@ def recherche_binaire(t, cible):
 print(recherche_binaire([1, 3, 5, 7, 9, 11], 7))   # 3
 ```
 
-**O(log n)** · O(1) espace (version itérative) · 1 milliard d'éléments → ~30 comparaisons.
+### Preuve de correction
 
-### Variantes : première / dernière position, insertion
+**Invariant** : si la cible est présente dans le tableau, elle se trouve dans `t[bas..haut]`.
+
+- Initialisation : `bas = 0` et `haut = n-1` couvrent tout le tableau.
+- Conservation : si `t[milieu] < cible`, alors, le tableau étant trié, la cible ne peut pas être en position `≤ milieu` ; on passe à `bas = milieu + 1`, et l'invariant reste vrai. Raisonnement symétrique sinon.
+- Terminaison : la longueur `haut - bas + 1` de l'intervalle **décroît strictement** à chaque tour (elle est au moins divisée par 2, et le milieu est exclu). Quand l'intervalle est vide, la cible n'est pas là.
+
+### Complexité
+
+Chaque tour divise la taille par deux : `T(n) = T(n/2) + O(1)`, donc `O(log n)`. Un milliard d'éléments exigent environ 30 comparaisons (`2³⁰ ≈ 10⁹`). Espace `O(1)` pour la version itérative.
+
+### Variantes : première position, dernière position, insertion
 
 ```python
 from bisect import bisect_left, bisect_right, insort
 
 t = [1, 2, 2, 2, 3]
-bisect_left(t, 2)          # 1 : première position où insérer 2 (premier index de 2)
-bisect_right(t, 2)         # 4 : après le dernier 2
-bisect_right(t, 2) - bisect_left(t, 2)    # 3 : nombre d'occurrences
-insort(t, 2)               # insère en gardant la liste triée (O(n) à cause du décalage)
-
-print(t)                   # [1, 2, 2, 2, 2, 3]
+print(bisect_left(t, 2))                          # 1 : première position de 2 (ou point d'insertion)
+print(bisect_right(t, 2))                         # 4 : position après le dernier 2
+print(bisect_right(t, 2) - bisect_left(t, 2))     # 3 : nombre d'occurrences
+insort(t, 2)                                      # insère en gardant la liste triée (O(n) : décalage)
+print(t)                                          # [1, 2, 2, 2, 2, 3]
 ```
 
-> **Pièges classiques** : **boucle infinie** (`bas = milieu` au lieu de `milieu + 1`), **condition `bas <= haut`** oubliée, liste **non triée**.
+`bisect_left(t, x)` renvoie le plus petit indice `i` tel que tous les éléments avant `i` sont `< x` ; `bisect_right(t, x)` renvoie le plus petit indice tel que tous les éléments avant sont `<= x`. Ces fonctions sont en `O(log n)`.
 
-## 6.3 Comparaison
+### Pièges classiques
 
-| | Linéaire | Binaire |
+| Piège | Conséquence |
+| --- | --- |
+| `bas = milieu` au lieu de `milieu + 1` | Boucle infinie |
+| Condition `bas < haut` au lieu de `bas <= haut` | Oubli d'un cas (intervalle d'un seul élément) |
+| Calcul `(bas + haut) // 2` avec des entiers bornés (C, Java) | Dépassement d'entier ; préférer `bas + (haut - bas) // 2` |
+| Liste non triée | Résultat faux, sans erreur signalée |
+| Doublons | La version simple renvoie un indice quelconque parmi les égaux |
+
+## 6.4 Autres recherches
+
+- **Recherche par interpolation** : au lieu de viser le milieu, on estime la position de la cible par proportion entre les valeurs extrêmes. En moyenne `O(log log n)` sur des données uniformément réparties, mais `O(n)` au pire.
+- **Recherche exponentielle** : on double un pas jusqu'à dépasser la cible, puis recherche binaire dans le dernier intervalle ; utile quand la taille est inconnue ou la cible proche du début.
+- **Recherche dans un tableau tourné** : tableau trié puis décalé circulairement ; une recherche binaire adaptée reste en `O(log n)`.
+- **Recherche dans une matrice triée** : partir du coin supérieur droit et éliminer une ligne ou une colonne à chaque étape, en `O(m + n)`.
+
+## 6.5 Comparaison
+
+|  | Linéaire | Binaire |
 | --- | --- | --- |
-| Pré-requis | Aucun | **Liste triée** |
+| Pré-requis | Aucun | **Liste triée** et accès direct par indice |
 | Temps | O(n) | **O(log n)** |
-| Quand | Petite liste, une seule recherche | Nombreuses recherches sur des données triées |
+| Quand l'utiliser | Petite liste, recherche unique | Nombreuses recherches sur des données triées |
 
-> Pour des appartenances **fréquentes** sur des données **non ordonnées**, un `set` (O(1)) est encore plus efficace.
+Pour des appartenances fréquentes sur des données non ordonnées, un `set` ou un `dict` (O(1) en moyenne) est encore plus efficace. Le coût de tri préalable (`O(n log n)`) n'est amorti qu'à partir d'un certain nombre de recherches, environ `log n`.
+
+## 6.6 Points à retenir et exercices
+
+**À retenir.**
+
+- La recherche linéaire est universelle mais en `O(n)`.
+- La recherche binaire exige un tableau trié et accessible par indice ; elle élimine la moitié des candidats à chaque étape.
+- La recherche binaire se généralise à toute fonction monotone (chapitre 15).
+
+**Exercices.**
+
+1. Écrire une recherche binaire récursive et donner sa récurrence.
+2. Écrire une fonction qui renvoie la première et la dernière position d'une valeur dans un tableau trié avec doublons, en `O(log n)`.
+3. Trouver l'élément minimal d'un tableau trié puis tourné, en `O(log n)`.
+4. Combien de comparaisons au maximum pour une recherche binaire dans 1000 éléments ? Dans 10⁶ ?
 
 ---
 
 # 7. Algorithmes mathématiques de base
 
-## 7.1 PGCD (algorithme d'Euclide)
+## 7.1 Plus grand commun diviseur (algorithme d'Euclide)
 
-Principe : `pgcd(a, b) = pgcd(b, a mod b)`, avec `pgcd(a, 0) = a`.
+### Définitions
+
+Le **PGCD** de deux entiers `a` et `b` (non tous deux nuls) est le plus grand entier qui divise à la fois `a` et `b`. Deux entiers sont **premiers entre eux** si leur PGCD vaut 1. Le **PPCM** est le plus petit entier strictement positif multiple de `a` et `b`, et on a la relation `pgcd(a, b) × ppcm(a, b) = |a × b|`.
+
+### Principe
+
+On s'appuie sur la propriété `pgcd(a, b) = pgcd(b, a mod b)` et sur le cas terminal `pgcd(a, 0) = a`.
+
+**Justification.** Écrivons `a = q·b + r` avec `r = a mod b`. Tout diviseur commun de `a` et `b` divise `r = a - q·b` ; réciproquement, tout diviseur commun de `b` et `r` divise `a = q·b + r`. Les deux paires ont donc les **mêmes diviseurs communs**, et donc le même PGCD.
 
 ```python
 def pgcd(a, b):
@@ -732,52 +1166,71 @@ def pgcd(a, b):
 
 print(pgcd(48, 18))                 # 6
 ppcm = lambda a, b: a // pgcd(a, b) * b
+print(ppcm(4, 6))                   # 12
 
 import math
-math.gcd(48, 18); math.lcm(4, 6)    # fonctions intégrées (lcm : Python 3.9+)
+print(math.gcd(48, 18), math.lcm(4, 6))    # intégrés (math.lcm depuis Python 3.9)
 ```
 
-Complexité **O(log min(a, b))**.
+Trace sur `(48, 18)` : `(48, 18)`, puis `(18, 12)`, puis `(12, 6)`, puis `(6, 0)`, résultat 6.
+
+**Terminaison.** `b` est un variant : `a mod b < b`, donc `b` décroît strictement dans les entiers naturels.
+
+**Complexité.** `O(log min(a, b))`. Le pire cas est atteint pour deux nombres de Fibonacci consécutifs (théorème de Lamé) : le nombre de divisions est proportionnel au logarithme du plus petit nombre.
+
+L'**algorithme d'Euclide étendu** (chapitre 16) calcule en plus des coefficients de Bézout `x` et `y` tels que `a·x + b·y = pgcd(a, b)`.
 
 ## 7.2 Nombres premiers : test naïf
 
-Un nombre `n > 1` est premier s'il n'a aucun diviseur entre 2 et **√n**.
+Un entier `n > 1` est **premier** s'il n'est divisible que par 1 et par lui-même. Sinon il est **composé**.
+
+**Propriété clé.** Si `n` est composé, il possède un diviseur `d` tel que `2 ≤ d ≤ √n`. En effet, si `n = a × b` avec `a ≤ b`, alors `a² ≤ a × b = n`, donc `a ≤ √n`. Il suffit donc de tester les diviseurs jusqu'à `√n`.
 
 ```python
 from math import isqrt
 
 def est_premier(n):
-    if n < 2: return False
-    if n % 2 == 0: return n == 2
-    for d in range(3, isqrt(n) + 1, 2):
+    if n < 2:
+        return False
+    if n % 2 == 0:
+        return n == 2
+    for d in range(3, isqrt(n) + 1, 2):    # seuls les diviseurs impairs
         if n % d == 0:
             return False
     return True
+
+print([k for k in range(30) if est_premier(k)])   # [2, 3, 5, 7, 11, 13, 17, 19, 23, 29]
 ```
 
-**O(√n)**. Pour plusieurs nombres : le **crible d'Ératosthène** ([section 16.1](#161-crible-dératosthène)) ; pour de très grands nombres : **Miller-Rabin** (section 16.5).
+**Complexité.** `O(√n)` divisions. Pour tester **plusieurs** nombres, utiliser le **crible d'Ératosthène** (chapitre 16) ; pour de très grands nombres, **Miller-Rabin** (chapitre 16). Rappelons que `√n` est exponentiel en la taille de `n` en bits : ce test n'est utilisable que pour `n` jusqu'à environ 10¹².
 
 ## 7.3 Factorielle
 
+La **factorielle** `n! = 1 × 2 × … × n` (avec `0! = 1`) dénombre les permutations de `n` objets.
+
 ```python
-def factorielle(n):                 # itérative : O(n)
+def factorielle(n):                 # version itérative : O(n) multiplications
     r = 1
-    for k in range(2, n + 1): r *= k
+    for k in range(2, n + 1):
+        r *= k
     return r
 
-import math; math.factorial(20)     # 2432902008176640000
+import math
+print(math.factorial(20))           # 2432902008176640000
 ```
 
-Python gère des **entiers de taille arbitraire** (pas de débordement) ; dans d'autres langages, `21!` dépasse un entier 64 bits.
+Python gère des **entiers de taille arbitraire** : aucun dépassement. Dans les langages à entiers de 64 bits, `21!` dépasse déjà la capacité (environ 9,2 × 10¹⁸). La croissance de `n!` est supérieure à toute exponentielle : d'après la formule de Stirling, `n! ≈ √(2πn) (n/e)ⁿ`, d'où `log(n!) = Θ(n log n)`.
 
 ## 7.4 Suite de Fibonacci
 
+Définition : `F(0) = 0`, `F(1) = 1`, `F(n) = F(n-1) + F(n-2)`. La suite croît exponentiellement, comme `φⁿ/√5` où `φ = (1 + √5)/2 ≈ 1,618` est le nombre d'or.
+
 | Méthode | Complexité | Remarque |
 | --- | --- | --- |
-| Récursive naïve | **O(2ⁿ)** | À éviter |
-| Récursive + mémoïsation (`@cache`) | O(n) | |
-| **Itérative** | O(n) temps, **O(1)** espace | Simple et efficace |
-| **Doublement rapide / exponentiation de matrice** | **O(log n)** multiplications | Pour de très grands `n` |
+| Récursive naïve | `O(φⁿ)` donc exponentielle | À éviter |
+| Récursive avec mémoïsation | `O(n)` temps et espace | Simple |
+| **Itérative** | `O(n)` temps, `O(1)` espace | Simple et efficace |
+| **Doublement rapide** ou exponentiation de matrice | `O(log n)` multiplications | Pour de très grands `n` |
 
 ```python
 def fib_iteratif(n):
@@ -789,26 +1242,47 @@ def fib_iteratif(n):
 def fib_doublement(n):                       # renvoie (F(n), F(n+1)) en O(log n)
     if n == 0:
         return (0, 1)
-    a, b = fib_doublement(n // 2)
+    a, b = fib_doublement(n // 2)            # a = F(k), b = F(k+1), avec k = n // 2
     c = a * (2 * b - a)                      # F(2k)
     d = a * a + b * b                        # F(2k+1)
     return (d, c + d) if n % 2 else (c, d)
 
-fib_doublement(90)[0]                        # 2880067194370816120
+print(fib_iteratif(90), fib_doublement(90)[0])   # 2880067194370816120 2880067194370816120
 ```
 
-## 7.5 Autres outils intégrés à Python *(ajout)*
+Les formules du doublement viennent de l'identité matricielle `[[1,1],[1,0]]ⁿ = [[F(n+1), F(n)], [F(n), F(n-1)]]`. Elles sont à la base de l'exponentiation de matrices (chapitre 16).
+
+## 7.5 Autres outils mathématiques intégrés à Python
 
 ```python
 import math
-math.isqrt(99)          # 9 : racine carrée entière exacte
-math.comb(5, 2)         # 10 : combinaisons
-math.perm(5, 2)         # 20 : arrangements
-divmod(17, 5)           # (3, 2)
-pow(2, 10, 1000)        # 24 : (2**10) % 1000, exponentiation modulaire rapide
-sum(int(c) for c in str(12345))     # somme des chiffres
-bin(10), int("1010", 2) # conversions de base
+print(math.isqrt(99))        # 9 : racine carrée entière exacte
+print(math.comb(5, 2))       # 10 : combinaisons C(5, 2)
+print(math.perm(5, 2))       # 20 : arrangements A(5, 2)
+print(divmod(17, 5))         # (3, 2) : quotient et reste
+print(pow(2, 10, 1000))      # 24 : (2**10) % 1000, exponentiation modulaire rapide
+print(sum(int(c) for c in str(12345)))   # 15 : somme des chiffres
+print(bin(10), int("1010", 2))           # 0b1010 10 : conversions de base
 ```
+
+**Représentation des entiers et opérations sur les bits.** Un entier se décompose en base 2 ; les opérateurs `&` (et), `|` (ou), `^` (ou exclusif), `<<` et `>>` (décalages) manipulent les bits. On utilise `n & 1` pour tester la parité, `n >> 1` pour diviser par 2, `1 << k` pour la valeur `2ᵏ`, et `n & (n - 1) == 0` pour tester si `n > 0` est une puissance de 2. Ces astuces servent dans les masques de bits (chapitre 18) et les arbres de Fenwick (chapitre 23).
+
+**Calcul approché et flottants.** Les nombres à virgule flottante sont binaires et approchés : `0.1 + 0.2 == 0.3` vaut `False`. On compare avec une tolérance (`math.isclose`) et on préfère les entiers ou les fractions (`fractions.Fraction`) dès qu'une précision exacte est requise.
+
+## 7.6 Points à retenir et exercices
+
+**À retenir.**
+
+- Euclide calcule le PGCD en `O(log)` grâce à l'invariance de l'ensemble des diviseurs communs.
+- Un test de primalité naïf s'arrête à `√n`.
+- Fibonacci illustre le contraste entre exponentiel (naïf), linéaire (itératif) et logarithmique (doublement).
+
+**Exercices.**
+
+1. Calculer à la main `pgcd(1071, 462)` et donner une relation de Bézout.
+2. Écrire une fonction qui renvoie tous les diviseurs d'un entier en `O(√n)`.
+3. Montrer que `pgcd(F(n), F(n+1)) = 1` pour tout `n`.
+4. Écrire une fonction qui teste si un entier est une puissance de 2 en `O(1)`.
 
 ---
 
@@ -820,31 +1294,35 @@ bin(10), int("1010", 2) # conversions de base
 
 ## 8.1 Vue d'ensemble
 
+Les tris simples sont quadratiques. Les tris de ce chapitre atteignent `O(n log n)`, qui est **optimal** pour un tri par comparaisons (borne `Ω(n log n)`, section 2.10), ou même `O(n)` lorsqu'on exploite la nature des clés.
+
 | Tri | Meilleur | Moyen | Pire | Espace | Stable | Principe |
 | --- | --- | --- | --- | --- | --- | --- |
 | **Fusion** (*merge*) | O(n log n) | O(n log n) | O(n log n) | O(n) | Oui | Diviser pour régner |
-| **Rapide** (*quick*) | O(n log n) | O(n log n) | **O(n²)** | O(log n) | Non | Partitionnement autour d'un pivot |
-| **Par tas** (*heap*) | O(n log n) | O(n log n) | O(n log n) | **O(1)** | Non | Tas binaire |
-| **Par comptage** | O(n + k) | O(n + k) | O(n + k) | O(k) | Oui | Compter les occurrences |
-| **Radix** (par base) | O(d(n + k)) | O(d(n + k)) | O(d(n + k)) | O(n + k) | Oui | Tri chiffre par chiffre |
-| **Timsort** (Python, Java) | **O(n)** | O(n log n) | O(n log n) | O(n) | Oui | Fusion + insertion, exploite les séquences déjà triées |
+| **Rapide** (*quick*) | O(n log n) | O(n log n) | **O(n²)** | O(log n) | Non | Partition autour d'un pivot |
+| **Par tas** (*heap*) | O(n log n) | O(n log n) | O(n log n) | O(1) en place | Non | Tas binaire |
+| **Par comptage** | O(n + k) | O(n + k) | O(n + k) | O(k) | Oui (version cumulée) | Compter les occurrences |
+| **Radix** | O(d(n + k)) | O(d(n + k)) | O(d(n + k)) | O(n + k) | Oui | Tri chiffre par chiffre |
+| **Timsort** (Python, Java) | **O(n)** | O(n log n) | O(n log n) | O(n) | Oui | Fusion et insertion, exploite les séquences déjà triées |
 
-> **Borne inférieure** : tout tri **par comparaisons** exige **Ω(n log n)** comparaisons dans le pire cas. Seuls les tris **sans comparaison** (comptage, radix) font mieux, sous hypothèses sur les clés.
+> **Borne inférieure.** Tout tri par comparaisons exige `Ω(n log n)` comparaisons dans le pire cas. Seuls les tris sans comparaison (comptage, radix) font mieux, sous hypothèses sur les clés (entiers bornés, chaînes de longueur fixe).
 
 ## 8.2 Tri fusion (*Merge Sort*)
 
-On **divise** la liste en deux, on trie chaque moitié récursivement, puis on **fusionne** deux listes triées.
+### Principe
+
+On **divise** la liste en deux moitiés, on **trie chaque moitié récursivement**, puis on **fusionne** les deux listes triées en une seule. La fusion est le cœur de l'algorithme : deux listes triées se fusionnent en temps linéaire en ne comparant que leurs têtes.
 
 ```python
 def tri_fusion(t):
-    if len(t) <= 1:
+    if len(t) <= 1:                       # cas de base
         return t
     milieu = len(t) // 2
     gauche, droite = tri_fusion(t[:milieu]), tri_fusion(t[milieu:])
 
-    resultat, i, j = [], 0, 0
+    resultat, i, j = [], 0, 0             # fusion de deux listes triées
     while i < len(gauche) and j < len(droite):
-        if gauche[i] <= droite[j]:               # <= garantit la stabilité
+        if gauche[i] <= droite[j]:        # <= garantit la stabilité
             resultat.append(gauche[i]); i += 1
         else:
             resultat.append(droite[j]); j += 1
@@ -853,11 +1331,20 @@ def tri_fusion(t):
 print(tri_fusion([5, 2, 9, 1, 5]))      # [1, 2, 5, 5, 9]
 ```
 
-**Θ(n log n)** garanti · O(n) espace · stable · idéal pour les **listes chaînées** et le **tri externe** (fichiers énormes). Récurrence : `T(n) = 2T(n/2) + O(n)`.
+### Analyse
+
+- La fusion de deux listes de tailles totales `n` effectue au plus `n - 1` comparaisons : coût `O(n)`.
+- Récurrence : `T(n) = 2T(n/2) + O(n)`. L'arbre de récursion a `log n` niveaux, chacun de coût `n`, donc `Θ(n log n)` **dans tous les cas**.
+- Espace : `O(n)` pour les listes auxiliaires.
+- Stable, grâce au `<=` (en cas d'égalité, on prend d'abord l'élément de la moitié gauche).
+
+**Usages.** Listes chaînées (la fusion s'y fait sans espace supplémentaire), **tri externe** de fichiers plus grands que la mémoire (on trie des blocs puis on les fusionne), comptage d'inversions (en comptant, pendant la fusion, le nombre d'éléments de gauche restant quand on prend un élément de droite).
 
 ## 8.3 Tri rapide (*Quick Sort*)
 
-On choisit un **pivot**, on **partitionne** (plus petits à gauche, plus grands à droite), puis on trie récursivement chaque côté.
+### Principe
+
+On choisit un **pivot**, on **partitionne** le tableau (éléments plus petits à gauche, plus grands à droite), le pivot étant alors à sa place définitive ; puis on trie récursivement chaque côté. Contrairement au tri fusion, le travail est fait **avant** les appels récursifs (partition), et il n'y a rien à combiner.
 
 ```python
 import random
@@ -865,13 +1352,13 @@ import random
 def tri_rapide(t):
     if len(t) <= 1:
         return t
-    pivot = random.choice(t)                      # pivot ALÉATOIRE : évite le pire cas sur des entrées triées
-    moins   = [x for x in t if x < pivot]
-    egaux   = [x for x in t if x == pivot]
-    plus    = [x for x in t if x > pivot]
+    pivot = random.choice(t)                 # pivot ALÉATOIRE : évite le pire cas sur des entrées triées
+    moins = [x for x in t if x < pivot]
+    egaux = [x for x in t if x == pivot]
+    plus = [x for x in t if x > pivot]
     return tri_rapide(moins) + egaux + tri_rapide(plus)
 
-print(tri_rapide([5, 2, 9, 1, 5]))      # [1, 2, 5, 5, 9]
+print(tri_rapide([5, 2, 9, 1, 5]))           # [1, 2, 5, 5, 9]
 ```
 
 ### Version en place (partition de Lomuto)
@@ -880,48 +1367,64 @@ print(tri_rapide([5, 2, 9, 1, 5]))      # [1, 2, 5, 5, 9]
 import random
 
 def tri_rapide_en_place(t, bas=0, haut=None):
-    if haut is None: haut = len(t) - 1
+    if haut is None:
+        haut = len(t) - 1
     if bas < haut:
         i = random.randint(bas, haut)
-        t[i], t[haut] = t[haut], t[i]             # pivot aléatoire placé en fin
+        t[i], t[haut] = t[haut], t[i]            # pivot aléatoire placé en fin
         pivot, p = t[haut], bas
         for j in range(bas, haut):
             if t[j] < pivot:
-                t[p], t[j] = t[j], t[p]; p += 1
-        t[p], t[haut] = t[haut], t[p]
+                t[p], t[j] = t[j], t[p]
+                p += 1
+        t[p], t[haut] = t[haut], t[p]            # le pivot prend sa place définitive
         tri_rapide_en_place(t, bas, p - 1)
         tri_rapide_en_place(t, p + 1, haut)
 
 liste = [5, 2, 9, 1, 5]
 tri_rapide_en_place(liste)
-print(liste)                       # [1, 2, 5, 5, 9]
+print(liste)                                     # [1, 2, 5, 5, 9]
 ```
 
-- **Moyen O(n log n)**, **pire O(n²)** (pivot toujours extrême : pivot fixe sur liste triée).
-- Très rapide en pratique (bonne localité mémoire). Les bibliothèques C++ utilisent **introsort** (quicksort + tri par tas si la profondeur explose + insertion pour les petits blocs) ; d'autres **pdqsort** (*pattern-defeating quicksort*).
-- Pour de nombreux doublons : partition **à trois voies** (comme ci-dessus, `moins / égaux / plus`).
-- **Quickselect** : la même partition trouve le **k-ième plus petit élément en O(n) en moyenne** (voir 9.4).
+**Invariant de la partition de Lomuto.** Pendant la boucle, `t[bas:p]` ne contient que des éléments `< pivot`, `t[p:j]` que des éléments `>= pivot`.
+
+### Analyse
+
+- **Meilleur cas** : le pivot coupe en deux moitiés égales, `T(n) = 2T(n/2) + O(n) = O(n log n)`.
+- **Pire cas** : le pivot est toujours le minimum ou le maximum (par exemple pivot fixe sur un tableau déjà trié), `T(n) = T(n-1) + O(n) = O(n²)`.
+- **Cas moyen** (ou espérance avec pivot aléatoire) : `O(n log n)`. Intuition : même un découpage déséquilibré constant (par exemple 10 % et 90 %) donne une profondeur logarithmique.
+- Espace : `O(log n)` de pile en moyenne (on peut garantir `O(log n)` en recursant sur la plus petite partie d'abord).
+- **Non stable** (la partition échange des éléments éloignés).
+
+### Améliorations en pratique
+
+- **Pivot aléatoire** ou **médiane de trois** (médiane du premier, du milieu et du dernier élément).
+- **Partition à trois voies** (moins, égaux, plus), comme dans la première version, qui traite efficacement les tableaux à nombreux doublons.
+- **Introsort** : quicksort, bascule vers le tri par tas si la profondeur dépasse `2 log n` (garantit `O(n log n)`), et tri par insertion pour les petits blocs. C'est le tri de la bibliothèque standard C++. **pdqsort** (*pattern-defeating quicksort*) en est une évolution.
+- **Quickselect** : la même partition trouve le `k`-ième plus petit élément en `O(n)` en moyenne (section 9.4).
 
 ## 8.4 Tri par tas (*Heap Sort*)
 
-On organise les éléments en **tas** (binaire), puis on en extrait n fois la racine (le plus petit avec `heapq`, qui est un tas-min ; la version « en place » classique utilise un tas-max).
+### Principe
+
+On transforme le tableau en **tas** (voir 3.7), puis on extrait `n` fois le sommet. Avec un tas-max, la version **en place** classique procède ainsi : on construit le tas-max dans le tableau en `O(n)`, puis on échange la racine (le maximum) avec le dernier élément du tas, on réduit la taille du tas de 1 et on **descend** la nouvelle racine pour restaurer la propriété de tas. Le tableau se remplit de la droite vers la gauche, du plus grand au plus petit.
 
 ```python
 import heapq
 
 def tri_par_tas(t):
     tas = list(t)
-    heapq.heapify(tas)                            # O(n)
-    return [heapq.heappop(tas) for _ in range(len(tas))]   # n × O(log n)
+    heapq.heapify(tas)                                       # O(n)
+    return [heapq.heappop(tas) for _ in range(len(tas))]     # n extractions en O(log n)
 
 print(tri_par_tas([5, 2, 9, 1, 5]))      # [1, 2, 5, 5, 9]
 ```
 
-**Θ(n log n)** garanti ; la version ci-dessus utilise O(n) d'espace, alors que la version « en place » classique n'en utilise que O(1) (non stable). Moins rapide que quicksort en pratique (mauvaise localité).
+**Complexité.** `Θ(n log n)` garanti (construction en `O(n)` plus `n` extractions en `O(log n)`). Cette version utilise `O(n)` d'espace (copie) ; la version en place classique utilise `O(1)`. Non stable. En pratique, plus lent que le tri rapide car ses accès mémoire sont dispersés (mauvaise localité du cache), mais sa garantie de pire cas et sa faible mémoire en font un bon choix de secours (introsort).
 
 ## 8.5 Tri par comptage (*Counting Sort*)
 
-Pour des **entiers dans un petit intervalle** `[0, k]` : on compte les occurrences.
+Pour des **entiers dans un petit intervalle** `[0, k]`, on n'a pas besoin de comparer : on **compte** les occurrences de chaque valeur, puis on reconstruit la liste triée.
 
 ```python
 def tri_comptage(t, k):
@@ -933,50 +1436,76 @@ def tri_comptage(t, k):
 print(tri_comptage([3, 1, 3, 0, 2], 3))   # [0, 1, 2, 3, 3]
 ```
 
-**O(n + k)** · utile si `k = O(n)`. (La version stable avec sommes cumulées sert de brique au radix.)
+**Complexité** : `O(n + k)` en temps et en espace. Avantageux si `k = O(n)`. Cette version ne conserve pas l'identité des éléments (seulement les valeurs). La **version stable**, nécessaire comme brique du tri radix, calcule les **sommes cumulées** des comptes pour connaître la position finale de chaque valeur, puis place les éléments en parcourant l'entrée de droite à gauche.
 
 ## 8.6 Tri radix (par base)
 
-On trie par **chiffre** (du moins au plus significatif) avec un tri **stable**.
+Le tri radix trie des entiers (ou des chaînes de même longueur) **chiffre par chiffre**, du **moins significatif** au plus significatif, en utilisant à chaque passe un tri **stable** (comptage ou seaux). La stabilité garantit que l'ordre obtenu aux chiffres de poids faible subsiste pour les éléments égaux sur les chiffres de poids fort.
 
 ```python
 def tri_radix(t):
-    if not t: return t
+    if not t:
+        return t
     exp, maximum = 1, max(t)
     while maximum // exp > 0:
         seaux = [[] for _ in range(10)]
         for x in t:
-            seaux[(x // exp) % 10].append(x)
-        t = [x for seau in seaux for x in seau]
+            seaux[(x // exp) % 10].append(x)      # le chiffre de poids exp
+        t = [x for seau in seaux for x in seau]   # concaténation stable
         exp *= 10
     return t
 
 print(tri_radix([170, 45, 75, 90, 802, 24, 2, 66]))   # [2, 24, 45, 66, 75, 90, 170, 802]
 ```
 
-**O(d · (n + b))** (`d` chiffres, base `b`). Pour entiers positifs ou chaînes de longueur fixe.
+**Complexité** : `O(d · (n + b))` pour `d` chiffres en base `b`. Pour des entiers de taille bornée, c'est un tri linéaire. Il s'applique aux entiers positifs et aux chaînes de longueur fixe ; pour les entiers négatifs, on traite le signe à part ou on décale les valeurs.
 
-## 8.7 Timsort et tri en Python *(à jour, ajout)*
+## 8.7 Timsort et tri en Python
 
-`sorted()` et `list.sort()` utilisent **Timsort** : il détecte les **séquences déjà triées** (*runs*), les prolonge par insertion, puis les fusionne. **Stable**, **O(n log n)** garanti, **O(n) si presque trié**. Depuis **Python 3.11**, la politique de fusion est celle de **Powersort**.
+`sorted()` et `list.sort()` utilisent **Timsort**, un tri hybride conçu par Tim Peters en 2002 :
+
+1. Il détecte les **séquences déjà triées** (*runs*, croissantes ou strictement décroissantes que l'on retourne) dans les données réelles.
+2. Il étend les petits runs jusqu'à une longueur minimale avec un tri par insertion.
+3. Il **fusionne** les runs en respectant une politique qui garde l'équilibre des tailles. Depuis Python 3.11, cette politique est celle de **Powersort**.
+
+Résultat : **stable**, `O(n log n)` garanti, `O(n)` si l'entrée est presque triée.
 
 ```python
 t = [("Alice", 30), ("Bob", 25), ("Chloé", 30)]
-sorted(t, key=lambda p: p[1])                     # tri par âge ; stabilité : Alice avant Chloé
-sorted(t, key=lambda p: (-p[1], p[0]))            # âge décroissant puis nom
-sorted(t, reverse=True)
+print(sorted(t, key=lambda p: p[1]))               # par âge ; stabilité : Alice avant Chloé
+print(sorted(t, key=lambda p: (-p[1], p[0])))      # âge décroissant puis nom croissant
+print(sorted(t, reverse=True))
 ```
+
+Le paramètre `key` est évalué une seule fois par élément ; `reverse=True` conserve la stabilité. Pour trier selon plusieurs critères, on peut soit utiliser un tuple comme clé, soit enchaîner plusieurs tris stables en commençant par le critère le moins important.
 
 ## 8.8 Quel tri choisir ?
 
 | Situation | Choix |
 | --- | --- |
-| Usage général en Python | `sorted()` / `.sort()` |
-| Besoin de stabilité, garantie O(n log n) | Tri fusion |
-| Mémoire très limitée | Tri par tas |
-| Entiers dans un petit intervalle | Comptage / radix |
-| Petits tableaux (< ~20 éléments) | Insertion |
-| Trier de gros fichiers | Tri fusion externe |
+| Usage général en Python | `sorted()` ou `.sort()` |
+| Stabilité et garantie O(n log n) | Tri fusion |
+| Mémoire très limitée, garantie de pire cas | Tri par tas |
+| Entiers dans un petit intervalle | Comptage |
+| Entiers ou chaînes de taille fixe, grand volume | Radix |
+| Petits tableaux (moins de 20 éléments environ) | Insertion |
+| Fichiers plus grands que la mémoire | Tri fusion externe |
+| Seulement les `k` plus petits ou plus grands | Tas (`heapq.nsmallest`) ou quickselect |
+
+## 8.9 Points à retenir et exercices
+
+**À retenir.**
+
+- `O(n log n)` est optimal pour les tris par comparaisons ; fusion le garantit, rapide l'obtient en moyenne, tas le garantit en place.
+- La stabilité distingue fusion, comptage, radix et Timsort de rapide et tas.
+- Les tris sans comparaison exploitent la structure des clés pour atteindre `O(n)`.
+
+**Exercices.**
+
+1. Modifier le tri fusion pour compter les inversions d'un tableau en `O(n log n)`.
+2. Montrer que le tri rapide avec pivot fixe en première position est en `O(n²)` sur un tableau trié.
+3. Écrire la version stable du tri par comptage avec sommes cumulées.
+4. Trier une liste de 10⁶ entiers compris entre 0 et 10⁹ : comparer `sorted`, le tri radix et le tri par comptage (pourquoi ce dernier est-il inadapté ?).
 
 ---
 
@@ -984,9 +1513,11 @@ sorted(t, reverse=True)
 
 ## 9.1 Principe
 
-1. **Diviser** le problème en sous-problèmes **indépendants** de même nature.
-2. **Régner** : résoudre chacun (récursivement ; cas de base direct).
-3. **Combiner** les solutions.
+Le paradigme **diviser pour régner** (*divide and conquer*) résout un problème en trois temps :
+
+1. **Diviser** le problème en sous-problèmes **indépendants** de même nature, de taille plus petite.
+2. **Régner** : résoudre chaque sous-problème récursivement ; en dessous d'un seuil, on applique une résolution directe (cas de base).
+3. **Combiner** les solutions des sous-problèmes pour obtenir celle du problème initial.
 
 | Problème | Algorithme | Complexité |
 | --- | --- | --- |
@@ -999,45 +1530,61 @@ sorted(t, reverse=True)
 | k-ième élément | Quickselect | O(n) en moyenne |
 | Transformée de Fourier rapide | FFT | O(n log n) |
 
-> **Diviser pour régner ≠ programmation dynamique** : ici les sous-problèmes sont **indépendants** ; en DP ils se **chevauchent** (et on les mémorise).
+> **Diviser pour régner et programmation dynamique.** Ici les sous-problèmes sont **indépendants** (aucun n'est calculé deux fois). En programmation dynamique, ils **se chevauchent**, et l'on mémorise leurs résultats.
+
+**Points d'attention.** Les sous-problèmes doivent être réellement plus petits (terminaison) ; le coût de division et de combinaison détermine la complexité ; en dessous d'un seuil, une méthode simple (insertion) est souvent plus rapide que la récursion.
 
 ## 9.2 Exemple : maximum d'une liste
 
 ```python
 def maximum_dc(t, bas=0, haut=None):
-    if haut is None: haut = len(t) - 1
+    if haut is None:
+        haut = len(t) - 1
     if bas == haut:
-        return t[bas]
+        return t[bas]                                    # cas de base : un seul élément
     milieu = (bas + haut) // 2
     return max(maximum_dc(t, bas, milieu), maximum_dc(t, milieu + 1, haut))
 
 print(maximum_dc([3, 8, 2, 9, 4]))        # 9
 ```
 
+Récurrence `T(n) = 2T(n/2) + O(1)`, soit `O(n)`. Il n'y a **aucun gain** par rapport à la boucle simple : diviser pour régner n'est pas toujours utile, mais cet exemple met en évidence la structure du schéma (et se parallélise facilement).
+
 ## 9.3 Exemple : sous-tableau de somme maximale
+
+**Problème.** Trouver la plus grande somme d'une tranche contiguë d'un tableau d'entiers (éventuellement négatifs).
+
+**Idée.** Le meilleur sous-tableau est soit entièrement dans la moitié gauche, soit entièrement dans la moitié droite, soit **traverse le milieu**. Dans ce dernier cas, il se compose du meilleur suffixe de la moitié gauche et du meilleur préfixe de la moitié droite, calculables en `O(n)`.
 
 ```python
 def somme_max(t, bas=0, haut=None):
-    if haut is None: haut = len(t) - 1
-    if bas == haut: return t[bas]
+    if haut is None:
+        haut = len(t) - 1
+    if bas == haut:
+        return t[bas]
     m = (bas + haut) // 2
 
-    # meilleur sous-tableau qui traverse le milieu
-    s, meilleur_g = 0, float("-inf")
+    s, meilleur_g = 0, float("-inf")          # meilleur sous-tableau finissant en m
     for i in range(m, bas - 1, -1):
-        s += t[i]; meilleur_g = max(meilleur_g, s)
-    s, meilleur_d = 0, float("-inf")
+        s += t[i]
+        meilleur_g = max(meilleur_g, s)
+    s, meilleur_d = 0, float("-inf")          # meilleur sous-tableau commençant en m + 1
     for i in range(m + 1, haut + 1):
-        s += t[i]; meilleur_d = max(meilleur_d, s)
+        s += t[i]
+        meilleur_d = max(meilleur_d, s)
 
     return max(somme_max(t, bas, m), somme_max(t, m + 1, haut), meilleur_g + meilleur_d)
 
 print(somme_max([-2, 1, -3, 4, -1, 2, 1, -5, 4]))   # 6
 ```
 
-> L'**algorithme de Kadane** résout ce problème en **O(n)** : `courant = max(x, courant + x)`.
+Récurrence `T(n) = 2T(n/2) + O(n)`, donc `O(n log n)`. L'**algorithme de Kadane** résout le même problème en `O(n)` par programmation dynamique (chapitre 18) : `courant = max(x, courant + x)`.
 
 ## 9.4 Quickselect : le k-ième plus petit élément
+
+**Problème.** Trouver l'élément de rang `k` (en comptant à partir de 0) sans trier tout le tableau.
+
+**Idée.** On partitionne autour d'un pivot, comme dans le tri rapide ; puis on ne poursuit que **du côté qui contient le rang cherché**.
 
 ```python
 import random
@@ -1052,44 +1599,82 @@ def quickselect(t, k):                       # k = 0 pour le minimum
         return pivot
     return quickselect([x for x in t if x > pivot], k - len(moins) - len(egaux))
 
-print(quickselect([7, 1, 5, 3, 9], 2))     # 5 (le 3e plus petit)
+print(quickselect([7, 1, 5, 3, 9], 2))      # 5 (le 3e plus petit)
 ```
 
-**O(n)** en moyenne, O(n²) au pire (la **médiane des médianes** garantit O(n)).
+**Complexité.** Si le pivot coupe en deux moitiés, `T(n) = T(n/2) + O(n)`, d'où `O(n)` (somme géométrique `n + n/2 + n/4 + … ≤ 2n`). En moyenne `O(n)`, au pire `O(n²)`. L'algorithme de la **médiane des médianes** choisit un pivot garanti et donne `O(n)` au pire (mais avec une grande constante). La médiane s'obtient avec `k = n // 2`.
 
 ## 9.5 Le théorème maître
 
-Pour `T(n) = a·T(n/b) + Θ(n^d)` avec `a ≥ 1`, `b > 1`, `d ≥ 0` (`a` sous-problèmes de taille `n/b`, travail de division/combinaison en `n^d`) :
+Pour une récurrence de la forme
 
-| Comparaison | Résultat | Intuition |
+`T(n) = a · T(n/b) + Θ(n^d)` avec `a ≥ 1`, `b > 1`, `d ≥ 0`,
+
+où `a` est le nombre de sous-problèmes, `n/b` la taille de chacun, `n^d` le coût de division et de combinaison, on pose `d* = log_b a` (exposant critique) et on compare `d` à `d*` :
+
+| Comparaison | Résultat | Intuition (arbre de récursion) |
 | --- | --- | --- |
-| `d > log_b a` | **Θ(n^d)** | Le travail à la racine domine |
-| `d = log_b a` | **Θ(n^d · log n)** | Chaque niveau coûte autant |
-| `d < log_b a` | **Θ(n^(log_b a))** | Les feuilles dominent |
+| `d > log_b a` | **Θ(n^d)** | Le travail est concentré à la **racine** |
+| `d = log_b a` | **Θ(n^d · log n)** | **Chaque niveau** coûte autant, il y a `log n` niveaux |
+| `d < log_b a` | **Θ(n^(log\_b a))** | Le travail est concentré aux **feuilles** |
 
-| Algorithme | Récurrence | `a, b, d` | Résultat |
+**Pourquoi ?** À la profondeur `i`, il y a `a^i` sous-problèmes de taille `n/b^i`, de coût total `a^i · (n/b^i)^d = n^d · (a/b^d)^i`. C'est une suite géométrique de raison `a/b^d` : si la raison est inférieure à 1 (`d > log_b a`), le premier terme domine ; égale à 1, tous les termes sont égaux ; supérieure à 1, le dernier terme (les feuilles, au nombre de `a^(log_b n) = n^(log_b a)`) domine.
+
+| Algorithme | Récurrence | `(a, b, d)` | Résultat |
 | --- | --- | --- | --- |
-| Recherche binaire | `T(n/2) + O(1)` | 1, 2, 0 | Θ(log n) |
-| Tri fusion | `2T(n/2) + O(n)` | 2, 2, 1 | Θ(n log n) |
-| Quickselect (cas moyen) | `T(n/2) + O(n)` | 1, 2, 1 | Θ(n) |
-| Karatsuba | `3T(n/2) + O(n)` | 3, 2, 1 | Θ(n^1,585) |
-| Strassen | `7T(n/2) + O(n²)` | 7, 2, 2 | Θ(n^2,807) |
+| Recherche binaire | `T(n/2) + O(1)` | (1, 2, 0) | Θ(log n) |
+| Tri fusion | `2T(n/2) + O(n)` | (2, 2, 1) | Θ(n log n) |
+| Quickselect (cas moyen) | `T(n/2) + O(n)` | (1, 2, 1) | Θ(n) |
+| Maximum par division | `2T(n/2) + O(1)` | (2, 2, 0) | Θ(n) |
+| Karatsuba | `3T(n/2) + O(n)` | (3, 2, 1) | Θ(n^1,585) |
+| Strassen | `7T(n/2) + O(n²)` | (7, 2, 2) | Θ(n^2,807) |
 
-## 9.6 Multiplication de matrices (Strassen)
+**Limites.** Le théorème ne s'applique pas aux récurrences où les sous-problèmes sont de tailles inégales (quicksort pire cas) ni à `T(n) = T(n-1) + …`. Dans ces cas, on emploie le dépliage ou l'arbre de récursion.
 
-Le produit naïf de deux matrices `n × n` coûte **O(n³)**. **Strassen** (1969) divise chaque matrice en 4 blocs et n'effectue que **7 produits récursifs au lieu de 8** (en échange de plus d'additions), d'où **O(n^log₂7) ≈ O(n^2,81)**.
+## 9.6 Multiplication de grands entiers : Karatsuba
+
+La multiplication scolaire de deux nombres de `n` chiffres coûte `O(n²)`. **Karatsuba** (1960) écrit `x = x₁·B + x₀` et `y = y₁·B + y₀` (avec `B = 10^(n/2)`), puis remarque que
+
+`x·y = x₁y₁·B² + ((x₁ + x₀)(y₁ + y₀) - x₁y₁ - x₀y₀)·B + x₀y₀`.
+
+Il suffit donc de **3 multiplications** de nombres de taille moitié (au lieu de 4), d'où `T(n) = 3T(n/2) + O(n)` et `Θ(n^(log₂3)) ≈ Θ(n^1,585)`. Python l'utilise pour les très grands entiers.
+
+## 9.7 Multiplication de matrices : Strassen
+
+Le produit naïf de deux matrices `n × n` coûte `O(n³)`. **Strassen** (1969) divise chaque matrice en 4 blocs et n'effectue que **7 produits récursifs au lieu de 8**, en échange de davantage d'additions, d'où `O(n^(log₂7)) ≈ O(n^2,81)`.
 
 ```text
 M1 = (A11 + A22)(B11 + B22)     M5 = (A11 + A12) B22
-M2 = (A21 + A22) B11            M6 = (A21 − A11)(B11 + B12)
-M3 = A11 (B12 − B22)            M7 = (A12 − A22)(B21 + B22)
-M4 = A22 (B21 − B11)
+M2 = (A21 + A22) B11            M6 = (A21 - A11)(B11 + B12)
+M3 = A11 (B12 - B22)            M7 = (A12 - A22)(B21 + B22)
+M4 = A22 (B21 - B11)
 
-C11 = M1 + M4 − M5 + M7         C12 = M3 + M5
-C21 = M2 + M4                   C22 = M1 − M2 + M3 + M6
+C11 = M1 + M4 - M5 + M7         C12 = M3 + M5
+C21 = M2 + M4                   C22 = M1 - M2 + M3 + M6
 ```
 
-> *(à jour)* L'exposant optimal ω de la multiplication matricielle reste un problème ouvert : les meilleures bornes **théoriques** actuelles sont d'environ **2,37**, mais ces algorithmes sont **impraticables** (constantes énormes). En pratique, on utilise l'algorithme naïf optimisé (BLAS, cache, parallélisme) ou, pour de grandes tailles, Strassen.
+L'exposant optimal `ω` de la multiplication matricielle est un problème ouvert : les meilleures bornes théoriques actuelles sont d'environ 2,37, mais ces algorithmes sont impraticables à cause de constantes énormes. En pratique, on emploie le produit naïf très optimisé (bibliothèques BLAS, gestion du cache, parallélisme) ou, pour de grandes tailles, Strassen.
+
+## 9.8 Autres applications célèbres
+
+- **Paire de points la plus proche** : on partitionne les points par abscisse, on résout chaque moitié, puis on examine une bande autour de la coupure en n'examinant, pour chaque point, qu'un nombre constant de voisins triés par ordonnée. `T(n) = 2T(n/2) + O(n) = O(n log n)`.
+- **Transformée de Fourier rapide (FFT)** : évalue un polynôme de degré `n` en `n` points en `O(n log n)` au lieu de `O(n²)`, d'où la multiplication de polynômes en `O(n log n)`.
+- **Comptage d'inversions** par tri fusion, **enveloppe convexe** par division, **skyline** (profil d'immeubles).
+
+## 9.9 Points à retenir et exercices
+
+**À retenir.**
+
+- Diviser, régner, combiner ; les sous-problèmes sont indépendants.
+- Le théorème maître donne la complexité en comparant le coût à la racine et le coût aux feuilles.
+- Réduire le nombre d'appels récursifs (Karatsuba, Strassen) abaisse l'exposant.
+
+**Exercices.**
+
+1. Appliquer le théorème maître à `T(n) = 4T(n/2) + n`, `T(n) = 4T(n/2) + n²` et `T(n) = 4T(n/2) + n³`.
+2. Écrire un algorithme diviser pour régner qui calcule `x^n` et un autre qui renvoie à la fois le minimum et le maximum avec environ `3n/2` comparaisons.
+3. Utiliser quickselect pour calculer la médiane d'un tableau et comparer avec le tri préalable.
+4. Expliquer pourquoi le tri fusion est un tri diviser pour régner et la recherche d'un élément dans un tableau non trié ne l'est pas utilement.
 
 ---
 
@@ -1097,37 +1682,46 @@ C21 = M2 + M4                   C22 = M1 − M2 + M3 + M6
 
 ## 10.1 Principe
 
-Un algorithme **glouton** (*greedy*) construit la solution en faisant, à chaque étape, **le choix localement optimal**, sans jamais revenir en arrière.
+Un algorithme **glouton** (*greedy*) construit une solution **étape par étape** en effectuant à chaque étape le **choix localement optimal** selon un critère fixé, **sans jamais revenir sur une décision** prise.
 
 | Avantages | Limites |
 | --- | --- |
-| Simples et rapides (souvent O(n log n)) | Optimal **seulement si** le problème s'y prête |
-| Peu de mémoire | Le choix local peut mener à un mauvais résultat global |
+| Simples à écrire et à analyser | Optimal **seulement si** le problème possède les bonnes propriétés |
+| Très rapides (souvent `O(n log n)`, dominés par un tri ou un tas) | Un choix local peut mener à une solution globale médiocre |
+| Peu de mémoire | La correction doit être **démontrée** ; un test sur quelques exemples ne suffit pas |
 
-## 10.2 Quand fonctionne-t-il ?
+## 10.2 Quand un algorithme glouton est-il correct ?
 
-Deux propriétés doivent être **démontrées** :
+Deux propriétés doivent être établies.
 
-1. **Choix glouton** : il existe une solution optimale qui commence par le choix glouton.
-2. **Sous-structure optimale** : le problème restant, après le choix, est du même type.
+1. **Propriété du choix glouton** : il existe une solution optimale qui contient le premier choix glouton. Autrement dit, faire le choix local ne ferme pas la porte à l'optimum.
+2. **Sous-structure optimale** : après avoir fait ce choix, le problème restant est un problème du même type, et une solution optimale de ce problème restant, complétée par le choix, donne une solution optimale du problème initial.
 
-Pour prouver : **argument d'échange** (on transforme une solution optimale en solution gloutonne sans la dégrader) ou **induction**.
+### Techniques de preuve
+
+- **Argument d'échange** : on prend une solution optimale quelconque `O` et on montre qu'on peut la transformer, en échangeant un de ses éléments contre le choix glouton, en une solution **au moins aussi bonne** qui contient le choix glouton. En répétant, on transforme `O` en la solution gloutonne sans dégrader sa valeur.
+- **Induction** : on montre que la solution gloutonne construite après `k` étapes est « en avance » ou « au moins aussi bonne » que toute autre solution après `k` étapes (méthode « le glouton reste en tête »).
+- **Matroïdes** : un cadre théorique (ensemble d'ensembles « indépendants » vérifiant la propriété d'échange) pour lequel l'algorithme glouton qui ajoute les éléments par poids décroissant est optimal. L'arbre couvrant de poids minimal en est l'exemple fondamental.
 
 ## 10.3 Cadre général
 
 ```text
-1. Trier / organiser les candidats selon un critère (le « bon » critère est la clé).
-2. Répéter : choisir le meilleur candidat compatible, l'ajouter à la solution.
-3. S'arrêter quand la solution est complète.
+1. Trier ou organiser les candidats selon un critère (le bon critère est toute la difficulté).
+2. Répéter : choisir le meilleur candidat compatible avec les choix précédents et l'ajouter.
+3. S'arrêter quand la solution est complète (ou qu'aucun candidat ne convient).
 ```
+
+Le choix du critère est essentiel : sur un même problème, plusieurs critères naturels sont possibles et seul l'un d'eux (ou aucun) est correct.
 
 ## 10.4 Sélection d'activités (*Activity Selection*)
 
-**Problème** : choisir le **maximum d'activités compatibles** (non chevauchantes). **Critère : l'heure de fin la plus tôt.**
+**Problème.** On dispose de `n` activités, chacune avec un début et une fin. Choisir un **maximum d'activités compatibles** (deux à deux sans chevauchement).
+
+**Critère glouton correct : l'heure de fin la plus tôt.** On trie par fin croissante, on retient la première, puis on retient chaque activité dont le début est postérieur ou égal à la fin de la dernière retenue.
 
 ```python
-def selection_activites(activites):              # liste de (debut, fin)
-    activites.sort(key=lambda a: a[1])           # tri par fin croissante
+def selection_activites(activites):                  # liste de (debut, fin)
+    activites.sort(key=lambda a: a[1])               # tri par fin croissante
     choisies, fin_derniere = [], float("-inf")
     for debut, fin in activites:
         if debut >= fin_derniere:
@@ -1139,32 +1733,41 @@ print(selection_activites([(1, 4), (3, 5), (0, 6), (5, 7), (8, 9), (5, 9)]))
 # [(1, 4), (5, 7), (8, 9)]
 ```
 
-**O(n log n)** (le tri domine). Attention : trier par **début** ou par **durée** ne donne **pas** l'optimum.
+**Preuve par échange.** Soit `a₁` l'activité qui finit le plus tôt, et `O` une solution optimale dont la première activité (par ordre de fin) est `b₁`. Comme `a₁` finit au plus tôt, `fin(a₁) ≤ fin(b₁)`. Remplacer `b₁` par `a₁` dans `O` ne crée aucun chevauchement (les autres activités commencent après `fin(b₁) ≥ fin(a₁)`) et conserve le nombre d'activités. Il existe donc une solution optimale contenant `a₁` ; on conclut par induction sur le problème restant.
+
+**Complexité** : `O(n log n)` (le tri domine). **Contre-exemples** : trier par début, par durée croissante ou par nombre de conflits **ne donne pas** l'optimum en général. Par exemple, avec `(0, 10)`, `(9, 11)`, `(10, 20)` pris par début croissant, on choisit `(0, 10)` puis `(10, 20)`, mais la durée la plus courte `(9, 11)` bloquerait les deux autres.
 
 ## 10.5 Sac à dos fractionnaire
 
-On peut prendre une **fraction** d'un objet. **Critère : rapport valeur / poids décroissant.**
+**Problème.** Objets de valeur `vᵢ` et de poids `pᵢ`, capacité `C`. On peut prendre **une fraction** de chaque objet. Maximiser la valeur totale.
+
+**Critère correct : le rapport valeur/poids décroissant.**
 
 ```python
-def sac_a_dos_fractionnaire(objets, capacite):    # objets : (valeur, poids)
+def sac_a_dos_fractionnaire(objets, capacite):         # objets : (valeur, poids)
     objets.sort(key=lambda o: o[0] / o[1], reverse=True)
     total = 0.0
     for valeur, poids in objets:
         if capacite >= poids:
-            total += valeur; capacite -= poids
+            total += valeur
+            capacite -= poids
         else:
-            total += valeur * capacite / poids    # fraction du dernier objet
+            total += valeur * capacite / poids         # fraction du dernier objet
             break
     return total
 
 print(sac_a_dos_fractionnaire([(60, 10), (100, 20), (120, 30)], 50))   # 240.0
 ```
 
-> **Attention** : pour le **sac à dos 0/1** (objets indivisibles), le glouton n'est **plus optimal** : il faut la **programmation dynamique** (section 18).
+**Preuve.** Si une solution optimale laissait de côté une portion d'un objet de meilleur rapport tout en emportant une portion d'un objet de moins bon rapport, échanger les deux augmenterait strictement la valeur : contradiction.
+
+> **Attention.** Pour le **sac à dos 0/1** (objets indivisibles), le glouton n'est **plus optimal** : avec capacité 50 et objets `(60, 10)`, `(100, 20)`, `(120, 30)`, le glouton prend les deux premiers (valeur 160) alors que prendre les deux derniers vaut 220. Il faut la **programmation dynamique** (chapitre 18).
 
 ## 10.6 Codage de Huffman
 
-Compression sans perte : les symboles **fréquents** reçoivent des codes **courts** (code préfixe optimal).
+**Problème.** Compresser un texte sans perte en associant à chaque symbole un **code binaire** ; un **code préfixe** (aucun code n'est préfixe d'un autre) permet un décodage sans ambiguïté. On veut minimiser la longueur totale du texte codé.
+
+**Algorithme glouton.** On crée une feuille par symbole, pondérée par sa fréquence. Tant qu'il reste plusieurs arbres, on **fusionne les deux arbres de plus faibles fréquences** en un nouvel arbre dont la fréquence est la somme. L'arbre final définit les codes : `0` pour descendre à gauche, `1` à droite. Les symboles fréquents sont proches de la racine et ont donc des codes courts.
 
 ```python
 import heapq
@@ -1173,61 +1776,77 @@ from collections import Counter
 def huffman(texte):
     tas = [[freq, i, symbole, None, None] for i, (symbole, freq) in enumerate(Counter(texte).items())]
     heapq.heapify(tas)
-    compteur = len(tas)
+    compteur = len(tas)                                       # départage les fréquences égales
     while len(tas) > 1:
-        a, b = heapq.heappop(tas), heapq.heappop(tas)        # les deux plus faibles fréquences
+        a, b = heapq.heappop(tas), heapq.heappop(tas)         # les deux plus faibles fréquences
         heapq.heappush(tas, [a[0] + b[0], compteur, None, a, b])
         compteur += 1
 
     codes = {}
     def parcourir(noeud, code=""):
-        if noeud[2] is not None:
+        if noeud[2] is not None:                              # feuille
             codes[noeud[2]] = code or "0"
         else:
-            parcourir(noeud[3], code + "0"); parcourir(noeud[4], code + "1")
+            parcourir(noeud[3], code + "0")
+            parcourir(noeud[4], code + "1")
     parcourir(tas[0])
     return codes
 
 print(huffman("abracadabra"))
 ```
 
-**O(n log n)** pour `n` symboles distincts.
+**Complexité** : `O(n log n)` pour `n` symboles distincts. **Optimalité** : parmi tous les codes préfixes, celui de Huffman minimise la longueur moyenne (démontré par échange : les deux symboles les moins fréquents peuvent être placés comme frères au niveau le plus profond).
 
 ## 10.7 Autres exemples gloutons
 
-| Problème | Critère glouton |
-| --- | --- |
-| **Arbre couvrant minimal** (Kruskal, Prim) | Plus petite arête sûre |
-| **Plus courts chemins** (Dijkstra) | Sommet non traité le plus proche |
-| **Rendu de monnaie** | Plus grande pièce possible… **si le système est « canonique »** |
-| Ordonnancement de tâches avec échéances | Trier par échéance / durée |
-| Minimiser la somme des temps d'attente | Traiter les tâches **les plus courtes d'abord** |
+| Problème | Critère glouton | Remarque |
+| --- | --- | --- |
+| **Arbre couvrant minimal** (Kruskal, Prim) | Plus petite arête sûre | Chapitre 19 |
+| **Plus courts chemins** (Dijkstra) | Sommet non traité le plus proche | Chapitre 20 |
+| **Rendu de monnaie** | Plus grande pièce possible | Correct **seulement si** le système est « canonique » (euro, dollar) |
+| Minimiser la somme des temps d'attente | Traiter les tâches les plus courtes d'abord | Argument d'échange |
+| Ordonnancement avec échéances | Trier par échéance (EDF) | Minimise le retard maximal |
+| Couverture d'intervalles par un minimum de points | Placer le point à la fin du premier intervalle non couvert | Comparable à la sélection d'activités |
 
-### Quand le glouton **échoue** : rendu de monnaie
+### Quand le glouton échoue : le rendu de monnaie
 
 ```python
 def monnaie_gloutonne(pieces, montant):
     rendu = []
     for p in sorted(pieces, reverse=True):
         while montant >= p:
-            montant -= p; rendu.append(p)
+            montant -= p
+            rendu.append(p)
     return rendu
 
-monnaie_gloutonne([1, 3, 4], 6)    # [4, 1, 1] → 3 pièces (non optimal) ; l'optimum est [3, 3] → 2 pièces
-
-print(monnaie_gloutonne([1, 3, 4], 6))
+print(monnaie_gloutonne([1, 3, 4], 6))    # [4, 1, 1] : 3 pièces, alors que [3, 3] en utilise 2
 ```
 
-Pour des systèmes de pièces arbitraires, utilisez la **programmation dynamique**.
+Pour des systèmes de pièces arbitraires, il faut la programmation dynamique (chapitre 18).
 
 ## 10.8 Glouton ou programmation dynamique ?
 
-| | Glouton | Programmation dynamique |
+|  | Glouton | Programmation dynamique |
 | --- | --- | --- |
-| Décision | **Locale**, irrévocable | Explore toutes les options via sous-problèmes |
+| Décision | **Locale** et irrévocable | Examine toutes les options via les sous-problèmes |
 | Vitesse | Très rapide | Plus lent, plus de mémoire |
-| Optimalité | Seulement si preuve | **Garantie** (si sous-structure optimale) |
-| Exemple | Fractionnaire, Huffman | Sac à dos 0/1, rendu général |
+| Optimalité | Seulement avec preuve | **Garantie** si sous-structure optimale |
+| Exemples | Fractionnaire, Huffman, Kruskal | Sac à dos 0/1, rendu général |
+
+## 10.9 Points à retenir et exercices
+
+**À retenir.**
+
+- Un glouton est correct s'il vérifie la propriété du choix glouton et la sous-structure optimale ; on le prouve par échange ou induction.
+- Le critère de tri est la clé : la fin pour les activités, le rapport valeur/poids pour le fractionnaire.
+- Ne jamais supposer le glouton optimal sans preuve ni contre-exemple.
+
+**Exercices.**
+
+1. Donner un contre-exemple montrant que trier les activités par durée croissante n'est pas optimal.
+2. Montrer par échange que traiter les tâches par durée croissante minimise la somme des temps d'attente.
+3. Calculer à la main le codage de Huffman de la fréquence `a:45, b:13, c:12, d:16, e:9, f:5`.
+4. Trouver un système de pièces pour lequel le glouton échoue et un pour lequel il réussit.
 
 ---
 
@@ -1235,25 +1854,27 @@ Pour des systèmes de pièces arbitraires, utilisez la **programmation dynamique
 
 ## 11.1 Principe
 
-Le **retour sur trace** construit une solution **pas à pas** en essayant des choix ; si un choix mène à une **impasse**, on **annule** (retour en arrière) et on essaie le suivant. C'est une **recherche exhaustive intelligente** : l'**élagage** (*pruning*) coupe les branches qui ne peuvent pas aboutir.
+Le **retour sur trace** construit une solution **pas à pas** en essayant des choix successifs. Lorsqu'un choix conduit à une **impasse** (contrainte violée, solution partielle ne pouvant plus être complétée), on **annule** ce choix (on revient en arrière) et on essaie le suivant. C'est une **recherche exhaustive organisée** : on parcourt implicitement un **arbre de recherche**, dont chaque nœud est une solution partielle et chaque arête un choix.
+
+L'**élagage** (*pruning*) est l'idée centrale : on abandonne une branche dès qu'on sait qu'elle ne peut pas aboutir, ce qui évite d'explorer tout son sous-arbre.
 
 ```text
-Arbre de recherche :        choix 1 ── choix 2 ── choix 3 ✗ (impasse)
-                                          └── choix 2' ── … ✓ solution
+Arbre de recherche :  choix 1 -- choix 2 -- choix 3   (impasse : on revient en arrière)
+                                   |-- choix 2' -- ... (solution trouvée)
 ```
 
 ## 11.2 Schéma général
 
 ```python
 def retour_sur_trace(etat, solutions, est_complet, candidats, est_valide, appliquer, annuler):
-    if est_complet(etat):                    # solution trouvée
-        solutions.append(list(etat))         # copie de l'état courant
+    if est_complet(etat):                      # solution trouvée
+        solutions.append(list(etat))           # copie de l'état courant
         return
     for choix in candidats(etat):
-        if est_valide(etat, choix):          # élagage : on ne continue que si c'est prometteur
-            appliquer(etat, choix)           # 1. choisir
+        if est_valide(etat, choix):            # élagage : ne continuer que si prometteur
+            appliquer(etat, choix)             # 1. choisir
             retour_sur_trace(etat, solutions, est_complet, candidats, est_valide, appliquer, annuler)  # 2. explorer
-            annuler(etat, choix)             # 3. défaire (backtrack)
+            annuler(etat, choix)               # 3. défaire (backtrack)
 
 # Application : toutes les permutations de {1, 2, 3}
 solutions = []
@@ -1265,58 +1886,68 @@ retour_sur_trace(
     appliquer=lambda etat, c: etat.append(c),
     annuler=lambda etat, c: etat.pop(),
 )
-print(solutions)    # 6 permutations : [[1, 2, 3], [1, 3, 2], [2, 1, 3], ...]
+print(solutions)    # 6 permutations
 ```
 
-## 11.3 Exemple : sous-ensembles et permutations
+Les trois étapes **choisir, explorer, défaire** sont indissociables : oublier de défaire laisse un état corrompu pour les branches suivantes. De même, il faut **copier** l'état courant quand on l'ajoute aux solutions (`list(etat)` ou `courant[:]`), sinon toutes les solutions pointent vers la même liste, modifiée ensuite.
+
+## 11.3 Sous-ensembles et permutations
 
 ```python
 def sous_ensembles(t):
     resultat, courant = [], []
     def aller(i):
         if i == len(t):
-            resultat.append(courant[:]); return
+            resultat.append(courant[:])
+            return
         aller(i + 1)                          # sans t[i]
-        courant.append(t[i]); aller(i + 1); courant.pop()     # avec t[i]
+        courant.append(t[i])                  # avec t[i]
+        aller(i + 1)
+        courant.pop()
     aller(0)
-    return resultat                           # 2ⁿ sous-ensembles
+    return resultat                           # 2^n sous-ensembles
 
 def permutations(t):
     resultat = []
     def aller(debut):
         if debut == len(t):
-            resultat.append(t[:]); return
+            resultat.append(t[:])
+            return
         for i in range(debut, len(t)):
             t[debut], t[i] = t[i], t[debut]
             aller(debut + 1)
-            t[debut], t[i] = t[i], t[debut]   # annuler
+            t[debut], t[i] = t[i], t[debut]   # annuler l'échange
     aller(0)
     return resultat                           # n! permutations
 
-print(len(sous_ensembles([1, 2, 3])))         # 8 = 2³
+print(len(sous_ensembles([1, 2, 3])))         # 8 = 2^3
 print(len(permutations([1, 2, 3])))           # 6 = 3!
 
-# Équivalents de la bibliothèque standard
 from itertools import permutations as perms, combinations
 print(list(combinations([1, 2, 3], 2)))       # [(1, 2), (1, 3), (2, 3)]
 ```
 
+Les sous-ensembles se modélisent par une décision binaire (prendre ou non chaque élément) : `2ⁿ` feuilles. Les permutations se construisent en fixant successivement l'élément de chaque position : `n!` feuilles. Pour les entrées avec doublons, on trie d'abord puis on saute un élément identique au précédent au même niveau de choix, afin de ne pas produire de solutions répétées.
+
 ## 11.4 Problème des N reines
 
-Placer `n` reines sur un échiquier `n × n` sans qu'elles s'attaquent (ni ligne, ni colonne, ni diagonale).
+**Problème.** Placer `n` reines sur un échiquier `n × n` de sorte qu'aucune n'en attaque une autre (ni même ligne, ni même colonne, ni même diagonale).
+
+**Modélisation.** On place **une reine par ligne** ; le choix est la colonne. Pour tester la compatibilité en `O(1)`, on mémorise les colonnes occupées, les diagonales « descendantes » (identifiées par `ligne - colonne`) et « montantes » (identifiées par `ligne + colonne`).
 
 ```python
 def n_reines(n):
     solutions = []
-    colonnes, diag1, diag2 = set(), set(), set()      # colonne, (ligne - col), (ligne + col)
+    colonnes, diag1, diag2 = set(), set(), set()
     placement = []
 
     def placer(ligne):
         if ligne == n:
-            solutions.append(placement[:]); return
+            solutions.append(placement[:])
+            return
         for col in range(n):
             if col in colonnes or (ligne - col) in diag1 or (ligne + col) in diag2:
-                continue                               # élagage O(1)
+                continue                                  # élagage en O(1)
             colonnes.add(col); diag1.add(ligne - col); diag2.add(ligne + col)
             placement.append(col)
             placer(ligne + 1)
@@ -1329,10 +1960,12 @@ def n_reines(n):
 print(len(n_reines(8)))      # 92 solutions
 ```
 
+Sans élagage, il y aurait `nⁿ` placements (ou `n!` en imposant des colonnes distinctes) ; avec l'élagage, le nombre de nœuds explorés est incomparablement plus faible (quelques milliers pour `n = 8`).
+
 ## 11.5 Solveur de Sudoku
 
 ```python
-def resoudre_sudoku(grille):                   # grille 9×9, 0 = case vide
+def resoudre_sudoku(grille):                   # grille 9 x 9, 0 = case vide
     def possible(l, c, v):
         if any(grille[l][j] == v for j in range(9)): return False
         if any(grille[i][c] == v for i in range(9)): return False
@@ -1360,30 +1993,61 @@ print(resoudre_sudoku(grille))      # True
 print(grille[0])                    # [5, 3, 4, 6, 7, 8, 9, 1, 2]
 ```
 
-> **Optimisation** : choisir d'abord la case ayant **le moins de valeurs possibles** (heuristique MRV) ; suivre les valeurs possibles avec des **masques de bits**.
+> **Optimisations.** Choisir d'abord la case qui a **le moins de valeurs possibles** (heuristique MRV, *minimum remaining values*) ; mémoriser les valeurs possibles de chaque ligne, colonne et bloc avec des **masques de bits** ; propager les contraintes (une case n'ayant qu'une valeur possible est remplie immédiatement).
 
-## 11.6 Autres problèmes classiques
+## 11.6 Somme de sous-ensemble et autres problèmes classiques
+
+```python
+def somme_sous_ensemble(t, cible):                 # existe-t-il un sous-ensemble de somme cible ? (t positifs, trié)
+    t = sorted(t)
+    def aller(i, reste):
+        if reste == 0:
+            return True
+        if i == len(t) or t[i] > reste:            # élagage : les suivants sont trop grands
+            return False
+        return aller(i + 1, reste - t[i]) or aller(i + 1, reste)
+    return aller(0, cible)
+
+print(somme_sous_ensemble([3, 34, 4, 12, 5, 2], 9))   # True (4 + 5)
+```
 
 | Problème | Idée |
 | --- | --- |
-| **Rat dans un labyrinthe** | Avancer / reculer dans un labyrinthe jusqu'à la sortie |
-| **Parcours du cavalier** | Visiter toutes les cases (heuristique de Warnsdorff) |
-| **Chemin hamiltonien** | Visiter chaque sommet une fois (NP-complet) |
-| **Somme de sous-ensemble** | Choisir des éléments dont la somme vaut `S` |
-| **Coloration de graphe**, **mots croisés**, **SAT** | Affecter + vérifier + annuler |
+| **Rat dans un labyrinthe** | Avancer, marquer, reculer en cas d'impasse |
+| **Parcours du cavalier** | Visiter toutes les cases ; heuristique de Warnsdorff (aller vers la case ayant le moins de sorties) |
+| **Chemin hamiltonien** | Visiter chaque sommet une seule fois (NP-complet) |
+| **Coloration de graphe**, **mots croisés**, **SAT** | Affecter, vérifier les contraintes, annuler |
+| **Génération de combinaisons, parenthésages bien formés** | Construire en respectant des invariants |
 
 ## 11.7 Complexité et comparaison
 
-Pire cas **exponentiel** (O(2ⁿ), O(n!)…) : l'élagage améliore beaucoup la pratique, pas le pire cas.
+Le **pire cas reste exponentiel** (`O(2ⁿ)`, `O(n!)`, `O(kⁿ)`) : l'élagage améliore beaucoup la pratique mais pas le pire cas. Pour estimer le coût, on dénombre les nœuds de l'arbre de recherche.
 
-| | Retour sur trace | Glouton | Programmation dynamique |
+|  | Retour sur trace | Glouton | Programmation dynamique |
 | --- | --- | --- | --- |
-| Exploration | Exhaustive avec élagage | Un seul chemin | Sous-problèmes mémorisés |
-| Revient en arrière | Oui | Non | — |
-| Sous-problèmes répétés | Souvent recalculés | — | **Mémorisés** |
-| Garantie d'optimalité | Oui (exhaustif) | Non | Oui |
+| Exploration | Exhaustive, avec élagage | Un seul chemin | Sous-problèmes mémorisés |
+| Revient en arrière | Oui | Non | Non applicable |
+| Sous-problèmes répétés | Souvent recalculés | Sans objet | **Mémorisés** |
+| Garantie d'optimalité | Oui (exhaustif) | Non en général | Oui |
 
-> Si l'on observe des **sous-problèmes qui se répètent**, ajoutez de la **mémoïsation** : le retour sur trace devient de la programmation dynamique.
+> Si l'on observe que des **sous-problèmes se répètent** (mêmes paramètres atteints par des chemins différents), on ajoute de la **mémoïsation** : le retour sur trace devient de la programmation dynamique.
+
+**Variantes pour l'optimisation : séparation et évaluation (*branch and bound*).** Pour un problème d'optimisation, on garde la meilleure solution trouvée et on **abandonne** toute branche dont une **borne optimiste** (par exemple une relaxation du problème) n'est pas meilleure que cette solution.
+
+## 11.8 Points à retenir et exercices
+
+**À retenir.**
+
+- Choisir, explorer, défaire ; copier l'état quand on enregistre une solution.
+- L'élagage précoce est ce qui rend la méthode praticable.
+- Le coût reste exponentiel au pire ; la mémoïsation ou la DP s'imposent si les sous-problèmes se répètent.
+
+**Exercices.**
+
+1. Générer toutes les combinaisons valides de `n` paires de parenthèses.
+2. Compter les solutions du problème des 8 reines puis modifier le code pour n'en afficher que la première.
+3. Écrire un solveur de labyrinthe qui renvoie un chemin de l'entrée à la sortie.
+4. Générer toutes les permutations d'une liste avec doublons sans répétition de résultats.
 
 ---
 
@@ -1391,15 +2055,22 @@ Pire cas **exponentiel** (O(2ⁿ), O(n!)…) : l'élagage améliore beaucoup la 
 
 ## 12.1 Principe
 
-On utilise **deux indices** qui parcourent la structure, soit en **sens opposés** (depuis les deux bouts), soit **dans le même sens** (à vitesses différentes). Cela remplace souvent une double boucle **O(n²)** par un seul passage **O(n)**.
+La technique des **deux pointeurs** utilise **deux indices** qui parcourent une séquence (tableau, chaîne, liste chaînée). Au lieu d'examiner toutes les paires `(i, j)` avec deux boucles imbriquées en `O(n²)`, on fait **avancer** les pointeurs de façon coordonnée, chaque pointeur ne parcourant la séquence qu'une seule fois : `O(n)`.
 
-| Variante | Usage |
-| --- | --- |
-| **Opposés** (gauche, droite) | Tableaux triés, palindromes, paires de somme donnée |
-| **Même sens** (lent, rapide) | Suppression de doublons, partition, fenêtre variable |
-| **Lent / rapide** (Floyd) | Détection de cycle dans une liste chaînée |
+Le cœur de la méthode est un **argument d'élimination** : à chaque pas, on peut prouver qu'un certain nombre de paires candidates ne peuvent pas être la réponse, et on les écarte toutes d'un coup en déplaçant un pointeur.
+
+| Variante | Description | Usages |
+| --- | --- | --- |
+| **Pointeurs opposés** | Un indice à chaque extrémité, qui convergent | Tableaux triés, palindromes, paires de somme donnée, aire maximale |
+| **Même sens** (lent et rapide) | Les deux indices avancent vers la droite à des rythmes différents | Suppression de doublons, partition, fenêtre à taille variable |
+| **Lièvre et tortue** (Floyd) | Un pointeur avance de 1, l'autre de 2 | Détection de cycle, milieu d'une liste chaînée |
+| **Deux séquences** | Un pointeur par tableau | Fusion de listes triées, intersection |
 
 ## 12.2 Somme de deux nombres dans un tableau trié
+
+**Problème.** Dans un tableau trié, trouver deux éléments dont la somme vaut `cible`.
+
+**Idée.** On place `g` au début et `d` à la fin. Si `t[g] + t[d]` est trop petit, aucune paire utilisant `t[g]` avec un élément à gauche de `d` ne peut convenir (ces éléments sont plus petits que `t[d]`) : on avance `g`. Si la somme est trop grande, symétriquement, on recule `d`.
 
 ```python
 def deux_somme_trie(t, cible):
@@ -1408,14 +2079,16 @@ def deux_somme_trie(t, cible):
         s = t[g] + t[d]
         if s == cible:
             return (g, d)
-        if s < cible: g += 1          # il faut une somme plus grande
-        else:         d -= 1          # il faut une somme plus petite
+        if s < cible:
+            g += 1            # il faut une somme plus grande
+        else:
+            d -= 1            # il faut une somme plus petite
     return None
 
 print(deux_somme_trie([1, 3, 4, 6, 9], 10))   # (0, 4) car 1 + 9 = 10
 ```
 
-**O(n)** (après un éventuel tri O(n log n)). Sur un tableau **non trié**, un `dict` donne aussi O(n) (section 17).
+**Complexité.** `O(n)` après le tri éventuel (`O(n log n)`). Sur un tableau non trié, un `dict` donne aussi `O(n)` (chapitre 17), mais le tableau trié permet une version en espace `O(1)`.
 
 ## 12.3 Autres exemples
 
@@ -1424,38 +2097,51 @@ def est_palindrome(s):
     s = [c.lower() for c in s if c.isalnum()]
     g, d = 0, len(s) - 1
     while g < d:
-        if s[g] != s[d]: return False
-        g += 1; d -= 1
+        if s[g] != s[d]:
+            return False
+        g += 1
+        d -= 1
     return True
 
 def supprimer_doublons_tries(t):              # en place, renvoie la nouvelle longueur
-    if not t: return 0
+    if not t:
+        return 0
     lent = 0
     for rapide in range(1, len(t)):
         if t[rapide] != t[lent]:
-            lent += 1; t[lent] = t[rapide]
+            lent += 1
+            t[lent] = t[rapide]
     return lent + 1
 
-def trois_somme(t):                           # triplets de somme nulle : O(n²)
-    t.sort(); res = []
+def trois_somme(t):                           # triplets de somme nulle : O(n^2)
+    t.sort()
+    res = []
     for i in range(len(t) - 2):
-        if i and t[i] == t[i - 1]: continue
+        if i and t[i] == t[i - 1]:
+            continue                          # évite les triplets répétés
         g, d = i + 1, len(t) - 1
         while g < d:
             s = t[i] + t[g] + t[d]
-            if s < 0: g += 1
-            elif s > 0: d -= 1
+            if s < 0:
+                g += 1
+            elif s > 0:
+                d -= 1
             else:
-                res.append((t[i], t[g], t[d])); g += 1; d -= 1
-                while g < d and t[g] == t[g - 1]: g += 1
+                res.append((t[i], t[g], t[d]))
+                g += 1
+                d -= 1
+                while g < d and t[g] == t[g - 1]:
+                    g += 1
     return res
 
 def aire_max_conteneur(h):                    # « Container With Most Water »
     g, d, meilleur = 0, len(h) - 1, 0
     while g < d:
         meilleur = max(meilleur, min(h[g], h[d]) * (d - g))
-        if h[g] < h[d]: g += 1
-        else: d -= 1
+        if h[g] < h[d]:
+            g += 1                            # la hauteur est limitée par la plus petite paroi
+        else:
+            d -= 1
     return meilleur
 
 print(est_palindrome("Esope reste ici et se repose"))      # True
@@ -1465,10 +2151,16 @@ print(trois_somme([-1, 0, 1, 2, -1, -4]))                # [(-1, -1, 2), (-1, 0,
 print(aire_max_conteneur([1, 8, 6, 2, 5, 4, 8, 3, 7]))   # 49
 ```
 
+**Justification du conteneur.** L'aire vaut `min(h[g], h[d]) × (d - g)`. Quand on rapproche les parois, la largeur diminue ; seule une paroi plus haute peut compenser. La paroi la plus **basse** est celle qui limite l'aire : la conserver en rapprochant l'autre ne peut que diminuer l'aire. On la déplace donc, sans perdre l'optimum.
+
+**Fusion de deux tableaux triés** (brique du tri fusion) : un pointeur par tableau, on avance celui dont l'élément est le plus petit. **Partition** (drapeau néerlandais) : trois pointeurs (`bas`, `milieu`, `haut`) pour séparer 0, 1 et 2 en un seul passage.
+
 ### Détection de cycle (lièvre et tortue de Floyd)
 
+On avance un pointeur **lent** d'un pas et un pointeur **rapide** de deux pas. S'il y a un cycle, le rapide finit par rattraper le lent (la distance entre eux diminue de 1 à chaque tour une fois dans le cycle) ; sinon, le rapide atteint la fin de la liste.
+
 ```python
-class Noeud:                                  # même classe qu'en 3.3
+class Noeud:
     def __init__(self, valeur, suivant=None):
         self.valeur, self.suivant = valeur, suivant
 
@@ -1482,14 +2174,36 @@ def a_un_cycle(tete):
 
 a, b, c = Noeud(1), Noeud(2), Noeud(3)
 a.suivant, b.suivant = b, c
-print(a_un_cycle(a))                          # False
-c.suivant = a                                 # on referme la boucle
-print(a_un_cycle(a))                          # True
+print(a_un_cycle(a))        # False
+c.suivant = a               # on referme la boucle
+print(a_un_cycle(a))        # True
 ```
+
+Complexité `O(n)` en temps, `O(1)` en espace (contre `O(n)` pour une solution avec un `set` de nœuds visités). On l'utilise aussi pour trouver le **milieu** d'une liste (quand le rapide atteint la fin, le lent est au milieu) et le **début** du cycle.
 
 ## 12.4 Quand l'utiliser ?
 
-Tableau **trié** (ou triable), recherche de **paires/triplets**, **comparaisons aux extrémités**, parcours **linéaire** d'une séquence, besoin de **O(1) mémoire**.
+- Le tableau est **trié** (ou peut l'être sans nuire) et on cherche des paires ou triplets.
+- On compare des éléments **aux extrémités** (palindrome, conteneur).
+- On parcourt une séquence en **un seul passage** avec une exigence de mémoire `O(1)`.
+- On modifie un tableau **en place** (suppression, partition).
+
+Si les données ne sont pas triées et que le tri est interdit, préférer le hachage (chapitre 17).
+
+## 12.5 Points à retenir et exercices
+
+**À retenir.**
+
+- Deux pointeurs transforment `O(n²)` en `O(n)` grâce à un argument d'élimination.
+- La monotonie (tri) est ce qui justifie quel pointeur déplacer.
+- Floyd détecte un cycle en espace constant.
+
+**Exercices.**
+
+1. Écrire une fonction qui renvoie le nombre de paires de somme inférieure à `S` dans un tableau trié, en `O(n)`.
+2. Implémenter la partition du drapeau néerlandais en un passage.
+3. Fusionner deux tableaux triés en place à partir de la fin.
+4. Trouver le nœud de début du cycle dans une liste chaînée (indice : après la rencontre, repartir de la tête).
 
 ---
 
@@ -1497,30 +2211,36 @@ Tableau **trié** (ou triable), recherche de **paires/triplets**, **comparaisons
 
 ## 13.1 Principe
 
-On maintient une **fenêtre** `[g, d]` sur un tableau ou une chaîne et on la **fait glisser** en mettant à jour l'information **de façon incrémentale** (ajouter l'élément entrant, retirer l'élément sortant), au lieu de tout recalculer.
+La **fenêtre glissante** (*sliding window*) maintient un **intervalle contigu** `[g, d]` d'une séquence et le fait **glisser** vers la droite en mettant à jour l'information de manière **incrémentale** : on ajoute l'élément qui entre et on retire celui qui sort, au lieu de recalculer toute la fenêtre. Chaque indice entre au plus une fois et sort au plus une fois, d'où une complexité typique en **`O(n)`**.
 
-| Type | Description |
-| --- | --- |
-| **Taille fixe** `k` | La fenêtre garde la même longueur |
-| **Taille variable** | On **étend** à droite, on **réduit** à gauche tant qu'une condition est violée |
+| Type | Description | Exemple |
+| --- | --- | --- |
+| **Taille fixe `k`** | La fenêtre garde la même longueur | Somme maximale de `k` éléments consécutifs |
+| **Taille variable** | On étend à droite, puis on réduit à gauche tant qu'une condition est violée (ou satisfaite) | Plus longue sous-chaîne sans répétition |
 
-Complexité typique : **O(n)** (chaque indice entre et sort au plus une fois).
+C'est un cas particulier de deux pointeurs de même sens, où les deux pointeurs délimitent la fenêtre et ne reculent jamais.
 
 ## 13.2 Taille fixe : somme maximale de `k` éléments consécutifs
 
 ```python
 def somme_max_fenetre(t, k):
-    somme = sum(t[:k])
+    somme = sum(t[:k])                       # première fenêtre
     meilleur = somme
     for i in range(k, len(t)):
-        somme += t[i] - t[i - k]              # entre t[i], sort t[i-k]
+        somme += t[i] - t[i - k]             # entre t[i], sort t[i-k]
         meilleur = max(meilleur, somme)
     return meilleur
 
-print(somme_max_fenetre([2, 1, 5, 1, 3, 2], 3))   # 9
+print(somme_max_fenetre([2, 1, 5, 1, 3, 2], 3))   # 9 (5 + 1 + 3)
 ```
 
+La version naïve recalcule chaque somme en `O(k)`, soit `O(nk)` au total ; la fenêtre glissante met à jour en `O(1)`, soit `O(n)`.
+
 ## 13.3 Taille variable : plus longue sous-chaîne sans répétition
+
+**Problème.** Longueur de la plus longue sous-chaîne dont tous les caractères sont distincts.
+
+**Idée.** On étend la fenêtre à droite ; si le nouveau caractère est déjà dans la fenêtre, on **saute** le bord gauche juste après sa dernière occurrence.
 
 ```python
 def plus_longue_sans_repetition(s):
@@ -1528,15 +2248,19 @@ def plus_longue_sans_repetition(s):
     g = meilleur = 0
     for d, c in enumerate(s):
         if c in derniere_position and derniere_position[c] >= g:
-            g = derniere_position[c] + 1       # on saute après la dernière occurrence
+            g = derniere_position[c] + 1         # on saute après la dernière occurrence
         derniere_position[c] = d
         meilleur = max(meilleur, d - g + 1)
     return meilleur
 
-print(plus_longue_sans_repetition("abcabcbb"))    # 3
+print(plus_longue_sans_repetition("abcabcbb"))   # 3 ("abc")
 ```
 
-## 13.4 Taille variable : plus petit sous-tableau de somme ≥ S (valeurs positives)
+**Invariant** : la fenêtre `s[g..d]` ne contient aucun caractère répété. `g` ne fait que croître : au plus `n` déplacements au total.
+
+## 13.4 Taille variable : plus petit sous-tableau de somme au moins `S`
+
+**Problème.** Pour un tableau de valeurs **strictement positives**, longueur du plus court sous-tableau contigu de somme supérieure ou égale à `S`.
 
 ```python
 def plus_court_sous_tableau(t, S):
@@ -1544,17 +2268,24 @@ def plus_court_sous_tableau(t, S):
     meilleur = float("inf")
     for d, x in enumerate(t):
         somme += x
-        while somme >= S:
+        while somme >= S:                         # fenêtre valide : on essaie de la réduire
             meilleur = min(meilleur, d - g + 1)
-            somme -= t[g]; g += 1
+            somme -= t[g]
+            g += 1
     return 0 if meilleur == float("inf") else meilleur
 
 print(plus_court_sous_tableau([2, 3, 1, 2, 4, 3], 7))   # 2 (4 + 3)
 ```
 
-> **Attention** : cette méthode suppose des **valeurs positives** : avec des négatifs, utilisez les sommes préfixes + table de hachage.
+**Complexité** `O(n)` : bien que la boucle `while` soit imbriquée, `g` ne dépasse jamais `d`, donc le nombre total d'exécutions de `g += 1` est au plus `n` (**analyse amortie**).
 
-## 13.5 Maximum de chaque fenêtre : file monotone *(ajout)*
+> **Condition essentielle.** Cette méthode exige que la **monotonie** soit vraie : ajouter un élément à droite ne fait qu'augmenter la somme, en retirer un à gauche ne fait que la diminuer. Avec des valeurs **négatives**, cette hypothèse tombe : on utilise alors les sommes préfixes avec une table de hachage (chapitre 14) ou une file monotone.
+
+## 13.5 Maximum de chaque fenêtre : file monotone
+
+**Problème.** Pour chaque fenêtre de taille `k`, calculer son maximum.
+
+**Idée.** On maintient une **file à double entrée** d'indices dont les valeurs sont en ordre **décroissant** : le maximum est toujours en tête. Quand un nouvel élément arrive, on retire par la fin tous les éléments plus petits (qui ne seront plus jamais maximum tant que le nouvel élément est dans la fenêtre). On retire aussi par la tête l'indice sorti de la fenêtre.
 
 ```python
 from collections import deque
@@ -1563,23 +2294,61 @@ def maximums_fenetres(t, k):
     dq, res = deque(), []                      # dq contient des INDICES de valeurs décroissantes
     for i, x in enumerate(t):
         while dq and t[dq[-1]] <= x:
-            dq.pop()
+            dq.pop()                           # dominés par x
         dq.append(i)
         if dq[0] <= i - k:
-            dq.popleft()
+            dq.popleft()                       # sorti de la fenêtre
         if i >= k - 1:
             res.append(t[dq[0]])
-    return res                                  # O(n) amorti
+    return res                                 # O(n) amorti
 
 print(maximums_fenetres([1, 3, -1, -3, 5, 3, 6, 7], 3))   # [3, 3, 5, 5, 6, 7]
 ```
 
-## 13.6 Autres problèmes classiques
+Chaque indice est inséré et retiré au plus une fois : `O(n)` amorti, contre `O(nk)` naïf ou `O(n log n)` avec un tas.
 
-- **Anagrammes dans une chaîne** (fenêtre de taille fixe + compteurs de lettres)
-- **Plus long sous-tableau avec au plus `k` valeurs distinctes**
-- **Sous-chaîne minimale contenant tous les caractères d'un motif**
-- **Fruits dans des paniers**, **plus longue sous-chaîne avec remplacement de `k` caractères**
+## 13.6 Fenêtre avec comptage : anagrammes et couverture
+
+Pour des problèmes de chaînes, la fenêtre s'accompagne d'un **dictionnaire de compteurs** (`Counter`). Exemple : trouver les positions où une sous-chaîne de longueur `m` est un anagramme du motif.
+
+```python
+from collections import Counter
+
+def positions_anagrammes(texte, motif):
+    m, res = len(motif), []
+    cible, fenetre = Counter(motif), Counter(texte[:m - 1])
+    for i in range(m - 1, len(texte)):
+        fenetre[texte[i]] += 1                 # entre
+        if fenetre == cible:
+            res.append(i - m + 1)
+        fenetre[texte[i - m + 1]] -= 1         # sort
+        if fenetre[texte[i - m + 1]] == 0:
+            del fenetre[texte[i - m + 1]]
+    return res
+
+print(positions_anagrammes("cbaebabacd", "abc"))    # [0, 6]
+```
+
+Autres problèmes classiques : plus long sous-tableau avec au plus `k` valeurs distinctes, sous-chaîne minimale contenant tous les caractères d'un motif, plus longue sous-chaîne avec remplacement d'au plus `k` caractères, fruits dans des paniers.
+
+## 13.7 Reconnaître une fenêtre glissante
+
+Le problème porte sur un sous-tableau ou une sous-chaîne **contigu(ë)**, cherche un optimum (plus long, plus court, plus grand) sous une contrainte **monotone**. Si la contrainte n'est pas monotone (valeurs négatives), préférer préfixes et hachage.
+
+## 13.8 Points à retenir et exercices
+
+**À retenir.**
+
+- Fenêtre fixe : on ajoute et retire un élément en `O(1)`.
+- Fenêtre variable : on étend à droite, on rétrécit à gauche selon l'invariant ; complexité amortie `O(n)`.
+- La file monotone répond au maximum ou minimum d'une fenêtre en `O(1)` amorti.
+
+**Exercices.**
+
+1. Longueur de la plus longue sous-chaîne contenant au plus 2 caractères distincts.
+2. Nombre de sous-tableaux de produit strictement inférieur à `K` (valeurs positives).
+3. Moyenne mobile d'un flux de valeurs sur les `k` dernières mesures.
+4. Expliquer pourquoi la fenêtre glissante échoue pour « plus court sous-tableau de somme au moins `S` » avec des valeurs négatives et proposer une méthode.
 
 ---
 
@@ -1587,7 +2356,13 @@ print(maximums_fenetres([1, 3, -1, -3, 5, 3, 6, 7], 3))   # [3, 3, 5, 5, 6, 7]
 
 ## 14.1 Sommes préfixes
 
-On précalcule `P[i] = t[0] + … + t[i-1]` : la somme de **n'importe quel intervalle** se calcule en **O(1)**.
+### Définition
+
+Pour un tableau `t` de `n` éléments, le **tableau des sommes préfixes** `P` est défini par `P[0] = 0` et `P[i] = t[0] + t[1] + … + t[i-1]`. Il a donc `n + 1` éléments. La somme de **n'importe quel intervalle** `t[l..r]` (bornes incluses) vaut
+
+`somme(l, r) = P[r + 1] - P[l]`,
+
+car `P[r+1]` contient tous les éléments jusqu'à `r` et on retranche ceux qui précèdent `l`.
 
 ```python
 from itertools import accumulate
@@ -1601,26 +2376,33 @@ def somme_intervalle(l, r):              # somme de t[l..r] inclus
 print(somme_intervalle(1, 3))            # 1 + 4 + 1 = 6
 ```
 
-Précalcul **O(n)**, requêtes **O(1)**.
+**Complexité** : précalcul `O(n)`, puis chaque requête en `O(1)`, au lieu de `O(n)` par requête. C'est un compromis temps et espace (mémoire `O(n)`).
 
 ### Sous-tableaux de somme `k` (avec valeurs négatives possibles)
+
+**Idée.** La somme de `t[i..j]` vaut `P[j+1] - P[i]`. Elle vaut `k` exactement quand `P[i] = P[j+1] - k`. En parcourant le tableau, on dénombre, grâce à un dictionnaire, le nombre de préfixes précédents égaux à `somme_courante - k`.
 
 ```python
 from collections import defaultdict
 
 def nb_sous_tableaux_somme(t, k):
-    vus = defaultdict(int); vus[0] = 1
+    vus = defaultdict(int)
+    vus[0] = 1                           # le préfixe vide
     somme = total = 0
     for x in t:
         somme += x
-        total += vus[somme - k]          # nombre de préfixes précédents tels que somme - préfixe = k
+        total += vus[somme - k]          # préfixes précédents tels que somme - préfixe = k
         vus[somme] += 1
     return total                         # O(n)
 
 print(nb_sous_tableaux_somme([1, 1, 1], 2))   # 2
 ```
 
-### Version 2D
+La même idée traite : plus long sous-tableau de somme `k`, sous-tableaux de somme divisible par `m` (on stocke les restes des préfixes), sous-tableaux avec autant de 0 que de 1 (on remplace les 0 par -1).
+
+### Version à deux dimensions
+
+Pour une matrice, `P[i][j]` est la somme du rectangle de coins `(0, 0)` et `(i-1, j-1)`. On le construit par **inclusion-exclusion**, puis la somme d'un rectangle quelconque s'obtient en `O(1)`.
 
 ```python
 def construire_prefixe_2d(m):
@@ -1631,7 +2413,7 @@ def construire_prefixe_2d(m):
             P[i + 1][j + 1] = m[i][j] + P[i][j + 1] + P[i + 1][j] - P[i][j]
     return P
 
-def somme_rect(P, r1, c1, r2, c2):       # inclusif
+def somme_rect(P, r1, c1, r2, c2):       # coins (r1, c1) et (r2, c2), inclusifs
     return P[r2 + 1][c2 + 1] - P[r1][c2 + 1] - P[r2 + 1][c1] + P[r1][c1]
 
 m = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
@@ -1639,9 +2421,19 @@ P2 = construire_prefixe_2d(m)
 print(somme_rect(P2, 1, 1, 2, 2))      # 5 + 6 + 8 + 9 = 28
 ```
 
+La soustraction de `P[i][j]` dans la construction compense le fait que le rectangle commun a été compté deux fois ; dans la requête, on ajoute `P[r1][c1]` parce qu'il a été retranché deux fois.
+
+### Généralisations
+
+Les préfixes fonctionnent pour toute opération **inversible** : somme, ou exclusif (XOR), produit modulaire (avec inverses), comptage. Pour un minimum ou un maximum (non inversibles), on utilise une table creuse ou un arbre de segments (chapitre 23).
+
 ## 14.2 Tableau de différences
 
-Pour appliquer **de nombreuses mises à jour d'intervalle** (« ajouter `v` à `t[l..r]` ») : chaque mise à jour coûte **O(1)**, puis une **reconstruction** en O(n).
+### Principe
+
+Le **tableau de différences** `D` de `t` vérifie `D[i] = t[i] - t[i-1]` (avec `D[0] = t[0]`). C'est l'opération **inverse** de la somme préfixe : en cumulant `D`, on retrouve `t`.
+
+Son utilité : pour appliquer **de nombreuses mises à jour d'intervalle** « ajouter `v` à `t[l..r]` », il suffit de faire `D[l] += v` et `D[r+1] -= v`, soit **`O(1)` par mise à jour**. On reconstruit ensuite `t` en une passe de cumul, en `O(n)`.
 
 ```python
 def mises_a_jour_intervalles(n, operations):          # operations : (l, r, v)
@@ -1658,19 +2450,36 @@ def mises_a_jour_intervalles(n, operations):          # operations : (l, r, v)
 print(mises_a_jour_intervalles(5, [(0, 2, 5), (2, 4, 10)]))   # [5, 5, 15, 10, 10]
 ```
 
-La **différence** est l'opération inverse de la somme préfixe.
+**Justification.** Ajouter `v` en `D[l]` fait que toutes les positions à partir de `l` voient `+v` lors du cumul ; retrancher `v` en `D[r+1]` annule cet effet à partir de `r+1`. Seule la plage `[l, r]` est donc affectée. Sans cette technique, `m` mises à jour coûteraient `O(m·n)`.
 
 ## 14.3 Applications
 
 | Application | Technique |
 | --- | --- |
-| Somme / moyenne d'un intervalle, requêtes multiples | Préfixes |
-| Nombre d'occurrences d'une lettre dans `[l, r]` | Préfixes par lettre |
-| Réservations qui se chevauchent, « covoiturage », ensoleillement | Différences |
+| Somme ou moyenne d'un intervalle, nombreuses requêtes | Préfixes |
+| Nombre d'occurrences d'une lettre dans `[l, r]` | Un tableau de préfixes par lettre |
+| Réservations qui se chevauchent, covoiturage, capacité maximale | Différences (balayage) |
 | Dessiner des rectangles sur une grille | Différences 2D |
-| Sous-tableau de somme `k` | Préfixes + `dict` |
+| Sous-tableau de somme `k` | Préfixes et dictionnaire |
+| Point d'équilibre (somme à gauche égale à somme à droite) | Préfixes |
+| Produit de tous les éléments sauf un | Préfixes et suffixes de produits |
 
-> Si le tableau **change** entre les requêtes, utilisez un **arbre de Fenwick** ou un **arbre de segments** ([section 23](#23-arbres-de-segments-et-arbres-de-fenwick)).
+Si le tableau **change** entre les requêtes, préfixes et différences ne suffisent plus : on emploie un **arbre de Fenwick** ou un **arbre de segments** (chapitre 23).
+
+## 14.4 Points à retenir et exercices
+
+**À retenir.**
+
+- `P[r+1] - P[l]` donne une somme d'intervalle en `O(1)` après un précalcul linéaire.
+- Préfixes et dictionnaire comptent les sous-tableaux de somme donnée, même avec des négatifs.
+- Les différences permettent des mises à jour d'intervalle en `O(1)`.
+
+**Exercices.**
+
+1. Calculer pour chaque indice le produit des autres éléments sans division, en `O(n)`.
+2. Compter les sous-tableaux dont la somme est divisible par `m`.
+3. Dessiner `m` rectangles sur une grille `n × n` avec des différences 2D.
+4. Étant donné des réservations `(début, fin)` d'une salle, trouver le nombre maximal de réservations simultanées.
 
 ---
 
@@ -1678,12 +2487,16 @@ La **différence** est l'opération inverse de la somme préfixe.
 
 ## 15.1 Principe
 
-Au lieu de chercher un **indice**, on cherche **la meilleure valeur** `x` dans un intervalle `[bas, haut]`, à condition de disposer d'une fonction **monotone** `est_valide(x)` : si `x` est faisable, alors tout `x' ≥ x` (ou tout `x' ≤ x`) l'est aussi.
+Au lieu de chercher un **indice** dans un tableau trié, on cherche **la meilleure valeur** `x` d'une grandeur (capacité, vitesse, distance, durée) dans un intervalle `[bas, haut]`, à condition de disposer d'une fonction de décision `est_valide(x)` **monotone** : si `x` est faisable, alors tout `x' ≥ x` l'est aussi (ou, symétriquement, tout `x' ≤ x`).
 
 ```text
 x :       1   2   3   4   5   6   7   8
-valide :  ✗   ✗   ✗   ✓   ✓   ✓   ✓   ✓      → on cherche la PREMIÈRE valeur valide (4)
+valide :  non non non oui oui oui oui oui    on cherche la PREMIÈRE valeur valide (4)
 ```
+
+La suite des réponses `non, non, non, oui, oui, …` est triée au sens booléen : la recherche binaire s'y applique, sans que ce tableau soit jamais construit. Chaque test de `est_valide` élimine la moitié de l'intervalle des réponses possibles.
+
+**Condition d'application.** Un problème d'optimisation (« trouver le plus petit `x` tel que… ») se transforme en problème de **décision** (« `x` convient-il ? ») plus facile à résoudre, dont la réponse est monotone en `x`. Le coût total vaut `O(log(intervalle) × coût de est_valide)`.
 
 ## 15.2 Modèle : plus petite valeur valide
 
@@ -1692,26 +2505,41 @@ def plus_petite_valeur_valide(bas, haut, est_valide):
     while bas < haut:
         milieu = (bas + haut) // 2
         if est_valide(milieu):
-            haut = milieu                # milieu est une candidate : on cherche plus petit
+            haut = milieu                # milieu est candidate : chercher plus petit
         else:
             bas = milieu + 1
-    return bas                           # première valeur valide (suppose qu'elle existe)
+    return bas                           # première valeur valide (suppose qu'elle existe dans [bas, haut])
 ```
 
-Pour **maximiser** (dernière valeur valide), utiliser `milieu = (bas + haut + 1) // 2` et `bas = milieu` / `haut = milieu - 1`.
+**Invariant.** La réponse appartient toujours à `[bas, haut]`. L'intervalle diminue strictement à chaque tour, car `milieu < haut` (division entière par défaut) et on affecte soit `haut = milieu`, soit `bas = milieu + 1`.
+
+Pour **maximiser** (dernière valeur valide), on utilise `milieu = (bas + haut + 1) // 2` (arrondi vers le haut, pour éviter une boucle infinie), puis `bas = milieu` si valide, et `haut = milieu - 1` sinon.
+
+```python
+def plus_grande_valeur_valide(bas, haut, est_valide):
+    while bas < haut:
+        milieu = (bas + haut + 1) // 2
+        if est_valide(milieu):
+            bas = milieu
+        else:
+            haut = milieu - 1
+    return bas
+```
 
 ## 15.3 Exemple : expédier des colis en D jours
 
-Poids `p`, capacité minimale d'un camion pour tout livrer en `D` jours (ordre fixé) :
+**Problème.** Des colis de poids `p₁, …, pₙ` doivent être expédiés **dans l'ordre**, en au plus `D` jours ; chaque jour, un camion transporte des colis consécutifs dont le poids total ne dépasse pas sa capacité. Trouver la capacité minimale.
+
+**Raisonnement.** Si une capacité `c` suffit, toute capacité plus grande suffit (monotonie). La capacité est au moins `max(p)` (il faut pouvoir porter le plus lourd) et au plus `sum(p)` (tout en un jour). Pour tester `c`, on simule en glouton : on remplit chaque jour autant que possible, et on compte les jours.
 
 ```python
-# Réutilise plus_petite_valeur_valide, définie en 15.2
 def capacite_minimale(poids, D):
     def faisable(cap):
         jours, charge = 1, 0
         for p in poids:
             if charge + p > cap:
-                jours += 1; charge = 0
+                jours += 1
+                charge = 0
             charge += p
         return jours <= D
 
@@ -1720,16 +2548,18 @@ def capacite_minimale(poids, D):
 print(capacite_minimale([1, 2, 3, 4, 5, 6, 7, 8, 9, 10], 5))   # 15
 ```
 
-Complexité : **O(n · log(somme))**.
+**Complexité** : `O(n · log(somme))`. Sans cette approche, il faudrait essayer toutes les façons de découper en `D` parties.
 
 ## 15.4 Exemple : vitesse minimale pour manger toutes les bananes
+
+**Problème.** `n` piles de bananes ; à vitesse `v` bananes par heure, on mange une pile à la fois (en une heure par pile au plus). Trouver la plus petite vitesse permettant de finir en au plus `h` heures.
 
 ```python
 from math import ceil
 
 def vitesse_minimale(piles, heures):
     bas, haut = 1, max(piles)
-    while bas < haut:                         # même modèle qu'en 15.2
+    while bas < haut:                             # même modèle qu'en 15.2
         milieu = (bas + haut) // 2
         if sum(ceil(p / milieu) for p in piles) <= heures:
             haut = milieu
@@ -1740,33 +2570,80 @@ def vitesse_minimale(piles, heures):
 print(vitesse_minimale([3, 6, 7, 11], 8))     # 4
 ```
 
-## 15.5 Schémas fréquents
+## 15.5 Exemple : maximiser la distance minimale
 
-| Type de problème | Direction |
+**Problème.** Placer `k` objets sur des positions triées `x₁ < … < xₙ` en **maximisant la plus petite distance** entre deux objets voisins.
+
+**Raisonnement.** Si on peut respecter une distance minimale `d`, on peut respecter toute distance plus petite : la validité est décroissante en `d`, on cherche donc la dernière valeur valide. Le test est glouton : placer le premier objet, puis chaque suivant au premier emplacement à distance au moins `d`.
+
+```python
+def distance_minimale_maximale(positions, k):
+    positions.sort()
+    def faisable(d):
+        compte, derniere = 1, positions[0]
+        for x in positions[1:]:
+            if x - derniere >= d:
+                compte += 1
+                derniere = x
+        return compte >= k
+    return plus_grande_valeur_valide(1, positions[-1] - positions[0], faisable)
+
+print(distance_minimale_maximale([1, 2, 4, 8, 9], 3))     # 3 (positions 1, 4, 8)
+```
+
+## 15.6 Schémas fréquents
+
+| Type de problème | Direction de recherche |
 | --- | --- |
-| **Minimiser le maximum** (capacité, charge) | Valide → chercher à **gauche** |
-| **Maximiser le minimum** (distance minimale) | Valide → chercher à **droite** |
-| Plus petite valeur satisfaisant une contrainte | Valide → gauche |
-| Plus grande valeur satisfaisant une contrainte | Valide → droite |
+| **Minimiser le maximum** (capacité, charge, temps) | Valide, donc chercher à **gauche** (réduire) |
+| **Maximiser le minimum** (distance minimale, résistance) | Valide, donc chercher à **droite** (augmenter) |
+| Plus petite valeur satisfaisant une contrainte | `plus_petite_valeur_valide` |
+| Plus grande valeur satisfaisant une contrainte | `plus_grande_valeur_valide` |
 
-## 15.6 Réels : recherche binaire flottante
+Signaux dans l'énoncé : « minimiser le maximum », « maximiser le minimum », « le plus petit `x` tel que… », avec une contrainte vérifiable par un parcours en `O(n)`.
+
+## 15.7 Recherche binaire sur les réels
+
+Quand la réponse est un réel, on ne peut pas tester chaque valeur : on effectue un nombre **fixe** d'itérations ou on s'arrête quand l'intervalle est plus petit que la précision voulue.
 
 ```python
 def racine_carree(x, eps=1e-9):
     bas, haut = 0.0, max(1.0, x)
     for _ in range(100):                 # un nombre FIXE d'itérations évite les boucles infinies
         milieu = (bas + haut) / 2
-        if milieu * milieu < x: bas = milieu
-        else: haut = milieu
+        if milieu * milieu < x:
+            bas = milieu
+        else:
+            haut = milieu
     return bas
+
+print(round(racine_carree(2), 6))       # 1.414214
 ```
 
-## 15.7 Conseils
+100 itérations suffisent à épuiser la précision d'un flottant double. Éviter `while haut - bas > eps` quand les nombres sont très grands : l'écart peut ne jamais passer sous `eps` à cause de la précision limitée des flottants.
 
-- Définissez soigneusement **`bas`** et **`haut`** (bornes qui contiennent la réponse).
-- Vérifiez la **monotonie** de la fonction de décision.
-- `est_valide` doit être **O(n)** (ou mieux).
-- Testez les **cas limites** (réponse = borne basse ou haute).
+## 15.8 Conseils
+
+- Définir soigneusement **`bas`** et **`haut`** de sorte que la réponse y soit toujours contenue.
+- Démontrer la **monotonie** de la fonction de décision (si on augmente la capacité, la faisabilité se conserve).
+- La fonction de décision doit être en `O(n)` ou mieux, sinon le gain est perdu.
+- Tester les cas limites : réponse égale à la borne basse ou haute, intervalle réduit à un point.
+- Éviter la boucle infinie en choisissant l'arrondi du milieu cohérent avec la mise à jour des bornes.
+
+## 15.9 Points à retenir et exercices
+
+**À retenir.**
+
+- On convertit « optimiser » en « décider » si la réponse est monotone, puis on cherche par dichotomie.
+- Complexité : `O(log(plage) × coût du test)`.
+- Deux modèles : première valeur valide (arrondi bas) et dernière valeur valide (arrondi haut).
+
+**Exercices.**
+
+1. Partager un tableau en `k` sous-tableaux contigus en minimisant la somme maximale d'un sous-tableau.
+2. Trouver la racine entière `n`-ième d'un entier.
+3. Trouver le plus petit diviseur `d` tel que la somme des quotients arrondis (plafond) reste au plus un seuil donné.
+4. Quelle est la valeur de `milieu` si on calcule `(bas + haut) // 2` quand `bas = 3` et `haut = 4` ? Pourquoi `bas = milieu` seul provoquerait-il une boucle infinie ?
 
 ---
 
@@ -1774,7 +2651,14 @@ def racine_carree(x, eps=1e-9):
 
 ## 16.1 Crible d'Ératosthène
 
-Trouve **tous les nombres premiers ≤ n** en O(n log log n).
+### Principe
+
+Le crible trouve **tous les nombres premiers inférieurs ou égaux à `n`**. On part d'un tableau de booléens tous à `True` ; pour chaque nombre premier `i` rencontré (non encore barré), on **barre tous ses multiples**. Les nombres restant non barrés sont premiers.
+
+**Deux optimisations** justifiées :
+
+- On ne parcourt que les `i` jusqu'à `√n` : un composé `m ≤ n` a un facteur premier `≤ √m ≤ √n`, donc il est barré avant.
+- On commence à barrer à partir de `i²` : les multiples plus petits `i × k` (avec `k < i`) ont déjà été barrés par un facteur premier plus petit.
 
 ```python
 def crible(n):
@@ -1782,45 +2666,63 @@ def crible(n):
     est_premier[0:2] = [False, False]
     for i in range(2, int(n ** 0.5) + 1):
         if est_premier[i]:
-            for multiple in range(i * i, n + 1, i):      # on démarre à i²
+            for multiple in range(i * i, n + 1, i):      # on démarre à i^2
                 est_premier[multiple] = False
     return [i for i, p in enumerate(est_premier) if p]
 
 print(crible(30))    # [2, 3, 5, 7, 11, 13, 17, 19, 23, 29]
 ```
 
-Variantes : **crible linéaire** (O(n)), **crible segmenté** (mémoire réduite), **crible des plus petits facteurs premiers** pour factoriser rapidement.
+**Complexité** : `O(n log log n)` en temps (la somme des `n/p` sur les premiers `p ≤ n` vaut `n log log n`), `O(n)` en espace.
+
+### Variantes
+
+- **Crible linéaire** (`O(n)`) : chaque composé est barré exactement une fois, par son plus petit facteur premier ; il fournit aussi le tableau des **plus petits facteurs premiers** (`spf`).
+- **Crible segmenté** : traite l'intervalle `[a, b]` par blocs pour réduire la mémoire.
+- **Factorisation rapide avec `spf`** : après un crible des plus petits facteurs premiers, factoriser un nombre `m ≤ n` coûte `O(log m)` en divisant successivement par `spf[m]`.
 
 ## 16.2 Factorisation
 
+Tout entier `n ≥ 2` s'écrit de façon **unique** (à l'ordre près) comme produit de nombres premiers : c'est le **théorème fondamental de l'arithmétique**.
+
 ```python
-def factoriser(n):                         # O(√n)
+def factoriser(n):                         # O(sqrt(n))
     facteurs, d = {}, 2
     while d * d <= n:
         while n % d == 0:
             facteurs[d] = facteurs.get(d, 0) + 1
             n //= d
         d += 1
-    if n > 1:
+    if n > 1:                              # le reste est premier
         facteurs[n] = facteurs.get(n, 0) + 1
     return facteurs
 
 print(factoriser(360))       # {2: 3, 3: 2, 5: 1}
 ```
 
+À partir de la factorisation `n = p₁^a₁ ··· p_k^a_k`, on obtient : le **nombre de diviseurs** `(a₁+1)···(a_k+1)`, la **somme des diviseurs** `∏ (p^(a+1) - 1)/(p - 1)`, le **PGCD** et **PPCM** (minimum et maximum des exposants). Pour des nombres de grande taille (plus de 10¹²), on utilise l'algorithme **rho de Pollard**.
+
 ## 16.3 Arithmétique modulaire
 
-Pour éviter les nombres énormes, on calcule **modulo** `m` (souvent `10⁹ + 7`).
+### Congruences
+
+On dit que `a ≡ b (mod m)` quand `m` divise `a - b`, c'est-à-dire quand `a` et `b` ont le même reste dans la division par `m`. Ces congruences sont compatibles avec l'addition, la soustraction et la multiplication :
+
+`(a + b) mod m = ((a mod m) + (b mod m)) mod m`, de même pour `-` et `×`.
+
+On peut donc réduire les résultats intermédiaires à chaque étape, ce qui évite les nombres énormes. Dans les énoncés, on demande souvent le résultat modulo `10⁹ + 7`, qui est premier. **La division n'est pas compatible** : on la remplace par la multiplication par l'**inverse modulaire**.
 
 ```python
 MOD = 10**9 + 7
 a, b = 10**12, 3 * 10**11
 
-print((a + b) % MOD, (a * b) % MOD, (a - b) % MOD)   # en Python, % renvoie un résultat ≥ 0
-print((3 - 5) % MOD)                                  # 1000000005 (jamais négatif)
+print((a + b) % MOD, (a * b) % MOD, (a - b) % MOD)
+print((3 - 5) % MOD)        # 1000000005 : en Python, % renvoie un résultat >= 0 (pas en C, C++ ou Java)
 ```
 
-### Exponentiation rapide : `a^b mod m` en O(log b)
+### Exponentiation rapide : `a^b mod m` en `O(log b)`
+
+On décompose l'exposant en binaire et on élève au carré successivement : `a^b = ∏ a^(2^i)` pour les bits `i` de `b` valant 1.
 
 ```python
 MOD = 10**9 + 7
@@ -1828,46 +2730,54 @@ MOD = 10**9 + 7
 def puissance_mod(a, b, m):
     resultat, a = 1, a % m
     while b:
-        if b & 1:
+        if b & 1:                       # bit courant égal à 1
             resultat = resultat * a % m
-        a = a * a % m
+        a = a * a % m                   # a^(2^i) -> a^(2^(i+1))
         b >>= 1
     return resultat
 
-print(puissance_mod(2, 10**18, MOD) == pow(2, 10**18, MOD))   # True : pow est l'équivalent intégré
+print(puissance_mod(2, 10**18, MOD) == pow(2, 10**18, MOD))   # True : pow(a, b, m) est l'équivalent intégré
 ```
 
 ### Inverse modulaire
 
-| Méthode | Condition | Code |
+L'**inverse** de `a` modulo `m` est un entier `x` tel que `a·x ≡ 1 (mod m)`. Il existe si et seulement si `pgcd(a, m) = 1`.
+
+| Méthode | Condition | Principe |
 | --- | --- | --- |
-| **Petit théorème de Fermat** | `m` **premier**, `a` non multiple de `m` | `a^(m-2) mod m` |
-| **Euclide étendu** | `pgcd(a, m) = 1` | Résout `a·x + m·y = 1` |
-| **Intégré** *(Python 3.8+)* | `pgcd(a, m) = 1` | `pow(a, -1, m)` |
+| **Petit théorème de Fermat** | `m` **premier**, `a` non multiple de `m` | `a^(m-1) ≡ 1`, donc l'inverse est `a^(m-2) mod m` |
+| **Euclide étendu** | `pgcd(a, m) = 1` | Résout `a·x + m·y = 1` (identité de Bézout) |
+| **Fonction intégrée** | `pgcd(a, m) = 1` | `pow(a, -1, m)` (Python 3.8 et suivants) |
 
 ```python
-print(pow(3, -1, 11))        # 4 car 3 × 4 = 12 ≡ 1 (mod 11)
+print(pow(3, -1, 11))        # 4, car 3 x 4 = 12 = 1 (mod 11)
 
-def euclide_etendu(a, b):    # renvoie (g, x, y) avec a·x + b·y = g = pgcd(a, b)
+def euclide_etendu(a, b):    # renvoie (g, x, y) avec a*x + b*y = g = pgcd(a, b)
     if b == 0:
         return a, 1, 0
     g, x, y = euclide_etendu(b, a % b)
     return g, y, x - (a // b) * y
 
-print(euclide_etendu(240, 46))    # (2, -9, 47) car 240·(-9) + 46·47 = 2
+print(euclide_etendu(240, 46))    # (2, -9, 47) car 240 * (-9) + 46 * 47 = 2
 ```
 
-### Binôme de Newton modulo un premier
+**Dérivation d'Euclide étendu.** Si `g = b·x' + (a mod b)·y'` et `a mod b = a - (a // b)·b`, alors `g = a·y' + b·(x' - (a // b)·y')`. D'où le retour `(g, y', x' - (a // b)·y')`.
+
+### Coefficients binomiaux modulo un premier
+
+`C(n, k) = n! / (k! (n-k)!)`. On précalcule les factorielles et leurs inverses pour répondre à chaque requête en `O(1)`.
 
 ```python
 MOD = 10**9 + 7
 
 def precalculer_factorielles(n, m=MOD):
     fact = [1] * (n + 1)
-    for i in range(1, n + 1): fact[i] = fact[i - 1] * i % m
+    for i in range(1, n + 1):
+        fact[i] = fact[i - 1] * i % m
     inv = [1] * (n + 1)
     inv[n] = pow(fact[n], -1, m)
-    for i in range(n, 0, -1): inv[i - 1] = inv[i] * i % m
+    for i in range(n, 0, -1):
+        inv[i - 1] = inv[i] * i % m          # 1/(i-1)! = i / i!
     return fact, inv
 
 def C(n, k, fact, inv, m=MOD):
@@ -1881,52 +2791,77 @@ print(C(10, 3, fact, inv))        # 120
 
 | Outil | Rôle |
 | --- | --- |
-| **Indicatrice d'Euler** φ(n) | Nombre d'entiers `≤ n` premiers avec `n` ; `a^φ(m) ≡ 1 (mod m)` si pgcd = 1 |
-| **Théorème des restes chinois** | Résout des systèmes de congruences à modules premiers entre eux |
-| **Exponentiation de matrices** | Récurrences linéaires (Fibonacci) en O(k³ log n) |
-| **Nombres de Catalan**, **Stirling**, **inclusion-exclusion** | Dénombrements |
+| **Indicatrice d'Euler** `φ(n)` | Nombre d'entiers de `1` à `n` premiers avec `n` ; théorème d'Euler : `a^φ(m) ≡ 1 (mod m)` si `pgcd(a, m) = 1` |
+| **Théorème des restes chinois** | Un système de congruences `x ≡ aᵢ (mod mᵢ)` avec `mᵢ` deux à deux premiers entre eux admet une solution unique modulo le produit des `mᵢ` |
+| **Exponentiation de matrices** | Calcule une récurrence linéaire d'ordre `k` (Fibonacci) en `O(k³ log n)` |
+| **Nombres de Catalan, de Stirling, inclusion-exclusion** | Dénombrements |
 
 ```python
 def phi(n):
-    r = n; d = 2
+    r, d = n, 2
     while d * d <= n:
         if n % d == 0:
-            while n % d == 0: n //= d
-            r -= r // d
+            while n % d == 0:
+                n //= d
+            r -= r // d                # multiplier par (1 - 1/d)
         d += 1
-    if n > 1: r -= r // n
+    if n > 1:
+        r -= r // n
     return r
 
 print(phi(36))                    # 12
 ```
 
-## 16.5 Test de primalité de Miller-Rabin *(ajout)*
+La formule `φ(n) = n ∏ (1 - 1/p)` (sur les facteurs premiers `p` de `n`) justifie le code.
 
-Test **probabiliste** rapide ; **déterministe** pour tout entier 64 bits avec les bases ci-dessous.
+## 16.5 Test de primalité de Miller-Rabin
+
+Pour les très grands nombres, le test par divisions successives est trop lent. **Miller-Rabin** est un test **probabiliste** rapide, **déterministe** pour tous les entiers inférieurs à `3,3 × 10²⁴` environ avec l'ensemble de bases ci-dessous (donc en particulier pour tout entier 64 bits).
+
+**Principe.** Si `n` est premier impair et `n - 1 = 2^s · d` avec `d` impair, alors pour toute base `a` non multiple de `n`, soit `a^d ≡ 1`, soit `a^(2^r · d) ≡ -1 (mod n)` pour un `r` tel que `0 ≤ r < s`. Si une base viole cette condition (un **témoin**), `n` est certainement composé. Un composé qui passe le test pour la base `a` est dit **pseudo-premier fort** ; les nombres de Carmichael (comme 561) trompent le test de Fermat simple mais pas Miller-Rabin avec plusieurs bases.
 
 ```python
 def miller_rabin(n):
-    if n < 2: return False
+    if n < 2:
+        return False
     for p in (2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37):
         if n % p == 0:
             return n == p
     d, s = n - 1, 0
     while d % 2 == 0:
-        d //= 2; s += 1
+        d //= 2
+        s += 1
     for a in (2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37):
         x = pow(a, d, n)
-        if x in (1, n - 1): continue
+        if x in (1, n - 1):
+            continue
         for _ in range(s - 1):
             x = x * x % n
-            if x == n - 1: break
+            if x == n - 1:
+                break
         else:
-            return False
+            return False                  # témoin de composition trouvé
     return True
 
-print(miller_rabin(2**61 - 1), miller_rabin(561))   # True False (561 est un nombre de Carmichael)
+print(miller_rabin(2**61 - 1), miller_rabin(561))   # True False
 ```
 
-Complexité **O(log³ n)** : bien plus rapide que O(√n) pour de grands nombres (cryptographie : RSA).
+**Complexité** : `O(k · log³ n)` pour `k` bases, très inférieure à `O(√n)`. Applications : cryptographie (génération de clés RSA), factorisation.
+
+## 16.6 Points à retenir et exercices
+
+**À retenir.**
+
+- Le crible génère les premiers en `O(n log log n)` ; la factorisation par divisions est en `O(√n)`.
+- On calcule modulo `m` à chaque étape ; la division devient une multiplication par l'inverse.
+- L'exponentiation rapide calcule `a^b mod m` en `O(log b)` ; l'inverse vient de Fermat ou d'Euclide étendu.
+
+**Exercices.**
+
+1. Compter les nombres premiers inférieurs à 10⁷ avec un crible, puis avec un crible linéaire.
+2. Résoudre `x ≡ 2 (mod 3)`, `x ≡ 3 (mod 5)`, `x ≡ 2 (mod 7)` par les restes chinois.
+3. Calculer la dernière chiffre de `7^(10^18)`.
+4. Calculer `C(10⁶, 5·10⁵) mod 10⁹+7`.
 
 ---
 
@@ -1934,58 +2869,60 @@ Complexité **O(log³ n)** : bien plus rapide que O(√n) pour de grands nombres
 
 ## 17.1 Principe
 
-Une **fonction de hachage** transforme une clé en un **entier** servant d'indice dans un tableau (*table de hachage*). L'accès, l'insertion et la suppression sont en **O(1) en moyenne**.
+Une **fonction de hachage** `h` transforme une **clé** (chaîne, nombre, tuple) en un entier servant d'**indice** dans un tableau, la **table de hachage**. Pour une clé `k`, on range la valeur à la case `h(k) mod taille`. L'accès, l'insertion et la suppression sont alors en **`O(1)` en moyenne**, sans parcourir la structure.
 
 ```text
-clé "Alice" ──hash()──▶ 8372649 ──mod taille──▶ case 5 :  [ … | … | "Alice" → 30 | … ]
+clé "Alice" --hash()--> 8372649 --mod taille--> case 5 :  [ ... | ... | "Alice" -> 30 | ... ]
 ```
 
-Propriétés d'une bonne fonction : **déterministe**, **rapide**, **répartition uniforme**.
+Propriétés d'une bonne fonction de hachage : **déterministe** (même clé, même valeur), **rapide** à calculer, **répartition uniforme** des valeurs (peu de clés par case).
 
 ## 17.2 Les structures en Python
 
 ```python
 d = {}                          # dictionnaire (table de hachage)
-d["pomme"] = 3                  # insertion / mise à jour : O(1) moyen
-d["pomme"]                      # lecture : 3 (KeyError si absent)
-d.get("poire", 0)               # lecture avec valeur par défaut
-"pomme" in d                    # test d'appartenance : O(1)
+d["pomme"] = 3                  # insertion ou mise à jour : O(1) en moyenne
+print(d["pomme"])               # lecture : 3 (KeyError si absent)
+print(d.get("poire", 0))        # lecture avec valeur par défaut
+print("pomme" in d)             # test d'appartenance : O(1)
 del d["pomme"]                  # suppression
 
 ensemble = {1, 2, 3}            # set : valeurs uniques
-2 in ensemble                   # O(1)
-ensemble | {4}; ensemble & {2, 9}; ensemble - {1}      # union, intersection, différence
+print(2 in ensemble)            # O(1)
+print(ensemble | {4}, ensemble & {2, 9}, ensemble - {1})   # union, intersection, différence
 ```
 
-Les clés doivent être **hachables** (donc **immuables**) : `int`, `str`, `tuple` de valeurs hachables sont utilisables comme clés ; `list`, `dict`, `set` ne le sont pas. Depuis Python 3.7, un `dict` **conserve l'ordre d'insertion**.
+Les clés doivent être **hachables**, donc **immuables** : `int`, `str`, `tuple` de valeurs hachables, `frozenset` conviennent ; `list`, `dict` et `set` ne le sont pas (leur modification changerait leur hachage). Depuis Python 3.7, un `dict` **conserve l'ordre d'insertion**.
 
 ## 17.3 Gestion des collisions
 
-Deux clés différentes peuvent avoir le même indice : c'est une **collision**.
+Deux clés différentes peuvent donner le même indice : c'est une **collision**. Elle est inévitable (principe des tiroirs : plus de clés possibles que de cases).
 
 | Méthode | Principe |
 | --- | --- |
-| **Chaînage** | Chaque case contient une liste de paires |
-| **Adressage ouvert** | On cherche une autre case libre (sondage linéaire, quadratique, double hachage) — c'est la méthode du `dict` de CPython |
-| **Redimensionnement** | Quand le **facteur de charge** (éléments / cases) devient trop grand, on **agrandit** et on **rehache** (coût amorti O(1)) |
+| **Chaînage** | Chaque case contient une liste de paires ; on parcourt la liste en cas de collision |
+| **Adressage ouvert** | On cherche une autre case libre : sondage linéaire (case suivante), quadratique, double hachage. C'est la méthode du `dict` de CPython |
+| **Redimensionnement** | Quand le **facteur de charge** (éléments divisé par nombre de cases) dépasse un seuil, on agrandit le tableau et on **rehache** toutes les clés ; coût amorti `O(1)` par insertion |
+
+Le facteur de charge `α = n/m` gouverne la performance : avec chaînage, la longueur moyenne d'une chaîne est `α`, donc `O(1 + α)` par opération ; on garde `α` borné (par exemple inférieur à 2/3 en adressage ouvert).
 
 ## 17.4 Complexité
 
 | Opération | Moyen | Pire cas |
 | --- | --- | --- |
-| Insertion / recherche / suppression | **O(1)** | O(n) (toutes les clés en collision) |
-| Parcours | O(n) | O(n) |
-| Mémoire | O(n) | O(n) |
+| Insertion, recherche, suppression | **`O(1)`** | `O(n)` (toutes les clés en collision) |
+| Parcours | `O(n)` | `O(n)` |
+| Mémoire | `O(n)` | `O(n)` |
 
-> **Attention** : pour des chaînes, Python **randomise** le hachage à chaque lancement (`PYTHONHASHSEED`) pour empêcher les attaques par collisions. En compétition, des tests « anti-hash » peuvent dégrader un `dict` basé sur des entiers : mélangez les clés (XOR avec une constante aléatoire) si nécessaire.
+> **Sécurité et compétition.** Python **randomise** le hachage des chaînes à chaque lancement (`PYTHONHASHSEED`) pour empêcher les attaques par collisions volontaires. Sur des plateformes de compétition, des jeux de tests « anti-hash » peuvent dégrader un `dict` basé sur des entiers : on mélange les clés (XOR avec une constante aléatoire) si nécessaire.
 
 ## 17.5 Problèmes classiques
 
-### Deux sommes
+### Deux sommes (tableau non trié)
 
 ```python
 def deux_somme(t, cible):
-    vus = {}                                   # valeur → indice
+    vus = {}                                   # valeur -> indice
     for i, x in enumerate(t):
         if cible - x in vus:
             return (vus[cible - x], i)
@@ -1995,6 +2932,8 @@ def deux_somme(t, cible):
 print(deux_somme([2, 7, 11, 15], 9))   # (0, 1)
 ```
 
+Pour chaque élément `x`, on cherche son **complément** `cible - x` parmi ceux déjà vus : un seul passage, au lieu de deux boucles imbriquées.
+
 ### Regrouper les anagrammes
 
 ```python
@@ -2003,12 +2942,14 @@ from collections import defaultdict
 def grouper_anagrammes(mots):
     groupes = defaultdict(list)
     for m in mots:
-        groupes["".join(sorted(m))].append(m)
+        groupes["".join(sorted(m))].append(m)      # clé canonique : lettres triées
     return list(groupes.values())
 
 print(grouper_anagrammes(["eat", "tea", "tan", "ate", "nat", "bat"]))
 # [['eat', 'tea', 'ate'], ['tan', 'nat'], ['bat']]
 ```
+
+Idée générale : trouver une **forme canonique** commune à tous les éléments équivalents, et s'en servir comme clé.
 
 ### Plus longue suite consécutive
 
@@ -2016,44 +2957,68 @@ print(grouper_anagrammes(["eat", "tea", "tan", "ate", "nat", "bat"]))
 def plus_longue_suite(t):
     ensemble, meilleur = set(t), 0
     for x in ensemble:
-        if x - 1 not in ensemble:               # début d'une suite
+        if x - 1 not in ensemble:               # x est le début d'une suite
             longueur = 1
-            while x + longueur in ensemble: longueur += 1
+            while x + longueur in ensemble:
+                longueur += 1
             meilleur = max(meilleur, longueur)
     return meilleur                              # O(n)
 
 print(plus_longue_suite([100, 4, 200, 1, 3, 2]))   # 4 (1, 2, 3, 4)
 ```
 
-### Autres
+La complexité est linéaire car chaque élément n'est parcouru que depuis le début de sa suite.
 
-Premier caractère unique, détection de doublons, **détection de cycle** (ensemble des sommets visités), mémoïsation, sous-tableau de somme `k` (préfixes + `dict`).
+### Autres problèmes
+
+Premier caractère unique, détection de doublons, **détection de cycle** (ensemble de sommets visités), **mémoïsation** (dictionnaire de résultats), sous-tableau de somme `k` (préfixes et dictionnaire), cache **LRU** (`OrderedDict`).
 
 ## 17.6 Outils du module `collections`
 
 | Outil | Rôle |
 | --- | --- |
 | `Counter` | Compter les occurrences (`Counter("abracadabra")`, `.most_common(3)`) |
-| `defaultdict(list)` / `defaultdict(int)` | Valeur par défaut automatique |
-| `OrderedDict` | Rarement nécessaire (les `dict` gardent l'ordre) |
+| `defaultdict(list)`, `defaultdict(int)` | Valeur par défaut créée automatiquement à la première lecture |
+| `OrderedDict` | Rarement nécessaire (les `dict` gardent l'ordre) ; utile pour `move_to_end` (LRU) |
 | `frozenset` | Ensemble immuable, utilisable comme clé |
 
 ## 17.7 Hachage d'objets et autres usages
 
 ```python
 class Point:
-    def __init__(self, x, y): self.x, self.y = x, y
-    def __eq__(self, autre): return (self.x, self.y) == (autre.x, autre.y)
-    def __hash__(self): return hash((self.x, self.y))       # cohérent avec __eq__
+    def __init__(self, x, y):
+        self.x, self.y = x, y
+    def __eq__(self, autre):
+        return (self.x, self.y) == (autre.x, autre.y)
+    def __hash__(self):
+        return hash((self.x, self.y))       # doit être cohérent avec __eq__
 ```
 
-Autres usages : **hachage cryptographique** (SHA-256, vérification d'intégrité — pas pour les mots de passe, utilisez bcrypt/argon2), **filtres de Bloom** (appartenance probabiliste), **hachage roulant** (Rabin-Karp), **hachage cohérent** (systèmes distribués).
+**Règle** : deux objets égaux doivent avoir le même hachage ; un objet utilisé comme clé ne doit pas voir sa valeur de hachage changer.
+
+Autres usages : **hachage cryptographique** (SHA-256 : vérification d'intégrité ; pas pour les mots de passe, pour lesquels on emploie bcrypt, scrypt ou argon2), **filtres de Bloom** (appartenance probabiliste avec faux positifs mais sans faux négatifs), **hachage roulant** (Rabin-Karp, chapitre 24), **hachage cohérent** (répartition de données dans des systèmes distribués).
 
 ## 17.8 Bonnes pratiques
 
-- Utilisez `set` / `dict` pour les **tests d'appartenance** et **comptages**.
-- Des **clés immuables** et un `__hash__` cohérent avec `__eq__`.
-- N'utilisez pas un ordre de hachage comme s'il était significatif (sauf `dict` : ordre d'insertion).
+- Utiliser `set` et `dict` pour les **tests d'appartenance** et les **comptages**.
+- Choisir des **clés immuables** ; définir `__hash__` de façon cohérente avec `__eq__`.
+- Ne pas se fier à l'ordre d'un `set` ; seul le `dict` garantit l'ordre d'insertion.
+- Ne pas modifier un dictionnaire pendant qu'on le parcourt.
+
+## 17.9 Points à retenir et exercices
+
+**À retenir.**
+
+- Le hachage donne des opérations en `O(1)` en moyenne ; le pire cas existe mais est rare.
+- Les collisions se gèrent par chaînage ou adressage ouvert ; le redimensionnement garde le facteur de charge bas.
+- Beaucoup de problèmes se résolvent en un passage avec un dictionnaire de « ce qu'on a déjà vu ».
+
+**Exercices.**
+
+1. Trouver le premier caractère non répété d'une chaîne.
+2. Écrire un cache LRU de capacité fixe avec `OrderedDict`.
+3. Détecter les doublons à distance au plus `k` dans un tableau.
+4. Implémenter une table de hachage avec chaînage et redimensionnement dynamique.
 
 ---
 
@@ -2065,61 +3030,73 @@ Autres usages : **hachage cryptographique** (SHA-256, vérification d'intégrit�
 
 ## 18.1 Principe
 
-La **programmation dynamique** (DP) résout un problème en le décomposant en **sous-problèmes qui se chevauchent**, dont on **mémorise** les résultats pour ne les calculer qu'une fois. Elle s'applique lorsque :
+La **programmation dynamique** (DP, *dynamic programming*) résout un problème en le décomposant en **sous-problèmes qui se chevauchent**, dont on **mémorise** les résultats pour ne calculer chacun qu'une seule fois. Le mot « programmation » est ici à prendre au sens de « planification » (méthode introduite par Richard Bellman dans les années 1950), pas de code.
 
-1. **Sous-structure optimale** : la solution optimale se construit à partir de solutions optimales de sous-problèmes.
-2. **Sous-problèmes chevauchants** : les mêmes sous-problèmes reviennent plusieurs fois.
+Deux propriétés doivent être vérifiées :
+
+1. **Sous-structure optimale** : une solution optimale du problème se construit à partir de solutions optimales de sous-problèmes.
+2. **Sous-problèmes chevauchants** : les mêmes sous-problèmes réapparaissent de nombreuses fois dans la décomposition récursive. S'ils sont indépendants et distincts, il s'agit de diviser pour régner, pas de DP.
 
 ```text
 fib(5)
- ├─ fib(4)
- │   ├─ fib(3) ← calculé plusieurs fois sans mémoïsation
- │   └─ fib(2)
- └─ fib(3)     ← …
+ |- fib(4)
+ |   |- fib(3)     <- calculé plusieurs fois sans mémoïsation
+ |   `- fib(2)
+ `- fib(3)           <- recalculé
 ```
 
-## 18.2 Démarche en 5 étapes
+En dénombrant les **états distincts** du problème et le coût de calcul de chacun, on obtient la complexité : `nombre d'états × coût de transition`.
 
-| Étape | Question |
+## 18.2 Démarche en cinq étapes
+
+| Étape | Question à se poser |
 | --- | --- |
-| 1. **État** | Que représente `dp[i]` (ou `dp[i][j]`) ? |
-| 2. **Transition** | Comment `dp[i]` dépend-il des états plus petits ? |
-| 3. **Cas de base** | Quelles valeurs initiales ? |
-| 4. **Ordre de calcul** | Dans quel ordre remplir (pour que les dépendances soient prêtes) ? |
-| 5. **Réponse** | Où se trouve le résultat final ? |
+| 1. **État** | Que représente `dp[i]` (ou `dp[i][j]`) ? Quels paramètres décrivent entièrement un sous-problème ? |
+| 2. **Transition** | Comment `dp[i]` se calcule-t-il à partir d'états plus petits ? (la **récurrence**) |
+| 3. **Cas de base** | Quelles sont les valeurs initiales évidentes ? |
+| 4. **Ordre de calcul** | Dans quel ordre remplir le tableau pour que les dépendances soient prêtes ? |
+| 5. **Réponse** | Quelle case contient le résultat final ? |
 
-## 18.3 Descendante (mémoïsation) ou ascendante (tabulation)
+La difficulté se concentre sur l'étape 1 : choisir un état suffisamment riche pour que la transition soit possible, sans qu'il y ait trop d'états.
 
-| | **Top-down** (mémoïsation) | **Bottom-up** (tabulation) |
+## 18.3 Descendante (mémoïsation) et ascendante (tabulation)
+
+|  | **Top-down** (mémoïsation) | **Bottom-up** (tabulation) |
 | --- | --- | --- |
-| Principe | Récursion + cache | Boucles, on remplit un tableau |
-| Avantage | Facile à écrire, ne calcule que le nécessaire | Pas de récursion (pas de limite de pile), optimisable en mémoire |
-| Inconvénient | Surcoût de la récursion, profondeur limitée | Il faut trouver l'ordre de calcul |
+| Principe | Récursion avec un cache des résultats | Boucles remplissant un tableau des petits aux grands sous-problèmes |
+| Avantages | Facile à écrire à partir de la récurrence ; ne calcule que les états nécessaires | Pas de récursion (donc pas de limite de pile) ; optimisation de mémoire possible |
+| Inconvénients | Surcoût de la récursion ; profondeur limitée en Python | Il faut identifier l'ordre de calcul |
 
 ```python
 from functools import cache
 
 # Top-down
 @cache
-def escaliers(n):                       # nombre de façons de monter n marches (pas de 1 ou 2)
+def escaliers(n):               # nombre de façons de monter n marches en pas de 1 ou 2
     return 1 if n <= 1 else escaliers(n - 1) + escaliers(n - 2)
 
-# Bottom-up, mémoire O(1)
+# Bottom-up, avec mémoire O(1)
 def escaliers_iteratif(n):
     a, b = 1, 1
     for _ in range(n - 1):
         a, b = b, a + b
     return b
+
+print(escaliers(10), escaliers_iteratif(10))     # 89 89
 ```
 
-## 18.4 Problèmes 1D
+La **réduction de mémoire** est possible quand `dp[i]` ne dépend que d'un petit nombre d'états précédents : on ne conserve que ceux-là (ici deux variables au lieu d'un tableau).
 
-### Rendu de monnaie (minimum de pièces)
+## 18.4 Problèmes à une dimension
+
+### Rendu de monnaie (nombre minimum de pièces)
+
+**État** : `dp[m]` = nombre minimal de pièces pour rendre exactement `m`. **Transition** : `dp[m] = 1 + min(dp[m - p])` pour chaque pièce `p ≤ m`. **Base** : `dp[0] = 0`.
 
 ```python
 def rendu_monnaie(pieces, montant):
     INF = float("inf")
-    dp = [0] + [INF] * montant                   # dp[m] = nombre minimal de pièces pour m
+    dp = [0] + [INF] * montant
     for m in range(1, montant + 1):
         for p in pieces:
             if p <= m and dp[m - p] + 1 < dp[m]:
@@ -2129,9 +3106,11 @@ def rendu_monnaie(pieces, montant):
 print(rendu_monnaie([1, 3, 4], 6))               # 2 (3 + 3)
 ```
 
-**O(montant × nb_pièces)**.
+Complexité `O(montant × nombre de pièces)`. Pour **compter** le nombre de façons (et non le minimum), on remplace le min par une somme, en parcourant les pièces dans la boucle **externe** pour ne pas compter deux fois la même combinaison dans des ordres différents.
 
 ### Voleur de maisons (*House Robber*)
+
+On ne peut pas cambrioler deux maisons adjacentes. **État** : `prend` (meilleur gain en prenant la maison courante) et `ignore` (meilleur gain en ne la prenant pas).
 
 ```python
 def voleur(maisons):
@@ -2144,6 +3123,8 @@ print(voleur([2, 7, 9, 3, 1]))       # 12 (2 + 9 + 1)
 ```
 
 ### Sous-tableau de somme maximale (Kadane)
+
+**État** : `courant` = meilleure somme d'un sous-tableau **se terminant** à l'indice courant. **Transition** : soit on prolonge le précédent, soit on repart de zéro : `courant = max(x, courant + x)`.
 
 ```python
 def kadane(t):
@@ -2158,40 +3139,56 @@ print(kadane([-2, 1, -3, 4, -1, 2, 1, -5, 4]))   # 6
 
 ### Plus longue sous-suite croissante (LIS)
 
+Version DP classique en `O(n²)` : `dp[i] = 1 + max(dp[j])` pour `j < i` avec `t[j] < t[i]`. Version `O(n log n)` : on maintient `queues[k]`, le plus petit élément terminal possible d'une sous-suite croissante de longueur `k+1` ; ce tableau est toujours croissant, ce qui permet une recherche binaire.
+
 ```python
 from bisect import bisect_left
 
-def lis(t):                                      # O(n log n)
-    queues = []                                  # queues[k] = plus petit dernier élément d'une sous-suite de longueur k+1
+def lis(t):
+    queues = []
     for x in t:
-        i = bisect_left(queues, x)
-        if i == len(queues): queues.append(x)
-        else: queues[i] = x
+        i = bisect_left(queues, x)         # première position avec queues[i] >= x
+        if i == len(queues):
+            queues.append(x)               # x prolonge la plus longue sous-suite
+        else:
+            queues[i] = x                  # x améliore un terminal
     return len(queues)
 
-print(lis([10, 9, 2, 5, 3, 7, 101, 18]))   # 4 (2, 3, 7, 18)
+print(lis([10, 9, 2, 5, 3, 7, 101, 18]))   # 4 (par exemple 2, 3, 7, 18)
 ```
 
-(La version DP classique `dp[i] = 1 + max(dp[j] pour j < i, t[j] < t[i])` est en O(n²).)
+Attention : `queues` n'est pas la sous-suite elle-même, mais seulement un outil donnant sa longueur.
 
-## 18.5 Problèmes 2D
+### Autres problèmes à une dimension
+
+Partition en sous-ensembles de même somme (booléen `dp[s]`), découpage de tige, décodage de messages, mots d'un dictionnaire (segmentation d'une chaîne), coût minimal pour monter un escalier.
+
+## 18.5 Problèmes à deux dimensions
 
 ### Sac à dos 0/1
+
+**Problème.** Objets de poids `pᵢ` et de valeur `vᵢ` ; capacité `C` ; chaque objet est pris **au plus une fois** ; maximiser la valeur totale.
+
+**État** : `dp[i][c]` = valeur maximale en utilisant les `i` premiers objets avec capacité `c`. **Transition** : `dp[i][c] = max(dp[i-1][c], dp[i-1][c - pᵢ] + vᵢ)` (ne pas prendre ou prendre l'objet `i`).
+
+Comme chaque ligne ne dépend que de la précédente, on compresse en un seul tableau en parcourant la capacité **de la droite vers la gauche**, pour ne jamais utiliser deux fois le même objet :
 
 ```python
 def sac_a_dos(objets, capacite):                 # objets : (poids, valeur)
     dp = [0] * (capacite + 1)
     for poids, valeur in objets:
-        for c in range(capacite, poids - 1, -1):     # parcours DÉCROISSANT : chaque objet utilisé au plus une fois
+        for c in range(capacite, poids - 1, -1):     # parcours DÉCROISSANT
             dp[c] = max(dp[c], dp[c - poids] + valeur)
     return dp[capacite]
 
 print(sac_a_dos([(1, 1), (3, 4), (4, 5), (5, 7)], 7))   # 9
 ```
 
-**O(n × capacité)**, mémoire O(capacité) grâce à l'optimisation sur une seule ligne. (Pseudo-polynomial : polynomial en la **valeur** de la capacité, pas en sa taille en bits.)
+**Complexité** : `O(n × C)` en temps, `O(C)` en mémoire. Cette complexité est **pseudo-polynomiale** : polynomiale en la valeur numérique de `C`, mais exponentielle en sa taille en bits. Le problème de décision reste NP-complet. Avec un parcours **croissant**, on obtiendrait le sac à dos **non borné** (chaque objet en nombre illimité).
 
 ### Plus longue sous-séquence commune (LCS)
+
+**État** : `dp[i][j]` = longueur de la LCS de `a[:i]` et `b[:j]`. **Transition** : si `a[i-1] == b[j-1]`, `dp[i][j] = dp[i-1][j-1] + 1` ; sinon `dp[i][j] = max(dp[i-1][j], dp[i][j-1])`.
 
 ```python
 def lcs(a, b):
@@ -2208,29 +3205,37 @@ def lcs(a, b):
 print(lcs("ABCBDAB", "BDCABA"))                   # 4
 ```
 
+`O(n × m)` en temps et en espace. Distinguer la **sous-séquence** (éléments non nécessairement contigus) de la **sous-chaîne** (contiguë).
+
 ### Distance d'édition (Levenshtein)
+
+Nombre minimal d'opérations (insertion, suppression, substitution d'un caractère) pour transformer `a` en `b`.
 
 ```python
 def distance_edition(a, b):
     n, m = len(a), len(b)
     dp = [[0] * (m + 1) for _ in range(n + 1)]
-    for i in range(n + 1): dp[i][0] = i             # supprimer i caractères
-    for j in range(m + 1): dp[0][j] = j             # insérer j caractères
+    for i in range(n + 1):
+        dp[i][0] = i                                 # supprimer i caractères
+    for j in range(m + 1):
+        dp[0][j] = j                                 # insérer j caractères
     for i in range(1, n + 1):
         for j in range(1, m + 1):
             cout = 0 if a[i - 1] == b[j - 1] else 1
             dp[i][j] = min(dp[i - 1][j] + 1,         # suppression
                            dp[i][j - 1] + 1,         # insertion
-                           dp[i - 1][j - 1] + cout)  # substitution
+                           dp[i - 1][j - 1] + cout)  # substitution ou égalité
     return dp[n][m]
 
 print(distance_edition("kitten", "sitting"))         # 3
 ```
 
+Applications : correcteurs orthographiques, bio-informatique (alignement de séquences), comparaison de fichiers (`diff`).
+
 ### Chemins dans une grille
 
 ```python
-def nb_chemins(lignes, colonnes):
+def nb_chemins(lignes, colonnes):                    # déplacements vers la droite ou le bas
     dp = [[1] * colonnes for _ in range(lignes)]
     for i in range(1, lignes):
         for j in range(1, colonnes):
@@ -2240,22 +3245,26 @@ def nb_chemins(lignes, colonnes):
 print(nb_chemins(3, 7))             # 28
 ```
 
+On adapte facilement : obstacles (`dp = 0` sur les cases bloquées), coût minimal (`min` au lieu de la somme), grille avec poids.
+
 ### Autres classiques
 
-Plus longue sous-chaîne palindromique, **produit de chaînes de matrices**, partition en deux sous-ensembles de même somme, découpage de tige, **plus grand carré de 1**, coût minimal de chemin, nombre de façons de rendre la monnaie (dénombrement), **DP sur les arbres**, **DP sur les intervalles**, **DP par chiffres**.
+Plus longue sous-chaîne palindromique, **produit de chaînes de matrices** (DP sur intervalles, `O(n³)`), partition en deux sous-ensembles de même somme, découpage de tige, **plus grand carré de 1**, coût minimal de chemin, **DP sur les arbres** (état = sommet, combinaison des états des enfants), **DP sur les intervalles** (`dp[i][j]` pour le segment `i..j`), **DP par chiffres** (compter les entiers d'un intervalle ayant une propriété).
 
 ## 18.6 DP avec masque de bits
 
-Pour des ensembles de **petite taille** (`n ≤ 20` environ), un entier représente un **sous-ensemble**.
+Pour des ensembles de **petite taille** (`n` d'environ 20 au plus), un entier représente un **sous-ensemble** : le bit `i` vaut 1 si l'élément `i` appartient à l'ensemble. Le nombre d'états est alors `2ⁿ`.
 
 ### Voyageur de commerce (TSP)
+
+**Problème.** Visiter toutes les villes exactement une fois et revenir au départ, en minimisant la distance totale. **État** : `dp[masque][i]` = coût minimal d'un chemin partant de la ville 0, ayant visité exactement les villes de `masque` et finissant en `i`.
 
 ```python
 def tsp(dist):
     n = len(dist)
     INF = float("inf")
-    dp = [[INF] * n for _ in range(1 << n)]          # dp[masque][i] : coût min pour avoir visité `masque`, finissant en i
-    dp[1][0] = 0                                     # départ en 0
+    dp = [[INF] * n for _ in range(1 << n)]
+    dp[1][0] = 0                                     # départ en 0, masque = {0}
     for masque in range(1 << n):
         for i in range(n):
             if dp[masque][i] == INF or not (masque >> i) & 1:
@@ -2271,33 +3280,92 @@ distances = [[0, 10, 15, 20], [10, 0, 35, 25], [15, 35, 0, 30], [20, 25, 30, 0]]
 print(tsp(distances))                 # 80
 ```
 
-Complexité **O(n² · 2ⁿ)** (contre O(n!) en force brute).
+Complexité `O(n² · 2ⁿ)` (algorithme de Held-Karp), contre `O(n!)` pour la force brute. Même schéma pour l'affectation de tâches, la couverture d'ensemble minimale, les « sous-ensembles de sous-ensembles » (`O(3ⁿ)`).
 
 ## 18.7 Reconstituer la solution
 
-Gardez une table `parent[...]` (quel choix a donné l'optimum) puis **remontez** depuis l'état final.
+La table `dp` donne la **valeur** optimale, pas la solution. Pour la retrouver, on conserve une table `parent[...]` indiquant **quel choix** a donné l'optimum de chaque état, puis on **remonte** depuis l'état final jusqu'à l'état initial. Alternative : refaire le calcul à rebours en cherchant, à chaque état, la transition qui a produit sa valeur.
 
-## 18.8 Conseils
+```python
+def rendu_monnaie_pieces(pieces, montant):
+    INF = float("inf")
+    dp, choix = [0] + [INF] * montant, [0] * (montant + 1)
+    for m in range(1, montant + 1):
+        for p in pieces:
+            if p <= m and dp[m - p] + 1 < dp[m]:
+                dp[m], choix[m] = dp[m - p] + 1, p
+    rendu = []
+    while montant > 0 and choix[montant]:
+        rendu.append(choix[montant])
+        montant -= choix[montant]
+    return rendu
 
-- Écrivez d'abord la **récurrence** et les **cas de base**, puis codez.
-- Commencez par la version **mémoïsée** (plus naturelle), puis passez en tabulation si besoin.
-- **Réduisez la mémoire** si `dp[i]` ne dépend que de `dp[i-1]` (ligne précédente seulement).
-- Surveillez la **limite de récursion** en Python (`sys.setrecursionlimit` ou version itérative).
-- Entraînez-vous : *Fibonacci*, *Climbing Stairs*, *House Robber*, *Coin Change*, *LIS*, *LCS*, *Edit Distance*, *Knapsack*, *TSP*, *Job Scheduling*.
+print(rendu_monnaie_pieces([1, 3, 4], 6))    # [3, 3]
+```
+
+## 18.8 Comparaison avec les autres approches
+
+|  | DP | Glouton | Retour sur trace |
+| --- | --- | --- | --- |
+| Sous-problèmes | Mémorisés | Un seul chemin | Souvent recalculés |
+| Garantit l'optimum | Oui (sous-structure optimale) | Seulement avec preuve | Oui (exhaustif) |
+| Coût | Polynomial en nombre d'états | Très faible | Exponentiel |
+
+## 18.9 Conseils
+
+- Écrire d'abord la **récurrence** en langage mathématique et les cas de base, puis coder.
+- Commencer par la version **mémoïsée**, plus naturelle ; passer à la tabulation si nécessaire.
+- **Réduire la mémoire** si `dp[i]` ne dépend que de la ligne précédente.
+- Surveiller la **limite de récursion** en Python (`sys.setrecursionlimit` ou version itérative).
+- Tester contre une version par force brute sur de petites entrées.
+- Entraînement conseillé : Fibonacci, escaliers, voleur, rendu de monnaie, LIS, LCS, distance d'édition, sac à dos, TSP, ordonnancement pondéré de tâches.
+
+## 18.10 Points à retenir et exercices
+
+**À retenir.**
+
+- La DP exige une sous-structure optimale et des sous-problèmes chevauchants ; sa complexité est (nombre d'états) × (coût de transition).
+- Cinq étapes : état, transition, base, ordre, réponse.
+- Mémoïsation (top-down) ou tabulation (bottom-up) ; reconstruction par table de parents.
+
+**Exercices.**
+
+1. Compter le nombre de façons de rendre un montant avec des pièces données (combinaisons, pas permutations).
+2. Déterminer si un tableau peut être partagé en deux sous-ensembles de même somme.
+3. Calculer le coût minimal de multiplication d'une chaîne de matrices (DP sur intervalles).
+4. Trouver la plus longue sous-chaîne palindromique d'une chaîne en `O(n²)`.
 
 ---
 
 # 19. Algorithmes sur les graphes
 
-## 19.1 Représentation
+## 19.1 Vocabulaire et définitions
 
-Un **graphe** `G = (V, E)` est un ensemble de **sommets** reliés par des **arêtes** (orientées ou non, pondérées ou non).
+Un **graphe** `G = (V, E)` est formé d'un ensemble `V` de **sommets** (ou nœuds) et d'un ensemble `E` d'**arêtes** reliant des paires de sommets. On note `V = |V|` et `E = |E|` dans les complexités.
+
+| Notion | Définition |
+| --- | --- |
+| **Graphe non orienté** | Les arêtes sont des paires non ordonnées `{u, v}` ; la relation est symétrique |
+| **Graphe orienté** | Les arêtes (ou **arcs**) sont des couples `(u, v)` ; `u` est la source, `v` la destination |
+| **Pondéré** | Chaque arête porte un **poids** (coût, distance, capacité) |
+| **Voisins, degré** | Les voisins de `u` sont les sommets adjacents ; `deg(u)` est leur nombre (degré entrant et sortant pour un graphe orienté). Dans un graphe non orienté, la somme des degrés vaut `2E` |
+| **Chemin** | Suite de sommets consécutivement reliés ; sa **longueur** est le nombre d'arêtes (ou la somme des poids) |
+| **Cycle** | Chemin non vide qui revient à son point de départ |
+| **Connexe** | Non orienté : il existe un chemin entre tout couple de sommets |
+| **Arbre** | Graphe non orienté connexe et sans cycle : `E = V - 1` |
+| **DAG** | Graphe orienté acyclique (*directed acyclic graph*) |
+| **Creux, dense** | Creux si `E` est de l'ordre de `V` ; dense si `E` est de l'ordre de `V²` |
+| **Biparti** | Les sommets se répartissent en deux groupes sans arête interne à un groupe |
+
+Exemples de modélisations : réseau routier (sommets : carrefours, arêtes : routes), réseaux sociaux, dépendances entre tâches (DAG), grille de jeu (sommets : cases), états d'un puzzle (sommets : configurations, arêtes : coups).
+
+## 19.2 Représentation
 
 | Représentation | Mémoire | Test d'arête `(u, v)` | Parcourir les voisins de `u` | Quand l'utiliser |
 | --- | --- | --- | --- | --- |
-| **Liste d'adjacence** | O(V + E) | O(deg(u)) | **O(deg(u))** | Graphes **creux** (le cas le plus courant) |
-| **Matrice d'adjacence** | O(V²) | **O(1)** | O(V) | Graphes **denses**, petits `V` |
-| **Liste d'arêtes** | O(E) | O(E) | O(E) | Kruskal, Bellman-Ford |
+| **Liste d'adjacence** | `O(V + E)` | `O(deg(u))` | **`O(deg(u))`** | Graphes **creux** (le cas le plus courant) |
+| **Matrice d'adjacence** | `O(V²)` | **`O(1)`** | `O(V)` | Graphes **denses** ou petits `V` ; Floyd-Warshall |
+| **Liste d'arêtes** | `O(E)` | `O(E)` | `O(E)` | Kruskal, Bellman-Ford |
 
 ```python
 from collections import defaultdict
@@ -2305,14 +3373,14 @@ from collections import defaultdict
 graphe = defaultdict(list)
 for u, v in [(0, 1), (0, 2), (1, 3), (2, 3)]:
     graphe[u].append(v)
-    graphe[v].append(u)                    # graphe non orienté : arête dans les deux sens
+    graphe[v].append(u)                    # non orienté : arête dans les deux sens
 
 # Pondéré : graphe[u].append((v, poids))
 ```
 
-## 19.2 Parcours en largeur (BFS)
+## 19.3 Parcours en largeur (BFS)
 
-Explore **niveau par niveau** avec une **file**. Il donne le **plus court chemin en nombre d'arêtes** dans un graphe non pondéré.
+**Principe.** À partir d'une source, on explore tous les sommets à distance 1, puis ceux à distance 2, etc., en utilisant une **file**. La **première fois** qu'un sommet est atteint, c'est par un plus court chemin en **nombre d'arêtes**. On marque les sommets dès qu'on les met dans la file pour ne jamais les traiter deux fois.
 
 ```python
 from collections import deque
@@ -2323,18 +3391,22 @@ def bfs(graphe, source):
     while file:
         u = file.popleft()
         for v in graphe[u]:
-            if v not in distance:
+            if v not in distance:                # pas encore découvert
                 distance[v] = distance[u] + 1
                 file.append(v)
-    return distance                        # O(V + E)
+    return distance                              # O(V + E)
 
 g_demo = {0: [1, 2], 1: [0, 3], 2: [0, 3], 3: [1, 2]}
-print(bfs(g_demo, 0))                     # {0: 0, 1: 1, 2: 1, 3: 2}
+print(bfs(g_demo, 0))                           # {0: 0, 1: 1, 2: 1, 3: 2}
 ```
 
-## 19.3 Parcours en profondeur (DFS)
+**Complexité** `O(V + E)` : chaque sommet est mis en file une fois, chaque arête examinée une fois (deux dans un graphe non orienté). **Correction** : la file contient à tout instant des sommets de distance `d` suivis de sommets de distance `d + 1`, ce qui garantit que les distances sont découvertes en ordre croissant.
 
-Explore le plus loin possible avant de revenir (**pile** ou récursion).
+Pour retrouver le chemin, on mémorise le **parent** de chaque sommet. En grille, le voisinage est donné par les quatre (ou huit) directions.
+
+## 19.4 Parcours en profondeur (DFS)
+
+**Principe.** On explore le plus loin possible le long d'un chemin avant de revenir en arrière (pile ou récursion).
 
 ```python
 def dfs(graphe, source):
@@ -2342,8 +3414,10 @@ def dfs(graphe, source):
     pile = [source]                         # version itérative : pas de limite de récursion
     while pile:
         u = pile.pop()
-        if u in visites: continue
-        visites.add(u); ordre.append(u)
+        if u in visites:
+            continue
+        visites.add(u)
+        ordre.append(u)
         pile.extend(reversed(graphe[u]))
     return ordre                            # O(V + E)
 
@@ -2360,53 +3434,88 @@ dfs_recursif(g_demo, 0, visites)
 print(sorted(visites))                    # [0, 1, 2, 3]
 ```
 
-| | BFS | DFS |
+### Dates de début et de fin, classification des arêtes
+
+En numérotant les sommets à l'**entrée** (date de découverte) et à la **sortie** (date de fin de traitement) du DFS, on classe les arêtes d'un graphe orienté : **arête d'arbre** (vers un sommet nouveau), **arête arrière** (vers un ancêtre encore « en cours »), **arête avant** (vers un descendant déjà traité), **arête transverse** (vers un sommet d'une autre branche déjà traité). Un graphe orienté est **acyclique si et seulement s'il n'a aucune arête arrière**. Ces dates fondent le tri topologique et les composantes fortement connexes (chapitre 21).
+
+|  | BFS | DFS |
 | --- | --- | --- |
-| Structure | File | Pile / récursion |
-| Plus court chemin (non pondéré) | Oui | Non |
-| Usages | Distances, niveaux | Composantes connexes, cycles, tri topologique, labyrinthes |
+| Structure | File | Pile ou récursion |
+| Plus court chemin (non pondéré) | **Oui** | Non |
+| Usages typiques | Distances, niveaux, plus court chemin en grille | Composantes connexes, cycles, tri topologique, labyrinthes, SCC |
+| Mémoire | Peut atteindre `O(V)` (grande largeur) | `O(profondeur)` |
 
 ### Applications
 
-- **Composantes connexes** : lancer un parcours depuis chaque sommet non visité.
-- **Détection de cycle** : graphe non orienté (arête vers un sommet visité qui n'est pas le parent) ; graphe orienté (sommet « en cours » dans la pile de récursion).
-- **Graphe biparti** : BFS avec 2 couleurs.
-- **Îles dans une grille**, **labyrinthes**, plus court chemin dans une grille.
+- **Composantes connexes** : on lance un parcours depuis chaque sommet non encore visité ; chaque lancement découvre une composante.
+- **Détection de cycle** : graphe non orienté, une arête vers un sommet déjà visité qui n'est pas le parent ; graphe orienté, une arête vers un sommet « en cours » (sur la pile de récursion).
+- **Graphe biparti** : BFS avec deux couleurs ; si une arête relie deux sommets de même couleur, le graphe n'est pas biparti (il contient un cycle de longueur impaire).
+- **Îles dans une grille**, **remplissage**, **labyrinthes**, **plus court chemin en grille**.
 
-## 19.4 Tri topologique (graphes orientés acycliques)
+```python
+def est_biparti(graphe, n):
+    couleur = [-1] * n
+    for debut in range(n):
+        if couleur[debut] != -1:
+            continue
+        couleur[debut] = 0
+        file = deque([debut])
+        while file:
+            u = file.popleft()
+            for v in graphe[u]:
+                if couleur[v] == -1:
+                    couleur[v] = 1 - couleur[u]
+                    file.append(v)
+                elif couleur[v] == couleur[u]:
+                    return False
+    return True
 
-Ordonner les sommets de façon que chaque arête `u → v` place `u` avant `v` (dépendances, prérequis de cours).
+print(est_biparti({0: [1, 3], 1: [0, 2], 2: [1, 3], 3: [2, 0]}, 4))   # True (cycle de longueur 4)
+print(est_biparti({0: [1, 2], 1: [0, 2], 2: [0, 1]}, 3))              # False (triangle)
+```
+
+## 19.5 Tri topologique (graphes orientés acycliques)
+
+**Définition.** Un **tri topologique** d'un DAG est un ordre des sommets tel que, pour toute arête `u → v`, `u` apparaît **avant** `v`. Il existe si et seulement si le graphe est acyclique. Usages : prérequis de cours, ordre de compilation, ordonnancement de tâches.
+
+**Algorithme de Kahn.** On traite d'abord les sommets sans prédécesseur (degré entrant nul) ; en retirant un sommet, on décrémente le degré entrant de ses successeurs, et ceux qui tombent à 0 rejoignent la file. Si tous les sommets sont traités, on a un ordre ; sinon, il existe un cycle.
 
 ```python
 from collections import deque
 
-def tri_topologique(n, aretes):               # algorithme de Kahn
+def tri_topologique(n, aretes):
     graphe = [[] for _ in range(n)]
     degre_entrant = [0] * n
     for u, v in aretes:
-        graphe[u].append(v); degre_entrant[v] += 1
+        graphe[u].append(v)
+        degre_entrant[v] += 1
 
     file = deque(i for i in range(n) if degre_entrant[i] == 0)
     ordre = []
     while file:
-        u = file.popleft(); ordre.append(u)
+        u = file.popleft()
+        ordre.append(u)
         for v in graphe[u]:
             degre_entrant[v] -= 1
             if degre_entrant[v] == 0:
                 file.append(v)
-    return ordre if len(ordre) == n else None    # None : il existe un cycle
+    return ordre if len(ordre) == n else None      # None : il existe un cycle
 
 print(tri_topologique(4, [(0, 1), (0, 2), (1, 3), (2, 3)]))   # [0, 1, 2, 3]
 print(tri_topologique(2, [(0, 1), (1, 0)]))                   # None (cycle)
 ```
 
-**O(V + E)**. La bibliothèque standard propose aussi `graphlib.TopologicalSorter`.
+**Complexité** `O(V + E)`. Variante par DFS : l'ordre topologique est l'**inverse de l'ordre de fin** des sommets. La bibliothèque standard propose aussi `graphlib.TopologicalSorter`.
 
-## 19.5 Arbre couvrant de poids minimal (MST)
+## 19.6 Arbre couvrant de poids minimal (MST)
 
-Sous-ensemble d'arêtes qui **relie tous les sommets** avec un **poids total minimal** et **sans cycle**.
+**Définition.** Dans un graphe non orienté, connexe et pondéré, un **arbre couvrant** est un sous-ensemble d'arêtes qui relie **tous** les sommets sans cycle (donc `V - 1` arêtes). Un **arbre couvrant de poids minimal** (*minimum spanning tree*) minimise la somme des poids. Applications : réseaux (câblage, canalisations), regroupement hiérarchique, approximation du voyageur de commerce.
+
+**Propriété de coupe.** Pour toute **coupe** (partition des sommets en deux parties), l'arête de **plus petit poids** traversant la coupe appartient à un arbre couvrant minimal (si elle est unique). C'est le fondement de la correction de Kruskal et de Prim, deux algorithmes gloutons.
 
 ### Union-Find (ensembles disjoints)
+
+Structure qui maintient une partition d'éléments en groupes et supporte deux opérations : **`trouver(x)`** (représentant du groupe de `x`) et **`unir(a, b)`** (fusionner deux groupes). Chaque groupe est un arbre dont la racine est le représentant.
 
 ```python
 class UnionFind:
@@ -2422,44 +3531,56 @@ class UnionFind:
 
     def unir(self, a, b):                          # union par taille
         a, b = self.trouver(a), self.trouver(b)
-        if a == b: return False
-        if self.taille[a] < self.taille[b]: a, b = b, a
+        if a == b:
+            return False                           # déjà dans le même groupe
+        if self.taille[a] < self.taille[b]:
+            a, b = b, a
         self.parent[b] = a
         self.taille[a] += self.taille[b]
         return True
 
 uf = UnionFind(5)
-uf.unir(0, 1); uf.unir(3, 4)
+uf.unir(0, 1)
+uf.unir(3, 4)
 print(uf.trouver(0) == uf.trouver(1), uf.trouver(1) == uf.trouver(3))   # True False
 ```
 
-Les opérations coûtent **O(α(n))** amorti (inverse d'Ackermann : quasi constant).
+Deux optimisations : la **compression de chemin** (on raccourcit les chemins vers la racine lors d'un `trouver`) et l'**union par taille ou par rang** (on rattache le petit arbre au grand). Ensemble, elles donnent un coût amorti de **`O(α(n))`** par opération, où `α` est l'inverse de la fonction d'Ackermann : inférieur à 5 pour tout `n` réaliste, donc quasi constant.
 
-### Algorithme de Kruskal (glouton, trie les arêtes)
+### Algorithme de Kruskal (glouton sur les arêtes)
+
+On trie les arêtes par poids croissant et on ajoute chaque arête qui **ne crée pas de cycle** (ses deux extrémités sont dans des groupes différents d'Union-Find).
 
 ```python
-def kruskal(n, aretes):                          # aretes : (poids, u, v) ; utilise la classe UnionFind ci-dessus
+def kruskal(n, aretes):                          # aretes : (poids, u, v)
     uf, poids_total, choisies = UnionFind(n), 0, []
     for w, u, v in sorted(aretes):
         if uf.unir(u, v):
-            poids_total += w; choisies.append((u, v, w))
+            poids_total += w
+            choisies.append((u, v, w))
     return poids_total, choisies                 # O(E log E)
 
 print(kruskal(4, [(1, 0, 1), (4, 0, 2), (3, 1, 2), (2, 1, 3), (5, 2, 3)]))
 # (6, [(0, 1, 1), (1, 3, 2), (1, 2, 3)])
 ```
 
-### Algorithme de Prim (glouton, fait grossir un arbre)
+Si le graphe n'est pas connexe, Kruskal produit une **forêt couvrante minimale**.
+
+### Algorithme de Prim (glouton sur les sommets)
+
+On part d'un sommet et on fait **grossir un arbre** en ajoutant à chaque étape l'arête de poids minimal reliant l'arbre à un sommet extérieur, grâce à un tas.
 
 ```python
 import heapq
 
-def prim(graphe, depart=0):                       # graphe[u] = [(v, poids), …]
+def prim(graphe, depart=0):                       # graphe[u] = [(v, poids), ...]
     vus, tas, total = set(), [(0, depart)], 0
     while tas:
         w, u = heapq.heappop(tas)
-        if u in vus: continue
-        vus.add(u); total += w
+        if u in vus:
+            continue
+        vus.add(u)
+        total += w
         for v, poids in graphe[u]:
             if v not in vus:
                 heapq.heappush(tas, (poids, v))
@@ -2469,40 +3590,77 @@ g_prim = {0: [(1, 1), (2, 4)], 1: [(0, 1), (2, 3), (3, 2)], 2: [(0, 4), (1, 3), 
 print(prim(g_prim))                       # 6
 ```
 
-| | Kruskal | Prim |
+|  | Kruskal | Prim |
 | --- | --- | --- |
-| Approche | Arêtes triées + Union-Find | Croissance depuis un sommet + tas |
-| Meilleur pour | Graphes **creux** | Graphes **denses** |
+| Approche | Arêtes triées et Union-Find | Croissance depuis un sommet avec un tas |
+| Complexité | `O(E log E)` | `O(E log V)` |
+| Meilleur pour | Graphes **creux** ; liste d'arêtes disponible | Graphes **denses** ; liste d'adjacence |
 
-## 19.6 Exercices recommandés
+## 19.7 Autres problèmes de graphes à connaître
 
-*Nombre d'îles*, *Cours à suivre (tri topologique)*, *Clone de graphe*, *Plus court chemin dans une grille*, *Réseau de connexions au coût minimal (MST)*.
+- **Points d'articulation et ponts** : sommets ou arêtes dont la suppression déconnecte le graphe ; algorithme de Tarjan basé sur le DFS et les valeurs `bas`.
+- **Circuits eulériens** (passer par chaque arête exactement une fois ; condition sur les degrés) et **hamiltoniens** (chaque sommet une fois ; NP-complet).
+- **Coloration** de graphe (NP-difficile) et applications aux emplois du temps.
+- **Plus bas ancêtre commun** dans un arbre, **diamètre** d'un arbre (deux BFS).
+
+## 19.8 Points à retenir et exercices
+
+**À retenir.**
+
+- Liste d'adjacence pour les graphes creux ; BFS pour les plus courts chemins non pondérés ; DFS pour la structure (cycles, topologie).
+- Tri topologique : degrés entrants (Kahn) ou ordre de fin inversé (DFS).
+- MST : Kruskal (Union-Find) ou Prim (tas) ; correct par la propriété de coupe.
+
+**Exercices.**
+
+1. Compter le nombre d'îles dans une grille de `0` et `1` par DFS.
+2. Déterminer l'ordre dans lequel suivre des cours avec prérequis (et détecter l'impossibilité).
+3. Trouver le diamètre d'un arbre avec deux parcours en largeur.
+4. Modifier Kruskal pour renvoyer le second meilleur arbre couvrant.
 
 ---
 
 # 20. Plus courts chemins dans les graphes pondérés
 
-## 20.1 Choisir l'algorithme
+## 20.1 Le problème et les notions
+
+Dans un graphe pondéré, le **poids d'un chemin** est la somme des poids de ses arêtes. Le **plus court chemin** de `s` à `t` est un chemin de poids minimal ; sa valeur est la **distance** `δ(s, t)`.
+
+**Variantes du problème.**
+
+- **Source unique** : distances de `s` vers tous les sommets (SSSP).
+- **Paire source-cible** : un seul couple ; on peut s'arrêter dès que la cible est finalisée.
+- **Toutes paires** (APSP).
+
+**Sous-structure optimale.** Tout sous-chemin d'un plus court chemin est lui-même un plus court chemin. C'est ce qui rend possibles les algorithmes ci-dessous.
+
+**Relâchement d'une arête** `(u, v, w)` : si `dist[u] + w < dist[v]`, on met à jour `dist[v] = dist[u] + w` (et le parent de `v`). Tous les algorithmes de cette section ne sont que des stratégies différentes pour ordonner les relâchements.
+
+**Cycles de poids négatif.** Si un cycle de poids total strictement négatif est atteignable depuis la source, les plus courts chemins ne sont **pas définis** (on peut boucler pour diminuer indéfiniment). Les poids négatifs sans tel cycle sont acceptables.
+
+## 20.2 Choisir l'algorithme
 
 | Algorithme | Type | Poids négatifs ? | Complexité | Usage |
 | --- | --- | --- | --- | --- |
-| **BFS** | Source unique | — (non pondéré) | O(V + E) | Arêtes sans poids |
-| **0-1 BFS** | Source unique | Poids 0 ou 1 | O(V + E) | Poids binaires |
-| **Dijkstra** | Source unique | **Non** | O((V + E) log V) | Cas général à poids ≥ 0 |
-| **Bellman-Ford** | Source unique | Oui (détecte les cycles négatifs) | O(V·E) | Poids négatifs |
-| **SPFA** | Source unique | Oui | O(V·E) pire cas, souvent rapide | Pratique (à utiliser avec prudence) |
-| **Floyd-Warshall** | **Toutes paires** | Oui | O(V³) | Petit graphe, toutes les distances |
-| **A\*** | Source → cible | Non (heuristique admissible) | Dépend de l'heuristique | Cartes, jeux |
-| **DAG (tri topologique)** | Source unique | Oui | O(V + E) | Graphes orientés acycliques |
+| **BFS** | Source unique | Sans objet (non pondéré) | `O(V + E)` | Arêtes sans poids |
+| **BFS 0-1** | Source unique | Poids 0 ou 1 | `O(V + E)` | Poids binaires |
+| **Dijkstra** | Source unique | **Non** | `O((V + E) log V)` | Cas général à poids positifs ou nuls |
+| **Bellman-Ford** | Source unique | Oui (détecte les cycles négatifs) | `O(V · E)` | Poids négatifs |
+| **SPFA** | Source unique | Oui | `O(V · E)` au pire, souvent rapide | Pratique, à utiliser avec prudence |
+| **Floyd-Warshall** | **Toutes paires** | Oui | `O(V³)` | Petit graphe, toutes les distances |
+| **A\*** | Source vers cible | Non (heuristique admissible) | Selon l'heuristique | Cartes, jeux |
+| **DAG (ordre topologique)** | Source unique | Oui | `O(V + E)` | Graphes acycliques |
 
-## 20.2 Dijkstra
+## 20.3 Dijkstra
 
-**Glouton** : on traite toujours le sommet non finalisé **le plus proche** de la source. Il exige des poids **≥ 0**.
+**Principe (glouton).** On maintient un ensemble de sommets **finalisés** dont la distance est définitive. À chaque étape, on prend le sommet non finalisé de **plus petite distance provisoire**, on le finalise, puis on relâche ses arêtes sortantes. Un tas binaire fournit le minimum.
+
+**Pourquoi c'est correct (et pourquoi les poids doivent être positifs).** Quand `u` est le sommet non finalisé de plus petite distance provisoire `d`, tout autre chemin vers `u` doit sortir de l'ensemble finalisé par un sommet dont la distance provisoire est `≥ d` ; comme les poids sont positifs ou nuls, ce chemin ne peut que s'allonger : `d` est optimale. Avec une arête négative, un chemin plus long au départ pourrait devenir plus court : l'argument s'effondre.
 
 ```python
 import heapq
 
-def dijkstra(graphe, source):                   # graphe[u] = [(v, poids), …]
+def dijkstra(graphe, source):                   # graphe[u] = [(v, poids), ...]
     INF = float("inf")
     dist = {u: INF for u in graphe}
     dist[source] = 0
@@ -2522,7 +3680,8 @@ def dijkstra(graphe, source):                   # graphe[u] = [(v, poids), …]
 def chemin(parent, cible):
     p = []
     while cible is not None:
-        p.append(cible); cible = parent.get(cible)
+        p.append(cible)
+        cible = parent.get(cible)
     return p[::-1]
 
 g_poids = {"A": [("B", 4), ("C", 1)], "B": [("D", 1)], "C": [("B", 2), ("D", 5)], "D": []}
@@ -2531,11 +3690,13 @@ print(dist)                               # {'A': 0, 'B': 3, 'C': 1, 'D': 4}
 print(chemin(parent, "D"))                # ['A', 'C', 'B', 'D']
 ```
 
-> *(à jour)* Dijkstra est resté **le** standard pendant plus de 60 ans car il « trie » implicitement les sommets par distance. Une avancée théorique de 2025 (Duan et coll., *Breaking the Sorting Barrier for Directed Single-Source Shortest Paths*, STOC 2025) a montré qu'on peut **contourner cette barrière de tri** pour les graphes orientés creux, en temps O(m log^(2/3) n). C'est un résultat **théorique** : en pratique, Dijkstra avec un tas binaire reste l'algorithme de référence.
+L'**insertion paresseuse** (ajouter un nouveau couple dans le tas au lieu de modifier l'ancien) évite d'avoir une opération de diminution de clé ; les entrées obsolètes sont ignorées à la sortie du tas (`d > dist[u]`). Chaque arête provoque au plus une insertion, d'où `O(E log E) = O(E log V)`.
 
-## 20.3 Bellman-Ford
+> **Remarque d'actualité.** Dijkstra est resté la référence pendant plus de soixante ans, notamment parce qu'il « trie » implicitement les sommets par distance. Un résultat théorique de 2025 (Duan et coll., *Breaking the Sorting Barrier for Directed Single-Source Shortest Paths*, STOC 2025) contourne cette barrière de tri pour les graphes orientés creux, avec une complexité en `O(m log^(2/3) n)`. Il s'agit d'un résultat **théorique** : en pratique, Dijkstra avec un tas binaire reste l'algorithme de référence.
 
-Relâche **toutes les arêtes** `V − 1` fois ; une `V`-ième passe qui améliore encore une distance révèle un **cycle négatif**.
+## 20.4 Bellman-Ford
+
+**Principe.** Un plus court chemin simple utilise au plus `V - 1` arêtes. On relâche donc **toutes les arêtes**, `V - 1` fois : après la `k`-ième passe, les distances correctes de tous les sommets atteignables par un plus court chemin d'au plus `k` arêtes sont acquises. Une `V`-ième passe qui améliore encore une distance révèle un **cycle de poids négatif atteignable**.
 
 ```python
 def bellman_ford(n, aretes, source):             # aretes : (u, v, poids)
@@ -2553,33 +3714,37 @@ def bellman_ford(n, aretes, source):             # aretes : (u, v, poids)
     for u, v, w in aretes:                        # détection de cycle négatif
         if dist[u] != INF and dist[u] + w < dist[v]:
             raise ValueError("Cycle de poids négatif atteignable")
-    return dist                                    # O(V·E)
+    return dist                                    # O(V * E)
 
 print(bellman_ford(4, [(0, 1, 4), (0, 2, 1), (2, 1, -2), (1, 3, 1)], 0))   # [0, -1, 1, 0]
 ```
 
-## 20.4 Floyd-Warshall
+Bellman-Ford est plus lent que Dijkstra mais gère les poids négatifs ; il sert aussi à détecter les cycles négatifs (arbitrage de devises avec les logarithmes des taux).
 
-Programmation dynamique : `dist[i][j] = min(dist[i][j], dist[i][k] + dist[k][j])` pour chaque sommet intermédiaire `k`.
+## 20.5 Floyd-Warshall
+
+**Principe (programmation dynamique).** Soit `dist_k[i][j]` la plus courte distance de `i` à `j` en n'utilisant comme sommets **intermédiaires** que les sommets `0..k`. Alors `dist_k[i][j] = min(dist_{k-1}[i][j], dist_{k-1}[i][k] + dist_{k-1}[k][j])` : soit le chemin évite `k`, soit il passe par `k`. On peut travailler en place sur une seule matrice.
 
 ```python
-def floyd_warshall(dist):                         # dist : matrice, INF si pas d'arête, 0 sur la diagonale
+def floyd_warshall(dist):                         # matrice, INF sans arête, 0 sur la diagonale
     n = len(dist)
     for k in range(n):                            # k doit être la boucle EXTÉRIEURE
         for i in range(n):
             for j in range(n):
                 if dist[i][k] + dist[k][j] < dist[i][j]:
                     dist[i][j] = dist[i][k] + dist[k][j]
-    return dist                                    # O(V³) ; un dist[i][i] < 0 révèle un cycle négatif
+    return dist                                    # O(V^3) ; un dist[i][i] < 0 révèle un cycle négatif
 
 INF = float("inf")
 matrice = [[0, 3, INF], [INF, 0, 1], [2, INF, 0]]
 print(floyd_warshall(matrice))            # [[0, 3, 4], [3, 0, 1], [2, 5, 0]]
 ```
 
-## 20.5 BFS 0-1
+Code très court, `O(V³)` en temps, `O(V²)` en mémoire ; adapté à `V` jusqu'à quelques centaines. Il sert aussi à calculer la **fermeture transitive** (accessibilité) avec des booléens.
 
-Pour des poids **0 ou 1** : un **deque** remplace le tas (O(V + E)).
+## 20.6 BFS 0-1
+
+Pour des poids valant uniquement 0 ou 1, un **deque** remplace le tas : on place le sommet voisin **en tête** si le poids est 0 et **en queue** si le poids est 1. Les sommets restent dans l'ordre croissant des distances, en `O(V + E)`.
 
 ```python
 from collections import deque
@@ -2590,16 +3755,21 @@ def bfs_01(graphe, source, n):
     dq = deque([source])
     while dq:
         u = dq.popleft()
-        for v, w in graphe[u]:                    # w ∈ {0, 1}
+        for v, w in graphe[u]:                    # w vaut 0 ou 1
             if dist[u] + w < dist[v]:
                 dist[v] = dist[u] + w
-                dq.appendleft(v) if w == 0 else dq.append(v)
+                if w == 0:
+                    dq.appendleft(v)
+                else:
+                    dq.append(v)
     return dist
 
 print(bfs_01({0: [(1, 0), (2, 1)], 1: [(2, 1)], 2: []}, 0, 3))   # [0, 0, 1]
 ```
 
-## 20.6 SPFA (Bellman-Ford avec file)
+## 20.7 SPFA (Bellman-Ford avec file)
+
+On ne relâche que les arêtes sortantes des sommets dont la distance vient de diminuer, gérés par une file.
 
 ```python
 from collections import deque
@@ -2610,24 +3780,31 @@ def spfa(graphe, source, n):
     dist[source] = 0
     file = deque([source])
     while file:
-        u = file.popleft(); dans_file[u] = False
+        u = file.popleft()
+        dans_file[u] = False
         for v, w in graphe[u]:
             if dist[u] + w < dist[v]:
                 dist[v] = dist[u] + w
                 if not dans_file[v]:
                     compte[v] += 1
-                    if compte[v] > n: raise ValueError("Cycle négatif")
-                    file.append(v); dans_file[v] = True
+                    if compte[v] > n:
+                        raise ValueError("Cycle négatif")
+                    file.append(v)
+                    dans_file[v] = True
     return dist
 
 print(spfa({0: [(1, 4), (2, 1)], 1: [(3, 1)], 2: [(1, -2)], 3: []}, 0, 4))   # [0, -1, 1, 0]
 ```
 
-> **Attention** : SPFA est **O(V·E) au pire** : il peut être mis en échec par des entrées conçues pour cela. Préférez Dijkstra dès que les poids sont positifs.
+> **Attention.** SPFA est en `O(V · E)` au pire et peut être mis en échec par des entrées conçues pour cela. Dès que les poids sont positifs, préférer Dijkstra.
 
-## 20.7 A\* *(ajout)*
+## 20.8 A\* (A étoile)
 
-**A\*** guide Dijkstra vers la cible avec une **heuristique** `h(v)` (estimation du reste). Il explore les sommets selon `f(v) = g(v) + h(v)`. Si `h` est **admissible** (ne surestime jamais) et **cohérente**, A\* est optimal.
+**Idée.** A\* guide la recherche de Dijkstra **vers la cible** grâce à une **heuristique** `h(v)`, estimation du coût restant de `v` à la cible. Il explore les sommets dans l'ordre de `f(v) = g(v) + h(v)`, où `g(v)` est le coût déjà parcouru depuis la source.
+
+- Si `h` est **admissible** (elle ne surestime jamais le coût réel), A\* renvoie un chemin optimal.
+- Si `h` est **cohérente** (inégalité triangulaire : `h(u) ≤ w(u, v) + h(v)`), chaque sommet est finalisé au plus une fois.
+- Avec `h = 0`, on retrouve Dijkstra.
 
 ```python
 import heapq
@@ -2639,7 +3816,8 @@ def a_etoile(graphe, debut, but, h):
         _, cout, u = heapq.heappop(tas)
         if u == but:
             return cout
-        if cout > g.get(u, float("inf")): continue
+        if cout > g.get(u, float("inf")):
+            continue
         for v, w in graphe[u]:
             nouveau = cout + w
             if nouveau < g.get(v, float("inf")):
@@ -2647,41 +3825,59 @@ def a_etoile(graphe, debut, but, h):
                 heapq.heappush(tas, (nouveau + h(v), nouveau, v))
     return None
 
-# Sur une grille : h = distance de Manhattan abs(x - xb) + abs(y - yb)
-
-# Grille 3 × 3 : sommets (ligne, colonne), h = distance de Manhattan
+# Grille 3 x 3 : sommets (ligne, colonne), heuristique = distance de Manhattan
 grille_g = {(i, j): [((i + di, j + dj), 1) for di, dj in ((1, 0), (-1, 0), (0, 1), (0, -1))
                      if 0 <= i + di < 3 and 0 <= j + dj < 3]
             for i in range(3) for j in range(3)}
 print(a_etoile(grille_g, (0, 0), (2, 2), lambda v: abs(v[0] - 2) + abs(v[1] - 2)))   # 4
 ```
 
-## 20.8 Plus courts chemins dans un DAG
+Sur une grille à déplacements en quatre directions, la **distance de Manhattan** `|x - xb| + |y - yb|` est admissible ; avec huit directions, on emploie la distance de Chebyshev ou la distance octile.
+
+## 20.9 Plus courts chemins dans un DAG
+
+Dans un graphe orienté acyclique, on traite les sommets dans l'**ordre topologique** et on relâche leurs arêtes sortantes : chaque arête n'est relâchée qu'une fois, et les poids négatifs sont acceptés. On peut aussi y calculer le **plus long chemin** (en négativant les poids ou en remplaçant `min` par `max`), ce qui est NP-difficile dans un graphe général.
 
 ```python
 def plus_court_dag(graphe, ordre_topo, source):
-    dist = {u: float("inf") for u in graphe}; dist[source] = 0
+    dist = {u: float("inf") for u in graphe}
+    dist[source] = 0
     for u in ordre_topo:                            # sommets dans l'ordre topologique
         if dist[u] != float("inf"):
             for v, w in graphe[u]:
                 dist[v] = min(dist[v], dist[u] + w)
-    return dist                                      # O(V + E), poids négatifs acceptés
+    return dist                                      # O(V + E)
 
 g_dag = {0: [(1, 2), (2, 6)], 1: [(2, 3)], 2: []}
 print(plus_court_dag(g_dag, [0, 1, 2], 0))     # {0: 0, 1: 2, 2: 5}
 ```
 
-## 20.9 Conseils de choix
+## 20.10 Guide de choix
 
 | Situation | Algorithme |
 | --- | --- |
 | Pas de poids | BFS |
-| Poids 0 / 1 | 0-1 BFS |
+| Poids 0 ou 1 | BFS 0-1 |
 | Poids positifs, une source | **Dijkstra** |
 | Poids négatifs ou détection de cycle négatif | **Bellman-Ford** |
-| Toutes les paires, `V` petit (≤ ~400) | Floyd-Warshall |
+| Toutes les paires, `V` petit (jusqu'à environ 400) | Floyd-Warshall |
 | Une cible, heuristique disponible | **A\*** |
-| Graphe acyclique | Tri topologique + relâchement |
+| Graphe acyclique | Ordre topologique puis relâchement |
+
+## 20.11 Points à retenir et exercices
+
+**À retenir.**
+
+- Tous ces algorithmes reposent sur le relâchement des arêtes ; ils diffèrent par l'ordre.
+- Dijkstra exige des poids positifs ou nuls ; Bellman-Ford tolère les négatifs et détecte les cycles négatifs.
+- Floyd-Warshall est une DP où `k` (sommets intermédiaires autorisés) est la boucle externe.
+
+**Exercices.**
+
+1. Trouver le chemin de poids minimal dans une grille de coûts avec Dijkstra.
+2. Détecter une opportunité d'arbitrage entre devises avec Bellman-Ford sur les logarithmes des taux.
+3. Modifier Dijkstra pour compter le nombre de plus courts chemins distincts.
+4. Expliquer pourquoi ajouter une constante à toutes les arêtes pour supprimer les poids négatifs ne marche pas.
 
 ---
 
@@ -2689,24 +3885,28 @@ print(plus_court_dag(g_dag, [0, 1, 2], 0))     # {0: 0, 1: 2, 2: 5}
 
 ## 21.1 Définition
 
-Dans un graphe **orienté**, une **composante fortement connexe** (SCC) est un **ensemble maximal de sommets** tels que **chacun peut atteindre tous les autres**. En contractant chaque SCC en un nœud, on obtient un **DAG** (graphe orienté acyclique).
+Dans un graphe **orienté**, deux sommets `u` et `v` sont **fortement connectés** s'il existe un chemin de `u` à `v` **et** un chemin de `v` à `u`. Cette relation est une relation d'équivalence ; ses classes sont les **composantes fortement connexes** (SCC, *strongly connected components*) : des ensembles maximaux de sommets deux à deux fortement connectés.
+
+**Graphe condensé.** En contractant chaque SCC en un seul sommet, on obtient un **DAG** (sinon deux composantes seraient mutuellement atteignables et fusionneraient). Cette structure permet d'appliquer au graphe condensé les outils des DAG : ordre topologique, programmation dynamique.
 
 ```text
-   A ⇄ B        Les SCC : {A, B, C} et {D, E}
-   ↓   ↑        Le graphe condensé : {A,B,C} → {D,E}
-   └─▶ C
-   C ───▶ D ⇄ E
+   A <-> B        Les SCC sont {A, B, C} et {D, E}.
+   |     ^         Le graphe condensé est :  {A,B,C} -> {D,E}
+   v     |
+   `---> C --> D <-> E
 ```
 
 ### Applications
 
-Analyse de dépendances cycliques, **2-SAT**, optimisation de compilateurs, analyse du web (pages mutuellement accessibles), condensation d'un graphe avant d'y appliquer de la DP.
+Analyse de **dépendances cycliques** (bibliothèques, modules), **2-SAT** (satisfaisabilité de formules à deux littéraux par clause), optimisation de compilateurs (analyse de flot), analyse du web (pages mutuellement accessibles), condensation d'un graphe avant d'y résoudre un problème par DP.
 
 ## 21.2 Algorithme de Kosaraju (deux parcours)
 
-1. DFS sur `G` : noter l'ordre de **fin** de traitement des sommets.
-2. Construire le graphe **transposé** (arêtes inversées).
-3. DFS sur le transposé, en traitant les sommets par **ordre de fin décroissant** : chaque arbre trouvé est une SCC.
+**Idée.** Un DFS qui part de n'importe quel sommet d'une SCC « puits » (sans arc sortant vers une autre SCC) découvre exactement cette SCC. On repère un tel ordre grâce aux dates de fin d'un premier DFS, puis on explore le graphe **transposé** (arcs inversés), où les SCC sont les mêmes mais où les arcs entre SCC sont inversés.
+
+1. DFS sur `G` : noter l'ordre de **fin de traitement** des sommets.
+2. Construire le graphe **transposé** (tous les arcs retournés).
+3. DFS sur le transposé, en traitant les sommets par **ordre de fin décroissant** : chaque arbre découvert est une SCC.
 
 ```python
 def kosaraju(n, graphe):                     # graphe[u] = liste des successeurs
@@ -2715,26 +3915,33 @@ def kosaraju(n, graphe):                     # graphe[u] = liste des successeurs
     def dfs1(u):
         visite[u] = True
         for v in graphe[u]:
-            if not visite[v]: dfs1(v)
+            if not visite[v]:
+                dfs1(v)
         ordre.append(u)                      # ajouté à la FIN du traitement
 
     for u in range(n):
-        if not visite[u]: dfs1(u)
+        if not visite[u]:
+            dfs1(u)
 
     transpose = [[] for _ in range(n)]
     for u in range(n):
-        for v in graphe[u]: transpose[v].append(u)
+        for v in graphe[u]:
+            transpose[v].append(u)
 
     comp, visite = [-1] * n, [False] * n
+
     def dfs2(u, c):
-        visite[u] = True; comp[u] = c
+        visite[u] = True
+        comp[u] = c
         for v in transpose[u]:
-            if not visite[v]: dfs2(v, c)
+            if not visite[v]:
+                dfs2(v, c)
 
     nb = 0
     for u in reversed(ordre):
         if not visite[u]:
-            dfs2(u, nb); nb += 1
+            dfs2(u, nb)
+            nb += 1
     return nb, comp                           # O(V + E)
 
 g_scc = [[1], [2], [0, 3], [4], [3]]                # cycles {0, 1, 2} et {3, 4}
@@ -2743,7 +3950,7 @@ print(kosaraju(5, g_scc))                         # (2, [0, 0, 0, 1, 1])
 
 ## 21.3 Algorithme de Tarjan (un seul parcours)
 
-Chaque sommet reçoit un **numéro de découverte** `idx[u]` et un **plus petit numéro atteignable** `bas[u]` ; un sommet avec `bas[u] == idx[u]` est la **racine** d'une SCC.
+**Idée.** Dans un seul DFS, chaque sommet reçoit un **numéro de découverte** `idx[u]` et une valeur `bas[u]`, le plus petit numéro de découverte atteignable depuis `u` en suivant des arcs d'arbre puis au plus un arc vers un sommet **encore sur la pile**. Les sommets sont empilés à la découverte. Un sommet avec `bas[u] == idx[u]` est la **racine** d'une SCC : on dépile alors jusqu'à `u` inclus, et les sommets dépilés forment la composante.
 
 ```python
 def tarjan(n, graphe):
@@ -2753,65 +3960,98 @@ def tarjan(n, graphe):
 
     def dfs(u):
         nonlocal compteur, nb
-        idx[u] = bas[u] = compteur; compteur += 1
-        pile.append(u); sur_pile[u] = True
+        idx[u] = bas[u] = compteur
+        compteur += 1
+        pile.append(u)
+        sur_pile[u] = True
         for v in graphe[u]:
             if idx[v] == -1:
-                dfs(v); bas[u] = min(bas[u], bas[v])
+                dfs(v)
+                bas[u] = min(bas[u], bas[v])
             elif sur_pile[v]:
                 bas[u] = min(bas[u], idx[v])
         if bas[u] == idx[u]:                     # racine d'une SCC
             while True:
-                w = pile.pop(); sur_pile[w] = False; comp[w] = nb
-                if w == u: break
+                w = pile.pop()
+                sur_pile[w] = False
+                comp[w] = nb
+                if w == u:
+                    break
             nb += 1
 
     for u in range(n):
-        if idx[u] == -1: dfs(u)
+        if idx[u] == -1:
+            dfs(u)
     return nb, comp                               # O(V + E)
 
 print(tarjan(5, [[1], [2], [0, 3], [4], [3]]))   # (2, [1, 1, 1, 0, 0]) : numérotation inverse de Kosaraju
 ```
 
-> **Attention** : en Python, ces versions **récursives** dépassent vite la limite de pile (graphes de plus de ~1000 sommets en profondeur) : augmentez `sys.setrecursionlimit` (et la taille de pile via `threading.stack_size`) ou réécrivez-les **avec une pile explicite**.
+> **Attention.** En Python, ces versions **récursives** dépassent vite la limite de pile (au-delà de 1000 niveaux de profondeur) : augmenter `sys.setrecursionlimit` (et la taille de pile via `threading.stack_size`) ou réécrire les parcours **avec une pile explicite**.
 
 ## 21.4 Kosaraju ou Tarjan ?
 
-| | Kosaraju | Tarjan |
+|  | Kosaraju | Tarjan |
 | --- | --- | --- |
-| Parcours | 2 DFS + graphe transposé | **1** DFS |
-| Complexité | O(V + E) | O(V + E) |
+| Parcours | 2 DFS et graphe transposé | **1** DFS |
+| Complexité | `O(V + E)` | `O(V + E)` |
 | Mémoire | Plus (graphe transposé) | Moins |
 | Facilité de compréhension | Plus intuitif | Plus subtil |
 | Ordre des composantes | Ordre topologique du graphe condensé | Ordre topologique **inverse** |
+
+## 21.5 Application : 2-SAT
+
+Une formule 2-CNF est un ET de clauses `(a OU b)`, où `a` et `b` sont des littéraux. Chaque clause équivaut à deux implications : `non a ⇒ b` et `non b ⇒ a`. On construit le **graphe d'implications** (un sommet par littéral et par négation) ; la formule est **satisfaisable si et seulement si aucune variable n'est dans la même SCC que sa négation**. Les affectations se lisent dans l'ordre topologique des composantes. Le problème est ainsi résolu en `O(V + E)`, alors que 3-SAT est NP-complet.
+
+## 21.6 Points à retenir et exercices
+
+**À retenir.**
+
+- Une SCC est une classe d'équivalence de l'accessibilité mutuelle ; le graphe condensé est un DAG.
+- Kosaraju : deux DFS (graphe puis transposé, par ordre de fin décroissant). Tarjan : un seul DFS avec `idx`, `bas` et une pile.
+- Les SCC permettent de résoudre 2-SAT et de ramener un problème sur graphe orienté à un DAG.
+
+**Exercices.**
+
+1. Calculer le nombre minimal d'arcs à ajouter pour rendre un graphe orienté fortement connexe (indice : sources et puits du graphe condensé).
+2. Réécrire Tarjan avec une pile explicite.
+3. Résoudre l'instance 2-SAT `(x OU y) ET (non x OU y) ET (non y OU z)`.
+4. Trouver dans un graphe orienté les sommets qui peuvent atteindre tous les autres.
 
 ---
 
 # 22. Flots dans les réseaux
 
-## 22.1 Définition
+## 22.1 Définitions
 
-Un **réseau de flot** est un graphe orienté dont chaque arête a une **capacité**, avec une **source** `s` et un **puits** `t`. Un **flot** envoie des unités de `s` vers `t` en respectant :
+Un **réseau de flot** est un graphe orienté `G = (V, E)` dans lequel chaque arc `(u, v)` possède une **capacité** `c(u, v) ≥ 0`, avec deux sommets distingués : une **source** `s` et un **puits** `t`. Un **flot** associe à chaque arc une quantité `f(u, v)` vérifiant :
 
-1. **Capacité** : `flot(u, v) ≤ capacité(u, v)` ;
-2. **Conservation** : pour chaque sommet intermédiaire, flot entrant = flot sortant.
+1. **Contrainte de capacité** : `0 ≤ f(u, v) ≤ c(u, v)` pour tout arc.
+2. **Conservation du flot** : pour tout sommet `v` différent de `s` et `t`, la somme des flots entrants égale la somme des flots sortants.
 
-**Problème du flot maximal** : envoyer le plus de flot possible de `s` à `t`.
+La **valeur** du flot est le flux net sortant de la source. Le **problème du flot maximal** consiste à trouver un flot de valeur maximale de `s` à `t`. Images : débit d'un réseau de canalisations, trafic d'un réseau de communication.
 
-> **Théorème flot max – coupe min** : la valeur du flot maximal est **égale à la capacité de la plus petite coupe** séparant `s` de `t`.
+### Coupes et théorème flot max, coupe min
 
-## 22.2 Réseau résiduel et arêtes inverses
+Une **coupe** `(S, T)` est une partition des sommets avec `s ∈ S` et `t ∈ T`. Sa **capacité** est la somme des capacités des arcs allant de `S` vers `T`. Tout flot a une valeur inférieure ou égale à la capacité de n'importe quelle coupe (le flot doit traverser chaque coupe). Le **théorème flot max, coupe min** affirme que la valeur du flot maximal est **égale à la capacité de la coupe minimale**. Ainsi, un flot est maximal exactement quand il n'existe plus de chemin augmentant dans le graphe résiduel.
 
-Le **graphe résiduel** indique la capacité restante de chaque arête, et ajoute des **arêtes inverses** permettant d'**annuler** une partie d'un flot déjà envoyé. C'est l'idée centrale de tous les algorithmes de flot.
+## 22.2 Graphe résiduel et arcs inverses
+
+Étant donné un flot `f`, le **graphe résiduel** contient, pour chaque arc `(u, v)` :
+
+- un arc `(u, v)` de capacité résiduelle `c(u, v) - f(u, v)` (flot encore poussable) ;
+- un **arc inverse** `(v, u)` de capacité `f(u, v)`, qui permet d'**annuler** une partie du flot déjà envoyé.
+
+Les arcs inverses sont indispensables : sans eux, un mauvais choix de chemin au début pourrait bloquer l'optimum. Un **chemin augmentant** est un chemin de `s` à `t` dans le graphe résiduel ; on y pousse une quantité égale à sa **capacité minimale** (le goulot d'étranglement), ce qui augmente la valeur du flot.
 
 ## 22.3 Ford-Fulkerson et Edmonds-Karp
 
-**Ford-Fulkerson** : tant qu'il existe un **chemin augmentant** de `s` à `t` dans le graphe résiduel, on y pousse le flot de la **capacité minimale** du chemin. Avec un **BFS** pour trouver le chemin, c'est **Edmonds-Karp**.
+**Ford-Fulkerson** : tant qu'il existe un chemin augmentant, on y pousse le flot de la capacité minimale du chemin. Le choix du chemin est libre. Avec un **parcours en largeur** pour trouver le chemin (plus court en nombre d'arcs), c'est l'algorithme d'**Edmonds-Karp**, dont la complexité est polynomiale quelles que soient les capacités.
 
 ```python
 from collections import deque
 
-def edmonds_karp(capacite, s, t):                 # capacite : matrice n × n (modifiée = graphe résiduel)
+def edmonds_karp(capacite, s, t):                 # capacite : matrice n x n (devient le graphe résiduel)
     n, flot_total = len(capacite), 0
     while True:
         parent = [-1] * n
@@ -2821,17 +4061,19 @@ def edmonds_karp(capacite, s, t):                 # capacite : matrice n × n (m
             u = file.popleft()
             for v in range(n):
                 if parent[v] == -1 and capacite[u][v] > 0:
-                    parent[v] = u; file.append(v)
-        if parent[t] == -1:                       # plus de chemin augmentant
+                    parent[v] = u
+                    file.append(v)
+        if parent[t] == -1:                       # plus de chemin augmentant : flot maximal
             break
         goulot, v = float("inf"), t
         while v != s:
-            goulot = min(goulot, capacite[parent[v]][v]); v = parent[v]
+            goulot = min(goulot, capacite[parent[v]][v])
+            v = parent[v]
         v = t
         while v != s:
             u = parent[v]
-            capacite[u][v] -= goulot              # arête directe
-            capacite[v][u] += goulot              # arête inverse
+            capacite[u][v] -= goulot              # arc direct
+            capacite[v][u] += goulot              # arc inverse
             v = u
         flot_total += goulot
     return flot_total
@@ -2841,9 +4083,11 @@ reseau = [[0, 16, 13, 0, 0, 0], [0, 0, 10, 12, 0, 0], [0, 4, 0, 0, 14, 0],
 print(edmonds_karp(reseau, 0, 5))     # 23
 ```
 
-## 22.4 Dinic
+**Pourquoi la terminaison ?** Avec des capacités entières, chaque augmentation accroît le flot d'au moins 1 : le nombre d'étapes est au plus la valeur du flot maximal. Avec BFS, on montre de plus que la distance de `s` à chaque sommet dans le graphe résiduel ne décroît jamais, d'où au plus `O(V·E)` augmentations, chacune en `O(E)`.
 
-Construit un **graphe de niveaux** par BFS, puis envoie un **flot bloquant** par DFS. Beaucoup plus rapide en pratique.
+## 22.4 Algorithme de Dinic
+
+Dinic procède par **phases** : à chaque phase, un BFS construit le **graphe de niveaux** (distance depuis `s` dans le résiduel), puis un DFS envoie un **flot bloquant** (un flot qui sature au moins un arc de chaque chemin) en n'empruntant que les arcs qui montent d'exactement un niveau. Le pointeur `ptr[u]` évite de réexaminer des arcs inutiles. Le nombre de phases est au plus `V`.
 
 ```python
 from collections import deque
@@ -2852,32 +4096,38 @@ class Dinic:
     def __init__(self, n):
         self.n = n
         self.g = [[] for _ in range(n)]            # g[u] = indices d'arêtes
-        self.arete = []                            # [v, capacité] ; arête inverse = indice ^ 1
+        self.arete = []                            # [v, capacité] ; l'arête inverse est à l'indice ^ 1
 
     def ajouter(self, u, v, c):
-        self.g[u].append(len(self.arete)); self.arete.append([v, c])
-        self.g[v].append(len(self.arete)); self.arete.append([u, 0])
+        self.g[u].append(len(self.arete))
+        self.arete.append([v, c])
+        self.g[v].append(len(self.arete))
+        self.arete.append([u, 0])
 
     def _bfs(self, s, t):
-        self.niveau = [-1] * self.n; self.niveau[s] = 0
+        self.niveau = [-1] * self.n
+        self.niveau[s] = 0
         file = deque([s])
         while file:
             u = file.popleft()
             for i in self.g[u]:
                 v, c = self.arete[i]
                 if c > 0 and self.niveau[v] < 0:
-                    self.niveau[v] = self.niveau[u] + 1; file.append(v)
+                    self.niveau[v] = self.niveau[u] + 1
+                    file.append(v)
         return self.niveau[t] >= 0
 
     def _dfs(self, u, t, pousse):
-        if u == t: return pousse
+        if u == t:
+            return pousse
         while self.ptr[u] < len(self.g[u]):
             i = self.g[u][self.ptr[u]]
             v, c = self.arete[i]
             if c > 0 and self.niveau[v] == self.niveau[u] + 1:
                 d = self._dfs(v, t, min(pousse, c))
                 if d > 0:
-                    self.arete[i][1] -= d; self.arete[i ^ 1][1] += d
+                    self.arete[i][1] -= d
+                    self.arete[i ^ 1][1] += d
                     return d
             self.ptr[u] += 1
         return 0
@@ -2897,28 +4147,47 @@ for u, v, c in [(0, 1, 16), (0, 2, 13), (1, 2, 10), (1, 3, 12), (2, 1, 4), (2, 4
 print(d.flot_max(0, 5))               # 23
 ```
 
+L'astuce `indice ^ 1` associe chaque arête à son inverse : les arêtes sont stockées par paires (directe aux indices pairs, inverse aux indices impairs).
+
 ## 22.5 Complexités
 
 | Algorithme | Complexité | Remarque |
 | --- | --- | --- |
-| **Ford-Fulkerson** (DFS) | O(E · f*) (`f*` = flot max, capacités **entières**) | Peut être très lent ; ne se termine pas toujours avec des capacités irrationnelles |
-| **Edmonds-Karp** (BFS) | **O(V · E²)** | Polynomial, indépendant des capacités |
-| **Dinic** | **O(V² · E)** ; **O(E · √V)** sur les réseaux à capacités unitaires (appariements) | Standard en compétition |
-| **Push-relabel** (préflot) | O(V² · √E) (variante « plus haut label ») | Efficace sur graphes denses |
-| **Algorithmes quasi-linéaires** | E^(1+o(1)) | Résultat **théorique** récent (2022) ; non utilisé en pratique |
+| **Ford-Fulkerson** (DFS) | `O(E · f*)` (`f*` : valeur du flot max, capacités **entières**) | Peut être très lent ; ne termine pas toujours avec des capacités irrationnelles |
+| **Edmonds-Karp** (BFS) | **`O(V · E²)`** | Polynomial, indépendant des capacités |
+| **Dinic** | **`O(V² · E)`** ; **`O(E · √V)`** sur les réseaux à capacités unitaires | Standard en compétition |
+| **Push-relabel** (préflot) | `O(V² · √E)` (variante plus haut label) | Efficace sur graphes denses |
+| **Algorithmes quasi-linéaires** | `E^(1+o(1))` | Résultat **théorique** récent (2022) ; non utilisé en pratique |
 
 ## 22.6 Applications
 
 | Problème | Modélisation |
 | --- | --- |
-| **Couplage biparti maximum** | Source → gauche (cap. 1), gauche → droite (cap. 1), droite → puits (cap. 1) ; spécialisé : **Hopcroft-Karp**, O(E√V) |
-| **Coupe minimale** | Après le flot max, sommets atteignables depuis `s` dans le résiduel |
-| **Chemins disjoints** (par arêtes / sommets) | Capacités unitaires (division des sommets) |
-| **Affectation de tâches / ressources**, **planning de matchs** | Flot avec capacités |
-| **Sélection de projets** (profit max avec dépendances) | Coupe minimale |
-| **Flot à coût minimal** | Chemins augmentants **les moins coûteux** (Bellman-Ford / Dijkstra avec potentiels) |
+| **Couplage biparti maximum** | Source vers chaque sommet de gauche (capacité 1), arêtes gauche-droite (capacité 1), chaque sommet de droite vers le puits (capacité 1). Spécialisé : Hopcroft-Karp en `O(E√V)` |
+| **Coupe minimale** | Après le flot max, les sommets atteignables depuis `s` dans le résiduel forment `S` |
+| **Chemins disjoints** (par arêtes ou par sommets) | Capacités unitaires ; pour les sommets, on **divise** chaque sommet en deux (entrée et sortie reliées par un arc de capacité 1) |
+| **Affectation de tâches ou de ressources**, planning de matchs | Flot avec capacités |
+| **Sélection de projets** (profit maximal avec dépendances) | Coupe minimale |
+| **Flot à coût minimal** | Chemins augmentants **de coût minimal** (Bellman-Ford ou Dijkstra avec potentiels) |
 
-> **Limites** : les flots ordinaires ne gèrent pas les **coûts** (flot à coût minimal), les **bornes inférieures** (circulations) ni les **flots entiers multi-produits** (NP-difficile).
+**Théorèmes liés.** Dans un graphe biparti, la taille d'un couplage maximum égale celle d'une couverture par sommets minimale (**théorème de König**). Pour les chemins disjoints, **théorème de Menger** : le nombre maximal de chemins arête-disjoints entre `s` et `t` est la taille d'une coupe minimale.
+
+> **Limites.** Les flots ordinaires ne gèrent pas les **coûts** (flot à coût minimal), les **bornes inférieures** (circulations) ni les **flots entiers multi-produits** (NP-difficile). Si les capacités sont entières, il existe toujours un flot maximal **entier**.
+
+## 22.7 Points à retenir et exercices
+
+**À retenir.**
+
+- Un flot respecte capacités et conservation ; le flot max égale la coupe min.
+- Le graphe résiduel avec arcs inverses permet d'annuler des décisions ; on augmente tant qu'il existe un chemin.
+- Dinic est la référence pratique ; beaucoup de problèmes (couplages, chemins disjoints, coupes) s'y ramènent.
+
+**Exercices.**
+
+1. Calculer à la main un flot maximal sur un petit réseau puis exhiber une coupe minimale de même capacité.
+2. Modéliser comme un flot l'affectation de `n` étudiants à `m` projets avec capacité de chaque projet.
+3. Trouver le nombre maximal de chemins arête-disjoints entre deux sommets.
+4. Expliquer sur un exemple pourquoi l'algorithme glouton qui n'utilise pas d'arcs inverses peut rester bloqué sous l'optimum.
 
 ---
 
@@ -2926,17 +4195,19 @@ print(d.flot_max(0, 5))               # 23
 
 ## 23.1 Le problème
 
-Sur un tableau qui **change**, on veut répondre vite à des **requêtes d'intervalle** (somme, minimum, maximum…) **et** appliquer des **mises à jour**.
+Sur un tableau qui **change** au cours du temps, on veut répondre rapidement à des **requêtes d'intervalle** (somme, minimum, maximum, pgcd…) **et** appliquer des **mises à jour**.
 
 | Approche | Requête | Mise à jour |
 | --- | --- | --- |
-| Tableau brut | O(n) | O(1) |
-| Sommes préfixes | O(1) | O(n) |
-| **Fenwick / arbre de segments** | **O(log n)** | **O(log n)** |
+| Tableau brut | `O(n)` | `O(1)` |
+| Sommes préfixes | `O(1)` | `O(n)` (recalcul) |
+| **Fenwick, arbre de segments** | **`O(log n)`** | **`O(log n)`** |
 
-## 23.2 Arbre de Fenwick (*Binary Indexed Tree*, BIT)
+Le principe commun : précalculer des résumés de **blocs de tailles puissances de 2**, de façon qu'un intervalle quelconque se décompose en `O(log n)` blocs et qu'une modification n'affecte que `O(log n)` résumés.
 
-Idée : chaque case `i` stocke la somme d'un **bloc** dont la taille est donnée par le **bit de poids faible** de `i` (`i & -i`). Court, rapide, mais limité aux opérations **inversibles** (somme, XOR).
+## 23.2 Arbre de Fenwick (*Binary Indexed Tree*)
+
+**Idée.** La case `i` (indices à partir de 1) stocke la somme d'un bloc de longueur égale au **bit de poids faible** de `i`, soit `i & -i`, se terminant en `i` : la case 12 (binaire 1100, bit de poids faible 4) résume les éléments 9 à 12. Pour obtenir la somme du préfixe `[1..i]`, on additionne les blocs obtenus en retirant successivement le bit de poids faible ; pour mettre à jour, on ajoute le delta à tous les blocs contenant `i`, en ajoutant successivement le bit de poids faible.
 
 ```python
 class Fenwick:
@@ -2965,13 +4236,15 @@ for i, v in enumerate([3, 2, -1, 6, 5, 4, -3, 3], start=1):
 print(fen.somme(2, 5))        # 2 - 1 + 6 + 5 = 12
 ```
 
-**Construction O(n log n)** (ou O(n) avec une astuce) · **requête / mise à jour O(log n)** · mémoire O(n).
+**Complexité** : construction `O(n log n)` (ou `O(n)` avec une astuce), requête et mise à jour `O(log n)` (au plus `log n` itérations, puisque chaque pas supprime ou fait avancer un bit), mémoire `O(n)`. Limité aux opérations **inversibles** (somme, XOR) pour obtenir un intervalle par soustraction de deux préfixes.
 
-> Variantes : BIT pour **mise à jour d'intervalle + requête de point** (sur le tableau de différences), BIT 2D, **comptage d'inversions** d'un tableau.
+**Variantes.** BIT pour **mise à jour d'intervalle et requête de point** (en l'appliquant au tableau de différences), BIT en deux dimensions, **comptage d'inversions** (on traite les éléments dans l'ordre et on compte combien d'éléments plus grands ont déjà été insérés), **recherche du k-ième élément** par descente binaire.
 
 ## 23.3 Arbre de segments (*Segment Tree*)
 
-Arbre binaire dont chaque nœud résume un **intervalle** (somme, min, max, pgcd…). Plus général que Fenwick : toute opération **associative**.
+**Idée.** Arbre binaire dont chaque nœud résume un **intervalle** (somme, minimum, maximum, pgcd…) en combinant les résumés de ses deux enfants. Plus général que Fenwick : toute opération **associative** convient (il n'est pas nécessaire qu'elle soit inversible).
+
+Version **ascendante** compacte : les feuilles sont stockées aux indices `n` à `2n-1`, les nœuds internes aux indices `1` à `n-1`, le nœud `i` ayant pour enfants `2i` et `2i+1`.
 
 ```python
 class ArbreSegments:
@@ -2992,9 +4265,14 @@ class ArbreSegments:
     def requete(self, l, r):                     # somme de t[l..r-1]  (r exclu)
         res, l, r = 0, l + self.n, r + self.n
         while l < r:
-            if l & 1: res += self.arbre[l]; l += 1
-            if r & 1: r -= 1; res += self.arbre[r]
-            l //= 2; r //= 2
+            if l & 1:
+                res += self.arbre[l]
+                l += 1
+            if r & 1:
+                r -= 1
+                res += self.arbre[r]
+            l //= 2
+            r //= 2
         return res
 
 seg = ArbreSegments([3, 2, -1, 6, 5, 4, -3, 3])
@@ -3003,16 +4281,16 @@ seg.modifier(2, 10)
 print(seg.requete(1, 5))              # 2 + 10 + 6 + 5 = 23
 ```
 
-Pour un **minimum** : remplacer `+` par `min` et `0` par `float("inf")`. Cette version « ascendante » est compacte et rapide ; la version récursive classique (nœud, `[debut, fin]`) est plus flexible.
+Pour un **minimum**, on remplace `+` par `min` et l'élément neutre `0` par `float("inf")`. Cette version ascendante est compacte et rapide ; la version récursive classique (nœud, intervalle `[debut, fin]`) est plus flexible, notamment pour la propagation paresseuse.
 
-**Construction O(n) · requête et mise à jour O(log n) · mémoire O(n).**
+**Complexité** : construction `O(n)`, requête et mise à jour `O(log n)`, mémoire `O(n)`.
 
 ## 23.4 Propagation paresseuse (*Lazy Propagation*)
 
-Pour des **mises à jour d'intervalle** (« ajouter `v` à `t[l..r]` ») avec requêtes d'intervalle, on **retarde** l'application de la mise à jour : on la stocke dans le nœud (`paresse`) et on ne la **propage** aux enfants que lorsque c'est nécessaire.
+Pour des **mises à jour d'intervalle** (par exemple « ajouter `v` à `t[l..r]` ») combinées à des requêtes d'intervalle, mettre à jour chaque feuille coûterait `O(n)`. On **retarde** l'application : lorsqu'un nœud est entièrement couvert par la mise à jour, on modifie son résumé et on note dans une étiquette `paresse` la mise à jour **en attente** pour ses enfants. On ne **propage** cette étiquette aux enfants que lorsqu'une opération doit descendre plus bas.
 
 ```python
-class ArbreSegmentsParesseux:                    # ajout sur intervalle + somme sur intervalle
+class ArbreSegmentsParesseux:                    # ajout sur intervalle et somme sur intervalle
     def __init__(self, t):
         self.n = len(t)
         self.somme = [0] * (4 * self.n)
@@ -3021,7 +4299,8 @@ class ArbreSegmentsParesseux:                    # ajout sur intervalle + somme 
 
     def _construire(self, noeud, l, r, t):
         if l == r:
-            self.somme[noeud] = t[l]; return
+            self.somme[noeud] = t[l]
+            return
         m = (l + r) // 2
         self._construire(2 * noeud, l, m, t)
         self._construire(2 * noeud + 1, m + 1, r, t)
@@ -3036,10 +4315,12 @@ class ArbreSegmentsParesseux:                    # ajout sur intervalle + somme 
             self.paresse[noeud] = 0
 
     def ajouter(self, noeud, l, r, a, b, v):     # t[a..b] += v ; appel : ajouter(1, 0, n-1, a, b, v)
-        if b < l or r < a: return
+        if b < l or r < a:
+            return
         if a <= l and r <= b:
             self.somme[noeud] += v * (r - l + 1)
-            self.paresse[noeud] += v; return
+            self.paresse[noeud] += v
+            return
         self._pousser(noeud, l, r)
         m = (l + r) // 2
         self.ajouter(2 * noeud, l, m, a, b, v)
@@ -3047,8 +4328,10 @@ class ArbreSegmentsParesseux:                    # ajout sur intervalle + somme 
         self.somme[noeud] = self.somme[2 * noeud] + self.somme[2 * noeud + 1]
 
     def requete(self, noeud, l, r, a, b):        # somme de t[a..b]
-        if b < l or r < a: return 0
-        if a <= l and r <= b: return self.somme[noeud]
+        if b < l or r < a:
+            return 0
+        if a <= l and r <= b:
+            return self.somme[noeud]
         self._pousser(noeud, l, r)
         m = (l + r) // 2
         return self.requete(2 * noeud, l, m, a, b) + self.requete(2 * noeud + 1, m + 1, r, a, b)
@@ -3059,37 +4342,54 @@ print(ap.requete(1, 0, 4, 0, 4))      # 15 + 30 = 45
 print(ap.requete(1, 0, 4, 2, 2))      # 13
 ```
 
+Le nombre de nœuds visités par opération reste `O(log n)` : à chaque niveau, au plus quatre nœuds sont explorés. Pour d'autres opérations (affectation d'une valeur sur un intervalle, minimum avec ajout), il faut définir comment composer deux étiquettes et comment une étiquette modifie un résumé.
+
 ## 23.5 Fenwick ou arbre de segments ?
 
 | Critère | **Fenwick (BIT)** | **Arbre de segments** |
 | --- | --- | --- |
 | Code | Très court | Plus long |
 | Opérations supportées | Somme, XOR (inversibles) | **Toute opération associative** (min, max, pgcd…) |
-| Mise à jour d'intervalle | Limitée (astuce différences) | Oui (propagation paresseuse) |
+| Mise à jour d'intervalle | Limitée (astuce des différences) | Oui (propagation paresseuse) |
 | Constante | **Plus petite** | Plus grande |
-| Mémoire | n | 2n à 4n |
+| Mémoire | `n` | `2n` à `4n` |
 
-## 23.6 Applications
+## 23.6 Structures voisines et applications
 
-- **Sommes / minimums / maximums d'intervalle** avec mises à jour
-- **Comptage d'inversions**, **rangs** (statistiques ordonnées)
-- Calcul de la **plus longue sous-suite croissante** (avec valeurs compressées)
-- **Géométrie** (balayage de ligne), **requêtes hors ligne**, **plus bas ancêtre commun** (variantes)
-- Autres structures voisines : **table creuse** (*sparse table*, min/max statique en O(1)), **arbre de Fenwick 2D**, **racine carrée** (*sqrt decomposition*).
+- **Table creuse** (*sparse table*) : minimum ou maximum **statique** d'un intervalle en `O(1)` après un précalcul en `O(n log n)` (les intervalles de longueur puissance de 2 se recouvrent).
+- **Décomposition en racine carrée** : blocs de taille `√n`, requêtes et mises à jour en `O(√n)`, simple et flexible.
+- **Applications** : sommes, minimums ou maximums d'intervalle avec mises à jour ; comptage d'inversions ; rangs (statistiques d'ordre) ; plus longue sous-suite croissante avec valeurs compressées ; géométrie (balayage de ligne) ; requêtes hors ligne ; plus bas ancêtre commun.
+
+## 23.7 Points à retenir et exercices
+
+**À retenir.**
+
+- Fenwick et arbres de segments offrent requêtes et mises à jour en `O(log n)` sur un tableau dynamique.
+- Fenwick : bit de poids faible, opérations inversibles. Arbre de segments : toute opération associative, propagation paresseuse pour les intervalles.
+- Préfixes pour un tableau figé, ces structures pour un tableau qui change.
+
+**Exercices.**
+
+1. Compter les inversions d'un tableau avec un arbre de Fenwick (compression des valeurs).
+2. Écrire un arbre de segments pour le minimum avec mise à jour ponctuelle.
+3. Implémenter une table creuse et répondre à des requêtes de minimum en `O(1)`.
+4. Adapter l'arbre paresseux pour « affecter la valeur `v` à tout l'intervalle ».
 
 ---
 
 # 24. Algorithmes sur les chaînes
 
-*(Section ajoutée : ces algorithmes figuraient dans la liste « avancé » de l'original sans être détaillés.)*
+## 24.1 Vocabulaire et recherche de motif naïve
 
-## 24.1 Recherche de motif naïve
+Une **chaîne** est une suite de caractères d'un **alphabet**. Une **sous-chaîne** est une portion contiguë ; une **sous-séquence** n'est pas nécessairement contiguë. Un **préfixe** est une sous-chaîne qui commence au début, un **suffixe** une sous-chaîne qui finit à la fin ; une **bordure** est une chaîne qui est à la fois préfixe et suffixe propre (par exemple `ab` pour `abcab`).
 
-On compare le motif à chaque position : **O(n · m)** (texte de longueur `n`, motif de longueur `m`). On améliore en évitant de **réexaminer** des caractères déjà comparés.
+**Problème de la recherche de motif.** Trouver toutes les occurrences d'un motif de longueur `m` dans un texte de longueur `n`.
+
+L'algorithme **naïf** compare le motif à chaque position : `O(n · m)` dans le pire cas (par exemple texte `aaaa…a`, motif `aaab`). On l'améliore en évitant de **réexaminer** des caractères déjà comparés.
 
 ## 24.2 Algorithme de Knuth-Morris-Pratt (KMP)
 
-On précalcule, pour chaque préfixe du motif, la **plus longue bordure** (préfixe qui est aussi suffixe) : c'est le **tableau des préfixes** (`pi`). En cas d'échec, on **saute** au lieu de reculer dans le texte.
+**Idée.** Quand une comparaison échoue après avoir reconnu les `k` premiers caractères du motif, on sait déjà que le texte contient ces `k` caractères. Plutôt que de reculer dans le texte, on réutilise cette information : on se replace au **plus long préfixe du motif qui est aussi suffixe** de la partie reconnue, c'est-à-dire sa plus longue bordure. Le tableau `pi` donne, pour chaque préfixe `motif[:i+1]`, la longueur de sa plus longue bordure.
 
 ```python
 def table_prefixes(motif):
@@ -3097,7 +4397,7 @@ def table_prefixes(motif):
     k = 0
     for i in range(1, len(motif)):
         while k and motif[i] != motif[k]:
-            k = pi[k - 1]
+            k = pi[k - 1]                        # on se replie sur une bordure plus courte
         if motif[i] == motif[k]:
             k += 1
         pi[i] = k
@@ -3112,22 +4412,24 @@ def kmp(texte, motif):                           # positions de toutes les occur
             k += 1
         if k == len(motif):
             positions.append(i - k + 1)
-            k = pi[k - 1]
+            k = pi[k - 1]                        # continuer pour les occurrences chevauchantes
     return positions                              # O(n + m)
 
 print(kmp("abababcabab", "abab"))                 # [0, 2, 7]
-
 print(table_prefixes("abab"))                     # [0, 0, 1, 2]
 ```
 
+**Complexité** : `O(n + m)`. Analyse amortie : `k` augmente d'au plus 1 par caractère du texte, et chaque repli le diminue ; il ne peut donc pas y avoir plus de `n` replis au total. La construction de `pi` suit le même raisonnement, en `O(m)`.
+
 ## 24.3 Algorithme de Rabin-Karp
 
-On compare des **empreintes** (hachage roulant) au lieu de chaînes entières, puis on **vérifie** les candidats.
+**Idée.** On compare des **empreintes** (valeurs de hachage) au lieu de chaînes entières. Avec un **hachage roulant**, l'empreinte de la fenêtre suivante se déduit de la précédente en `O(1)` : on retire le caractère sortant, on décale, on ajoute le caractère entrant. Quand les empreintes coïncident, on **vérifie** par comparaison directe, car des collisions sont possibles.
 
 ```python
 def rabin_karp(texte, motif, base=256, mod=10**9 + 7):
     n, m = len(texte), len(motif)
-    if m > n: return []
+    if m > n:
+        return []
     puissance = pow(base, m - 1, mod)
     h_motif = h_texte = 0
     for i in range(m):
@@ -3135,20 +4437,20 @@ def rabin_karp(texte, motif, base=256, mod=10**9 + 7):
         h_texte = (h_texte * base + ord(texte[i])) % mod
     positions = []
     for i in range(n - m + 1):
-        if h_motif == h_texte and texte[i:i + m] == motif:     # vérification (collisions possibles)
+        if h_motif == h_texte and texte[i:i + m] == motif:      # vérification (collisions possibles)
             positions.append(i)
-        if i < n - m:                                          # fait glisser la fenêtre en O(1)
+        if i < n - m:                                           # fait glisser la fenêtre en O(1)
             h_texte = ((h_texte - ord(texte[i]) * puissance) * base + ord(texte[i + m])) % mod
     return positions
 
 print(rabin_karp("abababcabab", "abab"))          # [0, 2, 7]
 ```
 
-**O(n + m) en moyenne**, O(n · m) au pire (collisions). Très utile pour chercher **plusieurs motifs** ou détecter des **doublons de sous-chaînes**.
+**Complexité** : `O(n + m)` en moyenne, `O(n · m)` au pire (collisions en grand nombre). Très utile pour chercher **plusieurs motifs de même longueur** et pour détecter des **sous-chaînes dupliquées** (on stocke les empreintes dans un ensemble). On choisit un grand module premier, voire un double hachage, pour réduire les collisions.
 
 ## 24.4 Algorithme Z
 
-`Z[i]` = longueur du plus long préfixe de la chaîne commun avec le suffixe commençant en `i`.
+**Définition.** Pour une chaîne `s`, `Z[i]` est la longueur du plus long préfixe de `s` qui coïncide avec le suffixe de `s` commençant en `i` (avec `Z[0] = 0` par convention). L'algorithme maintient une fenêtre `[l, r)` correspondant à la plus longue sous-chaîne déjà reconnue comme préfixe, ce qui permet de **réutiliser** les valeurs déjà calculées et de ne comparer que les nouveaux caractères.
 
 ```python
 def z_algorithme(s):
@@ -3156,23 +4458,26 @@ def z_algorithme(s):
     l = r = 0
     for i in range(1, n):
         if i < r:
-            z[i] = min(r - i, z[i - l])
+            z[i] = min(r - i, z[i - l])               # réutilise l'information de la fenêtre
         while i + z[i] < n and s[z[i]] == s[i + z[i]]:
             z[i] += 1
         if i + z[i] > r:
             l, r = i, i + z[i]
-    return z                                     # O(n)
-# Recherche de motif : z_algorithme(motif + "#" + texte) ; Z[i] == len(motif) → occurrence
+    return z                                          # O(n)
 
-print(z_algorithme("aabxaab"))                     # [0, 1, 0, 0, 3, 1, 0]
+print(z_algorithme("aabxaab"))                        # [0, 1, 0, 0, 3, 1, 0]
+
+# Recherche de motif : on calcule Z sur motif + "#" + texte ; Z[i] == len(motif) signale une occurrence
 motif, texte = "aab", "xaabaab"
 z = z_algorithme(motif + "#" + texte)
 print([i - len(motif) - 1 for i, v in enumerate(z) if v == len(motif)])   # [1, 4]
 ```
 
+Le séparateur `#` (caractère absent des deux chaînes) garantit qu'aucun préfixe ne dépasse la longueur du motif. Même complexité que KMP, `O(n + m)`, avec un code souvent plus simple à retenir. L'algorithme Z permet aussi de calculer les périodes d'une chaîne et de comparer des préfixes.
+
 ## 24.5 Trie (arbre préfixe)
 
-Arbre où chaque arête porte un caractère : insertion et recherche en **O(L)** (longueur du mot), indépendamment du nombre de mots stockés.
+Un **trie** est un arbre dont chaque arête porte un caractère : un chemin de la racine à un nœud lit un préfixe, et un indicateur marque la fin d'un mot. L'insertion et la recherche d'un mot coûtent **`O(L)`** (longueur `L` du mot), indépendamment du nombre de mots stockés. Les mots partageant un préfixe partagent le chemin correspondant.
 
 ```python
 class Trie:
@@ -3190,7 +4495,8 @@ class Trie:
         noeud = self
         for c in prefixe:
             noeud = noeud.enfants.get(c)
-            if noeud is None: return None
+            if noeud is None:
+                return None
         return noeud
 
     def contient(self, mot):
@@ -3203,10 +4509,13 @@ class Trie:
     def completions(self, prefixe):               # tous les mots qui commencent par `prefixe`
         resultat = []
         def parcourir(noeud, chemin):
-            if noeud.fin_de_mot: resultat.append(prefixe + chemin)
-            for c, e in noeud.enfants.items(): parcourir(e, chemin + c)
+            if noeud.fin_de_mot:
+                resultat.append(prefixe + chemin)
+            for c, e in noeud.enfants.items():
+                parcourir(e, chemin + c)
         n = self._noeud(prefixe)
-        if n: parcourir(n, "")
+        if n:
+            parcourir(n, "")
         return resultat
 
 trie = Trie()
@@ -3216,27 +4525,46 @@ print(trie.contient("car"), trie.contient("ca"), trie.commence_par("ch"))   # Tr
 print(sorted(trie.completions("cha")))                                      # ['char', 'chat']
 ```
 
-Usages : **autocomplétion**, correcteurs orthographiques, **routage IP** (trie binaire), recherche de mots dans une grille, dictionnaires, **Aho-Corasick** (recherche simultanée de plusieurs motifs).
+**Usages** : **autocomplétion**, correcteurs orthographiques, **routage IP** (trie binaire sur les bits d'adresse, préfixe le plus long), recherche de mots dans une grille (Boggle), dictionnaires, **Aho-Corasick** (recherche simultanée de plusieurs motifs), tri lexicographique, XOR maximal (trie binaire).
+
+**Compromis.** Mémoire potentiellement importante (un nœud par caractère) ; avec un alphabet grand, on utilise un dictionnaire par nœud (comme ici) plutôt qu'un tableau fixe. Un **trie compressé** (arbre radix) fusionne les chaînes de nœuds à un seul enfant.
 
 ## 24.6 Autres outils
 
 | Outil | Rôle | Complexité |
 | --- | --- | --- |
-| **Manacher** | Plus longs palindromes en tout centre | O(n) |
-| **Tableau des suffixes + LCP** | Recherche de sous-chaînes, plus longue sous-chaîne répétée | O(n log n) à O(n) |
-| **Aho-Corasick** | Plusieurs motifs à la fois | O(n + m + occurrences) |
-| **Distance d'édition** | Similarité (DP, [section 18](#185-problèmes-2d)) | O(nm) |
-| **Hachage polynomial** | Comparaison de sous-chaînes en O(1) après précalcul | O(n) |
+| **Manacher** | Plus longs palindromes centrés en chaque position | `O(n)` |
+| **Tableau des suffixes et tableau LCP** | Recherche de sous-chaînes, plus longue sous-chaîne répétée, comptage de sous-chaînes distinctes | `O(n log n)` à `O(n)` |
+| **Aho-Corasick** | Recherche de plusieurs motifs simultanément (trie plus liens d'échec, généralisation de KMP) | `O(n + m + occurrences)` |
+| **Distance d'édition** | Mesure de similarité (programmation dynamique, chapitre 18) | `O(n · m)` |
+| **Hachage polynomial** | Comparaison de sous-chaînes en `O(1)` après précalcul des hachages de préfixes | Précalcul `O(n)` |
+| **Plus longue sous-chaîne commune** | Tableau des suffixes ou DP | `O(n · m)` en DP |
 
-## 24.7 Comparaison des recherches de motif
+## 24.7 Comparaison des algorithmes de recherche de motif
 
 | Algorithme | Précalcul | Recherche | Remarque |
 | --- | --- | --- | --- |
-| Naïf | — | O(n · m) | Simple, suffisant pour de petits motifs |
-| **KMP** | O(m) | **O(n)** | Garanti, sans hachage |
-| **Rabin-Karp** | O(m) | O(n) moyen | Plusieurs motifs, hachage |
-| **Z** | O(n + m) | O(n) | Simple, polyvalent |
-| `str.find` / `in` (Python) | — | Rapide en pratique | Algorithme optimisé et hybride, à préférer en production |
+| Naïf | Aucun | `O(n · m)` | Simple, suffisant pour de petits motifs |
+| **KMP** | `O(m)` | **`O(n)`** | Garanti, sans hachage |
+| **Rabin-Karp** | `O(m)` | `O(n)` en moyenne | Plusieurs motifs, hachage roulant |
+| **Z** | `O(n + m)` | `O(n)` | Simple, polyvalent |
+| **Boyer-Moore** | `O(m + alphabet)` | Souvent sous-linéaire | Très rapide en pratique pour les longs motifs |
+| `str.find`, `in` (Python) | Aucun | Rapide en pratique | Algorithme hybride optimisé ; à préférer en production |
+
+## 24.8 Points à retenir et exercices
+
+**À retenir.**
+
+- Les algorithmes efficaces évitent de revenir en arrière dans le texte : bordures (KMP), préfixes communs (Z) ou empreintes (Rabin-Karp).
+- Le trie répond aux requêtes de préfixe en temps proportionnel à la longueur du mot.
+- En production, utiliser les fonctions standard (`in`, `find`, `re`) avant de réécrire un algorithme.
+
+**Exercices.**
+
+1. Calculer à la main le tableau `pi` de `abcabcab` et retrouver la période de la chaîne.
+2. Trouver la plus longue sous-chaîne qui est à la fois préfixe et suffixe (bordure maximale) d'une chaîne.
+3. Implémenter l'autocomplétion avec un trie renvoyant les trois suggestions les plus fréquentes.
+4. Détecter la plus longue sous-chaîne répétée avec le hachage polynomial et une recherche binaire sur la longueur.
 
 ---
 
@@ -3246,83 +4574,93 @@ Usages : **autocomplétion**, correcteurs orthographiques, **routage IP** (trie 
 
 | Domaine | Sujets |
 | --- | --- |
-| **Structures de données** | **Décomposition lourde-légère** (*Heavy-Light Decomposition*), **décomposition en centroïdes**, **algorithme de Mo**, structures **persistantes**, arbres d'ondelettes, treaps, arbres à intervalles, **LCA** (ancêtre commun) |
-| **Théorie des nombres** | Restes chinois, indicatrice d'Euler, résidus quadratiques, **FFT / NTT** (multiplication de polynômes) |
-| **Géométrie algorithmique** | **Enveloppe convexe**, balayage de ligne, intersection de segments, paire de points la plus proche |
-| **Théorie des jeux** | Nombres de **Grundy** (Sprague-Grundy), **minimax** et **élagage alpha-bêta** |
-| **Algèbre linéaire** | Exponentiation de matrices, élimination de Gauss |
-| **Combinatoire** | Inclusion-exclusion, nombres de Catalan, Burnside |
-| **Graphes avancés** | Appariement général (Blossom), **2-SAT**, ponts et points d'articulation, flots à coût minimal, circuits eulériens |
+| **Structures de données** | **Décomposition lourde-légère** (*heavy-light decomposition*) pour des requêtes sur des chemins d'arbre ; **décomposition en centroïdes** ; **algorithme de Mo** (requêtes d'intervalle hors ligne en `O((n + q)√n)`) ; structures **persistantes** (conserver toutes les versions) ; arbres d'ondelettes ; **treaps** et arbres équilibrés ; arbres d'intervalles ; **LCA** (plus bas ancêtre commun, par levage binaire ou table d'Euler) |
+| **Théorie des nombres** | Restes chinois, indicatrice d'Euler, résidus quadratiques, logarithme discret, **FFT** et **NTT** (multiplication rapide de polynômes) |
+| **Géométrie algorithmique** | **Enveloppe convexe** (Graham, Andrew), balayage de ligne, intersection de segments, paire de points la plus proche, aire de polygones |
+| **Théorie des jeux** | Nombres de **Grundy** (théorème de Sprague-Grundy pour les jeux impartiaux), **minimax** et **élagage alpha-bêta** |
+| **Algèbre linéaire** | Exponentiation de matrices, élimination de Gauss (modulo un premier ou sur les réels) |
+| **Combinatoire** | Inclusion-exclusion, nombres de Catalan, lemme de Burnside, fonctions génératrices |
+| **Graphes avancés** | Appariement dans un graphe général (Blossom d'Edmonds), **2-SAT**, ponts et points d'articulation, flots à coût minimal, circuits eulériens, couplage biparti pondéré (algorithme hongrois) |
+| **Algorithmes randomisés et en ligne** | Algorithmes de Las Vegas et de Monte Carlo, échantillonnage par réservoir, filtres de Bloom, algorithmes d'approximation en ligne |
 
-## 25.2 Complexité et difficulté : P, NP et au-delà *(ajout)*
+## 25.2 Complexité et difficulté : P, NP et au-delà
+
+La théorie de la complexité classe les **problèmes** (et non les algorithmes) selon les ressources nécessaires pour les résoudre. Elle s'exprime surtout sur des **problèmes de décision** (réponse oui ou non).
 
 | Classe | Signification | Exemples |
 | --- | --- | --- |
-| **P** | Résoluble en temps **polynomial** | Tri, plus courts chemins, flots |
-| **NP** | Une solution proposée se **vérifie** en temps polynomial | Sudoku, SAT, sac à dos |
-| **NP-complet** | Les plus difficiles de NP ; si l'un est dans P, tous le sont | SAT, TSP (décision), coloration, cycle hamiltonien, sac à dos (décision) |
-| **NP-difficile** | Au moins aussi dur que NP | TSP (optimisation) |
+| **P** | Résoluble en temps **polynomial** par un algorithme déterministe | Tri, plus courts chemins, flots, test de primalité |
+| **NP** | Une solution proposée (un **certificat**) se **vérifie** en temps polynomial | Sudoku, SAT, sac à dos (décision), coloration |
+| **NP-complet** | Problèmes de NP les plus difficiles : tout problème de NP s'y **réduit** en temps polynomial. Si l'un est dans P, tous le sont | SAT, 3-SAT, TSP (décision), coloration, cycle hamiltonien, sac à dos (décision), couverture de sommets |
+| **NP-difficile** | Au moins aussi difficile que NP (pas nécessairement dans NP) | TSP (optimisation), problème de l'arrêt |
+
+On a `P ⊆ NP`. La question **P = NP ?** reste ouverte et est l'un des sept problèmes du millénaire. On prouve qu'un problème est NP-difficile par **réduction** : on transforme (en temps polynomial) un problème NP-difficile connu en ce problème. Cette preuve ne dit pas que le problème est insoluble, mais qu'il est improbable d'en trouver une solution polynomiale exacte.
 
 Si un problème est **NP-difficile**, on se tourne vers :
 
-- des algorithmes **exacts exponentiels** raisonnables (DP par masques, retour sur trace avec élagage, *branch & bound*) ;
-- des algorithmes d'**approximation** (garantie sur la qualité) ;
-- des **heuristiques** et **métaheuristiques** (recuit simulé, algorithmes génétiques) ;
-- des **solveurs** (SAT, programmation linéaire en nombres entiers, OR-Tools).
+- des algorithmes **exacts exponentiels** raisonnables : DP par masques de bits, retour sur trace avec élagage, séparation et évaluation (*branch and bound*) ; algorithmes paramétrés (exponentiels seulement en un petit paramètre `k`) ;
+- des algorithmes d'**approximation** avec garantie sur la qualité : par exemple, une couverture de sommets de taille au plus double de l'optimum, ou un TSP métrique approché à un facteur 1,5 (Christofides) ;
+- des **heuristiques** et **métaheuristiques** sans garantie : recuit simulé, algorithmes génétiques, recherche tabou, colonies de fourmis ;
+- des **solveurs** généraux : SAT, programmation linéaire en nombres entiers, bibliothèque OR-Tools.
 
-La question **P = NP ?** reste ouverte.
+Autres classes utiles : **PSPACE** (espace polynomial), **EXPTIME**, **co-NP**, et les classes randomisées **RP** et **BPP**.
 
 ## 25.3 Résumé : quel algorithme pour quel problème ?
 
-| Problème | Technique / algorithme |
-| --- | --- |
-| Chercher dans un tableau trié | Recherche binaire / `bisect` |
-| Trouver une valeur optimale monotone | Recherche binaire sur la réponse |
-| Paires / triplets dans un tableau trié | Deux pointeurs |
-| Sous-tableau / sous-chaîne contigu optimal | Fenêtre glissante |
-| Somme sur un intervalle (statique) | Sommes préfixes |
-| Somme sur un intervalle (dynamique) | Fenwick / arbre de segments |
-| Compter, regrouper, tester l'appartenance | Hachage |
-| Choix localement optimal prouvé | Glouton |
-| Sous-problèmes qui se chevauchent | **Programmation dynamique** |
-| Explorer toutes les configurations avec élagage | Retour sur trace |
-| Plus court chemin, non pondéré | BFS |
-| Plus court chemin, poids ≥ 0 | Dijkstra |
-| Plus court chemin, poids négatifs | Bellman-Ford |
-| Toutes les paires de plus courts chemins | Floyd-Warshall |
-| Dépendances / ordonnancement | Tri topologique |
-| Connecter à coût minimal | Kruskal / Prim |
-| Composantes connexes dynamiques | Union-Find |
-| Cycles dans un graphe orienté, SCC | Tarjan / Kosaraju |
-| Capacité maximale d'un réseau, appariement | Flot maximal (Dinic) |
-| Recherche de motif | KMP, Z, Rabin-Karp |
-| Autocomplétion, préfixes | Trie |
-| Trier | `sorted()` (Timsort) ; comptage / radix si les clés s'y prêtent |
+| Problème | Technique ou algorithme | Chapitre |
+| --- | --- | --- |
+| Chercher dans un tableau trié | Recherche binaire, `bisect` | 6 |
+| Trouver une valeur optimale monotone | Recherche binaire sur la réponse | 15 |
+| Paires ou triplets dans un tableau trié | Deux pointeurs | 12 |
+| Sous-tableau ou sous-chaîne contigu optimal | Fenêtre glissante | 13 |
+| Somme sur un intervalle (statique) | Sommes préfixes | 14 |
+| Somme sur un intervalle (dynamique) | Fenwick, arbre de segments | 23 |
+| Compter, regrouper, tester l'appartenance | Hachage | 17 |
+| Choix localement optimal prouvé | Glouton | 10 |
+| Sous-problèmes qui se chevauchent | **Programmation dynamique** | 18 |
+| Explorer toutes les configurations avec élagage | Retour sur trace | 11 |
+| Plus court chemin, non pondéré | BFS | 19 |
+| Plus court chemin, poids positifs | Dijkstra | 20 |
+| Plus court chemin, poids négatifs | Bellman-Ford | 20 |
+| Toutes les paires de plus courts chemins | Floyd-Warshall | 20 |
+| Dépendances, ordonnancement | Tri topologique | 19 |
+| Connecter à coût minimal | Kruskal, Prim | 19 |
+| Composantes connexes dynamiques | Union-Find | 19 |
+| Cycles dans un graphe orienté, SCC, 2-SAT | Tarjan, Kosaraju | 21 |
+| Capacité maximale d'un réseau, appariement | Flot maximal (Dinic) | 22 |
+| Recherche de motif | KMP, Z, Rabin-Karp | 24 |
+| Autocomplétion, préfixes | Trie | 24 |
+| Trier | `sorted()` (Timsort) ; comptage ou radix si les clés s'y prêtent | 8 |
+| Entiers modulaires, premiers, inverses | Crible, exponentiation rapide, Euclide étendu | 16 |
 
 ## 25.4 Conseils de progression
 
-1. **Maîtrisez les bases** : complexité, tableaux, récursivité, tris, recherche.
-2. **Apprenez les schémas** (deux pointeurs, fenêtre, préfixes, hachage, binaire sur la réponse) : ils couvrent la majorité des problèmes d'entretien.
-3. **Pratiquez régulièrement** : un problème par jour vaut mieux que dix le week-end.
-4. **Écrivez le brute force d'abord**, puis optimisez ; comparez les deux sur des tests aléatoires.
-5. **Analysez** toujours la complexité avant de coder.
-6. **Relisez** vos solutions : pourquoi ça marche ? Quels cas limites ?
-7. **Étudiez** les solutions des autres une fois que vous avez cherché.
+1. **Maîtriser les bases** : complexité, tableaux, récursivité, tris, recherche.
+2. **Apprendre les schémas** (deux pointeurs, fenêtre glissante, préfixes, hachage, recherche binaire sur la réponse) : ils couvrent la majorité des problèmes d'entretien.
+3. **Pratiquer régulièrement** : un problème par jour vaut mieux que dix le week-end.
+4. **Écrire d'abord la solution par force brute**, puis optimiser ; comparer les deux sur des tests aléatoires pour détecter les erreurs.
+5. **Analyser** toujours la complexité avant de coder, en s'aidant des contraintes de l'énoncé.
+6. **Relire** ses solutions : pourquoi cela marche-t-il ? Quels sont les cas limites ?
+7. **Étudier** les solutions des autres une fois qu'on a cherché soi-même.
+8. **Prouver** ses algorithmes (invariant, échange, récurrence) : la preuve révèle les cas qui échappent aux tests.
+9. **Tenir un cahier de patrons** : pour chaque schéma, le code minimal, la complexité et un exemple.
 
 ## 25.5 Ressources
 
-- *Introduction à l'algorithmique* — Cormen, Leiserson, Rivest, Stein (**CLRS**)
-- *The Algorithm Design Manual* — Steven Skiena
-- *Algorithms* — Sedgewick & Wayne (et leur site compagnon)
-- *Competitive Programmer's Handbook* — Antti Laaksonen (gratuit)
-- **cp-algorithms.com** : référence très complète de compétition
-- **LeetCode**, **Codeforces**, **AtCoder**, **Kattis**, **Advent of Code**, **Project Euler**, **France-IOI** (en français)
-- **VisuAlgo** (visualisations animées), **Python Tutor** (exécution pas à pas)
+- *Introduction à l'algorithmique* de Cormen, Leiserson, Rivest et Stein (**CLRS**), la référence académique.
+- *The Algorithm Design Manual* de Steven Skiena, orienté pratique et catalogue de problèmes.
+- *Algorithms* de Sedgewick et Wayne, avec un site compagnon riche en visualisations.
+- *Competitive Programmer's Handbook* d'Antti Laaksonen (gratuit).
+- **cp-algorithms.com** : référence très complète pour la compétition.
+- Plateformes d'entraînement : **LeetCode**, **Codeforces**, **AtCoder**, **Kattis**, **Advent of Code**, **Project Euler**, **France-IOI** (en français).
+- **VisuAlgo** (visualisations animées des structures et algorithmes), **Python Tutor** (exécution pas à pas).
+
+## 25.6 Points à retenir
+
+- Un algorithme se juge sur sa correction (invariant, variant) puis sa complexité asymptotique.
+- Les grands schémas (diviser pour régner, glouton, programmation dynamique, retour sur trace, graphes) couvrent l'essentiel des problèmes ; le choix dépend de la structure du problème et des contraintes.
+- Au-delà de P, la NP-complétude explique pourquoi certains problèmes résistent et oriente vers l'approximation et les heuristiques.
 
 ---
 
-<div align="center">
-
 *Bon voyage au pays des algorithmes !*
-
-</div>
