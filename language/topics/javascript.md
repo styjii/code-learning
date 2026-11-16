@@ -1,18 +1,28 @@
 # JavaScript — Cours complet
 
-*Cours magistral en 25 modules, des variables aux modules, du DOM à l'asynchrone et à Temporal — ECMAScript 2026*
+*Cours magistral et module d'apprentissage exhaustif, fondé sur le plan « JavaScript — Guide complet » — ECMAScript 2026*
 
-## Comment utiliser ce cours
+## Avant de commencer : comment utiliser ce cours
 
-Ce document développe, module par module, le plan « JavaScript — Guide complet ». Chaque module suit la même progression : **définitions** (le vocabulaire exact), **fonctionnement** (ce que fait réellement le langage), **exemples commentés**, **pièges et erreurs fréquentes**, **bonnes pratiques**, puis **points clés** de synthèse.
+Ce cours développe, chapitre par chapitre, l'intégralité du plan en **25 chapitres**, regroupés en sept parties : **Fondations** (1 à 7), **Structures de données** (8 à 11), **Fonctions et abstractions** (12 à 15), **Asynchronisme et réseau** (16 et 17), **Orienté objet et architecture** (18 à 20), **Navigateur** (21 à 23) et **Professionnalisation** (24 et 25).
 
-**Prérequis** : savoir utiliser un éditeur de texte et un navigateur. Aucune expérience de programmation n'est supposée, mais le rythme est soutenu.
+Chaque chapitre suit la même trame : *objectifs d'apprentissage → notions et définitions → exemples de code commentés → pièges fréquents et bonnes pratiques → synthèse*.
 
-**Conventions** : `console.log` affiche un résultat ; `console.error` signale une erreur volontaire (le code fautif est alors dans un `try...catch`). Les exemples s'exécutent dans Node.js ou dans la console du navigateur ; ceux qui touchent au DOM, au stockage ou à la navigation demandent un navigateur ; ceux qui utilisent `fetch` demandent une connexion Internet.
+**Conventions de lecture**
 
-**Méthode de lecture recommandée** : lisez les modules dans l'ordre, exécutez chaque exemple dans la console du navigateur ou dans Node.js, et modifiez-le pour observer le comportement du langage.
+- **(à jour)** : pratique moderne qui remplace une ancienne. **(héritage)** : ancienne approche, encore fréquente dans le code existant. **(ajout)** : fonctionnalité récente du langage, dont la compatibilité est à vérifier (chapitre 25).
+- Le code est écrit en **JavaScript moderne** (ECMAScript 2026). `console.log` affiche un résultat ; `console.error` signale une erreur volontaire (le code fautif est alors dans un `try...catch`).
+- Les exemples s'exécutent dans Node.js ou dans la console du navigateur ; ceux qui touchent au DOM, au stockage ou à la navigation demandent un navigateur ; ceux qui utilisent `fetch` demandent une connexion Internet.
+- Le cours enseigne le JavaScript **actuel** (`let` / `const`, fonctions fléchées, classes, modules, `async` / `await`, `Temporal`) **et** explique l'ancien (`var`, fonctions constructeurs, *callbacks*, `Date`) pour que vous sachiez lire du code existant.
+
+**Parcours conseillé** : lisez les chapitres dans l'ordre (ils se construisent les uns sur les autres), exécutez chaque exemple dans la console du navigateur ou dans Node.js, et modifiez-le pour observer le comportement du langage. Un plan de progression par grands blocs figure en 25.5.
+
+---
+
 
 ## 1. Introduction
+
+**Objectifs d'apprentissage.** Définir JavaScript et situer le langage, sa norme ECMAScript, les moteurs et les environnements d'exécution ; décrire ses caractéristiques (dynamique, faiblement typé, événementiel, à ramasse-miettes) ; exécuter du code dans une page web, dans la console du navigateur et avec Node.js ; maîtriser la syntaxe de base (instructions, expressions, point-virgule et ASI, identifiants, conventions) ; afficher des informations avec `console`.
 
 ### 1.1 Qu'est-ce que JavaScript ?
 
@@ -33,7 +43,7 @@ Ce document développe, module par module, le plan « JavaScript — Guide compl
 | **Faiblement typé** | Le langage convertit implicitement les types dans certaines opérations (`'5' * 2` donne `10`). |
 | **Multi-paradigme** | Il autorise le style impératif, objet (par prototypes) et fonctionnel. |
 | **Fonctions de première classe** | Une fonction est une valeur : on la stocke, la passe en argument, la retourne. |
-| **À événements, non bloquant** | Un seul fil d'exécution, mais les opérations lentes (réseau, minuteries) sont déléguées et leurs résultats traités plus tard (module 16). |
+| **À événements, non bloquant** | Un seul fil d'exécution, mais les opérations lentes (réseau, minuteries) sont déléguées et leurs résultats traités plus tard (chapitre 16). |
 | **Ramasse-miettes** | La mémoire est libérée automatiquement quand une valeur n'est plus atteignable. |
 
 #### Moteur, environnement d'exécution et API
@@ -53,7 +63,7 @@ Conséquence pratique : `document` n'existe pas dans Node.js, et le module `fs` 
 | Mobile et bureau | React Native, Electron, Tauri |
 | Edge / embarqué | Cloudflare Workers, Deno Deploy |
 
-**TypeScript** est un sur-ensemble de JavaScript qui ajoute des types vérifiés avant l'exécution ; il est ensuite converti en JavaScript (module 24).
+**TypeScript** est un sur-ensemble de JavaScript qui ajoute des types vérifiés avant l'exécution ; il est ensuite converti en JavaScript (chapitre 24).
 
 ### 1.2 Exécuter du JavaScript
 
@@ -140,14 +150,41 @@ Règle : **terminez vos instructions par `;`** (ou adoptez un formateur automati
 | `console.time()` / `console.timeEnd()` | Mesure de durée |
 | `console.assert(cond, msg)` | Message seulement si la condition est fausse |
 
-### Points clés du module 1
+### 1.4 Prérequis et environnement de travail
 
-- JavaScript est le langage ; ECMAScript est sa norme ; le moteur l'exécute ; l'environnement fournit les API (DOM, `fetch`, `fs`).
-- Le langage est dynamique, à fonctions de première classe, mono-thread et événementiel.
-- Utilisez `defer` ou `type='module'` pour charger les scripts.
-- Terminez les instructions par `;` et soignez les noms.
+**Connaissances requises**
+
+- Savoir utiliser un **éditeur de texte** et un **navigateur**. Aucune expérience de programmation n'est supposée, mais le rythme est soutenu.
+
+**Outils**
+
+- Un **navigateur** moderne, dont la console (`F12`) sert de terrain d'expérimentation (section 1.2).
+- **Node.js** pour exécuter des fichiers hors du navigateur (section 1.2) ; les outils de qualité et de build sont présentés au chapitre 24.
+- Les exemples qui touchent au DOM, au stockage ou à la navigation demandent un navigateur ; ceux qui utilisent `fetch` demandent une connexion Internet.
+
+### 1.5 Glossaire du chapitre
+
+| Terme | Définition courte |
+| --- | --- |
+| JavaScript | Langage de programmation créé en 1995, implémentation la plus connue d'ECMAScript |
+| ECMAScript (ES) | Norme ECMA-262 qui définit le langage ; une édition par an depuis 2015 |
+| TC39 | Comité qui pilote l'évolution du langage ; une proposition franchit les stades 0 à 4 |
+| Moteur | Programme qui exécute le langage (V8, SpiderMonkey, JavaScriptCore) |
+| Environnement hôte | Navigateur, Node.js… : il fournit les API qui ne font pas partie du langage (`document`, `fs`) |
+| JIT | Compilation en code machine pendant l'exécution, avec optimisation des parties les plus utilisées |
+| Expression / instruction | Une expression **produit une valeur** ; une instruction **fait quelque chose** |
+| ASI | Insertion automatique de points-virgules par le moteur |
+| Ramasse-miettes | Libération automatique de la mémoire des valeurs qui ne sont plus atteignables |
+
+### Synthèse du chapitre 1
+
+JavaScript est le **langage**, ECMAScript sa **norme**, le **moteur** l'exécute et l'**environnement** (navigateur, Node.js) fournit les API (`document`, `fetch`, `fs`). Dynamique, à fonctions de première classe, **mono-thread** et événementiel, il se charge avec **`defer`** ou **`type='module'`**. Terminez vos instructions par `;` et soignez vos noms.
+
+---
 
 ## 2. Variables et portée
+
+**Objectifs d'apprentissage.** Déclarer des variables avec `const`, `let` et `var` et choisir la bonne ; comprendre la portée de bloc, la portée de fonction et la chaîne de portées ; expliquer le hoisting et la zone morte temporelle ; utiliser l'affectation par décomposition de tableaux et d'objets ; appliquer les bonnes pratiques de déclaration.
 
 ### 2.1 Déclarer une variable
 
@@ -164,7 +201,7 @@ let total = 0;         // déclaration + initialisation
 
 | Mot-clé | Portée | Réaffectation | Redéclaration | Hoisting |
 | --- | --- | --- | --- | --- |
-| `var` *(ancien)* | Fonction | Oui | Oui | Remontée, valeur `undefined` |
+| `var` *(héritage)* | Fonction | Oui | Oui | Remontée, valeur `undefined` |
 | `let` | **Bloc** | Oui | Non | Remontée, mais en **zone morte temporelle** |
 | `const` | **Bloc** | Non | Non | Idem `let` |
 
@@ -185,7 +222,7 @@ utilisateur.nom = 'Bob';          // autorisé : l'objet est modifiable
 console.log(utilisateur);         // { nom: 'Bob' }
 ```
 
-**Point essentiel** : `const` interdit de **réaffecter le nom**, pas de **modifier le contenu** d'un objet ou d'un tableau. Pour rendre un objet immuable (superficiellement), on utilise `Object.freeze` (module 9).
+**Point essentiel** : `const` interdit de **réaffecter le nom**, pas de **modifier le contenu** d'un objet ou d'un tableau. Pour rendre un objet immuable (superficiellement), on utilise `Object.freeze` (chapitre 9).
 
 **Pourquoi éviter `var` ?** Il n'a pas de portée de bloc, autorise les redéclarations silencieuses et crée des propriétés sur l'objet global. Ses défauts ont motivé l'invention de `let` et `const`.
 
@@ -238,7 +275,7 @@ console.log(niveau);              // 'global'
 
 #### Variables globales implicites
 
-Affecter un nom jamais déclaré (`x = 10;`) crée en mode sloppy une **variable globale accidentelle** ; en mode strict, c'est une `ReferenceError` (module 15). Déclarez toujours vos variables.
+Affecter un nom jamais déclaré (`x = 10;`) crée en mode sloppy une **variable globale accidentelle** ; en mode strict, c'est une `ReferenceError` (chapitre 15). Déclarez toujours vos variables.
 
 ### 2.3 Hoisting et zone morte temporelle (TDZ)
 
@@ -318,14 +355,15 @@ afficher({ nom: 'Bob' });          // 'Bob a 18 ans'
 - Ne déclarez pas de `let`/`const` directement dans un `case` sans accolades : tous les `case` partagent le même bloc. Écrivez `case 1: { const x = 1; break; }`.
 - Erreur classique : croire que `const` rend un objet immuable.
 
-### Points clés du module 2
+### Synthèse du chapitre 2
 
-- `const` par défaut, `let` si réaffectation, pas de `var`.
-- `let`/`const` ont une portée de bloc ; `var` une portée de fonction.
-- Hoisting : les déclarations sont connues dès le début de la portée ; `let`/`const` sont en TDZ avant leur ligne.
-- La décomposition extrait des valeurs par position (tableaux) ou par nom (objets), avec défauts, renommage et reste.
+Par défaut, **`const`** ; **`let`** si la valeur doit être réaffectée ; **pas de `var`**. `let` et `const` ont une **portée de bloc**, `var` une portée de fonction. Le **hoisting** rend les déclarations connues dès le début de la portée, mais `let` et `const` restent en **zone morte (TDZ)** avant leur ligne. La **décomposition** extrait des valeurs par position (tableaux) ou par nom (objets), avec valeurs par défaut, renommage et reste.
+
+---
 
 ## 3. Types de valeurs
+
+**Objectifs d'apprentissage.** Distinguer les types primitifs et les références ; copier un objet de façon superficielle ou profonde ; utiliser `typeof` et connaître ses limites ; maîtriser les conversions, la coercition implicite et les valeurs *falsy* ; choisir le bon test d'égalité.
 
 ### 3.1 Primitifs et références
 
@@ -377,7 +415,7 @@ const partage = Symbol.for('app.cle');    // registre global : même symbole pou
 console.log(partage === Symbol.for('app.cle'));   // true
 ```
 
-Les **symboles bien connus** (`Symbol.iterator`, `Symbol.toPrimitive`, `Symbol.hasInstance`…) permettent de personnaliser le comportement du langage (modules 13, 18 et 19).
+Les **symboles bien connus** (`Symbol.iterator`, `Symbol.toPrimitive`, `Symbol.hasInstance`…) permettent de personnaliser le comportement du langage (chapitres 13, 18 et 19).
 
 #### Les objets enveloppes (*wrappers*)
 
@@ -487,15 +525,15 @@ console.log('' == 0, '0' == false, [] == false);   // true true true : à évite
 
 Un quatrième algorithme, **SameValueZero**, est utilisé par `Array.prototype.includes`, `Map` et `Set` : comme `===` mais `NaN` égale `NaN` (d'où `[NaN].includes(NaN)` vrai alors que `[NaN].indexOf(NaN)` vaut `-1`).
 
-### Points clés du module 3
+### Synthèse du chapitre 3
 
-- Huit types : sept primitifs (immuables, par valeur) et l'objet (mutable, par référence).
-- `typeof null` vaut `'object'` : bug historique ; utilisez `Array.isArray` pour les tableaux.
-- Copie superficielle (`...`, `Object.assign`) ≠ copie profonde (`structuredClone`).
-- Huit valeurs falsy ; tout le reste est truthy.
-- Utilisez `===`, `Number.isNaN` et `Object.is` selon le besoin.
+Il existe **huit types** : sept **primitifs** (immuables, copiés par valeur) et l'**objet** (mutable, par référence). `typeof null` vaut `'object'` (bug historique) : utilisez `Array.isArray` pour les tableaux. Une copie **superficielle** (`...`, `Object.assign`) n'est pas une copie **profonde** (`structuredClone`). Huit valeurs sont *falsy*, toutes les autres sont *truthy*. Choisissez `===`, `Number.isNaN` ou `Object.is` selon le besoin.
+
+---
 
 ## 4. Opérateurs
+
+**Objectifs d'apprentissage.** Maîtriser les opérateurs arithmétiques, d'affectation, de comparaison et logiques ; utiliser le court-circuit, la fusion nulle `??`, le chaînage optionnel `?.` et les affectations logiques ; connaître les opérateurs bit à bit, de type et d'appartenance, ainsi que le ternaire ; lire la priorité des opérateurs.
 
 ### 4.1 Vocabulaire
 
@@ -577,7 +615,7 @@ console.log(null >= 0, null == 0);        // true false
 console.log(NaN < 1, NaN > 1, NaN === NaN);   // false false false
 ```
 
-Pour l'égalité (`===`, `==`, `Object.is`), voir le module 3. Pour trier des textes accentués, utilisez `localeCompare` (module 5).
+Pour l'égalité (`===`, `==`, `Object.is`), voir le chapitre 3. Pour trier des textes accentués, utilisez `localeCompare` (chapitre 5).
 
 ### 4.5 Opérateurs logiques et court-circuit
 
@@ -720,14 +758,15 @@ Ordre approximatif, du plus prioritaire au moins prioritaire :
 - Limiter les ternaires imbriqués et les effets de bord dans les expressions (`a[i++] = b[--j]`).
 - Parenthéser les expressions mixtes pour exprimer l'intention.
 
-### Points clés du module 4
+### Synthèse du chapitre 4
 
-- `&&` et `||` renvoient un opérande et court-circuitent ; `??` ne réagit qu'à `null` et `undefined`.
-- `?.` évite les erreurs sur chaînes de propriétés potentiellement absentes.
-- `%` est un reste (signe du dividende) ; `**` est associatif à droite.
-- Les opérateurs bit à bit travaillent sur 32 bits.
+`&&` et `||` renvoient un **opérande** et court-circuitent ; `??` ne réagit qu'à `null` et `undefined` ; `?.` évite les erreurs sur les chaînes de propriétés potentiellement absentes. `%` est un **reste** (signe du dividende) et `**` est associatif à droite. Les opérateurs **bit à bit** travaillent sur 32 bits.
+
+---
 
 ## 5. Chaînes de caractères
+
+**Objectifs d'apprentissage.** Déclarer des chaînes (guillemets, gabarits, gabarits étiquetés) ; comprendre l'immutabilité et l'encodage UTF-16 (unités, points de code, graphèmes) ; utiliser les méthodes principales ; comparer et trier des textes selon la langue ; construire des chaînes efficacement.
 
 ### 5.1 Déclarer des chaînes
 
@@ -843,7 +882,7 @@ Formes de normalisation : **NFC** (composée, la plus utilisée), **NFD** (déco
 | `at(i)` | Caractère (négatifs acceptés) |
 | `localeCompare()` | Comparaison selon la langue |
 | `normalize()` | Normalisation Unicode |
-| `match()` / `matchAll()` / `search()` | Expressions régulières (module 11) |
+| `match()` / `matchAll()` / `search()` | Expressions régulières (chapitre 11) |
 | `isWellFormed()` / `toWellFormed()` | Validité Unicode (ES2024) |
 
 ```javascript
@@ -903,14 +942,15 @@ console.log(['a', 'b', 'c'].join('-'));   // 'a-b-c'
 - Ne supposez pas qu'un « caractère » vaut une unité : utilisez l'itération (`for...of`, `[...s]`) ou `Intl.Segmenter`.
 - Ne construisez jamais du HTML ou du SQL en concaténant des saisies utilisateur (injection) : échappez ou utilisez des requêtes paramétrées.
 
-### Points clés du module 5
+### Synthèse du chapitre 5
 
-- Les chaînes sont immuables, en UTF-16 ; `length` compte des unités, pas des graphèmes.
-- Les gabarits permettent interpolation, multiligne et gabarits étiquetés.
-- `slice` est la méthode d'extraction à privilégier ; `replaceAll` ou regex `g` pour remplacer partout.
-- Tri et comparaison linguistiques : `localeCompare` / `Intl.Collator`.
+Les chaînes sont **immuables** et en **UTF-16** : `length` compte des unités, pas des graphèmes. Les **gabarits** permettent interpolation, multiligne et gabarits étiquetés. Préférez `slice` pour extraire, `replaceAll` ou une regex `g` pour remplacer partout, et `localeCompare` / `Intl.Collator` pour trier selon la langue.
+
+---
 
 ## 6. Nombres et `Math`
+
+**Objectifs d'apprentissage.** Comprendre le type `number` (flottant 64 bits) et ses pièges de précision ; utiliser les méthodes de `Number`, `BigInt` et l'objet `Math` ; formater les nombres selon la langue avec `Intl.NumberFormat`.
 
 ### 6.1 Le type `number`
 
@@ -1053,18 +1093,19 @@ Pour de nombreux appels, **créez le formateur une seule fois** et réutilisez-l
 - Gardez `Number.isSafeInteger` en tête pour les identifiants numériques ; basculez en `BigInt` ou en chaînes au-delà de 2⁵³.
 - Indiquez toujours la base en lecture : `parseInt(texte, 10)`.
 
-### Points clés du module 6
+### Synthèse du chapitre 6
 
-- Un seul type numérique (flottant 64 bits) + `BigInt` pour les grands entiers.
-- `0.1 + 0.2 !== 0.3` : c'est la nature des flottants, pas un bug de JavaScript.
-- `toFixed` renvoie une chaîne ; `Math.round` arrondit les demis vers +∞.
-- `Intl.NumberFormat` gère devises, pourcentages et unités selon la langue.
+JavaScript n'a qu'**un type numérique** (flottant 64 bits), complété par `BigInt` pour les grands entiers. `0.1 + 0.2 !== 0.3` est la nature des flottants, pas un bug du langage. `toFixed` renvoie une **chaîne**, `Math.round` arrondit les demis vers +∞, et `Intl.NumberFormat` gère devises, pourcentages et unités selon la langue.
+
+---
 
 ## 7. Conditions et boucles
 
+**Objectifs d'apprentissage.** Écrire des structures conditionnelles (`if`, `switch`, ternaire, tables de correspondance) ; choisir la boucle adaptée (`for`, `while`, `for...of`, `for...in`) ; contrôler le déroulement avec `break`, `continue` et les étiquettes ; combiner boucles et asynchronisme.
+
 ### 7.1 Les structures conditionnelles
 
-Une **condition** oriente l'exécution selon qu'une expression est *truthy* ou *falsy* (module 3). L'expression n'a pas besoin d'être un booléen : le moteur la convertit.
+Une **condition** oriente l'exécution selon qu'une expression est *truthy* ou *falsy* (chapitre 3). L'expression n'a pas besoin d'être un booléen : le moteur la convertit.
 
 ```javascript
 const note = 14;
@@ -1128,7 +1169,7 @@ switch (true) {
 
 #### Opérateurs conditionnels et tables de correspondance
 
-Le ternaire et les opérateurs logiques (module 4) conviennent aux cas simples. Pour de nombreuses branches associées à des **clés fixes**, une table de correspondance est plus lisible et extensible :
+Le ternaire et les opérateurs logiques (chapitre 4) conviennent aux cas simples. Pour de nombreuses branches associées à des **clés fixes**, une table de correspondance est plus lisible et extensible :
 
 ```javascript
 const ajouter = () => console.log('Ajout');
@@ -1151,7 +1192,7 @@ Une **boucle** répète un bloc tant qu'une condition est vraie ou pour chaque �
 | `do...while` | Au moins une exécution (condition testée **après**) |
 | `for...of` | **Valeurs** d'un itérable (tableau, chaîne, `Map`, `Set`, générateur) : à privilégier |
 | `for...in` | **Clés** énumérables d'un objet (héritées comprises) : à éviter sur les tableaux |
-| `for await...of` | Itérables asynchrones (module 13) |
+| `for await...of` | Itérables asynchrones (chapitre 13) |
 
 #### `for`
 
@@ -1169,7 +1210,7 @@ for (;;) { if (++k > 2) break; }
 console.log(k);   // 3
 ```
 
-Avec `let`, **une nouvelle variable est créée à chaque itération** : les fermetures créées dans la boucle capturent donc chacune leur propre valeur (voir le module 12).
+Avec `let`, **une nouvelle variable est créée à chaque itération** : les fermetures créées dans la boucle capturent donc chacune leur propre valeur (voir le chapitre 12).
 
 #### `while` et `do...while`
 
@@ -1258,14 +1299,17 @@ const attendre = (ms) => new Promise((r) => setTimeout(r, ms));
 - Évitez de calculer `tableau.length` coûteux dans la condition si la structure n'est pas un tableau simple.
 - Piège : `for (let i = 0; i <= tableau.length; i++)` lit un indice de trop (`undefined`).
 
-### Points clés du module 7
+### Synthèse du chapitre 7
 
-- `if` / `else`, `switch` (`===`, `break`), ternaire et table de correspondance règlent les branchements.
-- `for...of` itère les valeurs, `for...in` les clés énumérables (héritées incluses).
-- `break`, `continue` et les étiquettes contrôlent le flux ; `forEach` ne les supporte pas.
-- En asynchrone : `for...of` + `await` pour le séquentiel, `Promise.all` pour le parallèle.
+`if` / `else`, `switch` (comparaison `===`, `break`), le **ternaire** et les **tables de correspondance** règlent les branchements. `for...of` itère les **valeurs**, `for...in` les clés énumérables (héritées incluses). `break`, `continue` et les étiquettes contrôlent le flux, ce que `forEach` ne permet pas. En asynchrone : `for...of` avec `await` pour le séquentiel, `Promise.all` pour le parallèle.
+
+---
+
+# Partie II — Structures de données
 
 ## 8. Tableaux
+
+**Objectifs d'apprentissage.** Comprendre la nature d'un tableau ; ajouter, retirer et modifier des éléments en distinguant méthodes mutantes et non mutantes ; parcourir un tableau avec les méthodes d'ordre supérieur (`map`, `filter`, `reduce`…) ; copier avec spread, rest et décomposition ; manipuler des tableaux d'objets ; connaître les tableaux typés.
 
 ### 8.1 Nature d'un tableau
 
@@ -1482,14 +1526,15 @@ console.log(octets);   // Uint8Array [10, 255, 0, 255] : valeurs ramenées modul
 - `map` doit **renvoyer une valeur** ; pour des effets de bord, utilisez `forEach` ou `for...of`.
 - Chaînez les méthodes avec modération : lisibilité d'abord.
 
-### Points clés du module 8
+### Synthèse du chapitre 8
 
-- Un tableau est un objet ordonné, indexé à partir de 0, à longueur dynamique.
-- `push`, `pop`, `splice`, `sort`, `reverse` **mutent** ; `slice`, `concat`, `toSorted`, `with` non.
-- `map`, `filter`, `reduce`, `find`, `some`, `every`, `flat`, `flatMap` forment la boîte à outils fonctionnelle.
-- `sort()` sans comparateur trie en ordre alphabétique : fournissez `(a, b) => a - b` pour les nombres.
+Un tableau est un **objet ordonné**, indexé à partir de 0, de longueur dynamique. `push`, `pop`, `splice`, `sort` et `reverse` **mutent** ; `slice`, `concat`, `toSorted` et `with` non. `map`, `filter`, `reduce`, `find`, `some`, `every`, `flat` et `flatMap` forment la boîte à outils fonctionnelle. `sort()` sans comparateur trie par ordre alphabétique : fournissez `(a, b) => a - b` pour les nombres.
+
+---
 
 ## 9. Objets, `Map` et `Set`
+
+**Objectifs d'apprentissage.** Créer et manipuler des objets (propriétés, descripteurs, méthodes utilitaires) et contrôler leur mutabilité ; utiliser `Map` et `Set` ; connaître `WeakMap`, `WeakSet` et `WeakRef` ; choisir la structure de données adaptée.
 
 ### 9.1 Les objets
 
@@ -1519,7 +1564,7 @@ console.log(personne.saluer());             // 'Bonjour, je suis Alice'
 | Manière | Exemple | Remarque |
 | --- | --- | --- |
 | Littéral | `{ a: 1 }` | La plus courante |
-| Constructeur de classe / fonction | `new Personne('A')` | Modules 18 et 19 |
+| Constructeur de classe / fonction | `new Personne('A')` | Chapitres 18 et 19 |
 | `Object.create(proto)` | `Object.create(null)` | Choisit le prototype |
 | Fabrique | `creerPersonne('A')` | Fonction qui renvoie un objet |
 
@@ -1703,14 +1748,15 @@ console.log(meta.get(element), meta.has(element));   // { clics: 1 } true
 | Cache ou métadonnées liés à des objets | `WeakMap` |
 | Numérique homogène volumineux | Tableau typé |
 
-### Points clés du module 9
+### Synthèse du chapitre 9
 
-- Un objet est un ensemble de paires clé → valeur ; `const` ne le rend pas immuable, `Object.freeze` le fige superficiellement.
-- `in` teste les clés héritées, `Object.hasOwn` les clés propres.
-- `Map` : clés de tout type, ordre garanti, `size`. `Set` : valeurs uniques, opérations ensemblistes.
-- `WeakMap` et `WeakSet` évitent les fuites mémoire en retenant leurs clés faiblement.
+Un objet est un ensemble de paires **clé → valeur** ; `const` ne le rend pas immuable et `Object.freeze` ne le fige que superficiellement. `in` teste les clés héritées, `Object.hasOwn` les clés propres. `Map` accepte des clés de tout type, garantit l'ordre et expose `size` ; `Set` stocke des valeurs uniques et offre des opérations ensemblistes. `WeakMap` et `WeakSet` évitent les fuites mémoire en retenant leurs clés faiblement.
+
+---
 
 ## 10. `globalThis`
+
+**Objectifs d'apprentissage.** Désigner l'objet global avec `globalThis` ; reconnaître les cas d'usage légitimes (détection de fonctionnalités, polyfills) ; connaître les règles précises des variables globales ; éviter les pièges.
 
 ### 10.1 L'objet global et ses noms
 
@@ -1765,13 +1811,15 @@ On teste l'existence avec `typeof` (qui ne lève pas d'erreur pour un nom inconn
 - Ne modifiez pas les objets natifs (`Array.prototype.maMethode = ...`) : risque de conflits avec de futures normes. Un polyfill ne doit s'activer que si la fonctionnalité est absente.
 - Ne stockez pas de secrets ni d'état applicatif dans des globales accessibles depuis la console.
 
-### Points clés du module 10
+### Synthèse du chapitre 10
 
-- `globalThis` est le nom unique et standard de l'objet global.
-- Utilisez-le pour la détection de fonctionnalités et les polyfills, pas pour stocker des variables.
-- `var` global devient propriété de `globalThis` ; `let` / `const` et les modules n'y touchent pas.
+`globalThis` est le nom **unique et standard** de l'objet global. Utilisez-le pour la détection de fonctionnalités et les polyfills, pas pour stocker des variables. Un `var` global devient une propriété de `globalThis` ; `let`, `const` et les modules n'y touchent pas.
+
+---
 
 ## 11. Expressions régulières
+
+**Objectifs d'apprentissage.** Définir une expression régulière ; maîtriser la syntaxe (classes, ancres, quantificateurs, groupes) et les drapeaux ; utiliser les méthodes de recherche et de remplacement ; exploiter groupes de capture, anticipations et rétrospections ; écrire des expressions utiles ; éviter les risques de performance et de ReDoS.
 
 ### 11.1 Qu'est-ce qu'une expression régulière ?
 
@@ -1937,14 +1985,17 @@ Certains motifs imbriqués (`(a+)+$`) subissent un **retour arrière catastrophi
 - N'analysez pas de HTML ou de JSON avec des regex : utilisez un analyseur (`DOMParser`, `JSON.parse`).
 - Utilisez `u` (ou `v`) dès que le texte peut contenir des caractères non ASCII.
 
-### Points clés du module 11
+### Synthèse du chapitre 11
 
-- Une regex décrit un motif ; elle se crée par littéral ou `new RegExp`.
-- Quantificateurs gourmands par défaut, paresseux avec `?`.
-- Groupes nommés, références arrière, anticipations et rétrospections permettent des extractions précises.
-- Attention à `lastIndex` avec `g` et au ReDoS.
+Une regex décrit un **motif**, créé par littéral ou par `new RegExp`. Les quantificateurs sont **gourmands** par défaut, **paresseux** avec `?`. Groupes nommés, références arrière, anticipations et rétrospections permettent des extractions précises. Attention à `lastIndex` avec le drapeau `g` et au **ReDoS**.
+
+---
+
+# Partie III — Fonctions et abstractions
 
 ## 12. Fonctions, portée et fermetures
+
+**Objectifs d'apprentissage.** Définir des fonctions (déclaration, expression, fléchée) ; maîtriser paramètres, valeur de retour et portée lexicale ; comprendre les fermetures ; contrôler `this` avec `call`, `apply` et `bind` ; utiliser fonctions d'ordre supérieur, curryfication, composition, IIFE, récursivité et mémoïsation ; documenter avec JSDoc.
 
 ### 12.1 Qu'est-ce qu'une fonction ?
 
@@ -1987,8 +2038,8 @@ console.log(additionner(2, 3), soustraire(5, 3), multiplier(4, 3), carre(5), cre
 ```javascript
 const objet = {
     methode() { return 'méthode courte'; },
-    async chargement() { return 1; },       // fonction asynchrone (module 16)
-    *generateur() { yield 1; },             // générateur (module 13)
+    async chargement() { return 1; },       // fonction asynchrone (chapitre 16)
+    *generateur() { yield 1; },             // générateur (chapitre 13)
 };
 console.log(objet.methode());
 console.log(additionner.name, additionner.length);   // 'additionner' 2 : nom et nombre de paramètres sans valeur par défaut
@@ -2166,7 +2217,7 @@ console.log(composer(x => x * 2, x => x + 1)(5));   // 12 : x + 1 d'abord
 
 Une fonction est **pure** si, pour les mêmes arguments, elle renvoie toujours le même résultat et ne modifie rien d'extérieur (pas d'écriture globale, pas d'E/S, pas de mutation de ses arguments). Les fonctions pures sont faciles à tester, à mettre en cache et à combiner. Isolez les **effets de bord** (réseau, DOM, console) dans quelques endroits bien identifiés.
 
-### 12.8 Fonctions immédiatement invoquées (IIFE)
+### 12.8 Fonctions immédiatement invoquées (IIFE) *(héritage)*
 
 ```javascript
 (function () {
@@ -2244,14 +2295,15 @@ Les éditeurs exploitent JSDoc pour l'autocomplétion, et TypeScript peut le vé
 - Préférez les fléchées pour les callbacks, les fonctions classiques ou méthodes courtes pour les méthodes d'objet.
 - Évitez `arguments` : utilisez `...reste`.
 
-### Points clés du module 12
+### Synthèse du chapitre 12
 
-- Trois formes : déclaration (hoistée), expression, fléchée (`this` lexical).
-- Portée lexicale : une fonction voit les variables de l'endroit où elle est **écrite**.
-- Une fermeture garde vivantes les variables de sa portée d'origine ; elle permet l'état privé et les fabriques.
-- `this` dépend de l'appel ; `call`, `apply` et `bind` le fixent explicitement.
+Une fonction se définit de trois façons : **déclaration** (hoistée), **expression** ou **fléchée** (`this` lexical). La **portée lexicale** fait voir à une fonction les variables de l'endroit où elle est **écrite**. Une **fermeture** garde vivantes les variables de sa portée d'origine : état privé, fabriques. `this` dépend de l'appel ; `call`, `apply` et `bind` le fixent explicitement.
+
+---
 
 ## 13. Itérateurs et générateurs
+
+**Objectifs d'apprentissage.** Comprendre le protocole d'itération ; écrire des générateurs ; utiliser les assistants d'itérateurs ; traiter des flux asynchrones avec les générateurs asynchrones et `for await...of`.
 
 ### 13.1 Le protocole d'itération
 
@@ -2352,7 +2404,7 @@ const arbre = { valeur: 1, enfants: [{ valeur: 2 }, { valeur: 3, enfants: [{ val
 console.log([...parcourir(arbre)]);   // [1, 2, 3, 4]
 ```
 
-### 13.3 Assistants d'itérateurs (ES2025)
+### 13.3 Assistants d'itérateurs (ES2025) *(ajout)*
 
 Les itérateurs disposent de méthodes **paresseuses** analogues à celles des tableaux : `map`, `filter`, `take`, `drop`, `flatMap` (renvoient des itérateurs), et `toArray`, `reduce`, `forEach`, `some`, `every`, `find` (consomment). `Iterator.from(itérable)` enveloppe n'importe quel itérable. Chaque valeur traverse toute la chaîne **une à une** : aucun tableau intermédiaire, et la production s'arrête dès que le consommateur a ce qu'il faut.
 
@@ -2400,14 +2452,15 @@ Exemples réels : lecture d'un `ReadableStream` (`for await (const bloc of repon
 - Dans `for await...of`, les itérations sont **séquentielles** ; pour paralléliser, collectez les promesses et utilisez `Promise.all`.
 - Gérez les erreurs : une exception levée dans un générateur se propage au consommateur.
 
-### Points clés du module 13
+### Synthèse du chapitre 13
 
-- Itérable = `[Symbol.iterator]()` ; itérateur = `next()` → `{ value, done }`.
-- Un générateur (`function*`, `yield`) est un itérateur paresseux, suspendable et bidirectionnel.
-- Les assistants d'itérateurs (`map`, `filter`, `take`…) chaînent des traitements sans tableaux intermédiaires.
-- `async function*` et `for await...of` traitent des flux asynchrones.
+Un **itérable** expose `[Symbol.iterator]()` ; un **itérateur** expose `next()` et renvoie `{ value, done }`. Un **générateur** (`function*`, `yield`) est un itérateur paresseux, suspendable et bidirectionnel. Les **assistants d'itérateurs** (`map`, `filter`, `take`…) chaînent des traitements sans tableaux intermédiaires, et `async function*` avec `for await...of` traite des flux asynchrones.
+
+---
 
 ## 14. `eval` et ses alternatives
+
+**Objectifs d'apprentissage.** Expliquer ce que fait `eval` ; comprendre pourquoi l'éviter ; choisir une alternative sûre selon le besoin ; reconnaître les cas où on le rencontre.
 
 ### 14.1 Qu'est-ce que `eval` ?
 
@@ -2480,13 +2533,15 @@ console.log(handlers['saluer']('Alice'));
 
 `eval` reste présent dans des outils de développement (consoles, REPL, hot reload), des moteurs de templates anciens et du code hérité. Dans une application neuve, vous n'en avez presque jamais besoin.
 
-### Points clés du module 14
+### Synthèse du chapitre 14
 
-- `eval` exécute une chaîne comme du code : dangereux (injection), lent, incompatible avec une CSP stricte.
-- `new Function` partage les mêmes risques ; `eval` indirecte s'exécute en portée globale.
-- Alternatives : `JSON.parse`, tables de fonctions, accès par crochets, `import()`, bibliothèques d'analyse.
+`eval` exécute une chaîne comme du code : **dangereux** (injection), lent et incompatible avec une CSP stricte. `new Function` partage les mêmes risques ; une `eval` indirecte s'exécute en portée globale. Préférez les alternatives : `JSON.parse`, tables de fonctions, accès par crochets, `import()` ou bibliothèques d'analyse.
+
+---
 
 ## 15. Gestion des erreurs et mode strict
+
+**Objectifs d'apprentissage.** Distinguer les types d'erreurs ; utiliser `try` / `catch` / `finally` ; lever et personnaliser des erreurs ; gérer les erreurs asynchrones ; comprendre le mode strict ; définir une stratégie de gestion des erreurs.
 
 ### 15.1 Notions et types d'erreurs
 
@@ -2647,14 +2702,17 @@ essayer('paramètres dupliqués', () => new Function('"use strict"; function f(a
 - N'affichez pas la pile d'appels à l'utilisateur final.
 - Pour les réessais, utilisez une temporisation croissante (*backoff*) et un nombre maximal de tentatives.
 
-### Points clés du module 15
+### Synthèse du chapitre 15
 
-- Les erreurs remontent la pile ; `try/catch/finally` les traite ; `throw new Error(...)` les lève.
-- `catch` ne voit pas les erreurs asynchrones non attendues : utilisez `await` ou `.catch()`.
-- `fetch` ne rejette pas sur un statut HTTP d'erreur.
-- Le mode strict transforme des erreurs silencieuses en exceptions ; modules et classes y sont toujours.
+Les erreurs **remontent la pile** ; `try` / `catch` / `finally` les traite et `throw new Error(...)` les lève. `catch` ne voit pas les erreurs asynchrones non attendues : utilisez `await` ou `.catch()`. `fetch` ne rejette pas sur un statut HTTP d'erreur. Le **mode strict** transforme des erreurs silencieuses en exceptions ; modules et classes y sont toujours.
+
+---
+
+# Partie IV — Asynchronisme et réseau
 
 ## 16. JavaScript asynchrone
+
+**Objectifs d'apprentissage.** Comprendre le modèle synchrone / asynchrone et la boucle d'événements ; utiliser minuteries, *callbacks*, promesses et `async` / `await` ; combiner plusieurs opérations ; annuler avec `AbortController` ; éviter les pièges courants.
 
 ### 16.1 Synchrone, asynchrone et boucle d'événements
 
@@ -2710,7 +2768,7 @@ boucle();
 
 > **Attention** : le délai est un **minimum**, non garanti ; les onglets en arrière-plan ralentissent les minuteries. Pour l'**animation**, utilisez `requestAnimationFrame` ; pour du travail non urgent, `requestIdleCallback`.
 
-### 16.3 Les *callbacks* (rappels)
+### 16.3 Les *callbacks* (rappels) *(héritage)*
 
 Un **callback** est une fonction passée à une autre pour être appelée plus tard. Convention Node.js : **erreur d'abord** `(err, donnees)`.
 
@@ -2752,7 +2810,7 @@ Promise.reject(new Error('non')).catch((e) => console.error(e.message));
 
 Règles du chaînage : une valeur renvoyée par `then` devient la valeur de la promesse suivante ; une **promesse renvoyée** est « aplatie » (la chaîne attend sa résolution) ; une **exception** levée dans un `then` rejette la promesse suivante. **Oublier `return`** dans un `then` est une erreur fréquente : la suite reçoit `undefined`.
 
-### 16.5 `async` / `await`
+### 16.5 `async` / `await` *(à jour)*
 
 Syntaxe construite sur les promesses, qui donne au code asynchrone l'allure du code synchrone. Une fonction **`async` renvoie toujours une promesse** ; `await` **suspend la fonction** (pas le fil principal) jusqu'à ce que la promesse soit réglée, puis renvoie sa valeur ou lève son erreur.
 
@@ -2837,7 +2895,7 @@ controleur.abort();                        // annulation immédiate pour l'exemp
 fetch(url, { signal: AbortSignal.timeout(5000) }).then((r) => console.log('Réponse reçue :', r.status));
 ```
 
-Un `AbortSignal` s'applique aussi aux écouteurs d'événements (module 21) et à vos propres fonctions asynchrones : surveillez `signal.aborted` ou écoutez l'événement `abort`. `AbortSignal.any([...])` combine plusieurs signaux.
+Un `AbortSignal` s'applique aussi aux écouteurs d'événements (chapitre 21) et à vos propres fonctions asynchrones : surveillez `signal.aborted` ou écoutez l'événement `abort`. `AbortSignal.any([...])` combine plusieurs signaux.
 
 ### 16.8 Pièges courants
 
@@ -2869,14 +2927,15 @@ const dormir = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 - Ne mettez pas de `await` dans `forEach`.
 - Pour du calcul lourd, déléguez à un **Worker**.
 
-### Points clés du module 16
+### Synthèse du chapitre 16
 
-- Un seul fil ; la boucle d'événements orchestre pile, microtâches et macrotâches ; les microtâches passent avant les macrotâches.
-- Une promesse est en attente, tenue ou rejetée ; `then`, `catch`, `finally` se chaînent.
-- `async` / `await` rend le code asynchrone lisible ; `Promise.all`, `allSettled`, `race`, `any` combinent les tâches.
-- `AbortController` annule ; toute erreur asynchrone doit être traitée.
+Un **seul fil** : la **boucle d'événements** orchestre la pile, les microtâches et les macrotâches (les microtâches passent avant les macrotâches). Une promesse est **en attente, tenue ou rejetée** ; `then`, `catch` et `finally` se chaînent. `async` / `await` rend le code asynchrone lisible ; `Promise.all`, `allSettled`, `race` et `any` combinent les tâches. `AbortController` annule, et toute erreur asynchrone doit être traitée.
+
+---
 
 ## 17. APIs web, `fetch` et JSON
+
+**Objectifs d'apprentissage.** Définir ce qu'est une API ; envoyer des requêtes avec `fetch` (lecture, envoi, options, URL, sécurité et CORS) ; convertir des données avec JSON (`stringify` / `parse`) et connaître ses limites ; découvrir d'autres API web utiles.
 
 ### 17.1 Qu'est-ce qu'une API ?
 
@@ -3091,7 +3150,7 @@ console.log(config.port);   // 3000
 | `navigator.sendBeacon` | Envoi fiable de petites données à la fermeture d'une page |
 | `BroadcastChannel`, `postMessage` | Communication entre onglets, iframes, workers |
 | `Web Workers` | Calcul en arrière-plan |
-| `Intl` | Formatage localisé (module 6 et 23) |
+| `Intl` | Formatage localisé (chapitres 6 et 23) |
 
 ### 17.5 Bonnes pratiques
 
@@ -3102,14 +3161,17 @@ console.log(config.port);   // 3000
 - Respectez les limites de débit et gérez le code `429` (attendez, puis réessayez).
 - Centralisez les appels dans un module `api.js` (URL de base, en-têtes, gestion d'erreur communes).
 
-### Points clés du module 17
+### Synthèse du chapitre 17
 
-- `fetch` renvoie une promesse ; il ne rejette pas sur un statut d'erreur HTTP : testez `response.ok`.
-- `JSON.stringify` / `JSON.parse` convertissent objets et texte ; ils ont des limites (dates, `Map`, `undefined`, circularité).
-- CORS se règle côté serveur ; aucun secret dans le code client.
-- Construisez les URL avec `URL` / `URLSearchParams`.
+`fetch` renvoie une promesse mais **ne rejette pas** sur un statut d'erreur HTTP : testez `response.ok`. `JSON.stringify` / `JSON.parse` convertissent objets et texte, avec des limites (dates, `Map`, `undefined`, circularité). **CORS** se règle côté serveur, et aucun **secret** ne doit figurer dans le code client. Construisez les URL avec `URL` et `URLSearchParams`.
+
+---
+
+# Partie V — Orienté objet et architecture
 
 ## 18. Constructeurs, prototypes et héritage
+
+**Objectifs d'apprentissage.** Parcourir les manières de créer des objets ; écrire des fonctions constructeurs et comprendre `new` ; maîtriser la chaîne de prototypes et `Object.create` ; connaître les motifs de création, les membres statiques, les mixins et la composition ; tester le type d'un objet ; utiliser `Proxy` et `Reflect` ; déboguer constructeurs et prototypes.
 
 ### 18.1 Créer des objets : panorama
 
@@ -3127,7 +3189,7 @@ console.log(litteral, Object.getPrototypeOf(vide), instance);
 // { nom: 'Alice' } null Personne { nom: 'Alice', age: 30 }
 ```
 
-### 18.2 Fonctions constructeurs
+### 18.2 Fonctions constructeurs *(héritage)*
 
 Une **fonction constructeur** (nom en `PascalCase`) est une fonction destinée à être appelée avec **`new`** pour fabriquer des objets de même structure : des **instances**.
 
@@ -3203,7 +3265,7 @@ console.log(bob.saluer());                        // 'Bonjour, je suis Bob'
 console.log(bob instanceof Personne);             // true
 ```
 
-La syntaxe **`class ... extends`** (module 19) est du **sucre syntaxique** sur ce mécanisme : elle produit exactement ces chaînes de prototypes, en plus sûr et plus lisible.
+La syntaxe **`class ... extends`** (chapitre 19) est du **sucre syntaxique** sur ce mécanisme : elle produit exactement ces chaînes de prototypes, en plus sûr et plus lisible.
 
 ### 18.4 `Object.create`
 
@@ -3312,7 +3374,7 @@ console.log(groupe.sort(Personne.comparerAge).map(p => p.nom));  // ['Alice', 'B
 console.log(groupe[0].espece);                                   // undefined : non hérité par les instances
 ```
 
-Avec les classes : le mot-clé `static` (module 19).
+Avec les classes : le mot-clé `static` (chapitre 19).
 
 ### 18.8 Mixins et composition
 
@@ -3402,14 +3464,15 @@ Dans les **DevTools** (F12 → *Sources*), posez des points d'arrêt dans le con
 
 Erreurs fréquentes : oubli de `new` ; `this` perdu dans un callback ; prototype remplacé sans rétablir `constructor` ; méthodes définies **dans** le constructeur (une copie par instance) ; modification de `Object.prototype` ou des prototypes natifs.
 
-### Points clés du module 18
+### Synthèse du chapitre 18
 
-- `new` crée un objet, le relie à `Constructeur.prototype`, exécute le constructeur et renvoie l'objet.
-- Les propriétés absentes sont cherchées le long de la **chaîne de prototypes** ; les méthodes partagées vivent sur le prototype.
-- `Object.create` choisit directement le prototype ; `class` est du sucre syntaxique sur ce mécanisme.
-- Préférez la **composition** à l'héritage profond ; `Proxy` intercepte les opérations pour validation ou réactivité.
+`new` crée un objet, le relie à `Constructeur.prototype`, exécute le constructeur et renvoie l'objet. Les propriétés absentes sont cherchées le long de la **chaîne de prototypes** ; les méthodes partagées vivent sur le prototype. `Object.create` choisit directement le prototype, et `class` est du **sucre syntaxique** sur ce mécanisme. Préférez la **composition** à l'héritage profond ; `Proxy` intercepte les opérations (validation, réactivité).
+
+---
 
 ## 19. Classes et programmation orientée objet
+
+**Objectifs d'apprentissage.** Rappeler les principes de la programmation orientée objet ; définir des classes ; utiliser l'héritage (`extends`, `super`), les membres statiques, l'encapsulation (`#privé`), l'abstraction et le polymorphisme ; connaître les méthodes et symboles spéciaux ainsi que `using` ; choisir entre classes, fonctions et objets.
 
 ### 19.1 Les principes de la programmation orientée objet
 
@@ -3422,9 +3485,9 @@ La **programmation orientée objet** (POO) organise un programme autour d'**obje
 | **Héritage** | Une classe en spécialise une autre (relation « est un ») | `extends`, chaîne de prototypes |
 | **Polymorphisme** | Des objets différents répondent au même message à leur manière | Redéfinition de méthodes, *duck typing* |
 
-JavaScript est une POO **à prototypes** : les **classes** (ES2015) sont une syntaxe claire par-dessus ce mécanisme (module 18).
+JavaScript est une POO **à prototypes** : les **classes** (ES2015) sont une syntaxe claire par-dessus ce mécanisme (chapitre 18).
 
-### 19.2 Définir une classe
+### 19.2 Définir une classe *(à jour)*
 
 ```javascript
 class Personne {
@@ -3666,7 +3729,7 @@ console.log(formes.map(f => f.aire()));   // [3.14..., 6, 42] : chaque objet ré
 | `[Symbol.toPrimitive](indice)` | Conversion en valeur primitive (`'number'`, `'string'`, `'default'`) |
 | `valueOf()` | Valeur utilisée dans les opérations arithmétiques et comparaisons |
 | `toJSON()` | Personnalise `JSON.stringify` |
-| `[Symbol.iterator]` / `[Symbol.asyncIterator]` | Rend l'objet itérable (module 13) |
+| `[Symbol.iterator]` / `[Symbol.asyncIterator]` | Rend l'objet itérable (chapitre 13) |
 | `[Symbol.hasInstance]` | Personnalise `instanceof` |
 | `[Symbol.toStringTag]` | Étiquette de `Object.prototype.toString` |
 | `[Symbol.species]` | Constructeur utilisé par les méthodes dérivées (`map` sur une sous-classe d'`Array`) |
@@ -3682,7 +3745,7 @@ const t = new Temperature(21);
 console.log(`${t}`, t + 1, t > 20);   // '21 °C' 22 true
 ```
 
-### 19.9 Gestion explicite des ressources : `using`
+### 19.9 Gestion explicite des ressources : `using` *(ajout)*
 
 Le mot-clé **`using`** (*Explicit Resource Management*) libère automatiquement une ressource (fichier, connexion, verrou) à la **sortie du bloc**, même en cas d'erreur, en appelant `[Symbol.dispose]()`. `await using` fait de même avec `[Symbol.asyncDispose]()`. Il a atteint le **stade 4** de TC39 en 2026 (publication prévue dans ES2027) : vérifiez la prise en charge de vos environnements ; un transpileur peut le fournir.
 
@@ -3721,14 +3784,15 @@ Plusieurs déclarations `using` sont libérées dans l'**ordre inverse** de leur
 - Définissez `toString()` / `toJSON()` quand l'objet doit être affiché ou sérialisé.
 - Respectez le **principe de substitution de Liskov** : une sous-classe doit pouvoir remplacer sa classe mère sans surprise.
 
-### Points clés du module 19
+### Synthèse du chapitre 19
 
-- Une classe est une syntaxe claire sur les prototypes : constructeur, méthodes partagées, champs, accesseurs, statiques.
-- `extends` et `super` expriment l'héritage ; `super()` précède `this` dans un constructeur dérivé.
-- `#privé` garantit l'encapsulation ; le polymorphisme s'appuie sur le *duck typing*.
-- `using` automatise la libération des ressources (stade 4, ES2027).
+Une classe est une syntaxe claire sur les prototypes : constructeur, méthodes partagées, champs, accesseurs, statiques. `extends` et `super` expriment l'**héritage** (`super()` précède `this` dans un constructeur dérivé). `#privé` garantit l'**encapsulation** ; le **polymorphisme** s'appuie sur le *duck typing*. `using` automatise la libération des ressources (stade 4, ES2027).
+
+---
 
 ## 20. Modules (`import` / `export`)
+
+**Objectifs d'apprentissage.** Comprendre l'intérêt des modules ; les activer ; utiliser `export` et `import` (statique et dynamique) ; comprendre leur fonctionnement interne ; comparer modules ES et CommonJS ; organiser un projet ; éviter les pièges courants.
 
 ### 20.1 Pourquoi des modules ?
 
@@ -3895,14 +3959,17 @@ Conseils : un module = une responsabilité ; limitez la surface exportée ; évi
 | `__dirname` / `require` indéfinis en ESM | `import.meta.dirname`, `import` |
 | Modification d'un import | Les imports sont en lecture seule : exportez une fonction de modification |
 
-### Points clés du module 20
+### Synthèse du chapitre 20
 
-- Un module a sa propre portée, est strict, et se charge avec `type='module'` ou `.mjs`.
-- `export` (nommé / par défaut) et `import` (statique, dynamique) organisent les dépendances.
-- Les imports sont des **liaisons vivantes** en lecture seule ; un module n'est évalué qu'une fois.
-- Préférez les exports nommés, évitez les cycles, servez les modules via HTTP.
+Un module a sa **propre portée**, est en mode strict et se charge avec `type='module'` ou l'extension `.mjs`. `export` (nommé ou par défaut) et `import` (statique ou dynamique) organisent les dépendances. Les imports sont des **liaisons vivantes** en lecture seule, et un module n'est évalué qu'**une fois**. Préférez les exports nommés, évitez les cycles et servez les modules via HTTP.
+
+---
+
+# Partie VI — Le navigateur
 
 ## 21. DOM et événements
+
+**Objectifs d'apprentissage.** Décrire le DOM ; sélectionner, lire, modifier, créer et supprimer des éléments ; gérer classes, styles, dimensions et défilement ; maîtriser les événements (propagation, délégation, événements personnalisés, formulaires) ; savoir quand le DOM est prêt ; utiliser observateurs, Shadow DOM, composants web et animations ; respecter l'accessibilité.
 
 ### 21.1 Qu'est-ce que le DOM ?
 
@@ -4319,14 +4386,15 @@ Une interface dynamique doit rester **utilisable au clavier et avec un lecteur d
 - Séparez structure (HTML), apparence (CSS) et comportement (JS).
 - Pour de grosses interfaces, utilisez un framework (React, Vue, Svelte…) ou des composants web.
 
-### Points clés du module 21
+### Synthèse du chapitre 21
 
-- Le DOM est un arbre d'objets accessible via `document` ; `querySelector(All)` sélectionne, `textContent` et `classList` modifient en sécurité.
-- Les événements se propagent en capture puis en bulle ; `preventDefault` annule l'action par défaut ; la délégation optimise les listes.
-- `innerHTML` avec des données externes est une faille XSS.
-- Observateurs, composants web et Web Animations remplacent bon nombre de bricolages anciens.
+Le DOM est un **arbre d'objets** accessible via `document` : `querySelector(All)` sélectionne, `textContent` et `classList` modifient en sécurité. Les événements se propagent en **capture** puis en **bulle** ; `preventDefault` annule l'action par défaut et la **délégation** optimise les listes. `innerHTML` avec des données externes est une **faille XSS**. Observateurs, composants web et Web Animations remplacent bon nombre de bricolages anciens.
+
+---
 
 ## 22. Environnement du navigateur (BOM) et stockage
+
+**Objectifs d'apprentissage.** Distinguer le BOM et le DOM et utiliser `window`, `navigator`, `location`, `history` et `screen` ; comparer les mécanismes de stockage ; utiliser cookies, `localStorage` et `sessionStorage` ; connaître IndexedDB et les autres options ; choisir le bon stockage.
 
 ### 22.1 Le BOM
 
@@ -4549,16 +4617,17 @@ Usages : état d'un formulaire multi-étapes, filtres temporaires, données lié
 | Gros volumes, données structurées, hors-ligne | IndexedDB |
 | Données à garder en mémoire pendant la visite seulement | Variable JavaScript |
 
-### Points clés du module 22
+### Synthèse du chapitre 22
 
-- Le BOM (`window`, `navigator`, `location`, `history`, `screen`) pilote le navigateur ; le DOM représente la page.
-- `history.pushState` + `popstate` fondent le routage des applications monopages.
-- Cookies (envoyés au serveur), `localStorage` (persistant), `sessionStorage` (par onglet), IndexedDB (volumineux).
-- Aucun secret dans `localStorage` ; sessions via cookies `HttpOnly` côté serveur.
+Le **BOM** (`window`, `navigator`, `location`, `history`, `screen`) pilote le navigateur, tandis que le DOM représente la page. `history.pushState` et `popstate` fondent le routage des applications monopages. Les **cookies** sont envoyés au serveur, `localStorage` est persistant, `sessionStorage` est propre à l'onglet, IndexedDB accueille les gros volumes. Aucun secret dans `localStorage` : les sessions passent par des cookies `HttpOnly` côté serveur.
+
+---
 
 ## 23. Dates et heures : `Date` et `Temporal`
 
-### 23.1 L'objet `Date` (historique)
+**Objectifs d'apprentissage.** Manipuler l'objet `Date` (lecture, modification, formatage, différences) et connaître ses défauts ; utiliser `Temporal`, son remplaçant moderne ; migrer de `Date` vers `Temporal` ; appliquer les bonnes pratiques.
+
+### 23.1 L'objet `Date` *(héritage)*
 
 Un objet **`Date`** représente un **instant** sous la forme d'un **nombre de millisecondes** écoulées depuis l'**epoch Unix** (1ᵉʳ janvier 1970 à 00:00:00 UTC). Il propose deux « vues » du même instant : **UTC** et **heure locale** (fuseau du système).
 
@@ -4639,7 +4708,7 @@ console.log(jours);                                       // 30
 - Pas de **calendriers** non grégoriens, pas de durées, arithmétique source d'erreurs, précision limitée à la milliseconde.
 - Pas de type « date seule » ou « heure seule » : une date sans heure est modélisée par un instant à minuit, ce qui provoque des décalages de jour selon le fuseau.
 
-### 23.2 `Temporal` : le remplaçant moderne
+### 23.2 `Temporal` : le remplaçant moderne *(ajout)*
 
 **`Temporal`** est une API conçue pour remplacer `Date`. Ses objets sont **immuables** (chaque opération renvoie un nouvel objet), les mois vont de **1 à 12**, les **fuseaux horaires IANA** sont gérés pour de bon (`Europe/Paris`, `Indian/Antananarivo`), les **calendriers** multiples sont pris en charge, l'arithmétique est fiable (gestion des changements d'heure), et la précision atteint la **nanoseconde**. Il distingue clairement les concepts.
 
@@ -4702,14 +4771,17 @@ const enMs = Temporal.Instant.fromEpochMilliseconds(Date.now());
 - Ne calculez jamais « + 24 h » pour obtenir « demain » : les changements d'heure rendent certains jours plus courts ou plus longs.
 - Testez vos fonctions de dates avec des cas limites : fin de mois, 29 février, changement d'heure, fuseaux éloignés.
 
-### Points clés du module 23
+### Synthèse du chapitre 23
 
-- `Date` est un timestamp en millisecondes ; mois indexés à 0, mutable, analyse non fiable hors ISO 8601.
-- `Intl.DateTimeFormat` et `Intl.RelativeTimeFormat` formatent selon la langue et le fuseau.
-- `Temporal` (stade 4, ES2027) : immuable, vrais fuseaux, types distincts (`Instant`, `ZonedDateTime`, `PlainDate`, `Duration`).
-- Stockez en UTC / ISO 8601 ; localisez à l'affichage.
+`Date` est un **timestamp** en millisecondes, aux mois indexés à 0, mutable, à l'analyse peu fiable hors ISO 8601. `Intl.DateTimeFormat` et `Intl.RelativeTimeFormat` formatent selon la langue et le fuseau. `Temporal` (stade 4, ES2027) est **immuable**, gère de vrais fuseaux et distingue ses types (`Instant`, `ZonedDateTime`, `PlainDate`, `Duration`). **Stockez en UTC / ISO 8601, localisez à l'affichage.**
+
+---
+
+# Partie VII — Professionnalisation
 
 ## 24. Outils et écosystème
+
+**Objectifs d'apprentissage.** Utiliser Node.js et les gestionnaires de paquets ; connaître les outils de qualité et de build ; comprendre le rôle de TypeScript ; repérer les frameworks et bibliothèques courants ; déboguer avec les outils de développement ; adopter de bonnes pratiques de projet.
 
 ### 24.1 Node.js et gestionnaires de paquets
 
@@ -4861,14 +4933,15 @@ Les **DevTools** du navigateur (F12) :
 - Mesurez avant d'optimiser (profil de performance) ; surveillez le poids des bundles.
 - Mettez régulièrement les dépendances à jour, par petites étapes.
 
-### Points clés du module 24
+### Synthèse du chapitre 24
 
-- Node.js exécute JavaScript hors navigateur ; npm gère les paquets, `package.json` les décrit, le fichier de verrouillage les fige.
-- Vite/esbuild (build), ESLint/Prettier (qualité), Vitest/`node:test` (tests), TypeScript (types).
-- Les DevTools (Console, Sources, Network, Application) sont l'outil de débogage essentiel.
-- Maîtrisez le langage avant les frameworks ; auditez vos dépendances.
+**Node.js** exécute JavaScript hors du navigateur ; **npm** gère les paquets, `package.json` les décrit et le fichier de verrouillage les fige. Vite / esbuild assurent le build, ESLint / Prettier la qualité, Vitest / `node:test` les tests, TypeScript les types. Les **DevTools** (Console, Sources, Network, Application) sont l'outil de débogage essentiel. Maîtrisez le langage avant les frameworks et auditez vos dépendances.
+
+---
 
 ## 25. Nouveautés par version d'ECMAScript
+
+**Objectifs d'apprentissage.** Comprendre le processus et la cadence d'ECMAScript ; lire le tableau récapitulatif des éditions ; repérer les nouveautés marquantes d'ES2015 à ES2027 ; utiliser les nouveautés en pratique (compatibilité, transpilation, polyfills) ; planifier sa progression.
 
 ### 25.1 Le processus et la cadence
 
@@ -4903,11 +4976,11 @@ Depuis ES2015, une nouvelle **édition annuelle** de la norme ECMA-262 est publi
 
 #### ES2015 : la refondation
 
-Cette édition a changé la façon d'écrire du JavaScript : **portée de bloc** (`let`, `const`), **fonctions fléchées** avec `this` lexical, **classes** et **modules**, **promesses** pour l'asynchrone, **gabarits** de chaînes, **décomposition**, **spread/rest**, paramètres par défaut, **itérateurs et générateurs**, `Map`, `Set`, `WeakMap`, `WeakSet`, `Symbol`, et métaprogrammation (`Proxy`, `Reflect`). Elle structure les modules 2, 5, 8, 9, 12, 13, 16, 18, 19 et 20.
+Cette édition a changé la façon d'écrire du JavaScript : **portée de bloc** (`let`, `const`), **fonctions fléchées** avec `this` lexical, **classes** et **modules**, **promesses** pour l'asynchrone, **gabarits** de chaînes, **décomposition**, **spread/rest**, paramètres par défaut, **itérateurs et générateurs**, `Map`, `Set`, `WeakMap`, `WeakSet`, `Symbol`, et métaprogrammation (`Proxy`, `Reflect`). Elle structure les chapitres 2, 5, 8, 9, 12, 13, 16, 18, 19 et 20.
 
 #### ES2016 à ES2019 : confort d'écriture
 
-`includes` (recherche lisible, gère `NaN`), `**`, **`async` / `await`** (module 16), `Object.entries` / `values` / `fromEntries`, `padStart`, spread d'objets (`{ ...a, ...b }`), `finally`, **itération asynchrone**, regex plus expressives (groupes nommés, rétrospection, propriétés Unicode), `flat` / `flatMap`, `catch` sans paramètre.
+`includes` (recherche lisible, gère `NaN`), `**`, **`async` / `await`** (chapitre 16), `Object.entries` / `values` / `fromEntries`, `padStart`, spread d'objets (`{ ...a, ...b }`), `finally`, **itération asynchrone**, regex plus expressives (groupes nommés, rétrospection, propriétés Unicode), `flat` / `flatMap`, `catch` sans paramètre.
 
 #### ES2020 : sécurité d'accès et grands nombres
 
@@ -4945,13 +5018,13 @@ console.log(Promise.try(() => JSON.parse('{"a":1}')) instanceof Promise);   // t
 
 #### ES2026 : approuvée le 30 juin 2026
 
-- **`Array.fromAsync()`** : `Array.from` pour itérables asynchrones (module 8).
-- **`Error.isError()`** : test fiable d'erreur, y compris entre contextes (module 15).
-- **`Math.sumPrecise()`** : somme de nombres sans accumulation d'erreur d'arrondi (module 6).
+- **`Array.fromAsync()`** : `Array.from` pour itérables asynchrones (chapitre 8).
+- **`Error.isError()`** : test fiable d'erreur, y compris entre contextes (chapitre 15).
+- **`Math.sumPrecise()`** : somme de nombres sans accumulation d'erreur d'arrondi (chapitre 6).
 - **Base64 et hexadécimal pour `Uint8Array`** : `toBase64()`, `fromBase64()`, `toHex()`, `fromHex()`.
-- **`Iterator.concat()`** : concaténer des itérables paresseusement (module 13).
-- **`JSON.parse` avec accès au texte source** et `JSON.rawJSON()` : grands entiers sans perte (module 17).
-- **`Map` / `WeakMap` `getOrInsert()` et `getOrInsertComputed()`** : évitent le motif « si absent, créer » (module 9).
+- **`Iterator.concat()`** : concaténer des itérables paresseusement (chapitre 13).
+- **`JSON.parse` avec accès au texte source** et `JSON.rawJSON()` : grands entiers sans perte (chapitre 17).
+- **`Map` / `WeakMap` `getOrInsert()` et `getOrInsertComputed()`** : évitent le motif « si absent, créer » (chapitre 9).
 
 ```javascript
 const octets = new Uint8Array([72, 101, 108, 108, 111]);
@@ -4961,7 +5034,7 @@ console.log(Math.sumPrecise([0.1, 0.2, 0.3]));   // 0.6 (le résultat exact atte
 
 #### ES2027 : en préparation
 
-Deux propositions majeures ont déjà atteint le **stade 4** : **`Temporal`** (module 23) et la **gestion explicite des ressources** avec `using` / `await using` (module 19). Leur publication officielle est prévue dans ES2027 ; la prise en charge varie encore selon les moteurs, d'où la prudence et l'usage de polyfills ou de transpilation.
+Deux propositions majeures ont déjà atteint le **stade 4** : **`Temporal`** (chapitre 23) et la **gestion explicite des ressources** avec `using` / `await using` (chapitre 19). Leur publication officielle est prévue dans ES2027 ; la prise en charge varie encore selon les moteurs, d'où la prudence et l'usage de polyfills ou de transpilation.
 
 ### 25.4 Utiliser les nouveautés en pratique
 
@@ -4973,29 +5046,20 @@ Deux propositions majeures ont déjà atteint le **stade 4** : **`Temporal`** (m
 
 > **Note** : les listes de fonctionnalités par édition circulent avec des contradictions sur Internet. La source de référence est le tableau des **propositions terminées** de TC39 (github.com/tc39/proposals, fichier *finished-proposals*). Vérifiez toujours la compatibilité sur caniuse.com et MDN.
 
-### Points clés du module 25
+### 25.5 Parcours d'apprentissage et ressources
 
-- Une édition d'ECMAScript paraît chaque année ; les fonctionnalités passent par les stades 0 à 4 de TC39.
-- Les grandes étapes : ES2015 (refondation), ES2017 (`async/await`), ES2020 (`?.`, `??`), ES2022 (privés `#`), ES2023-2025 (non mutants, regroupement, itérateurs, `Set`).
-- ES2026 est approuvée ; `Temporal` et `using` (stade 4) sont attendues dans ES2027.
-- Vérifiez toujours la compatibilité et utilisez transpilation, polyfills et détection de fonctionnalités.
+**Parcours conseillé** : (1) chapitres 1 à 7 (syntaxe, variables, types, opérateurs, chaînes, nombres, contrôle de flux) ; (2) 8 à 11 (tableaux, objets, `Map`, `Set`, `globalThis`, expressions régulières) ; (3) 12 à 15 (fonctions, fermetures, itérateurs, `eval`, erreurs, mode strict) ; (4) 16 et 17 (promesses, `async` / `await`, `fetch`, JSON) ; (5) 18 à 20 (prototypes, classes, modules) ; (6) 21 à 23 (DOM, événements, BOM, stockage, dates) ; (7) 24 et 25 (outils, tests, TypeScript, veille sur le langage).
 
-## Ressources pour progresser
-
-- **MDN Web Docs (fr)** : developer.mozilla.org/fr/docs/Web/JavaScript : référence officielle et tutoriels.
-- **javascript.info (fr)** : fr.javascript.info : cours progressif détaillé.
-- **Spécification ECMA-262** : tc39.es/ecma262 ; propositions : github.com/tc39/proposals.
-- **Compatibilité** : caniuse.com et les tableaux de compatibilité de MDN.
+- **MDN Web Docs (fr)** : <https://developer.mozilla.org/fr/docs/Web/JavaScript> (référence officielle et tutoriels)
+- **javascript.info (fr)** : <https://fr.javascript.info> (cours progressif détaillé)
+- **Spécification ECMA-262** : <https://tc39.es/ecma262> · **Propositions TC39** : <https://github.com/tc39/proposals>
+- **Compatibilité** : <https://caniuse.com> et les tableaux de compatibilité de MDN
 - **Guide d'origine** : plan « JavaScript — Guide complet » (ECMAScript 2026), dont ce document est le développement.
 
-### Plan de progression suggéré
+### Synthèse du chapitre 25
 
-1. **Fondations (modules 1-7)** : syntaxe, variables, types, opérateurs, chaînes, nombres, contrôle de flux.
-2. **Structures de données (8-11)** : tableaux, objets, `Map`, `Set`, `globalThis`, expressions régulières.
-3. **Fonctions et abstractions (12-15)** : fonctions, fermetures, itérateurs, `eval`, erreurs, mode strict.
-4. **Asynchronisme et réseau (16-17)** : promesses, `async` / `await`, `fetch`, JSON.
-5. **Orienté objet et architecture (18-20)** : prototypes, classes, modules.
-6. **Navigateur (21-23)** : DOM, événements, BOM, stockage, dates.
-7. **Professionnalisation (24-25)** : outils, tests, TypeScript, veille sur le langage.
+Une **édition** d'ECMAScript paraît chaque année ; les fonctionnalités passent par les **stades 0 à 4** de TC39. Grandes étapes : ES2015 (refondation), ES2017 (`async` / `await`), ES2020 (`?.`, `??`), ES2022 (privés `#`), ES2023 à ES2025 (méthodes non mutantes, regroupement, itérateurs, `Set`). ES2026 est approuvée ; `Temporal` et `using` (stade 4) sont attendues dans ES2027. **Vérifiez toujours la compatibilité** et recourez à la transpilation, aux polyfills et à la détection de fonctionnalités.
 
-*Bon code !*
+---
+
+*Fin du cours. Bon code avec JavaScript !*

@@ -2,15 +2,28 @@
 
 *Du premier `print()` à la programmation orientée objet moderne — rédigé pour Python 3.14 / 3.15 (octobre 2026)*
 
-## Comment lire ce cours
+## Avant de commencer : comment utiliser ce cours
 
-Ce cours suit le plan en 20 chapitres. Chaque chapitre développe les notions dans l'ordre : définitions, fonctionnement, exemples commentés, pièges fréquents, bonnes pratiques, puis une synthèse « À retenir ». Les exemples sont courts : tapez-les vous-même dans un terminal ou un éditeur plutôt que de les lire passivement, et modifiez-les pour observer ce qui change. Dans les blocs de code, un commentaire `# →` indique le résultat affiché.
+Ce cours développe, chapitre par chapitre, l'intégralité du plan en **20 chapitres**, regroupés en six parties : **Les bases du langage** (1 à 6), **Structures de données** (7 à 10), **Fonctions, itérateurs et générateurs** (11 et 12), **Robustesse, fichiers et organisation du code** (13 à 15), **Programmation professionnelle** (16 à 19) et **La suite du parcours** (20).
 
-Aucun prérequis n'est nécessaire. La progression est la suivante : chapitres 1 à 6 (les bases du langage), 7 à 10 (les structures de données), 11 et 12 (fonctions, itérateurs, générateurs), 13 à 15 (robustesse, fichiers, organisation du code), 16 à 19 (programmation professionnelle : objets, typage, concurrence, tests) et 20 (la suite du parcours).
+Chaque chapitre suit la même trame : *objectifs d'apprentissage → notions et définitions → exemples de code commentés → pièges fréquents → synthèse*.
+
+**Conventions de lecture**
+
+- Dans les blocs de code, un commentaire `# →` indique le résultat affiché.
+- Les mentions entre parenthèses, comme *(Python 3.10+)*, indiquent la version minimale du langage nécessaire pour la notion décrite.
+- Les exemples sont courts : tapez-les vous-même dans un terminal ou un éditeur plutôt que de les lire passivement, et modifiez-les pour observer ce qui change.
+- Aucun prérequis n'est nécessaire.
+
+**Parcours conseillé** : lisez les chapitres 1 à 6 dans l'ordre (ils se construisent les uns sur les autres), puis les chapitres 7 à 10 (structures de données) et 11 et 12 (fonctions, itérateurs, générateurs). Choisissez ensuite librement dans les parties suivantes — 13 à 15 (robustesse, fichiers, organisation du code), 16 à 19 (programmation professionnelle) et 20 (la suite du parcours) — selon vos besoins.
+
+---
+
+# Partie I — Les bases du langage
 
 ## 1. Introduction
 
-**Objectifs du chapitre** : comprendre ce qu'est Python et comment il fonctionne, connaître son histoire et ses usages, installer un environnement de travail, exécuter un premier programme et savoir chercher de l'aide.
+**Objectifs d'apprentissage.** Comprendre ce qu'est Python et comment il fonctionne, connaître son histoire et ses usages, installer un environnement de travail, exécuter un premier programme et savoir chercher de l'aide.
 
 ### 1.1 Qu'est-ce que Python ?
 
@@ -485,17 +498,15 @@ print(len.__doc__)    # docstring brute
 
 En ligne de commande : `python -m pydoc len`. Ressources : docs.python.org, Real Python, discuss.python.org, Stack Overflow.
 
-### À retenir (chapitre 1)
+### Synthèse du chapitre 1
 
-- Python est un langage de haut niveau, polyvalent, multi-paradigme, au typage **dynamique et fort**, où **tout est objet**.
-- Le code source est compilé en bytecode puis exécuté par la machine virtuelle ; CPython est l'implémentation de référence.
-- Une version majeure paraît chaque octobre ; utilisez toujours une version de Python 3 encore supportée.
-- Le REPL sert à explorer, les scripts `.py` à conserver.
-- `print()`, `help()`, `dir()` et `type()` sont vos premiers outils d'investigation.
+Python est un langage **de haut niveau, polyvalent et multi-paradigme**, au typage **dynamique et fort**, où **tout est objet**. Le code source est compilé en *bytecode* puis exécuté par la machine virtuelle ; **CPython** est l'implémentation de référence. Une version majeure paraît chaque octobre : utilisez toujours une version de Python 3 encore supportée. Le **REPL** sert à explorer, les scripts `.py` à conserver ; `print()`, `help()`, `dir()` et `type()` sont vos premiers outils d'investigation.
+
+---
 
 ## 2. Syntaxe et indentation
 
-**Objectifs du chapitre** : comprendre comment Python lit un fichier source, maîtriser l'indentation qui structure le code, distinguer expressions et instructions, et adopter dès le début les conventions de la PEP 8.
+**Objectifs d'apprentissage.** Comprendre comment Python lit un fichier source, maîtriser l'indentation qui structure le code, distinguer expressions et instructions, et adopter dès le début les conventions de la PEP 8.
 
 ### 2.1 Introduction à la syntaxe
 
@@ -688,17 +699,15 @@ print(resultat)   # → [2, 4, 6]
 
 Outils modernes : **Ruff** (lint et formatage), **Black** (formatage), **mypy** et **pyright** (vérification de types). Ils appliquent automatiquement ces conventions.
 
-### À retenir (chapitre 2)
+### Synthèse du chapitre 2
 
-- L'indentation (4 espaces) délimite les blocs ; ne mélangez jamais tabulations et espaces.
-- Un bloc s'ouvre après `:` et ne peut pas être vide (`pass`).
-- Python est sensible à la casse ; les mots-clés sont réservés.
-- Une expression produit une valeur, une instruction réalise une action ; `:=` affecte au sein d'une expression.
-- Suivez la PEP 8 et laissez Ruff ou Black formater le code.
+L'**indentation** (4 espaces) délimite les blocs : ne mélangez jamais tabulations et espaces. Un bloc s'ouvre après `:` et ne peut pas être vide (`pass`). Python est **sensible à la casse** et ses mots-clés sont réservés. Une **expression** produit une valeur, une **instruction** réalise une action ; `:=` affecte au sein d'une expression. Suivez la **PEP 8** et laissez Ruff ou Black formater le code.
+
+---
 
 ## 3. Variables et types de données
 
-**Objectifs du chapitre** : comprendre ce qu'est réellement une variable en Python, connaître tous les types de base et leurs particularités, maîtriser conversions, mutabilité et portée.
+**Objectifs d'apprentissage.** Comprendre ce qu'est réellement une variable en Python, connaître tous les types de base et leurs particularités, maîtriser conversions, mutabilité et portée.
 
 ### 3.1 Les variables
 
@@ -1043,18 +1052,15 @@ print(SECONDES_PAR_JOUR * 2)   # → 172800
 - Ne masquez jamais une fonction intégrée (`list`, `str`, `sum`, `max`…).
 - Utilisez `None` comme valeur par défaut pour les paramètres mutables (chapitre 11).
 
-### À retenir (chapitre 3)
+### Synthèse du chapitre 3
 
-- Une variable est un nom lié à un objet ; les affectations ne copient pas, elles référencent.
-- `int` est illimité, `float` est approché (IEEE 754), `Decimal` est exact en base 10.
-- Une `str` est une séquence Unicode immuable ; `bytes` représente des octets.
-- `bool` est un `int` ; les valeurs vides ou nulles sont « fausses » ; `None` se teste avec `is`.
-- Immuable ou mutable détermine ce qu'une copie ou un alias provoque ; `is` compare l'identité, `==` la valeur.
-- Les noms sont résolus selon LEGB.
+Une **variable** est un nom lié à un objet : les affectations ne copient pas, elles référencent. `int` est illimité, `float` est approché (IEEE 754), `Decimal` est exact en base 10 ; une `str` est une séquence Unicode **immuable**, `bytes` représente des octets. `bool` est un `int`, les valeurs vides ou nulles sont « fausses » et `None` se teste avec `is`. Savoir si un objet est **mutable ou immuable** détermine ce qu'une copie ou un alias provoque ; `is` compare l'identité, `==` la valeur. Les noms sont résolus selon la règle **LEGB**.
+
+---
 
 ## 4. Opérateurs et expressions
 
-**Objectifs du chapitre** : connaître tous les opérateurs du langage, comprendre leur priorité et leur associativité, évaluer correctement une expression et éviter les pièges classiques.
+**Objectifs d'apprentissage.** Connaître tous les opérateurs du langage, comprendre leur priorité et leur associativité, évaluer correctement une expression et éviter les pièges classiques.
 
 Un **opérateur** est un symbole ou un mot-clé qui combine des **opérandes** pour produire une valeur. Un opérateur est **unaire** (un opérande : `-x`, `not x`), **binaire** (deux : `a + b`) ou, pour le conditionnel, **ternaire** (`a if c else b`).
 
@@ -1267,7 +1273,7 @@ print(Vecteur(1, 2) == Vecteur(1, 2))       # → True
 
 Quand l'opérande de gauche ne sait pas gérer l'opération, Python essaie la version **inversée** de l'opérande de droite (`__radd__`, `__rmul__`…). Voir le chapitre 16.
 
-### 4.10 Pièges courants
+### 4.10 Pièges fréquents
 
 1. **Imprécision des flottants** : `0.1 + 0.2 == 0.3` est faux ; comparez avec `math.isclose`.
 2. **`is` contre `==`** : `==` pour les valeurs ; `is` uniquement pour `None`, `True`, `False`.
@@ -1297,16 +1303,15 @@ print(r)                        # → C
 - Préférez `is None` / `is not None` à `== None`.
 - Évitez d'enchaîner plusieurs conditionnels (ternaires).
 
-### À retenir (chapitre 4)
+### Synthèse du chapitre 4
 
-- `/` renvoie un `float`, `//` arrondit vers le bas, `%` suit le signe du diviseur, `**` est associatif à droite.
-- `and` et `or` sont paresseux et renvoient un opérande.
-- `==` compare les valeurs, `is` les identités ; `in` teste l'appartenance.
-- En cas de doute sur la priorité, utilisez des parenthèses.
+`/` renvoie un `float`, `//` arrondit vers le bas, `%` suit le signe du diviseur et `**` est associatif à droite. `and` et `or` sont **paresseux** et renvoient un opérande. `==` compare les valeurs, `is` les identités, `in` teste l'appartenance. En cas de doute sur la **priorité**, utilisez des parenthèses.
+
+---
 
 ## 5. Entrées et sorties
 
-**Objectifs du chapitre** : lire des données fournies par l'utilisateur ou par la ligne de commande, afficher des résultats proprement, maîtriser le formatage de texte, de nombres et de dates.
+**Objectifs d'apprentissage.** Lire des données fournies par l'utilisateur ou par la ligne de commande, afficher des résultats proprement, maîtriser le formatage de texte, de nombres et de dates.
 
 ### 5.1 Introduction
 
@@ -1481,16 +1486,15 @@ Pour les **fuseaux horaires**, utilisez `zoneinfo.ZoneInfo('Europe/Paris')` et m
 - Pour les programmes non interactifs, privilégiez les arguments en ligne de commande plutôt que `input()`.
 - Ne présumez pas l'encodage de la console ; en cas de caractères accentués mal affichés, vérifiez `sys.stdout.encoding`.
 
-### À retenir (chapitre 5)
+### Synthèse du chapitre 5
 
-- `input()` renvoie toujours un `str` : convertissez et validez.
-- `print()` accepte `sep`, `end`, `file`, `flush`.
-- Les f-strings et leur mini-langage de format couvrent presque tous les besoins ; les t-strings (3.14) servent à traiter les valeurs interpolées en sécurité.
-- `datetime` + `strftime` / `strptime` pour les dates ; `zoneinfo` pour les fuseaux.
+`input()` renvoie **toujours** un `str` : convertissez et validez. `print()` accepte `sep`, `end`, `file` et `flush`. Les **f-strings** et leur mini-langage de format couvrent presque tous les besoins ; les **t-strings** (3.14) servent à traiter les valeurs interpolées en sécurité. Pour les dates, `datetime` avec `strftime` / `strptime` ; pour les fuseaux, `zoneinfo`.
+
+---
 
 ## 6. Structures de contrôle
 
-**Objectifs du chapitre** : maîtriser les conditions, le filtrage par motifs et les boucles, et savoir choisir la bonne structure pour chaque situation.
+**Objectifs d'apprentissage.** Maîtriser les conditions, le filtrage par motifs et les boucles, et savoir choisir la bonne structure pour chaque situation.
 
 ### 6.1 Introduction
 
@@ -1736,16 +1740,17 @@ print(g(3), g(-1))   # → positif None
 - Ne modifiez pas une liste pendant que vous la parcourez ; parcourez une copie ou construisez une nouvelle liste.
 - Remplacez les cascades de `elif` portant sur une même valeur par `match` ou par un dictionnaire.
 
-### À retenir (chapitre 6)
+### Synthèse du chapitre 6
 
-- `if` / `elif` / `else` pour choisir ; ternaire pour les cas simples ; `match` pour décomposer des structures.
-- `for` parcourt un itérable, `while` répète tant qu'une condition est vraie.
-- `break`, `continue` et le `else` de boucle contrôlent l'exécution.
-- `enumerate`, `zip`, `reversed`, `sorted` rendent les parcours expressifs.
+`if` / `elif` / `else` pour choisir, l'opérateur ternaire pour les cas simples, `match` pour décomposer des structures. `for` parcourt un itérable, `while` répète tant qu'une condition est vraie ; `break`, `continue` et le `else` de boucle contrôlent l'exécution. `enumerate`, `zip`, `reversed` et `sorted` rendent les parcours expressifs.
+
+---
+
+# Partie II — Structures de données
 
 ## 7. Dictionnaires
 
-**Objectifs du chapitre** : comprendre le fonctionnement d'un dictionnaire, maîtriser création, accès, modification, parcours, fusion et compréhension, connaître les structures spécialisées du module `collections`.
+**Objectifs d'apprentissage.** Comprendre le fonctionnement d'un dictionnaire, maîtriser création, accès, modification, parcours, fusion et compréhension, connaître les structures spécialisées du module `collections`.
 
 ### 7.1 Introduction
 
@@ -1968,16 +1973,15 @@ print(freq)   # → {'b': 1, 'a': 2, 'n': 2, 'e': 1}
 
 Pour des données structurées à clés fixes, préférez un `dataclass` ou un `TypedDict` (chapitres 16 et 17).
 
-### À retenir (chapitre 7)
+### Synthèse du chapitre 7
 
-- Un `dict` associe des clés hachables uniques à des valeurs ; il conserve l'ordre d'insertion.
-- `d[k]` lève `KeyError`, `d.get(k, défaut)` non.
-- `keys`, `values`, `items` donnent des vues ; ne changez pas la taille pendant un parcours.
-- `|` fusionne, les compréhensions transforment, `defaultdict` et `Counter` simplifient les regroupements et comptages.
+Un `dict` associe des **clés hachables uniques** à des valeurs et conserve l'ordre d'insertion. `d[k]` lève `KeyError`, `d.get(k, défaut)` non. `keys`, `values` et `items` donnent des **vues** : ne changez pas la taille du dictionnaire pendant un parcours. L'opérateur `|` fusionne, les compréhensions transforment, `defaultdict` et `Counter` simplifient regroupements et comptages.
+
+---
 
 ## 8. Listes
 
-**Objectifs du chapitre** : maîtriser la structure de données la plus utilisée de Python : création, indexation, tranches, modification, tri, compréhensions, copies et pièges liés à la mutabilité.
+**Objectifs d'apprentissage.** Maîtriser la structure de données la plus utilisée de Python : création, indexation, tranches, modification, tri, compréhensions, copies et pièges liés à la mutabilité.
 
 ### 8.1 Introduction
 
@@ -2189,16 +2193,15 @@ print(list('abc'))                # → ['a', 'b', 'c']
 
 Pour une **file** (ajouts et retraits aux deux extrémités), utilisez `collections.deque` : `append()` et `popleft()` y sont en O(1), alors que `list.pop(0)` est en O(n).
 
-### À retenir (chapitre 8)
+### Synthèse du chapitre 8
 
-- Une liste est ordonnée et mutable ; les tranches sont `[début:fin:pas]` avec fin exclue.
-- `append` ajoute un élément, `extend` plusieurs ; `sort` modifie, `sorted` renvoie une copie.
-- Copiez avec `.copy()` (superficielle) ou `deepcopy` (profonde) ; méfiez-vous des alias et de `[[0] * 3] * 3`.
-- Les compréhensions sont l'outil privilégié de transformation et de filtrage.
+Une **liste** est ordonnée et mutable ; les tranches s'écrivent `[début:fin:pas]` avec la fin exclue. `append` ajoute un élément, `extend` plusieurs ; `sort` modifie la liste, `sorted` renvoie une copie. Copiez avec `.copy()` (superficielle) ou `deepcopy` (profonde) et méfiez-vous des alias et de `[[0] * 3] * 3`. Les **compréhensions** sont l'outil privilégié de transformation et de filtrage.
+
+---
 
 ## 9. Ensembles
 
-**Objectifs du chapitre** : utiliser les ensembles pour éliminer des doublons, tester l'appartenance rapidement et appliquer les opérations mathématiques (union, intersection, différence).
+**Objectifs d'apprentissage.** Utiliser les ensembles pour éliminer des doublons, tester l'appartenance rapidement et appliquer les opérations mathématiques (union, intersection, différence).
 
 ### 9.1 Introduction
 
@@ -2307,15 +2310,15 @@ if 'admin' in interdits:               # recherche rapide
 - **Ne comptez jamais sur l'ordre** d'un ensemble.
 - Employez les ensembles pour les tests d'appartenance fréquents et les comparaisons de collections.
 
-### À retenir (chapitre 9)
+### Synthèse du chapitre 9
 
-- Un `set` contient des éléments uniques, hachables, sans ordre ; `set()` crée un ensemble vide.
-- `| & - ^` donnent union, intersection, différence, différence symétrique.
-- `frozenset` est la variante immuable et hachable.
+Un `set` contient des éléments **uniques**, hachables et sans ordre ; `set()` crée un ensemble vide. Les opérateurs `|`, `&`, `-` et `^` donnent union, intersection, différence et différence symétrique. `frozenset` est la variante **immuable et hachable**.
+
+---
 
 ## 10. Tuples
 
-**Objectifs du chapitre** : comprendre le rôle des séquences immuables, maîtriser le déballage, et savoir quand choisir un tuple plutôt qu'une liste.
+**Objectifs d'apprentissage.** Comprendre le rôle des séquences immuables, maîtriser le déballage, et savoir quand choisir un tuple plutôt qu'une liste.
 
 ### 10.1 Introduction
 
@@ -2435,7 +2438,7 @@ class Coordonnee(NamedTuple):      # version typée (recommandée)
 print(Coordonnee(3))               # → Coordonnee(x=3, y=0.0)
 ```
 
-### 10.11 Erreurs courantes
+### 10.11 Pièges fréquents
 
 | Erreur | Cause | Solution |
 | --- | --- | --- |
@@ -2445,16 +2448,17 @@ print(Coordonnee(3))               # → Coordonnee(x=3, y=0.0)
 | Clé de dict non hachable | Tuple contenant une liste | Convertir en sous-tuples |
 | `IndexError` | Indice hors limites | Vérifier `len(t)` ou utiliser une tranche |
 
-### À retenir (chapitre 10)
+### Synthèse du chapitre 10
 
-- Un tuple est une séquence immuable ; la virgule le crée, `(5,)` pour un seul élément.
-- Le déballage (`a, b = t`, `a, *reste = t`) est un idiome central.
-- Hachable si son contenu l'est : utilisable comme clé.
-- `NamedTuple` ajoute des noms de champs et des types.
+Un **tuple** est une séquence immuable : la virgule le crée, `(5,)` pour un seul élément. Le **déballage** (`a, b = t`, `a, *reste = t`) est un idiome central. Un tuple est hachable si son contenu l'est, donc utilisable comme clé. `NamedTuple` ajoute des noms de champs et des types.
+
+---
+
+# Partie III — Fonctions, itérateurs et générateurs
 
 ## 11. Fonctions
 
-**Objectifs du chapitre** : définir et appeler des fonctions, maîtriser tous les types de paramètres, comprendre portée, fermetures, décorateurs, récursivité, annotations et docstrings.
+**Objectifs d'apprentissage.** Définir et appeler des fonctions, maîtriser tous les types de paramètres, comprendre portée, fermetures, décorateurs, récursivité, annotations et docstrings.
 
 ### 11.1 Introduction
 
@@ -2760,16 +2764,15 @@ print(aire_rectangle(3, 4))   # → 12
 - Documentez et **typez** les fonctions publiques.
 - Ne renvoyez pas des types différents selon les cas sans l'annoncer dans la signature.
 
-### À retenir (chapitre 11)
+### Synthèse du chapitre 11
 
-- Paramètres : positionnels, nommés, par défaut, `*args`, `**kwargs`, `/` et `*`.
-- Jamais de valeur par défaut mutable : utilisez `None`.
-- Les fonctions sont des objets : fermetures, décorateurs et `functools` en découlent.
-- Récursivité = cas de base + cas récursif, mais attention à la limite de profondeur.
+Les paramètres peuvent être positionnels, nommés, par défaut, `*args`, `**kwargs`, ou contraints par `/` et `*`. N'utilisez **jamais** de valeur par défaut mutable : préférez `None`. Les fonctions sont des **objets** : fermetures, décorateurs et `functools` en découlent. La récursivité repose sur un **cas de base** et un **cas récursif**, en gardant à l'esprit la limite de profondeur.
+
+---
 
 ## 12. Itérateurs et générateurs
 
-**Objectifs du chapitre** : comprendre le protocole d'itération sur lequel repose `for`, écrire des générateurs pour traiter des données à la demande et utiliser `itertools`.
+**Objectifs d'apprentissage.** Comprendre le protocole d'itération sur lequel repose `for`, écrire des générateurs pour traiter des données à la demande et utiliser `itertools`.
 
 ### 12.1 Itérables et itérateurs
 
@@ -2898,15 +2901,17 @@ Dans la plupart des cas, un **générateur** est plus simple et plus court qu'un
 
 Attention : on ne peut parcourir un générateur qu'**une seule fois**, et on ne peut ni connaître sa longueur (`len`) ni l'indexer.
 
-### À retenir (chapitre 12)
+### Synthèse du chapitre 12
 
-- `for` repose sur `iter()` et `next()` ; un itérateur s'épuise.
-- `yield` transforme une fonction en générateur : valeurs paresseuses, état conservé.
-- `itertools` offre des outils combinatoires et de découpage économes en mémoire.
+`for` repose sur `iter()` et `next()` ; un **itérateur s'épuise**. `yield` transforme une fonction en **générateur** : valeurs produites à la demande, état conservé entre deux appels. `itertools` offre des outils combinatoires et de découpage économes en mémoire.
+
+---
+
+# Partie IV — Robustesse, fichiers et organisation du code
 
 ## 13. Gestion des erreurs
 
-**Objectifs du chapitre** : distinguer erreurs de syntaxe et exceptions, savoir les capturer, les lever, les chaîner et en créer de nouvelles ; utiliser `finally`, `with`, `assert` et `logging` ; adopter une stratégie de gestion d'erreurs robuste.
+**Objectifs d'apprentissage.** Distinguer erreurs de syntaxe et exceptions, savoir les capturer, les lever, les chaîner et en créer de nouvelles ; utiliser `finally`, `with`, `assert` et `logging` ; adopter une stratégie de gestion d'erreurs robuste.
 
 ### 13.1 Introduction
 
@@ -3183,15 +3188,15 @@ except KeyError:
 print(valeur)   # → None
 ```
 
-### À retenir (chapitre 13)
+### Synthèse du chapitre 13
 
-- `try` / `except` / `else` / `finally`, avec des exceptions précises et jamais de `except:` nu.
-- `raise` lève, `raise ... from e` chaîne, `raise` seul relance.
-- `with` et `finally` garantissent le nettoyage ; `logging` trace ; `assert` vérifie les hypothèses de développement.
+Utilisez `try` / `except` / `else` / `finally` avec des **exceptions précises** et jamais de `except:` nu. `raise` lève une exception, `raise ... from e` la chaîne, `raise` seul la relance. `with` et `finally` garantissent le **nettoyage** ; `logging` trace les erreurs ; `assert` vérifie les hypothèses de développement.
+
+---
 
 ## 14. Gestion des fichiers
 
-**Objectifs du chapitre** : lire et écrire des fichiers texte et binaires, manipuler chemins et dossiers avec `pathlib`, traiter CSV, JSON et TOML, et connaître les risques de `pickle`.
+**Objectifs d'apprentissage.** Lire et écrire des fichiers texte et binaires, manipuler chemins et dossiers avec `pathlib`, traiter CSV, JSON et TOML, et connaître les risques de `pickle`.
 
 ### 14.1 Introduction
 
@@ -3450,16 +3455,15 @@ print(os.access('a.txt', os.R_OK))    # → True si lisible
 - **Fichiers mappés en mémoire** : module `mmap`.
 - **Écriture atomique** : écrire dans un fichier temporaire puis `os.replace()`, pour ne jamais laisser un fichier à moitié écrit.
 
-### À retenir (chapitre 14)
+### Synthèse du chapitre 14
 
-- Toujours `with open(..., encoding='utf-8')` ; modes `r`, `w` (écrase), `a`, `x`, `b`.
-- Parcourez les gros fichiers ligne par ligne ou par blocs.
-- `pathlib` pour les chemins, `shutil` pour copier et supprimer, `csv` / `json` / `tomllib` pour les formats.
-- Ne désérialisez jamais un pickle non fiable.
+Ouvrez toujours les fichiers avec `with open(..., encoding='utf-8')` ; les modes sont `r`, `w` (écrase), `a`, `x` et `b`. Parcourez les gros fichiers ligne par ligne ou par blocs. Utilisez `pathlib` pour les chemins, `shutil` pour copier et supprimer, `csv` / `json` / `tomllib` pour les formats. Ne désérialisez **jamais** un `pickle` non fiable.
+
+---
 
 ## 15. Modules, paquets et environnements virtuels
 
-**Objectifs du chapitre** : organiser son code en modules et paquets, installer des bibliothèques tierces, isoler les dépendances de chaque projet et connaître les outils modernes de gestion de projet.
+**Objectifs d'apprentissage.** Organiser son code en modules et paquets, installer des bibliothèques tierces, isoler les dépendances de chaque projet et connaître les outils modernes de gestion de projet.
 
 ### 15.1 Modules
 
@@ -3620,15 +3624,17 @@ testpaths = ["tests"]
 
 Un exemple d'usage de `re` : `re.findall(r'[0-9]+', 'a12b345')` renvoie `['12', '345']`.
 
-### À retenir (chapitre 15)
+### Synthèse du chapitre 15
 
-- Un module est un fichier `.py`, un paquet un dossier de modules ; `if __name__ == '__main__':` sépare import et exécution.
-- `python -m pip install` installe depuis PyPI ; `python -m venv .venv` isole un projet.
-- `pyproject.toml` est le fichier de référence ; `uv` simplifie l'ensemble du flux de travail.
+Un **module** est un fichier `.py`, un **paquet** un dossier de modules ; `if __name__ == '__main__':` sépare l'import de l'exécution. `python -m pip install` installe depuis PyPI et `python -m venv .venv` isole un projet. `pyproject.toml` est le fichier de référence, et `uv` simplifie l'ensemble du flux de travail.
+
+---
+
+# Partie V — Programmation professionnelle
 
 ## 16. Programmation orientée objet
 
-**Objectifs du chapitre** : maîtriser classes, objets, attributs et méthodes, les quatre piliers de la POO, les méthodes spéciales, les `dataclass`, les classes abstraites et les protocoles, et connaître les mécanismes avancés (descripteurs, métaclasses).
+**Objectifs d'apprentissage.** Maîtriser classes, objets, attributs et méthodes, les quatre piliers de la POO, les méthodes spéciales, les `dataclass`, les classes abstraites et les protocoles, et connaître les mécanismes avancés (descripteurs, métaclasses).
 
 ### 16.1 Concepts fondamentaux
 
@@ -4166,17 +4172,15 @@ except SoldeInsuffisant as erreur:
 
 Cet exemple combine classe de données, exception personnalisée, validation et annotations.
 
-### À retenir (chapitre 16)
+### Synthèse du chapitre 16
 
-- Classe = plan, objet = instance ; `__init__` initialise, `self` désigne l'instance.
-- Encapsulation par convention (`_x`) et propriétés ; `@classmethod` pour les constructeurs alternatifs.
-- Héritage + `super()` + MRO ; préférez la composition quand c'est possible.
-- Duck typing et protocoles : l'interface prime sur la classe.
-- `@dataclass` supprime le code répétitif ; `Enum` modélise les constantes ; `ABC` définit des interfaces.
+Une **classe** est un plan, un **objet** en est une instance ; `__init__` initialise et `self` désigne l'instance. L'encapsulation se fait par convention (`_x`) et par **propriétés** ; `@classmethod` sert aux constructeurs alternatifs. L'**héritage** s'appuie sur `super()` et le MRO, mais préférez la **composition** quand c'est possible. Le *duck typing* et les protocoles font primer l'interface sur la classe. `@dataclass` supprime le code répétitif, `Enum` modélise les constantes et `ABC` définit des interfaces.
+
+---
 
 ## 17. Typage statique
 
-**Objectifs du chapitre** : annoter le code avec des types, utiliser la syntaxe moderne, comprendre génériques et alias, connaître l'évaluation différée des annotations de Python 3.14 et vérifier ses types avec un outil.
+**Objectifs d'apprentissage.** Annoter le code avec des types, utiliser la syntaxe moderne, comprendre génériques et alias, connaître l'évaluation différée des annotations de Python 3.14 et vérifier ses types avec un outil.
 
 ### 17.1 Annotations de types
 
@@ -4300,15 +4304,15 @@ mypy mon_script.py
 
 Le vérificateur signale par exemple l'appel `additionner('a', 'b')` du 17.1 sans exécuter le code. Intégrez-le à l'éditeur (Pylance, pyright) et à l'intégration continue. Pour les bibliothèques sans annotations, des fichiers de **stubs** (`.pyi`) fournissent les types.
 
-### À retenir (chapitre 17)
+### Synthèse du chapitre 17
 
-- Les annotations n'ont aucun effet à l'exécution ; elles servent aux outils (mypy, pyright) et à la documentation.
-- Syntaxe moderne : `list[int]`, `dict[str, int]`, `str | None`.
-- `def f[T](...)`, `class C[T]` et `type Alias = ...` (3.12+) ; annotations évaluées à la demande (3.14).
+Les **annotations de types** n'ont aucun effet à l'exécution : elles servent aux outils (mypy, pyright) et à la documentation. La syntaxe moderne s'écrit `list[int]`, `dict[str, int]`, `str | None`. Depuis Python 3.12, `def f[T](...)`, `class C[T]` et `type Alias = ...` expriment les génériques ; depuis la 3.14, les annotations sont évaluées à la demande.
+
+---
 
 ## 18. Programmation asynchrone et concurrence
 
-**Objectifs du chapitre** : distinguer concurrence et parallélisme, choisir entre `asyncio`, threads et processus, écrire du code asynchrone avec `async` / `await`, et comprendre le rôle du GIL et ses évolutions récentes.
+**Objectifs d'apprentissage.** Distinguer concurrence et parallélisme, choisir entre `asyncio`, threads et processus, écrire du code asynchrone avec `async` / `await`, et comprendre le rôle du GIL et ses évolutions récentes.
 
 ### 18.1 Choisir le bon modèle
 
@@ -4423,16 +4427,15 @@ Le **GIL** (*Global Interpreter Lock*) est un verrou de CPython qui n'autorise q
 
 En mode sans GIL, les threads peuvent s'exécuter vraiment en parallèle : les verrous et la prudence sur les données partagées deviennent plus importants, et les extensions natives doivent être compatibles.
 
-### À retenir (chapitre 18)
+### Synthèse du chapitre 18
 
-- E/S nombreuses : `asyncio` ; E/S bloquantes : threads ; calcul intensif : processus (ou mode sans GIL).
-- Une coroutine se déclare avec `async def` et s'attend avec `await` ; `TaskGroup` structure la concurrence.
-- Ne bloquez jamais la boucle d'événements ; protégez les données partagées entre threads.
-- Le GIL limite le parallélisme des threads ; Python 3.13/3.14 ouvrent la voie du sans-GIL et des sous-interpréteurs.
+Pour de nombreuses E/S, utilisez `asyncio` ; pour des E/S bloquantes, des **threads** ; pour du calcul intensif, des **processus** (ou le mode sans GIL). Une **coroutine** se déclare avec `async def` et s'attend avec `await` ; `TaskGroup` structure la concurrence. Ne bloquez jamais la boucle d'événements et protégez les données partagées entre threads. Le **GIL** limite le parallélisme des threads ; Python 3.13 et 3.14 ouvrent la voie du **sans-GIL** et des sous-interpréteurs.
+
+---
 
 ## 19. Tests et qualité du code
 
-**Objectifs du chapitre** : écrire des tests automatisés avec `pytest`, connaître `unittest` et `doctest`, mesurer la couverture, mettre en place des outils de qualité et déboguer efficacement.
+**Objectifs d'apprentissage.** Écrire des tests automatisés avec `pytest`, connaître `unittest` et `doctest`, mesurer la couverture, mettre en place des outils de qualité et déboguer efficacement.
 
 ### 19.1 Pourquoi tester ?
 
@@ -4564,15 +4567,17 @@ breakpoint()   # lance le débogueur pdb à cet endroit ; tapez c pour continuer
 
 Commandes `pdb` : `n` (ligne suivante), `s` (entrer dans l'appel), `c` (continuer), `p variable` (afficher), `l` (afficher le code), `q` (quitter). Les éditeurs (VS Code, PyCharm) proposent un débogueur graphique avec points d'arrêt. Le module `logging` et `print(f'{x=}')` restent des alliés simples ; `python -X dev` active des vérifications supplémentaires.
 
-### À retenir (chapitre 19)
+### Synthèse du chapitre 19
 
-- Testez avec `pytest` : fichiers `test_*.py`, `assert`, `parametrize`, fixtures, `pytest.raises`.
-- Automatisez le lint, le formatage, les types et les tests (Ruff, mypy, pre-commit, CI).
-- Pour déboguer : trace d'erreur, exemple minimal, `breakpoint()` ou débogueur de l'éditeur.
+Testez avec **`pytest`** : fichiers `test_*.py`, `assert`, `parametrize`, fixtures, `pytest.raises`. Automatisez le lint, le formatage, les types et les tests (Ruff, mypy, pre-commit, CI). Pour **déboguer** : lisez la trace d'erreur, réduisez à un exemple minimal, puis utilisez `breakpoint()` ou le débogueur de l'éditeur.
+
+---
+
+# Partie VI — La suite du parcours
 
 ## 20. Aller plus loin
 
-**Objectifs du chapitre** : situer ses acquis, choisir une spécialisation, suivre l'évolution du langage et savoir où chercher de l'aide.
+**Objectifs d'apprentissage.** Situer ses acquis, choisir une spécialisation, suivre l'évolution du langage et savoir où chercher de l'aide.
 
 ### 20.1 Parcours d'apprentissage suggéré
 
@@ -4609,6 +4614,10 @@ Pour suivre l'actualité du langage : les notes de version (*What's New*), les P
 - Index des paquets : pypi.org
 - Glossaire en français : docstring.fr/glossaire
 
-### Conclusion
+### Synthèse du chapitre 20
 
 Python récompense la régularité : lire du code d'autres personnes, écrire de petits programmes chaque semaine, tester, typer et refactoriser. Les concepts de ce cours (objets, mutabilité, itérateurs, exceptions, modules) se retrouvent dans tout l'écosystème ; une fois maîtrisés, chaque nouvelle bibliothèque devient une simple application de principes connus. Bon code !
+
+---
+
+*Fin du cours. Bon code avec Python !*
