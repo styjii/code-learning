@@ -239,7 +239,7 @@ language/topics/
 ├── frameworks/    angular, django, laravel, nextjs, react, vuejs
 ├── modules/       python, bs4, c-module, cpp-module, flask, pandas, numpy
 ├── database/      sqlite3, mysql, postgresql
-├── system/        linux-commands, windows-commands, bash-scripts, zsh-scripts
+├── system/        linux-commands, windows-commands, reseaux-informatiques, bash-scripts, zsh-scripts
 ├── exercises/     énoncés par langage
 ├── solutions/     corrigés commentés
 └── projects/      projets guidés
