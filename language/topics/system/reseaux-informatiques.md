@@ -1,8 +1,6 @@
-# Réseaux informatiques — Cours complet
+# Avant de commencer : mode d'emploi du cours
 
 *Module d'apprentissage détaillé, du technicien débutant à l'administrateur système et réseau (Ubuntu Server 24.04, Windows Server 2022, Cisco IOS, MikroTik RouterOS 7 ; novembre 2026)*
-
-## Avant de commencer : mode d'emploi du cours
 
 **À qui s'adresse ce cours ?** À toute personne qui connaît les bases de l'informatique (fichiers, processus, installation de logiciels, usage d'un terminal) et qui veut apprendre à concevoir, configurer, sécuriser, superviser et dépanner le réseau d'une entreprise : débutant, technicien informatique, administrateur système Linux débutant, futur technicien réseau.
 
@@ -16,9 +14,9 @@
 6. appliquer une méthodologie de dépannage structurée ;
 7. déployer et documenter l'infrastructure d'une PME de 30 à 50 employés.
 
-**Fil rouge.** Tous les exemples s'appuient sur une même entreprise fictive de 40 collaborateurs, **Atlas Conseil**, et sur un même plan d'adressage : postes en VLAN 10 et 20 (`192.168.10.0/24`, `192.168.20.0/24`), serveurs en VLAN 30 (`192.168.30.0/24`), zone DMZ en VLAN 40, invités en VLAN 50, imprimantes en VLAN 60 et administration en VLAN 99. Vous retrouvez donc toujours les mêmes noms : `srv-infra`, `srv-fic`, `srv-web`, `srv-mon`, `rb-gw`, `sw1`, `sw2`. Les travaux pratiques (section 22) utilisent une version réduite du réseau en machines virtuelles (`srv-lab`, `cli-ubuntu`, `192.168.10.0/24`) et le projet final (section 23) assemble l'ensemble. Deux noms de domaine DNS apparaissent : `entreprise.local` (exemples de cours et TP) et `int.atlas.example` (projet final) ; en production, on évite `.local` (réservé à mDNS) au profit d'un sous-domaine d'un nom que l'on possède.
+**Fil rouge.** Tous les exemples s'appuient sur une même entreprise fictive de 40 collaborateurs, **Atlas Conseil**, et sur un même plan d'adressage : postes en VLAN 10 et 20 (`192.168.10.0/24`, `192.168.20.0/24`), serveurs en VLAN 30 (`192.168.30.0/24`), zone DMZ en VLAN 40, invités en VLAN 50, imprimantes en VLAN 60 et administration en VLAN 99. Vous retrouvez donc toujours les mêmes noms : `srv-infra`, `srv-fic`, `srv-web`, `srv-mon`, `rb-gw`, `sw1`, `sw2`. Les travaux pratiques (section « Travaux pratiques et laboratoires ») utilisent une version réduite du réseau en machines virtuelles (`srv-lab`, `cli-ubuntu`, `192.168.10.0/24`) et le projet final (section « Projet final : infrastructure réseau d'une entreprise de 40 collaborateurs ») assemble l'ensemble. Deux noms de domaine DNS apparaissent : `entreprise.local` (exemples de cours et TP) et `int.atlas.example` (projet final) ; en production, on évite `.local` (réservé à mDNS) au profit d'un sous-domaine d'un nom que l'on possède.
 
-**Structure de chaque section.** Chaque chapitre suit le même schéma : *objectifs d'apprentissage* → *concepts et définitions* → *exemples commentés (commandes, configurations, résultats)* → *pièges et bonnes pratiques* → *à retenir*. Les exercices et leurs corrections sont regroupés dans deux sections dédiées (24 et 25) afin de ne pas révéler les réponses.
+**Structure de chaque section.** Chaque section suit le même schéma : *objectifs d'apprentissage* → *concepts et définitions* → *exemples commentés (commandes, configurations, résultats)* → *pièges et bonnes pratiques* → *à retenir*. Les exercices et leurs corrections sont regroupés dans deux sections dédiées (« Exercices » et « Corrections des exercices et des laboratoires ») afin de ne pas révéler les réponses.
 
 **Légende.** *(à jour)* = pratique moderne qui remplace une ancienne ; *(ajout)* = notion absente du plan d'origine. Les marqueurs suivants servent dans tous les exemples :
 
@@ -38,50 +36,13 @@
 
 ---
 
-## Table des matières
+# Introduction aux réseaux informatiques
 
-- **Fondations**
-  - [1. Introduction aux réseaux informatiques](#1-introduction-aux-réseaux-informatiques)
-  - [2. Environnement de laboratoire et outillage](#2-environnement-de-laboratoire-et-outillage)
-  - [3. Protocoles, adresses et noms](#3-protocoles-adresses-et-noms)
-  - [4. Adressage IPv4 et subnetting](#4-adressage-ipv4-et-subnetting)
-  - [5. IPv6 et configuration IP statique ou dynamique](#5-ipv6-et-configuration-ip-statique-ou-dynamique)
-  - [6. Commandes réseau sous Windows](#6-commandes-réseau-sous-windows)
-  - [7. Commandes réseau sous Linux](#7-commandes-réseau-sous-linux)
-- **Équipements et réseau d'entreprise**
-  - [8. Équipements réseau, câblage et prise en main de Cisco IOS](#8-équipements-réseau-câblage-et-prise-en-main-de-cisco-ios)
-  - [9. VLAN, trunks et routage inter-VLAN](#9-vlan-trunks-et-routage-inter-vlan)
-  - [10. Routage, NAT et listes de contrôle d'accès](#10-routage-nat-et-listes-de-contrôle-daccès)
-  - [11. DHCP relais, Spanning Tree, agrégation de liens et Wi-Fi](#11-dhcp-relais-spanning-tree-agrégation-de-liens-et-wi-fi)
-  - [12. MikroTik RouterOS et sauvegarde des configurations](#12-mikrotik-routeros-et-sauvegarde-des-configurations)
-- **Services réseau en entreprise**
-  - [13. Services sous Ubuntu Server : socle commun, DHCP et DNS](#13-services-sous-ubuntu-server--socle-commun-dhcp-et-dns)
-  - [14. SSH, Samba, NFS et serveur de fichiers](#14-ssh-samba-nfs-et-serveur-de-fichiers)
-  - [15. Serveurs web, VPN, FTP/SFTP et proxy](#15-serveurs-web-vpn-ftpsftp-et-proxy)
-  - [16. Windows Server : Active Directory, DNS et DHCP](#16-windows-server--active-directory-dns-et-dhcp)
-  - [17. Windows Server : GPO, partages et permissions](#17-windows-server--gpo-partages-et-permissions)
-- **Dépannage, sécurité et supervision**
-  - [18. Méthodologie professionnelle de dépannage](#18-méthodologie-professionnelle-de-dépannage)
-  - [19. Les problèmes réseau rencontrés en entreprise](#19-les-problèmes-réseau-rencontrés-en-entreprise)
-  - [20. Sécurité réseau en entreprise](#20-sécurité-réseau-en-entreprise)
-  - [21. Outils professionnels de diagnostic et de supervision](#21-outils-professionnels-de-diagnostic-et-de-supervision)
-- **Pratique, projet et référence**
-  - [22. Travaux pratiques et laboratoires](#22-travaux-pratiques-et-laboratoires)
-  - [23. Projet final : infrastructure réseau d'une entreprise de 40 collaborateurs](#23-projet-final--infrastructure-réseau-dune-entreprise-de-40-collaborateurs)
-  - [24. Exercices](#24-exercices)
-  - [25. Corrections des exercices et des laboratoires](#25-corrections-des-exercices-et-des-laboratoires)
-  - [26. Aide-mémoire : index des commandes et dépannage rapide](#26-aide-mémoire--index-des-commandes-et-dépannage-rapide)
-  - [27. Bonnes pratiques, ressources et glossaire](#27-bonnes-pratiques-ressources-et-glossaire)
-
----
-
-## 1. Introduction aux réseaux informatiques
-
-### Objectifs d'apprentissage
+## Objectifs d'apprentissage
 
 Définir ce qu'est un réseau informatique et situer LAN, WAN, WLAN, MAN et PAN ; distinguer client–serveur et pair à pair ; choisir une topologie ; expliquer les couches des modèles OSI et TCP/IP et le principe de l'encapsulation ; décrire le métier de technicien et d'administrateur réseau.
 
-### 1.1 Pourquoi les réseaux ? Le métier de technicien réseau
+## Pourquoi les réseaux ? Le métier de technicien réseau
 
 Un réseau informatique relie des équipements (postes, serveurs, imprimantes, téléphones, objets connectés) afin qu'ils échangent des données. Dans une entreprise, le réseau est une infrastructure critique : une panne de quelques minutes peut bloquer la facturation, la téléphonie ou l'accès aux fichiers.
 
@@ -94,7 +55,7 @@ Le métier de technicien réseau et d'administrateur système et réseau consist
 
 Ce guide suit une progression en quatre niveaux : débutant, intermédiaire, avancé, professionnel. Chaque notion est expliquée avant d'être manipulée en ligne de commande.
 
-### 1.2 Définition et fonctionnement d'un réseau
+## Définition et fonctionnement d'un réseau
 
 Un réseau informatique est un ensemble d'équipements reliés par des supports de transmission (câbles, ondes radio, fibre) et qui suivent des **protocoles**, c'est-à-dire des règles communes de communication.
 
@@ -103,7 +64,7 @@ Les données sont découpées en **paquets** (ou **trames** selon la couche). Ch
 - un **en-tête** : adresses source et destination, protocole, contrôle d'erreurs ;
 - une **charge utile** (payload) : les données de l'application.
 
-### 1.3 Types de réseaux selon l'étendue
+## Types de réseaux selon l'étendue
 
 | Type | Nom complet | Étendue | Exemple |
 |---|---|---|---|
@@ -113,7 +74,7 @@ Les données sont découpées en **paquets** (ou **trames** selon la couche). Ch
 | MAN | Metropolitan Area Network | Une ville | Réseau d'une université sur plusieurs sites |
 | WAN | Wide Area Network | Pays, monde | Internet, liaison entre agences |
 
-### 1.4 Client-serveur et Peer-to-Peer
+## Client-serveur et Peer-to-Peer
 
 | Critère | Client-serveur | Peer-to-Peer (P2P) |
 |---|---|---|
@@ -123,7 +84,7 @@ Les données sont découpées en **paquets** (ou **trames** selon la couche). Ch
 | Coût | Plus élevé | Faible |
 | Usage typique | Entreprise (fichiers, messagerie, Active Directory) | Petit groupe, partage occasionnel |
 
-### 1.5 Topologies réseau
+## Topologies réseau
 
 | Topologie | Principe | Avantages | Inconvénients |
 |---|---|---|---|
@@ -145,7 +106,7 @@ Les données sont découpées en **paquets** (ou **trames** selon la couche). Ch
 
 En entreprise, on utilise une **étoile étendue** (hiérarchique) : accès, distribution, cœur de réseau.
 
-### 1.6 Le modèle OSI (7 couches)
+## Le modèle OSI (7 couches)
 
 Le modèle OSI (ISO/IEC 7498-1) est un modèle de référence pour décrire les communications.
 
@@ -161,7 +122,7 @@ Le modèle OSI (ISO/IEC 7498-1) est un modèle de référence pour décrire les 
 
 Moyen mnémotechnique (de 7 à 1) : « **A**ucun **P**rofesseur **S**érieux **T**ravaillant **R**arement **L**ui **P**ardonne » est une des variantes courantes ; l'important est de connaître l'ordre.
 
-#### Encapsulation
+### Encapsulation
 
 Lors de l'envoi, chaque couche ajoute son en-tête ; à la réception, chaque couche le retire (désencapsulation).
 
@@ -173,7 +134,7 @@ flowchart TB
     L --> P["Physique: bits sur le support"]
 ```
 
-### 1.7 Le modèle TCP/IP
+## Le modèle TCP/IP
 
 Le modèle TCP/IP, utilisé réellement sur Internet, comporte 4 couches (parfois présentées en 5).
 
@@ -184,7 +145,7 @@ Le modèle TCP/IP, utilisé réellement sur Internet, comporte 4 couches (parfoi
 | Internet | 3 | IP (v4, v6), ICMP, IPsec |
 | Accès réseau | 1, 2 | Ethernet, Wi-Fi, ARP |
 
-### Pièges fréquents
+## Pièges fréquents
 
 | Piège | Conséquence | Remède |
 | --- | --- | --- |
@@ -193,27 +154,21 @@ Le modèle TCP/IP, utilisé réellement sur Internet, comporte 4 couches (parfoi
 | Croire qu'une étoile n'a pas de point de défaillance | Panne de tout le site si le switch central tombe | Prévoir la redondance (liens agrégés, second switch, onduleur) |
 | Réseau pair à pair en entreprise | Droits et sécurité ingérables, aucune traçabilité | Architecture client–serveur avec comptes centralisés |
 
-### À retenir
-
-- Un réseau relie des équipements qui suivent des **protocoles** ; il se décrit en **couches**.
-- **OSI** (7 couches) est un langage commun de diagnostic ; **TCP/IP** (4 couches) est ce qui fonctionne réellement ; l'**encapsulation** ajoute un en-tête à chaque couche.
-- En entreprise : topologie en **étoile étendue** hiérarchique et architecture **client–serveur**.
-
 ---
 
-## 2. Environnement de laboratoire et outillage
+# Environnement de laboratoire et outillage
 
-### Objectifs d'apprentissage
+## Objectifs d'apprentissage
 
 Préparer un laboratoire virtuel isolé et reproductible (VirtualBox, réseau interne, instantanés) ; choisir les outils de simulation (Packet Tracer, GNS3) et de diagnostic ; adopter les conventions et précautions du cours (droits administrateur, commandes obsolètes, retour arrière).
 
-### 2.1 Prérequis
+## Prérequis
 
 - Savoir utiliser un système d'exploitation (Windows ou Linux) et un terminal.
 - Notions de base : fichiers, processus, installation de logiciels.
 - Aucune connaissance préalable des réseaux n'est exigée.
 
-### 2.2 Outils nécessaires
+## Outils nécessaires
 
 | Outil | Usage | Gratuit |
 |---|---|---|
@@ -225,9 +180,9 @@ Préparer un laboratoire virtuel isolé et reproductible (VirtualBox, réseau in
 | Wireshark | Analyse de paquets | Oui |
 | Un éditeur de texte (VS Code, nano, vim) | Fichiers de configuration | Oui |
 
-### 2.3 Machines virtuelles, réseau et plan d'adressage du laboratoire
+## Machines virtuelles, réseau et plan d'adressage du laboratoire
 
-#### Machines virtuelles
+### Machines virtuelles
 
 Hyperviseur : **VirtualBox** (gratuit) ou VMware Workstation Player. Ressources recommandées : 8 Go de RAM et 4 cœurs sur l'hôte permettent de faire fonctionner 2 ou 3 machines Ubuntu Server (1 Go de RAM chacune).
 
@@ -239,7 +194,7 @@ Hyperviseur : **VirtualBox** (gratuit) ou VMware Workstation Player. Ressources 
 
 À l'installation d'Ubuntu Server : cocher « Install OpenSSH server », créer l'utilisateur `admin`.
 
-#### Cartes réseau de VirtualBox
+### Cartes réseau de VirtualBox
 
 Pour chaque VM (Paramètres > Réseau) :
 
@@ -250,7 +205,7 @@ Pour chaque VM (Paramètres > Réseau) :
 
 Dans les VM, les interfaces se nomment en général `enp0s3` (NAT) et `enp0s8` (réseau interne). **Vérifiez avec** `ip -br link` et adaptez les exemples. Un réseau interne VirtualBox **ne fournit pas de DHCP** : c'est exactement ce qui permet de construire le vôtre au TP 3.
 
-#### Plan d'adressage du laboratoire
+### Plan d'adressage du laboratoire
 
 | Hôte | Interface | Adresse |
 |---|---|---|
@@ -259,7 +214,7 @@ Dans les VM, les interfaces se nomment en général `enp0s3` (NAT) et `enp0s8` (
 | cli-win | Ethernet 2 | 192.168.10.102/24 (statique), puis DHCP |
 | Domaine DNS du TP | | `entreprise.local` |
 
-#### Bonnes pratiques de laboratoire
+### Bonnes pratiques de laboratoire
 
 - Faire un **instantané (snapshot)** de chaque VM avant chaque TP et avant chaque panne introduite : retour à un état propre en quelques secondes.
 - Ne jamais brancher le laboratoire (réseau interne) à un réseau de production, ni lancer un serveur DHCP sur un réseau partagé : vous perturberiez d'autres machines.
@@ -279,7 +234,7 @@ flowchart LR
     C1 -. "enp0s3" .- NAT
 ```
 
-### Pièges fréquents
+## Pièges fréquents
 
 | Piège | Conséquence | Remède |
 | --- | --- | --- |
@@ -288,23 +243,17 @@ flowchart LR
 | Supposer les noms d'interface identiques (`enp0s8`) | Commandes sans effet ou erreurs | Vérifier avec `ip -br link` et adapter les exemples |
 | Images d'équipements propriétaires sans licence (GNS3) | Usage illégal du logiciel | Utiliser des images libres ou dont vous détenez la licence |
 
-### À retenir
-
-- Un laboratoire **isolé**, avec **instantanés**, permet d'expérimenter sans risque.
-- Les conventions du cours (**Droits admin**, **Obsolète**, **Risque**) signalent ce qui demande de la prudence.
-- Avant toute modification d'une machine distante : sauvegarde et **retour arrière**.
-
 ---
 
-## 3. Protocoles, adresses et noms
+# Protocoles, adresses et noms
 
-### Objectifs d'apprentissage
+## Objectifs d'apprentissage
 
 Distinguer TCP et UDP et décrire la poignée de main en trois temps ; connaître les protocoles et ports usuels (HTTP, HTTPS, SSH, DNS, DHCP, SMB…) ; différencier adresse MAC et adresse IP et expliquer ARP ; comparer IPv4 et IPv6 ; utiliser adresses privées et publiques, masque et passerelle ; expliquer le rôle de DNS et DHCP (DORA) ; comprendre ports et sockets.
 
-### 3.1 Protocoles essentiels
+## Protocoles essentiels
 
-#### TCP et UDP
+### TCP et UDP
 
 | Critère | TCP | UDP |
 |---|---|---|
@@ -326,7 +275,7 @@ sequenceDiagram
     Note over C,S: Connexion établie
 ```
 
-#### Protocoles applicatifs et ports usuels
+### Protocoles applicatifs et ports usuels
 
 | Protocole | Rôle | Port(s) | Transport |
 |---|---|---|---|
@@ -342,11 +291,11 @@ sequenceDiagram
 | SMB | Partage de fichiers Windows/Samba | 445 | TCP |
 | RDP | Bureau à distance Windows | 3389 | TCP |
 
-#### ICMP
+### ICMP
 
 ICMP (Internet Control Message Protocol) transporte des messages de contrôle et d'erreur. `ping` utilise ICMP Echo Request (type 8) et Echo Reply (type 0). `traceroute` exploite le message « Time Exceeded » (type 11) lié au champ TTL.
 
-### 3.2 Adresses MAC et IP
+## Adresses MAC et IP
 
 | Critère | Adresse MAC | Adresse IP |
 |---|---|---|
@@ -356,7 +305,7 @@ ICMP (Internet Control Message Protocol) transporte des messages de contrôle et
 | Attribution | Fabricant (OUI + identifiant) | Administrateur ou DHCP |
 | Portée | Segment local (non routée) | Routée à travers les réseaux |
 
-#### ARP
+### ARP
 
 ARP (Address Resolution Protocol) associe une adresse IPv4 à une adresse MAC sur le réseau local : l'hôte diffuse « Qui possède 192.168.1.1 ? » en broadcast, et le propriétaire répond avec sa MAC.
 
@@ -371,7 +320,7 @@ sequenceDiagram
 
 Sur IPv6, ARP est remplacé par **NDP** (Neighbor Discovery Protocol).
 
-### 3.3 IPv4 et IPv6
+## IPv4 et IPv6
 
 | Critère | IPv4 | IPv6 |
 |---|---|---|
@@ -382,7 +331,7 @@ Sur IPv6, ARP est remplacé par **NDP** (Neighbor Discovery Protocol).
 | NAT | Très répandu | Non nécessaire en principe |
 | Configuration | Manuelle, DHCP | SLAAC, DHCPv6, manuelle |
 
-#### Adresses privées et publiques (IPv4)
+### Adresses privées et publiques (IPv4)
 
 Les plages privées de la RFC 1918 ne sont pas routées sur Internet :
 
@@ -401,7 +350,7 @@ Autres plages spéciales à connaître :
 | 100.64.0.0/10 | CGNAT (opérateurs) |
 | 224.0.0.0/4 | Multicast |
 
-### 3.4 Masque de sous-réseau et passerelle par défaut
+## Masque de sous-réseau et passerelle par défaut
 
 Le **masque de sous-réseau** indique quelle partie de l'adresse identifie le réseau et laquelle identifie l'hôte. Avec `192.168.1.10` et le masque `255.255.255.0` (/24) : réseau `192.168.1.0`, hôte `.10`.
 
@@ -414,9 +363,9 @@ flowchart LR
     PC -->|"destination 192.168.1.20 (même réseau)"| PC2["PC 192.168.1.20"]
 ```
 
-### 3.5 DNS et DHCP
+## DNS et DHCP
 
-#### DHCP (Dynamic Host Configuration Protocol)
+### DHCP (Dynamic Host Configuration Protocol)
 
 Le serveur DHCP attribue automatiquement : adresse IP, masque, passerelle, serveurs DNS, durée du bail. Le processus est appelé **DORA** :
 
@@ -432,7 +381,7 @@ sequenceDiagram
 
 Si aucun serveur ne répond, Windows s'attribue une adresse **APIPA** en `169.254.x.x` : symptôme classique d'un DHCP indisponible.
 
-#### DNS (Domain Name System)
+### DNS (Domain Name System)
 
 Le DNS traduit un nom (`www.exemple.fr`) en adresse IP. Types d'enregistrements fréquents :
 
@@ -446,7 +395,7 @@ Le DNS traduit un nom (`www.exemple.fr`) en adresse IP. Types d'enregistrements 
 | PTR | Adresse vers nom (zone inverse) | `10.10.168.192.in-addr.arpa PTR srv1` |
 | TXT | Texte libre (SPF, vérifications) | `v=spf1 ...` |
 
-### 3.6 Ports et sockets
+## Ports et sockets
 
 Un **port** (0 à 65535) identifie une application sur une machine. Un **socket** est la combinaison adresse IP + port + protocole de transport, par exemple `192.168.1.10:51034 -> 93.184.216.34:443/TCP`.
 
@@ -458,7 +407,7 @@ Un **port** (0 à 65535) identifie une application sur une machine. Un **socket*
 
 Références : [RFC 791 (IPv4)](https://www.rfc-editor.org/rfc/rfc791), [RFC 8200 (IPv6)](https://www.rfc-editor.org/rfc/rfc8200), [RFC 793 puis RFC 9293 (TCP)](https://www.rfc-editor.org/rfc/rfc9293), [RFC 826 (ARP)](https://www.rfc-editor.org/rfc/rfc826), [RFC 1918 (adresses privées)](https://www.rfc-editor.org/rfc/rfc1918), [RFC 2131 (DHCP)](https://www.rfc-editor.org/rfc/rfc2131), [RFC 1035 (DNS)](https://www.rfc-editor.org/rfc/rfc1035).
 
-### Pièges fréquents
+## Pièges fréquents
 
 | Piège | Conséquence | Remède |
 | --- | --- | --- |
@@ -467,21 +416,15 @@ Références : [RFC 791 (IPv4)](https://www.rfc-editor.org/rfc/rfc791), [RFC 820
 | Confondre port ouvert et service fonctionnel | Test de port réussi mais application en panne | Tester aussi l'application (`curl`, client réel) |
 | Adresse `169.254.x.x` ignorée | Poste sans accès réseau sans que l'on comprenne pourquoi | C'est l'APIPA : le DHCP n'a pas répondu |
 
-### À retenir
-
-- **TCP** est fiable et orienté connexion ; **UDP** est léger et sans connexion.
-- L'**ARP** traduit IP en MAC sur le réseau local ; le **masque** et la **passerelle** décident si l'on sort du réseau.
-- Mémorisez les ports usuels (22, 53, 67/68, 80, 443, 445) : ils guident tout diagnostic.
-
 ---
 
-## 4. Adressage IPv4 et subnetting
+# Adressage IPv4 et subnetting
 
-### Objectifs d'apprentissage
+## Objectifs d'apprentissage
 
 Lire une adresse IPv4 en binaire ; utiliser classes et notation CIDR ; calculer masque, adresse réseau, broadcast, plage utilisable et nombre d'hôtes ; découper un réseau en sous-réseaux de taille fixe puis en VLSM ; établir un plan d'adressage cohérent.
 
-### 4.1 Structure d'une adresse IPv4
+## Structure d'une adresse IPv4
 
 Une adresse IPv4 comporte 32 bits, répartis en 4 octets notés en décimal.
 
@@ -498,7 +441,7 @@ Chaque octet vaut de 0 à 255. Table de conversion des puissances de 2 :
 
 Exemple : `00001010` = 8 + 2 = 10.
 
-### 4.2 Classes d'adresses et CIDR
+## Classes d'adresses et CIDR
 
 Le système par classes est historique (RFC 791) ; il est remplacé depuis 1993 par **CIDR** (Classless Inter-Domain Routing, RFC 4632).
 
@@ -514,7 +457,7 @@ Le premier octet 127 est réservé au loopback.
 
 La **notation CIDR** `192.168.1.10/24` indique que les 24 premiers bits identifient le réseau.
 
-### 4.3 Calcul des masques de sous-réseau
+## Calcul des masques de sous-réseau
 
 Un masque est une suite de bits à 1 (réseau) suivie de bits à 0 (hôtes).
 
@@ -529,13 +472,13 @@ Un masque est une suite de bits à 1 (réseau) suivie de bits à 0 (hôtes).
 | /30 | 255.255.255.252 | 2 | 4 | 2 |
 | /31 | 255.255.255.254 | 1 | 2 | 2 (liaisons point à point, RFC 3021) |
 
-#### Formules à retenir
+### Formules à retenir
 
 - Nombre d'adresses d'un sous-réseau : `2^(32 - préfixe)`
 - Nombre d'hôtes utilisables : `2^(32 - préfixe) - 2` (pour un préfixe inférieur à /31)
 - Taille du « saut » (block size) dans l'octet concerné : `256 - valeur du masque dans cet octet`
 
-### 4.4 Adresse réseau, broadcast et plage utilisable
+## Adresse réseau, broadcast et plage utilisable
 
 Pour une adresse hôte et son masque :
 
@@ -544,7 +487,7 @@ Pour une adresse hôte et son masque :
 3. **Première adresse utilisable** = adresse réseau + 1.
 4. **Dernière adresse utilisable** = broadcast - 1.
 
-#### Exemple détaillé : 192.168.1.130/26
+### Exemple détaillé : 192.168.1.130/26
 
 - Masque /26 = 255.255.255.192, taille du saut = 256 - 192 = 64.
 - Multiples de 64 dans le 4e octet : 0, 64, 128, 192. L'hôte 130 est dans le bloc 128.
@@ -555,7 +498,7 @@ Pour une adresse hôte et son masque :
 
 Vérification binaire du 4e octet : `130 = 10000010`, masque `192 = 11000000`, ET = `10000000 = 128`.
 
-### 4.5 Découpage d'un réseau en sous-réseaux (subnetting à taille fixe)
+## Découpage d'un réseau en sous-réseaux (subnetting à taille fixe)
 
 **Énoncé :** découper `192.168.10.0/24` en 4 sous-réseaux égaux.
 
@@ -577,7 +520,7 @@ flowchart TB
     R --> S4["192.168.10.192/26"]
 ```
 
-### 4.6 VLSM (Variable Length Subnet Mask)
+## VLSM (Variable Length Subnet Mask)
 
 Le VLSM permet d'utiliser des masques différents selon les besoins, pour éviter le gaspillage.
 
@@ -594,7 +537,7 @@ Le VLSM permet d'utiliser des masques différents selon les besoins, pour évite
 
 Espace restant : de 192.168.1.228 à 192.168.1.255, disponible pour des extensions.
 
-### Pièges fréquents
+## Pièges fréquents
 
 | Piège | Conséquence | Remède |
 | --- | --- | --- |
@@ -603,21 +546,15 @@ Espace restant : de 192.168.1.228 à 192.168.1.255, disponible pour des extensio
 | Passerelle hors du sous-réseau de l'hôte | Aucune sortie du réseau local | Vérifier que la passerelle appartient au même sous-réseau |
 | Plan d'adressage non prévu pour la croissance | Renumérotation coûteuse plus tard | Prévoir de la réserve (par exemple un /24 par VLAN) |
 
-### À retenir
-
-- **Réseau = adresse ET masque** ; **broadcast** = bits hôtes à 1 ; hôtes utilisables = 2^n − 2.
-- **CIDR** remplace les classes ; **VLSM** adapte la taille de chaque sous-réseau au besoin.
-- Un plan d'adressage documenté est la base de toute exploitation et de tout dépannage.
-
 ---
 
-## 5. IPv6 et configuration IP statique ou dynamique
+# IPv6 et configuration IP statique ou dynamique
 
-### Objectifs d'apprentissage
+## Objectifs d'apprentissage
 
 Lire et abréger une adresse IPv6 ; identifier les types d'adresses (global, ULA, lien local, multicast) ; choisir entre configuration statique, DHCP et réservation ; configurer une adresse persistante sous Ubuntu (Netplan) et sous Windows (PowerShell) avec retour arrière.
 
-### 5.1 Notions d'adressage IPv6
+## Notions d'adressage IPv6
 
 Une adresse IPv6 comporte 8 groupes de 16 bits notés en hexadécimal : `2001:0db8:0000:0000:0000:0000:0000:0010`.
 
@@ -637,7 +574,7 @@ Une adresse IPv6 comporte 8 groupes de 16 bits notés en hexadécimal : `2001:0d
 
 En pratique, un sous-réseau IPv6 de LAN utilise un préfixe **/64**. Un site reçoit souvent un /48 ou un /56 de son fournisseur.
 
-### 5.2 Configuration IP statique et dynamique
+## Configuration IP statique et dynamique
 
 | Mode | Avantages | Inconvénients | Usage |
 |---|---|---|---|
@@ -645,7 +582,7 @@ En pratique, un sous-réseau IPv6 de LAN utilise un préfixe **/64**. Un site re
 | Dynamique (DHCP) | Automatique, centralisé | Dépend du serveur DHCP | Postes de travail, Wi-Fi |
 | DHCP avec réservation | Adresse stable gérée centralement | Configuration côté serveur | Imprimantes, serveurs non critiques |
 
-#### Configuration statique sous Ubuntu Server (Netplan, 22.04 et 24.04)
+### Configuration statique sous Ubuntu Server (Netplan, 22.04 et 24.04)
 
 Fichier : `/etc/netplan/01-reseau.yaml` (le nom varie selon l'installation, par exemple `00-installer-config.yaml` ou `50-cloud-init.yaml`).
 
@@ -680,7 +617,7 @@ sudo netplan apply
 
 Le nom de l'interface (`ens18` ici) doit être adapté : `ip -br link` liste les interfaces.
 
-#### Configuration statique sous Windows (PowerShell, **Droits admin**)
+### Configuration statique sous Windows (PowerShell, **Droits admin**)
 
 ```powershell
 # Identifier l'interface
@@ -701,7 +638,7 @@ Si une adresse ou une route existe déjà, `New-NetIPAddress` renvoie une erreur
 
 Références : [RFC 4632 (CIDR)](https://www.rfc-editor.org/rfc/rfc4632), [RFC 4291 (adressage IPv6)](https://www.rfc-editor.org/rfc/rfc4291), [RFC 3021 (/31)](https://www.rfc-editor.org/rfc/rfc3021), [Netplan](https://netplan.readthedocs.io/), [Microsoft Learn : NetTCPIP](https://learn.microsoft.com/powershell/module/nettcpip/).
 
-### Pièges fréquents
+## Pièges fréquents
 
 | Piège | Conséquence | Remède |
 | --- | --- | --- |
@@ -710,23 +647,17 @@ Références : [RFC 4632 (CIDR)](https://www.rfc-editor.org/rfc/rfc4632), [RFC 4
 | `New-NetIPAddress` quand le DHCP est actif | Erreur ou configuration mixte | Désactiver le DHCP de l'interface avant d'attribuer l'adresse |
 | Deux fois `::` dans une adresse IPv6 | Adresse invalide ou ambiguë | Une seule suite de groupes à zéro peut être abrégée |
 
-### À retenir
-
-- IPv6 : 128 bits, `fe80::/10` lien local, `/64` pour un LAN ; pas de broadcast, **NDP** remplace ARP.
-- Statique pour serveurs et équipements, **DHCP** pour les postes, **réservation** pour les équipements fixes gérés centralement.
-- Toute configuration persistante se teste avec un **retour arrière** avant d'être validée.
-
 ---
 
-## 6. Commandes réseau sous Windows
+# Commandes réseau sous Windows
 
-### Objectifs d'apprentissage
+## Objectifs d'apprentissage
 
 Utiliser les commandes CMD (`ipconfig`, `ping`, `tracert`, `pathping`, `nslookup`, `netstat`, `arp`, `route`, `netsh`, `net`…) et les cmdlets PowerShell (`Get-Net*`, `Test-NetConnection`, `Resolve-DnsName`, `New-NetFirewallRule`…) ; interpréter leurs résultats ; savoir quand les droits administrateur sont nécessaires ; mener un dépannage guidé par un arbre de décision.
 
-### 6.1 Principes généraux
+## Principes généraux
 
-#### CMD, PowerShell et outils complémentaires
+### CMD, PowerShell et outils complémentaires
 
 | Famille | Description | Exemples |
 |---|---|---|
@@ -736,7 +667,7 @@ Utiliser les commandes CMD (`ipconfig`, `ping`, `tracert`, `pathping`, `nslookup
 
 Les exécutables CMD (`ping`, `ipconfig`...) fonctionnent aussi dans PowerShell. Les cmdlets PowerShell, elles, ne fonctionnent pas dans CMD.
 
-#### Différences de syntaxe
+### Différences de syntaxe
 
 | Point | CMD | PowerShell |
 |---|---|---|
@@ -745,17 +676,17 @@ Les exécutables CMD (`ping`, `ipconfig`...) fonctionnent aussi dans PowerShell.
 | Filtrer | `\| findstr motif` | `\| Where-Object { ... }` ou `\| Select-String motif` |
 | Alias piégeux | n/a | Dans Windows PowerShell 5.1, `curl` et `wget` sont des alias de `Invoke-WebRequest` ; utiliser `curl.exe` pour le vrai programme curl |
 
-#### Droits administrateur
+### Droits administrateur
 
 Pour ouvrir une session élevée : clic droit sur le terminal puis « Exécuter en tant qu'administrateur ». Dans ce guide, la mention **Droits admin** signale une commande qui échoue ou reste partielle sans élévation. Les commandes de lecture simples (`ipconfig`, `ping`, `Get-NetIPConfiguration`) n'en demandent pas ; les commandes de modification (`New-NetIPAddress`, `route add`, `netsh ... set`) en demandent.
 
-#### Précautions
+### Précautions
 
 Toute commande qui modifie l'adresse IP, les routes, le DNS ou le pare-feu peut vous déconnecter, surtout à distance (RDP, SSH). Avant modification : noter la configuration actuelle (`ipconfig /all > C:\temp\avant.txt`), disposer d'un accès console ou d'un second accès, et connaître la commande de retour arrière.
 
-### 6.2 Commandes CMD
+## Commandes CMD
 
-#### ipconfig
+### ipconfig
 
 **Rôle :** afficher et gérer la configuration IP des interfaces.
 
@@ -798,7 +729,7 @@ Carte Ethernet Ethernet :
 
 **Dépannage :** poste en 169.254.x.x. Vérifier le câble, puis `ipconfig /release` et `ipconfig /renew`. Si l'échec persiste, tester un autre port ou un autre poste pour isoler un problème de VLAN ou de DHCP.
 
-#### ping
+### ping
 
 **Rôle :** tester l'accessibilité d'un hôte avec ICMP Echo et mesurer la latence.
 
@@ -845,7 +776,7 @@ Remarque : un ping sans réponse ne prouve pas qu'un hôte est éteint ; Windows
 
 **Dépannage :** tester dans l'ordre `ping 127.0.0.1` (pile TCP/IP), `ping <IP locale>`, `ping <passerelle>`, `ping 1.1.1.1`, `ping www.exemple.fr`. Le premier échec indique la couche à examiner.
 
-#### tracert
+### tracert
 
 **Rôle :** afficher le chemin (sauts) vers une destination en incrémentant le TTL.
 
@@ -870,7 +801,7 @@ C:\> tracert -d 1.1.1.1
 
 **Dépannage :** le tracert s'arrête au saut 1 : problème sur la passerelle ou le lien local. Il s'arrête chez le fournisseur : problème côté opérateur.
 
-#### pathping
+### pathping
 
 **Rôle :** combine `ping` et `tracert` en mesurant la perte de paquets saut par saut sur plusieurs minutes.
 
@@ -880,7 +811,7 @@ C:\> tracert -d 1.1.1.1
 
 **Interprétation :** la seconde partie du résultat donne le pourcentage de perte par saut. Une perte qui apparaît à un saut et se prolonge sur les suivants désigne un lien défectueux ; une perte isolée sur un seul saut vient souvent du rate limiting ICMP du routeur et n'est pas significative.
 
-#### nslookup
+### nslookup
 
 **Rôle :** interroger un serveur DNS.
 
@@ -903,7 +834,7 @@ Address:  93.184.216.34
 
 Remarque : `nslookup` est un outil historique ; PowerShell propose `Resolve-DnsName` (voir plus loin).
 
-#### netstat
+### netstat
 
 **Rôle :** afficher les connexions, ports en écoute, statistiques et table de routage.
 
@@ -929,7 +860,7 @@ C:\> netstat -ano | findstr :443
 
 **Interprétation :** `LISTENING` = port en attente de connexions ; `ESTABLISHED` = connexion active ; `TIME_WAIT` = connexion fermée en attente ; `SYN_SENT` persistant = destination injoignable ou filtrée. Pour trouver le programme : `tasklist /fi "PID eq 7432"`.
 
-#### arp
+### arp
 
 **Rôle :** consulter et gérer le cache ARP (IPv4).
 
@@ -953,7 +884,7 @@ Interface : 192.168.10.54 --- 0x6
 
 **Dépannage :** après le remplacement d'un routeur, un poste garde l'ancienne MAC en cache : `arp -d *` (**Droits admin**) force une nouvelle résolution.
 
-#### route
+### route
 
 **Rôle :** afficher et modifier la table de routage IPv4/IPv6 locale.
 
@@ -971,7 +902,7 @@ Interface : 192.168.10.54 --- 0x6
 
 **Retour arrière :** `route delete 10.20.0.0`. Attention : `route -f` supprime toutes les routes, y compris la route par défaut ; à éviter sur une machine distante.
 
-#### getmac
+### getmac
 
 **Rôle :** afficher les adresses MAC.
 
@@ -985,13 +916,13 @@ Nom de connexion  Carte réseau            Adresse physique    Nom de transport
 Ethernet          Intel(R) Ethernet ...   00-1A-2B-3C-4D-5E   \Device\Tcpip_{...}
 ```
 
-#### hostname
+### hostname
 
 **Rôle :** afficher le nom de l'ordinateur.
 
 **Syntaxe :** `hostname`. Le renommage se fait par `Rename-Computer` (PowerShell, **Droits admin**, redémarrage requis).
 
-#### nbtstat
+### nbtstat
 
 **Rôle :** diagnostiquer NetBIOS sur TCP/IP (protocole hérité).
 
@@ -1008,7 +939,7 @@ Ethernet          Intel(R) Ethernet ...   00-1A-2B-3C-4D-5E   \Device\Tcpip_{...
 
 **Usage :** utile uniquement dans des environnements anciens (WINS, partages hérités). Dans un réseau moderne, privilégier DNS et SMB sur le port 445.
 
-#### netsh
+### netsh
 
 **Rôle :** utilitaire de configuration réseau en ligne de commande, organisé en contextes (`interface`, `wlan`, `advfirewall`, `winsock`...). Il est progressivement remplacé par PowerShell, mais reste très répandu.
 
@@ -1027,7 +958,7 @@ Ethernet          Intel(R) Ethernet ...   00-1A-2B-3C-4D-5E   \Device\Tcpip_{...
 
 **Risque :** `netsh winsock reset` et `netsh int ip reset` effacent des paramètres de pile ; à utiliser en dernier recours, après avoir noté la configuration. **Retour arrière du pare-feu :** `netsh advfirewall import "C:\temp\pare-feu.wfw"`.
 
-#### net
+### net
 
 **Rôle :** gestion de ressources Windows (partages, utilisateurs, services). Syntaxe : `net commande`.
 
@@ -1043,7 +974,7 @@ Ethernet          Intel(R) Ethernet ...   00-1A-2B-3C-4D-5E   \Device\Tcpip_{...
 
 **Dépannage :** erreur système 53 (« chemin réseau introuvable ») : problème de résolution de nom ou port 445 bloqué ; tester `Test-NetConnection srv -Port 445`. Erreur 1219 : connexion multiple avec des identifiants différents ; `net use * /delete` puis nouvelle connexion.
 
-#### telnet
+### telnet
 
 **Rôle :** client TCP en texte clair. Il n'est pas installé par défaut sur les Windows récents. **Obsolète et non sécurisé** : tout transite en clair. Pour tester un port, préférer `Test-NetConnection`. Pour administrer, préférer SSH.
 
@@ -1051,25 +982,25 @@ Activation (**Droits admin**) : `Enable-WindowsOptionalFeature -Online -FeatureN
 
 Usage de test : `telnet 192.168.10.10 25` ; un écran noir signifie généralement que le port est ouvert, `Connexion impossible` qu'il est fermé ou filtré.
 
-#### ftp
+### ftp
 
 **Rôle :** client FTP intégré. **Non chiffré** : à proscrire sur des réseaux non maîtrisés. Alternative : `sftp` et `scp` (client OpenSSH inclus dans Windows 10 et 11, installable en fonctionnalité facultative).
 
 **Syntaxe :** `ftp [-v] [-n] [-i] [-s:fichier] [-A] [hôte]`. Commandes interactives usuelles : `open`, `user`, `ls`, `get`, `put`, `bye`. Option `-s:` pour automatiser par script (les identifiants s'y trouvent en clair).
 
-#### tftp
+### tftp
 
 **Rôle :** transfert de fichiers sans authentification (UDP 69), utilisé pour sauvegarder ou restaurer des configurations d'équipements réseau en laboratoire. Fonctionnalité « Client TFTP » à activer : `Enable-WindowsOptionalFeature -Online -FeatureName TFTP` (**Droits admin**).
 
 **Syntaxe :** `tftp [-i] hôte {GET|PUT} source [destination]`. Exemple : `tftp -i 192.168.10.5 PUT config.txt`. Non sécurisé : réserver à un réseau d'administration isolé.
 
-#### systeminfo
+### systeminfo
 
 **Rôle :** informations système, dont les cartes réseau et les correctifs installés. Syntaxe : `systeminfo [/s ordinateur /u utilisateur /p mot_de_passe] [/fo {TABLE|LIST|CSV}]`.
 
 **Usage réseau :** `systeminfo | findstr /i "Carte réseau DHCP"` (la chaîne dépend de la langue). Utile pour récupérer rapidement nom d'hôte, domaine, version de Windows et cartes réseau.
 
-#### tasklist et taskkill
+### tasklist et taskkill
 
 **tasklist :** liste les processus. Syntaxe : `tasklist [/v] [/svc] [/fi "filtre"] [/m module]`.
 
@@ -1085,11 +1016,11 @@ chrome.exe        7432  Console                 112 340 Ko
 
 **Risque :** `taskkill /f` termine brutalement le processus et peut perdre des données ; ne jamais l'appliquer à un processus système ou à un service critique sans en connaître le rôle.
 
-### 6.3 Cmdlets PowerShell
+## Cmdlets PowerShell
 
 Les modules `NetTCPIP`, `NetAdapter`, `DnsClient` et `NetSecurity` sont disponibles depuis Windows 8 et Windows Server 2012. Les exemples fonctionnent dans Windows PowerShell 5.1 et PowerShell 7. Pour afficher l'aide : `Get-Help Get-NetIPAddress -Examples`.
 
-#### Consultation
+### Consultation
 
 | Cmdlet | Rôle | Exemple |
 |---|---|---|
@@ -1116,7 +1047,7 @@ Wi-Fi      Intel(R) Wi-Fi 6 AX201               9  Disconnected  ...          0 
 
 **Interprétation :** `Status` à `Up` indique un lien actif ; `Disconnected` un câble débranché ou un Wi-Fi non associé ; `Disabled` une carte désactivée par logiciel. `LinkSpeed` à 100 Mbps sur un lien prévu à 1 Gbps suggère un câble ou un port défectueux.
 
-#### Tests
+### Tests
 
 **Test-NetConnection** (équivalent moderne de `ping`, `tracert` et du test de port) :
 
@@ -1151,7 +1082,7 @@ Resolve-DnsName srv-web -DnsOnly   # ignore hosts et LLMNR, teste uniquement le 
 
 **Test-Connection :** ping orienté objets. Dans Windows PowerShell 5.1 : `Test-Connection 192.168.10.1 -Count 2` ; avec `-Quiet`, renvoie `True` ou `False`. Dans PowerShell 7, la sortie et certains paramètres diffèrent.
 
-#### Modification (**Droits admin**)
+### Modification (**Droits admin**)
 
 | Cmdlet | Rôle | Retour arrière |
 |---|---|---|
@@ -1165,7 +1096,7 @@ Resolve-DnsName srv-web -DnsOnly   # ignore hosts et LLMNR, teste uniquement le 
 **Exemples :**
 
 ```powershell
-# IP statique (voir aussi sections 4 et 5)
+# IP statique (voir aussi les sections « Adressage IPv4 et subnetting » et « IPv6 et configuration IP statique ou dynamique »)
 New-NetIPAddress -InterfaceAlias "Ethernet" -IPAddress 192.168.10.50 -PrefixLength 24 -DefaultGateway 192.168.10.1
 Set-DnsClientServerAddress -InterfaceAlias "Ethernet" -ServerAddresses 192.168.10.2,1.1.1.1
 
@@ -1185,7 +1116,7 @@ Remove-NetFirewallRule -DisplayName "App interne 8080"
 
 **Piège :** `New-NetIPAddress` échoue si une adresse DHCP existe déjà sur l'interface. Désactiver d'abord le DHCP : `Set-NetIPInterface -InterfaceAlias "Ethernet" -Dhcp Disabled`.
 
-#### Autres cmdlets utiles
+### Autres cmdlets utiles
 
 | Cmdlet | Usage |
 |---|---|
@@ -1198,7 +1129,7 @@ Remove-NetFirewallRule -DisplayName "App interne 8080"
 | `Set-NetFirewallProfile` | Modifie les profils de pare-feu |
 | `Enable-NetFirewallRule`, `Disable-NetFirewallRule` | Active ou désactive une règle existante |
 
-#### Correspondance CMD et PowerShell
+### Correspondance CMD et PowerShell
 
 | Besoin | CMD | PowerShell |
 |---|---|---|
@@ -1214,7 +1145,7 @@ Remove-NetFirewallRule -DisplayName "App interne 8080"
 | Pare-feu | `netsh advfirewall` | `New-NetFirewallRule`, `Get-NetFirewallRule` |
 | Tester un port | `telnet hôte port` | `Test-NetConnection hôte -Port N` |
 
-### 6.4 Outils complémentaires
+## Outils complémentaires
 
 | Outil | Rôle | Remarque |
 |---|---|---|
@@ -1222,12 +1153,12 @@ Remove-NetFirewallRule -DisplayName "App interne 8080"
 | `ssh`, `scp`, `sftp` | Client OpenSSH | Fonctionnalité facultative, activée par défaut sur les versions récentes |
 | `pktmon` | Capture de paquets intégrée | Depuis Windows 10 1809 ; **Droits admin** ; export possible au format pcapng pour Wireshark |
 | `netsh trace start capture=yes` | Capture réseau native | **Droits admin** ; format .etl |
-| Wireshark | Analyse approfondie de paquets | Voir section 21 |
+| Wireshark | Analyse approfondie de paquets | Voir section « Outils professionnels de diagnostic et de supervision » |
 | TCPView (Sysinternals) | Connexions par processus en interface graphique | Microsoft Sysinternals |
 | Moniteur de ressources (`resmon`) | Activité réseau par processus | Onglet Réseau |
-| `nltest`, `dcdiag` | Diagnostic de domaine Active Directory | Serveurs et postes joints au domaine ; voir sections 13 à 17 |
+| `nltest`, `dcdiag` | Diagnostic de domaine Active Directory | Serveurs et postes joints au domaine ; voir les sections sur les services Ubuntu Server et Windows Server |
 
-### 6.5 Scénarios de dépannage Windows
+## Scénarios de dépannage Windows
 
 ```mermaid
 flowchart TD
@@ -1260,7 +1191,7 @@ flowchart TD
 2. Sur le serveur : `Get-NetTCPConnection -LocalPort 443 -State Listen` : rien n'écoute, le service est arrêté ; ou règle de pare-feu manquante (`Get-NetFirewallRule`).
 3. Démarrer le service, créer la règle, retester.
 
-### Pièges fréquents
+## Pièges fréquents
 
 | Piège | Conséquence | Remède |
 | --- | --- | --- |
@@ -1270,30 +1201,24 @@ flowchart TD
 | `route -f` sur un poste distant | Suppression de la route par défaut, perte d'accès | Supprimer une route précise (`route delete`) |
 | Telnet et FTP pour administrer | Identifiants en clair sur le réseau | SSH, SFTP, ou `Test-NetConnection` pour un simple test de port |
 
-### À retenir
-
-- `ipconfig /all`, `ping`, `tracert`/`pathping`, `nslookup`/`Resolve-DnsName`, `netstat`/`Get-NetTCPConnection` forment la **boîte à outils de base**.
-- PowerShell renvoie des **objets** (filtrables) ; `Test-NetConnection -Port` remplace `telnet` pour tester un port.
-- Toute modification réseau s'accompagne d'une **sauvegarde de l'état initial** et d'une commande de retour.
-
 ---
 
-## 7. Commandes réseau sous Linux
+# Commandes réseau sous Linux
 
-### Objectifs d'apprentissage
+## Objectifs d'apprentissage
 
 Utiliser les commandes modernes (`ip`, `ss`, `ip neigh`, `dig`, `resolvectl`, `curl`, `nc`, `tcpdump`, `ethtool`, `nmap`…) et reconnaître les commandes obsolètes ; configurer le réseau avec Netplan, NetworkManager et `ip` ; administrer pare-feu (`ufw`, `iptables`, `nft`) et journaux (`journalctl`, `dmesg`) ; différencier Ubuntu Server, Debian et Red Hat.
 
-### 7.1 Principes généraux *(à jour)*
+## Principes généraux *(à jour)*
 
-#### Droits et conventions
+### Droits et conventions
 
 - `$` : utilisateur normal ; `#` : root. Dans ce guide, on utilise `sudo` plutôt qu'une session root permanente.
 - Un nom d'interface est de la forme `ens18`, `enp0s3`, `eth0` (noms prévisibles attribués par systemd). Adaptez-le avec `ip -br link`.
 - Les modifications faites avec `ip` sont **temporaires** : elles disparaissent au redémarrage ou au redémarrage du service réseau. Pour les rendre durables, on passe par Netplan, NetworkManager ou `/etc/network/interfaces` selon la distribution.
-- Avant toute modification réseau sur une machine distante, prévoir un retour arrière (voir 4.7).
+- Avant toute modification réseau sur une machine distante, prévoir un retour arrière (voir la section « Modifier sans casser : risques et retour arrière »).
 
-#### Installer les outils manquants
+### Installer les outils manquants
 
 Ubuntu Server minimal n'installe pas tous les outils de diagnostic.
 
@@ -1308,7 +1233,7 @@ sudo dnf install traceroute mtr bind-utils nmap tcpdump ethtool nmap-ncat lsof
 
 `net-tools` fournit les commandes **obsolètes** `ifconfig`, `netstat`, `arp`, `route` ; il n'est cité ici que pour les reconnaître.
 
-#### Commandes obsolètes et alternatives modernes
+### Commandes obsolètes et alternatives modernes
 
 | Obsolète | Alternative recommandée | Remarque |
 |---|---|---|
@@ -1323,7 +1248,7 @@ sudo dnf install traceroute mtr bind-utils nmap tcpdump ethtool nmap-ncat lsof
 | `iptables` | `nft` (ou `ufw`, `firewalld` en surcouche) | Sur les distributions récentes, `iptables` est souvent un frontal vers nftables |
 | `nslookup` | `dig`, `resolvectl query` | `nslookup` n'est pas retiré, mais `dig` est plus précis |
 
-#### Différences entre distributions
+### Différences entre distributions
 
 | Élément | Ubuntu Server | Debian 12 | RHEL 9 / Rocky / Alma |
 |---|---|---|---|
@@ -1333,9 +1258,9 @@ sudo dnf install traceroute mtr bind-utils nmap tcpdump ethtool nmap-ncat lsof
 | Service SSH | `ssh.service` | `ssh.service` | `sshd.service` |
 | Gestionnaire de paquets | `apt` | `apt` | `dnf` |
 
-### 7.2 Diagnostic réseau
+## Diagnostic réseau
 
-#### ip (famille de sous-commandes)
+### ip (famille de sous-commandes)
 
 **Rôle :** consulter et configurer interfaces, adresses, routes et voisins (remplace `ifconfig`, `route`, `arp`). Paquet `iproute2`.
 
@@ -1377,7 +1302,7 @@ default via 192.168.10.1 dev ens18 proto static
 
 **Dépannage :** pas d'accès hors réseau local. `ip route` : pas de route par défaut. Correction temporaire (**sudo**) : `sudo ip route add default via 192.168.10.1 dev ens18`. Puis corriger durablement dans Netplan.
 
-#### ping
+### ping
 
 **Rôle :** test ICMP Echo. **Contrairement à Windows, le ping Linux est continu par défaut** : il faut `Ctrl+C` ou `-c`.
 
@@ -1421,7 +1346,7 @@ rtt min/avg/max/mdev = 0.389/0.401/0.412/0.009 ms
 
 **Dépannage :** tester dans l'ordre `127.0.0.1`, IP locale, passerelle, `1.1.1.1`, puis un nom.
 
-#### traceroute et tracepath
+### traceroute et tracepath
 
 **traceroute** (paquet `traceroute`) : chemin vers une destination (UDP par défaut sous Linux).
 
@@ -1444,9 +1369,9 @@ traceroute to 1.1.1.1 (1.1.1.1), 30 hops max, 60 byte packets
 
 **tracepath** (paquet `iputils-tracepath` ou inclus selon la distribution) : similaire, sans droits root, et affiche la **PMTU** détectée. `tracepath -n 1.1.1.1`.
 
-**Interprétation :** voir tracert (section 6). `* * *` répétés jusqu'au TTL maximum : chemin coupé ou filtré. Un `pmtu 1400` signale une MTU réduite (tunnel, VPN, PPPoE).
+**Interprétation :** voir tracert (section « Commandes réseau sous Windows »). `* * *` répétés jusqu'au TTL maximum : chemin coupé ou filtré. Un `pmtu 1400` signale une MTU réduite (tunnel, VPN, PPPoE).
 
-#### mtr
+### mtr
 
 **Rôle :** `traceroute` et `ping` en continu, avec pourcentage de perte et latence par saut (paquet `mtr-tiny` ou `mtr`).
 
@@ -1463,7 +1388,7 @@ HOST: srv1                  Loss%   Snt   Last   Avg  Best  Wrst StDev
 
 **Interprétation :** la perte compte si elle persiste jusqu'à la destination. Ici le saut 3 ne répond pas à ICMP mais n'empêche pas d'atteindre le saut 4 : sans conséquence. Un saut avec 30 % de perte qui se retrouve à 30 % jusqu'à la fin désigne un lien défaillant. Usage typique : fournir un rapport `-r` à un opérateur.
 
-#### ss
+### ss
 
 **Rôle :** sockets, connexions et ports en écoute (remplace `netstat`). Paquet `iproute2`.
 
@@ -1500,11 +1425,11 @@ ss -s                                          # résumé
 
 **Dépannage :** « le site ne répond pas » : `sudo ss -tulpn | grep :80` ; si rien n'écoute, `systemctl status nginx`.
 
-#### netstat (obsolète)
+### netstat (obsolète)
 
 Paquet `net-tools`. Équivalences : `netstat -tulpn` vaut `ss -tulpn` ; `netstat -r` vaut `ip route` ; `netstat -i` vaut `ip -s link`. À utiliser seulement s'il est imposé par un script existant.
 
-#### arp et ip neigh
+### arp et ip neigh
 
 **arp** est **obsolète** (net-tools). Utiliser **ip neigh**.
 
@@ -1524,9 +1449,9 @@ $ ip neigh
 
 **États :** `REACHABLE` (confirmé récemment), `STALE` (ancien, sera revalidé), `DELAY` et `PROBE` (vérification en cours), `INCOMPLETE` (requête sans réponse), `FAILED` (pas de réponse : hôte absent ou injoignable), `PERMANENT` (entrée statique).
 
-**Dépannage :** deux IP pour la même MAC, ou une MAC qui change pour l'IP de la passerelle : suspicion d'ARP spoofing (voir section 20).
+**Dépannage :** deux IP pour la même MAC, ou une MAC qui change pour l'IP de la passerelle : suspicion d'ARP spoofing (voir section « Sécurité réseau en entreprise »).
 
-#### hostname
+### hostname
 
 ```bash
 hostname            # nom court
@@ -1534,9 +1459,9 @@ hostname -f         # nom qualifié (FQDN), nécessite une résolution cohérent
 hostname -I         # toutes les adresses IP (hors loopback)
 ```
 
-Pour **modifier** le nom : `sudo hostnamectl set-hostname srv-fichiers` (voir 4.4). `hostname -i` dépend de la résolution du nom local et peut renvoyer 127.0.1.1 : préférer `-I`.
+Pour **modifier** le nom : `sudo hostnamectl set-hostname srv-fichiers`. `hostname -i` dépend de la résolution du nom local et peut renvoyer 127.0.1.1 : préférer `-I`.
 
-#### dig, nslookup, host
+### dig, nslookup, host
 
 Paquets : `dnsutils` (Ubuntu 22.04), `bind9-dnsutils` (Ubuntu 24.04, Debian 12), `bind-utils` (RHEL).
 
@@ -1563,9 +1488,9 @@ srv1.entreprise.local.  3600  IN  A  192.168.10.10
 
 **host** : version concise. `host exemple.fr`, `host -t MX exemple.fr`.
 
-**nslookup** : voir section 6 ; encore présent mais moins précis.
+**nslookup** : voir section « Commandes réseau sous Windows » ; encore présent mais moins précis.
 
-#### resolvectl
+### resolvectl
 
 **Rôle :** gérer et interroger **systemd-resolved** (Ubuntu). Remplace `systemd-resolve`, devenu obsolète.
 
@@ -1578,7 +1503,7 @@ resolvectl statistics                # statistiques du cache
 
 **Interprétation :** `resolvectl status` montre `Current DNS Server` et `DNS Servers` par interface. Le fichier `/etc/resolv.conf` pointe alors vers `127.0.0.53` (stub) : c'est normal. Ne modifiez pas ce fichier directement ; configurez le DNS dans Netplan ou NetworkManager.
 
-#### getent
+### getent
 
 **Rôle :** interroge les bases du système via NSS (Name Service Switch), donc **comme le font les applications** (fichier `/etc/hosts` puis DNS selon `/etc/nsswitch.conf`).
 
@@ -1589,7 +1514,7 @@ getent ahosts exemple.fr      # toutes les adresses, IPv4 et IPv6
 
 **Intérêt :** si `dig` fonctionne mais `getent hosts` échoue, le problème vient de NSS, de `/etc/hosts` ou du résolveur local et non du serveur DNS.
 
-#### curl et wget
+### curl et wget
 
 **curl :**
 
@@ -1615,7 +1540,7 @@ curl --resolve exemple.fr:443:192.168.10.20 https://exemple.fr
 
 **wget :** `wget -O fichier url`, `wget -q --spider url` (teste l'existence sans télécharger), `wget -c url` (reprise), `--no-check-certificate` (dangereux).
 
-#### nc (netcat)
+### nc (netcat)
 
 **Rôle :** lecture et écriture sur des connexions TCP/UDP : test de port, transfert, écoute.
 
@@ -1635,7 +1560,7 @@ Connection to 192.168.10.20 443 port [tcp/https] succeeded!
 
 **Erreurs :** `Connection refused` : hôte joint, aucun service n'écoute ; `Connection timed out` : filtrage ou hôte injoignable. Un test UDP réussi ne prouve pas que le service répond.
 
-#### tcpdump
+### tcpdump
 
 **Rôle :** capture de paquets en ligne de commande. **Droits admin** (`sudo`).
 
@@ -1666,7 +1591,7 @@ $ sudo tcpdump -i ens18 -nn 'port 67 or port 68'
 
 **Interprétation :** requête DHCP vue sans réponse : serveur absent, VLAN erroné ou relais manquant. Beaucoup de SYN sans SYN-ACK : service ou pare-feu en cause. **Précaution légale et éthique :** ne capturer que sur des réseaux dont vous avez l'autorisation ; une capture peut contenir des données personnelles et des mots de passe.
 
-#### ethtool
+### ethtool
 
 **Rôle :** état du lien physique et paramètres de la carte (paquet `ethtool`). Certaines commandes demandent **sudo**.
 
@@ -1687,7 +1612,7 @@ Settings for ens18:
 
 **Interprétation :** `Speed: 100Mb/s` sur un lien 1 Gbit/s : câble ou port défectueux. `Duplex: Half` : incohérence d'autonégociation (cause de lenteur et de collisions). `Link detected: no` : câble, port ou switch. Les compteurs `rx_crc_errors` en hausse indiquent un câble mauvais ou parasité. Un changement forcé de vitesse (`ethtool -s`) est **risqué** (perte de lien) et non persistant.
 
-#### lsof
+### lsof
 
 **Rôle :** liste les fichiers ouverts, donc aussi les sockets.
 
@@ -1698,7 +1623,7 @@ sudo lsof -iTCP -sTCP:LISTEN -P -n     # ports TCP en écoute
 
 `-P` et `-n` évitent la résolution des ports et des noms. **Usage :** identifier le programme qui occupe un port (erreur « Address already in use » au démarrage d'un service).
 
-#### nmap
+### nmap
 
 **Rôle :** découverte d'hôtes, scan de ports, détection de services. Paquet `nmap`.
 
@@ -1731,9 +1656,9 @@ PORT    STATE    SERVICE VERSION
 
 **États :** `open` (service en écoute), `closed` (hôte joint, aucun service), `filtered` (paquets bloqués par un pare-feu), `open|filtered` (UDP incertain).
 
-### 7.3 Configuration réseau *(à jour)*
+## Configuration réseau *(à jour)*
 
-#### ip addr, ip link, ip route, ip neigh : modification
+### ip addr, ip link, ip route, ip neigh : modification
 
 Modifications **non persistantes**, **sudo** nécessaire, **risque** de perte de session distante.
 
@@ -1748,7 +1673,7 @@ sudo ip route del 10.20.0.0/16
 sudo ip route replace default via 192.168.10.1
 ```
 
-#### netplan (Ubuntu)
+### netplan (Ubuntu)
 
 Fichiers YAML dans `/etc/netplan/`. L'indentation se fait **avec des espaces, jamais avec des tabulations**. Les fichiers doivent être accessibles uniquement par root (`sudo chmod 600 /etc/netplan/*.yaml`), sinon les versions récentes affichent un avertissement.
 
@@ -1780,7 +1705,7 @@ network:
 
 **Wi-Fi ou NetworkManager :** `renderer: NetworkManager`.
 
-#### nmcli et nmtui (NetworkManager)
+### nmcli et nmtui (NetworkManager)
 
 Standard sur RHEL, Rocky, Alma, Fedora, Ubuntu bureau ; possible sur Debian et Ubuntu Server.
 
@@ -1804,7 +1729,7 @@ sudo nmcli device wifi list
 
 **nmtui :** interface texte pour modifier une connexion (« Edit a connection »), pratique à la console.
 
-#### systemctl (services réseau)
+### systemctl (services réseau)
 
 ```bash
 systemctl status systemd-networkd
@@ -1818,7 +1743,7 @@ systemctl --failed
 
 `restart` coupe brièvement les services ; sur une machine distante, **un redémarrage du service réseau peut interrompre votre session**. Préférez `reload` quand le service le supporte.
 
-#### ifup et ifdown
+### ifup et ifdown
 
 Valables avec le paquet `ifupdown` et le fichier `/etc/network/interfaces` (Debian). **Absents ou inadaptés** sur Ubuntu Server moderne (Netplan).
 
@@ -1832,11 +1757,11 @@ iface ens18 inet static
 
 `sudo ifdown ens18 && sudo ifup ens18` : à exécuter en une seule ligne lorsque l'on est connecté à distance (sinon la session est perdue entre les deux). Alternatives modernes : `networkctl`, `nmcli`.
 
-#### dhclient (obsolète)
+### dhclient (obsolète)
 
 Client DHCP de l'ISC, en fin de vie. Alternatives : `sudo networkctl renew ens18` (systemd-networkd), `sudo nmcli device reapply ens18` ou `nmcli connection up` (NetworkManager). Dans un environnement ancien : `sudo dhclient -r ens18` (libère) puis `sudo dhclient ens18` (renouvelle).
 
-#### ufw
+### ufw
 
 **Rôle :** pare-feu simplifié (surcouche d'iptables ou nftables). **Désactivé par défaut** sur Ubuntu. Non installé par défaut sur Debian et RHEL (qui utilise `firewalld`).
 
@@ -1855,7 +1780,7 @@ sudo ufw disable                                            # retour arrière ra
 
 **Risque majeur :** activer `ufw` avant d'avoir autorisé le port SSH vous coupe d'un serveur distant. Si SSH écoute sur un port non standard, autorisez ce port.
 
-#### iptables et nft
+### iptables et nft
 
 **iptables** est un frontal historique. Sur les distributions récentes, la commande `iptables` utilise souvent le backend nftables (`iptables --version` indique `nf_tables` ou `legacy`). Ne mélangez pas des règles iptables et nft sur la même machine sans les comprendre.
 
@@ -1898,9 +1823,9 @@ table inet filter {
 
 Application : `sudo nft -c -f /etc/nftables.conf` (vérification sans application), puis `sudo systemctl enable --now nftables`. **Retour arrière :** `sudo nft flush ruleset` supprime toutes les règles (la machine devient alors non filtrée) ; restaurez la sauvegarde avec `sudo nft -f /root/nft.backup`.
 
-### 7.4 Administration et surveillance
+## Administration et surveillance
 
-#### journalctl
+### journalctl
 
 **Rôle :** lire les journaux de systemd.
 
@@ -1922,7 +1847,7 @@ sudo journalctl -p err --since "1 hour ago"
 
 **Usage :** échec de connexion SSH : `journalctl -u ssh` montre `Failed password for ...` ou `Connection closed by authenticating user`. Échec DHCP ou de lien : `journalctl -u systemd-networkd` ou `-u NetworkManager`.
 
-#### dmesg
+### dmesg
 
 Messages du noyau (pilotes, liens réseau). **Droits** : sur Ubuntu, `kernel.dmesg_restrict=1` impose souvent `sudo`. Options : `-T` (horodatage lisible), `-w` (suivi), `--level=err,warn`.
 
@@ -1934,7 +1859,7 @@ $ sudo dmesg -T | grep -i ens18
 
 Des alternances « Link is Down / Up » signalent un câble, une prise ou un port de switch défectueux.
 
-#### hostnamectl et timedatectl
+### hostnamectl et timedatectl
 
 ```bash
 hostnamectl                                     # nom, OS, noyau
@@ -1947,7 +1872,7 @@ timedatectl timesync-status                     # état de systemd-timesyncd (si
 
 **Pourquoi l'heure compte :** les certificats TLS, Kerberos (Active Directory tolère 5 minutes d'écart par défaut), les journaux et la corrélation d'événements exigent des horloges synchronisées. Sur RHEL, la synchronisation est assurée par `chronyd` (`chronyc tracking`).
 
-### 7.5 Méthode de diagnostic Linux
+## Méthode de diagnostic Linux
 
 ```mermaid
 flowchart TD
@@ -1966,7 +1891,7 @@ flowchart TD
     G -- Oui --> H["nc -zv hôte port, ss, ufw/nft, journalctl"]
 ```
 
-### Pièges fréquents
+## Pièges fréquents
 
 | Piège | Conséquence | Remède |
 | --- | --- | --- |
@@ -1976,27 +1901,15 @@ flowchart TD
 | Se fier à `dig` seul | Les applications passent par NSS (`/etc/hosts`, résolveur local) | Comparer `dig` et `getent hosts` |
 | Variantes de `nc` ignorées | Options qui ne fonctionnent pas selon la distribution | Vérifier la variante (openbsd, ncat) avec `man nc` |
 
-### À retenir
-
-- `ip`, `ss`, `dig`, `getent`, `tcpdump`, `journalctl` couvrent l'essentiel du diagnostic.
-- Les modifications à chaud (`ip`) sont **temporaires** ; Netplan/NetworkManager les rendent **persistantes**.
-- Pare-feu : refus par défaut, règle SSH **avant** l'activation, `nft`/`ufw` plutôt qu'`iptables` pour du neuf.
-
 ---
 
----
+# Équipements réseau, câblage et prise en main de Cisco IOS
 
-# Équipements et réseau d'entreprise
-
----
-
-## 8. Équipements réseau, câblage et prise en main de Cisco IOS
-
-### Objectifs d'apprentissage
+## Objectifs d'apprentissage
 
 Distinguer modem, routeur, switch, point d'accès, pare-feu et serveur ; choisir et réaliser un câblage Ethernet (catégories, T568A/B, baies, panneaux de brassage) ; naviguer dans les modes de Cisco IOS ; appliquer une configuration de base sécurisée (SSH, secrets, interfaces) et la vérifier.
 
-### 8.1 Les équipements et leur rôle
+## Les équipements et leur rôle
 
 | Équipement | Couche OSI | Rôle | Exemple en entreprise |
 |---|---|---|---|
@@ -2010,9 +1923,9 @@ Distinguer modem, routeur, switch, point d'accès, pare-feu et serveur ; choisir
 
 **Modem et double NAT :** si le boîtier de l'opérateur reste en mode routeur et que votre routeur fait aussi du NAT, le trafic est traduit deux fois (double NAT), ce qui complique les redirections de ports et les VPN. Solution : mode bridge sur le modem ou DMZ vers le routeur.
 
-### 8.2 Câblage Ethernet, baies et panneaux de brassage
+## Câblage Ethernet, baies et panneaux de brassage
 
-#### Catégories de câbles
+### Catégories de câbles
 
 | Catégorie | Débit usuel | Distance maximale | Remarque |
 |---|---|---|---|
@@ -2023,7 +1936,7 @@ Distinguer modem, routeur, switch, point d'accès, pare-feu et serveur ; choisir
 
 Limite d'un canal Ethernet en cuivre : **100 m** au total, soit 90 m de câblage permanent (mur) et 10 m de cordons de brassage.
 
-#### Brochage RJ45
+### Brochage RJ45
 
 Norme **T568B** (la plus répandue en France et en entreprise) :
 
@@ -2036,7 +1949,7 @@ Norme **T568B** (la plus répandue en France et en entreprise) :
 - **Câble croisé** : T568A d'un côté et T568B de l'autre. Inutile avec les équipements modernes, qui détectent automatiquement le croisement (**Auto-MDIX**), mais utile sur du matériel ancien.
 - Vérifier chaque câble avec un testeur de câble (continuité, paires croisées, longueur).
 
-#### Baie de brassage et panneaux
+### Baie de brassage et panneaux
 
 - **Baie 19 pouces** : l'unité de hauteur (**U**) vaut 44,45 mm. Une baie de 42U accueille switchs, panneaux, serveurs, onduleur.
 - **Panneau de brassage (patch panel)** : reçoit les câbles venant des prises murales ; des cordons courts relient chaque prise au port du switch. Ce système évite de manipuler les câbles fixes.
@@ -2047,9 +1960,9 @@ Norme **T568B** (la plus répandue en France et en entreprise) :
    [B-12] ==(câble fixe)==> [Port 12] --(cordon)--> [Gi0/12]
 ```
 
-### 8.3 Prise en main de Cisco IOS
+## Prise en main de Cisco IOS
 
-#### Modes de la ligne de commande
+### Modes de la ligne de commande
 
 | Mode | Invite | Accès |
 |---|---|---|
@@ -2061,7 +1974,7 @@ Norme **T568B** (la plus répandue en France et en entreprise) :
 
 Aides : `?` (liste des commandes), `Tab` (complétion), `show running-config` (configuration active en RAM), `show startup-config` (configuration sauvegardée), `copy running-config startup-config` (sauvegarde ; sans elle, tout est perdu au redémarrage), `no commande` (annule une commande).
 
-#### Configuration de base sécurisée
+### Configuration de base sécurisée
 
 ```text
 Router> enable
@@ -2095,7 +2008,7 @@ Explications :
 - La clé RSA nécessite un nom d'hôte et un nom de domaine définis.
 - Les mots de passe ci-dessus sont des **exemples** : utilisez des mots de passe longs et uniques.
 
-#### Configurer les interfaces d'un routeur
+### Configurer les interfaces d'un routeur
 
 ```text
 R1(config)# interface GigabitEthernet0/0
@@ -2125,7 +2038,7 @@ GigabitEthernet0/1     203.0.113.2     YES manual up                    up
 | down / down | Problème physique : câble, port distant éteint, SFP |
 | up / down | Problème de couche 2 : encapsulation, keepalive, incohérence de configuration |
 
-### Pièges fréquents
+## Pièges fréquents
 
 | Piège | Conséquence | Remède |
 | --- | --- | --- |
@@ -2135,25 +2048,19 @@ GigabitEthernet0/1     203.0.113.2     YES manual up                    up
 | Câble de plus de 100 m ou de catégorie insuffisante | Pertes, débit réduit | 90 m de câblage permanent + 10 m de cordons, Cat6A recommandé |
 | Câbles non étiquetés | Dépannage et évolutions très longs | Étiqueter les deux extrémités, documenter le brassage |
 
-### À retenir
-
-- Switch = couche 2, routeur = couche 3 ; un modem en mode routeur derrière votre routeur crée un **double NAT**.
-- Cisco IOS : `?` pour l'aide, `show running-config`, `copy running-config startup-config`, `no` pour annuler.
-- Une configuration de base sécurisée : `enable secret`, SSH v2 seul, `exec-timeout`, bannière, sauvegarde.
-
 ---
 
-## 9. VLAN, trunks et routage inter-VLAN
+# VLAN, trunks et routage inter-VLAN
 
-### Objectifs d'apprentissage
+## Objectifs d'apprentissage
 
 Expliquer VLAN, port access, trunk et VLAN natif (802.1Q) ; créer des VLAN et configurer ports et trunks sur un switch Cisco ; réaliser le routage inter-VLAN par sous-interfaces (router-on-a-stick) ; vérifier et dépanner avec les commandes `show`.
 
-### 9.1 VLAN, Access et Trunk (switch)
+## VLAN, Access et Trunk (switch)
 
 Un **VLAN** (IEEE 802.1Q) est un domaine de diffusion logique : il sépare le trafic sur un même switch physique. Un port **access** appartient à un seul VLAN et transporte des trames non étiquetées. Un port **trunk** transporte plusieurs VLAN en ajoutant une étiquette 802.1Q de 4 octets (identifiant de VLAN sur 12 bits). Le **VLAN natif** est celui dont les trames circulent non étiquetées sur un trunk ; il doit être identique aux deux extrémités.
 
-#### Plan de VLAN de l'exemple
+### Plan de VLAN de l'exemple
 
 | VLAN | Nom | Réseau | Usage |
 |---|---|---|---|
@@ -2172,7 +2079,7 @@ flowchart TB
     SW1 -- "trunk VLAN 50 et 99" --> AP["Point d'accès Wi-Fi"]
 ```
 
-#### Configuration du switch (Cisco IOS)
+### Configuration du switch (Cisco IOS)
 
 ```text
 SW1(config)# vlan 10
@@ -2253,7 +2160,7 @@ Gi0/24    10,20,30,50,99
 
 Autres vérifications : `show interfaces status`, `show mac address-table`, `show interfaces GigabitEthernet0/1 switchport`.
 
-### 9.2 Routage inter-VLAN (router-on-a-stick)
+## Routage inter-VLAN (router-on-a-stick)
 
 Un seul lien trunk entre le switch et le routeur ; le routeur utilise une **sous-interface** par VLAN.
 
@@ -2277,7 +2184,7 @@ R1(config-subif)# ip address 192.168.99.1 255.255.255.0
 
 Chaque sous-interface sert de passerelle à son VLAN. Limite : le lien unique est un goulot d'étranglement et un point de défaillance ; sur un switch de niveau 3, on préfère des interfaces **SVI** (`interface vlan 10` avec `ip routing`).
 
-### Pièges fréquents
+## Pièges fréquents
 
 | Piège | Conséquence | Remède |
 | --- | --- | --- |
@@ -2287,23 +2194,17 @@ Chaque sous-interface sert de passerelle à son VLAN. Limite : le lien unique es
 | `no shutdown` oublié sur l'interface physique du routeur | Toutes les sous-interfaces restent down | Activer l'interface physique parente |
 | Ports d'accès laissés dans le VLAN 1 | Mélange de trafics, sécurité faible | VLAN dédié, ports inutilisés désactivés |
 
-### À retenir
-
-- Un **VLAN** est un domaine de diffusion logique ; le **trunk** transporte plusieurs VLAN étiquetés.
-- Router-on-a-stick : une **sous-interface par VLAN** (`encapsulation dot1Q`), passerelle de chaque VLAN.
-- Vérifier : `show vlan brief`, `show interfaces trunk`, `show ip interface brief`.
-
 ---
 
-## 10. Routage, NAT et listes de contrôle d'accès
+# Routage, NAT et listes de contrôle d'accès
 
-### Objectifs d'apprentissage
+## Objectifs d'apprentissage
 
 Choisir entre routage statique et dynamique ; configurer des routes statiques et OSPF ; mettre en place NAT et PAT et des redirections de ports ; écrire et placer des ACL standard et étendues ; diagnostiquer routage, NAT et ACL avec les commandes `show`.
 
-### 10.1 Routage statique et dynamique
+## Routage statique et dynamique
 
-#### Routage statique
+### Routage statique
 
 ```text
 R1(config)# ip route 10.20.0.0 255.255.0.0 192.168.10.254
@@ -2322,7 +2223,7 @@ Codes : `C` connecté, `L` adresse locale, `S` statique, `O` OSPF, `*` route par
 | Charge sur les équipements | Nulle | Faible à modérée |
 | Usage | Petits réseaux, routes par défaut | Réseaux à plusieurs routeurs |
 
-#### Routage dynamique : OSPF (exemple)
+### Routage dynamique : OSPF (exemple)
 
 OSPF (Open Shortest Path First, RFC 2328 pour OSPFv2) est un protocole à état de liens, standard et très répandu. RIP est ancien et peu adapté ; EIGRP est issu de Cisco ; BGP sert entre systèmes autonomes (Internet).
 
@@ -2341,7 +2242,7 @@ Neighbor ID  Pri  State     Dead Time  Address      Interface
 
 Les masques de la commande `network` sont des masques inverses (wildcard) : `0.0.0.255` couvre un /24. `passive-interface` empêche d'envoyer des messages OSPF vers les postes. Un état `FULL` indique une adjacence établie ; `INIT` ou `2WAY` figés signalent un problème (MTU différent, temporisateurs, authentification, sous-réseaux différents).
 
-### 10.2 NAT et PAT
+## NAT et PAT
 
 Le **NAT** traduit des adresses privées en adresses publiques. Le **PAT** (NAT overload) fait partager une seule adresse publique entre plusieurs hôtes en distinguant les ports sources.
 
@@ -2369,7 +2270,7 @@ R1# show ip nat statistics
 
 **Pannes courantes :** `ip nat inside/outside` sur la mauvaise interface ; ACL de NAT qui ne couvre pas le sous-réseau ; absence de route par défaut ; absence de route retour côté serveur pour une redirection.
 
-### 10.3 Listes de contrôle d'accès (ACL)
+## Listes de contrôle d'accès (ACL)
 
 Une ACL filtre les paquets selon l'adresse, le protocole et le port. Règles essentielles :
 
@@ -2407,7 +2308,7 @@ R1(config-line)# access-class ADMIN-SSH in
 
 **Risque :** appliquer une ACL sur l'interface par laquelle vous administrez l'équipement peut vous couper. Testez depuis la console ou ouvrez d'abord une règle d'administration.
 
-### Pièges fréquents
+## Pièges fréquents
 
 | Piège | Conséquence | Remède |
 | --- | --- | --- |
@@ -2417,23 +2318,17 @@ R1(config-line)# access-class ADMIN-SSH in
 | Masque inverse (wildcard) confondu avec le masque | ACL ou OSPF qui ne correspond pas | Wildcard = 255.255.255.255 − masque |
 | ACL appliquée sur l'interface d'administration | Perte d'accès au routeur | Tester depuis la console, prévoir un retour arrière |
 
-### À retenir
-
-- Routes statiques pour les petits réseaux et la route par défaut ; **OSPF** pour plusieurs routeurs.
-- **PAT** partage une adresse publique entre plusieurs hôtes ; la route de retour doit exister.
-- ACL : lecture de haut en bas, `deny` implicite, étendue près de la source, standard près de la destination.
-
 ---
 
-## 11. DHCP relais, Spanning Tree, agrégation de liens et Wi-Fi
+# DHCP relais, Spanning Tree, agrégation de liens et Wi-Fi
 
-### Objectifs d'apprentissage
+## Objectifs d'apprentissage
 
 Configurer un serveur DHCP Cisco et le relais DHCP (`ip helper-address`) ; expliquer STP/RSTP, l'élection du pont racine, `portfast` et `bpduguard` ; agréger des liens (LACP, EtherChannel) ; choisir normes, modes de sécurité (WPA2/WPA3) et architecture par SSID et VLAN pour le Wi-Fi.
 
-### 11.1 DHCP sur Cisco et DHCP Relay
+## DHCP sur Cisco et DHCP Relay
 
-#### Serveur DHCP sur routeur
+### Serveur DHCP sur routeur
 
 ```text
 R1(config)# ip dhcp excluded-address 192.168.10.1 192.168.10.20
@@ -2448,7 +2343,7 @@ R1# show ip dhcp binding
 R1# show ip dhcp pool
 ```
 
-#### DHCP Relay
+### DHCP Relay
 
 Les requêtes DHCP sont des broadcasts, qui ne traversent pas un routeur. Si le serveur DHCP est dans un autre VLAN (par exemple le serveur Ubuntu du VLAN 30), le routeur relaie les requêtes en unicast avec `ip helper-address` placé sur l'interface **côté clients**.
 
@@ -2474,7 +2369,7 @@ sequenceDiagram
     R->>C: DHCPACK
 ```
 
-### 11.2 Spanning Tree Protocol (STP)
+## Spanning Tree Protocol (STP)
 
 Dans un réseau Ethernet avec des liens redondants, les trames de broadcast tourneraient indéfiniment (**boucle de commutation**, tempête de broadcast). STP bloque certains ports pour obtenir une topologie sans boucle.
 
@@ -2504,7 +2399,7 @@ SW1# show spanning-tree summary
 
 **Symptômes d'une boucle :** voyants de switch clignotant en continu, CPU très élevé, latence extrême, table MAC instable (adresses qui « sautent » de port), perte du réseau entier.
 
-### 11.3 Agrégation de liens (Link Aggregation, EtherChannel)
+## Agrégation de liens (Link Aggregation, EtherChannel)
 
 L'agrégation regroupe plusieurs liens physiques en un lien logique : débit cumulé (réparti par flux) et redondance. Norme **IEEE 802.1AX** (LACP, anciennement 802.3ad). Chez Cisco : EtherChannel.
 
@@ -2531,9 +2426,9 @@ Flags : `S` (couche 2), `U` (en service), `P` (membre agrégé). Un flag `D` (do
 
 Sur un serveur Linux, l'équivalent est le **bonding** (mode 802.3ad) configurable via Netplan.
 
-### 11.4 Wi-Fi et sécurité *(à jour)*
+## Wi-Fi et sécurité *(à jour)*
 
-#### Normes
+### Normes
 
 | Nom commercial | Norme | Bandes |
 |---|---|---|
@@ -2545,7 +2440,7 @@ Sur un serveur Linux, l'équivalent est le **bonding** (mode 802.3ad) configurab
 - **2,4 GHz** : meilleure portée, plus d'interférences (peu de canaux sans recouvrement : 1, 6 et 11 en Amérique du Nord ; en Europe, 1, 5, 9, 13 conviennent aussi si le matériel est compatible).
 - **5 GHz et 6 GHz** : débits plus élevés, portée moindre.
 
-#### Modes de sécurité
+### Modes de sécurité
 
 | Mode | Authentification | Chiffrement | Avis |
 |---|---|---|---|
@@ -2559,7 +2454,7 @@ Sur un serveur Linux, l'équivalent est le **bonding** (mode 802.3ad) configurab
 
 Le **6 GHz** impose WPA3.
 
-#### Architecture recommandée en entreprise
+### Architecture recommandée en entreprise
 
 | SSID | VLAN | Sécurité | Particularités |
 |---|---|---|---|
@@ -2569,7 +2464,7 @@ Le **6 GHz** impose WPA3.
 
 Pratiques : désactiver WPS, mettre à jour le micrologiciel, relier les AP par un port trunk (VLAN des SSID étiquetés + VLAN de gestion), alimentation par PoE (802.3af/at/bt), choisir les canaux et les puissances d'émission avec une étude de couverture (mesure de terrain).
 
-### Pièges fréquents
+## Pièges fréquents
 
 | Piège | Conséquence | Remède |
 | --- | --- | --- |
@@ -2579,23 +2474,17 @@ Pratiques : désactiver WPS, mettre à jour le micrologiciel, relier les AP par 
 | EtherChannel en mode `on` contre `active` | Agrégat non formé | LACP des deux côtés (`active`/`passive`) |
 | WEP, WPA/TKIP, WPS activé | Réseau Wi-Fi compromettable | WPA2/WPA3, WPS désactivé, 802.1X en entreprise |
 
-### À retenir
-
-- Le **relais DHCP** transforme le broadcast en unicast vers le serveur ; le serveur choisit l'étendue d'après `giaddr`.
-- **STP** supprime les boucles en bloquant des ports ; `portfast` + `bpduguard` sur les ports d'accès.
-- **LACP** agrège les liens (débit par flux et redondance) ; Wi-Fi : un SSID par usage, mappé sur un VLAN.
-
 ---
 
-## 12. MikroTik RouterOS et sauvegarde des configurations
+# MikroTik RouterOS et sauvegarde des configurations
 
-### Objectifs d'apprentissage
+## Objectifs d'apprentissage
 
 Configurer un routeur MikroTik RouterOS 7 (LAN, DHCP, DNS, NAT, pare-feu, VLAN, OSPF, agrégation) ; utiliser le Safe Mode, l'export et la sauvegarde binaire ; comparer les équivalences Cisco/MikroTik ; appliquer des techniques de retour arrière.
 
-### 12.1 MikroTik RouterOS 7
+## MikroTik RouterOS 7
 
-#### Principes
+### Principes
 
 - Interfaces : **WinBox** (graphique), WebFig, SSH, console série. La CLI est hiérarchique (`/ip address`, `/interface bridge`) ; `print` liste, `add`, `set`, `remove` modifient, `?` affiche l'aide.
 - **Safe Mode** : touche `Ctrl+X` dans le terminal (ou bouton dans WinBox) ; si la session est coupée pendant ce mode, les changements sont annulés automatiquement. C'est le principal filet de sécurité pour une configuration à distance.
@@ -2607,7 +2496,7 @@ Configurer un routeur MikroTik RouterOS 7 (LAN, DHCP, DNS, NAT, pare-feu, VLAN, 
 [admin@MikroTik] > /export file=avant-modif
 ```
 
-#### LAN, DHCP, NAT, DNS
+### LAN, DHCP, NAT, DNS
 
 ```text
 /interface bridge add name=bridge-lan
@@ -2632,7 +2521,7 @@ Configurer un routeur MikroTik RouterOS 7 (LAN, DHCP, DNS, NAT, pare-feu, VLAN, 
 
 `allow-remote-requests=yes` fait du routeur un résolveur DNS pour le LAN : la règle de pare-feu doit **empêcher l'accès depuis Internet** (sinon le routeur devient un résolveur ouvert exploitable pour des attaques par amplification).
 
-#### Pare-feu (filter)
+### Pare-feu (filter)
 
 Principe : trois chaînes. `input` (vers le routeur), `forward` (à travers le routeur), `output` (depuis le routeur). Suivi d'état : `established,related` / `invalid` / `new`.
 
@@ -2659,7 +2548,7 @@ Redirection de port :
 /ip firewall nat add chain=dstnat protocol=tcp dst-port=443 in-interface=ether1 action=dst-nat to-addresses=192.168.30.20 to-ports=443
 ```
 
-#### VLAN avec le bridge VLAN filtering (RouterOS 7, et 6.41 et suivantes)
+### VLAN avec le bridge VLAN filtering (RouterOS 7, et 6.41 et suivantes)
 
 ```text
 /interface bridge add name=bridge1 vlan-filtering=no
@@ -2686,7 +2575,7 @@ add address=192.168.20.1/24 interface=vlan20
 
 **Risque :** activer `vlan-filtering` avant d'avoir terminé la configuration peut vous couper du routeur. Utilisez un port de gestion hors du bridge ou le Safe Mode.
 
-#### Routage, OSPF, agrégation
+### Routage, OSPF, agrégation
 
 ```text
 # Route statique
@@ -2703,7 +2592,7 @@ add address=192.168.20.1/24 interface=vlan20
 
 Vérifications : `/ip address print`, `/ip route print`, `/ip firewall connection print`, `/ip dhcp-server lease print`, `/interface print`, `/log print`, `/tool ping 1.1.1.1 count=4`, `/tool traceroute 1.1.1.1`.
 
-#### Équivalences Cisco IOS et MikroTik
+### Équivalences Cisco IOS et MikroTik
 
 | Besoin | Cisco IOS | MikroTik RouterOS 7 |
 |---|---|---|
@@ -2717,7 +2606,7 @@ Vérifications : `/ip address print`, `/ip route print`, `/ip firewall connectio
 | VLAN | `vlan`, `switchport` | `/interface bridge vlan` |
 | Relais DHCP | `ip helper-address` | `/ip dhcp-relay add` |
 
-### 12.2 Retour arrière et sauvegarde des configurations
+## Retour arrière et sauvegarde des configurations
 
 | Technique | Cisco IOS | MikroTik |
 |---|---|---|
@@ -2728,7 +2617,7 @@ Vérifications : `/ip address print`, `/ip route print`, `/ip firewall connectio
 
 Principe : ne sauvegardez **pas** la configuration modifiée (`copy running-config startup-config`) tant que vous n'avez pas vérifié que l'accès fonctionne ; ainsi un redémarrage restaure l'état précédent.
 
-### Pièges fréquents
+## Pièges fréquents
 
 | Piège | Conséquence | Remède |
 | --- | --- | --- |
@@ -2738,29 +2627,17 @@ Principe : ne sauvegardez **pas** la configuration modifiée (`copy running-conf
 | `vlan-filtering=yes` activé trop tôt | Coupure du routeur | L'activer en dernier, avec un port de gestion de secours |
 | Confondre `/export` et `/system backup` | Restauration impossible sur un autre matériel | Export texte pour versionner, sauvegarde binaire pour le même matériel |
 
-### À retenir
-
-- Le **Safe Mode** (`Ctrl+X`) annule les changements si la session est coupée.
-- Pare-feu RouterOS : chaînes `input` / `forward` / `output`, états `established,related`, `invalid`, `new`.
-- Sauvegarder **avant** de modifier ; ne valider (`startup-config`) qu'après test.
-
 ---
 
----
+# Services sous Ubuntu Server : socle commun, DHCP et DNS
 
-# Services réseau en entreprise
-
----
-
-## 13. Services sous Ubuntu Server : socle commun, DHCP et DNS
-
-### Objectifs d'apprentissage
+## Objectifs d'apprentissage
 
 Mettre en place le socle commun d'un serveur Ubuntu (IP statique, SSH, pare-feu, heure) ; installer et configurer un serveur DHCP (Kea) avec réservations et relais ; installer BIND 9 (zones directe et inverse, redirecteurs, récursion restreinte) ; vérifier et dépanner chaque service.
 
-### 13.1 Contexte et architecture de référence
+## Contexte et architecture de référence
 
-Les exemples s'appuient sur le plan d'adressage (section 9.1).
+Les exemples s'appuient sur le plan d'adressage (section « VLAN, Access et Trunk (switch) »).
 
 | Hôte | Adresse | Rôle |
 |---|---|---|
@@ -2784,7 +2661,7 @@ flowchart LR
 
 **Remarque sur le nom de domaine :** le suffixe `.local` est réservé à mDNS (RFC 6762) et peut causer des conflits de résolution. Il est utilisé ici par commodité pédagogique. En production, utilisez un sous-domaine d'un domaine que vous possédez (par exemple `int.exemple.fr`) ; la RFC 8375 réserve `home.arpa` pour les réseaux domestiques.
 
-#### Prérequis communs à tous les services
+### Prérequis communs à tous les services
 
 1. Ubuntu Server installé, **adresse IP statique**, nom d'hôte défini (`hostnamectl set-hostname`).
 2. Heure synchronisée (`timedatectl`), paquets à jour : `sudo apt update && sudo apt upgrade`.
@@ -2792,7 +2669,7 @@ flowchart LR
 4. **Avant toute modification d'un fichier de configuration** : `sudo cp -a /etc/service/fichier.conf /etc/service/fichier.conf.bak-$(date +%F)`.
 5. Pare-feu : décider des ports à ouvrir (voir le tableau récapitulatif en 6.13).
 
-#### Méthode de vérification commune
+### Méthode de vérification commune
 
 ```bash
 systemctl status <service>            # état
@@ -2801,17 +2678,17 @@ sudo journalctl -u <service> -n 50    # dernières erreurs
 <outil> -t <fichier>                  # test de syntaxe quand il existe (named-checkconf, nginx -t, sshd -t ...)
 ```
 
-### 13.2 Serveur DHCP *(à jour)*
+## Serveur DHCP *(à jour)*
 
-#### Présentation et fonctionnement
+### Présentation et fonctionnement
 
-DHCP attribue automatiquement adresse, masque, passerelle, DNS et durée de bail (processus DORA, voir section 3.5). **ISC DHCP** (`isc-dhcp-server`) est en fin de vie ; **Kea** (`kea-dhcp4-server`), son successeur développé par l'ISC, est recommandé pour une nouvelle installation. La configuration ISC est donnée en fin de section pour reconnaître les installations existantes.
+DHCP attribue automatiquement adresse, masque, passerelle, DNS et durée de bail (processus DORA, voir section « DNS et DHCP »). **ISC DHCP** (`isc-dhcp-server`) est en fin de vie ; **Kea** (`kea-dhcp4-server`), son successeur développé par l'ISC, est recommandé pour une nouvelle installation. La configuration ISC est donnée en fin de section pour reconnaître les installations existantes.
 
-#### Architecture
+### Architecture
 
 Les clients de plusieurs VLAN obtiennent leur bail auprès de `srv-infra`. Le routeur relaie les requêtes (`ip helper-address 192.168.30.2`). Le serveur choisit l'étendue (subnet) d'après l'adresse du relais.
 
-#### Installation et configuration (Kea)
+### Installation et configuration (Kea)
 
 ```bash
 sudo apt install kea-dhcp4-server
@@ -2860,7 +2737,7 @@ sudo nano /etc/kea/kea-dhcp4.conf
 
 Le fichier Kea est du JSON qui tolère les commentaires `#` et `//`. Adaptez `ens18` à votre interface ; pour les clients relayés, l'interface qui reçoit le trafic unicast du relais doit être listée.
 
-#### Vérification
+### Vérification
 
 ```bash
 sudo kea-dhcp4 -t /etc/kea/kea-dhcp4.conf       # test de syntaxe
@@ -2871,13 +2748,13 @@ cat /var/lib/kea/kea-leases4.csv                  # baux attribués
 sudo tcpdump -i ens18 -nn 'port 67 or port 68'    # trafic DHCP
 ```
 
-#### Sécurisation
+### Sécurisation
 
 - Pare-feu : `sudo ufw allow from 192.168.0.0/16 to any port 67 proto udp`.
-- Activer **DHCP snooping** sur les switchs pour bloquer les serveurs DHCP pirates (section 20).
+- Activer **DHCP snooping** sur les switchs pour bloquer les serveurs DHCP pirates (section « Sécurité réseau en entreprise »).
 - Limiter les plages aux besoins réels ; utiliser des **réservations** pour imprimantes et équipements fixes.
 
-#### Dépannage
+### Dépannage
 
 | Symptôme | Cause probable | Vérification |
 |---|---|---|
@@ -2887,11 +2764,11 @@ sudo tcpdump -i ens18 -nn 'port 67 or port 68'    # trafic DHCP
 | Mauvaise passerelle distribuée | Option `routers` erronée | Contrôler `option-data` du sous-réseau |
 | Bail expiré, adresse perdue | Pool épuisé ou bail trop court | Fichier de baux, augmenter la plage |
 
-#### Exemple d'usage en entreprise
+### Exemple d'usage en entreprise
 
 Un seul serveur sert tous les VLAN via relais, avec des réservations pour imprimantes et téléphones IP, et des baux courts (1 à 4 heures) pour le Wi-Fi invités.
 
-#### Configuration ISC DHCP (ancienne, pour mémoire)
+### Configuration ISC DHCP (ancienne, pour mémoire)
 
 ```text
 # /etc/dhcp/dhcpd.conf
@@ -2908,17 +2785,17 @@ subnet 192.168.10.0 netmask 255.255.255.0 {
 
 Interface d'écoute dans `/etc/default/isc-dhcp-server` (`INTERFACESv4="ens18"`) ; test : `sudo dhcpd -t -cf /etc/dhcp/dhcpd.conf` ; service `isc-dhcp-server`.
 
-### 13.3 Serveur DNS (BIND 9)
+## Serveur DNS (BIND 9)
 
-#### Présentation et fonctionnement
+### Présentation et fonctionnement
 
 Le DNS résout noms et adresses. **BIND 9** peut jouer deux rôles : serveur **faisant autorité** pour des zones (ici `entreprise.local`) et **résolveur récursif** pour les clients (transmet ce qu'il ne connaît pas à des forwarders).
 
-#### Architecture
+### Architecture
 
 Les clients interrogent `srv-infra` (192.168.30.2). Il répond pour la zone interne et relaie le reste vers des résolveurs externes.
 
-#### Installation
+### Installation
 
 ```bash
 sudo apt install bind9 bind9-utils bind9-dnsutils
@@ -2927,7 +2804,7 @@ sudo mkdir -p /etc/bind/zones
 
 Sur Ubuntu, le service s'appelle `named` (alias `bind9`).
 
-#### Configuration
+### Configuration
 
 `/etc/bind/named.conf.options` :
 
@@ -2995,7 +2872,7 @@ $TTL 3600
 
 Les noms complets se terminent par un point (`ns1.entreprise.local.`) ; sans point final, BIND ajoute le nom de la zone, cause fréquente d'erreurs.
 
-#### Vérification
+### Vérification
 
 ```bash
 sudo named-checkconf
@@ -3010,7 +2887,7 @@ dig @192.168.30.2 exemple.fr +short   # test des forwarders
 
 Résultat attendu : `192.168.30.20`, puis `srv-web.entreprise.local.`.
 
-#### Sécurisation
+### Sécurisation
 
 - **Pas de récursion ouverte** : `allow-recursion` limité au LAN (sinon le serveur peut servir d'amplificateur d'attaques DDoS).
 - `allow-transfer { none; }` ou limité aux serveurs secondaires.
@@ -3018,7 +2895,7 @@ Résultat attendu : `192.168.30.20`, puis `srv-web.entreprise.local.`.
 - Maintenir BIND à jour ; masquer la version est secondaire par rapport aux correctifs.
 - Prévoir un second serveur (`type secondary`) pour la redondance.
 
-#### Dépannage
+### Dépannage
 
 | Symptôme | Piste |
 |---|---|
@@ -3031,11 +2908,11 @@ Résultat attendu : `192.168.30.20`, puis `srv-web.entreprise.local.`.
 
 Conflit possible avec **systemd-resolved** : il écoute sur `127.0.0.53:53`, pas sur `127.0.0.1` ; BIND configuré avec `listen-on` explicite évite le conflit de port. Le serveur lui-même doit utiliser `127.0.0.1` ou sa propre adresse dans sa configuration réseau (Netplan).
 
-#### Exemple d'usage en entreprise
+### Exemple d'usage en entreprise
 
 DNS interne pour les serveurs et les postes (noms courts), avec transfert vers le DNS public pour Internet ; zones inverses pour les journaux lisibles et certains services (messagerie, Kerberos).
 
-### Pièges fréquents
+## Pièges fréquents
 
 | Piège | Conséquence | Remède |
 | --- | --- | --- |
@@ -3045,34 +2922,28 @@ DNS interne pour les serveurs et les postes (noms courts), avec transfert vers l
 | Mauvaise interface dans `interfaces-config` de Kea | Le service tourne mais ne sert personne | Vérifier `ss -ulpn | grep :67` |
 | Domaine interne en `.local` | Conflit avec mDNS | Sous-domaine d'un domaine possédé |
 
-### À retenir
-
-- Chaque service : **installation → configuration → test de syntaxe → démarrage → vérification → pare-feu**.
-- Kea (DHCP) et BIND (DNS) : toujours valider la configuration avant de recharger.
-- Prévoir la **redondance** : un seul serveur DHCP/DNS est un point de défaillance unique.
-
 ---
 
-## 14. SSH, Samba, NFS et serveur de fichiers
+# SSH, Samba, NFS et serveur de fichiers
 
-### Objectifs d'apprentissage
+## Objectifs d'apprentissage
 
 Sécuriser SSH (clés, durcissement, fail2ban) ; publier des partages Samba avec des droits par groupe ; exporter un répertoire par NFS en le restreignant ; concevoir un serveur de fichiers (groupes, ACL, quotas, sauvegardes) ; diagnostiquer les erreurs courantes.
 
-### 14.1 Serveur SSH (OpenSSH)
+## Serveur SSH (OpenSSH)
 
-#### Présentation
+### Présentation
 
 SSH (port TCP 22) offre une administration à distance chiffrée, le transfert de fichiers (SFTP, SCP) et des tunnels. Il remplace Telnet et rsh.
 
-#### Installation
+### Installation
 
 ```bash
 sudo apt install openssh-server
 systemctl status ssh
 ```
 
-#### Authentification par clé
+### Authentification par clé
 
 Sur le poste d'administration :
 
@@ -3082,7 +2953,7 @@ ssh-copy-id admin@192.168.30.21
 ssh admin@192.168.30.21
 ```
 
-#### Configuration sécurisée
+### Configuration sécurisée
 
 Sur Ubuntu, créer un fichier de surcharge dans `/etc/ssh/sshd_config.d/` (inclus par le fichier principal) plutôt que de modifier `sshd_config` :
 
@@ -3111,7 +2982,7 @@ sudo systemctl reload ssh
 
 **Changement de port :** il ne remplace pas une vraie sécurité (il réduit surtout le bruit des journaux). Sur Ubuntu 24.04, le service SSH est démarré par activation de socket (`ssh.socket`) : la directive `Port` du fichier de configuration peut ne pas suffire ; vérifiez avec `ss -tlnp | grep ssh` et consultez la documentation Ubuntu avant de changer le port.
 
-#### Protection contre le brute force : fail2ban
+### Protection contre le brute force : fail2ban
 
 ```bash
 sudo apt install fail2ban
@@ -3132,13 +3003,13 @@ sudo fail2ban-client status sshd
 sudo fail2ban-client set sshd unbanip 192.168.10.54    # débannir une adresse
 ```
 
-#### Pare-feu
+### Pare-feu
 
 ```bash
 sudo ufw allow from 192.168.99.0/24 to any port 22 proto tcp
 ```
 
-#### Dépannage
+### Dépannage
 
 | Symptôme | Cause probable |
 |---|---|
@@ -3150,13 +3021,13 @@ sudo ufw allow from 192.168.99.0/24 to any port 22 proto tcp
 
 Diagnostic côté client : `ssh -vvv admin@srv` ; côté serveur : `sudo journalctl -u ssh -n 50`.
 
-### 14.2 Serveur de fichiers Samba (SMB)
+## Serveur de fichiers Samba (SMB)
 
-#### Présentation et fonctionnement
+### Présentation et fonctionnement
 
-Samba implémente SMB/CIFS (TCP 445) et permet aux postes Windows, Linux et macOS d'utiliser des partages. Ici, Samba est en mode **serveur autonome** (comptes locaux à la machine). L'intégration à un domaine Active Directory est traitée avec Windows Server (sections 16 et 17).
+Samba implémente SMB/CIFS (TCP 445) et permet aux postes Windows, Linux et macOS d'utiliser des partages. Ici, Samba est en mode **serveur autonome** (comptes locaux à la machine). L'intégration à un domaine Active Directory est traitée avec Windows Server (sections « Windows Server : Active Directory, DNS et DHCP » et « Windows Server : GPO, partages et permissions »).
 
-#### Installation et organisation des données
+### Installation et organisation des données
 
 ```bash
 sudo apt install samba
@@ -3169,7 +3040,7 @@ sudo usermod -aG compta alice
 sudo smbpasswd -a alice                   # mot de passe SMB (distinct de celui du système)
 ```
 
-#### Configuration `/etc/samba/smb.conf`
+### Configuration `/etc/samba/smb.conf`
 
 ```text
 [global]
@@ -3192,7 +3063,7 @@ sudo smbpasswd -a alice                   # mot de passe SMB (distinct de celui 
    directory mask = 0770
 ```
 
-#### Vérification
+### Vérification
 
 ```bash
 testparm                                  # valide smb.conf et affiche la configuration effective
@@ -3205,14 +3076,14 @@ sudo mount -t cifs //192.168.30.21/Compta /mnt/compta -o username=alice
 
 Depuis Windows : `\\192.168.30.21\Compta` dans l'Explorateur.
 
-#### Sécurisation
+### Sécurisation
 
 - Pas d'accès invité, SMB1 désactivé (`server min protocol = SMB2`), partages limités à des groupes.
 - Ouvrir uniquement le port 445 vers les VLAN concernés : `sudo ufw allow from 192.168.10.0/24 to any port 445 proto tcp`.
 - Journaliser l'accès (`vfs objects = full_audit`) si une traçabilité est exigée.
 - Sur Red Hat et dérivées, SELinux demande une étiquette adaptée (`semanage fcontext -a -t samba_share_t "/srv/partages(/.*)?"` puis `restorecon -Rv /srv/partages`) et le booléen adéquat.
 
-#### Dépannage
+### Dépannage
 
 | Message | Signification et piste |
 |---|---|
@@ -3222,13 +3093,13 @@ Depuis Windows : `\\192.168.30.21\Compta` dans l'Explorateur.
 | Partage invisible sous Windows | Pare-feu (445), nom d'hôte non résolu, profil réseau public sur Windows |
 | Modification sans effet | `sudo systemctl reload smbd` ou `restart` ; `testparm` signale les erreurs |
 
-### 14.3 Serveur NFS
+## Serveur NFS
 
-#### Présentation
+### Présentation
 
 NFS partage des répertoires entre systèmes Unix/Linux. NFSv4 (port TCP 2049) est recommandé : un seul port, meilleur support du pare-feu.
 
-#### Installation et configuration
+### Installation et configuration
 
 Serveur :
 
@@ -3265,24 +3136,24 @@ Montage permanent dans `/etc/fstab` (testez avec `sudo mount -a` avant de redém
 192.168.30.21:/srv/nfs/donnees  /mnt/donnees  nfs4  defaults,_netdev  0  0
 ```
 
-#### Sécurisation
+### Sécurisation
 
 - Restreindre les exports par réseau ou par hôte ; garder `root_squash` (par défaut) pour que l'utilisateur root d'un client ne devienne pas root sur le serveur.
 - Le mode d'authentification par défaut (`sys`) fait confiance aux UID envoyés par le client : réservez NFS aux réseaux de confiance ou utilisez Kerberos (`sec=krb5p`).
 - Ne jamais exporter vers `*`.
 
-#### Dépannage
+### Dépannage
 
 - `mount.nfs: access denied by server` : l'adresse du client n'est pas dans `/etc/exports` ; relancer `exportfs -ra`.
 - `Connection timed out` : pare-feu ou service arrêté (`systemctl status nfs-server`).
 - Fichiers appartenant à `nobody` : correspondance d'UID/GID ou domaine d'identification (idmapd) différent.
 - Montage bloqué au démarrage : option `_netdev` oubliée, ou serveur indisponible (ajouter `nofail`).
 
-### 14.4 Serveur de fichiers : conception et exploitation
+## Serveur de fichiers : conception et exploitation
 
 Un serveur de fichiers d'entreprise combine Samba, des droits cohérents, des sauvegardes et une organisation lisible.
 
-#### Organisation
+### Organisation
 
 ```text
 /srv/partages/
@@ -3294,7 +3165,7 @@ Un serveur de fichiers d'entreprise combine Samba, des droits cohérents, des sa
 
 Principes : un **groupe par fonction** (jamais des droits attribués utilisateur par utilisateur), droits donnés aux groupes, `chmod 2770` (setgid) pour hériter du groupe, répertoire `commun` en lecture/écriture pour un groupe général.
 
-#### Droits fins (ACL POSIX)
+### Droits fins (ACL POSIX)
 
 ```bash
 sudo apt install acl
@@ -3303,7 +3174,7 @@ sudo setfacl -R -d -m g:compta:rwx /srv/partages/compta     # ACL par défaut, h
 getfacl /srv/partages/compta
 ```
 
-#### Quotas, sauvegardes, corbeille
+### Quotas, sauvegardes, corbeille
 
 - **Quotas** : `quota` ou quotas de système de fichiers (XFS, ext4) selon la volumétrie.
 - **Sauvegarde** : voir la règle 3-2-1 (trois copies, deux supports, une hors site) ; exemple de synchronisation vers un autre serveur :
@@ -3317,7 +3188,7 @@ rsync -aHAX --delete -e ssh /srv/partages/ sauvegarde@192.168.30.50:/srv/sauvega
 - **Corbeille Samba** : `vfs objects = recycle` (à configurer avec une rétention).
 - **Surveillance** : espace disque (`df -h`), inodes (`df -i`), erreurs SMART, saturation de la RAM.
 
-### Pièges fréquents
+## Pièges fréquents
 
 | Piège | Conséquence | Remède |
 | --- | --- | --- |
@@ -3327,27 +3198,21 @@ rsync -aHAX --delete -e ssh /srv/partages/ sauvegarde@192.168.30.50:/srv/sauvega
 | Export NFS vers `*` | Tout le monde peut monter le partage | Restreindre par réseau ou par hôte, garder `root_squash` |
 | `rsync --delete` sans test | Suppression de données à destination | `--dry-run`, conserver des versions |
 
-### À retenir
-
-- SSH : **clés**, pas de root, `AllowGroups`, accès depuis le VLAN de gestion, fail2ban.
-- Droits de fichiers : **un groupe par fonction**, `chmod 2770` (setgid), jamais de droits individuels.
-- Sauvegardes : règle **3-2-1** et **test de restauration** régulier.
-
 ---
 
-## 15. Serveurs web, VPN, FTP/SFTP et proxy
+# Serveurs web, VPN, FTP/SFTP et proxy
 
-### Objectifs d'apprentissage
+## Objectifs d'apprentissage
 
 Publier un site avec Apache ou Nginx (sites virtuels, HTTPS, reverse proxy) ; mettre en place un VPN d'accès distant avec WireGuard ; remplacer FTP par SFTP (utilisateurs cloisonnés) ; configurer un proxy Squid ; connaître les ports à ouvrir pour chaque service.
 
-### 15.1 Serveur Web Apache
+## Serveur Web Apache
 
-#### Présentation et architecture
+### Présentation et architecture
 
 Apache HTTP Server sert des pages web, applications PHP et sites virtuels. Un **VirtualHost** associe un nom (`ServerName`) à un répertoire.
 
-#### Installation et site
+### Installation et site
 
 ```bash
 sudo apt install apache2
@@ -3381,7 +3246,7 @@ sudo systemctl reload apache2
 curl -I http://www.entreprise.local
 ```
 
-#### HTTPS
+### HTTPS
 
 ```bash
 sudo a2enmod ssl headers
@@ -3392,11 +3257,11 @@ sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
 
 Un certificat auto-signé déclenche un avertissement navigateur : pour un site interne, utilisez une autorité de certification interne ; pour un site public, **Let's Encrypt** (`certbot`). Bloc `VirtualHost *:443` avec `SSLEngine on`, `SSLCertificateFile`, `SSLCertificateKeyFile`.
 
-#### Sécurisation
+### Sécurisation
 
 Dans `/etc/apache2/conf-available/security.conf` : `ServerTokens Prod`, `ServerSignature Off`. Désactiver les modules inutiles (`a2dismod`), mettre à jour régulièrement, appliquer les protocoles TLS 1.2 et 1.3 uniquement, activer l'en-tête HSTS pour un site public, limiter les droits du répertoire web (propriétaire différent de l'utilisateur `www-data` pour le code).
 
-#### Dépannage
+### Dépannage
 
 | Symptôme | Piste |
 |---|---|
@@ -3406,13 +3271,13 @@ Dans `/etc/apache2/conf-available/security.conf` : `ServerTokens Prod`, `ServerS
 | 500 | Application (PHP) en erreur : `/var/log/apache2/error.log` |
 | Mauvais site servi | `ServerName` ne correspond pas ; ordre des VirtualHosts (`apache2ctl -S`) |
 
-### 15.2 Serveur Web Nginx
+## Serveur Web Nginx
 
-#### Présentation
+### Présentation
 
 Nginx sert des fichiers statiques et fait office de **reverse proxy** vers des applications (Django, Node, PHP-FPM) avec une consommation mémoire faible. **Apache et Nginx ne peuvent pas écouter ensemble sur le même port** : choisissez l'un, ou changez de port.
 
-#### Installation et site
+### Installation et site
 
 ```bash
 sudo apt install nginx
@@ -3453,16 +3318,16 @@ sudo systemctl reload nginx
 
 HTTPS : dans un bloc `listen 443 ssl;` avec `ssl_certificate`, `ssl_certificate_key`, `ssl_protocols TLSv1.2 TLSv1.3;` ; redirection HTTP vers HTTPS par `return 301 https://$host$request_uri;`.
 
-#### Dépannage
+### Dépannage
 
 - `nginx -t` signale la ligne en erreur (point-virgule manquant, bloc non fermé).
 - `502 Bad Gateway` : l'application en amont ne répond pas (`ss -tlnp | grep 8000`).
 - `403` : droits ou absence d'`index`.
 - Journaux : `/var/log/nginx/error.log` et `access.log`.
 
-### 15.3 Serveur VPN (WireGuard) *(à jour)*
+## Serveur VPN (WireGuard) *(à jour)*
 
-#### Présentation et architecture
+### Présentation et architecture
 
 Un VPN crée un tunnel chiffré entre un client distant et le réseau de l'entreprise. **WireGuard** est moderne, rapide et simple (UDP, port 51820 par défaut, intégré au noyau Linux depuis la version 5.6). OpenVPN reste une alternative répandue (TCP ou UDP).
 
@@ -3472,7 +3337,7 @@ flowchart LR
     VPN --> LAN["Réseaux internes 192.168.x.0/24"]
 ```
 
-#### Installation et clés
+### Installation et clés
 
 ```bash
 sudo apt install wireguard
@@ -3480,7 +3345,7 @@ cd /etc/wireguard
 sudo sh -c 'umask 077; wg genkey | tee server.key | wg pubkey > server.pub'
 ```
 
-#### Configuration du serveur `/etc/wireguard/wg0.conf`
+### Configuration du serveur `/etc/wireguard/wg0.conf`
 
 ```text
 [Interface]
@@ -3508,7 +3373,7 @@ sudo ufw route allow in on wg0 out on ens18    # si ufw filtre le routage
 sudo systemctl enable --now wg-quick@wg0
 ```
 
-#### Configuration du client
+### Configuration du client
 
 ```text
 [Interface]
@@ -3525,7 +3390,7 @@ PersistentKeepalive = 25
 
 `AllowedIPs` côté client définit **le trafic envoyé dans le tunnel** (ici le réseau d'entreprise : « split tunnel ») ; `0.0.0.0/0` enverrait tout le trafic Internet dans le tunnel.
 
-#### Vérification
+### Vérification
 
 ```bash
 sudo wg show                  # pairs, dernière poignée de main (« latest handshake »), octets échangés
@@ -3535,17 +3400,17 @@ ping -c 3 10.8.0.1            # depuis le client
 
 Pas de « latest handshake » : clé publique erronée, port UDP 51820 bloqué, `Endpoint` incorrect.
 
-#### Sécurisation
+### Sécurisation
 
 Protéger les clés privées (droits 600), une paire de clés par utilisateur, retirer un `[Peer]` pour révoquer un accès, filtrer ce que les clients VPN atteignent (règles de pare-feu sur `wg0`), journaliser et superviser, mettre à jour. Exiger en complément un second facteur sur les services sensibles.
 
-### 15.4 Serveur FTP et SFTP
+## Serveur FTP et SFTP
 
-#### Choix recommandé : SFTP (OpenSSH)
+### Choix recommandé : SFTP (OpenSSH)
 
 FTP transmet identifiants et données en clair : **obsolète pour tout usage externe**. SFTP (sous-système SSH, port 22) chiffre tout et réutilise OpenSSH. Variante FTPS (FTP + TLS) possible avec `vsftpd`.
 
-#### SFTP avec utilisateurs cloisonnés (chroot)
+### SFTP avec utilisateurs cloisonnés (chroot)
 
 ```bash
 sudo groupadd sftpusers
@@ -3575,7 +3440,7 @@ sftp partenaire1@192.168.30.21
 
 Règle importante : le répertoire de chroot et ses parents doivent appartenir à **root** et ne pas être modifiables par un autre utilisateur, sinon la connexion échoue (`bad ownership or modes for chroot directory`). L'utilisateur écrit dans un sous-répertoire (ici `upload`). Pour de meilleures garanties, préférez les clés SSH aux mots de passe.
 
-#### FTPS avec vsftpd (si FTP est imposé)
+### FTPS avec vsftpd (si FTP est imposé)
 
 `/etc/vsftpd.conf` (extraits) :
 
@@ -3596,17 +3461,17 @@ pasv_max_port=40100
 
 Ouvrir TCP 21 et la plage passive 40000 à 40100. Le FTP en mode passif et le NAT exigent des réglages supplémentaires (`pasv_address`).
 
-#### Dépannage
+### Dépannage
 
 Échec SFTP en chroot : droits du dossier racine. Connexion acceptée mais shell refusé : normal avec `nologin`. FTP : problèmes de mode passif derrière pare-feu ou NAT.
 
-### 15.5 Serveur proxy (Squid)
+## Serveur proxy (Squid)
 
-#### Présentation
+### Présentation
 
 Un proxy HTTP/HTTPS intercale un serveur entre les postes et Internet : filtrage de sites, journalisation, cache, contrôle d'accès. Squid écoute par défaut sur le port TCP 3128.
 
-#### Installation et configuration
+### Installation et configuration
 
 ```bash
 sudo apt install squid
@@ -3640,17 +3505,17 @@ sudo ufw allow from 192.168.10.0/24 to any port 3128 proto tcp
 
 **Ordre des règles :** Squid applique la première règle `http_access` qui correspond ; la règle finale `http_access deny all` du fichier principal bloque tout le reste.
 
-#### Sécurité et considérations légales
+### Sécurité et considérations légales
 
 Pour le HTTPS, Squid par défaut établit un tunnel (`CONNECT`) et ne voit que le nom du site. Déchiffrer le trafic (« SSL bump ») est intrusif, nécessite de déployer un certificat d'autorité sur les postes et engage des obligations de transparence et de protection de la vie privée (information des salariés, respect du droit du travail et du RGPD pour les données personnelles). Définissez cela dans une charte informatique avec les services juridique et RH.
 
-#### Dépannage
+### Dépannage
 
 - `TCP_DENIED/403` dans `access.log` : règle `http_access` ou ACL de source.
 - `TCP_MISS/503` : DNS ou connectivité sortante du proxy défaillants.
 - Postes qui contournent le proxy : bloquer le trafic web sortant direct au niveau du pare-feu, sauf depuis le proxy.
 
-### 15.6 Tableau récapitulatif des ports à ouvrir *(ajout)*
+## Tableau récapitulatif des ports à ouvrir *(ajout)*
 
 | Service | Ports | Sens | Source recommandée |
 |---|---|---|---|
@@ -3664,7 +3529,7 @@ Pour le HTTPS, Squid par défaut établit un tunnel (`CONNECT`) et ne voit que l
 | Squid | TCP 3128 | Entrée | VLAN utilisateurs |
 | FTPS | TCP 21 + plage passive | Entrée | Partenaires connus |
 
-### Pièges fréquents
+## Pièges fréquents
 
 | Piège | Conséquence | Remède |
 | --- | --- | --- |
@@ -3674,21 +3539,15 @@ Pour le HTTPS, Squid par défaut établit un tunnel (`CONNECT`) et ne voit que l
 | Transfert IP désactivé sur la passerelle VPN | Tunnel établi mais LAN inaccessible | `net.ipv4.ip_forward=1` (et règles de pare-feu) |
 | Ordre des `http_access` dans Squid | Règles ignorées ou accès trop large | Première règle correspondante, `deny all` final |
 
-### À retenir
-
-- HTTPS partout ; `nginx -t` / `apache2ctl configtest` avant chaque rechargement.
-- **WireGuard** : une paire de clés par utilisateur, `AllowedIPs` limité, révocation par suppression du pair.
-- **SFTP** plutôt que FTP ; un proxy est un outil de filtrage soumis à des obligations légales (information, vie privée).
-
 ---
 
-## 16. Windows Server : Active Directory, DNS et DHCP
+# Windows Server : Active Directory, DNS et DHCP
 
-### Objectifs d'apprentissage
+## Objectifs d'apprentissage
 
 Installer un domaine Active Directory et un contrôleur de domaine ; organiser OU, utilisateurs et groupes (AGDLP) ; configurer le DNS intégré à AD et un serveur DHCP autorisé (avec failover) ; sécuriser, sauvegarder et dépanner l'annuaire.
 
-### 16.1 Contexte et architecture de référence
+## Contexte et architecture de référence
 
 Dans un environnement Windows, **Active Directory** est le cœur de l'identité : authentification (Kerberos), annuaire (LDAP), politiques (GPO) et DNS intégré. Les services s'appuient les uns sur les autres :
 
@@ -3719,7 +3578,7 @@ flowchart TB
 - **Nom de domaine :** `entreprise.local` est utilisé par cohérence avec les sections précédentes. Microsoft recommande un sous-domaine d'un nom DNS que vous possédez (par exemple `ad.exemple.fr`), car `.local` entre en conflit avec mDNS. Le nom d'un domaine AD **ne se change pas facilement** : choisissez-le avec soin.
 - Dans un domaine AD, **les postes doivent utiliser le DNS du contrôleur de domaine** et non un DNS public, sinon l'ouverture de session, la jonction au domaine et les GPO échouent.
 
-#### Prérequis communs
+### Prérequis communs
 
 1. Windows Server installé en édition Standard ou Datacenter, mis à jour.
 2. **Adresse IP statique**, nom d'hôte définitif (le renommage après promotion est contraignant).
@@ -3734,9 +3593,9 @@ Set-DnsClientServerAddress -InterfaceAlias "Ethernet" -ServerAddresses 127.0.0.1
 
 (Avant la promotion, le DNS peut pointer vers un résolveur externe pour télécharger des mises à jour ; après la promotion, il doit pointer vers le contrôleur de domaine lui-même et le second contrôleur.)
 
-### 16.2 Active Directory et contrôleur de domaine
+## Active Directory et contrôleur de domaine
 
-#### Présentation et fonctionnement
+### Présentation et fonctionnement
 
 **Active Directory Domain Services (AD DS)** stocke les objets (utilisateurs, groupes, ordinateurs) dans une base répliquée entre contrôleurs de domaine. Vocabulaire :
 
@@ -3752,7 +3611,7 @@ Set-DnsClientServerAddress -InterfaceAlias "Ethernet" -ServerAddresses 127.0.0.1
 
 Les cinq rôles **FSMO** : Schema Master et Domain Naming Master (un par forêt) ; PDC Emulator, RID Master et Infrastructure Master (un par domaine). Le **PDC Emulator** est la source de temps du domaine.
 
-#### Installation et création de la forêt
+### Installation et création de la forêt
 
 ```powershell
 Install-WindowsFeature -Name AD-Domain-Services -IncludeManagementTools
@@ -3770,7 +3629,7 @@ Install-ADDSForest `
 
 `WinThreshold` correspond au niveau fonctionnel Windows Server 2016, le niveau le plus élevé pour Windows Server 2019 et 2022. Windows Server 2025 introduit un niveau supérieur ; vérifiez la valeur acceptée avec `Get-Help Install-ADDSForest -Parameter ForestMode`. Le mot de passe **DSRM** (mode de restauration des services d'annuaire) sert à réparer le contrôleur : conservez-le dans un coffre sécurisé. Le serveur **redémarre automatiquement**. Un avertissement sur la délégation DNS est normal pour un domaine interne.
 
-#### Ajouter un second contrôleur de domaine
+### Ajouter un second contrôleur de domaine
 
 Sur `srv-dc2` (IP statique, DNS pointant vers `srv-dc1`) :
 
@@ -3781,7 +3640,7 @@ Install-ADDSDomainController -DomainName "entreprise.local" -InstallDns:$true `
   -SafeModeAdministratorPassword (Read-Host -AsSecureString "Mot de passe DSRM")
 ```
 
-#### Vérification
+### Vérification
 
 ```powershell
 Get-ADDomain
@@ -3795,7 +3654,7 @@ nltest /dsgetdc:entreprise.local
 
 Résultat attendu : tous les tests `dcdiag` en `passed`, aucune erreur de réplication (`0` dans la colonne des échecs), les 5 rôles FSMO sur un contrôleur actif.
 
-#### Synchronisation de l'heure
+### Synchronisation de l'heure
 
 Sur le contrôleur détenant le rôle **PDC Emulator** :
 
@@ -3807,7 +3666,7 @@ w32tm /query /status
 
 Les autres contrôleurs et postes se synchronisent sur le domaine automatiquement.
 
-#### Sécurisation d'Active Directory
+### Sécurisation d'Active Directory
 
 - Limiter strictement les membres des groupes **Domain Admins**, **Enterprise Admins** et **Schema Admins** ; utiliser des comptes d'administration distincts des comptes quotidiens.
 - Activer la **Corbeille Active Directory** (irréversible, à faire tôt) :
@@ -3818,7 +3677,7 @@ Les autres contrôleurs et postes se synchronisent sur le domaine automatiquemen
 - Sauvegarder l'état du système des contrôleurs de domaine : `wbadmin start systemstatebackup -backupTarget:E:` (testez la restauration).
 - Journaliser les connexions (événements 4624, 4625, 4740 pour les verrouillages).
 
-#### Pare-feu : ports principaux d'AD
+### Pare-feu : ports principaux d'AD
 
 | Service | Port(s) |
 |---|---|
@@ -3834,7 +3693,7 @@ Les autres contrôleurs et postes se synchronisent sur le domaine automatiquemen
 
 Le blocage de ces ports entre postes et contrôleurs, ou entre contrôleurs, est une cause classique de pannes de réplication et de connexion.
 
-#### Dépannage
+### Dépannage
 
 | Symptôme | Cause probable | Piste |
 |---|---|---|
@@ -3845,7 +3704,7 @@ Le blocage de ces ports entre postes et contrôleurs, ou entre contrôleurs, est
 | Réplication en échec | DNS, pare-feu, horloge, DC éteint trop longtemps | `repadmin /replsummary`, `repadmin /showrepl`, `dcdiag /test:dns` |
 | Compte qui se verrouille sans cesse | Ancien mot de passe en cache (session, service, mobile) | `Search-ADAccount -LockedOut`, événement 4740 sur le PDC Emulator |
 
-#### Jonction d'un poste au domaine
+### Jonction d'un poste au domaine
 
 ```powershell
 Add-Computer -DomainName "entreprise.local" -Credential ENTREPRISE\admin -Restart
@@ -3854,9 +3713,9 @@ Test-ComputerSecureChannel -Verbose
 whoami /fqdn
 ```
 
-### 16.3 Utilisateurs, groupes et unités d'organisation
+## Utilisateurs, groupes et unités d'organisation
 
-#### Structure d'OU conseillée
+### Structure d'OU conseillée
 
 ```text
 entreprise.local
@@ -3874,7 +3733,7 @@ entreprise.local
 
 Les OU servent à **déléguer l'administration** et à **cibler les GPO**. Elles ne servent pas à attribuer des droits d'accès aux fichiers (rôle des groupes).
 
-#### Création en PowerShell
+### Création en PowerShell
 
 ```powershell
 $racine = "DC=entreprise,DC=local"
@@ -3894,7 +3753,7 @@ New-ADUser -Name "Alice Martin" -GivenName "Alice" -Surname "Martin" `
 
 Les OU peuvent être protégées contre la suppression accidentelle (option activée par défaut avec `New-ADOrganizationalUnit`).
 
-#### Groupes : portée et stratégie AGDLP
+### Groupes : portée et stratégie AGDLP
 
 | Portée | Contient | Utilisable pour |
 |---|---|---|
@@ -3923,7 +3782,7 @@ Add-ADGroupMember -Identity "DL_Compta_Modif" -Members "GG_Compta"
 
 Avantage : une arrivée ou un départ ne demande que de modifier l'appartenance à `GG_Compta`, jamais les permissions des dossiers.
 
-#### Gestion courante
+### Gestion courante
 
 ```powershell
 Get-ADUser amartin -Properties *                       # détail complet
@@ -3940,13 +3799,13 @@ Get-ADGroupMember "GG_Compta"
 
 **Création en masse :** à partir d'un fichier CSV (`Import-Csv utilisateurs.csv | ForEach-Object { New-ADUser ... }`) ; testez toujours sur quelques lignes avec `-WhatIf`.
 
-### 16.4 Serveur DNS Windows
+## Serveur DNS Windows
 
-#### Présentation
+### Présentation
 
 Le rôle DNS de Windows Server héberge les zones. Avec AD, les zones sont **intégrées à Active Directory** : stockées dans l'annuaire, répliquées avec lui, avec **mises à jour dynamiques sécurisées** (les postes enregistrent leur nom ; seuls les membres authentifiés peuvent modifier leurs enregistrements). Les contrôleurs de domaine s'annoncent via des enregistrements **SRV** (`_ldap._tcp`, `_kerberos._tcp`), indispensables à la découverte du domaine.
 
-#### Installation et configuration
+### Installation et configuration
 
 Avec `-InstallDns:$true`, le rôle est installé lors de la création de la forêt. Pour un serveur DNS seul :
 
@@ -3973,7 +3832,7 @@ Set-DnsServerForwarder -IPAddress 1.1.1.1, 9.9.9.9
 Add-DnsServerConditionalForwarderZone -Name "partenaire.exemple" -MasterServers 203.0.113.53
 ```
 
-#### Vérification
+### Vérification
 
 ```powershell
 Get-DnsServerZone
@@ -3984,7 +3843,7 @@ dcdiag /test:dns /v
 Clear-DnsServerCache
 ```
 
-#### Sécurisation
+### Sécurisation
 
 - **Mises à jour dynamiques sécurisées uniquement** (jamais « non sécurisées »).
 - Restreindre les transferts de zone aux serveurs autorisés.
@@ -3992,7 +3851,7 @@ Clear-DnsServerCache
 - Activer le **nettoyage (scavenging)** des enregistrements périmés (`Set-DnsServerScavenging`) avec des durées cohérentes avec les baux DHCP.
 - DNS sur les clients : serveurs DNS du domaine uniquement.
 
-#### Dépannage
+### Dépannage
 
 | Symptôme | Cause probable | Piste |
 |---|---|---|
@@ -4001,13 +3860,13 @@ Clear-DnsServerCache
 | Internet non résolu | Redirecteurs injoignables | `Resolve-DnsName exemple.fr -Server 1.1.1.1`, pare-feu |
 | Réponses obsolètes | Cache DNS client ou serveur | `Clear-DnsClientCache` (poste), `Clear-DnsServerCache` (serveur) |
 
-### 16.5 Serveur DHCP Windows
+## Serveur DHCP Windows
 
-#### Présentation et fonctionnement
+### Présentation et fonctionnement
 
 Le rôle DHCP attribue les adresses via des **étendues** (scopes) ; chacune correspond à un sous-réseau. Dans un domaine, le serveur doit être **autorisé dans Active Directory**, sans quoi il refuse de distribuer des adresses (protection contre les serveurs DHCP pirates).
 
-#### Installation et autorisation
+### Installation et autorisation
 
 ```powershell
 Install-WindowsFeature -Name DHCP -IncludeManagementTools
@@ -4023,7 +3882,7 @@ Restart-Service DHCPServer
 Set-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\ServerManager\Roles\12 -Name ConfigurationState -Value 2
 ```
 
-#### Étendues, exclusions, options et réservations
+### Étendues, exclusions, options et réservations
 
 ```powershell
 # Étendue du VLAN 10 : plage .10 à .200, bail d'un jour
@@ -4042,9 +3901,9 @@ Add-DhcpServerv4Reservation -ScopeId 192.168.10.0 -IPAddress 192.168.10.30 `
   -ClientId "00-1A-2B-3C-4D-5E" -Name "imprimante1" -Description "Imprimante compta"
 ```
 
-Les étendues pour les autres VLAN suivent le même modèle (passerelle propre à chaque VLAN). Le **relais DHCP** (`ip helper-address 192.168.30.10`) doit être configuré sur le routeur de chaque VLAN (section 11.1) : le serveur choisit l'étendue d'après l'adresse du relais.
+Les étendues pour les autres VLAN suivent le même modèle (passerelle propre à chaque VLAN). Le **relais DHCP** (`ip helper-address 192.168.30.10`) doit être configuré sur le routeur de chaque VLAN (section « DHCP sur Cisco et DHCP Relay ») : le serveur choisit l'étendue d'après l'adresse du relais.
 
-#### Vérification et exploitation
+### Vérification et exploitation
 
 ```powershell
 Get-DhcpServerInDC
@@ -4055,17 +3914,17 @@ Get-DhcpServerv4ScopeStatistics            # pourcentage d'utilisation
 Get-WinEvent -LogName "Microsoft-Windows-DHCP Server Events/Operational" -MaxEvents 20
 ```
 
-#### Haute disponibilité et sauvegarde
+### Haute disponibilité et sauvegarde
 
 - **DHCP Failover** (Windows Server 2012 et suivants) entre deux serveurs, en équilibrage de charge ou en attente (hot standby) :
   `Add-DhcpServerv4Failover -ComputerName srv-dc1 -PartnerServer srv-dc2 -Name "Failover-DC" -ScopeId 192.168.10.0 -LoadBalancePercent 50 -SharedSecret "<secret>"`
 - Sauvegarde : `Backup-DhcpServer -Path C:\Sauvegardes\DHCP` ; restauration : `Restore-DhcpServer -Path C:\Sauvegardes\DHCP`. Exportez aussi la configuration : `Export-DhcpServer -File C:\Sauvegardes\dhcp.xml -Leases`.
 
-#### Sécurisation
+### Sécurisation
 
 Autorisation AD obligatoire ; DHCP snooping sur les switchs ; réservations pour les équipements fixes ; journalisation activée ; adresses exclues pour éviter les conflits avec les adresses statiques ; limiter les droits du groupe « Administrateurs DHCP ».
 
-#### Dépannage
+### Dépannage
 
 | Symptôme | Piste |
 |---|---|
@@ -4076,7 +3935,7 @@ Autorisation AD obligatoire ; DHCP snooping sur les switchs ; réservations pour
 | Mauvaise passerelle | Option 003 erronée sur l'étendue |
 | Deux serveurs DHCP répondent | Serveur pirate ou ancien serveur : repérer avec `tcpdump` ou Wireshark, couper la source |
 
-### Pièges fréquents
+## Pièges fréquents
 
 | Piège | Conséquence | Remède |
 | --- | --- | --- |
@@ -4086,23 +3945,17 @@ Autorisation AD obligatoire ; DHCP snooping sur les switchs ; réservations pour
 | Serveur DHCP non autorisé dans AD | Aucun bail distribué | `Add-DhcpServerInDC` |
 | Nom de domaine choisi à la légère (`.local`) | Difficile à changer, conflits mDNS | Sous-domaine d'un nom DNS possédé |
 
-### À retenir
-
-- AD = annuaire + DNS + Kerberos : **DNS correct = domaine fonctionnel**.
-- **AGDLP** : comptes dans des groupes globaux, eux-mêmes dans des groupes de domaine local qui reçoivent les permissions.
-- Sécurité : comptes d'administration séparés, LAPS, Corbeille AD, sauvegarde de l'état du système.
-
 ---
 
-## 17. Windows Server : GPO, partages et permissions
+# Windows Server : GPO, partages et permissions
 
-### Objectifs d'apprentissage
+## Objectifs d'apprentissage
 
 Créer et lier des GPO, comprendre l'ordre d'application (LSDOU) et diagnostiquer avec `gpresult` ; publier des partages SMB avec permissions de partage et NTFS combinées ; appliquer la sécurité de SMB ; mettre en œuvre quotas, DFS et copies cachées.
 
-### 17.1 Stratégies de groupe (GPO)
+## Stratégies de groupe (GPO)
 
-#### Présentation et fonctionnement
+### Présentation et fonctionnement
 
 Une **GPO** (Group Policy Object) applique des paramètres (sécurité, bureau, lecteurs réseau, imprimantes, scripts) à des utilisateurs ou à des ordinateurs. Elle se **lie** à un site, à un domaine ou à une OU. Une GPO comporte une partie **Ordinateur** (appliquée au démarrage) et une partie **Utilisateur** (appliquée à l'ouverture de session).
 
@@ -4114,7 +3967,7 @@ flowchart LR
     O2 --> R["Paramètres effectifs (dernier gagnant)"]
 ```
 
-#### Création et liaison
+### Création et liaison
 
 ```powershell
 # Module GroupPolicy (installé avec RSAT / le serveur de gestion)
@@ -4148,7 +4001,7 @@ Les paramètres de la plupart des stratégies se configurent surtout dans la con
 
 **Bonnes pratiques :** ne pas modifier la « Default Domain Policy » au-delà des paramètres de mot de passe et de verrouillage de compte ; créer une GPO par objectif, nommée clairement ; tester sur une OU pilote ; documenter ; **sauvegarder** (`Backup-GPO -All -Path C:\Sauvegardes\GPO`) ; utiliser un **magasin central ADMX** pour les modèles d'administration.
 
-#### Vérification et dépannage
+### Vérification et dépannage
 
 Sur le poste client :
 
@@ -4168,9 +4021,9 @@ Sur le serveur : `Get-GPO -All`, `Get-GPOReport -All -ReportType Html -Path rapp
 | Application lente | Résolution DNS, scripts de connexion, nombreuses GPO | `gpresult /h`, journaux événements « GroupPolicy » |
 | Échec d'accès à SYSVOL | DNS, réplication DFSR défaillante | `dcdiag`, `repadmin`, accès à `\\entreprise.local\SYSVOL` |
 
-### 17.2 Serveur de fichiers, partages et permissions
+## Serveur de fichiers, partages et permissions
 
-#### Présentation et fonctionnement
+### Présentation et fonctionnement
 
 Un serveur de fichiers Windows publie des dossiers par SMB (TCP 445). L'accès à un fichier dépend de **deux niveaux de permissions** :
 
@@ -4181,7 +4034,7 @@ Un serveur de fichiers Windows publie des dossiers par SMB (TCP 445). L'accès �
 
 **Règle :** les droits effectifs d'un utilisateur par le réseau sont l'**intersection** des deux : le plus restrictif l'emporte. Un « Refuser » explicite prime sur un « Autoriser ». Approche courante : donner aux partages des droits larges (par exemple Modification aux Utilisateurs authentifiés) et gérer le détail en **NTFS** avec les groupes AGDLP.
 
-#### Installation et création
+### Installation et création
 
 ```powershell
 Install-WindowsFeature -Name FS-FileServer -IncludeManagementTools
@@ -4203,7 +4056,7 @@ icacls "D:\Partages\Compta" /grant "BUILTIN\Administrators:(OI)(CI)F" "NT AUTHOR
 
 Signification d'`icacls` : `(OI)` hérité par les fichiers, `(CI)` hérité par les sous-dossiers, `F` contrôle total, `M` modification, `RX` lecture et exécution. Le nom du groupe « Admins du domaine » dépend de la langue de Windows (`Domain Admins` en anglais).
 
-#### Vérification
+### Vérification
 
 ```powershell
 Get-SmbShare
@@ -4216,14 +4069,14 @@ Get-SmbOpenFile                     # fichiers ouverts (verrous)
 
 Depuis un poste : `\\srv-fic\Compta` ou `net use Z: \\srv-fic\Compta`. L'onglet « Accès effectif » (Sécurité > Avancé) calcule les droits réels d'un utilisateur.
 
-#### Fonctions complémentaires
+### Fonctions complémentaires
 
 - **FSRM** (File Server Resource Manager) : quotas, filtrage de fichiers, rapports (`Install-WindowsFeature FS-Resource-Manager`).
 - **Copies cachées (Volume Shadow Copy)** : versions précédentes de fichiers pour les restaurations rapides.
 - **DFS Namespaces** : chemin unique (`\\entreprise.local\Partages`) indépendant du serveur physique ; **DFS Replication** pour la redondance.
 - Lecteurs réseau automatiques par GPO (mappages de lecteurs).
 
-#### Sécurisation
+### Sécurisation
 
 ```powershell
 Set-SmbServerConfiguration -EnableSMB1Protocol $false -Force
@@ -4234,7 +4087,7 @@ Set-SmbServerConfiguration -EncryptData $true -Force
 
 Vérifiez la compatibilité des clients avant d'imposer la signature ou le chiffrement. Autres bonnes pratiques : pas de droits individuels, pas de « Tout le monde » avec contrôle total, sauvegardes testées, audit des accès sensibles, antivirus adapté, séparation des données sur un volume dédié (`D:`).
 
-#### Dépannage
+### Dépannage
 
 | Symptôme | Cause probable | Piste |
 |---|---|---|
@@ -4245,7 +4098,7 @@ Vérifiez la compatibilité des clients avant d'imposer la signature ou le chiff
 | Lecteur réseau absent | GPO de mappage non appliquée | `gpresult /r`, ciblage |
 | Disque plein | Absence de quota | FSRM, nettoyage, extension |
 
-### 17.3 Exemples d'utilisation en entreprise
+## Exemples d'utilisation en entreprise
 
 Un cabinet de 40 personnes :
 
@@ -4255,7 +4108,7 @@ Un cabinet de 40 personnes :
 4. Des GPO : verrouillage d'écran, lecteurs réseau, imprimantes par service, pare-feu activé, mises à jour planifiées.
 5. Procédure d'arrivée et de départ documentée (création de compte, ajout au groupe de service, désactivation puis suppression différée).
 
-### Pièges fréquents
+## Pièges fréquents
 
 | Piège | Conséquence | Remède |
 | --- | --- | --- |
@@ -4265,27 +4118,15 @@ Un cabinet de 40 personnes :
 | Droits attribués à des utilisateurs individuels | Gestion ingérable, oublis au départ | Groupes AGDLP |
 | Jeton d'accès non actualisé | Accès refusé après ajout à un groupe | Fermer puis rouvrir la session |
 
-### À retenir
-
-- GPO : **L**ocale, **S**ite, **D**omaine, **OU** ; la dernière appliquée l'emporte ; `gpresult /h` pour comprendre.
-- Droits effectifs réseau = **intersection** des permissions de partage et NTFS.
-- SMB1 désactivé, signature SMB, énumération basée sur l'accès, sauvegarde des GPO et du serveur.
-
 ---
 
----
+# Méthodologie professionnelle de dépannage
 
-# Dépannage, sécurité et supervision
-
----
-
-## 18. Méthodologie professionnelle de dépannage
-
-### Objectifs d'apprentissage
+## Objectifs d'apprentissage
 
 Appliquer une méthode rigoureuse (définir, mesurer, hypothèse, test, un changement à la fois) ; choisir une stratégie de diagnostic ; raisonner par couches OSI ; suivre un arbre de décision ; modifier sans casser (risques et retour arrière) ; documenter un incident.
 
-### 18.1 Principes fondamentaux
+## Principes fondamentaux
 
 Dépanner n'est pas essayer des commandes au hasard : c'est réduire progressivement le champ des causes possibles.
 
@@ -4294,10 +4135,10 @@ Dépanner n'est pas essayer des commandes au hasard : c'est réduire progressive
 3. **Formuler une hypothèse, la tester, conclure.** Un seul changement à la fois, sinon on ne sait plus ce qui a corrigé ou aggravé la panne.
 4. **Comparer** avec un équipement qui fonctionne (même VLAN, même switch, autre poste) : la différence désigne souvent la cause.
 5. **Documenter** au fur et à mesure : heure, commande, résultat, changement effectué.
-6. **Prévoir le retour arrière avant toute modification** (voir 8.5).
+6. **Prévoir le retour arrière avant toute modification** (voir la section « Retour arrière et sauvegarde des configurations »).
 7. **Escalader** à temps (opérateur, fournisseur, niveau supérieur) avec un dossier complet plutôt que de s'acharner.
 
-#### Stratégies de diagnostic
+### Stratégies de diagnostic
 
 | Stratégie | Principe | Quand l'utiliser |
 |---|---|---|
@@ -4308,7 +4149,7 @@ Dépanner n'est pas essayer des commandes au hasard : c'est réduire progressive
 | Substitution | On remplace un élément (câble, port, poste) par un élément sain | Suspicion matérielle |
 | Comparaison | On compare avec un poste fonctionnel | Panne limitée à un équipement |
 
-### 18.2 Méthode en 11 étapes
+## Méthode en 11 étapes
 
 Chaque fiche du catalogue suit cette structure :
 
@@ -4326,7 +4167,7 @@ Chaque fiche du catalogue suit cette structure :
 | 10 | Vérification après réparation | Tests prouvant que la panne est résolue |
 | 11 | Prévention | Mesures pour éviter la récidive |
 
-### 18.3 Diagnostic par couches du modèle OSI
+## Diagnostic par couches du modèle OSI
 
 | Couche | Questions à se poser | Symptômes typiques | Outils |
 |---|---|---|---|
@@ -4340,7 +4181,7 @@ Chaque fiche du catalogue suit cette structure :
 
 Règle pratique : **la couche la plus basse qui échoue est celle à réparer** ; les couches supérieures ne fonctionneront pas tant que les inférieures ne le sont pas.
 
-### 18.4 Arbre de décision général
+## Arbre de décision général
 
 ```mermaid
 flowchart TD
@@ -4370,7 +4211,7 @@ Windows :  Get-NetAdapter -> ipconfig /all -> ping passerelle -> ping 1.1.1.1 ->
 Linux   :  ip -br link    -> ip -br addr   -> ping passerelle -> ping 1.1.1.1 -> getent hosts / dig -> nc -zv hôte N
 ```
 
-### 18.5 Modifier sans casser : risques et retour arrière
+## Modifier sans casser : risques et retour arrière
 
 **Aucune modification de configuration ne doit être faite sans avoir répondu à ces questions :**
 
@@ -4393,7 +4234,7 @@ Techniques de retour arrière déjà vues dans ce guide :
 
 **Opérations à fort risque, à n'exécuter qu'en connaissance de cause :** `netsh winsock reset`, `netsh int ip reset`, `iptables -F` ou `nft flush ruleset`, `ip link set <interface> down` sur la seule interface de gestion, `taskkill /f` sur un service, suppression de route par défaut, changement de VLAN natif, activation d'un pare-feu sans règle SSH, `erase startup-config`, `rm -rf` hors d'un chemin vérifié.
 
-### 18.6 Modèle de fiche d'incident *(ajout)*
+## Modèle de fiche d'incident *(ajout)*
 
 ```markdown
 # Incident n° AAAA-MM-JJ-01
@@ -4421,7 +4262,7 @@ Techniques de retour arrière déjà vues dans ce guide :
 - Actions correctives et responsables :
 ```
 
-### 18.7 Erreurs fréquentes du dépanneur *(ajout)*
+## Erreurs fréquentes du dépanneur *(ajout)*
 
 - Tester par nom avant d'avoir testé par adresse IP (on ne sait plus si c'est le DNS ou le réseau).
 - Modifier plusieurs choses en même temps.
@@ -4431,7 +4272,7 @@ Techniques de retour arrière déjà vues dans ce guide :
 - Ne pas noter l'état initial et ne pas pouvoir revenir en arrière.
 - Redémarrer « pour voir » sans collecter les journaux qui disparaîtront.
 
-### Pièges fréquents
+## Pièges fréquents
 
 | Piège | Conséquence | Remède |
 | --- | --- | --- |
@@ -4440,30 +4281,23 @@ Techniques de retour arrière déjà vues dans ce guide :
 | Pas de retour arrière préparé | Une erreur transforme une panne en sinistre | Sauvegarde, minuterie (`netplan try`, `reload in`, Safe Mode) |
 | Redémarrer « pour voir » | Les journaux et l'état de la panne disparaissent | Collecter journaux et mesures d'abord |
 
-### À retenir
-
-- **La couche la plus basse qui échoue** est celle à réparer en premier.
-- Une méthode en **11 étapes** donne à chaque fiche la même structure, de la description à la prévention.
-- Documenter (fiche d'incident) et **prévenir** : une panne résolue sans prévention reviendra.
-
 ---
 
-## 19. Les problèmes réseau rencontrés en entreprise
+# Les problèmes réseau rencontrés en entreprise
 
-### Objectifs d'apprentissage
+## Objectifs d'apprentissage
 
 Reconnaître et traiter les pannes les plus fréquentes (connectivité, DNS et DHCP, VLAN et routage, sécurité, serveurs) ; appliquer à chaque fiche la structure en 11 étapes ; utiliser les commandes Windows et Linux adaptées ; identifier la cause réelle, corriger et vérifier.
 
-> Les fiches de cette section suivent la méthode décrite dans la section 18 (structure en 11 étapes, section 18.2, et diagnostic par couches, section 18.3). Si vous débutez, lisez d'abord les sections 18.1 à 18.4.
+> Les fiches de cette section suivent la méthode décrite dans la section « Méthodologie professionnelle de dépannage » (structure en 11 étapes, puis diagnostic par couches). Si vous débutez, lisez d'abord les sous-sections « Principes fondamentaux » à « Arbre de décision général ».
 
-
-Le catalogue comporte des **fiches détaillées** (structure complète en 11 étapes) pour les pannes les plus formatrices, puis des **fiches synthétiques** en tableau pour les autres, avec les mêmes informations condensées. Les commandes ont été présentées dans les sections 6 et 7 ; elles sont ici utilisées en situation.
+Le catalogue comporte des **fiches détaillées** (structure complète en 11 étapes) pour les pannes les plus formatrices, puis des **fiches synthétiques** en tableau pour les autres, avec les mêmes informations condensées. Les commandes ont été présentées dans les sections « Commandes réseau sous Windows » et « Commandes réseau sous Linux » ; elles sont ici utilisées en situation.
 
 Conventions : **Admin** = droits administrateur ou `sudo` nécessaires. Les adresses sont celles du plan d'adressage des sections précédentes.
 
-### 19.1 Fiches détaillées
+## Fiches détaillées
 
-#### Fiche 1 — Ordinateur sans connexion Internet
+### Fiche 1 — Ordinateur sans connexion Internet
 
 1. **Description.** Un poste du VLAN 10 ouvre le réseau local mais aucune page web ne s'affiche.
 2. **Symptômes.** Navigateur : « Pas de connexion Internet » ou « Impossible d'accéder au site » ; icône réseau avec avertissement.
@@ -4489,7 +4323,7 @@ Conventions : **Admin** = droits administrateur ou `sudo` nécessaires. Les adre
 10. **Vérification.** `ping 1.1.1.1` et `ping www.exemple.fr` réussissent, une page s'ouvre, le test se répète après redémarrage du poste.
 11. **Prévention.** DHCP plutôt que statique pour les postes, supervision du lien WAN, documentation du plan d'adressage.
 
-#### Fiche 2 — Connexion Ethernet inexistante
+### Fiche 2 — Connexion Ethernet inexistante
 
 1. **Description.** L'icône réseau affiche un câble débranché ; aucun voyant au port.
 2. **Symptômes.** `Get-NetAdapter` : `Disconnected` ou `Not Present` ; Linux : `NO-CARRIER`.
@@ -4503,7 +4337,7 @@ Conventions : **Admin** = droits administrateur ou `sudo` nécessaires. Les adre
 10. **Vérification.** Lien actif à la vitesse attendue (`LinkSpeed 1 Gbps`), adresse IP obtenue, `ping` de la passerelle.
 11. **Prévention.** Étiquetage et documentation du brassage, cordons de qualité, recette de câblage (test de certification), alertes de supervision sur les ports.
 
-#### Fiche 3 — Réseau lent
+### Fiche 3 — Réseau lent
 
 1. **Description.** Les transferts de fichiers et les pages web sont lents pour un ou plusieurs utilisateurs.
 2. **Symptômes.** Débit très inférieur à l'attendu, latence variable, délais intermittents.
@@ -4530,9 +4364,9 @@ Conventions : **Admin** = droits administrateur ou `sudo` nécessaires. Les adre
 8. **Cause réelle.** Exemple : `ethtool` montre `Speed: 100Mb/s` sur un lien gigabit : câble de catégorie insuffisante ou paire défectueuse.
 9. **Résolution.** Remplacer le câble, vérifier le brassage ; forcer l'autonégociation des deux côtés ; séparer les flux lourds (sauvegardes) des heures de bureau ; QoS pour la voix ; corriger la boucle (fiche 9). **Risque** : forcer vitesse ou duplex d'un seul côté crée un désaccord (duplex mismatch).
 10. **Vérification.** Nouvelle mesure `iperf3` et test applicatif, absence d'erreurs croissantes sur les compteurs.
-11. **Prévention.** Supervision de débit et des erreurs (section 21), recettes de câblage, dimensionnement avec marge, QoS.
+11. **Prévention.** Supervision de débit et des erreurs (section « Outils professionnels de diagnostic et de supervision »), recettes de câblage, dimensionnement avec marge, QoS.
 
-#### Fiche 4 — Conflit d'adresses IP
+### Fiche 4 — Conflit d'adresses IP
 
 1. **Description.** Deux machines utilisent la même adresse IPv4.
 2. **Symptômes.** Message Windows « Une autre machine du réseau a la même adresse IP » ; connexions qui tombent au hasard ; un hôte joignable une minute sur deux.
@@ -4546,7 +4380,7 @@ Conventions : **Admin** = droits administrateur ou `sudo` nécessaires. Les adre
 10. **Vérification.** `arping` ne répond que d'une MAC, plus de message de conflit, services testés.
 11. **Prévention.** Plan d'adressage documenté (IPAM), plage statique séparée de la plage DHCP, réservations DHCP, DHCP snooping.
 
-#### Fiche 5 — Adresse APIPA (169.254.x.x) et DHCP indisponible
+### Fiche 5 — Adresse APIPA (169.254.x.x) et DHCP indisponible
 
 1. **Description.** Un poste obtient `169.254.x.x` au lieu d'une adresse du réseau.
 2. **Symptômes.** Aucun accès hors du lien local, `ipconfig` indique une configuration automatique.
@@ -4560,7 +4394,7 @@ Conventions : **Admin** = droits administrateur ou `sudo` nécessaires. Les adre
 10. **Vérification.** Adresse correcte avec bonne passerelle et bons DNS, bail visible côté serveur (`Get-DhcpServerv4Lease`).
 11. **Prévention.** DHCP en failover, supervision de l'utilisation des étendues, sauvegarde de la configuration.
 
-#### Fiche 6 — Impossible de résoudre un nom de domaine
+### Fiche 6 — Impossible de résoudre un nom de domaine
 
 1. **Description.** Les sites répondent par adresse IP mais pas par nom.
 2. **Symptômes.** « Le serveur DNS ne répond pas » ; `ping nom` échoue avec « La requête n'a pas pu trouver l'hôte » ; `ping 1.1.1.1` réussit.
@@ -4588,7 +4422,7 @@ Conventions : **Admin** = droits administrateur ou `sudo` nécessaires. Les adre
 10. **Vérification.** Résolution de noms internes et externes par plusieurs postes, par `Resolve-DnsName` et par le navigateur.
 11. **Prévention.** Deux serveurs DNS, supervision du service et d'une requête de test, sauvegarde des zones, `named-checkzone` avant chaque rechargement.
 
-#### Fiche 7 — VLAN mal configuré
+### Fiche 7 — VLAN mal configuré
 
 1. **Description.** Un poste n'atteint pas ses serveurs, ou reçoit une adresse d'un autre réseau.
 2. **Symptômes.** Adresse du mauvais sous-réseau, aucune adresse, accès impossible aux serveurs du bon VLAN, ping passerelle impossible.
@@ -4602,7 +4436,7 @@ Conventions : **Admin** = droits administrateur ou `sudo` nécessaires. Les adre
 10. **Vérification.** Le poste obtient une adresse du bon réseau, passerelle joignable, accès au serveur cible.
 11. **Prévention.** Standard de nommage et de numérotation, documentation des ports, vérification de configuration régulière (sauvegardes versionnées), 802.1X ou affectation dynamique des VLAN.
 
-#### Fiche 8 — Boucle réseau
+### Fiche 8 — Boucle réseau
 
 1. **Description.** Un câble relie deux ports du même réseau (ou un mini-switch non géré crée une boucle) : le broadcast circule indéfiniment.
 2. **Symptômes.** Réseau très lent ou totalement indisponible, voyants des switchs clignotant en rafale, CPU des switchs à 100 %, messages `MAC flapping`.
@@ -4616,7 +4450,7 @@ Conventions : **Admin** = droits administrateur ou `sudo` nécessaires. Les adre
 10. **Vérification.** CPU revenu à la normale, plus de MAC flapping, topologie STP stable.
 11. **Prévention.** `spanning-tree bpduguard enable` et `portfast` sur les ports d'accès, `storm-control broadcast level` selon le matériel, choix explicite du root bridge, contrôle des branchements.
 
-#### Fiche 9 — Connexion SSH refusée
+### Fiche 9 — Connexion SSH refusée
 
 1. **Description.** `ssh admin@srv-fic` échoue.
 2. **Symptômes.** Trois messages distincts : `Connection timed out`, `Connection refused`, `Permission denied`.
@@ -4630,7 +4464,7 @@ Conventions : **Admin** = droits administrateur ou `sudo` nécessaires. Les adre
 10. **Vérification.** Nouvelle connexion réussie ; connexion par clé uniquement ; consulter `journalctl -u ssh`.
 11. **Prévention.** Gestion centralisée des clés, fail2ban, supervision du service, accès console de secours.
 
-#### Fiche 10 — Détection d'une attaque ARP spoofing
+### Fiche 10 — Détection d'une attaque ARP spoofing
 
 1. **Description.** Un équipement du LAN envoie de fausses réponses ARP pour se faire passer pour la passerelle et intercepter le trafic. Cette fiche décrit la **détection et la réaction** (défensif).
 2. **Symptômes.** Coupures brèves, avertissements de certificat inattendus, deux adresses IP avec la même MAC dans le cache ARP, MAC de la passerelle qui change.
@@ -4644,7 +4478,7 @@ Conventions : **Admin** = droits administrateur ou `sudo` nécessaires. Les adre
 10. **Vérification.** MAC de la passerelle conforme partout, plus de doublon, trafic normal.
 11. **Prévention.** **DHCP snooping** puis **Dynamic ARP Inspection** (`ip arp inspection vlan 10`), port security, 802.1X, segmentation en VLAN, protocoles chiffrés (HTTPS, SSH, SMB signé), supervision `arpwatch`.
 
-#### Fiche 11 — Serveur Web indisponible
+### Fiche 11 — Serveur Web indisponible
 
 1. **Description.** Le site interne `www.entreprise.local` ne répond plus.
 2. **Symptômes.** Délai dépassé, `Connection refused`, erreur 502 ou 503, page blanche.
@@ -4658,7 +4492,7 @@ Conventions : **Admin** = droits administrateur ou `sudo` nécessaires. Les adre
 10. **Vérification.** Réponse HTTP 200, test depuis plusieurs réseaux, surveillance d'espace disque.
 11. **Prévention.** Supervision (Zabbix, Prometheus), alertes disque à 80 %, rotation des journaux, renouvellement automatique des certificats, redondance.
 
-#### Fiche 12 — Problème de certificat TLS
+### Fiche 12 — Problème de certificat TLS
 
 1. **Description.** Les navigateurs affichent un avertissement de sécurité, ou un client refuse la connexion TLS.
 2. **Symptômes.** « Votre connexion n'est pas privée », erreurs `NET::ERR_CERT_DATE_INVALID`, `ERR_CERT_COMMON_NAME_INVALID`, `ERR_CERT_AUTHORITY_INVALID`, code curl 60.
@@ -4678,11 +4512,11 @@ Conventions : **Admin** = droits administrateur ou `sudo` nécessaires. Les adre
 10. **Vérification.** Navigateurs sans avertissement, `openssl s_client` affichant `Verify return code: 0 (ok)`.
 11. **Prévention.** Renouvellement automatique avec alerte à 30 jours de l'échéance, inventaire des certificats, autorité interne déployée par GPO pour les services internes.
 
-### 19.2 Fiches synthétiques
+## Fiches synthétiques
 
 Même structure, condensée : **Symptômes** (étape 2), **Causes** (3), **Diagnostic** (4 à 7, noté W pour Windows, L pour Linux), **Résolution et retour arrière** (9), **Vérification et prévention** (10 et 11). Les étapes 1 et 8 se déduisent de la ligne.
 
-#### Connectivité
+### Connectivité
 
 | Problème | Symptômes | Causes | Diagnostic | Résolution | Vérification et prévention |
 |---|---|---|---|---|---|
@@ -4693,7 +4527,7 @@ Même structure, condensée : **Symptômes** (étape 2), **Causes** (3), **Diagn
 | Problème de passerelle | Réseau local seul | Passerelle erronée ou hors sous-réseau, routeur éteint, ARP incomplet | W : `ipconfig`, `arp -a`. L : `ip route`, `ip neigh` | Corriger la passerelle, relancer le routeur ; DHCP | Ping passerelle OK ; documentation, DHCP |
 | Mauvaise configuration du masque | Certains hôtes joignables, d'autres non | Masque trop large ou trop étroit (par exemple /25 au lieu de /24) | W : `ipconfig`. L : `ip addr` ; recalculer réseau et broadcast | Corriger le masque (DHCP ou statique) | Tous les hôtes joignables ; plan d'adressage, DHCP |
 
-#### DNS et DHCP
+### DNS et DHCP
 
 | Problème | Symptômes | Causes | Diagnostic | Résolution | Vérification et prévention |
 |---|---|---|---|---|---|
@@ -4704,7 +4538,7 @@ Même structure, condensée : **Symptômes** (étape 2), **Causes** (3), **Diagn
 | Bail DHCP expiré | Perte d'adresse après un délai | Serveur injoignable au renouvellement, bail trop court, pool épuisé | W : `ipconfig /all` (bail). L : `journalctl -u systemd-networkd` | Rétablir le serveur, ajuster la durée, agrandir la plage | Renouvellement réussi ; supervision du pool |
 | Serveur DHCP pirate | Adresses et passerelles inattendues | Routeur domestique branché, machine mal configurée | W : `ipconfig /all`. L : `tcpdump -i ens18 -nn port 67` | Localiser par MAC, couper le port | Un seul DHCP actif ; DHCP snooping |
 
-#### Routage et switching
+### Routage et switching
 
 | Problème | Symptômes | Causes | Diagnostic | Résolution | Vérification et prévention |
 |---|---|---|---|---|---|
@@ -4714,7 +4548,7 @@ Même structure, condensée : **Symptômes** (étape 2), **Causes** (3), **Diagn
 | NAT défectueux | Postes internes sans Internet, redirections en échec | `ip nat inside/outside` mal placés, ACL de NAT incomplète, route de retour | `show ip nat translations`, `show ip nat statistics`, `show access-lists` | Corriger interfaces et ACL, compter les traductions | Traductions visibles ; sauvegarde de configuration |
 | ACL bloquant le trafic | Un service précis inaccessible, ping passe ou non | Règle trop stricte, ordre incorrect, `deny` implicite | `show access-lists` (compteurs), `show ip interface` (ACL appliquée) | Insérer la règle avant le `deny`, tester | Service accessible ; revue régulière des ACL |
 
-#### Sécurité
+### Sécurité
 
 | Problème | Symptômes | Causes | Diagnostic | Résolution | Vérification et prévention |
 |---|---|---|---|---|---|
@@ -4725,7 +4559,7 @@ Même structure, condensée : **Symptômes** (étape 2), **Causes** (3), **Diagn
 | Attaque ARP spoofing | Voir fiche 10 | Voir fiche 10 | Voir fiche 10 | Voir fiche 10 | Voir fiche 10 |
 | Problème de certificat | Voir fiche 12 | Voir fiche 12 | Voir fiche 12 | Voir fiche 12 | Voir fiche 12 |
 
-#### Serveurs
+### Serveurs
 
 | Problème | Symptômes | Causes | Diagnostic | Résolution | Vérification et prévention |
 |---|---|---|---|---|---|
@@ -4736,7 +4570,7 @@ Même structure, condensée : **Symptômes** (étape 2), **Causes** (3), **Diagn
 | Problème d'authentification | Mot de passe refusé, accès refusé | Compte verrouillé, mot de passe expiré, horloge, groupe non actualisé, DC injoignable | W : `Search-ADAccount -LockedOut`, `klist`, `w32tm /query /status`. L : `journalctl -u ssh`, `chronyc tracking` | Déverrouiller, réinitialiser, resynchroniser l'heure, rouvrir la session | Connexion réussie ; NTP partout, politique de verrouillage réaliste |
 | Saturation de RAM ou de disque | Lenteur, services arrêtés, erreurs d'écriture | Fuite mémoire, journaux non tournés, sauvegardes accumulées, quota absent | L : `free -h`, `top`, `df -h`, `du -xh /var | sort -h | tail`, `df -i`. W : Gestionnaire des tâches, `Get-PSDrive` | Libérer l'espace, redémarrer le processus fautif, agrandir le disque | Seuils respectés ; alertes à 80 %, rotation, quotas |
 
-#### Autres problèmes fréquents
+### Autres problèmes fréquents
 
 | Problème | Symptômes | Causes | Diagnostic | Résolution | Vérification et prévention |
 |---|---|---|---|---|---|
@@ -4747,7 +4581,7 @@ Même structure, condensée : **Symptômes** (étape 2), **Causes** (3), **Diagn
 | Imprimante réseau injoignable | Impression bloquée | IP changée, port 9100 bloqué, file bloquée | W : `Test-NetConnection imp -Port 9100`, `Restart-Service Spooler` | Réservation DHCP, nouvelle file | Impression OK ; réservations DHCP |
 | Proxy mal configuré | Navigateur échoue, `curl` direct réussit | Paramètre proxy erroné, PAC inaccessible | W : `netsh winhttp show proxy`. L : `env | grep -i proxy` | Corriger ou retirer le proxy | Navigation OK ; configuration centralisée par GPO |
 
-### Pièges fréquents
+## Pièges fréquents
 
 | Piège | Conséquence | Remède |
 | --- | --- | --- |
@@ -4756,21 +4590,15 @@ Même structure, condensée : **Symptômes** (étape 2), **Causes** (3), **Diagn
 | Réactiver un port `err-disabled` sans corriger la cause | Le port retombe en erreur | Chercher d'abord la boucle, la violation de sécurité |
 | « Résoudre » une erreur de certificat en l'ignorant | Exposition aux attaques d'interception | Corriger le certificat ou déployer l'autorité interne |
 
-### À retenir
-
-- 12 fiches détaillées et plus de 30 fiches synthétiques couvrent les pannes courantes.
-- Chaque fiche relie **symptôme → cause → diagnostic → résolution → prévention**.
-- Les pannes de sécurité (ARP spoofing, accès non autorisé) exigent **isolement, preuves et information** avant correction.
-
 ---
 
-## 20. Sécurité réseau en entreprise
+# Sécurité réseau en entreprise
 
-### Objectifs d'apprentissage
+## Objectifs d'apprentissage
 
 Appliquer les principes de défense en profondeur ; segmenter par VLAN et zones (DMZ, invités, gestion) et rédiger une matrice des flux ; configurer pare-feu et VPN ; contrôler les accès (802.1X, MFA) ; contrer les attaques courantes (ARP, DHCP, STP, VLAN hopping) ; surveiller, mettre à jour, sauvegarder ; rédiger une politique de sécurité et un plan de réponse à incident.
 
-### 20.1 Principes directeurs
+## Principes directeurs
 
 | Principe | Signification | Exemple |
 |---|---|---|
@@ -4784,7 +4612,7 @@ Appliquer les principes de défense en profondeur ; segmenter par VLAN et zones 
 
 Référentiels utiles : **guide d'hygiène informatique de l'ANSSI**, **CIS Benchmarks**, **ISO/IEC 27001**, **NIST Cybersecurity Framework**.
 
-### 20.2 Segmentation et VLAN de sécurité
+## Segmentation et VLAN de sécurité
 
 La **segmentation** divise le réseau en zones de confiance différentes. Un poste compromis dans un VLAN ne doit pas atteindre librement les serveurs ni l'administration des équipements.
 
@@ -4809,7 +4637,7 @@ flowchart TB
     CORE --- MGMT["Gestion (VLAN 99)"]
 ```
 
-#### Matrice des flux (exemple)
+### Matrice des flux (exemple)
 
 | Source vers destination | Utilisateurs | Serveurs | DMZ | Internet | Gestion |
 |---|---|---|---|---|---|
@@ -4823,7 +4651,7 @@ La matrice sert de **cahier des charges** du pare-feu et des ACL : chaque flux a
 
 Sur les switchs, d'autres précautions de sécurité des VLAN : ne pas utiliser le VLAN 1 pour les utilisateurs, choisir un VLAN natif inutilisé (par exemple 999), désactiver la négociation de trunk (`switchport nonegotiate`) pour éviter le **VLAN hopping**, désactiver et isoler les ports inutilisés, gérer les équipements dans un VLAN de gestion.
 
-### 20.3 Pare-feu
+## Pare-feu
 
 Un pare-feu **à états** (stateful) suit les connexions : le trafic de retour d'une connexion autorisée est accepté automatiquement. Un pare-feu **nouvelle génération (NGFW)** ajoute inspection applicative, filtrage d'URL, IDS/IPS et identification des utilisateurs.
 
@@ -4835,7 +4663,7 @@ Règles d'or :
 4. Revoir régulièrement et supprimer les règles inutiles.
 5. Journaliser les refus et les accès sensibles.
 
-#### Exemples par plateforme
+### Exemples par plateforme
 
 **Linux, ufw (Ubuntu) :**
 
@@ -4848,7 +4676,7 @@ sudo ufw logging medium
 sudo ufw enable
 ```
 
-**Linux, nftables :** jeu de règles complet (section 7.3). Pour un routeur Linux, ajouter une chaîne `forward` à `policy drop` et des règles explicites.
+**Linux, nftables :** jeu de règles complet (section « Configuration réseau »). Pour un routeur Linux, ajouter une chaîne `forward` à `policy drop` et des règles explicites.
 
 **Windows (PowerShell, Admin) :**
 
@@ -4858,24 +4686,24 @@ Set-NetFirewallProfile -Profile Domain,Private,Public -LogBlocked True -LogFileN
 New-NetFirewallRule -DisplayName "RDP depuis gestion" -Direction Inbound -Protocol TCP -LocalPort 3389 -RemoteAddress 192.168.99.0/24 -Action Allow
 ```
 
-**MikroTik et Cisco :** voir sections 8 à 12 (règles de filtrage, ACL).
+**MikroTik et Cisco :** voir les sections sur les équipements réseau, le routage et MikroTik (règles de filtrage, ACL).
 
 **Redirections de ports (NAT entrant) :** n'exposez que ce qui est nécessaire, de préférence **vers une DMZ**, jamais vers un poste utilisateur ; privilégiez un reverse proxy et le VPN plutôt qu'un service d'administration (RDP, SSH) exposé sur Internet.
 
-### 20.4 VPN
+## VPN
 
 | Type | Usage | Technologies courantes |
 |---|---|---|
 | Accès distant (remote access) | Télétravail, nomades | WireGuard, OpenVPN, IPsec/IKEv2, VPN SSL des pare-feu |
 | Site à site | Relier deux agences | IPsec, WireGuard |
 
-Bonnes pratiques : **authentification forte** (certificats ou clés par utilisateur, plus un second facteur), **tunnel partiel** (split tunnel) ou tunnel complet selon la politique, filtrage de ce que les clients VPN peuvent joindre (zone dédiée, règles précises), journalisation des connexions, révocation immédiate lors du départ d'un utilisateur, mises à jour régulières de la passerelle VPN (cible fréquente d'attaques). Mise en place pas à pas : section 15.3 (WireGuard) et TP 15 (laboratoire).
+Bonnes pratiques : **authentification forte** (certificats ou clés par utilisateur, plus un second facteur), **tunnel partiel** (split tunnel) ou tunnel complet selon la politique, filtrage de ce que les clients VPN peuvent joindre (zone dédiée, règles précises), journalisation des connexions, révocation immédiate lors du départ d'un utilisateur, mises à jour régulières de la passerelle VPN (cible fréquente d'attaques). Mise en place pas à pas : section « Serveur VPN (WireGuard) » et TP 15 (laboratoire).
 
-### 20.5 Contrôle d'accès et authentification
+## Contrôle d'accès et authentification
 
-#### Contrôle d'accès au réseau
+### Contrôle d'accès au réseau
 
-- **Port security** (Cisco, sections 8 à 12) : limite le nombre de MAC par port. Utile mais contournable (usurpation de MAC).
+- **Port security** (Cisco ; voir les sections sur les équipements réseau) : limite le nombre de MAC par port. Utile mais contournable (usurpation de MAC).
 - **802.1X** : authentification **avant** l'accès au réseau : le poste (suppliant) s'authentifie auprès du switch (authentificateur), qui interroge un serveur **RADIUS** (FreeRADIUS, NPS de Windows Server). Il autorise l'accès et peut affecter un VLAN dynamique.
 
 Exemple Cisco (syntaxe variable selon les versions d'IOS et de plate-forme ; à valider sur votre matériel) :
@@ -4896,9 +4724,9 @@ interface GigabitEthernet0/1
 **Risque :** activer 802.1X sur tous les ports d'un coup peut couper imprimantes, téléphones et serveurs qui ne savent pas s'authentifier ; déployez par étapes, avec un mode de repli (MAB, VLAN invité) et testez d'abord sur un étage.
 
 - **NAC** (contrôle d'admission réseau) : vérifie aussi l'état de conformité du poste.
-- **Wi-Fi d'entreprise** : WPA2/WPA3-Enterprise (802.1X), voir sections 8 à 12.
+- **Wi-Fi d'entreprise** : WPA2/WPA3-Enterprise (802.1X), voir les sections sur les équipements réseau et le Wi-Fi.
 
-#### Authentification
+### Authentification
 
 | Mesure | Pourquoi |
 |---|---|
@@ -4910,11 +4738,11 @@ interface GigabitEthernet0/1
 | Comptes d'administration distincts des comptes quotidiens | Limite l'exposition |
 | Désactivation rapide des comptes inactifs et des départs | Réduit la surface d'attaque |
 
-#### SSH sécurisé
+### SSH sécurisé
 
-Rappel (section 14.1) : clés plutôt que mots de passe, `PermitRootLogin no`, `AllowGroups`, `MaxAuthTries`, accès depuis le VLAN de gestion, fail2ban, journalisation, algorithmes modernes (clés `ed25519`), mise à jour d'OpenSSH. Pour les équipements réseau : SSH version 2 uniquement, Telnet désactivé.
+Rappel (section « Serveur SSH (OpenSSH) ») : clés plutôt que mots de passe, `PermitRootLogin no`, `AllowGroups`, `MaxAuthTries`, accès depuis le VLAN de gestion, fail2ban, journalisation, algorithmes modernes (clés `ed25519`), mise à jour d'OpenSSH. Pour les équipements réseau : SSH version 2 uniquement, Telnet désactivé.
 
-### 20.6 Protection contre les attaques réseau courantes
+## Protection contre les attaques réseau courantes
 
 | Attaque | Principe | Contre-mesures |
 |---|---|---|
@@ -4924,13 +4752,13 @@ Rappel (section 14.1) : clés plutôt que mots de passe, `PermitRootLogin no`, `
 | Attaques sur STP | Faux switch qui devient racine | BPDU guard, root guard |
 | VLAN hopping | Sortie d'un VLAN par négociation de trunk ou double étiquetage | `switchport mode access`, `switchport nonegotiate`, VLAN natif inutilisé |
 | Déni de service (DoS, DDoS) | Épuisement de ressources ou de bande passante | Limitation de débit, `tcp_syncookies`, filtrage amont (opérateur), CDN, redondance |
-| Amplification DNS | Résolveur ouvert utilisé pour amplifier du trafic | Récursion limitée au LAN (section 13.3), filtrage anti-usurpation (BCP 38) |
+| Amplification DNS | Résolveur ouvert utilisé pour amplifier du trafic | Récursion limitée au LAN (section « Serveur DNS (BIND 9) »), filtrage anti-usurpation (BCP 38) |
 | Brute force | Essais massifs de mots de passe | MFA, verrouillage, fail2ban, clés SSH |
 | Balayage et reconnaissance | Découverte des services exposés | Surface minimale, pare-feu, IDS |
 | Intercepteur (homme du milieu) | Interception de flux non chiffrés | HTTPS/TLS, SSH, SMB signé et chiffré, 802.1X |
 | Rançongiciel | Chiffrement des données | Sauvegardes hors ligne et testées, correctifs, EDR, segmentation, droits limités |
 
-#### Configuration de défense sur un switch Cisco
+### Configuration de défense sur un switch Cisco
 
 ```text
 ! Protection DHCP et ARP (sur les VLAN utilisateurs)
@@ -4954,7 +4782,7 @@ interface GigabitEthernet0/24
 
 Remarques : **DAI** s'appuie sur la table de liaison créée par DHCP snooping ; les équipements en **adresse statique** (serveurs, imprimantes) nécessitent des ACL ARP (`arp access-list`) ou des ports de confiance, sinon leur trafic ARP est rejeté. Déployez en mode d'observation d'abord et testez sur un étage pilote.
 
-#### Durcissement réseau d'un serveur Linux
+### Durcissement réseau d'un serveur Linux
 
 ```bash
 # /etc/sysctl.d/99-securite.conf
@@ -4973,7 +4801,7 @@ sudo sysctl --system
 
 **Attention :** `rp_filter` strict peut gêner un serveur à plusieurs interfaces ou avec du routage asymétrique ; `net.ipv4.ip_forward` ne doit être activé que sur un routeur ou une passerelle VPN. Vérifiez avec `sysctl net.ipv4.conf.all.rp_filter`.
 
-### 20.7 Surveillance du trafic et journalisation
+## Surveillance du trafic et journalisation
 
 | Besoin | Outil ou protocole | Remarque |
 |---|---|---|
@@ -4981,7 +4809,7 @@ sudo sysctl --system
 | Métriques d'équipements | **SNMP v3** | Éviter SNMP v1/v2c et la communauté « public » |
 | Flux de trafic | NetFlow, IPFIX, sFlow | Qui parle à qui, volumes, anomalies |
 | Détection d'intrusion | **IDS/IPS** (Suricata, Snort, ou fonction du pare-feu) | Nécessite un réglage pour limiter les faux positifs |
-| Capture ponctuelle | `tcpdump`, Wireshark | Voir la section 21 |
+| Capture ponctuelle | `tcpdump`, Wireshark | Voir la section « Outils professionnels de diagnostic et de supervision » |
 | Synchronisation des horloges | NTP/chrony | Indispensable pour corréler les événements |
 
 Équipement Cisco : journalisation et SNMPv3 :
@@ -4998,7 +4826,7 @@ snmp-server user supervision SUPERVISION v3 auth sha MotDePasseAuthLong priv aes
 
 Événements Windows à surveiller : 4624 (ouverture de session réussie), 4625 (échec), 4740 (verrouillage de compte), 4720 (création de compte), 4728 ou 4732 (ajout à un groupe privilégié). Linux : `/var/log/auth.log` (Debian, Ubuntu) ou `journalctl -u ssh`, `last`, `lastb`.
 
-### 20.8 Gestion des mises à jour
+## Gestion des mises à jour
 
 | Élément | Windows | Linux (Ubuntu) |
 |---|---|---|
@@ -5023,7 +4851,7 @@ APT::Periodic::Unattended-Upgrade "1";
 
 Les redémarrages (`Unattended-Upgrade::Automatic-Reboot`) doivent être planifiés selon la criticité du serveur. Règles générales : inventaire à jour, priorité aux vulnérabilités exploitées, test avant déploiement massif, retour arrière possible (instantané de VM), suivi des **fins de support** (systèmes et micrologiciels).
 
-### 20.9 Sauvegardes de configuration et de données
+## Sauvegardes de configuration et de données
 
 Sauvegardez **les configurations** (équipements, serveurs) en plus des données. Sans elles, reconstruire un routeur après une panne peut prendre des heures.
 
@@ -5046,11 +4874,11 @@ archive
 
 Principes : **versionner** les configurations (git), chiffrer les sauvegardes qui contiennent des secrets, tester régulièrement la **restauration**, stocker une copie hors ligne contre les rançongiciels, documenter la procédure.
 
-### 20.10 Bonnes pratiques de sécurité pour Ubuntu Server
+## Bonnes pratiques de sécurité pour Ubuntu Server
 
 1. Installation minimale ; désinstaller ou désactiver les services inutiles (`systemctl list-unit-files --state=enabled`).
-2. Mises à jour de sécurité automatiques (9.8).
-3. SSH durci (section 14.1), accès restreint au VLAN de gestion.
+2. Mises à jour de sécurité automatiques (voir la section « Gestion des mises à jour »).
+3. SSH durci (section « Serveur SSH (OpenSSH) »), accès restreint au VLAN de gestion.
 4. Pare-feu `ufw` ou `nftables` : refus par défaut, règles par service.
 5. Comptes nominatifs, `sudo` plutôt que `root`, mots de passe forts ou verrouillés.
 6. **AppArmor** actif (`sudo aa-status`), profils des services exposés en mode enforce.
@@ -5060,7 +4888,7 @@ Principes : **versionner** les configurations (git), chiffrer les sauvegardes qu
 10. Audit : `sudo apt install lynis`, `sudo lynis audit system` (rapport de recommandations), et `auditd` pour tracer les actions sensibles.
 11. Sauvegardes testées.
 
-### 20.11 Bonnes pratiques de sécurité pour les postes Windows
+## Bonnes pratiques de sécurité pour les postes Windows
 
 1. Windows à jour, correctifs déployés par WSUS ou outil équivalent.
 2. **Microsoft Defender** (ou autre antivirus/EDR) actif, signatures à jour (`Get-MpComputerStatus`, `Update-MpSignature`).
@@ -5073,7 +4901,7 @@ Principes : **versionner** les configurations (git), chiffrer les sauvegardes qu
 9. Journalisation des événements de sécurité vers un collecteur central.
 10. Sauvegarde des données utilisateurs (redirection de dossiers, synchronisation) et procédure de réinstallation.
 
-### 20.12 Politique de sécurité réseau (plan type)
+## Politique de sécurité réseau (plan type)
 
 Une politique de sécurité est un **document court, approuvé par la direction**, appliqué et mis à jour. Plan conseillé :
 
@@ -5090,7 +4918,7 @@ Une politique de sécurité est un **document court, approuvé par la direction*
 11. Formation et sensibilisation.
 12. Contrôles, revue au moins annuelle, sanctions en cas de non-respect.
 
-### 20.13 Plan de réponse à incident (version courte) *(ajout)*
+## Plan de réponse à incident (version courte) *(ajout)*
 
 1. **Détecter et qualifier** (supervision, signalement) : périmètre, gravité.
 2. **Contenir** : isoler la machine ou le VLAN (couper le port, règle de pare-feu), sans éteindre brutalement si l'analyse mémoire est nécessaire.
@@ -5100,7 +4928,7 @@ Une politique de sécurité est un **document court, approuvé par la direction*
 6. **Communiquer** (direction, utilisateurs, autorités si une violation de données personnelles est constatée : obligation de notification à la CNIL sous 72 heures dans le cadre du RGPD).
 7. **Retour d'expérience** et amélioration de la prévention.
 
-### Pièges fréquents
+## Pièges fréquents
 
 | Piège | Conséquence | Remède |
 | --- | --- | --- |
@@ -5110,21 +4938,15 @@ Une politique de sécurité est un **document court, approuvé par la direction*
 | Sauvegardes jamais restaurées | Découverte du problème le jour du sinistre | Test de restauration périodique, copie hors ligne |
 | Règles de pare-feu trop larges ou non documentées | Surface d'attaque inutile | Matrice des flux, commentaire par règle, revue régulière |
 
-### À retenir
-
-- **Refus par défaut**, **moindre privilège**, **segmentation**, **traçabilité**.
-- Switch : DHCP snooping, DAI, port security, BPDU guard, VLAN natif inutilisé, ports inutilisés coupés.
-- Une politique de sécurité courte, appliquée et revue, et un **plan de réponse à incident** prêt avant l'incident.
-
 ---
 
-## 21. Outils professionnels de diagnostic et de supervision
+# Outils professionnels de diagnostic et de supervision
 
-### Objectifs d'apprentissage
+## Objectifs d'apprentissage
 
 Capturer et analyser du trafic (Wireshark, tcpdump) ; inventorier avec Nmap dans un cadre autorisé ; simuler et émuler des réseaux (Packet Tracer, GNS3) ; mettre en place une supervision (Zabbix, Nagios, LibreNMS, Prometheus, Grafana, Netdata) ; choisir l'outil adapté au besoin.
 
-### 21.1 Vue d'ensemble
+## Vue d'ensemble
 
 ```mermaid
 flowchart LR
@@ -5149,13 +4971,13 @@ flowchart LR
 | Grafana | Visualisation | Tableaux de bord | Faible à moyenne |
 | Netdata | Supervision temps réel | Diagnostic d'un serveur à la seconde | Faible |
 
-### 21.2 Wireshark
+## Wireshark
 
-#### Fonctionnement
+### Fonctionnement
 
 Wireshark capture les trames d'une interface (via **libpcap** sous Linux, **Npcap** sous Windows) et les décode protocole par protocole. Il lit aussi les captures `.pcap` / `.pcapng` produites par `tcpdump`.
 
-#### Installation
+### Installation
 
 ```bash
 # Ubuntu : installer, accepter la capture par utilisateurs non root, puis ajouter l'utilisateur au groupe
@@ -5165,7 +4987,7 @@ sudo usermod -aG wireshark $USER        # reconnexion nécessaire
 
 Sous Windows : installeur officiel (inclut Npcap).
 
-#### Filtres : deux types à ne pas confondre
+### Filtres : deux types à ne pas confondre
 
 | Type | Syntaxe | Quand | Exemple |
 |---|---|---|---|
@@ -5189,7 +5011,7 @@ tls.handshake.type == 1                            # ClientHello
 arp.duplicate-address-detected                     # conflit d'adresse ou usurpation
 ```
 
-#### Utilisation
+### Utilisation
 
 - **Statistiques > Conversations / Endpoints** : qui parle le plus.
 - **Statistiques > Graphiques d'E/S** : volume dans le temps.
@@ -5202,20 +5024,20 @@ sudo tshark -i ens18 -f "port 53" -c 20
 tshark -r capture.pcap -Y "dns" -T fields -e ip.src -e dns.qry.name
 ```
 
-#### Exemples pratiques
+### Exemples pratiques
 
 1. **Diagnostic DHCP** : filtre `dhcp` ; une séquence Discover, Offer, Request, ACK doit apparaître. Discover sans Offer : serveur absent ou VLAN erroné.
 2. **Réseau lent** : filtre `tcp.analysis.retransmission` ; beaucoup de retransmissions indiquent des pertes de paquets ; « Window Full » ou « Zero Window » indiquent un récepteur trop lent.
 3. **DNS lent** : afficher `dns.time` en colonne ; des réponses à plusieurs secondes désignent le serveur DNS.
 4. **Suspicion d'ARP spoofing** : filtre `arp` ; plusieurs MAC pour une IP, réponses ARP non sollicitées répétées.
 
-#### Cas d'usage en entreprise
+### Cas d'usage en entreprise
 
 Analyse d'un incident précis (échec d'authentification, lenteur applicative), preuve pour un fournisseur ou un opérateur, apprentissage des protocoles. **Précaution :** captures contenant des mots de passe et des données personnelles (protéger le fichier, le supprimer après usage).
 
-### 21.3 tcpdump
+## tcpdump
 
-Voir la section 7 pour la syntaxe détaillée. Cas d'usage en entreprise : capture sur un serveur sans interface graphique, puis analyse dans Wireshark.
+Voir la section « Commandes réseau sous Linux » pour la syntaxe détaillée. Cas d'usage en entreprise : capture sur un serveur sans interface graphique, puis analyse dans Wireshark.
 
 ```bash
 sudo tcpdump -i ens18 -nn -s 0 -w /tmp/capture.pcap host 192.168.10.54 and port 443
@@ -5225,9 +5047,9 @@ scp admin@srv-fic:/tmp/capture.pcap .
 
 Limitez la durée et la taille (`-c`, ou `-G` et `-W` pour la rotation) pour ne pas remplir le disque.
 
-### 21.4 Nmap
+## Nmap
 
-Voir la section 7 pour les options. Cas d'usage en entreprise : **inventaire** des hôtes, vérification que seuls les ports prévus sont ouverts après une modification de pare-feu, audit de la surface exposée.
+Voir la section « Commandes réseau sous Linux » pour les options. Cas d'usage en entreprise : **inventaire** des hôtes, vérification que seuls les ports prévus sont ouverts après une modification de pare-feu, audit de la surface exposée.
 
 ```bash
 nmap -sn 192.168.10.0/24                         # hôtes présents
@@ -5237,31 +5059,31 @@ nmap -p 22,80,443 --open 192.168.30.0/24 -oN rapport.txt
 
 Les scans sont **bruyants** et peuvent perturber des équipements fragiles (imprimantes, automates) : prévenir, planifier, limiter le débit (`-T3`), obtenir l'autorisation écrite.
 
-### 21.5 Cisco Packet Tracer
+## Cisco Packet Tracer
 
-#### Fonctionnement
+### Fonctionnement
 
 Simulateur de réseaux Cisco gratuit pour les inscrits à **Cisco Networking Academy**. Il simule routeurs, switchs, PC, serveurs, points d'accès. Deux modes : **temps réel** et **simulation** (visualisation de chaque paquet et de chaque PDU, très utile pour comprendre ARP, DHCP, NAT).
 
-#### Installation et utilisation
+### Installation et utilisation
 
 Création d'un compte Cisco Networking Academy, téléchargement de Packet Tracer pour Windows, macOS ou Linux, puis installation guidée. Interface : équipements en bas à gauche, câblage avec l'outil « Connections », onglets CLI et Config de chaque équipement, fichiers `.pkt`.
 
-#### Exemple pratique
+### Exemple pratique
 
-Topologie : 1 routeur, 1 switch, 4 PC, VLAN 10 et 20, routage inter-VLAN. Reprendre les commandes des sections 8 à 12 (VLAN, trunk, sous-interfaces). Dans l'onglet **Simulation**, filtrez sur ICMP et observez le trajet d'un `ping` entre VLAN.
+Topologie : 1 routeur, 1 switch, 4 PC, VLAN 10 et 20, routage inter-VLAN. Reprendre les commandes des sections sur les équipements réseau (VLAN, trunk, sous-interfaces). Dans l'onglet **Simulation**, filtrez sur ICMP et observez le trajet d'un `ping` entre VLAN.
 
-#### Cas d'usage en entreprise
+### Cas d'usage en entreprise
 
 Maquette de configuration avant déploiement, formation des techniciens. **Limites :** ne reproduit pas toutes les commandes ni le comportement exact du matériel réel ; ne remplace pas un test sur équipement ou émulation fidèle.
 
-### 21.6 GNS3
+## GNS3
 
-#### Fonctionnement
+### Fonctionnement
 
 GNS3 est un émulateur : il fait fonctionner de **vraies images** de systèmes (Linux, routeurs virtuels, pare-feu), reliées dans une topologie graphique. Composants : GUI, serveur GNS3, et moteurs (Dynamips pour d'anciens routeurs Cisco, QEMU/KVM, Docker, VPCS pour des PC légers). **Les images Cisco (IOS, IOSv, IOL) sont soumises à licence :** vous devez en disposer légalement. Images librement utilisables : machines Linux, FRRouting, **MikroTik CHR** (version gratuite limitée en débit).
 
-#### Installation (Ubuntu)
+### Installation (Ubuntu)
 
 ```bash
 sudo add-apt-repository ppa:gns3/ppa
@@ -5271,21 +5093,21 @@ sudo apt install gns3-gui gns3-server
 
 Suivre ensuite l'assistant de première configuration (serveur local), et activer la virtualisation matérielle (KVM) pour de bonnes performances. Consultez la documentation officielle pour votre version.
 
-#### Utilisation
+### Utilisation
 
 Glisser les équipements dans le projet, les relier, démarrer, ouvrir une console. Capture intégrée : clic droit sur un lien > « Start capture » (ouvre Wireshark). Projets exportables et partageables.
 
-#### Exemple pratique
+### Exemple pratique
 
 Topologie : 2 routeurs MikroTik CHR en OSPF, 2 VM Ubuntu derrière chacun, une capture Wireshark sur le lien entre routeurs pour observer les messages Hello OSPF.
 
-#### Cas d'usage en entreprise
+### Cas d'usage en entreprise
 
 Tester une migration, valider une configuration de routage ou de VPN, reproduire un incident, se préparer à des certifications. Consomme beaucoup de RAM et de CPU. Alternatives : EVE-NG, Containerlab.
 
-### 21.7 Zabbix
+## Zabbix
 
-#### Fonctionnement
+### Fonctionnement
 
 Zabbix est une plate-forme de supervision complète : **serveur** (collecte, déclencheurs, alertes), **base de données** (MySQL/MariaDB ou PostgreSQL), **interface web**, **agents** sur les machines et supervision **SNMP** ou **ICMP** des équipements sans agent.
 
@@ -5297,7 +5119,7 @@ Zabbix est une plate-forme de supervision complète : **serveur** (collecte, dé
 | Modèle (template) | Ensemble d'items, de déclencheurs et de graphiques appliqué à des hôtes |
 | Action | Notification et réaction (e-mail, Teams, script) |
 
-#### Installation (principe)
+### Installation (principe)
 
 Les paquets dépendent de la version : suivez l'assistant d'installation officiel de zabbix.com (choix de la version LTS, de l'OS, de la base et du serveur web). Étapes générales :
 
@@ -5308,7 +5130,7 @@ Les paquets dépendent de la version : suivez l'assistant d'installation officie
 
 Ports : agent 10050 (passif), serveur 10051 (actif).
 
-#### Configuration d'un agent
+### Configuration d'un agent
 
 `/etc/zabbix/zabbix_agent2.conf` :
 
@@ -5325,24 +5147,24 @@ sudo ufw allow from 192.168.30.6 to any port 10050 proto tcp
 
 Dans l'interface web : **Collecte de données > Hôtes > Créer un hôte**, associer le modèle « Linux by Zabbix agent » (ou « Windows by Zabbix agent »). Pour un switch ou routeur, activer SNMP sur l'équipement (v3) et associer un modèle SNMP adapté.
 
-#### Utilisation et exemple
+### Utilisation et exemple
 
 - Tableaux de bord (graphiques de charge, trafic par interface, état des services).
 - Déclencheur : « espace disque libre inférieur à 15 % pendant 5 minutes » ; action : e-mail à l'équipe.
 - Test d'un item en ligne de commande : `zabbix_get -s 192.168.30.21 -k system.cpu.load`.
 - Supervision de disponibilité : modèle « ICMP Ping », contrôle de ports et de pages web.
 
-#### Cas d'usage en entreprise
+### Cas d'usage en entreprise
 
 Supervision centralisée de serveurs, équipements réseau, services (DNS, DHCP, Web), alertes, rapports de disponibilité, découverte automatique (LLD) des interfaces et des disques.
 
-### 21.8 Nagios
+## Nagios
 
-#### Fonctionnement
+### Fonctionnement
 
 Nagios Core exécute des **plugins** (petits programmes qui renvoient un état : OK, WARNING, CRITICAL, UNKNOWN) à intervalles réguliers sur des hôtes et des services définis par des fichiers de configuration. Il est plus simple à comprendre que Zabbix, mais la configuration est manuelle ; **NRPE** permet l'exécution de plugins sur un hôte distant.
 
-#### Installation (Ubuntu, principe)
+### Installation (Ubuntu, principe)
 
 ```bash
 sudo apt install nagios4 nagios-plugins
@@ -5351,7 +5173,7 @@ sudo htpasswd -c /etc/nagios4/htdigest.users nagiosadmin    # selon l'empaquetag
 
 Les chemins et le mode d'authentification web varient selon les versions : consultez la documentation de votre distribution.
 
-#### Configuration (exemple)
+### Configuration (exemple)
 
 ```text
 define host {
@@ -5376,23 +5198,23 @@ sudo nagios4 -v /etc/nagios4/nagios.cfg
 sudo systemctl restart nagios4
 ```
 
-#### Cas d'usage en entreprise
+### Cas d'usage en entreprise
 
 Parc modeste ou besoin de contrôles très spécifiques (plugins personnalisés), héritage d'installations existantes ; la communauté fournit de nombreux plugins. Forks et alternatives modernes : Icinga, Naemon, Checkmk.
 
-### 21.9 LibreNMS
+## LibreNMS
 
-#### Fonctionnement
+### Fonctionnement
 
 LibreNMS est une solution de supervision **réseau** open source, centrée sur **SNMP**. Elle **découvre automatiquement** les équipements, leurs interfaces et leurs voisins (LLDP, CDP), trace des graphiques de trafic, génère des cartes et envoie des alertes. Elle repose sur PHP, une base MariaDB et RRDtool.
 
-#### Installation
+### Installation
 
 L'installation par paquets est détaillée (nombreuses dépendances) ; suivez la documentation officielle de LibreNMS pour votre distribution, ou utilisez l'image **Docker** fournie par la communauté pour un essai rapide.
 
-#### Configuration et utilisation
+### Configuration et utilisation
 
-1. Activer **SNMPv3** sur les équipements (Cisco : section 20.7).
+1. Activer **SNMPv3** sur les équipements (Cisco : section « Surveillance du trafic et journalisation »).
 2. Dans l'interface web : **Devices > Add Device** : nom ou IP, version SNMP et identifiants.
 3. Laisser la découverte et le sondage tourner ; consulter les graphiques par port.
 4. Créer des **règles d'alerte** (interface down, trafic en forte hausse, température) et des **transports** (e-mail, Slack, Teams).
@@ -5403,13 +5225,13 @@ Test depuis un serveur Linux (paquet `snmp`) :
 snmpwalk -v3 -l authPriv -u supervision -a SHA -A 'MotDePasseAuth' -x AES -X 'MotDePassePriv' 192.168.99.2 sysName
 ```
 
-#### Exemple pratique et cas d'usage
+### Exemple pratique et cas d'usage
 
 Ajouter les switchs et routeurs du plan d'adressage, observer la carte du réseau obtenue par LLDP, déclencher une alerte quand un trunk tombe. Idéal pour un réseau d'équipements (switchs, routeurs, points d'accès) ; moins adapté à la supervision applicative fine des serveurs.
 
-### 21.10 Prometheus
+## Prometheus
 
-#### Fonctionnement
+### Fonctionnement
 
 Prometheus **collecte** (pull) des métriques exposées en HTTP par des **exporters**, les stocke dans une base de séries temporelles et évalue des **règles d'alerte** transmises à **Alertmanager**. Il s'interroge avec le langage **PromQL**.
 
@@ -5421,7 +5243,7 @@ Prometheus **collecte** (pull) des métriques exposées en HTTP par des **export
 | snmp_exporter | Métriques d'équipements SNMP | 9116 |
 | Alertmanager | Regroupement et envoi d'alertes | 9093 |
 
-#### Installation (Ubuntu)
+### Installation (Ubuntu)
 
 ```bash
 sudo apt install prometheus prometheus-node-exporter prometheus-blackbox-exporter prometheus-alertmanager
@@ -5429,7 +5251,7 @@ sudo apt install prometheus prometheus-node-exporter prometheus-blackbox-exporte
 
 (Les versions des paquets Ubuntu peuvent être en retard sur la version officielle : pour des fonctions récentes, utilisez les binaires officiels.)
 
-#### Configuration `/etc/prometheus/prometheus.yml` (extrait)
+### Configuration `/etc/prometheus/prometheus.yml` (extrait)
 
 ```yaml
 global:
@@ -5481,7 +5303,7 @@ promtool check rules /etc/prometheus/rules/alertes.yml
 sudo systemctl reload prometheus
 ```
 
-#### Requêtes PromQL utiles
+### Requêtes PromQL utiles
 
 ```text
 up == 0                                                       # cibles injoignables
@@ -5490,17 +5312,17 @@ rate(node_network_receive_bytes_total{device="ens18"}[5m]) * 8                  
 probe_success{job="ping_icmp"}                                # résultat des tests ICMP
 ```
 
-#### Cas d'usage en entreprise
+### Cas d'usage en entreprise
 
 Supervision d'infrastructures dynamiques (VM, conteneurs), métriques fines avec alertes, base de tableaux de bord Grafana. **Sécurité :** les exporters exposent des métriques sans authentification : filtrez par pare-feu (seul Prometheus doit y accéder) ou utilisez TLS et authentification.
 
-### 21.11 Grafana
+## Grafana
 
-#### Fonctionnement
+### Fonctionnement
 
 Grafana est un outil de **visualisation** : il interroge des sources de données (Prometheus, Zabbix, InfluxDB, Loki, bases SQL...) et affiche des tableaux de bord et des alertes.
 
-#### Installation (Ubuntu)
+### Installation (Ubuntu)
 
 Utiliser le dépôt officiel de Grafana (clé GPG et ligne de dépôt à jour sur la documentation officielle), puis :
 
@@ -5512,23 +5334,23 @@ sudo systemctl enable --now grafana-server
 
 Interface : `http://serveur:3000`. À la première connexion, le compte `admin` est proposé : **changez immédiatement le mot de passe** ; placez l'interface derrière HTTPS (reverse proxy) et limitez l'accès.
 
-#### Configuration et utilisation
+### Configuration et utilisation
 
 1. **Connections > Data sources > Add > Prometheus**, URL `http://localhost:9090`, puis « Save & test ».
 2. **Dashboards > Import** : par exemple le tableau de bord communautaire « Node Exporter Full » (identifiant 1860 sur grafana.com), associé à la source Prometheus.
 3. Créer ses propres panneaux avec les requêtes PromQL de la section précédente ; définir des **alertes** et des points de contact (e-mail, Teams).
 
-#### Cas d'usage en entreprise
+### Cas d'usage en entreprise
 
 Tableaux de bord pour la direction informatique (disponibilité, charge, trafic), écran mural dans la salle des techniciens, corrélation de métriques de plusieurs sources.
 
-### 21.12 Netdata
+## Netdata
 
-#### Fonctionnement
+### Fonctionnement
 
 Netdata est un agent de supervision **en temps réel** (mesures à la seconde) très simple à installer : il affiche des centaines de métriques d'un serveur (CPU, mémoire, disques, interfaces, services) avec une interface web locale sur le port **19999**, et propose des alertes préconfigurées.
 
-#### Installation
+### Installation
 
 ```bash
 wget -O /tmp/netdata-kickstart.sh https://get.netdata.cloud/kickstart.sh
@@ -5537,16 +5359,16 @@ sh /tmp/netdata-kickstart.sh --disable-telemetry
 
 Lisez le script avant de l'exécuter (bonne pratique pour tout script téléchargé), ou utilisez les paquets de votre distribution.
 
-#### Configuration et sécurité
+### Configuration et sécurité
 
 - Par défaut, l'interface locale est accessible à toute personne qui atteint le port : **limitez** l'écoute à `127.0.0.1` ou au VLAN de gestion (`[web]` > `bind to` dans `netdata.conf`, modifiable avec `sudo /etc/netdata/edit-config netdata.conf`) et filtrez par pare-feu.
 - Netdata peut envoyer des données vers un service cloud optionnel : n'activez cette liaison que si la politique de sécurité l'autorise.
 
-#### Exemple pratique et cas d'usage
+### Exemple pratique et cas d'usage
 
 Un serveur de fichiers devient lent : en ouvrant Netdata, on observe en direct la saturation disque (latence, file d'attente) ou la charge réseau par interface. Très utile pour le **diagnostic ponctuel** et la supervision d'une machine isolée ; pour une supervision centralisée avec historique long, privilégier Zabbix ou Prometheus et Grafana.
 
-### 21.13 Choisir ses outils *(ajout)*
+## Choisir ses outils *(ajout)*
 
 | Besoin | Solution recommandée |
 |---|---|
@@ -5560,9 +5382,9 @@ Un serveur de fichiers devient lent : en ouvrant Netdata, on observe en direct l
 | Diagnostic temps réel d'un serveur | Netdata |
 | Parc modeste, contrôles personnalisés | Nagios ou Icinga |
 
-Pour le projet final (section 23 du guide) : Zabbix pour la supervision de l'infrastructure, complété par des captures Wireshark pour les tests.
+Pour le projet final (section « Projet final : infrastructure réseau d'une entreprise de 40 collaborateurs » du guide) : Zabbix pour la supervision de l'infrastructure, complété par des captures Wireshark pour les tests.
 
-### Pièges fréquents
+## Pièges fréquents
 
 | Piège | Conséquence | Remède |
 | --- | --- | --- |
@@ -5571,27 +5393,15 @@ Pour le projet final (section 23 du guide) : Zabbix pour la supervision de l'inf
 | Compte `admin` par défaut de Grafana ou Zabbix | Accès administrateur trivial | Changer le mot de passe dès la première connexion |
 | Images Cisco sans licence dans GNS3 | Usage non conforme | Images libres (Linux, MikroTik CHR) ou licenciées |
 
-### À retenir
-
-- **Wireshark/tcpdump** pour comprendre un échange précis, **Nmap** pour l'inventaire, **Zabbix/LibreNMS/Prometheus** pour la surveillance continue.
-- Une supervision utile = **mesures** + **seuils** + **alertes** + **tableaux de bord**.
-- Captures et journaux contiennent des données personnelles : accès, durée de conservation et information des utilisateurs.
-
 ---
 
----
+# Travaux pratiques et laboratoires
 
-# Pratique, projet et référence
-
----
-
-## 22. Travaux pratiques et laboratoires
-
-### Objectifs d'apprentissage
+## Objectifs d'apprentissage
 
 Réaliser 16 laboratoires progressifs (réseau local, IP statiques, DHCP, DNS, SSH, Samba, UFW, VLAN, routeur Cisco, MikroTik, Wireshark, réseau lent, conflit IP, DNS, VPN, supervision Zabbix) ; diagnostiquer des pannes volontairement introduites ; évaluer ses compétences avec une grille d'auto-évaluation.
 
-### 22.1 Comment utiliser les TP
+## Comment utiliser les TP
 
 Chaque TP suit la même structure :
 
@@ -5601,31 +5411,31 @@ Chaque TP suit la même structure :
 4. **Étapes de réalisation**, avec les commandes (TP guidés).
 5. **Résultats attendus** et critères de réussite.
 6. **Scénarios de panne** : défauts à introduire (ou à faire introduire par un binôme) puis à diagnostiquer **sans consulter les corrections**.
-7. Les **corrections** se trouvent dans la section 25, séparée des énoncés.
+7. Les **corrections** se trouvent dans la section « Corrections des exercices et des laboratoires », séparée des énoncés.
 
-Méthode de travail : appliquez la méthodologie de la section 18 (une modification à la fois, notez ce que vous faites, validez par des tests objectifs). Progression : TP 1 à 3 (niveau débutant), TP 4 à 8 (intermédiaire), TP 9 à 16 (avancé).
+Méthode de travail : appliquez la méthodologie de la section « Méthodologie professionnelle de dépannage » (une modification à la fois, notez ce que vous faites, validez par des tests objectifs). Progression : TP 1 à 3 (niveau débutant), TP 4 à 8 (intermédiaire), TP 9 à 16 (avancé).
 
-### 22.2 TP 1 — Création d'un réseau local
+## TP 1 — Création d'un réseau local
 
 **Niveau :** débutant. **Durée indicative :** 45 minutes.
 
-#### Objectifs
+### Objectifs
 
 - Relier deux machines sur un réseau local et vérifier leur communication.
 - Observer la résolution ARP et l'échange ICMP.
 - Utiliser `ip`, `ping`, `ip neigh` et `tcpdump`.
 
-#### Matériel et logiciels
+### Matériel et logiciels
 
 VirtualBox, 2 VM Ubuntu Server (`srv-lab`, `cli-ubuntu`) avec un adaptateur « Réseau interne `lab-net` ». Variante : Cisco Packet Tracer (2 PC et un switch 2960).
 
-#### Architecture
+### Architecture
 
 ```text
  [srv-lab 192.168.10.10] ---- (réseau interne lab-net) ---- [cli-ubuntu 192.168.10.101]
 ```
 
-#### Étapes
+### Étapes
 
 1. Démarrer les deux VM. Repérer l'interface du réseau interne : `ip -br link`.
 2. Sur `srv-lab` (configuration **temporaire**, non persistante) :
@@ -5644,36 +5454,36 @@ VirtualBox, 2 VM Ubuntu Server (`srv-lab`, `cli-ubuntu`) avec un adaptateur « R
 7. Sur `cli-ubuntu` : `ip neigh show` (table ARP).
 8. Variante Packet Tracer : placer 2 PC et un switch, relier avec des câbles droits, configurer les adresses dans *Desktop > IP Configuration*, tester avec `ping` dans l'invite de commandes du PC, puis passer en mode Simulation pour observer l'ARP.
 
-#### Résultats attendus
+### Résultats attendus
 
 - Les `ping` aboutissent (0 % de perte).
 - La capture montre une requête ARP (« Who has 192.168.10.10 ? »), une réponse ARP, puis des Echo request et Echo reply.
 - `ip neigh` liste l'adresse de l'autre machine avec sa MAC à l'état `REACHABLE`.
 
-#### Critères de réussite
+### Critères de réussite
 
 Vous savez expliquer pourquoi l'ARP précède le premier ping, et pourquoi la configuration disparaît au redémarrage.
 
-#### Scénarios de panne (à diagnostiquer)
+### Scénarios de panne (à diagnostiquer)
 
 - **Panne 1A.** Sur `cli-ubuntu`, l'adresse est saisie avec le masque `/25` au lieu de `/24` et l'adresse `192.168.10.201/25`. Les machines se joignent-elles ? Pourquoi ?
 - **Panne 1B.** Le client est configuré avec `192.168.20.101/24`. Quel est le symptôme ?
 - **Panne 1C.** L'interface du client est désactivée (`ip link set enp0s8 down`).
 
-### 22.3 TP 2 — Configuration d'adresses IP statiques
+## TP 2 — Configuration d'adresses IP statiques
 
 **Niveau :** débutant. **Durée :** 45 minutes.
 
-#### Objectifs
+### Objectifs
 
 - Rendre la configuration **persistante** avec Netplan (Linux) et PowerShell (Windows).
 - Comprendre masque, passerelle et DNS.
 
-#### Matériel
+### Matériel
 
 Mêmes VM qu'au TP 1 ; `cli-win` facultative.
 
-#### Étapes
+### Étapes
 
 1. Redémarrer les VM : la configuration du TP 1 a disparu (`ip -br addr`). Constat à noter.
 2. Sur `srv-lab`, créer `/etc/netplan/60-lab.yaml` :
@@ -5701,31 +5511,31 @@ Mêmes VM qu'au TP 1 ; `cli-win` facultative.
 6. Tester les communications deux à deux (`ping`) et après redémarrage.
 7. Documenter dans un tableau : hôte, interface, adresse, masque, rôle.
 
-#### Résultats attendus
+### Résultats attendus
 
 La configuration survit au redémarrage ; les trois machines se joignent. `ip route` montre la route du réseau `192.168.10.0/24` ; la route par défaut reste celle de la carte NAT.
 
-#### Scénarios de panne
+### Scénarios de panne
 
 - **Panne 2A.** Le fichier Netplan contient une tabulation ou une indentation incorrecte : `netplan generate` signale une erreur.
 - **Panne 2B.** Deux machines reçoivent la même adresse `192.168.10.101`.
 - **Panne 2C.** Le fichier a les droits `644` : message d'avertissement sur les permissions.
 
-### 22.4 TP 3 — Configuration d'un serveur DHCP Ubuntu
+## TP 3 — Configuration d'un serveur DHCP Ubuntu
 
 **Niveau :** intermédiaire. **Durée :** 1 h 30.
 
-#### Objectifs
+### Objectifs
 
 - Installer et configurer **Kea DHCP4** sur Ubuntu Server.
 - Distribuer adresse, passerelle, DNS et domaine ; créer une réservation.
 - Diagnostiquer un échec DHCP avec `tcpdump` et les journaux.
 
-#### Matériel
+### Matériel
 
 `srv-lab` (serveur DHCP, 192.168.10.10/24), `cli-ubuntu` et éventuellement `cli-win` en clients. **Retirez la carte NAT des clients** pour ce TP (elle fournit déjà une route par défaut qui perturberait l'observation de la passerelle distribuée).
 
-#### Architecture
+### Architecture
 
 ```mermaid
 flowchart LR
@@ -5734,7 +5544,7 @@ flowchart LR
     C2["cli-win (DHCP)"] --- LAB
 ```
 
-#### Étapes
+### Étapes
 
 1. Sur `srv-lab` :
    ```bash
@@ -5792,32 +5602,32 @@ flowchart LR
    puis tester la configuration, redémarrer le service, renouveler le bail du client.
 8. Windows (si présent) : `ipconfig /release` puis `ipconfig /renew`, `ipconfig /all`.
 
-#### Résultats attendus
+### Résultats attendus
 
 Le client obtient une adresse de `.100` à `.150` avec passerelle `.1`, DNS `.10`, domaine `entreprise.local`. La capture montre la séquence Discover, Offer, Request, ACK. Après la réservation, le client reçoit `192.168.10.30`.
 
-#### Scénarios de panne
+### Scénarios de panne
 
 - **Panne 3A.** Le service ne démarre pas après une modification de `kea-dhcp4.conf`.
 - **Panne 3B.** Les clients restent sans adresse alors que le service est actif.
 - **Panne 3C.** Une machine reçoit une adresse mais la mauvaise passerelle.
 - **Panne 3D.** La plage est réduite à 2 adresses, trois clients démarrent.
 
-### 22.5 TP 4 — Installation et configuration d'un serveur DNS
+## TP 4 — Installation et configuration d'un serveur DNS
 
 **Niveau :** intermédiaire. **Durée :** 2 heures.
 
-#### Objectifs
+### Objectifs
 
 - Installer **BIND 9**, créer une zone directe et une zone inverse.
 - Configurer la récursion restreinte et des redirecteurs.
 - Tester avec `dig`, `nslookup` et `resolvectl`.
 
-#### Matériel
+### Matériel
 
 `srv-lab` (DNS, 192.168.10.10), clients Linux et Windows (configurés en DHCP ou en statique avec ce DNS). Carte NAT conservée sur `srv-lab` pour la résolution des noms externes.
 
-#### Étapes
+### Étapes
 
 1. Installer : `sudo apt install bind9 bind9-utils bind9-dnsutils`.
 2. `/etc/bind/named.conf.options` :
@@ -5883,32 +5693,32 @@ Le client obtient une adresse de `.100` à `.150` avec passerelle `.1`, DNS `.10
 8. Configurer le client pour utiliser ce DNS (option distribuée par Kea au TP 3 ou, en statique, `nameservers` dans Netplan) puis vérifier `resolvectl status` et `resolvectl query srv-lab.entreprise.local`.
 9. Windows : `nslookup srv-lab.entreprise.local 192.168.10.10` ; `Resolve-DnsName srv-lab.entreprise.local -Server 192.168.10.10`.
 
-#### Résultats attendus
+### Résultats attendus
 
 Résolution directe, inverse et alias (CNAME) des noms de la zone ; résolution Internet par les redirecteurs ; refus (`REFUSED`) pour une requête venant d'une adresse hors de l'ACL.
 
-#### Scénarios de panne
+### Scénarios de panne
 
 - **Panne 4A.** Une modification de zone n'apparaît pas chez les clients.
 - **Panne 4B.** `named-checkzone` signale une erreur de syntaxe après l'ajout d'un enregistrement.
 - **Panne 4C.** Les noms internes se résolvent, mais pas les noms Internet.
 - **Panne 4D.** `dig` renvoie `connection timed out; no servers could be reached` depuis un client.
 
-### 22.6 TP 5 — Configuration SSH
+## TP 5 — Configuration SSH
 
 **Niveau :** intermédiaire. **Durée :** 1 h 30.
 
-#### Objectifs
+### Objectifs
 
 - Se connecter par SSH, mettre en place l'authentification par clé.
 - Durcir le serveur et protéger contre le brute force.
 - Savoir diagnostiquer un refus de connexion.
 
-#### Matériel
+### Matériel
 
 `srv-lab` (serveur SSH), `cli-ubuntu` (client).
 
-#### Étapes
+### Étapes
 
 1. Sur `srv-lab` : `sudo apt install openssh-server fail2ban` ; `systemctl status ssh`.
 2. Connexion par mot de passe depuis le client : `ssh admin@192.168.10.10`. Noter l'empreinte de la clé d'hôte acceptée à la première connexion.
@@ -5952,31 +5762,31 @@ Résolution directe, inverse et alias (CNAME) des noms de la zone ; résolution 
 8. Simuler des échecs depuis un utilisateur inexistant (`ssh faux@192.168.10.10`, plusieurs fois, en désactivant la clé : `-o PubkeyAuthentication=no`) puis consulter `sudo fail2ban-client status sshd`. Débannir : `sudo fail2ban-client set sshd unbanip 192.168.10.101`.
 9. Examiner les journaux : `sudo journalctl -u ssh -n 30`.
 
-#### Résultats attendus
+### Résultats attendus
 
 Connexion par clé réussie, mots de passe refusés, utilisateur hors groupe refusé, adresse bannie après les échecs.
 
-#### Scénarios de panne
+### Scénarios de panne
 
 - **Panne 5A.** `Permission denied (publickey)` alors que la clé est copiée.
 - **Panne 5B.** Après durcissement, plus personne ne peut se connecter.
 - **Panne 5C.** `Connection refused`.
 
-### 22.7 TP 6 — Partage de fichiers avec Samba
+## TP 6 — Partage de fichiers avec Samba
 
 **Niveau :** intermédiaire. **Durée :** 1 h 30.
 
-#### Objectifs
+### Objectifs
 
 - Créer des partages Samba avec des droits par groupe.
 - Se connecter depuis Linux (`smbclient`, `mount.cifs`) et Windows.
 - Diagnostiquer des erreurs `NT_STATUS_*`.
 
-#### Matériel
+### Matériel
 
 `srv-lab` (Samba), `cli-ubuntu`, `cli-win` (facultatif).
 
-#### Étapes
+### Étapes
 
 1. Sur `srv-lab` :
    ```bash
@@ -6023,32 +5833,32 @@ Connexion par clé réussie, mots de passe refusés, utilisateur hors groupe ref
 6. Windows : Explorateur, `\\192.168.10.10\Compta`, saisir les identifiants ; ou `net use Z: \\192.168.10.10\Compta /user:alice`.
 7. Vérifier les permissions créées : `ls -l /srv/partages/compta` ; observer l'héritage du groupe (bit setgid).
 
-#### Résultats attendus
+### Résultats attendus
 
 `alice` lit et écrit dans `Compta` ; `bob` n'y accède pas mais accède à `Commun` ; les fichiers créés appartiennent au groupe `compta`.
 
-#### Scénarios de panne
+### Scénarios de panne
 
 - **Panne 6A.** `NT_STATUS_LOGON_FAILURE` pour un utilisateur qui existe sur le système.
 - **Panne 6B.** `NT_STATUS_ACCESS_DENIED` pour `alice` sur `Compta`.
 - **Panne 6C.** Le partage `Compta` n'apparaît pas dans la liste.
 - **Panne 6D.** Windows ne peut pas joindre `\\192.168.10.10` (« chemin d'accès réseau introuvable »).
 
-### 22.8 TP 7 — Configuration d'un pare-feu UFW
+## TP 7 — Configuration d'un pare-feu UFW
 
 **Niveau :** intermédiaire. **Durée :** 1 h 15.
 
-#### Objectifs
+### Objectifs
 
 - Définir une politique de pare-feu stricte avec `ufw`.
 - Autoriser des services précis selon la source.
 - Vérifier avec `nc` et `nmap` ; lire les journaux ; prévoir un retour arrière.
 
-#### Matériel
+### Matériel
 
 `srv-lab` (SSH, Apache), `cli-ubuntu` (client de test). Accès à la **console de la VM** (pas seulement SSH) pour récupérer la main en cas d'erreur.
 
-#### Étapes
+### Étapes
 
 1. Sur `srv-lab` : `sudo apt install apache2 nmap` ; vérifier `ufw status` (`inactive`).
 2. **Filet de sécurité** : planifier la désactivation automatique du pare-feu dans 10 minutes :
@@ -6077,31 +5887,31 @@ Connexion par clé réussie, mots de passe refusés, utilisateur hors groupe ref
 7. Ajouter puis supprimer une règle : `sudo ufw allow 8080/tcp`, `sudo ufw status numbered`, `sudo ufw delete <numéro>`.
 8. Tester `sudo ufw limit 22/tcp` et observer son effet (limite les connexions répétées).
 
-#### Résultats attendus
+### Résultats attendus
 
 22 et 80 ouverts pour le client autorisé, 443 filtré (`filtered` ou délai dépassé), blocages visibles dans les journaux.
 
-#### Scénarios de panne
+### Scénarios de panne
 
 - **Panne 7A.** Après `ufw enable`, la session SSH se coupe.
 - **Panne 7B.** Le site web est inaccessible alors que la règle semble exister.
 - **Panne 7C.** Une règle trop large (`ufw allow 22`) laisse SSH ouvert à tous.
 
-### 22.9 TP 8 — Création de VLAN avec Packet Tracer
+## TP 8 — Création de VLAN avec Packet Tracer
 
 **Niveau :** intermédiaire. **Durée :** 2 heures.
 
-#### Objectifs
+### Objectifs
 
 - Créer deux VLAN, des ports access et un trunk.
 - Réaliser le routage inter-VLAN en **router-on-a-stick**.
 - Vérifier avec les commandes `show` et dépanner.
 
-#### Matériel
+### Matériel
 
 Cisco Packet Tracer (une version récente), 1 routeur (2911), 1 switch 2960, 4 PC.
 
-#### Architecture
+### Architecture
 
 ```mermaid
 flowchart TB
@@ -6114,7 +5924,7 @@ flowchart TB
 
 Plan : VLAN 10 `ADMIN` (192.168.10.0/24, passerelle .1) ; VLAN 20 `TECH` (192.168.20.0/24, passerelle .1). Adaptez les noms d'interface au modèle utilisé.
 
-#### Étapes
+### Étapes
 
 1. Placer les équipements et les câbler (câbles droits ; PC aux ports Fa0/1 à Fa0/4, routeur vers `GigabitEthernet0/1` du switch).
 2. Configurer les PC (adresse, masque, passerelle).
@@ -6168,28 +5978,28 @@ Plan : VLAN 10 `ADMIN` (192.168.10.0/24, passerelle .1) ; VLAN 20 `TECH` (192.16
 6. Tests : `ping` entre PC du même VLAN ; `ping` d'un PC du VLAN 10 vers un PC du VLAN 20 ; `tracert` (1 saut = le routeur).
 7. Mode Simulation : suivre un ping inter-VLAN et observer l'étiquette 802.1Q sur le trunk.
 
-#### Résultats attendus
+### Résultats attendus
 
 Même VLAN : communication directe. Entre VLAN : communication via le routeur (`tracert` montre `192.168.10.1`). `show interfaces trunk` indique les VLAN 10 et 20 autorisés et actifs.
 
-#### Scénarios de panne
+### Scénarios de panne
 
 - **Panne 8A.** Les PC du VLAN 20 ne joignent plus ceux du VLAN 10.
 - **Panne 8B.** Un PC ne joint même pas son voisin du même VLAN.
 - **Panne 8C.** Aucun PC ne joint la passerelle.
 - **Panne 8D.** Un VLAN natif différent est configuré des deux côtés du trunk (message d'avertissement CDP).
 
-### 22.10 TP 9 — Configuration d'un routeur Cisco
+## TP 9 — Configuration d'un routeur Cisco
 
 **Niveau :** avancé. **Durée :** 2 heures. **Outil :** Cisco Packet Tracer.
 
-#### Objectifs
+### Objectifs
 
 - Configurer un routeur (nom, accès sécurisé SSH, interfaces).
 - Relier deux sites par une liaison point à point et définir des routes.
 - Mettre en place NAT/PAT et limiter l'accès d'administration avec une ACL.
 
-#### Architecture
+### Architecture
 
 ```mermaid
 flowchart LR
@@ -6208,7 +6018,7 @@ flowchart LR
 
 Une seconde machine du LAN A, `PC-A2` (192.168.10.11), sert de contre-exemple pour l'ACL d'administration.
 
-#### Étapes
+### Étapes
 
 1. **Base sécurisée de R1** :
    ```text
@@ -6269,27 +6079,27 @@ Une seconde machine du LAN A, `PC-A2` (192.168.10.11), sert de contre-exemple po
 9. Tester depuis PC-A : `ssh -l admin 192.168.10.1` (réussit) ; depuis PC-A2 : refusé.
 10. **Sauvegarder** (après validation seulement) : `R1# copy running-config startup-config`.
 
-#### Résultats attendus
+### Résultats attendus
 
 Avant NAT : ping de bout en bout en échec (route retour absente). Après NAT : réussite et traductions visibles avec l'adresse source `10.0.0.1`. SSH autorisé pour PC-A uniquement.
 
-#### Scénarios de panne
+### Scénarios de panne
 
 - **Panne 9A.** Après configuration, PC-A ne joint pas PC-B malgré le NAT.
 - **Panne 9B.** Les traductions NAT n'apparaissent pas.
 - **Panne 9C.** Plus aucun accès SSH à R1, même pour PC-A, après l'ajout de l'ACL.
 - **Panne 9D.** Les deux routeurs ne se voient pas (`ping 10.0.0.2` depuis R1 échoue).
 
-### 22.11 TP 10 — Configuration d'un réseau avec MikroTik
+## TP 10 — Configuration d'un réseau avec MikroTik
 
 **Niveau :** avancé. **Durée :** 2 h 30. **Outil :** MikroTik **CHR** (Cloud Hosted Router) dans VirtualBox.
 
-#### Objectifs
+### Objectifs
 
 - Mettre en place un routeur MikroTik RouterOS 7 : LAN, DHCP, DNS, NAT, pare-feu.
 - Utiliser le **Safe Mode**, l'export et la sauvegarde.
 
-#### Matériel
+### Matériel
 
 CHR (image disque téléchargée sur le site de MikroTik) importée dans VirtualBox : sans licence payante, le CHR fonctionne avec un **débit limité** (suffisant pour un TP). `cli-ubuntu` comme client.
 
@@ -6300,7 +6110,7 @@ CHR (image disque téléchargée sur le site de MikroTik) importée dans Virtual
 
 Arrêtez le serveur Kea de `srv-lab` s'il fonctionne sur `lab-net` : un seul serveur DHCP par réseau.
 
-#### Étapes (console de la VM, puis SSH depuis un client)
+### Étapes (console de la VM, puis SSH depuis un client)
 
 1. Connexion avec l'utilisateur `admin` (mot de passe vide sur une installation neuve) puis définir un mot de passe :
    ```text
@@ -6362,32 +6172,32 @@ Arrêtez le serveur Kea de `srv-lab` s'il fonctionne sur `lab-net` : un seul ser
 9. Exporter la configuration finale : `/export file=apres-tp10` ; lister les fichiers : `/file print`.
 10. **Retour arrière** (exercice) : restaurer l'état initial avec `/system backup load name=avant-tp10` (redémarrage), ou comparer les deux exports.
 
-#### Résultats attendus
+### Résultats attendus
 
 Le client reçoit `192.168.10.100-150`, passerelle et DNS `192.168.10.1`, accède à Internet via le masquerade. Les règles de pare-feu affichent des compteurs en hausse. Une session coupée pendant le Safe Mode annule les changements en cours.
 
-#### Scénarios de panne
+### Scénarios de panne
 
 - **Panne 10A.** Le client obtient une adresse mais n'a pas d'accès Internet.
 - **Panne 10B.** Le client ne reçoit aucune adresse.
 - **Panne 10C.** Après l'ajout de la règle `drop` finale, la session SSH tombe.
 - **Panne 10D.** Les noms ne sont pas résolus alors que `ping 1.1.1.1` fonctionne.
 
-### 22.12 TP 11 — Analyse du trafic avec Wireshark
+## TP 11 — Analyse du trafic avec Wireshark
 
 **Niveau :** intermédiaire. **Durée :** 2 heures.
 
-#### Objectifs
+### Objectifs
 
 - Capturer et analyser ARP, ICMP, DNS, DHCP, TCP et HTTP.
 - Utiliser filtres de capture et d'affichage.
 - Distinguer un port **fermé**, un port **filtré** (DROP) et un port **rejeté** (REJECT) à partir des paquets.
 
-#### Matériel
+### Matériel
 
 `srv-lab` (Apache installé au TP 7, DNS du TP 4, DHCP Kea du TP 3), `cli-ubuntu`. Wireshark installé sur l'hôte ou sur une VM avec interface graphique ; sinon utiliser `tshark` dans la VM.
 
-#### Étapes
+### Étapes
 
 1. Sur `cli-ubuntu`, lancer la capture :
    ```bash
@@ -6418,7 +6228,7 @@ Le client reçoit `192.168.10.100-150`, passerelle et DNS `192.168.10.1`, accèd
    - cas 3 : `sudo ufw reject 80/tcp` (le pare-feu **rejette** activement).
    Rétablir ensuite : `sudo ufw delete ...` et `sudo systemctl start apache2`.
 
-#### Fiche d'analyse (à remplir)
+### Fiche d'analyse (à remplir)
 
 1. Quelle adresse MAC est annoncée dans la réponse ARP et à quelle IP correspond-elle ?
 2. Quel est le champ TTL d'un Echo reply ?
@@ -6429,31 +6239,31 @@ Le client reçoit `192.168.10.100-150`, passerelle et DNS `192.168.10.1`, accèd
 7. Quel code HTTP et quel en-tête `Server` voit-on dans la réponse ?
 8. Comment reconnaît-on, dans les paquets, les cas 1, 2 et 3 de l'étape 6 ?
 
-#### Résultats attendus
+### Résultats attendus
 
 Une analyse complète d'un échange réel et une compréhension de la différence entre `Connection refused` (RST immédiat) et `timed out` (silence).
 
-#### Scénarios de panne
+### Scénarios de panne
 
 - **Panne 11A.** Une capture montre des SYN répétés sans réponse.
 - **Panne 11B.** Une capture montre un SYN suivi immédiatement d'un RST.
 - **Panne 11C.** Une requête DNS reçoit une réponse avec un code d'erreur.
 
-### 22.13 TP 12 — Diagnostic d'un réseau lent
+## TP 12 — Diagnostic d'un réseau lent
 
 **Niveau :** avancé. **Durée :** 2 heures. **Travail en binôme** : un « saboteur » et un « dépanneur ».
 
-#### Objectifs
+### Objectifs
 
 - Mesurer latence, perte et débit pour isoler la cause d'une lenteur.
 - Utiliser `ping`, `mtr`, `iperf3`, `ip -s link`, `dig`.
 - Rédiger un rapport de diagnostic.
 
-#### Matériel
+### Matériel
 
 `srv-lab` et `cli-ubuntu`, paquets `iperf3` et `mtr-tiny` sur les deux machines.
 
-#### Étapes
+### Étapes
 
 **Rôle du dépanneur (mesure de référence, avant toute panne) :**
 
@@ -6483,30 +6293,30 @@ Une analyse complète d'un échange réel et une compréhension de la différenc
 2. Refaire les mesures, comparer aux valeurs de référence, formuler une hypothèse.
 3. Choisir le test discriminant : `ping` (latence ou perte), `mtr` (où ?), `iperf3 -c` (débit TCP) et `iperf3 -c ... -u -b 50M` (UDP, perte), `dig` ou `time getent hosts` (DNS).
 4. Conclure, appliquer la correction (en la demandant au saboteur ou en retirant le défaut), vérifier par une nouvelle mesure.
-5. Rédiger le rapport au format de la fiche d'incident (section 18.6).
+5. Rédiger le rapport au format de la fiche d'incident (section « Modèle de fiche d'incident »).
 
-#### Résultats attendus
+### Résultats attendus
 
 Chaque défaut a une signature mesurable distincte (voir les corrections). Le rapport décrit symptômes, mesures, cause, correction et prévention.
 
-#### Scénarios de panne
+### Scénarios de panne
 
 Les quatre défauts A à D sont les scénarios. Ajouter, pour les plus avancés, une combinaison (par exemple A et D).
 
-### 22.14 TP 13 — Résolution d'un conflit IP
+## TP 13 — Résolution d'un conflit IP
 
 **Niveau :** intermédiaire. **Durée :** 1 h 15.
 
-#### Objectifs
+### Objectifs
 
 - Reproduire un conflit d'adresses, le détecter et le résoudre.
 - Mettre en place des mesures de prévention (exclusions, réservations).
 
-#### Contexte
+### Contexte
 
 Le plan des TP place `cli-ubuntu` en `192.168.10.101` en adresse statique (TP 2) et la plage DHCP de Kea couvre `192.168.10.100 - 192.168.10.150` (TP 3) : l'adresse statique est **dans la plage distribuée**, ce qui est une cause réelle de conflit.
 
-#### Étapes
+### Étapes
 
 1. Remettre `cli-ubuntu` en adresse statique `192.168.10.101/24`. Vérifier que Kea fonctionne sur `srv-lab`.
 2. Démarrer une troisième machine (ou cloner `cli-ubuntu`), `cli-ubuntu2`, en DHCP, jusqu'à ce qu'elle reçoive `192.168.10.101` (adaptez : forcez en réservant d'abord `.100` et `.101` à d'autres MAC, ou réduisez la plage à `.101 - .101` pour garantir l'attribution de `.101`). Constater que **deux machines utilisent la même adresse**.
@@ -6526,29 +6336,29 @@ Le plan des TP place `cli-ubuntu` en `192.168.10.101` en adresse statique (TP 2)
 7. Vérifier : `arping` ne reçoit plus qu'une MAC ; `ping -c 20` sans perte ; mettre à jour le plan d'adressage.
 8. Variante Windows : configurer `cli-win` avec une adresse déjà utilisée ; observer le message de conflit dans la zone de notification et l'événement système (source Tcpip, ID 4199) ; `arp -a` pour relever la MAC.
 
-#### Résultats attendus
+### Résultats attendus
 
 Détection du doublon par ARP, résolution durable par séparation des plages et par réservations ; document d'adressage mis à jour.
 
-#### Scénarios de panne
+### Scénarios de panne
 
 - **Panne 13A.** Après correction, le conflit réapparaît au redémarrage.
 - **Panne 13B.** Deux machines statiques ont la même adresse alors qu'aucun DHCP n'existe.
 
-### 22.15 TP 14 — Dépannage d'un problème DNS
+## TP 14 — Dépannage d'un problème DNS
 
 **Niveau :** avancé. **Durée :** 2 heures. **Binôme saboteur et dépanneur.**
 
-#### Objectifs
+### Objectifs
 
-- Appliquer la fiche de dépannage DNS (section 19, fiche 6) sans connaître la panne à l'avance.
+- Appliquer la fiche de dépannage DNS (section « Les problèmes réseau rencontrés en entreprise », fiche 6) sans connaître la panne à l'avance.
 - Distinguer problèmes de client, de serveur, de zone et de redirecteurs.
 
-#### État initial valide
+### État initial valide
 
 La configuration du TP 4 fonctionne : `dig @192.168.10.10 www.entreprise.local` répond, ainsi que `dig @192.168.10.10 exemple.fr`. Prenez un instantané.
 
-#### Défauts à introduire (par le saboteur, un seul à la fois)
+### Défauts à introduire (par le saboteur, un seul à la fois)
 
 | N° | Défaut | Introduction |
 |---|---|---|
@@ -6559,7 +6369,7 @@ La configuration du TP 4 fonctionne : `dig @192.168.10.10 www.entreprise.local` 
 | 5 | Surcharge `/etc/hosts` | Sur le client, ajouter `192.168.10.99 www.entreprise.local` à `/etc/hosts` |
 | 6 | ACL trop restrictive | Retirer le réseau du client de l'ACL `lan` dans `named.conf.options` puis redémarrer |
 
-#### Étapes (dépanneur)
+### Étapes (dépanneur)
 
 1. Décrire le symptôme observé par l'utilisateur : « Impossible d'ouvrir `http://www.entreprise.local` ».
 2. Suivre la séquence : câble et IP (`ip -br addr`), passerelle ou serveur DNS joignable (`ping`), puis :
@@ -6575,25 +6385,25 @@ La configuration du TP 4 fonctionne : `dig @192.168.10.10 www.entreprise.local` 
    ```
 3. Identifier la couche (client, réseau, serveur, zone, redirecteurs), corriger, **vérifier** et rédiger la fiche d'incident.
 
-#### Résultats attendus
+### Résultats attendus
 
 Pour chaque défaut, un diagnostic en quelques commandes, avec identification de la cause et un retour à l'état initial vérifié.
 
-#### Scénarios de panne
+### Scénarios de panne
 
 Les six défauts. Un septième défaut libre peut être inventé par le saboteur.
 
-### 22.16 TP 15 — Mise en place d'un VPN (WireGuard)
+## TP 15 — Mise en place d'un VPN (WireGuard)
 
 **Niveau :** avancé. **Durée :** 2 h 30.
 
-#### Objectifs
+### Objectifs
 
 - Installer et configurer un VPN d'accès distant avec WireGuard.
 - Faire accéder un poste « externe » au réseau interne.
 - Vérifier le chiffrement par capture et diagnostiquer les pannes classiques.
 
-#### Architecture
+### Architecture
 
 ```mermaid
 flowchart LR
@@ -6610,7 +6420,7 @@ flowchart LR
 
 Installer `wireguard` sur `srv-lab` et `cli-vpn` **avant** de couper la carte NAT de `cli-vpn` (ou conservez-la pour les mises à jour).
 
-#### Étapes
+### Étapes
 
 1. Adresses de la maquette (Netplan) : `enp0s9` sur `srv-lab` ; `enp0s8` sur `cli-vpn` (voir TP 2). Vérifier `ping 203.0.113.1` depuis `cli-vpn`.
 2. Installer et générer les clés sur **chaque** machine :
@@ -6670,32 +6480,32 @@ Installer `wireguard` sur `srv-lab` et `cli-vpn` **avant** de couper la carte NA
    ```
 9. **Révocation** : supprimer le `[Peer]` du serveur, `sudo wg syncconf wg0 <(sudo wg-quick strip wg0)` (ou redémarrer l'interface) et constater que le client n'a plus accès.
 
-#### Résultats attendus
+### Résultats attendus
 
 Poignée de main (« latest handshake ») visible ; accès du poste externe au réseau interne par `10.8.0.2` ; paquets chiffrés sur `enp0s9`.
 
-#### Scénarios de panne
+### Scénarios de panne
 
 - **Panne 15A.** Aucune poignée de main (`wg show` sans « latest handshake »).
 - **Panne 15B.** Tunnel établi, mais `ping 192.168.10.101` échoue.
 - **Panne 15C.** `ping 192.168.10.101` répond, mais la résolution de noms internes échoue.
 - **Panne 15D.** Les gros transferts bloquent alors que les ping passent.
 
-### 22.17 TP 16 — Supervision d'un serveur avec Zabbix
+## TP 16 — Supervision d'un serveur avec Zabbix
 
 **Niveau :** avancé. **Durée :** 3 heures.
 
-#### Objectifs
+### Objectifs
 
 - Installer un serveur Zabbix et superviser des hôtes avec un agent.
 - Créer un déclencheur et provoquer une alerte.
 - Construire un petit tableau de bord.
 
-#### Matériel
+### Matériel
 
 Une VM dédiée `srv-zabbix` (Ubuntu Server 24.04, **2 Go de RAM**, 192.168.10.20/24 sur `lab-net`, plus la carte NAT pour installer les paquets), `srv-lab` à superviser (agent), éventuellement `cli-ubuntu`.
 
-#### Étapes
+### Étapes
 
 1. **Installation de Zabbix** : ouvrir la page officielle d'installation de zabbix.com, choisir la version **LTS**, la plate-forme (Ubuntu 24.04), la base **MySQL** et le serveur web **Apache**, puis exécuter les commandes affichées pour : ajouter le dépôt, installer `zabbix-server-mysql zabbix-frontend-php zabbix-apache-conf zabbix-sql-scripts zabbix-agent2`, et `mariadb-server`. Les URL et numéros de version changent : ne les recopiez pas d'un ancien guide.
 2. **Base de données** (adaptez le mot de passe) :
@@ -6741,19 +6551,19 @@ Une VM dédiée `srv-zabbix` (Ubuntu Server 24.04, **2 Go de RAM**, 192.168.10.2
 10. **Tableau de bord** : créer un tableau avec un graphique CPU, un graphique de trafic de `enp0s8`, et le widget « Problèmes ».
 11. (Facultatif) Configurer un type de média e-mail et une action de notification (nécessite un serveur SMTP).
 
-#### Résultats attendus
+### Résultats attendus
 
 Hôte `srv-lab` « disponible » (icône ZBX verte), données collectées, un problème apparaît à l'arrêt d'Apache et se résout au redémarrage, tableau de bord fonctionnel.
 
-#### Scénarios de panne
+### Scénarios de panne
 
 - **Panne 16A.** L'hôte reste en rouge (indisponible).
 - **Panne 16B.** Les graphiques sont vides alors que l'agent est actif.
 - **Panne 16C.** Le déclencheur ne se déclenche pas quand Apache s'arrête.
 
-### 22.18 Atelier de pannes (fin de laboratoire)
+## Atelier de pannes (fin de laboratoire)
 
-Travail en binôme : le saboteur applique **une** panne de la liste, le dépanneur applique la méthode de la section 18 sans connaître la liste, chronomètre en main. Un instantané est pris avant chaque panne.
+Travail en binôme : le saboteur applique **une** panne de la liste, le dépanneur applique la méthode de la section « Méthodologie professionnelle de dépannage » sans connaître la liste, chronomètre en main. Un instantané est pris avant chaque panne.
 
 | N° | Panne (introduction par le saboteur) | Symptôme observé |
 |---|---|---|
@@ -6768,7 +6578,7 @@ Travail en binôme : le saboteur applique **une** panne de la liste, le dépanne
 
 Chaque panne doit être résolue avec une **fiche d'incident** et une vérification finale.
 
-### 22.19 Grille d'auto-évaluation des laboratoires
+## Grille d'auto-évaluation des laboratoires
 
 | Compétence | Atteinte si... |
 |---|---|
@@ -6779,7 +6589,7 @@ Chaque panne doit être résolue avec une **fiche d'incident** et une vérificat
 | Dépannage | Vous appliquez la méthode (une hypothèse, un test, un changement), documentez et vérifiez |
 | Supervision | Vous obtenez une alerte fiable et un tableau de bord utile |
 
-### Pièges fréquents
+## Pièges fréquents
 
 | Piège | Conséquence | Remède |
 | --- | --- | --- |
@@ -6788,28 +6598,22 @@ Chaque panne doit être résolue avec une **fiche d'incident** et une vérificat
 | Plusieurs serveurs DHCP sur le même réseau interne | Baux incohérents, résultats imprévisibles | Un seul DHCP actif ; arrêter Kea avant le TP MikroTik |
 | Introduire une panne sur un réseau réel | Impact sur des utilisateurs | Pannes uniquement en laboratoire isolé |
 
-### À retenir
-
-- Chaque TP : **objectifs, matériel, architecture, étapes, résultats attendus, pannes, corrections**.
-- Les pannes volontaires entraînent la méthode : **une hypothèse, un test, un changement**.
-- Les corrections sont dans la section 25, séparées des énoncés.
-
 ---
 
-## 23. Projet final : infrastructure réseau d'une entreprise de 40 collaborateurs
+# Projet final : infrastructure réseau d'une entreprise de 40 collaborateurs
 
-### Objectifs d'apprentissage
+## Objectifs d'apprentissage
 
 Rédiger un cahier des charges ; concevoir schémas, plan d'adressage et matrice des flux ; configurer routeur, switchs et points d'accès ; installer et sécuriser DHCP, DNS, fichiers, web, supervision et sauvegardes ; recetter avec un plan de tests ; dépanner des scénarios ; produire la documentation technique finale.
 
-### 23.1 Comment aborder le projet
+## Comment aborder le projet
 
 Ce document est un **dossier de référence**. Deux manières de l'utiliser :
 
-1. **Mode étudiant** : lisez uniquement la section 23.2 (cahier des charges), concevez votre propre solution (schéma, adressage, règles), puis comparez avec les sections suivantes.
+1. **Mode étudiant** : lisez uniquement la section « Cahier des charges », concevez votre propre solution (schéma, adressage, règles), puis comparez avec les sections suivantes.
 2. **Mode réalisation** : suivez la solution pas à pas, en laboratoire (VirtualBox, Packet Tracer, MikroTik CHR) ou sur du matériel réel.
 
-La solution mobilise toutes les sections précédentes : adressage (sections 1 à 5), commandes (sections 6 et 7), équipements (sections 8 à 12), services (sections 13 à 17), pannes et méthode (sections 18 et 19), sécurité et supervision (sections 20 et 21), TP (section 22).
+La solution mobilise toutes les sections précédentes : adressage, commandes Windows et Linux, équipements réseau, services Ubuntu Server et Windows Server, pannes et méthode de dépannage, sécurité et supervision, travaux pratiques.
 
 Choix d'architecture et justifications :
 
@@ -6821,13 +6625,13 @@ Choix d'architecture et justifications :
 | Postes Windows et Linux **hors domaine** | Le cahier des charges ne demande pas d'annuaire ; une variante Active Directory est décrite en 12.14 |
 | Domaine DNS interne `int.atlas.example` | Le TLD `.example` est réservé (RFC 2606) ; évite le conflit de `.local` avec mDNS |
 
-### 23.2 Cahier des charges
+## Cahier des charges
 
-#### Contexte
+### Contexte
 
 **Atlas Conseil**, cabinet de conseil de **40 collaborateurs** (+ quelques visiteurs) installé sur un plateau de bureaux d'un seul site. Il utilise un site web vitrine, un serveur de fichiers par service et une messagerie externalisée (hors périmètre).
 
-#### Besoins fonctionnels
+### Besoins fonctionnels
 
 | Réf. | Exigence |
 |---|---|
@@ -6841,7 +6645,7 @@ Choix d'architecture et justifications :
 | F8 | Sauvegardes quotidiennes des données et des configurations, copie hors site |
 | F9 | Supervision avec alertes (disponibilité, disque, services, liens) |
 
-#### Contraintes et exigences non fonctionnelles
+### Contraintes et exigences non fonctionnelles
 
 | Réf. | Contrainte |
 |---|---|
@@ -6853,13 +6657,13 @@ Choix d'architecture et justifications :
 | C6 | Documentation complète, procédures d'exploitation, plan de reprise |
 | C7 | Budget raisonnable pour une PME : matériel d'entrée de gamme professionnel, logiciels libres |
 
-#### Livrables attendus
+### Livrables attendus
 
 1. Cahier des charges (ci-dessus). 2. Schéma réseau. 3. Plan d'adressage IP. 4. Configuration des équipements. 5. Installation des serveurs. 6. Règles de sécurité. 7. Tests de fonctionnement (plan de recette). 8. Scénarios de dépannage. 9. Documentation technique finale.
 
-### 23.3 Schéma réseau
+## Schéma réseau
 
-#### Schéma logique
+### Schéma logique
 
 ```mermaid
 flowchart TB
@@ -6876,7 +6680,7 @@ flowchart TB
     SW2 --- AP["3 points d'accès Wi-Fi (SSID CORP VLAN 20, INVITES VLAN 50)"]
 ```
 
-#### Schéma physique (extrait de baie)
+### Schéma physique (extrait de baie)
 
 ```text
 Baie 12U
@@ -6893,9 +6697,9 @@ Baie 12U
 
 Liaisons : fibre opérateur vers `ether1` de RB-GW ; `ether2` de RB-GW vers `Gi1/0/1` de SW1 (trunk) ; `Gi1/0/23-24` de SW1 vers `Gi1/0/47-48` de SW2 (EtherChannel) ; serveurs sur SW1 ; postes, imprimantes et points d'accès sur SW2.
 
-### 23.4 Plan d'adressage IP
+## Plan d'adressage IP
 
-#### VLAN et sous-réseaux
+### VLAN et sous-réseaux
 
 | VLAN | Nom | Réseau | Passerelle | Usage | DHCP |
 |---|---|---|---|---|---|
@@ -6913,7 +6717,7 @@ Liaisons : fibre opérateur vers `ether1` de RB-GW ; `ether2` de RB-GW vers `Gi1
 
 Réserve : 192.168.0.0/16 laisse de la place pour de nouveaux VLAN (par exemple 70, 80). Les adresses du WAN appartiennent à la plage de documentation 203.0.113.0/24 ; remplacez-les par celles de l'opérateur en production.
 
-#### Adresses fixes
+### Adresses fixes
 
 | Hôte | VLAN | Adresse | Rôle |
 |---|---|---|---|
@@ -6929,7 +6733,7 @@ Réserve : 192.168.0.0/16 laisse de la place pour de nouveaux VLAN (par exemple 
 | srv-web | 40 | 192.168.40.20 | Nginx (DMZ) |
 | imp1, imp2 | 60 | 192.168.60.10, .11 | Imprimantes (réservations DHCP) |
 
-#### Ports des switchs
+### Ports des switchs
 
 | Switch | Ports | Fonction |
 |---|---|---|
@@ -6944,7 +6748,7 @@ Réserve : 192.168.0.0/16 laisse de la place pour de nouveaux VLAN (par exemple 
 | SW2 | Gi1/0/47-48 | Po1 vers SW1 |
 | SW2 | Autres | Désactivés, VLAN 998 |
 
-#### Matrice des flux autorisés
+### Matrice des flux autorisés
 
 | Source vers destination | ADMIN / PRODUCTION | SERVEURS | DMZ | INVITES | IOT | GESTION | Internet | VPN |
 |---|---|---|---|---|---|---|---|---|
@@ -6958,11 +6762,11 @@ Réserve : 192.168.0.0/16 laisse de la place pour de nouveaux VLAN (par exemple 
 | Internet | Non | Non | HTTP, HTTPS (redirigés) | Non | Non | Non | n/a | WireGuard UDP 51820 vers RB-GW |
 | srv-mon (supervision) | Agents (10050), ICMP | Interne | Agent, ICMP | Non | ICMP | SNMP (161), ICMP | n/a | Non |
 
-### 23.5 Configuration des équipements
+## Configuration des équipements
 
 > **Avant toute mise en service :** sauvegardez la configuration d'usine, branchez-vous à la **console** (câble série) ou à un port de gestion dédié, et appliquez les configurations par blocs en vérifiant l'accès entre chaque bloc. Les mots de passe ci-dessous sont des **exemples** à remplacer.
 
-#### 23.5.1 RB-GW : MikroTik RouterOS 7
+### RB-GW : MikroTik RouterOS 7
 
 ```text
 # ---- Identité, utilisateurs, services ----
@@ -7095,11 +6899,11 @@ add chain=forward action=drop log=yes log-prefix="FWD-DROP"
 /interface wireguard print        # affiche la clé publique du routeur, à donner aux clients
 ```
 
-Le client utilise le fichier de la section 15.3 avec `Endpoint = 203.0.113.2:51820` (ou le nom DNS public), `DNS = 192.168.30.2` et `AllowedIPs = 192.168.30.0/24, 10.8.0.0/24`.
+Le client utilise le fichier de la section « Serveur VPN (WireGuard) » avec `Endpoint = 203.0.113.2:51820` (ou le nom DNS public), `DNS = 192.168.30.2` et `AllowedIPs = 192.168.30.0/24, 10.8.0.0/24`.
 
 **Sauvegarde et retour arrière :** `/export file=rb-gw-AAAAMMJJ` et `/system backup save name=rb-gw-AAAAMMJJ` avant chaque changement ; **Safe Mode** (`Ctrl+X`) pour tout changement de pare-feu à distance.
 
-#### 23.5.2 SW1 : Cisco IOS (switch de cœur)
+### SW1 : Cisco IOS (switch de cœur)
 
 ```text
 hostname SW1
@@ -7205,7 +7009,7 @@ snmp-server user supervision SUPERVISION v3 auth sha MotDePasseAuth_A_Remplacer 
 
 Remarques : `switchport trunk encapsulation dot1q` n'existe que sur certains modèles (à supprimer s'il est refusé). Avant `shutdown` des ports inutilisés, vérifiez qu'ils sont bien inutilisés.
 
-#### 23.5.3 SW2 : Cisco IOS (switch d'accès PoE)
+### SW2 : Cisco IOS (switch d'accès PoE)
 
 La base (nom, utilisateurs, SSH, NTP, journaux, SNMP, VLAN, STP en `rapid-pvst`) est identique à SW1, avec `hostname SW2`, l'adresse `192.168.99.3` et `spanning-tree vlan 1,10,20,30,40,50,60,99 root secondary`. Configuration propre à SW2 :
 
@@ -7289,7 +7093,7 @@ interface range GigabitEthernet1/0/1 - 38
 
 Note : les ports d'accès des points d'accès sont un **cas d'exception** à la règle « VLAN natif inutilisé » : le VLAN de gestion y circule non étiqueté pour permettre l'administration des AP ; ils restent dans un VLAN dédié (99) et sont protégés par les règles du pare-feu. `no ip dhcp snooping information option` évite que l'option 82 insérée par le switch fasse rejeter les requêtes par le relais DHCP du routeur. Les imprimantes ayant des réservations DHCP, DAI les accepte (liaison issue du snooping).
 
-#### 23.5.4 Points d'accès Wi-Fi
+### Points d'accès Wi-Fi
 
 | SSID | VLAN | Sécurité | Remarques |
 |---|---|---|---|
@@ -7298,9 +7102,9 @@ Note : les ports d'accès des points d'accès sont un **cas d'exception** à la 
 
 Gestion des AP : adresses `192.168.99.11 à .13`, accès par un compte nominatif, mises à jour du micrologiciel, WPS désactivé, canaux 1/6/11 en 2,4 GHz (largeur 20 MHz) et canaux 5 GHz non recouvrants, puissance réduite pour limiter les interférences entre AP. Étude de couverture avant installation.
 
-### 23.6 Installation et configuration des serveurs
+## Installation et configuration des serveurs
 
-#### 23.6.1 Socle commun à tous les serveurs Ubuntu
+### Socle commun à tous les serveurs Ubuntu
 
 ```bash
 sudo hostnamectl set-hostname srv-infra            # adapter
@@ -7349,15 +7153,15 @@ sudo ufw allow from 192.168.99.0/24 to any port 22 proto tcp
 sudo ufw enable
 ```
 
-Synchronisation : `srv-infra` sert de source de temps interne (voir 12.5.2) ; les autres serveurs utilisent `server 192.168.30.2 iburst` dans `/etc/chrony/chrony.conf` (`chronyc sources -v` pour vérifier).
+Synchronisation : `srv-infra` sert de source de temps interne (voir la section « srv-infra : DHCP, DNS, NTP ») ; les autres serveurs utilisent `server 192.168.30.2 iburst` dans `/etc/chrony/chrony.conf` (`chronyc sources -v` pour vérifier).
 
 Sauvegardez `/etc` avec `etckeeper` (`sudo apt install etckeeper`) pour versionner les changements de configuration.
 
-#### 23.6.2 srv-infra : DHCP, DNS, NTP
+### srv-infra : DHCP, DNS, NTP
 
-**Rôles :** Kea DHCP4, BIND 9, chrony. Détail du fonctionnement : sections 13 à 15. Valeurs du projet :
+**Rôles :** Kea DHCP4, BIND 9, chrony. Détail du fonctionnement : voir les sections sur les services sous Ubuntu Server. Valeurs du projet :
 
-`/etc/kea/kea-dhcp4.conf` (voir la section 13.2 pour l'installation et le test) :
+`/etc/kea/kea-dhcp4.conf` (voir la section « Serveur DHCP » pour l'installation et le test) :
 
 ```json
 {
@@ -7460,7 +7264,7 @@ Ajouter les zones inverses pour `30.168.192.in-addr.arpa`, `99.168.192.in-addr.a
 
 **Résilience :** srv-infra est un point de défaillance unique pour DHCP et DNS. Recommandations : sauvegarde de `/etc/kea`, `/etc/bind`, `/var/lib/kea` ; machine virtuelle ou image de restauration prête ; évolution : second serveur (DNS secondaire et Kea en haute disponibilité).
 
-#### 23.6.3 srv-fic : serveur de fichiers Samba et sauvegarde
+### srv-fic : serveur de fichiers Samba et sauvegarde
 
 **Organisation :**
 
@@ -7586,7 +7390,7 @@ sudo sh -c 'set -a; . /etc/restic/env; restic snapshots; restic check'
 
 **Sauvegarde des configurations d'équipements** (nightly, depuis srv-mon, avec des comptes de lecture dédiés et des clés SSH) : export MikroTik (`ssh adm-sauv@192.168.99.1 "/export"`), `show running-config` des switchs (`ssh adm-sauv@192.168.99.2 "show running-config"`), stockage dans un dépôt git local ; outils recommandés pour automatiser : **Oxidized**.
 
-#### 23.6.4 srv-web : site web en DMZ (Nginx)
+### srv-web : site web en DMZ (Nginx)
 
 ```bash
 sudo apt install nginx certbot python3-certbot-nginx
@@ -7615,13 +7419,13 @@ server {
 }
 ```
 
-Le certificat Let's Encrypt n'est obtenu qu'avec un nom de domaine **public réel** (`www.atlas.example` est un nom de démonstration) : `sudo certbot --nginx -d <votre domaine>`. En laboratoire, utilisez un certificat auto-signé (section 15.1). Contrôle : `sudo nginx -t`, `sudo systemctl reload nginx`, `sudo certbot renew --dry-run`.
+Le certificat Let's Encrypt n'est obtenu qu'avec un nom de domaine **public réel** (`www.atlas.example` est un nom de démonstration) : `sudo certbot --nginx -d <votre domaine>`. En laboratoire, utilisez un certificat auto-signé (section « Serveur Web Apache »). Contrôle : `sudo nginx -t`, `sudo systemctl reload nginx`, `sudo certbot renew --dry-run`.
 
 Pare-feu : `sudo ufw allow 80/tcp`, `sudo ufw allow 443/tcp`, SSH depuis `192.168.99.0/24` uniquement. Le serveur de la DMZ ne contient **aucun secret interne** et n'a pas accès aux partages.
 
-#### 23.6.5 srv-mon : supervision (Zabbix)
+### srv-mon : supervision (Zabbix)
 
-Installation : voir TP 16 (section 22). Éléments de supervision définis pour le projet :
+Installation : voir TP 16 (section « Travaux pratiques et laboratoires »). Éléments de supervision définis pour le projet :
 
 | Cible | Mesure | Seuil d'alerte |
 |---|---|---|
@@ -7636,7 +7440,7 @@ Installation : voir TP 16 (section 22). Éléments de supervision définis pour 
 
 Les agents Zabbix des serveurs autorisent `srv-mon` (`Server=192.168.30.6`, règle `ufw allow from 192.168.30.6 to any port 10050`). Les alertes sont envoyées par e-mail et/ou messagerie d'équipe ; une astreinte (qui reçoit quoi, quand) est définie dans la documentation.
 
-#### 23.6.6 Postes clients
+### Postes clients
 
 | Poste | Configuration |
 |---|---|
@@ -7650,7 +7454,7 @@ Exemple de montage Linux :
 //srv-fic.int.atlas.example/Compta  /mnt/compta  cifs  credentials=/etc/smb-compta.cred,uid=1000,iocharset=utf8,_netdev,nofail  0  0
 ```
 
-### 23.7 Règles de sécurité du projet
+## Règles de sécurité du projet
 
 | Domaine | Règle appliquée |
 |---|---|
@@ -7665,9 +7469,9 @@ Exemple de montage Linux :
 | Journalisation | Journaux des équipements vers srv-mon, horloge unique (chrony) |
 | Sauvegardes | 3-2-1, chiffrées, test de restauration mensuel |
 | VPN | WireGuard, une clé par utilisateur, accès limité aux serveurs DNS et SMB, révocation par suppression du pair |
-| Politique | Charte informatique signée, plan de réponse à incident (section 20.13) |
+| Politique | Charte informatique signée, plan de réponse à incident (section « Plan de réponse à incident (version courte) ») |
 
-### 23.8 Plan de tests de fonctionnement (recette)
+## Plan de tests de fonctionnement (recette)
 
 Cochez chaque ligne : **[ ]** à faire, **[x]** réussi, **[!]** anomalie à traiter.
 
@@ -7700,9 +7504,9 @@ Cochez chaque ligne : **[ ]** à faire, **[x]** réussi, **[!]** anomalie à tra
 | T25 | Performance | Débit inter-VLAN | `iperf3` poste vers srv-fic | Proche de la capacité du lien | [ ] |
 | T26 | Reprise | Redémarrage complet | Coupure et remise sous tension de la baie | Tous les services reviennent sans intervention | [ ] |
 
-### 23.9 Scénarios de dépannage du projet
+## Scénarios de dépannage du projet
 
-Chaque scénario est introduit par un « saboteur » sur le laboratoire ou le site d'essai ; le dépanneur applique la méthode de la section 18 et rédige une fiche d'incident. Les corrections suivent (12.12).
+Chaque scénario est introduit par un « saboteur » sur le laboratoire ou le site d'essai ; le dépanneur applique la méthode de la section « Méthodologie professionnelle de dépannage » et rédige une fiche d'incident. Les corrections figurent dans « Corrections de l'atelier de pannes ».
 
 | N° | Symptôme rapporté |
 |---|---|
@@ -7717,7 +7521,7 @@ Chaque scénario est introduit par un « saboteur » sur le laboratoire ou le si
 | S9 | Zabbix signale « Aucun instantané restic depuis 26 h » |
 | S10 | Zabbix indique que l'agent de `srv-fic` est injoignable ; le serveur fonctionne |
 
-### 23.10 Phasage et planning du projet
+## Phasage et planning du projet
 
 ```mermaid
 gantt
@@ -7758,7 +7562,7 @@ gantt
 | Erreur de règle de pare-feu | Matrice des flux, tests T11 à T14 avant mise en production |
 | Départ de l'administrateur | Documentation complète, coffre de mots de passe, accès d'urgence |
 
-### 23.11 Documentation technique finale (plan type et contenu clé)
+## Documentation technique finale (plan type et contenu clé)
 
 ```markdown
 # Atlas Conseil - Documentation technique du réseau (version AAAA-MM-JJ)
@@ -7779,7 +7583,7 @@ gantt
 14. Annexes : contacts fournisseurs, contrats, licences
 ```
 
-#### Inventaire (modèle)
+### Inventaire (modèle)
 
 | Équipement | Modèle | N° de série | Adresse | Emplacement | Fin de garantie |
 |---|---|---|---|---|---|
@@ -7788,7 +7592,7 @@ gantt
 | sw2 | | | 192.168.99.3 | Baie U10 | |
 | srv-infra | | | 192.168.30.2 | Baie U7 | |
 
-#### Procédures d'exploitation essentielles
+### Procédures d'exploitation essentielles
 
 **Arrivée d'un collaborateur :**
 1. Créer le compte Samba et l'ajouter aux groupes de son service (12.5.3).
@@ -7807,11 +7611,11 @@ gantt
 
 **Mise à jour des équipements :** lire les notes de version, sauvegarder la configuration, mettre à jour hors des heures ouvrées, vérifier les services, conserver l'ancienne version pour un retour arrière.
 
-### 23.12 Variante avec Active Directory (résumé) *(ajout)*
+## Variante avec Active Directory (résumé) *(ajout)*
 
-Pour un parc entièrement Windows géré par domaine : déployer deux contrôleurs de domaine Windows Server 2022 (VLAN 30, `192.168.30.11` et `.12`) avec DNS intégré et DHCP en failover (sections 16 et 17) ; les clients utilisent ces DNS ; remplacer Samba par un serveur de fichiers Windows (permissions AGDLP, énumération basée sur l'accès) ; gérer les postes par GPO ; conserver BIND/Kea pour les zones non Windows seulement si nécessaire. Les règles de pare-feu doivent alors autoriser les ports d'Active Directory entre postes et contrôleurs (tableau de la section 16.2).
+Pour un parc entièrement Windows géré par domaine : déployer deux contrôleurs de domaine Windows Server 2022 (VLAN 30, `192.168.30.11` et `.12`) avec DNS intégré et DHCP en failover (sections « Windows Server : Active Directory, DNS et DHCP » et « Windows Server : GPO, partages et permissions ») ; les clients utilisent ces DNS ; remplacer Samba par un serveur de fichiers Windows (permissions AGDLP, énumération basée sur l'accès) ; gérer les postes par GPO ; conserver BIND/Kea pour les zones non Windows seulement si nécessaire. Les règles de pare-feu doivent alors autoriser les ports d'Active Directory entre postes et contrôleurs (tableau de la section « Active Directory et contrôleur de domaine »).
 
-### Pièges fréquents
+## Pièges fréquents
 
 | Piège | Conséquence | Remède |
 | --- | --- | --- |
@@ -7821,25 +7625,19 @@ Pour un parc entièrement Windows géré par domaine : déployer deux contrôleu
 | Certificat Let's Encrypt avec un nom fictif | Échec de l'émission | Nom de domaine public réel, ou certificat auto-signé en laboratoire |
 | Documentation faite après coup | Procédures introuvables au premier incident | Documenter à chaque phase, versionner les configurations |
 
-### À retenir
-
-- Un projet réseau se décompose en : **besoins → conception → réalisation → recette → exploitation**.
-- La **matrice des flux** est le cahier des charges du pare-feu ; le **plan de tests** prouve qu'il est respecté.
-- Sans **sauvegardes testées** et **documentation**, l'infrastructure n'est pas exploitable.
-
 ---
 
-## 24. Exercices
+# Exercices
 
-### Objectifs d'apprentissage
+## Objectifs d'apprentissage
 
-S'entraîner section par section avec des questions de compréhension, des QCM, des exercices de calcul, de configuration et de diagnostic, et des scénarios de dépannage ; progresser du niveau débutant au niveau avancé ; réserver les corrections (section 25) à la vérification.
+S'entraîner section par section avec des questions de compréhension, des QCM, des exercices de calcul, de configuration et de diagnostic, et des scénarios de dépannage ; progresser du niveau débutant au niveau avancé ; réserver les corrections (section « Corrections des exercices et des laboratoires ») à la vérification.
 
-### 24.1 Adressage et protocoles (sections 1 à 5)
+## Adressage et protocoles
 
 Les corrections se trouvent dans la section suivante. Essayez de répondre avant de les consulter.
 
-#### Questions de compréhension (niveau débutant)
+### Questions de compréhension (niveau débutant)
 
 1. Quelle est la différence entre un LAN et un WAN ?
 2. Citez les 7 couches du modèle OSI dans l'ordre.
@@ -7848,7 +7646,7 @@ Les corrections se trouvent dans la section suivante. Essayez de répondre avant
 5. Que signifie une adresse en 169.254.x.x sur un poste Windows ?
 6. Quelle est la différence entre une adresse MAC et une adresse IP ?
 
-#### QCM
+### QCM
 
 **Q1.** Quel protocole associe une adresse IPv4 à une adresse MAC ?
 a) DNS  b) ARP  c) DHCP  d) ICMP
@@ -7865,7 +7663,7 @@ a) 32  b) 30  c) 28  d) 62
 **Q5.** Quelle commande teste la connectivité avec ICMP Echo ?
 a) tracert  b) ping  c) netstat  d) nslookup
 
-#### Exercices de calcul (progressifs)
+### Exercices de calcul (progressifs)
 
 **Exercice 1 (débutant).** Pour l'hôte `192.168.1.77/26`, donnez l'adresse réseau, le broadcast, la plage utilisable et le nombre d'hôtes.
 
@@ -7877,13 +7675,13 @@ a) tracert  b) ping  c) netstat  d) nslookup
 
 **Exercice 5 (avancé).** À partir de `10.10.0.0/24`, appliquez le VLSM pour : Ventes (60 hôtes), RH (28 hôtes), Serveurs (12 hôtes), Wi-Fi invités (28 hôtes), deux liaisons point à point (2 hôtes chacune). Donnez le plan complet.
 
-#### Exercices de configuration
+### Exercices de configuration
 
 **Exercice 6.** Un serveur Ubuntu doit avoir l'adresse `10.10.0.20/24`, la passerelle `10.10.0.1` et pour DNS `10.10.0.2`. Écrivez le fichier Netplan correspondant et indiquez la commande de test avec retour arrière automatique.
 
 **Exercice 7.** Écrivez les commandes PowerShell pour configurer un poste Windows avec `10.10.0.50/24`, la passerelle `10.10.0.1`, puis la commande de retour au DHCP.
 
-#### Exercices de diagnostic
+### Exercices de diagnostic
 
 **Exercice 8.** Un poste a l'adresse `192.168.1.25/24` et la passerelle `192.168.2.1`. Il ne sort pas du réseau local. Quelle est la cause et comment la corriger ?
 
@@ -7891,15 +7689,15 @@ a) tracert  b) ping  c) netstat  d) nslookup
 
 **Scénario de dépannage.** Deux postes de l'étage reçoivent la même adresse `192.168.10.50`. Les connexions de l'un des deux se coupent par intermittence. Décrivez comment confirmer un conflit d'adresses et comment le résoudre durablement (réservation DHCP, plage statique hors pool).
 
-#### Mini travaux pratiques
+### Mini travaux pratiques
 
 **TP A.** Avec deux machines virtuelles Ubuntu en réseau interne VirtualBox, attribuez-leur des adresses du même /24 et vérifiez avec `ping` qu'elles communiquent. Attribuez ensuite à l'une un masque /25 incompatible et observez ce qui se passe.
 
 **TP B.** Dans Packet Tracer, construisez un réseau de 2 PC et d'un switch, configurez des adresses statiques et vérifiez avec `ping`.
 
-### 24.2 Commandes Windows (section 6)
+## Commandes Windows
 
-#### Questions de compréhension
+### Questions de compréhension
 
 1. Quelle est la différence entre `ipconfig /release` et `ipconfig /flushdns` ?
 2. Pourquoi un ping sans réponse ne prouve-t-il pas qu'un hôte est éteint ?
@@ -7907,7 +7705,7 @@ a) tracert  b) ping  c) netstat  d) nslookup
 4. Pourquoi faut-il éviter `telnet` et `ftp` en production ?
 5. Que signifie un état `SYN_SENT` qui persiste dans `netstat` ?
 
-#### QCM
+### QCM
 
 **Q1.** Quelle commande affiche les adresses MAC des cartes ?
 a) `getmac`  b) `hostname`  c) `route print`  d) `nbtstat -c`
@@ -7921,7 +7719,7 @@ a) `-f`  b) `-p`  c) `-n`  d) `-t`
 **Q4.** Quel état d'interface `Get-NetAdapter` indique un câble débranché ?
 a) `Up`  b) `Disabled`  c) `Disconnected`  d) `Not Present`
 
-#### Exercices de configuration
+### Exercices de configuration
 
 **Exercice 1.** Écrivez les commandes PowerShell pour : configurer `10.10.0.60/24` avec la passerelle `10.10.0.1` et le DNS `10.10.0.2` sur l'interface « Ethernet », puis annuler et repasser en DHCP.
 
@@ -7929,7 +7727,7 @@ a) `Up`  b) `Disabled`  c) `Disconnected`  d) `Not Present`
 
 **Exercice 3.** Ajoutez une route persistante vers `172.20.0.0/16` via `192.168.10.254`, puis supprimez-la.
 
-#### Exercices de diagnostic
+### Exercices de diagnostic
 
 **Exercice 4.** Voici un résultat :
 
@@ -7946,11 +7744,11 @@ Que peut-on conclure et quelles vérifications faire ensuite ?
 
 **Exercice 5.** Un poste a pour résultat `ipconfig` : `192.168.10.54`, masque `255.255.255.0`, passerelle `192.168.20.1`. Il joint les postes de son réseau mais pas Internet. Expliquez.
 
-**Scénario de dépannage.** Après un changement de routeur, un poste accède à Internet mais pas à une imprimante réseau en `192.168.10.30`, alors que ses voisins y accèdent. Proposez une démarche avec les commandes de la section 6.
+**Scénario de dépannage.** Après un changement de routeur, un poste accède à Internet mais pas à une imprimante réseau en `192.168.10.30`, alors que ses voisins y accèdent. Proposez une démarche avec les commandes de la section « Commandes réseau sous Windows ».
 
-### 24.3 Commandes Linux (section 7)
+## Commandes Linux
 
-#### Questions de compréhension
+### Questions de compréhension
 
 1. Quelle commande remplace `ifconfig` ? `netstat` ? `arp` ?
 2. Pourquoi une adresse ajoutée avec `ip addr add` disparaît-elle après redémarrage ?
@@ -7958,7 +7756,7 @@ Que peut-on conclure et quelles vérifications faire ensuite ?
 4. Que signifie `FAILED` dans `ip neigh` ?
 5. Pourquoi `dig` peut-il réussir alors que `getent hosts` échoue ?
 
-#### QCM
+### QCM
 
 **Q1.** Quelle commande liste les ports TCP/UDP en écoute avec le processus ?
 a) `ip route`  b) `sudo ss -tulpn`  c) `ping -c1`  d) `hostnamectl`
@@ -7972,7 +7770,7 @@ a) `/etc/network/interfaces`  b) `/etc/netplan/*.yaml`  c) `/etc/hosts`  d) `/et
 **Q4.** `curl` retourne le code de sortie 7. Que signifie-t-il ?
 a) Nom non résolu  b) Échec de connexion  c) Certificat invalide  d) Délai dépassé
 
-#### Exercices de configuration
+### Exercices de configuration
 
 **Exercice 1.** Écrivez un fichier Netplan pour un serveur `ens18` : `10.10.0.20/24`, passerelle `10.10.0.1`, DNS `10.10.0.2` puis `1.1.1.1`, domaine de recherche `entreprise.local`. Donnez les commandes de validation avec retour arrière.
 
@@ -7980,7 +7778,7 @@ a) Nom non résolu  b) Échec de connexion  c) Certificat invalide  d) Délai d�
 
 **Exercice 3.** Écrivez les commandes `ufw` pour : refuser tout en entrée par défaut, autoriser SSH depuis `10.10.0.0/24` uniquement, autoriser HTTP et HTTPS depuis partout, puis activer. Précisez l'ordre.
 
-#### Exercices de diagnostic
+### Exercices de diagnostic
 
 **Exercice 4.** Voici un résultat :
 
@@ -8002,11 +7800,11 @@ Quelles hypothèses ? Quelle commande confirmer ?
 
 **Exercice 6.** `nc -zv 192.168.10.20 443` renvoie `Connection refused`, alors que `ping` fonctionne. Interprétez, puis donnez les commandes à lancer sur le serveur.
 
-**Scénario de dépannage.** Un serveur Ubuntu est lent en transfert de fichiers (10 Mo/s sur un lien censé fournir 1 Gbit/s). Donnez une démarche avec les commandes de la section 7.
+**Scénario de dépannage.** Un serveur Ubuntu est lent en transfert de fichiers (10 Mo/s sur un lien censé fournir 1 Gbit/s). Donnez une démarche avec les commandes de la section « Commandes réseau sous Linux ».
 
-### 24.4 Équipements réseau (sections 8 à 12)
+## Équipements réseau
 
-#### Questions de compréhension
+### Questions de compréhension
 
 1. Quelle est la différence entre un port access et un port trunk ?
 2. Pourquoi une requête DHCP ne traverse-t-elle pas un routeur sans `ip helper-address` ?
@@ -8014,7 +7812,7 @@ Quelles hypothèses ? Quelle commande confirmer ?
 4. Pourquoi faut-il activer `portfast` et `bpduguard` ensemble sur les ports utilisateurs ?
 5. Pourquoi WEP et WPA/TKIP sont-ils à proscrire ?
 
-#### QCM
+### QCM
 
 **Q1.** Un statut d'interface `administratively down / down` signifie :
 a) câble débranché  b) interface désactivée par `shutdown`  c) erreur d'encapsulation  d) interface en service
@@ -8031,7 +7829,7 @@ a) `on`  b) `passive`  c) `active`  d) `desirable`
 **Q5.** Sur MikroTik, à quel moment active-t-on `vlan-filtering=yes` ?
 a) au début  b) à la fin de la configuration, avec le Safe Mode  c) jamais  d) avant de créer le bridge
 
-#### Exercices de configuration
+### Exercices de configuration
 
 **Exercice 1.** Écrivez la configuration Cisco d'un switch pour : VLAN 10 (ADMIN) et 20 (TECH), ports Gi0/1 à Gi0/4 en VLAN 10, Gi0/5 à Gi0/8 en VLAN 20, trunk sur Gi0/24 autorisant uniquement les VLAN 10, 20 et 99 avec le natif 99.
 
@@ -8043,7 +7841,7 @@ a) au début  b) à la fin de la configuration, avec le Safe Mode  c) jamais  d)
 
 **Exercice 5.** Traduisez en RouterOS la NAT en masquerade sur `ether1` et un pare-feu `input` qui n'autorise que le LAN `192.168.10.0/24`.
 
-#### Exercices de diagnostic
+### Exercices de diagnostic
 
 **Exercice 6.** `show interfaces trunk` indique `Native vlan 1` sur SW1 et `Native vlan 99` sur SW2. Quelles conséquences et quelle correction ?
 
@@ -8053,15 +7851,15 @@ a) au début  b) à la fin de la configuration, avec le Safe Mode  c) jamais  d)
 
 **Scénario de dépannage.** Tout le réseau du premier étage est lent, les voyants des switchs clignotent en continu et la console du switch affiche des messages `MAC flapping`. Quelle est l'hypothèse la plus probable et comment procéder ?
 
-#### Mini travaux pratiques
+### Mini travaux pratiques
 
 **TP A.** Dans Packet Tracer, construisez : 1 routeur, 1 switch, 4 PC, VLAN 10 et 20, routage inter-VLAN en router-on-a-stick. Vérifiez par `ping` entre VLAN, puis ajoutez l'ACL de l'exercice 4 et testez.
 
 **TP B.** Ajoutez un second switch relié au premier par deux câbles ; observez avec `show spanning-tree` quel port est bloqué, puis remplacez les deux liens par un EtherChannel LACP.
 
-### 24.5 Services sous Ubuntu Server (sections 13 à 15)
+## Services sous Ubuntu Server
 
-#### Questions de compréhension
+### Questions de compréhension
 
 1. Pourquoi Kea est-il préféré à `isc-dhcp-server` pour une nouvelle installation ?
 2. À quoi sert le numéro de série d'une zone DNS et que se passe-t-il s'il n'est pas incrémenté ?
@@ -8070,7 +7868,7 @@ a) au début  b) à la fin de la configuration, avec le Safe Mode  c) jamais  d)
 5. Pourquoi `allow-recursion` doit-il être restreint dans BIND ?
 6. Pourquoi préférer SFTP à FTP ?
 
-#### QCM
+### QCM
 
 **Q1.** Quelle commande teste la syntaxe de la configuration Nginx ?
 a) `nginx -v`  b) `nginx -t`  c) `nginx -s stop`  d) `systemctl status nginx`
@@ -8084,7 +7882,7 @@ a) l'utilisateur  b) root  c) `www-data`  d) n'importe qui
 **Q4.** Quelle commande recharge les exports NFS ?
 a) `exportfs -ra`  b) `mount -a`  c) `systemctl reload ssh`  d) `smbpasswd -a`
 
-#### Exercices de configuration
+### Exercices de configuration
 
 **Exercice 1.** Écrivez une étendue Kea pour `192.168.50.0/24` (VLAN invités) : plage `.100` à `.250`, passerelle `192.168.50.1`, DNS public `9.9.9.9`, bail d'1 heure.
 
@@ -8096,7 +7894,7 @@ a) `exportfs -ra`  b) `mount -a`  c) `systemctl reload ssh`  d) `smbpasswd -a`
 
 **Exercice 5.** Écrivez un `VirtualHost` Apache pour `intranet.entreprise.local` sur `/var/www/intranet`, sans listing de répertoire.
 
-#### Exercices de diagnostic
+### Exercices de diagnostic
 
 **Exercice 6.** `sudo named-checkzone entreprise.local /etc/bind/zones/db.entreprise.local` affiche `dns_rdata_fromtext: ... bad dotted quad`. Que rechercher ?
 
@@ -8106,9 +7904,9 @@ a) `exportfs -ra`  b) `mount -a`  c) `systemctl reload ssh`  d) `smbpasswd -a`
 
 **Scénario de dépannage.** Les postes du VLAN 20 ne reçoivent plus d'adresse depuis ce matin. Les postes du VLAN 10 fonctionnent. `kea-dhcp4-server` est actif. Proposez une démarche.
 
-### 24.6 Services sous Windows Server (sections 16 et 17)
+## Services sous Windows Server
 
-#### Questions de compréhension
+### Questions de compréhension
 
 1. Pourquoi les postes d'un domaine doivent-ils utiliser le DNS du contrôleur de domaine ?
 2. Quelle est la différence entre une OU et un groupe de sécurité ?
@@ -8117,7 +7915,7 @@ a) `exportfs -ra`  b) `mount -a`  c) `systemctl reload ssh`  d) `smbpasswd -a`
 5. Quelle est la règle de combinaison entre permissions de partage et permissions NTFS ?
 6. Dans quel ordre s'appliquent les GPO ? Laquelle l'emporte en cas de conflit ?
 
-#### QCM
+### QCM
 
 **Q1.** Quelle commande contrôle l'état de la réplication AD ?
 a) `ipconfig /all`  b) `repadmin /replsummary`  c) `tracert`  d) `gpupdate`
@@ -8131,7 +7929,7 @@ a) `New-SmbShare`  b) `New-NetFirewallRule`  c) `Add-Computer`  d) `New-GPLink`
 **Q4.** Quel rôle FSMO sert de source de temps du domaine ?
 a) Schema Master  b) RID Master  c) PDC Emulator  d) Infrastructure Master
 
-#### Exercices de configuration
+### Exercices de configuration
 
 **Exercice 1.** Écrivez les commandes PowerShell pour créer l'étendue DHCP du VLAN 20 : `192.168.20.0/24`, plage `.10` à `.200`, exclusion de `.10` à `.99`, passerelle `192.168.20.1`, DNS `192.168.30.10` et `192.168.30.11`, bail de 8 heures.
 
@@ -8141,7 +7939,7 @@ a) Schema Master  b) RID Master  c) PDC Emulator  d) Infrastructure Master
 
 **Exercice 4.** Écrivez la commande pour lier une GPO nommée `GPO_Utilisateurs_Lecteurs` à l'OU `Technique` des utilisateurs.
 
-#### Exercices de diagnostic
+### Exercices de diagnostic
 
 **Exercice 5.** Un poste affiche « Un contrôleur de domaine pour le domaine entreprise.local est introuvable » lors de la jonction. `ipconfig /all` montre comme DNS `192.168.1.254` (box de l'opérateur). Diagnostic et correction ?
 
@@ -8151,9 +7949,9 @@ a) Schema Master  b) RID Master  c) PDC Emulator  d) Infrastructure Master
 
 **Scénario de dépannage.** Plus aucun poste du siège n'obtient d'adresse DHCP depuis le redémarrage de `srv-dc1` après une mise à jour. Le service DHCP Server est démarré. Proposez une démarche.
 
-### 24.7 Dépannage (sections 18 et 19)
+## Dépannage
 
-#### Questions de compréhension
+### Questions de compréhension
 
 1. Citez les trois premières informations à recueillir avant de toucher à une configuration.
 2. Pourquoi ne faut-il changer qu'un paramètre à la fois ?
@@ -8162,7 +7960,7 @@ a) Schema Master  b) RID Master  c) PDC Emulator  d) Infrastructure Master
 5. Que signifie `Connection refused` comparé à `Connection timed out` ?
 6. Pourquoi `netsh winsock reset` est-il considéré comme une opération à risque ?
 
-#### QCM
+### QCM
 
 **Q1.** `ping 1.1.1.1` réussit, `ping www.exemple.fr` échoue. Quelle couche d'investigation en priorité ?
 a) câble  b) DNS  c) VLAN  d) trunk
@@ -8176,7 +7974,7 @@ a) ajoute le VLAN 20  b) remplace la liste par le seul VLAN 20  c) supprime le V
 **Q4.** Quelle mesure protège contre l'ARP spoofing ?
 a) Dynamic ARP Inspection  b) augmenter le bail DHCP  c) désactiver STP  d) changer le DNS
 
-#### Exercices de diagnostic
+### Exercices de diagnostic
 
 **Exercice 1.** Un poste affiche `192.168.10.57/24` avec la passerelle `192.168.10.1`. `ping 192.168.10.1` répond, `ping 1.1.1.1` échoue. Quelles hypothèses, dans quel ordre vérifier ?
 
@@ -8190,9 +7988,9 @@ a) Dynamic ARP Inspection  b) augmenter le bail DHCP  c) désactiver STP  d) cha
 
 **Scénario de dépannage global.** Lundi 8 h 30 : les utilisateurs du VLAN 20 ne peuvent plus accéder au serveur de fichiers `\\srv-fic\Compta`, mais accèdent à Internet. Le VLAN 10 n'a aucun souci. Rédigez la fiche d'incident (étapes 1 à 11) avec votre démarche.
 
-### 24.8 Sécurité (section 20)
+## Sécurité
 
-#### Questions de compréhension
+### Questions de compréhension
 
 1. Expliquez la défense en profondeur avec trois exemples.
 2. Pourquoi placer les équipements d'administration dans un VLAN de gestion ?
@@ -8201,7 +7999,7 @@ a) Dynamic ARP Inspection  b) augmenter le bail DHCP  c) désactiver STP  d) cha
 5. Pourquoi le NIST déconseille-t-il la rotation périodique forcée des mots de passe ?
 6. Pourquoi conserver une sauvegarde hors ligne ?
 
-#### QCM
+### QCM
 
 **Q1.** Quelle fonction empêche un serveur DHCP pirate de répondre sur un port d'accès ?
 a) port security  b) DHCP snooping  c) STP  d) NAT
@@ -8215,7 +8013,7 @@ a) v1  b) v2c  c) v3  d) aucun
 **Q4.** Sur un trunk Cisco, quelle commande empêche la négociation DTP ?
 a) `switchport nonegotiate`  b) `spanning-tree portfast`  c) `ip dhcp snooping`  d) `no shutdown`
 
-#### Exercices de configuration
+### Exercices de configuration
 
 **Exercice 1.** Écrivez les règles `ufw` d'un serveur web : SSH depuis `192.168.99.0/24` uniquement, HTTP et HTTPS depuis partout, journalisation, politique par défaut stricte.
 
@@ -8223,7 +8021,7 @@ a) `switchport nonegotiate`  b) `spanning-tree portfast`  c) `ip dhcp snooping` 
 
 **Exercice 3.** Écrivez les commandes PowerShell pour activer le pare-feu Windows sur tous les profils avec blocage entrant par défaut, et autoriser RDP uniquement depuis `192.168.99.0/24`.
 
-#### Exercices de diagnostic
+### Exercices de diagnostic
 
 **Exercice 4.** Après activation de DAI sur le VLAN 30, le serveur Ubuntu en adresse statique n'est plus joignable. Pourquoi, et quelles solutions ?
 
@@ -8231,9 +8029,9 @@ a) `switchport nonegotiate`  b) `spanning-tree portfast`  c) `ip dhcp snooping` 
 
 **Scénario.** Un poste du VLAN 20 génère un trafic sortant massif vers une adresse inconnue la nuit. Rédigez la démarche de réponse (contenir, analyser, éradiquer, rétablir).
 
-### 24.9 Outils de diagnostic et de supervision (section 21)
+## Outils de diagnostic et de supervision
 
-#### Questions de compréhension
+### Questions de compréhension
 
 1. Quelle différence entre filtre de capture et filtre d'affichage dans Wireshark ?
 2. Pourquoi privilégier SNMPv3 pour la supervision ?
@@ -8241,7 +8039,7 @@ a) `switchport nonegotiate`  b) `spanning-tree portfast`  c) `ip dhcp snooping` 
 4. Pourquoi sécuriser l'accès aux exporters et à Netdata ?
 5. Quelles limites de Packet Tracer face à GNS3 ?
 
-#### QCM
+### QCM
 
 **Q1.** Quel port utilise l'interface web de Grafana par défaut ?
 a) 3000  b) 9090  c) 10051  d) 19999
@@ -8255,7 +8053,7 @@ a) `tcp.analysis.retransmission`  b) `dns`  c) `arp`  d) `tcp.port == 443`
 **Q4.** Quel outil est le plus adapté à un diagnostic temps réel d'un seul serveur ?
 a) Nagios  b) Netdata  c) Packet Tracer  d) LibreNMS
 
-#### Exercices pratiques
+### Exercices pratiques
 
 **Exercice 1.** Écrivez la commande `tcpdump` qui capture le trafic DNS du poste `192.168.10.54` vers un fichier, puis le filtre Wireshark pour n'afficher que les réponses DNS en erreur.
 
@@ -8265,20 +8063,20 @@ a) Nagios  b) Netdata  c) Packet Tracer  d) LibreNMS
 
 **Exercice 4.** Décrivez les étapes pour superviser un switch Cisco avec LibreNMS en SNMPv3.
 
-#### Exercices de diagnostic
+### Exercices de diagnostic
 
 **Exercice 5.** Une capture Wireshark montre un `DHCP Discover` toutes les 4 secondes sans `Offer`. Interprétation et vérifications ?
 
 **Exercice 6.** `promtool check config` signale une erreur. Prometheus affiche `up == 0` pour un `node_exporter`. Citez 4 causes possibles.
 
-### 24.10 Projet final (section 23)
+## Projet final
 
 | N° | Extension | Compétence travaillée |
 |---|---|---|
 | E1 | Ajouter un second serveur DNS (secondaire BIND) et Kea en haute disponibilité | Résilience |
 | E2 | Passer ATLAS-CORP en WPA2/WPA3-Enterprise avec FreeRADIUS | 802.1X |
 | E3 | Mettre en place un second lien Internet avec bascule automatique (RouterOS) | Redondance WAN |
-| E4 | Remplacer Samba par un domaine Active Directory (Windows Server 2022, DHCP, DNS, GPO) | sections 13 à 17 |
+| E4 | Remplacer Samba par un domaine Active Directory (Windows Server 2022, DHCP, DNS, GPO) | services Ubuntu Server et Windows Server |
 | E5 | Mettre en place un serveur de journaux centralisé (rsyslog ou Graylog) | Traçabilité |
 | E6 | Ajouter un IDS (Suricata) sur le miroir de port de SW1 | Détection |
 | E7 | Automatiser la sauvegarde des configurations avec Oxidized | Exploitation |
@@ -8306,7 +8104,7 @@ a) Nagios  b) Netdata  c) Packet Tracer  d) LibreNMS
 | Documentation et procédures | 10 |
 | Dépannage : scénarios résolus avec méthode | 5 |
 
-### Pièges fréquents
+## Pièges fréquents
 
 | Piège | Conséquence | Remède |
 | --- | --- | --- |
@@ -8314,23 +8112,17 @@ a) Nagios  b) Netdata  c) Packet Tracer  d) LibreNMS
 | Copier-coller des commandes sans les comprendre | Compétence non acquise, risques en production | Expliquer chaque option avant de l'exécuter |
 | Ne pas vérifier le résultat | Un exercice « fini » mais faux | Définir le test de validation avant de commencer |
 
-### À retenir
-
-- Les exercices suivent l'ordre des sections ; leurs corrections sont regroupées en section 25.
-- Écrire sa réponse (calcul, configuration, démarche) avant de consulter la correction.
-- Les scénarios de dépannage s'appuient sur la **méthode** de la section 18.
-
 ---
 
-## 25. Corrections des exercices et des laboratoires
+# Corrections des exercices et des laboratoires
 
-### Objectifs d'apprentissage
+## Objectifs d'apprentissage
 
 Vérifier ses réponses aux exercices et aux travaux pratiques ; comprendre la démarche de résolution (et pas seulement le résultat) ; réutiliser les corrections comme modèles de configuration et de fiches d'incident.
 
-### 25.1 Adressage et protocoles (sections 1 à 5)
+## Adressage et protocoles
 
-#### Questions de compréhension
+### Questions de compréhension
 
 1. Un LAN couvre un site restreint (bâtiment, bureau) et appartient à une organisation ; un WAN relie des sites distants, souvent via des opérateurs (Internet en est l'exemple).
 2. 7 Application, 6 Présentation, 5 Session, 4 Transport, 3 Réseau, 2 Liaison de données, 1 Physique.
@@ -8339,11 +8131,11 @@ Vérifier ses réponses aux exercices et aux travaux pratiques ; comprendre la d
 5. Le poste n'a pas obtenu d'adresse par DHCP et s'est attribué une adresse APIPA (lien local). Il ne peut communiquer qu'avec les machines du même segment ayant aussi une adresse 169.254.x.x.
 6. L'adresse MAC est physique (couche 2), liée à la carte réseau, non routable ; l'adresse IP est logique (couche 3), attribuée selon le réseau, et routable.
 
-#### QCM
+### QCM
 
 Q1 : **b** (ARP). Q2 : **b** (22). Q3 : **d** (8.8.8.8 ; les autres sont des plages privées RFC 1918, 172.20.1.1 étant dans 172.16.0.0/12). Q4 : **b** (30 = 2^5 - 2). Q5 : **b** (ping).
 
-#### Exercice 1
+### Exercice 1
 
 192.168.1.77/26 : taille du saut 64 ; 77 est dans le bloc 64 à 127.
 - Réseau : 192.168.1.64
@@ -8351,11 +8143,11 @@ Q1 : **b** (ARP). Q2 : **b** (22). Q3 : **d** (8.8.8.8 ; les autres sont des pla
 - Plage utilisable : 192.168.1.65 à 192.168.1.126
 - Hôtes : 62
 
-#### Exercice 2
+### Exercice 2
 
 255.255.255.224 : 224 = 11100000, soit 3 bits à 1 dans le dernier octet, donc 24 + 3 = **/27**. Hôtes utilisables : 2^5 - 2 = 30.
 
-#### Exercice 3
+### Exercice 3
 
 172.16.45.200/20 : masque 255.255.240.0. Le saut dans le 3e octet est 256 - 240 = 16. 45 est dans le bloc 32 à 47.
 - Réseau : 172.16.32.0
@@ -8363,7 +8155,7 @@ Q1 : **b** (ARP). Q2 : **b** (22). Q3 : **d** (8.8.8.8 ; les autres sont des pla
 - Plage utilisable : 172.16.32.1 à 172.16.47.254
 - Hôtes : 2^12 - 2 = 4094
 
-#### Exercice 4
+### Exercice 4
 
 8 sous-réseaux = 2^3 donc 3 bits empruntés : /27 (255.255.255.224), 32 adresses par sous-réseau.
 
@@ -8375,7 +8167,7 @@ Q1 : **b** (ARP). Q2 : **b** (22). Q3 : **d** (8.8.8.8 ; les autres sont des pla
 
 (Les suivants : .96, .128, .160, .192, .224.)
 
-#### Exercice 5
+### Exercice 5
 
 On trie par taille décroissante. Besoins : 60 (Ventes), 28 (RH), 28 (Wi-Fi invités), 12 (Serveurs), 2, 2.
 
@@ -8392,7 +8184,7 @@ Pour 60 hôtes : /26 (62). Pour 28 hôtes : /27 (30). Pour 12 hôtes : /28 (14).
 
 Espace libre restant : à partir de 10.10.0.152.
 
-#### Exercice 6
+### Exercice 6
 
 ```yaml
 network:
@@ -8412,7 +8204,7 @@ network:
 
 Commande de test avec retour arrière automatique : `sudo netplan try` (la configuration est annulée si elle n'est pas confirmée avant le délai).
 
-#### Exercice 7
+### Exercice 7
 
 ```powershell
 New-NetIPAddress -InterfaceAlias "Ethernet" -IPAddress 10.10.0.50 -PrefixLength 24 -DefaultGateway 10.10.0.1
@@ -8423,24 +8215,24 @@ Set-NetIPInterface -InterfaceAlias "Ethernet" -Dhcp Enabled
 Set-DnsClientServerAddress -InterfaceAlias "Ethernet" -ResetServerAddresses
 ```
 
-#### Exercice 8
+### Exercice 8
 
 La passerelle `192.168.2.1` n'est pas dans le sous-réseau `192.168.1.0/24` du poste : il ne peut pas la joindre en couche 2, donc ne peut pas sortir. Correction : utiliser une passerelle de 192.168.1.0/24 (par exemple 192.168.1.1) ou corriger l'adresse du poste si elle appartient en réalité à 192.168.2.0/24.
 
-#### Exercice 9
+### Exercice 9
 
 Ordre de vérification : (1) câble branché, voyant de lien, port du switch actif ; (2) serveur DHCP en fonctionnement ; (3) pool d'adresses non épuisé ; (4) VLAN du port correct ou relais DHCP (DHCP Relay) configuré si le serveur est dans un autre sous-réseau. Autres causes : filtrage DHCP (DHCP snooping) mal configuré, pare-feu.
 
-#### Scénario de dépannage (conflit d'adresses)
+### Scénario de dépannage (conflit d'adresses)
 
 1. Confirmation : sous Windows, l'événement de conflit s'affiche et `arp -a` montre une MAC différente de celle attendue pour 192.168.10.50 ; sous Linux, `arping -D -I <interface> 192.168.10.50` détecte un doublon.
 2. Identification : relever les MAC en conflit, retrouver les équipements via la table MAC du switch.
 3. Résolution : passer le poste fautif en DHCP ou lui attribuer une autre adresse.
 4. Prévention : réserver les adresses statiques hors de la plage DHCP, créer des réservations DHCP pour les équipements fixes, tenir un plan d'adressage à jour.
 
-### 25.2 Commandes Windows (section 6)
+## Commandes Windows
 
-#### Questions de compréhension
+### Questions de compréhension
 
 1. `ipconfig /release` abandonne le bail DHCP (l'adresse IP est retirée de l'interface) ; `ipconfig /flushdns` vide uniquement le cache de résolution DNS locale et ne modifie pas l'adresse IP.
 2. Parce que l'hôte ou un pare-feu intermédiaire peut bloquer ICMP Echo (Windows le bloque par défaut en entrée) ; l'absence de route de retour produit le même symptôme.
@@ -8448,11 +8240,11 @@ Ordre de vérification : (1) câble branché, voyant de lien, port du switch act
 4. Ces protocoles transmettent identifiants et données en clair : n'importe qui capturant le trafic peut les lire. Alternatives : SSH, SFTP, FTPS.
 5. Le client a envoyé un SYN sans recevoir de SYN-ACK : l'hôte est injoignable, le port est filtré par un pare-feu, ou le service ne répond pas.
 
-#### QCM
+### QCM
 
 Q1 : **a**. Q2 : **b**. Q3 : **b**. Q4 : **c** (`Disabled` signifie désactivée logiciellement).
 
-#### Exercice 1
+### Exercice 1
 
 ```powershell
 New-NetIPAddress -InterfaceAlias "Ethernet" -IPAddress 10.10.0.60 -PrefixLength 24 -DefaultGateway 10.10.0.1
@@ -8465,7 +8257,7 @@ Set-NetIPInterface -InterfaceAlias "Ethernet" -Dhcp Enabled
 Set-DnsClientServerAddress -InterfaceAlias "Ethernet" -ResetServerAddresses
 ```
 
-#### Exercice 2
+### Exercice 2
 
 ```powershell
 New-NetFirewallRule -DisplayName "ICMPv4 Echo entrant (LAN)" -Direction Inbound -Protocol ICMPv4 -IcmpType 8 -RemoteAddress 192.168.10.0/24 -Action Allow -Profile Domain,Private
@@ -8473,7 +8265,7 @@ New-NetFirewallRule -DisplayName "ICMPv4 Echo entrant (LAN)" -Direction Inbound 
 Remove-NetFirewallRule -DisplayName "ICMPv4 Echo entrant (LAN)"
 ```
 
-#### Exercice 3
+### Exercice 3
 
 ```cmd
 route -p add 172.20.0.0 MASK 255.255.0.0 192.168.10.254
@@ -8482,15 +8274,15 @@ route delete 172.20.0.0
 
 Équivalent PowerShell : `New-NetRoute -DestinationPrefix 172.20.0.0/16 -NextHop 192.168.10.254 -InterfaceAlias "Ethernet"` puis `Remove-NetRoute -DestinationPrefix 172.20.0.0/16 -Confirm:$false`.
 
-#### Exercice 4
+### Exercice 4
 
 L'hôte répond au ping, donc il est allumé et joignable, mais le port 445 (SMB) n'est pas accessible. Causes possibles : service « Serveur » arrêté, pare-feu local ou réseau bloquant SMB, SMB désactivé. Vérifications : sur le serveur, `Get-NetTCPConnection -LocalPort 445 -State Listen`, `Get-NetFirewallRule` du groupe « Partage de fichiers et d'imprimantes », profil réseau (`Get-NetConnectionProfile`), puis `Get-Service LanmanServer`.
 
-#### Exercice 5
+### Exercice 5
 
 La passerelle `192.168.20.1` n'est pas dans le sous-réseau `192.168.10.0/24` du poste : il ne peut pas l'atteindre directement, donc aucun trafic sortant du réseau local ne passe. Les échanges locaux fonctionnent car ils ne nécessitent pas de passerelle. Correction : mettre la passerelle correcte (par exemple `192.168.10.1`), de préférence par DHCP.
 
-#### Scénario de dépannage (imprimante)
+### Scénario de dépannage (imprimante)
 
 1. `ping 192.168.10.30` puis `Test-NetConnection 192.168.10.30 -Port 9100` (ou 631/445 selon le protocole) : localiser si l'hôte ou le port répond.
 2. `Get-NetNeighbor -IPAddress 192.168.10.30` ou `arp -a` : une MAC obsolète ? Si oui, `arp -d 192.168.10.30` (**Droits admin**) pour forcer une nouvelle résolution.
@@ -8499,9 +8291,9 @@ La passerelle `192.168.20.1` n'est pas dans le sous-réseau `192.168.10.0/24` du
 5. Comparer avec un poste voisin qui fonctionne : différence d'IP, de masque, de profil réseau, de règle de pare-feu sortante.
 6. Prévention : réservation DHCP de l'imprimante, documentation du plan d'adressage.
 
-### 25.3 Commandes Linux (section 7)
+## Commandes Linux
 
-#### Questions de compréhension
+### Questions de compréhension
 
 1. `ifconfig` : `ip addr` et `ip link` ; `netstat` : `ss` ; `arp` : `ip neigh`.
 2. `ip` modifie la configuration du noyau en mémoire ; seul un fichier de configuration (Netplan, NetworkManager, ifupdown) est relu au démarrage.
@@ -8509,11 +8301,11 @@ La passerelle `192.168.20.1` n'est pas dans le sous-réseau `192.168.10.0/24` du
 4. Le noyau n'a obtenu aucune réponse ARP/NDP : hôte éteint, absent du VLAN, ou filtré.
 5. `dig` interroge directement un serveur DNS ; `getent hosts` suit la chaîne du système (`/etc/nsswitch.conf`, `/etc/hosts`, résolveur local). Une ligne parasite dans `/etc/hosts`, une configuration NSS ou un cache local erroné peut donc faire échouer `getent` seul.
 
-#### QCM
+### QCM
 
 Q1 : **b**. Q2 : **a**. Q3 : **b**. Q4 : **b**.
 
-#### Exercice 1
+### Exercice 1
 
 ```yaml
 network:
@@ -8540,7 +8332,7 @@ sudo netplan try             # test avec annulation automatique
 
 Remarque : un fichier `.bak` dans `/etc/netplan/` est ignoré (seuls les `.yaml` sont lus), mais il vaut mieux le ranger dans `/root/`.
 
-#### Exercice 2
+### Exercice 2
 
 ```bash
 sudo nmcli connection add type ethernet ifname ens18 con-name lan \
@@ -8549,7 +8341,7 @@ sudo nmcli connection add type ethernet ifname ens18 con-name lan \
 sudo nmcli connection up lan
 ```
 
-#### Exercice 3
+### Exercice 3
 
 ```bash
 sudo ufw default deny incoming
@@ -8563,15 +8355,15 @@ sudo ufw status verbose
 
 L'ordre compte : activer avant d'autoriser SSH coupe une session distante.
 
-#### Exercice 4
+### Exercice 4
 
 `169.254.0.0/16` est une adresse de lien local (IPv4LL) : l'interface n'a pas reçu de bail DHCP. Vérifier : lien (`ip link`, `ethtool`), serveur DHCP et VLAN, `sudo tcpdump -i ens18 -nn 'port 67 or port 68'` pour voir si les requêtes partent et si une réponse revient, `journalctl -u systemd-networkd` ou `-u NetworkManager`.
 
-#### Exercice 5
+### Exercice 5
 
 `NXDOMAIN` : le serveur répond mais ne connaît pas ce nom. Hypothèses : enregistrement manquant dans la zone, faute de frappe, mauvaise zone interrogée, enregistrement dynamique non créé. Confirmer : `dig @192.168.10.2 entreprise.local SOA` (la zone existe-t-elle), `dig @192.168.10.2 srv1.entreprise.local A +norecurse`, puis consulter la zone sur le serveur DNS.
 
-#### Exercice 6
+### Exercice 6
 
 `Connection refused` signifie que l'hôte répond (une réponse RST est arrivée) mais qu'aucun service n'écoute sur ce port. Ce n'est pas un filtrage (qui donnerait un délai dépassé). Sur le serveur :
 
@@ -8581,7 +8373,7 @@ systemctl status nginx          # ou apache2 / httpd selon le service
 sudo journalctl -u nginx -n 50
 ```
 
-#### Scénario de dépannage (transferts lents)
+### Scénario de dépannage (transferts lents)
 
 1. `sudo ethtool ens18` : vitesse (100 Mbit/s au lieu de 1 Gbit/s ?), duplex (Half ?).
 2. `sudo ethtool -S ens18 | grep -i err` et `ip -s link show ens18` : erreurs CRC, paquets perdus.
@@ -8589,11 +8381,11 @@ sudo journalctl -u nginx -n 50
 4. `sudo dmesg -T | grep -i ens18` : alternances de lien.
 5. Test de débit avec `iperf3` (si disponible) pour séparer le réseau du disque ou du protocole.
 6. Si l'origine est le câble ou le port : changer de câble et de port, puis revérifier. Si c'est le duplex : rétablir l'autonégociation des deux côtés (serveur et switch).
-7. Prévention : supervision des erreurs d'interface (voir section 21).
+7. Prévention : supervision des erreurs d'interface (voir section « Outils professionnels de diagnostic et de supervision »).
 
-### 25.4 Équipements réseau (sections 8 à 12)
+## Équipements réseau
 
-#### Questions de compréhension
+### Questions de compréhension
 
 1. Un port access appartient à un VLAN et émet des trames sans étiquette ; un port trunk transporte plusieurs VLAN, avec des trames étiquetées 802.1Q (sauf le VLAN natif).
 2. La requête est un broadcast ; un routeur ne transmet pas les broadcasts. Le relais DHCP reçoit la requête et la retransmet en unicast au serveur.
@@ -8601,11 +8393,11 @@ sudo journalctl -u nginx -n 50
 4. `portfast` fait passer le port en transfert immédiatement (les postes obtiennent vite une adresse) ; `bpduguard` désactive le port si un BPDU arrive, ce qui bloque un switch ou une boucle branchés par erreur sur un port prévu pour un poste.
 5. Leurs algorithmes de chiffrement sont cassés : une clé peut être retrouvée en quelques minutes avec des outils courants.
 
-#### QCM
+### QCM
 
 Q1 : **b**. Q2 : **b**. Q3 : **b**. Q4 : **c**. Q5 : **b**.
 
-#### Exercice 1
+### Exercice 1
 
 ```text
 SW1(config)# vlan 10
@@ -8629,7 +8421,7 @@ SW1(config-if)# switchport trunk native vlan 99
 SW1(config-if)# switchport trunk allowed vlan 10,20,99
 ```
 
-#### Exercice 2
+### Exercice 2
 
 ```text
 R1(config)# interface GigabitEthernet0/0
@@ -8642,7 +8434,7 @@ R1(config-subif)# encapsulation dot1Q 20
 R1(config-subif)# ip address 192.168.20.1 255.255.255.0
 ```
 
-#### Exercice 3
+### Exercice 3
 
 ```text
 R1(config)# interface GigabitEthernet0/0
@@ -8655,7 +8447,7 @@ R1(config)# ip nat inside source list NAT-LAN interface GigabitEthernet0/1 overl
 R1(config)# ip nat inside source static tcp 192.168.30.20 443 interface GigabitEthernet0/1 443
 ```
 
-#### Exercice 4
+### Exercice 4
 
 ```text
 R1(config)# ip access-list extended FILTRE-INVITES
@@ -8670,7 +8462,7 @@ R1(config-subif)# ip access-group FILTRE-INVITES in
 
 Remarque : si le DNS des invités est un résolveur interne, il faudra une règle `permit udp ... eq 53` vers ce serveur **avant** les `deny` (ou utiliser un DNS public pour ce VLAN). L'ordre des règles est déterminant.
 
-#### Exercice 5
+### Exercice 5
 
 ```text
 /ip firewall nat add chain=srcnat out-interface=ether1 action=masquerade
@@ -8681,11 +8473,11 @@ add chain=input src-address=192.168.10.0/24 action=accept
 add chain=input action=drop
 ```
 
-#### Exercice 6
+### Exercice 6
 
 Un VLAN natif différent aux deux extrémités provoque un **mélange de VLAN** (les trames non étiquetées d'un VLAN atterrissent dans un autre), des messages CDP `native VLAN mismatch` et des avertissements STP. Correction : aligner les deux côtés (`switchport trunk native vlan 99` des deux côtés) puis vérifier avec `show interfaces trunk`.
 
-#### Exercice 7
+### Exercice 7
 
 1. Le serveur DHCP possède-t-il une étendue pour `192.168.20.0/24` ?
 2. `ip helper-address 192.168.30.2` est-il présent sur la sous-interface du VLAN 20 (`show running-config interface Gi0/0.20`) ?
@@ -8695,11 +8487,11 @@ Un VLAN natif différent aux deux extrémités provoque un **mélange de VLAN** 
 6. Le trunk autorise-t-il le VLAN 20 (`show interfaces trunk`) ?
 7. Contrôle côté serveur : `sudo tcpdump -i ens18 -nn 'port 67 or port 68'` pour voir si la requête relayée arrive.
 
-#### Exercice 8
+### Exercice 8
 
 Le flag `I` (indépendant) indique que le port ne participe pas à l'agrégat. Contrôler que les deux membres ont les mêmes paramètres (vitesse, duplex, mode access/trunk, VLAN autorisés, VLAN natif), le même mode LACP des deux côtés (`active` ou `passive`, pas `on` contre `active`) et que le lien physique est actif (`show interfaces status`).
 
-#### Scénario de dépannage (réseau lent, MAC flapping)
+### Scénario de dépannage (réseau lent, MAC flapping)
 
 L'hypothèse la plus probable est une **boucle de commutation** (câble branché entre deux ports du même réseau, mini-switch non géré ajouté par un utilisateur, STP désactivé ou mal configuré).
 
@@ -8708,9 +8500,9 @@ L'hypothèse la plus probable est une **boucle de commutation** (câble branché
 3. Rétablir : retirer le câble ou le switch fautif ; remettre en service les ports `err-disabled` après correction.
 4. Prévenir : `spanning-tree bpduguard enable` sur les ports d'accès, `storm-control broadcast level` selon le matériel, étiquetage et contrôle des branchements, root bridge choisi explicitement.
 
-### 25.5 Services sous Ubuntu Server (sections 13 à 15)
+## Services sous Ubuntu Server
 
-#### Questions de compréhension
+### Questions de compréhension
 
 1. L'ISC a mis fin au développement d'ISC DHCP ; Kea est son successeur, maintenu, avec une API de gestion, des bases de baux externes, une architecture modulaire et la haute disponibilité.
 2. Les serveurs secondaires et les caches comparent ce numéro pour savoir si la zone a changé ; sans incrément, les modifications ne sont pas répliquées sur les secondaires et peuvent ne pas être rechargées comme prévu.
@@ -8719,11 +8511,11 @@ L'hypothèse la plus probable est une **boucle de commutation** (câble branché
 5. Un serveur récursif ouvert peut être utilisé pour des attaques par amplification DNS (DDoS) et exposer des informations de cache.
 6. SFTP chiffre l'authentification et les données ; FTP expose identifiants et contenus.
 
-#### QCM
+### QCM
 
 Q1 : **b**. Q2 : **c**. Q3 : **b**. Q4 : **a**.
 
-#### Exercice 1
+### Exercice 1
 
 ```json
 {
@@ -8740,7 +8532,7 @@ Q1 : **b**. Q2 : **c**. Q3 : **b**. Q4 : **a**.
 
 (À insérer dans le tableau `subnet4`, avec une virgule entre les éléments. Test : `kea-dhcp4 -t`.) Le routeur doit disposer d'un `ip helper-address` sur la sous-interface du VLAN 50.
 
-#### Exercice 2
+### Exercice 2
 
 Dans `db.entreprise.local` :
 
@@ -8751,7 +8543,7 @@ wiki        IN CNAME srv-web
 
 Le PTR de `192.168.10.30` doit figurer dans une **autre zone inverse** (`10.168.192.in-addr.arpa`) : créer la zone dans `named.conf.local` et le fichier `db.192.168.10` avec `30 IN PTR imprimante1.entreprise.local.`. Dans tous les cas, **incrémenter le numéro de série** puis `named-checkzone` et `systemctl reload named`.
 
-#### Exercice 3
+### Exercice 3
 
 ```text
 # /etc/ssh/sshd_config.d/10-durcissement.conf
@@ -8764,7 +8556,7 @@ AllowGroups ssh-users
 
 Contrôle : `sudo sshd -t`, `sudo systemctl reload ssh`, test dans une **seconde session** avant de fermer la première.
 
-#### Exercice 4
+### Exercice 4
 
 ```bash
 sudo groupadd technique
@@ -8788,7 +8580,7 @@ Dans `smb.conf` :
 
 Puis `testparm` et `sudo systemctl reload smbd`.
 
-#### Exercice 5
+### Exercice 5
 
 ```text
 <VirtualHost *:80>
@@ -8805,11 +8597,11 @@ Puis `testparm` et `sudo systemctl reload smbd`.
 
 Activation : `sudo a2ensite intranet`, `sudo apache2ctl configtest`, `sudo systemctl reload apache2` ; ajouter l'enregistrement DNS correspondant.
 
-#### Exercice 6
+### Exercice 6
 
 Une adresse IPv4 mal écrite dans un enregistrement `A` : octet supérieur à 255, adresse incomplète, adresse suivie d'un caractère parasite, ou un nom saisi à la place d'une adresse. La ligne est indiquée dans le message ; corriger, puis relancer `named-checkzone`.
 
-#### Exercice 7
+### Exercice 7
 
 1. Port 445 joignable : `Test-NetConnection 192.168.30.21 -Port 445`.
 2. Service `smbd` actif : `systemctl status smbd` ; `ss -tlnp | grep 445`.
@@ -8819,11 +8611,11 @@ Une adresse IPv4 mal écrite dans un enregistrement `A` : octet supérieur à 25
 6. ACL du routeur entre le VLAN client et le VLAN serveurs.
 7. Côté Windows : anciennes connexions en conflit (`net use * /delete`), profil réseau.
 
-#### Exercice 8
+### Exercice 8
 
 Port UDP 51820 ouvert (pare-feu serveur, routeur, redirection de port vers `srv-acces`), `Endpoint` du client correct et résolu, clés publiques correctes **des deux côtés** (clé publique du serveur dans le client, clé publique du client dans le `[Peer]` du serveur), `AllowedIPs` du pair serveur cohérents, interface `wg0` active (`ip -br addr show wg0`), horloge système raisonnable, trafic UDP observable avec `sudo tcpdump -i ens18 -nn udp port 51820`.
 
-#### Scénario de dépannage (VLAN 20 sans DHCP)
+### Scénario de dépannage (VLAN 20 sans DHCP)
 
 1. Confirmer côté serveur : `sudo tcpdump -i ens18 -nn 'port 67 or port 68'` pendant qu'un poste du VLAN 20 redemande une adresse. Les `DISCOVER` relayés arrivent-ils avec `giaddr` 192.168.20.1 ?
 2. Si rien n'arrive : problème en amont (relais, VLAN, trunk, ACL) : `show running-config interface Gi0/0.20` (présence d'`ip helper-address`), `show vlan brief`, `show interfaces trunk` (le VLAN 20 est-il autorisé ?), `show access-lists`.
@@ -8831,9 +8623,9 @@ Port UDP 51820 ouvert (pare-feu serveur, routeur, redirection de port vers `srv-
 4. Rétablir, puis vérifier avec un poste de test (`ipconfig /renew`) et surveiller.
 5. Prévention : supervision du taux d'utilisation du pool, sauvegarde versionnée de `kea-dhcp4.conf`, test de syntaxe avant chaque rechargement.
 
-### 25.6 Services sous Windows Server (sections 16 et 17)
+## Services sous Windows Server
 
-#### Questions de compréhension
+### Questions de compréhension
 
 1. Les contrôleurs de domaine s'enregistrent dans le DNS avec des enregistrements SRV ; les postes les y recherchent pour s'authentifier, joindre le domaine et récupérer les GPO. Un DNS public ne connaît pas ces enregistrements.
 2. Une OU est un conteneur d'administration (délégation, GPO) ; un groupe de sécurité sert à **attribuer des permissions** sur des ressources. Un utilisateur ne peut être que dans une OU mais dans plusieurs groupes.
@@ -8842,11 +8634,11 @@ Port UDP 51820 ouvert (pare-feu serveur, routeur, redirection de port vers `srv-
 5. Le droit effectif par le réseau est l'intersection des deux : la permission la plus restrictive s'applique ; un « Refuser » l'emporte.
 6. Locale, Site, Domaine, OU (du parent à l'enfant) ; la dernière appliquée l'emporte, sauf GPO « Enforced » et paramètres hérités.
 
-#### QCM
+### QCM
 
 Q1 : **b**. Q2 : **b**. Q3 : **a**. Q4 : **c**.
 
-#### Exercice 1
+### Exercice 1
 
 ```powershell
 Add-DhcpServerv4Scope -Name "VLAN20-Tech" -StartRange 192.168.20.10 -EndRange 192.168.20.200 `
@@ -8858,7 +8650,7 @@ Set-DhcpServerv4OptionValue -ScopeId 192.168.20.0 -Router 192.168.20.1 `
 
 Vérification : `Get-DhcpServerv4Scope -ScopeId 192.168.20.0`. N'oubliez pas le `ip helper-address` sur la sous-interface du VLAN 20.
 
-#### Exercice 2
+### Exercice 2
 
 ```powershell
 $racine = "DC=entreprise,DC=local"
@@ -8872,7 +8664,7 @@ Add-ADGroupMember -Identity "GG_Technique" -Members "bdurand"
 Add-ADGroupMember -Identity "DL_Technique_Modif" -Members "GG_Technique"
 ```
 
-#### Exercice 3
+### Exercice 3
 
 ```powershell
 New-Item -Path D:\Partages\Technique -ItemType Directory
@@ -8884,7 +8676,7 @@ icacls "D:\Partages\Technique" /grant "BUILTIN\Administrators:(OI)(CI)F" "NT AUT
   "ENTREPRISE\DL_Technique_Modif:(OI)(CI)M"
 ```
 
-#### Exercice 4
+### Exercice 4
 
 ```powershell
 New-GPLink -Name "GPO_Utilisateurs_Lecteurs" -Target "OU=Technique,OU=Utilisateurs,OU=Entreprise,DC=entreprise,DC=local"
@@ -8892,19 +8684,19 @@ New-GPLink -Name "GPO_Utilisateurs_Lecteurs" -Target "OU=Technique,OU=Utilisateu
 
 Remarque : une GPO contenant des **paramètres utilisateur** s'applique aux utilisateurs situés dans l'OU liée, quel que soit l'ordinateur utilisé.
 
-#### Exercice 5
+### Exercice 5
 
 Le poste interroge la box de l'opérateur, qui ne connaît pas le domaine interne. Corriger : configurer le DNS du poste (ou, mieux, de l'étendue DHCP) sur `192.168.30.10` et `192.168.30.11`, vider le cache (`ipconfig /flushdns`), vérifier avec `nslookup entreprise.local` et `nltest /dsgetdc:entreprise.local`, puis relancer la jonction.
 
-#### Exercice 6
+### Exercice 6
 
 Le jeton de sécurité (la liste des groupes de l'utilisateur) est créé à l'**ouverture de session**. L'utilisateur ajouté ce matin doit fermer sa session puis la rouvrir (ou redémarrer le poste ; `klist purge` peut aider pour les tickets Kerberos) pour que le nouveau groupe soit pris en compte.
 
-#### Exercice 7
+### Exercice 7
 
 Dans la console GPMC, onglet « Délégation » de la GPO : le groupe ou les comptes ciblés ont-ils les droits **Lecture** et **Appliquer la stratégie de groupe** ? Si le filtrage de sécurité a remplacé « Utilisateurs authentifiés » par un groupe, vérifier que le **compte ordinateur** (pour les paramètres ordinateur) est bien dans ce groupe, et que « Utilisateurs authentifiés » (ou « Ordinateurs du domaine ») conserve au moins le droit de **Lecture**. Vérifier ensuite l'emplacement de l'objet ordinateur et les filtres WMI.
 
-#### Scénario de dépannage (DHCP après redémarrage)
+### Scénario de dépannage (DHCP après redémarrage)
 
 1. `Get-DhcpServerInDC` : le serveur est-il toujours autorisé ? Une mise à jour ou un redémarrage peut avoir changé le nom ou l'adresse, ou le contrôleur n'a pas pu valider l'autorisation (AD ou DNS indisponible au démarrage).
 2. Journal `Microsoft-Windows-DHCP Server Events/Operational` : événements de non-autorisation (par exemple l'événement 1046) ou d'échec de liaison réseau.
@@ -8914,9 +8706,9 @@ Dans la console GPMC, onglet « Délégation » de la GPO : le groupe ou les com
 6. Corriger (`Add-DhcpServerInDC`, redémarrage du service `DHCPServer`), puis tester avec `ipconfig /renew` sur un poste.
 7. Prévention : DHCP en **failover** sur deux serveurs, supervision de l'état du service, documentation de la procédure post-mise à jour.
 
-### 25.7 Dépannage (sections 18 et 19)
+## Dépannage
 
-#### Questions de compréhension
+### Questions de compréhension
 
 1. Qui est touché, depuis quand, et ce qui a changé. S'y ajoutent un message d'erreur exact et le résultat d'un test objectif.
 2. Pour savoir quelle modification a eu un effet, et pour pouvoir revenir en arrière proprement.
@@ -8925,34 +8717,34 @@ Dans la console GPMC, onglet « Délégation » de la GPO : le groupe ou les com
 5. `refused` : l'hôte est joint mais aucun service n'écoute (ou le service rejette activement). `timed out` : aucun retour, donc paquets filtrés ou hôte injoignable.
 6. Elle réinitialise le catalogue Winsock (fournisseurs de services réseau) : des logiciels de sécurité, VPN ou proxys peuvent cesser de fonctionner, et un redémarrage est exigé.
 
-#### QCM
+### QCM
 
 Q1 : **b**. Q2 : **b**. Q3 : **b**. Q4 : **a**.
 
-#### Exercice 1
+### Exercice 1
 
 La couche 2 et la passerelle fonctionnent. Hypothèses dans l'ordre : (1) route par défaut du routeur ou lien WAN en panne (`show ip route`, `ping` depuis le routeur) ; (2) NAT (`show ip nat translations`) ; (3) ACL sortante du VLAN ; (4) pare-feu de bordure ; (5) opérateur. Si d'autres postes ont le même symptôme, l'incident est central, pas local ; vérifier sur le routeur avec `traceroute 1.1.1.1`.
 
-#### Exercice 2
+### Exercice 2
 
 Le saut 1 (routeur local) répond, le saut 2 ne répond plus ou le chemin s'arrête : routeur opérateur ou lien WAN. Informations prioritaires : état du lien WAN (`show interfaces`), journal du routeur, avis de maintenance de l'opérateur, changement de configuration de la veille (NAT, route, ACL). Appeler l'opérateur avec les résultats de `mtr` et l'heure de début.
 
-#### Exercice 3
+### Exercice 3
 
 Les postes Windows du domaine reçoivent le certificat de l'autorité interne par GPO ; les postes Linux ne l'ont pas. Correction : installer le certificat racine interne dans le magasin des autorités de confiance (`/usr/local/share/ca-certificates/`, puis `sudo update-ca-certificates`), ou fournir `--cacert` à curl. Ne pas utiliser `-k` en production.
 
-#### Exercice 4
+### Exercice 4
 
 Une MAC qui alterne entre deux ports toutes les secondes indique une **boucle de commutation** (MAC flapping) et une tempête de broadcast. Actions : (1) `shutdown` du port Gi0/17 ou Gi0/3 (le plus récent ou celui qui mène à un équipement non géré), (2) repérer l'équipement ou le câble en cause, (3) le retirer, (4) rétablir le port, (5) vérifier STP et le CPU. Prévention : BPDU guard, storm-control.
 
-#### Exercice 5
+### Exercice 5
 
 1. Service SSH arrêté : `systemctl status ssh`, `sudo ss -tlnp | grep ssh`.
 2. Service sur un autre port : `sudo ss -tlnp | grep sshd` ; essayer le port annoncé.
 3. Pare-feu qui rejette (REJECT) au lieu de laisser tomber : `sudo ufw status verbose`, `sudo nft list ruleset`.
 Une quatrième : écoute limitée à une autre adresse (`ListenAddress`), vérifiée avec `sshd -T | grep -i listen`.
 
-#### Scénario de dépannage global (fiche d'incident modèle)
+### Scénario de dépannage global (fiche d'incident modèle)
 
 1. **Description.** Le VLAN 20 n'atteint plus `srv-fic` (partages SMB) ; Internet fonctionne ; VLAN 10 non concerné.
 2. **Symptômes.** « Le chemin d'accès réseau est introuvable » ; `ping 192.168.30.21` ? à tester ; `Test-NetConnection 192.168.30.21 -Port 445`.
@@ -8966,7 +8758,7 @@ Une quatrième : écoute limitée à une autre adresse (`ListenAddress`), vérif
 10. **Vérification.** `Test-NetConnection srv-fic -Port 445` réussit depuis le VLAN 20, ouverture du partage, aucun effet de bord sur les autres VLAN ; compteurs de l'ACL en cohérence.
 11. **Prévention.** Gestion des changements (revue avant modification d'ACL), versionnage des configurations, supervision de l'accès au service SMB depuis chaque VLAN (test automatisé).
 
-### 25.8 Sécurité (section 20)
+## Sécurité
 
 **Questions de compréhension**
 
@@ -9018,7 +8810,7 @@ New-NetFirewallRule -DisplayName "RDP depuis gestion" -Direction Inbound -Protoc
 
 **Scénario.** Contenir : isoler le port du poste (`shutdown`) ou le mettre dans un VLAN de quarantaine ; conserver les preuves (journaux du pare-feu, captures, NetFlow, copie du disque). Analyser : identifier la destination, le processus (`netstat -ano`, EDR), la période, les autres postes touchés. Éradiquer : nettoyer ou réinstaller, changer les mots de passe exposés, corriger la vulnérabilité. Rétablir : restaurer, surveiller. Informer : direction, responsable de la sécurité, et notification si des données personnelles sont concernées. Prévenir : filtrage sortant, EDR, segmentation, sensibilisation.
 
-### 25.9 Outils de diagnostic et de supervision (section 21)
+## Outils de diagnostic et de supervision
 
 **Questions de compréhension**
 
@@ -9074,13 +8866,13 @@ Hostname=srv-web
 
 Ensuite : `sudo systemctl enable --now zabbix-agent2`, ouvrir le port 10050 depuis le serveur, créer l'hôte `srv-web` avec le modèle Linux et la même valeur de `Hostname`.
 
-**Exercice 4.** (1) Configurer SNMPv3 et le NTP sur le switch (section 20.7) et restreindre l'accès SNMP (ACL) à l'IP du serveur LibreNMS. (2) Tester `snmpwalk -v3 ...` depuis le serveur. (3) Dans LibreNMS, **Add Device** avec l'adresse (VLAN de gestion), SNMP v3, niveau `authPriv`, identifiants. (4) Attendre la découverte, vérifier les ports et les voisins LLDP. (5) Créer les règles d'alerte (interface down, erreurs) et un transport de notification.
+**Exercice 4.** (1) Configurer SNMPv3 et le NTP sur le switch (section « Surveillance du trafic et journalisation ») et restreindre l'accès SNMP (ACL) à l'IP du serveur LibreNMS. (2) Tester `snmpwalk -v3 ...` depuis le serveur. (3) Dans LibreNMS, **Add Device** avec l'adresse (VLAN de gestion), SNMP v3, niveau `authPriv`, identifiants. (4) Attendre la découverte, vérifier les ports et les voisins LLDP. (5) Créer les règles d'alerte (interface down, erreurs) et un transport de notification.
 
 **Exercice 5.** Le client envoie des requêtes DHCP sans réponse : serveur DHCP éteint ou hors de portée, VLAN du port incorrect, relais DHCP absent, DHCP snooping bloquant (port de confiance mal défini), filtrage. Vérifier le serveur (`kea-dhcp4`, `Get-DhcpServerv4Scope`), le relais (`ip helper-address`), le VLAN et le trunk, et capturer côté serveur pour voir si le Discover relayé arrive.
 
 **Exercice 6.** Erreur de syntaxe YAML ; port 9100 bloqué par le pare-feu ; `node_exporter` arrêté (`systemctl status prometheus-node-exporter`) ; mauvaise adresse ou mauvais port dans `targets` ; hôte éteint ; politique réseau (ACL) entre le serveur Prometheus et la cible.
 
-### 25.10 Projet final (section 23)
+## Projet final
 
 | N° | Diagnostic | Cause réelle | Résolution et vérification |
 |---|---|---|---|
@@ -9095,9 +8887,9 @@ Ensuite : `sudo systemctl enable --now zabbix-agent2`, ouvrir le port 10050 depu
 | S9 | `systemctl status sauvegarde-fic.service`, `journalctl -u sauvegarde-fic` | Clé SSH vers nas-sauv invalide, disque du NAS plein, dépôt verrouillé (`restic unlock`) | Corriger l'accès ou libérer de l'espace (`restic forget --prune`), relancer, vérifier `restic snapshots`. Prévention : alerte d'espace disque sur le NAS |
 | S10 | `zabbix_get -s 192.168.30.21 -k agent.ping` depuis srv-mon ; `ufw status` | Règle `ufw` pour 10050 absente (réinstallation ou réinitialisation) ou règle `forward` de RB-GW manquante (agents de zones différentes) | Rétablir la règle, vérifier le service `zabbix-agent2` ; documenter les ports de supervision dans la matrice |
 
-### 25.11 Travaux pratiques 1 à 8 (section 22)
+## Travaux pratiques 1 à 8
 
-#### Corrections TP 1
+### Corrections TP 1
 
 **Validation.** Les `ping` réussissent ; `tcpdump` affiche ARP request, ARP reply puis ICMP. Raison de l'ARP : un hôte ne peut construire une trame Ethernet qu'avec la **MAC** de destination ; l'ARP la découvre à partir de l'IP. La configuration `ip addr add` modifie l'état du noyau en mémoire : elle disparaît au redémarrage, d'où la nécessité de Netplan (TP 2).
 
@@ -9107,7 +8899,7 @@ Ensuite : `sudo systemctl enable --now zabbix-agent2`, ouvrir le port 10050 depu
 
 **Panne 1C (interface désactivée).** `ip -br link` montre `DOWN`. Correction : `sudo ip link set enp0s8 up`.
 
-#### Corrections TP 2
+### Corrections TP 2
 
 **Validation.** `ip -br addr` montre l'adresse après redémarrage ; `ping` entre les trois machines réussit ; `ip route` contient `192.168.10.0/24 dev enp0s8 proto kernel scope link`.
 
@@ -9117,7 +8909,7 @@ Ensuite : `sudo systemctl enable --now zabbix-agent2`, ouvrir le port 10050 depu
 
 **Panne 2C (droits 644).** Netplan avertit que les fichiers doivent être lisibles par root uniquement : `sudo chmod 600 /etc/netplan/60-lab.yaml`.
 
-#### Corrections TP 3
+### Corrections TP 3
 
 **Validation.** Séquence DORA visible, baux dans `/var/lib/kea/kea-leases4.csv`, client avec `192.168.10.100-150`, gateway `.1`, DNS `.10`. Après réservation : `192.168.10.30`.
 
@@ -9129,7 +8921,7 @@ Ensuite : `sudo systemctl enable --now zabbix-agent2`, ouvrir le port 10050 depu
 
 **Panne 3D (plage de 2 adresses).** Le troisième client n'obtient pas d'adresse (pool épuisé) ; les journaux Kea signalent l'épuisement (`DHCP4_...` avec message de pool vide). Correction : agrandir la plage, réduire la durée du bail.
 
-#### Corrections TP 4
+### Corrections TP 4
 
 **Validation.** `dig` retourne `192.168.10.10` pour `srv-lab.entreprise.local`, la cible CNAME `srv-lab` pour `www`, le PTR pour `-x 192.168.10.101`, et une adresse pour `exemple.fr` via les redirecteurs.
 
@@ -9141,7 +8933,7 @@ Ensuite : `sudo systemctl enable --now zabbix-agent2`, ouvrir le port 10050 depu
 
 **Panne 4D (timeout depuis un client).** Pare-feu (UDP et TCP 53), `listen-on` qui exclut l'adresse du serveur, service arrêté, mauvaise adresse DNS configurée côté client. Contrôles : `sudo ss -ulpn | grep :53`, `sudo ufw status`, `dig @192.168.10.10 ...` depuis le serveur lui-même.
 
-#### Corrections TP 5
+### Corrections TP 5
 
 **Validation.** Connexion par clé réussie ; `PasswordAuthentication no` refuse les mots de passe ; un utilisateur hors `ssh-users` est refusé ; fail2ban affiche l'adresse bannie.
 
@@ -9151,7 +8943,7 @@ Ensuite : `sudo systemctl enable --now zabbix-agent2`, ouvrir le port 10050 depu
 
 **Panne 5C (`Connection refused`).** Service arrêté (`systemctl status ssh`), port différent (`sudo ss -tlnp | grep ssh`), ou service qui n'a pas redémarré après une erreur de configuration (`sudo sshd -t`).
 
-#### Corrections TP 6
+### Corrections TP 6
 
 **Validation.** `smbclient -L` liste `Compta` et `Commun` ; `alice` écrit dans `Compta` ; `bob` reçoit `NT_STATUS_ACCESS_DENIED` sur `Compta` mais écrit dans `Commun` ; les fichiers créés ont le groupe `compta`.
 
@@ -9163,7 +8955,7 @@ Ensuite : `sudo systemctl enable --now zabbix-agent2`, ouvrir le port 10050 depu
 
 **Panne 6D (chemin introuvable sous Windows).** Test `Test-NetConnection 192.168.10.10 -Port 445` ; vérifier `smbd` (`systemctl status smbd`), le pare-feu (`sudo ufw allow from 192.168.10.0/24 to any port 445 proto tcp`), `interfaces` et `bind interfaces only` dans `smb.conf`, ou un adaptateur Windows au profil réseau « Public » avec règles trop restrictives.
 
-#### Corrections TP 7
+### Corrections TP 7
 
 **Validation.** `nc -zv` : 22 et 80 réussis ; 443 en délai dépassé ; `nmap` : 22/tcp open, 80/tcp open, 443/tcp filtered ; journaux : blocs `[UFW BLOCK]` pour 443.
 
@@ -9173,7 +8965,7 @@ Ensuite : `sudo systemctl enable --now zabbix-agent2`, ouvrir le port 10050 depu
 
 **Panne 7C (règle trop large).** `ufw allow 22` ouvre SSH à toutes les sources. Supprimer (`sudo ufw delete allow 22`) et recréer avec la source limitée.
 
-#### Corrections TP 8
+### Corrections TP 8
 
 **Validation.** `show vlan brief` : VLAN 10 avec Fa0/1-2, VLAN 20 avec Fa0/3-4 ; `show interfaces trunk` : Gi0/1 en `trunking`, VLAN 10,20 autorisés ; `show ip interface brief` : `Gi0/0` up/up (les sous-interfaces up) ; ping inter-VLAN réussi.
 
@@ -9185,9 +8977,9 @@ Ensuite : `sudo systemctl enable --now zabbix-agent2`, ouvrir le port 10050 depu
 
 **Panne 8D (VLAN natif différent).** Message CDP `native VLAN mismatch` et risque de fuite de trames entre VLAN. Correction : `switchport trunk native vlan 99` des deux côtés (côté routeur : `encapsulation dot1Q 99 native`), et utiliser un VLAN natif inutilisé pour les utilisateurs.
 
-### 25.12 Travaux pratiques 9 à 16 et atelier de pannes (section 22)
+## Travaux pratiques 9 à 16 et atelier de pannes
 
-#### Corrections TP 9
+### Corrections TP 9
 
 **Validation.** `show ip nat translations` contient des entrées `10.0.0.1:port` pour `192.168.10.10:port` ; `show ip route` sur R1 : `S* 0.0.0.0/0 via 10.0.0.2` ; SSH réussi depuis PC-A et refusé depuis PC-A2.
 
@@ -9199,7 +8991,7 @@ Ensuite : `sudo systemctl enable --now zabbix-agent2`, ouvrir le port 10050 depu
 
 **Panne 9D (routeurs sans liaison).** Incohérence de masque (`/30` d'un côté, `/24` de l'autre), adresses dans des sous-réseaux différents, interface `administratively down` (`no shutdown` oublié), câble sur la mauvaise interface. `show ip interface brief` des deux côtés révèle la cause.
 
-#### Corrections TP 10
+### Corrections TP 10
 
 **Validation.** Le client a une adresse de `192.168.10.100-150`, passerelle `.1`, DNS `.1` ; `/ip firewall nat print stats` montre des paquets pour le masquerade ; l'export `apres-tp10` contient la configuration.
 
@@ -9211,7 +9003,7 @@ Ensuite : `sudo systemctl enable --now zabbix-agent2`, ouvrir le port 10050 depu
 
 **Panne 10D (pas de résolution de noms).** `allow-remote-requests=no`, ou règle `input` qui bloque UDP et TCP 53 depuis le LAN, ou option `dns-server` du `dhcp-server network` erronée. Test : `dig @192.168.10.1 exemple.fr`, `/ip dns print`, `/ip dns cache print`.
 
-#### Corrections TP 11
+### Corrections TP 11
 
 **Réponses de la fiche d'analyse (valeurs de principe ; les vôtres diffèrent).**
 
@@ -9230,7 +9022,7 @@ Ensuite : `sudo systemctl enable --now zabbix-agent2`, ouvrir le port 10050 depu
 
 **Panne 11C.** Filtre `dns.flags.rcode != 0` : `NXDOMAIN` (nom inexistant), `SERVFAIL` (serveur incapable de répondre), `REFUSED` (ACL).
 
-#### Corrections TP 12
+### Corrections TP 12
 
 **Valeurs de référence typiques sur un réseau interne VirtualBox :** RTT inférieur à 1 ms, aucune perte, débit `iperf3` de plusieurs Gbit/s (selon la machine), DNS local en quelques ms.
 
@@ -9243,7 +9035,7 @@ Ensuite : `sudo systemctl enable --now zabbix-agent2`, ouvrir le port 10050 depu
 
 Une même lenteur ressentie par l'utilisateur peut venir de causes très différentes : seules les mesures permettent de trancher. **Modèle de rapport :** symptôme, mesures de référence, mesures en panne, hypothèse, test discriminant, cause, correction, vérification, prévention (supervision de latence, de perte et de débit).
 
-#### Corrections TP 13
+### Corrections TP 13
 
 **Validation.** Après correction : `arping` ne reçoit qu'une MAC, plus de perte de ping, plage DHCP distincte des adresses statiques, plan d'adressage mis à jour.
 
@@ -9253,7 +9045,7 @@ Une même lenteur ressentie par l'utilisateur peut venir de causes très différ
 
 **Panne 13B (doublon statique sans DHCP).** Aucune protection automatique : détection par `arping`, `ip neigh`, Wireshark (filtre `arp.duplicate-address-detected`), journaux de Windows ; correction manuelle et gestion centralisée de l'adressage (tableau IPAM, documentation).
 
-#### Corrections TP 14
+### Corrections TP 14
 
 | N° | Signature du diagnostic | Cause | Correction |
 |---|---|---|---|
@@ -9266,7 +9058,7 @@ Une même lenteur ressentie par l'utilisateur peut venir de causes très différ
 
 **Méthode gagnante :** comparer `dig @serveur` (le serveur répond-il bien ?) et `getent hosts` (ce que voient les applications) ; tester un nom interne et un nom externe ; consulter `journalctl -u named`. La différence entre noms internes et externes sépare la zone locale des redirecteurs.
 
-#### Corrections TP 15
+### Corrections TP 15
 
 **Validation.** `wg show` : « latest handshake » récent, compteurs de transfert non nuls ; le client joint `10.8.0.1` et `192.168.10.101` ; `tcpdump` sur `enp0s9` montre des paquets UDP 51820 opaques ; sur `wg0`, des ICMP en clair.
 
@@ -9278,7 +9070,7 @@ Une même lenteur ressentie par l'utilisateur peut venir de causes très différ
 
 **Panne 15D (gros paquets bloqués).** Problème de MTU : la MTU de `wg0` (1420 par défaut) n'est pas adaptée au chemin ; réduire (`MTU = 1380` dans l'interface) ou vérifier le filtrage d'ICMP. Test : `ping -M do -s 1372 10.8.0.1` ; diminuer jusqu'à passer.
 
-#### Corrections TP 16
+### Corrections TP 16
 
 **Validation.** L'icône ZBX de l'hôte passe au vert ; *Dernières données* affiche CPU, mémoire, trafic ; l'arrêt d'Apache produit un problème « Élevé », sa remise en route résout le problème.
 
@@ -9288,7 +9080,7 @@ Une même lenteur ressentie par l'utilisateur peut venir de causes très différ
 
 **Panne 16C (déclencheur muet).** Mauvaise syntaxe d'expression ou nom d'hôte erroné dans l'expression, item en état « non supporté », intervalle de l'item trop long, service HTTP lancé sur un autre port que celui testé. Vérifier l'item (*Dernières données*), tester l'expression dans l'éditeur de déclencheur.
 
-#### Corrections de l'atelier de pannes
+### Corrections de l'atelier de pannes
 
 | N° | Diagnostic | Correction |
 |---|---|---|
@@ -9301,7 +9093,7 @@ Une même lenteur ressentie par l'utilisateur peut venir de causes très différ
 | 7 | `dig` : `NXDOMAIN` pour `srv-lab` ; zone modifiée | Rétablir l'enregistrement, incrémenter le numéro de série, recharger |
 | 8 | `timedatectl` : date aberrante ; erreurs de certificat et de validation DNSSEC | `sudo timedatectl set-ntp true`, vérifier la synchronisation |
 
-### Pièges fréquents
+## Pièges fréquents
 
 | Piège | Conséquence | Remède |
 | --- | --- | --- |
@@ -9309,23 +9101,17 @@ Une même lenteur ressentie par l'utilisateur peut venir de causes très différ
 | Appliquer une correction sans adapter les noms et les adresses | Configurations incohérentes | Remplacer les valeurs d'exemple par les vôtres |
 | Passer sous silence l'étape de vérification | Panne non réellement résolue | Refaire le test qui avait échoué |
 
-### À retenir
-
-- Les corrections détaillent **diagnostic, cause, résolution et prévention**.
-- Les sorties de terminal sont représentatives : vos valeurs peuvent différer.
-- Rédigez vos propres fiches d'incident à partir des modèles proposés.
-
 ---
 
-## 26. Aide-mémoire : index des commandes et dépannage rapide
+# Aide-mémoire : index des commandes et dépannage rapide
 
-### Objectifs d'apprentissage
+## Objectifs d'apprentissage
 
 Retrouver rapidement une commande Windows ou Linux et la section qui l'explique ; repérer les commandes obsolètes et leurs alternatives ; suivre un tableau de dépannage rapide du symptôme à la cause probable.
 
-### 26.1 Index des commandes Windows
+## Index des commandes Windows
 
-Les sections renvoient aux chapitres du guide (section 6, sauf mention).
+Sauf mention contraire, les renvois pointent vers la section « Commandes réseau sous Windows ».
 
 | Commande | Rôle | Section |
 |---|---|---|
@@ -9373,13 +9159,13 @@ Les sections renvoient aux chapitres du guide (section 6, sauf mention).
 | `New-GPO`, `New-GPLink`, `Backup-GPO` | Stratégies de groupe | 17.1 |
 | `New-SmbShare`, `icacls` | Partages et permissions NTFS | 17.2 |
 
-### 26.2 Index des commandes Linux
+## Index des commandes Linux
 
-Les sections renvoient aux chapitres du guide (section 7, sauf mention). **Obsolète** : à éviter, alternative indiquée.
+Sauf mention contraire, les renvois pointent vers la section « Commandes réseau sous Linux ». **Obsolète** : à éviter, alternative indiquée.
 
 | Commande | Rôle | Section |
 |---|---|---|
-| `arping` | Détection de doublons d'adresse (ARP) | section 19, fiche 4 |
+| `arping` | Détection de doublons d'adresse (ARP) | section « Les problèmes réseau rencontrés en entreprise », fiche 4 |
 | `arp` (obsolète) | Cache ARP ; utiliser `ip neigh` | 7.2 |
 | `chronyc` | État de la synchronisation d'horloge | 20.8, 23.6 |
 | `curl` | Requêtes HTTP(S) | 7.2 |
@@ -9394,7 +9180,7 @@ Les sections renvoient aux chapitres du guide (section 7, sauf mention). **Obsol
 | `ifconfig` (obsolète) | Interfaces ; utiliser `ip addr` | 7.1 |
 | `ifup` / `ifdown` | Interfaces (Debian, ifupdown) | 7.3 |
 | `ip addr`, `ip link`, `ip route`, `ip neigh` | Adresses, interfaces, routes, voisins | 7.2, 7.3 |
-| `iperf3` | Mesure de débit | section 19, fiche 3 |
+| `iperf3` | Mesure de débit | section « Les problèmes réseau rencontrés en entreprise », fiche 3 |
 | `iptables` | Pare-feu historique | 7.3 |
 | `journalctl` | Journaux systemd | 7.4 |
 | `lsof` | Fichiers ouverts, sockets | 7.2 |
@@ -9406,7 +9192,7 @@ Les sections renvoient aux chapitres du guide (section 7, sauf mention). **Obsol
 | `nmap` | Scan de ports et d'hôtes | 7.2 |
 | `nmcli`, `nmtui` | NetworkManager | 7.3 |
 | `nslookup` | Requêtes DNS (historique) | 7.2 |
-| `openssl s_client` | Test TLS et certificats | section 19, fiche 12 |
+| `openssl s_client` | Test TLS et certificats | section « Les problèmes réseau rencontrés en entreprise », fiche 12 |
 | `ping` | Test ICMP | 7.2 |
 | `resolvectl` | systemd-resolved | 7.2 |
 | `route` (obsolète) | Routes ; utiliser `ip route` | 7.1 |
@@ -9425,7 +9211,7 @@ Les sections renvoient aux chapitres du guide (section 7, sauf mention). **Obsol
 | `wget` | Téléchargement HTTP(S) | 7.2 |
 | `zabbix_get` | Test d'item Zabbix | TP 16 |
 
-### 26.3 Tableau de dépannage rapide
+## Tableau de dépannage rapide
 
 Appliquez toujours : **une hypothèse, un test, un changement**, avec un retour arrière préparé.
 
@@ -9455,47 +9241,41 @@ Appliquez toujours : **une hypothèse, un test, un changement**, avec un retour 
 | Trafic sortant suspect | Processus, destination | `netstat -ano`, `ss -tn`, supervision de flux | Poste compromis ; isoler et analyser |
 | ARP : deux MAC pour la passerelle | Cache ARP, port | `arp -a`, `ip neigh`, `show mac address-table` | ARP spoofing ; isoler le port, DAI |
 
-### Pièges fréquents
+## Pièges fréquents
 
 | Piège | Conséquence | Remède |
 | --- | --- | --- |
 | Se fier à l'aide-mémoire sans lire la section | Options ou risques ignorés | Suivre le renvoi vers la section de référence |
 | Supposer que toutes les distributions se ressemblent | Paquets, services et chemins différents | Vérifier la distribution (Ubuntu, Debian, Red Hat) |
-| Exécuter une commande de réparation sans retour arrière | Aggravation de la panne | Appliquer la méthode de la section 18 |
-
-### À retenir
-
-- Un index sert à **retrouver**, pas à **apprendre** : les explications sont dans les sections.
-- Les commandes marquées **obsolète** ont une alternative moderne indiquée.
-- Le tableau de dépannage rapide suit toujours : **une hypothèse, un test, un changement**.
+| Exécuter une commande de réparation sans retour arrière | Aggravation de la panne | Appliquer la méthode de la section « Méthodologie professionnelle de dépannage » |
 
 ---
 
-## 27. Bonnes pratiques, ressources et glossaire
+# Bonnes pratiques, ressources et glossaire
 
-### Objectifs d'apprentissage
+## Objectifs d'apprentissage
 
 Situer les évolutions de pratique (outils obsolètes et alternatives modernes) ; synthétiser les bonnes pratiques et les erreurs classiques ; retrouver les références officielles ; suivre un parcours d'apprentissage ; réviser le vocabulaire avec le glossaire.
 
-### 27.1 Évolutions et pratiques modernes *(à jour)*
+## Évolutions et pratiques modernes *(à jour)*
 
 | Ancienne pratique | Pratique actuelle | Où la retrouver |
 | --- | --- | --- |
-| `ifconfig`, `route`, `netstat`, `arp` | `ip addr`, `ip route`, `ss`, `ip neigh` | Section 7.1 |
-| `nslookup` | `dig`, `resolvectl query` | Section 7.2 |
-| `iptables` seul | `nft` (nftables), ou `ufw` / `firewalld` en surcouche | Section 7.3 |
-| `/etc/network/interfaces` sous Ubuntu | **Netplan** (avec systemd-networkd ou NetworkManager) | Section 7.3 |
-| ISC DHCP (`isc-dhcp-server`, en fin de vie) | **Kea DHCP** | Section 13.2 |
-| Telnet, FTP | SSH, SFTP ou FTPS | Sections 14.1, 15.4 |
-| SNMP v1 / v2c | **SNMPv3** (`authPriv`) | Section 20.7 |
-| WEP, WPA/TKIP | WPA2, WPA3 (SAE), 802.1X en entreprise | Section 11.4 |
-| SMB1 | SMB 2 et supérieur, signature et chiffrement SMB | Section 17.2 |
-| Rotation forcée des mots de passe | Phrases de passe longues, MFA, listes de mots de passe compromis (NIST SP 800-63B) | Section 20.5 |
-| Mot de passe administrateur local identique partout | **LAPS** | Section 16.2 |
-| Domaine interne en `.local` | Sous-domaine d'un domaine possédé (`ad.exemple.fr`), `.example` en documentation | Sections 13.1, 16.1 |
-| Sauvegarde sans test | Règle **3-2-1** et restauration testée | Sections 20.9, 14.4 |
+| `ifconfig`, `route`, `netstat`, `arp` | `ip addr`, `ip route`, `ss`, `ip neigh` | Section « Commandes réseau sous Linux — Principes généraux » |
+| `nslookup` | `dig`, `resolvectl query` | Section « Diagnostic réseau » |
+| `iptables` seul | `nft` (nftables), ou `ufw` / `firewalld` en surcouche | Section « Configuration réseau » |
+| `/etc/network/interfaces` sous Ubuntu | **Netplan** (avec systemd-networkd ou NetworkManager) | Section « Configuration réseau » |
+| ISC DHCP (`isc-dhcp-server`, en fin de vie) | **Kea DHCP** | Section « Serveur DHCP » |
+| Telnet, FTP | SSH, SFTP ou FTPS | Sections « Serveur SSH (OpenSSH) », « Serveur FTP et SFTP » |
+| SNMP v1 / v2c | **SNMPv3** (`authPriv`) | Section « Surveillance du trafic et journalisation » |
+| WEP, WPA/TKIP | WPA2, WPA3 (SAE), 802.1X en entreprise | Section « Wi-Fi et sécurité » |
+| SMB1 | SMB 2 et supérieur, signature et chiffrement SMB | Section « Serveur de fichiers, partages et permissions » |
+| Rotation forcée des mots de passe | Phrases de passe longues, MFA, listes de mots de passe compromis (NIST SP 800-63B) | Section « Contrôle d'accès et authentification » |
+| Mot de passe administrateur local identique partout | **LAPS** | Section « Active Directory et contrôleur de domaine » |
+| Domaine interne en `.local` | Sous-domaine d'un domaine possédé (`ad.exemple.fr`), `.example` en documentation | Sections « Contexte et architecture de référence » (Ubuntu Server et Windows Server) |
+| Sauvegarde sans test | Règle **3-2-1** et restauration testée | Sections « Sauvegardes de configuration et de données », « Serveur de fichiers : conception et exploitation » |
 
-### 27.2 Bonnes pratiques générales
+## Bonnes pratiques générales
 
 | Domaine | Pratique |
 | --- | --- |
@@ -9508,7 +9288,7 @@ Situer les évolutions de pratique (outils obsolètes et alternatives modernes) 
 | **Dépannage** | Méthode, un changement à la fois, retour arrière préparé, fiche d'incident |
 | **Exploitation** | Procédures d'arrivée et de départ, gestion des changements, fenêtres de maintenance |
 
-### 27.3 Les erreurs classiques
+## Les erreurs classiques
 
 - Activer un pare-feu ou durcir SSH **sans avoir testé** l'accès de secours · modifier un trunk sans `add`.
 - Mots de passe par défaut, communauté SNMP « public », comptes partagés · administrateur local identique partout.
@@ -9519,11 +9299,11 @@ Situer les évolutions de pratique (outils obsolètes et alternatives modernes) 
 - Conclure d'un `ping` sans réponse que l'hôte est éteint · redémarrer avant de collecter les journaux.
 - Boucle de commutation non prévenue (pas de BPDU guard) · `portfast` sur un lien entre switchs.
 
-### 27.4 Ressources et références
+## Ressources et références
 
-#### Références générales
+### Références générales
 
-##### Systèmes et services
+#### Systèmes et services
 - Ubuntu Server : https://documentation.ubuntu.com/server/
 - Debian : https://www.debian.org/doc/
 - Red Hat Enterprise Linux : https://docs.redhat.com/
@@ -9537,18 +9317,18 @@ Situer les évolutions de pratique (outils obsolètes et alternatives modernes) 
 - WireGuard : https://www.wireguard.com/ ; Squid : http://www.squid-cache.org/Doc/
 - restic : https://restic.readthedocs.io/
 
-##### Équipements
+#### Équipements
 - Cisco (IOS, IOS XE, Packet Tracer) : https://www.cisco.com/c/en/us/support/index.html et https://www.netacad.com/
 - MikroTik RouterOS : https://help.mikrotik.com/docs/
 
-##### Outils
+#### Outils
 - Wireshark : https://www.wireshark.org/docs/ ; Nmap : https://nmap.org/book/man.html
 - GNS3 : https://docs.gns3.com/
 - Zabbix : https://www.zabbix.com/documentation/current/ ; LibreNMS : https://docs.librenms.org/
 - Prometheus : https://prometheus.io/docs/ ; Grafana : https://grafana.com/docs/ ; Netdata : https://learn.netdata.cloud/
 - Nagios : https://www.nagios.org/documentation/
 
-##### Normes et recommandations
+#### Normes et recommandations
 - RFC 791 (IPv4), RFC 8200 (IPv6), RFC 9293 (TCP), RFC 826 (ARP), RFC 1918 (adresses privées), RFC 2131 (DHCP), RFC 1035 (DNS), RFC 4632 (CIDR), RFC 2328 (OSPFv2), RFC 3022 (NAT), RFC 6762 (mDNS), RFC 8375 (`home.arpa`), RFC 2606 (noms réservés) : https://www.rfc-editor.org/
 - IEEE 802.1Q, 802.1AX, 802.1X : https://standards.ieee.org/
 - ANSSI, guide d'hygiène informatique : https://cyber.gouv.fr/publications/guide-dhygiene-informatique
@@ -9556,9 +9336,9 @@ Situer les évolutions de pratique (outils obsolètes et alternatives modernes) 
 - NIST SP 800-63B : https://pages.nist.gov/800-63-3/sp800-63b.html
 - CNIL (violations de données personnelles) : https://www.cnil.fr/fr/les-violations-de-donnees-personnelles
 
-#### Références par section
+### Références par section
 
-**Section 6 : commandes Windows**
+**Commandes Windows**
 
 - [Microsoft Learn : référence des commandes Windows](https://learn.microsoft.com/windows-server/administration/windows-commands/windows-commands)
 - [Microsoft Learn : module NetTCPIP](https://learn.microsoft.com/powershell/module/nettcpip/)
@@ -9567,7 +9347,7 @@ Situer les évolutions de pratique (outils obsolètes et alternatives modernes) 
 - [Microsoft Learn : module NetSecurity (pare-feu)](https://learn.microsoft.com/powershell/module/netsecurity/)
 - [Microsoft Learn : pktmon](https://learn.microsoft.com/windows-server/administration/windows-commands/pktmon)
 
-**Section 7 : commandes Linux**
+**Commandes Linux**
 
 - [Ubuntu Server : configuration réseau](https://documentation.ubuntu.com/server/explanation/networking/about-networking/)
 - [Netplan : documentation](https://netplan.readthedocs.io/)
@@ -9577,7 +9357,7 @@ Situer les évolutions de pratique (outils obsolètes et alternatives modernes) 
 - [Documentation de nftables](https://wiki.nftables.org/)
 - [Documentation de nmap](https://nmap.org/book/man.html)
 
-**Sections 8 à 12 : équipements**
+**Équipements**
 
 - [Cisco : documentation de configuration IOS et IOS XE](https://www.cisco.com/c/en/us/support/index.html)
 - [MikroTik : documentation RouterOS](https://help.mikrotik.com/docs/)
@@ -9587,7 +9367,7 @@ Situer les évolutions de pratique (outils obsolètes et alternatives modernes) 
 - [RFC 3022 : NAT traditionnel](https://www.rfc-editor.org/rfc/rfc3022)
 - [Wi-Fi Alliance : sécurité WPA3](https://www.wi-fi.org/discover-wi-fi/security)
 
-**Sections 13 à 15 : services sous Ubuntu Server**
+**Services sous Ubuntu Server**
 
 - [Documentation Ubuntu Server](https://documentation.ubuntu.com/server/)
 - [Kea DHCP : manuel administrateur](https://kea.readthedocs.io/)
@@ -9600,7 +9380,7 @@ Situer les évolutions de pratique (outils obsolètes et alternatives modernes) 
 - [Squid : documentation](http://www.squid-cache.org/Doc/)
 - [RFC 6762 (mDNS, domaine .local)](https://www.rfc-editor.org/rfc/rfc6762), [RFC 8375 (home.arpa)](https://www.rfc-editor.org/rfc/rfc8375)
 
-**Sections 16 et 17 : services sous Windows Server**
+**Services sous Windows Server**
 
 - [Microsoft Learn : Active Directory Domain Services](https://learn.microsoft.com/windows-server/identity/ad-ds/get-started/virtual-dc/active-directory-domain-services-overview)
 - [Microsoft Learn : module ActiveDirectory (PowerShell)](https://learn.microsoft.com/powershell/module/activedirectory/)
@@ -9611,7 +9391,7 @@ Situer les évolutions de pratique (outils obsolètes et alternatives modernes) 
 - [Microsoft Learn : bonnes pratiques de sécurité d'Active Directory](https://learn.microsoft.com/windows-server/identity/ad-ds/plan/security-best-practices/best-practices-for-securing-active-directory)
 - [Microsoft Learn : Windows LAPS](https://learn.microsoft.com/windows-server/identity/laps/laps-overview)
 
-**Sections 18 et 19 : dépannage**
+**Dépannage**
 
 - [Microsoft Learn : dépannage de la connectivité réseau Windows](https://learn.microsoft.com/windows-server/networking/technologies/network-subsystem/net-sub-performance-top)
 - [Ubuntu Server : dépannage réseau](https://documentation.ubuntu.com/server/explanation/networking/about-networking/)
@@ -9621,7 +9401,7 @@ Situer les évolutions de pratique (outils obsolètes et alternatives modernes) 
 - [OpenSSL : `s_client`](https://docs.openssl.org/master/man1/openssl-s_client/)
 - [Let's Encrypt : documentation](https://letsencrypt.org/docs/)
 
-**Section 20 : sécurité**
+**Sécurité**
 
 - [ANSSI : guide d'hygiène informatique](https://cyber.gouv.fr/publications/guide-dhygiene-informatique)
 - [CIS Benchmarks](https://www.cisecurity.org/cis-benchmarks)
@@ -9630,7 +9410,7 @@ Situer les évolutions de pratique (outils obsolètes et alternatives modernes) 
 - [Microsoft Learn : sécurité de Windows](https://learn.microsoft.com/windows/security/)
 - [CNIL : violations de données personnelles](https://www.cnil.fr/fr/les-violations-de-donnees-personnelles)
 
-**Section 21 : outils**
+**Outils**
 
 - [Wireshark : documentation](https://www.wireshark.org/docs/)
 - [Nmap : manuel de référence](https://nmap.org/book/man.html)
@@ -9643,7 +9423,7 @@ Situer les évolutions de pratique (outils obsolètes et alternatives modernes) 
 - [Grafana : documentation](https://grafana.com/docs/grafana/latest/)
 - [Netdata : documentation](https://learn.netdata.cloud/)
 
-**Section 22 : TP 1 à 8**
+**Travaux pratiques : TP 1 à 8**
 
 - [Ubuntu Server : Netplan](https://netplan.readthedocs.io/)
 - [Kea DHCP : manuel](https://kea.readthedocs.io/)
@@ -9654,7 +9434,7 @@ Situer les évolutions de pratique (outils obsolètes et alternatives modernes) 
 - [Cisco Networking Academy : Packet Tracer](https://www.netacad.com/cisco-packet-tracer)
 - [VirtualBox : réseaux internes](https://www.virtualbox.org/manual/ch06.html)
 
-**Section 22 : TP 9 à 16**
+**Travaux pratiques : TP 9 à 16**
 
 - [Cisco : documentation IOS et IOS XE](https://www.cisco.com/c/en/us/support/index.html)
 - [MikroTik : documentation RouterOS et CHR](https://help.mikrotik.com/docs/)
@@ -9664,7 +9444,7 @@ Situer les évolutions de pratique (outils obsolètes et alternatives modernes) 
 - [WireGuard : documentation](https://www.wireguard.com/)
 - [Zabbix : documentation et assistant d'installation](https://www.zabbix.com/documentation/current/)
 
-**Section 23 : projet final**
+**Projet final**
 
 - [ANSSI : guide d'hygiène informatique](https://cyber.gouv.fr/publications/guide-dhygiene-informatique)
 - [MikroTik : documentation RouterOS (firewall, WireGuard, VLAN)](https://help.mikrotik.com/docs/)
@@ -9677,7 +9457,7 @@ Situer les évolutions de pratique (outils obsolètes et alternatives modernes) 
 - [RFC 2606 : noms de domaine réservés (`.example`)](https://www.rfc-editor.org/rfc/rfc2606)
 - [RFC 1918 : adresses privées](https://www.rfc-editor.org/rfc/rfc1918)
 
-### 27.5 Parcours d'apprentissage suggéré
+## Parcours d'apprentissage suggéré
 
 | Étape | Sections | Objectif |
 | --- | --- | --- |
@@ -9688,9 +9468,9 @@ Situer les évolutions de pratique (outils obsolètes et alternatives modernes) 
 | **5. Dépannage, sécurité, supervision** | 18 à 21 | Méthode, pannes courantes, sécurisation, outils |
 | **6. Pratique** | 22 à 25 | Laboratoires, projet final, exercices et corrections |
 
-**Projet de synthèse proposé.** Reproduisez en laboratoire le réseau d'Atlas Conseil (section 23) : deux switchs, un routeur MikroTik, quatre VLAN au minimum, DHCP et DNS sur un serveur Ubuntu, serveur de fichiers Samba avec droits par groupe, site web en DMZ, VPN WireGuard, sauvegardes restic testées, supervision Zabbix ; passez les 26 tests de recette, résolvez les 10 scénarios de panne et rédigez la documentation technique finale. C'est l'ensemble du cours mis en pratique.
+**Projet de synthèse proposé.** Reproduisez en laboratoire le réseau d'Atlas Conseil (section « Projet final : infrastructure réseau d'une entreprise de 40 collaborateurs ») : deux switchs, un routeur MikroTik, quatre VLAN au minimum, DHCP et DNS sur un serveur Ubuntu, serveur de fichiers Samba avec droits par groupe, site web en DMZ, VPN WireGuard, sauvegardes restic testées, supervision Zabbix ; passez les 26 tests de recette, résolvez les 10 scénarios de panne et rédigez la documentation technique finale. C'est l'ensemble du cours mis en pratique.
 
-### Glossaire récapitulatif
+## Glossaire récapitulatif
 
 | Terme | Définition |
 |---|---|
@@ -9771,12 +9551,6 @@ Situer les évolutions de pratique (outils obsolètes et alternatives modernes) 
 | **WireGuard** | VPN moderne, simple et rapide (UDP, port 51820 par défaut). |
 | **WPA2 / WPA3** | Protocoles de sécurité Wi-Fi ; WPA3 apporte SAE et de meilleures protections. |
 | **Zone DNS** | Portion de l'espace de noms gérée par un serveur DNS (directe ou inverse). |
-
-### À retenir
-
-- Préférez les outils **modernes** (`ip`, `ss`, `nft`, Netplan, Kea, WireGuard, SNMPv3, WPA3) et sachez reconnaître les anciens.
-- Les bonnes pratiques se résument en : **plan d'adressage et documentation, segmentation, sécurité par défaut, sauvegardes testées, supervision, méthode de dépannage**.
-- La documentation officielle de **votre version** reste la référence finale.
 
 ---
 

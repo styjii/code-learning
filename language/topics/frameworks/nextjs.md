@@ -1,33 +1,35 @@
+<div align="center">
+
 # Next.js — Cours complet
 
 *Cours magistral et module d'apprentissage exhaustif, fondé sur le plan « Cours complet Next.js — Du débutant à l'expert » — Next.js 16.4 (octobre 2026), React 19.3*
 
-## Avant de commencer : comment utiliser ce cours
+</div>
 
-Ce cours développe, chapitre par chapitre, l'intégralité du plan en **25 chapitres**, regroupés en cinq parties : **Fondamentaux** (1 à 6), **Rendu, cache et mutations** (7 à 12), **Interface et optimisation** (13 à 15), **Applications de production** (16 à 20) et **Qualité et exploitation** (21 à 25).
+# Avant de commencer : comment utiliser ce cours
 
-Chaque chapitre suit la même trame : *objectifs d'apprentissage → notions et définitions → exemples de code commentés → pièges fréquents → glossaire → synthèse*. Le cours ne contient **aucun exercice** : il se concentre sur l'explication des concepts.
+Ce cours couvre l'intégralité de Next.js, du débutant à l'expert, en sections détaillées : les **fondamentaux** (installation, structure, routing, fichiers spéciaux, Server et Client Components, données), le **rendu, le cache et les mutations**, l'**interface et l'optimisation**, les **applications de production** (authentification, i18n, configuration, variables d'environnement, TypeScript) et la **qualité et l'exploitation** (tests, déploiement, Pages Router, bonnes pratiques).
+
+Chaque section suit la même trame : *objectifs d'apprentissage → notions et définitions → exemples de code commentés → pièges fréquents → glossaire → synthèse*. Le cours ne contient **aucun exercice** : il se concentre sur l'explication des concepts.
 
 **Conventions de lecture**
 
 - **(à jour)** : pratique moderne qui remplace une ancienne. **(héritage)** : ancienne approche, encore fréquente dans les projets existants. **(ajout)** : notion absente des anciens guides. **Version** : comportement qui a changé entre Next.js 13, 14, 15 et 16.
-- Le code est écrit en **TypeScript**. Les exemples utilisent l'**App Router** (dossier `app/`) ; le Pages Router est traité au chapitre 23.
+- Le code est écrit en **TypeScript**. Les exemples utilisent l'**App Router** (dossier `app/`) ; le Pages Router est traité dans la section « Pages Router (historique et migration) ».
 - Chaque exemple est volontairement **autonome** : les imports nécessaires sont toujours indiqués. Les fonctions comme `db`, `getPost` ou `verifySession` désignent des fonctions **fictives** de votre application.
 - Le cours enseigne le Next.js **actuel** (App Router, Server Components, Cache Components avec `"use cache"`, Server Actions, `proxy.ts`, Turbopack) **et** explique l'ancien (Pages Router, `getServerSideProps`, `middleware.ts`, options de `fetch`) pour que vous sachiez lire du code existant.
 
-**Parcours conseillé** : lisez les chapitres 1 à 6 dans l'ordre (ils se construisent les uns sur les autres), puis les chapitres 7 à 9 (cache, rendu, mutations), qui forment le cœur du modèle mental de Next.js. Choisissez ensuite librement dans le reste selon vos besoins.
+**Parcours conseillé** : lisez dans l'ordre les sections « Introduction et installation » à « Récupération de données » (elles se construisent les unes sur les autres), puis « Mise en cache », « Stratégies de rendu » et « Server Actions et mutations » (cache, rendu, mutations), qui forment le cœur du modèle mental de Next.js. Choisissez ensuite librement dans le reste selon vos besoins.
 
 **Prérequis** : JavaScript moderne (ES2020+ : modules, `async` / `await`, déstructuration), bases de **React** (composants, props, état, hooks `useState` / `useEffect`), HTML / CSS, notions de **HTTP** (méthodes, codes de statut, en-têtes, cookies). TypeScript est un plus.
 
 > **À propos des versions.** Next.js évolue vite, surtout sur le cache et la navigation. Ce cours distingue le **modèle actuel** (Cache Components, recommandé depuis Next.js 16.4 et annoncé comme futur défaut de Next.js 17) du **modèle classique** (cache implicite des versions 13 et 14, options de `fetch`). En cas de doute sur un détail d'API, la documentation officielle (<https://nextjs.org/docs>) de votre version fait foi.
 
----
+# Introduction et installation
 
-## 1. Introduction et installation
+**Objectifs d'apprentissage.** À la fin de cette section, vous saurez : définir Next.js et expliquer ce qui le distingue de React seul ; décrire les limites d'une application monopage et ce que le rendu serveur y change ; distinguer les trois environnements d'exécution (build, serveur, client) ; décrire le cycle de vie d'une requête ; comprendre le calendrier des versions ; installer un projet, lancer les commandes essentielles et lire le résultat d'un build.
 
-**Objectifs d'apprentissage.** À la fin de ce chapitre, vous saurez : définir Next.js et expliquer ce qui le distingue de React seul ; décrire les limites d'une application monopage et ce que le rendu serveur y change ; distinguer les trois environnements d'exécution (build, serveur, client) ; décrire le cycle de vie d'une requête ; comprendre le calendrier des versions ; installer un projet, lancer les commandes essentielles et lire le résultat d'un build.
-
-### 1.1 Qu'est-ce que Next.js ?
+## Qu'est-ce que Next.js ?
 
 **Next.js** est un **framework full-stack** open source, développé par **Vercel** et une large communauté, construit sur **React**. Il permet de bâtir des sites et des applications web qui s'exécutent **à la fois sur le serveur et dans le navigateur**, avec un seul langage (JavaScript / TypeScript) et une seule base de code.
 
@@ -42,23 +44,23 @@ Chaque chapitre suit la même trame : *objectifs d'apprentissage → notions et 
 
 Next.js apporte des réponses **cohérentes et éprouvées** à toutes ces questions. Il est dit **opinionné** (*opinionated*) : il impose des **conventions** (par exemple, l'organisation des fichiers détermine les URLs) qui réduisent le nombre de décisions à prendre et rendent deux projets Next.js semblables entre eux.
 
-| Brique | Rôle | Chapitre |
+| Brique | Rôle | Section |
 | --- | --- | --- |
-| **Routage par fichiers** | Une URL = un dossier | 3, 4 |
-| **Server Components / Client Components** | Décider où s'exécute chaque composant | 5 |
-| **Récupération de données** | Charger les données côté serveur | 6 |
-| **Cache et revalidation** | Éviter le travail inutile | 7 |
-| **Stratégies de rendu** | Statique, dynamique, partiel | 8 |
-| **Server Actions** | Mutations depuis l'interface | 9 |
-| **Route Handlers** | Endpoints HTTP, webhooks | 10 |
-| **Proxy** | Interception des requêtes | 11 |
-| **Navigation** | Liens, prefetching, historique | 12 |
-| **Styles, images, polices, scripts** | Interface et optimisation | 13, 14 |
-| **Métadonnées / SEO** | Référencement et partage | 15 |
-| **Authentification, i18n, configuration** | Fonctions transverses | 16 à 19 |
-| **Tests, déploiement** | Qualité et exploitation | 21, 22 |
+| **Routage par fichiers** | Une URL = un dossier | Routing (App Router), Fichiers spéciaux |
+| **Server Components / Client Components** | Décider où s'exécute chaque composant | Server Components et Client Components |
+| **Récupération de données** | Charger les données côté serveur | Récupération de données |
+| **Cache et revalidation** | Éviter le travail inutile | Mise en cache |
+| **Stratégies de rendu** | Statique, dynamique, partiel | Stratégies de rendu |
+| **Server Actions** | Mutations depuis l'interface | Server Actions et mutations |
+| **Route Handlers** | Endpoints HTTP, webhooks | Route Handlers (API) |
+| **Proxy** | Interception des requêtes | Proxy |
+| **Navigation** | Liens, prefetching, historique | Navigation |
+| **Styles, images, polices, scripts** | Interface et optimisation | Styles, Optimisations |
+| **Métadonnées / SEO** | Référencement et partage | Métadonnées et SEO |
+| **Authentification, i18n, configuration** | Fonctions transverses | Authentification, Internationalisation, Configuration, Variables d'environnement |
+| **Tests, déploiement** | Qualité et exploitation | Tests, Déploiement |
 
-### 1.2 Le problème des applications monopages (SPA)
+## Le problème des applications monopages (SPA)
 
 Une **SPA** React « classique » (créée avec Vite ou l'ancien Create React App) envoie au navigateur un HTML presque vide :
 
@@ -81,7 +83,7 @@ Le navigateur doit alors **télécharger** le bundle JavaScript, l'**exécuter**
 
 Next.js résout ces problèmes en **rendant les composants React sur le serveur**, en envoyant du **HTML déjà complet** et en n'envoyant au navigateur **que le JavaScript nécessaire** à l'interactivité.
 
-### 1.3 Fonctionnalités clés
+## Fonctionnalités clés
 
 1. **Routage par système de fichiers** (App Router et Pages Router).
 2. **React Server Components (RSC)** : composants exécutés uniquement côté serveur.
@@ -94,7 +96,7 @@ Next.js résout ces problèmes en **rendant les composants React sur le serveur*
 9. **Bundlers** : **Turbopack** (par défaut depuis Next.js 16) ou Webpack.
 10. **TypeScript**, **ESLint**, variables d'environnement, **i18n**, **métadonnées / SEO**, images Open Graph.
 
-### 1.4 Historique et versions *(à jour)*
+## Historique et versions *(à jour)*
 
 Next.js suit le **versionnement sémantique**. Une version majeure paraît environ **une fois par an** (octobre), accompagnée de versions mineures plus fréquentes. Depuis l'été 2026, l'équipe applique aussi un **programme formel de versions de sécurité** : des correctifs de sécurité sont publiés régulièrement, annoncés à l'avance, pour les lignes de versions encore maintenues.
 
@@ -114,9 +116,9 @@ Next.js suit le **versionnement sémantique**. Une version majeure paraît envir
 
 > **Direction du projet.** L'équipe a annoncé que **Cache Components deviendra le modèle par défaut de Next.js 17**. Le cours enseigne donc ce modèle comme référence, et le modèle classique comme héritage à connaître.
 
-**Quelle version utiliser ?** La plus récente (ici, **16.4**), en installant régulièrement les correctifs de sécurité de votre ligne de versions (chapitre 24).
+**Quelle version utiliser ?** La plus récente (ici, **16.4**), en installant régulièrement les correctifs de sécurité de votre ligne de versions (section « Bonnes pratiques »).
 
-### 1.5 Les trois environnements d'exécution
+## Les trois environnements d'exécution
 
 Comprendre **où** le code s'exécute est la clé de Next.js. Un même fichier peut s'exécuter dans plusieurs environnements.
 
@@ -137,29 +139,29 @@ Comprendre **où** le code s'exécute est la clé de Next.js. Un même fichier p
 7. Le JavaScript des **Client Components** est téléchargé, puis **hydraté** : React « attache » les gestionnaires d'événements au HTML existant, ce qui rend la page interactive.
 8. Les navigations suivantes se font **côté client** : seul le payload RSC des segments modifiés est demandé au serveur.
 
-> **Hydratation.** Processus par lequel React rend interactif un HTML déjà produit par le serveur, en associant l'arbre de composants au DOM existant. Si le HTML du serveur et le premier rendu du client diffèrent, on obtient une **erreur d'hydratation** (*hydration mismatch*, voir 5.10).
+> **Hydratation.** Processus par lequel React rend interactif un HTML déjà produit par le serveur, en associant l'arbre de composants au DOM existant. Si le HTML du serveur et le premier rendu du client diffèrent, on obtient une **erreur d'hydratation** (*hydration mismatch*, voir la section « Erreurs d'hydratation »).
 
-### 1.6 Rappel : les nouveautés de React utiles à Next.js
+## Rappel : les nouveautés de React utiles à Next.js
 
 Next.js 15 et 16 s'appuient sur React 19.x ; Next.js 16.4 embarque **React 19.3**. À connaître :
 
 - **Actions** : fonctions asynchrones passées à `<form action={...}>` ou déclenchées dans une transition.
-- **`useActionState`**, **`useFormStatus`**, **`useOptimistic`** (chapitre 9).
+- **`useActionState`**, **`useFormStatus`**, **`useOptimistic`** (section « Server Actions et mutations »).
 - **`use(promise)`** / **`use(context)`** : lit une promesse ou un contexte ; peut être appelé de façon conditionnelle.
 - **`ref` comme prop** dans les composants fonction (plus besoin de `forwardRef`).
 - **Métadonnées natives** : `<title>`, `<meta>`, `<link>` rendus depuis n'importe quel composant.
 - **React 19.2** : `<Activity>`, `useEffectEvent`, première version des **View Transitions**.
 - **React 19.3** : **View Transitions** stables, *Fragment Refs*.
-- **React Compiler** (1.0) : mémoïsation automatique, activable dans Next.js (chapitre 14).
+- **React Compiler** (1.0) : mémoïsation automatique, activable dans Next.js (section « Optimisations »).
 
-### 1.7 Prérequis système *(à jour)*
+## Prérequis système *(à jour)*
 
 - **Node.js** : version **20.9 ou plus récente** (Node 18 n'est plus supporté depuis Next.js 16).
 - **TypeScript** (si utilisé) : version **5.1 ou plus** ; **TypeScript 7** (port natif, beaucoup plus rapide) peut servir à la vérification de types pendant `next build` depuis Next.js 16.3.
 - **Navigateurs** : versions récentes de Chrome, Edge, Firefox et Safari.
 - **Gestionnaire de paquets** : npm, pnpm, yarn ou bun.
 
-### 1.8 Créer un projet
+## Créer un projet
 
 ```bash
 npx create-next-app@latest mon-app
@@ -177,7 +179,7 @@ L'assistant pose des questions (les valeurs par défaut suffisent pour débuter)
 | App Router ? | Recommandé : oui |
 | Alias d'import (`@/*`) ? | Permet `import x from "@/lib/x"` |
 
-> **Version 16.4.** Les nouveaux projets créés avec `create-next-app` ont **Cache Components activé par défaut** (`cacheComponents: true`). Si vous reprenez du code écrit pour un ancien modèle, certaines options de segment (`export const dynamic`, `revalidate`…) ne sont pas compatibles : voir chapitres 7 et 8.
+> **Version 16.4.** Les nouveaux projets créés avec `create-next-app` ont **Cache Components activé par défaut** (`cacheComponents: true`). Si vous reprenez du code écrit pour un ancien modèle, certaines options de segment (`export const dynamic`, `revalidate`…) ne sont pas compatibles : voir les sections « Mise en cache » et « Stratégies de rendu ».
 
 Lancement :
 
@@ -205,12 +207,12 @@ npm run dev      # serveur de développement sur http://localhost:3000
 | `next build` | Compilation de production : optimisation, génération statique, analyse des routes |
 | `next start` | Démarre le serveur de production (après `build`) |
 | `next info` | Affiche des informations de diagnostic (versions, système) |
-| `next typegen` | Génère les types de routes (chapitre 20) |
+| `next typegen` | Génère les types de routes (section « TypeScript ») |
 | `next upgrade` | Met à niveau Next.js ; l'option `--agent` prépare une mise à niveau assistée par un agent de codage |
 
 > **Version 16.** `next lint` a été **retiré** : on appelle ESLint directement. De plus, `next build` n'exécute plus le lint automatiquement.
 
-### 1.9 Turbopack et Webpack *(à jour)*
+## Turbopack et Webpack *(à jour)*
 
 - **Turbopack** est un bundler écrit en **Rust**, **par défaut** pour `next dev` et `next build` depuis Next.js 16.
 - Pour utiliser Webpack : `next dev --webpack` et `next build --webpack`.
@@ -218,18 +220,18 @@ npm run dev      # serveur de développement sur http://localhost:3000
 - Depuis 16.3, une **éviction mémoire** réduit fortement la consommation de RAM des longues sessions de développement.
 - Certains loaders Webpack spécifiques peuvent être incompatibles : consultez la table de compatibilité de la documentation.
 
-### 1.10 Ce que fait `next build`
+## Ce que fait `next build`
 
 À la fin d'un build, Next.js affiche un **tableau des routes** avec leur mode de rendu (symboles tels que ○ statique, ● SSG avec `generateStaticParams`, ƒ dynamique, ◐ partiellement pré-rendu selon la version). Lire ce tableau permet de **vérifier que vos routes sont statiques ou dynamiques comme prévu**, et de voir la taille du JavaScript chargé pour chaque route (« First Load JS »).
 
-### 1.11 Pièges fréquents
+## Pièges fréquents
 
 - **Confondre développement et production.** Certains comportements (préchargement des liens, cache) diffèrent en développement. Testez toujours avec `build` + `start`.
 - **Mauvaise version de Node.** Les erreurs de build sont alors obscures.
 - **Oublier que code serveur et code client coexistent.** Une API du navigateur (`window`) appelée dans un composant serveur provoque une erreur.
-- **Suivre un tutoriel ancien.** `getServerSideProps`, `pages/`, `middleware.ts`, `fetch` mis en cache par défaut : autant de signes d'un contenu antérieur à Next.js 15 (voir 23.6 pour dater un exemple).
+- **Suivre un tutoriel ancien.** `getServerSideProps`, `pages/`, `middleware.ts`, `fetch` mis en cache par défaut : autant de signes d'un contenu antérieur à Next.js 15 (voir la section « Dater un exemple de code » pour dater un exemple).
 
-### 1.12 Glossaire du chapitre
+## Glossaire
 
 | Terme | Définition courte |
 | --- | --- |
@@ -244,17 +246,11 @@ npm run dev      # serveur de développement sur http://localhost:3000
 | Cache Components | Modèle de cache **explicite** fondé sur `"use cache"` |
 | First Load JS | Quantité de JavaScript chargée pour afficher une route |
 
-### Synthèse du chapitre 1
-
-Next.js est un **framework full-stack opinionné** construit sur React : routage, rendu serveur, données, optimisations et déploiement dans un seul outil. Il combine **trois environnements** (build, serveur, client) et repose sur des **Server Components** qui n'envoient au navigateur que le nécessaire. L'actuel (16.4) s'appuie sur **Turbopack**, **Cache Components** et **React 19.3** ; installez avec `create-next-app`, développez avec `next dev`, et vérifiez toujours le résultat avec `next build` + `next start`.
-
----
-
-## 2. Structure d'un projet
+# Structure d'un projet
 
 **Objectifs d'apprentissage.** Connaître le rôle de chaque dossier et fichier de la racine d'un projet ; appliquer les conventions de **colocation**, de **dossiers privés** et de **groupes de routes** ; choisir une stratégie d'organisation du code ; configurer les **alias d'import** ; connaître les fichiers de configuration courants.
 
-### 2.1 Arborescence type
+## Arborescence type
 
 ```text
 mon-app/
@@ -286,17 +282,17 @@ mon-app/
 | `pages/` | Routes du **Pages Router** *(héritage)* |
 | `public/` | Fichiers statiques servis à la racine du site : `public/logo.png` → `/logo.png` |
 | `src/` | Dossier **optionnel** qui regroupe `app/`, `components/`, `lib/`… |
-| `next.config.ts` (ou `.js` / `.mjs`) | Configuration (chapitre 18) |
+| `next.config.ts` (ou `.js` / `.mjs`) | Configuration (section « Configuration ») |
 | `proxy.ts` | Interception des requêtes ; **Version 16** : remplace `middleware.ts` |
 | `instrumentation.ts` | Code exécuté au démarrage du serveur (monitoring, OpenTelemetry) |
 | `.next/` | Sortie du build et du cache : **à ignorer dans Git** |
-| `.env*` | Variables d'environnement (chapitre 19) |
+| `.env*` | Variables d'environnement (section « Variables d'environnement ») |
 | `next-env.d.ts` | Déclarations de types ; régénéré automatiquement |
 | `AGENTS.md` | *(ajout, 16.3)* Fichier maintenu par `next dev` pour guider les agents de codage vers la documentation correspondant à votre version |
 
-### 2.2 Le dossier `public/`
+## Le dossier `public/`
 
-Tout fichier placé dans `public/` est servi **tel quel** à partir de la racine du site. Usages : favicon, images statiques, polices, fichiers de vérification de domaine, `robots.txt` (ou sa génération par `app/robots.ts`, chapitre 15).
+Tout fichier placé dans `public/` est servi **tel quel** à partir de la racine du site. Usages : favicon, images statiques, polices, fichiers de vérification de domaine, `robots.txt` (ou sa génération par `app/robots.ts`, voir la section « Métadonnées et SEO »).
 
 ```tsx
 <img src="/logo.png" alt="Logo" />   {/* fichier public/logo.png */}
@@ -304,15 +300,15 @@ Tout fichier placé dans `public/` est servi **tel quel** à partir de la racine
 
 > **Attention.** Ne mettez **jamais** de données sensibles dans `public/` : tout y est accessible publiquement. Si un fichier change, **renommez-le ou versionnez-le** pour éviter qu'un cache (navigateur ou CDN) serve l'ancienne version.
 
-### 2.3 Le dossier `src/`
+## Le dossier `src/`
 
 Si vous choisissez `src/`, la structure devient `src/app/`, `src/components/`, `src/lib/`. Seuls les fichiers de configuration (`next.config.ts`, `package.json`, `tsconfig.json`, fichiers `.env`) restent à la **racine**. **`proxy.ts` se place dans `src/`** à côté de `app/`.
 
-### 2.4 Conventions de nommage dans `app/`
+## Conventions de nommage dans `app/`
 
-Dans `app/`, certains **noms de fichiers sont réservés** (chapitre 4) : `page`, `layout`, `loading`, `error`, `not-found`, `route`, `template`, `default`, etc. Les extensions supportées sont `.js`, `.jsx`, `.ts` et `.tsx`. Les noms de dossiers déterminent les segments d'URL (chapitre 3).
+Dans `app/`, certains **noms de fichiers sont réservés** (section « Fichiers spéciaux ») : `page`, `layout`, `loading`, `error`, `not-found`, `route`, `template`, `default`, etc. Les extensions supportées sont `.js`, `.jsx`, `.ts` et `.tsx`. Les noms de dossiers déterminent les segments d'URL (section « Routing (App Router) »).
 
-### 2.5 La colocation
+## La colocation
 
 Dans l'App Router, **un dossier n'est accessible publiquement que s'il contient un fichier `page` ou `route`**. Vous pouvez donc placer côte à côte composants, styles, tests et utilitaires dans le dossier d'une route sans les exposer :
 
@@ -336,9 +332,9 @@ app/
 
 Pour qu'une URL commence réellement par un underscore, on l'encode : `%5Ffichier`.
 
-**Groupes de routes.** Un dossier `(nom)` regroupe des routes **sans modifier l'URL** (chapitre 3).
+**Groupes de routes.** Un dossier `(nom)` regroupe des routes **sans modifier l'URL** (section « Routing (App Router) »).
 
-### 2.6 Organisation recommandée
+## Organisation recommandée
 
 Trois stratégies courantes :
 
@@ -352,12 +348,12 @@ Choisissez **une** stratégie et appliquez-la de façon cohérente dans toute l'
 | --- | --- |
 | `components/` | Composants d'interface réutilisables (boutons, cartes) |
 | `lib/` | Fonctions utilitaires, client de base de données, schémas |
-| `lib/dal.ts` | Couche d'accès aux données (chapitre 6) |
-| `actions/` ou `actions.ts` | Server Actions (chapitre 9) |
+| `lib/dal.ts` | Couche d'accès aux données (section « Récupération de données ») |
+| `actions/` ou `actions.ts` | Server Actions (section « Server Actions et mutations ») |
 | `hooks/` | Hooks personnalisés (Client Components) |
 | `types/` | Types partagés |
 
-### 2.7 Alias d'import
+## Alias d'import
 
 Dans `tsconfig.json` (ou `jsconfig.json`) :
 
@@ -372,16 +368,16 @@ Dans `tsconfig.json` (ou `jsconfig.json`) :
 
 Usage : `import { db } from "@/lib/db";` au lieu de `../../../lib/db`. Next.js lit automatiquement ces `paths`.
 
-### 2.8 Fichiers de configuration courants
+## Fichiers de configuration courants
 
-- **`next.config.ts`** : options de Next.js (chapitre 18).
+- **`next.config.ts`** : options de Next.js (section « Configuration »).
 - **`eslint.config.mjs`** : configuration ESLint au format « flat config ».
 - **`postcss.config.mjs`** : utilisé notamment par Tailwind CSS.
-- **`tsconfig.json`** : configuration TypeScript (chapitre 20).
+- **`tsconfig.json`** : configuration TypeScript (section « TypeScript »).
 - **`.gitignore`** : doit ignorer `.next/`, `node_modules/`, `.env*.local`.
 - **`instrumentation.ts`** : branchement de l'observabilité (4.9).
 
-### 2.9 Pièges fréquents
+## Pièges fréquents
 
 - **Placer un `page.tsx` dans un dossier utilitaire** : il devient une **route publique**.
 - **Mélanger `app/` et `pages/`** avec des routes qui entrent en conflit : le build échoue (une URL ne peut exister que dans un seul routeur).
@@ -389,7 +385,7 @@ Usage : `import { db } from "@/lib/db";` au lieu de `../../../lib/db`. Next.js l
 - **Oublier de placer `proxy.ts` dans `src/`** quand ce dossier est utilisé : le proxy est ignoré.
 - **Ne pas ignorer `.next/`** dans Git : dépôt alourdi de fichiers générés.
 
-### 2.10 Glossaire du chapitre
+## Glossaire
 
 | Terme | Définition courte |
 | --- | --- |
@@ -400,17 +396,11 @@ Usage : `import { db } from "@/lib/db";` au lieu de `../../../lib/db`. Next.js l
 | `public/` | Dossier des fichiers servis tels quels |
 | `.next/` | Dossier de sortie du build, généré |
 
-### Synthèse du chapitre 2
-
-`app/` contient les **routes**, `public/` les **fichiers statiques**, `src/` est facultatif. Seuls `page` et `route` rendent un dossier accessible : le reste est **colocalisé** sans risque. `_dossier` = privé ; `(groupe)` = organisation sans effet sur l'URL. Choisissez une stratégie d'organisation et tenez-vous-y.
-
----
-
-## 3. Routing (App Router)
+# Routing (App Router)
 
 **Objectifs d'apprentissage.** Créer des routes statiques, dynamiques et *catch-all* ; utiliser **layouts**, **templates**, **groupes de routes**, **routes parallèles** et **routes interceptées** ; lire `params` et `searchParams` ; pré-générer des routes dynamiques avec `generateStaticParams` ; connaître les hooks de routage côté client et les helpers de types.
 
-### 3.1 Principes
+## Principes
 
 Le routeur de Next.js est **basé sur le système de fichiers** :
 
@@ -447,9 +437,9 @@ https://exemple.com/blog/mon-article?tri=date#commentaires
 </RootLayout>
 ```
 
-Chaque layout enveloppe ses enfants ; chaque segment peut aussi avoir son `loading`, son `error`, son `not-found`, qui deviennent des **frontières** (`Suspense`, *error boundary*) autour du segment (chapitre 4).
+Chaque layout enveloppe ses enfants ; chaque segment peut aussi avoir son `loading`, son `error`, son `not-found`, qui deviennent des **frontières** (`Suspense`, *error boundary*) autour du segment (section « Fichiers spéciaux »).
 
-### 3.2 Les pages
+## Les pages
 
 ```tsx
 // app/about/page.tsx
@@ -459,10 +449,10 @@ export default function AboutPage() {
 ```
 
 - Une page est un composant exporté **par défaut**.
-- Par défaut, c'est un **Server Component** (chapitre 5).
-- Une page peut être **`async`** et charger ses données directement (chapitre 6).
+- Par défaut, c'est un **Server Component** (section « Server Components et Client Components »).
+- Une page peut être **`async`** et charger ses données directement (section « Récupération de données »).
 
-### 3.3 Les layouts
+## Les layouts
 
 Un **layout** est une interface **partagée** entre plusieurs pages. Il reçoit `children` : la page ou le layout enfant.
 
@@ -508,7 +498,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 }
 ```
 
-### 3.4 Les templates
+## Les templates
 
 `template.tsx` fonctionne comme un layout, mais **un nouvel exemplaire est créé à chaque navigation**. L'état est **réinitialisé**, les effets sont **ré-exécutés**, le DOM est **recréé**.
 
@@ -529,7 +519,7 @@ export default function Template({ children }: { children: React.ReactNode }) {
 | Effets (`useEffect`) | Exécutés une fois | Ré-exécutés à chaque navigation |
 | Usage typique | Navigation, barre latérale | Animations, statistiques de vues |
 
-### 3.5 Routes dynamiques
+## Routes dynamiques
 
 Un dossier entre crochets définit un **segment dynamique** : `[slug]`.
 
@@ -588,7 +578,7 @@ app/docs/[[...slug]]/page.tsx
 
 **Priorité de correspondance.** Quand plusieurs routes peuvent correspondre, Next.js privilégie la plus **spécifique** : segment statique > dynamique `[x]` > *catch-all* `[...x]` > *catch-all* optionnel `[[...x]]`.
 
-### 3.6 Pré-génération : `generateStaticParams`
+## Pré-génération : `generateStaticParams`
 
 Cette fonction permet de **générer à l'avance** (au build) les pages d'une route dynamique.
 
@@ -613,9 +603,9 @@ export const dynamicParams = true;     // (défaut) génération à la demande, 
 // export const dynamicParams = false; // toute valeur non listée → 404
 ```
 
-> **Version (Cache Components).** Avec `cacheComponents: true`, la configuration de segment `dynamicParams` n'est **pas supportée** ; le comportement dépend de l'usage de `"use cache"` et de `Suspense` (chapitres 7 et 8). Avec Cache Components, `generateStaticParams` doit retourner **au moins un jeu de paramètres** pour permettre la validation au build. Depuis **16.3**, une page **non pré-rendue** au build sert à son premier visiteur une **coque de chargement instantanée** (nouvelle forme d'ISR, chapitre 8), puis est mise à niveau en arrière-plan.
+> **Version (Cache Components).** Avec `cacheComponents: true`, la configuration de segment `dynamicParams` n'est **pas supportée** ; le comportement dépend de l'usage de `"use cache"` et de `Suspense` (sections « Mise en cache » et « Stratégies de rendu »). Avec Cache Components, `generateStaticParams` doit retourner **au moins un jeu de paramètres** pour permettre la validation au build. Depuis **16.3**, une page **non pré-rendue** au build sert à son premier visiteur une **coque de chargement instantanée** (nouvelle forme d'ISR, voir la section « Stratégies de rendu »), puis est mise à niveau en arrière-plan.
 
-### 3.7 Paramètres de requête (`searchParams`)
+## Paramètres de requête (`searchParams`)
 
 ```tsx
 // app/recherche/page.tsx — URL : /recherche?q=next&page=2
@@ -637,7 +627,7 @@ Points essentiels :
 - Une clé répétée (`?a=1&a=2`) donne un **tableau**.
 - Côté client : `useSearchParams()`, à envelopper dans `<Suspense>` pour ne pas désactiver le pré-rendu statique de toute la page.
 
-### 3.8 Groupes de routes : `(nom)`
+## Groupes de routes : `(nom)`
 
 Un dossier entre parenthèses **n'apparaît pas dans l'URL**. Utilités :
 
@@ -658,7 +648,7 @@ app/
 
 > **Attention.** Deux groupes ne doivent pas définir **la même URL** (par exemple `(a)/about/page.tsx` et `(b)/about/page.tsx`) : erreur. Naviguer entre deux **layouts racines** différents provoque un **rechargement complet** de la page.
 
-### 3.9 Routes parallèles : `@slot`
+## Routes parallèles : `@slot`
 
 Les **routes parallèles** permettent de rendre **simultanément** plusieurs pages dans un même layout, ou de rendre conditionnellement. Un dossier `@nom` définit un **slot** ; il est passé en **prop** au layout parent (ce n'est **pas** un segment d'URL).
 
@@ -706,7 +696,7 @@ Chaque slot a ses propres `loading.tsx` et `error.tsx` : il se charge et échoue
 
 **Cas d'usage :** tableaux de bord à panneaux indépendants ; **rendu conditionnel** selon le rôle (`@admin` / `@utilisateur`) en choisissant dans le layout ; modales (avec routes interceptées) ; onglets ayant leur propre état de navigation.
 
-### 3.10 Routes interceptées
+## Routes interceptées
 
 Elles permettent de **charger une route dans le contexte courant** (par exemple en **modale**) lors d'une navigation interne, tout en gardant une **URL partageable** qui, lors d'un accès direct, affiche la page complète.
 
@@ -762,7 +752,7 @@ Fermeture de la modale : `router.back()` dans un Client Component.
 
 **Comportement :** un clic sur un lien `/photo/3` depuis la galerie ouvre la **modale** (interception) ; un rafraîchissement ou un lien partagé affiche la **page complète** `/photo/3`.
 
-### 3.11 Hooks utiles liés au routage
+## Hooks utiles liés au routage
 
 | Hook (Client Component) | Rôle |
 | --- | --- |
@@ -771,7 +761,7 @@ Fermeture de la modale : `router.back()` dans un Client Component.
 | `useSearchParams()` | Lecture des paramètres de requête |
 | `useSelectedLayoutSegment()` | Segment actif juste sous le layout |
 | `useSelectedLayoutSegments()` | Tous les segments actifs sous le layout |
-| `useRouter()` | Navigation impérative (chapitre 12) |
+| `useRouter()` | Navigation impérative (section « Navigation ») |
 
 **Exemple : lien actif.**
 
@@ -791,7 +781,7 @@ export function NavLink({ href, children }: { href: string; children: React.Reac
 }
 ```
 
-### 3.12 Paramètres racine : `next/root-params` *(ajout, 16.3)*
+## Paramètres racine : `next/root-params` *(ajout, 16.3)*
 
 Pour les paramètres situés **au-dessus du layout racine** (par exemple un segment `[lang]` en tête d'arborescence), il fallait jusqu'ici les **faire descendre en props** à travers tout l'arbre. Depuis **16.3**, ils s'obtiennent depuis **n'importe quel Server Component** :
 
@@ -812,15 +802,15 @@ export default async function PostPage(props: PageProps<"/[lang]/posts/[slug]">)
 }
 ```
 
-Les *root params* fonctionnent aussi dans un périmètre `"use cache"`. Ils sont pris en charge dans les Server Components ; le support des Route Handlers et des Server Actions est annoncé pour une version ultérieure. Cas typique : l'internationalisation (chapitre 17).
+Les *root params* fonctionnent aussi dans un périmètre `"use cache"`. Ils sont pris en charge dans les Server Components ; le support des Route Handlers et des Server Actions est annoncé pour une version ultérieure. Cas typique : l'internationalisation (section « Internationalisation »).
 
-### 3.13 Redirections et réécritures au niveau du routage
+## Redirections et réécritures au niveau du routage
 
 - **Redirections** (`redirects` dans `next.config`) : statut **307 / 308** ; l'URL du navigateur **change**.
 - **Réécritures** (`rewrites`) : servent un autre contenu **sans changer l'URL affichée** (proxy transparent).
-- Voir chapitres 11 et 18.
+- Voir les sections « Proxy » et « Configuration ».
 
-### 3.14 Helpers de types pour `params` *(à jour)*
+## Helpers de types pour `params` *(à jour)*
 
 Next.js 15.5+ et 16 offrent des **helpers de types globaux**, générés par `next dev`, `next build` ou `next typegen` :
 
@@ -831,9 +821,9 @@ export default async function Page(props: PageProps<"/blog/[slug]">) {
 }
 ```
 
-Autres helpers : `LayoutProps<"/dashboard">`, `RouteContext<"/api/posts/[id]">`. Ils évitent de retaper les types des paramètres (chapitre 20).
+Autres helpers : `LayoutProps<"/dashboard">`, `RouteContext<"/api/posts/[id]">`. Ils évitent de retaper les types des paramètres (section « TypeScript »).
 
-### 3.15 Pièges fréquents
+## Pièges fréquents
 
 - **Oublier `await params`** (Next.js 15 / 16) : erreur ou avertissement.
 - **Utiliser `searchParams` dans un layout** : non supporté ; passez par la page.
@@ -843,7 +833,7 @@ Autres helpers : `LayoutProps<"/dashboard">`, `RouteContext<"/api/posts/[id]">`.
 - **Confondre `[...slug]` et `[[...slug]]`** : le premier **ne correspond pas** à la racine du segment.
 - **Faire confiance à `params`** sans validation : ce sont des chaînes saisies par l'utilisateur.
 
-### 3.16 Glossaire du chapitre
+## Glossaire
 
 | Terme | Définition courte |
 | --- | --- |
@@ -858,17 +848,11 @@ Autres helpers : `LayoutProps<"/dashboard">`, `RouteContext<"/api/posts/[id]">`.
 | `generateStaticParams` | Fonction listant les valeurs à pré-générer |
 | *Root params* | Paramètres au-dessus du layout racine, lisibles partout |
 
-### Synthèse du chapitre 3
-
-Dossier = **segment** ; `page.tsx` = **route publique**. Le `layout` **persiste**, le `template` se **recrée**. `[x]`, `[...x]`, `[[...x]]` pour le dynamique ; `(x)` pour regrouper ; `@x` pour les slots (avec `default.tsx` obligatoire) ; `(.)x` pour intercepter. `params` et `searchParams` sont **asynchrones** ; `generateStaticParams` pré-génère les routes dynamiques ; `next/root-params` évite de faire descendre `[lang]` en props.
-
----
-
-## 4. Fichiers spéciaux
+# Fichiers spéciaux
 
 **Objectifs d'apprentissage.** Connaître chaque fichier réservé de l'App Router et son rôle ; comprendre la **hiérarchie de frontières** qu'ils composent ; gérer les états de chargement, d'erreur et de page introuvable ; utiliser `redirect`, `notFound`, `forbidden` et `unauthorized` ; définir des frontières d'erreur personnalisées avec `catchError` ; brancher l'observabilité avec `instrumentation.ts` ; générer les fichiers de métadonnées (icônes, images Open Graph).
 
-### 4.1 Vue d'ensemble
+## Vue d'ensemble
 
 Next.js attribue un **sens particulier** à certains noms de fichiers. Ils se composent **dans un ordre hiérarchique précis** autour de la page :
 
@@ -905,7 +889,7 @@ Cette imbrication explique plusieurs comportements. Par exemple, le `error.tsx` 
 | `opengraph-image`, `twitter-image`, `icon`, `apple-icon` | Images de métadonnées |
 | `sitemap`, `robots`, `manifest` | Fichiers SEO / PWA |
 
-### 4.2 `loading.tsx`
+## `loading.tsx`
 
 Il crée automatiquement une frontière `<Suspense>` autour de la page et de ses enfants. Pendant que la page (asynchrone) charge ses données, l'utilisateur voit immédiatement le **contenu de `loading.tsx`**, et la navigation reste **interruptible**.
 
@@ -921,11 +905,11 @@ export default function Loading() {
 - Afficher des **squelettes** (*skeletons*) fidèles à la mise en page finale pour limiter les décalages visuels.
 - `loading.tsx` ne protège que ce qui est **sous** lui : un layout qui attend des données n'est pas couvert.
 - Pour un contrôle plus fin, utilisez `<Suspense>` directement dans la page autour de composants individuels.
-- Avec **Cache Components** (chapitre 7), `loading.tsx` reste valable, mais les `<Suspense>` explicites sont l'outil principal : ils définissent précisément la **coque statique** de la page.
+- Avec **Cache Components** (section « Mise en cache »), `loading.tsx` reste valable, mais les `<Suspense>` explicites sont l'outil principal : ils définissent précisément la **coque statique** de la page.
 
-> **Instant Navigations (16.3).** Oublier un `loading.tsx` ou un `<Suspense>` rendait certaines navigations lentes sans qu'on s'en aperçoive. Les DevTools de Next.js intègrent désormais **Instant Insights**, qui signale les navigations non instantanées (chapitre 12).
+> **Instant Navigations (16.3).** Oublier un `loading.tsx` ou un `<Suspense>` rendait certaines navigations lentes sans qu'on s'en aperçoive. Les DevTools de Next.js intègrent désormais **Instant Insights**, qui signale les navigations non instantanées (section « Navigation »).
 
-### 4.3 `error.tsx`
+## `error.tsx`
 
 C'est une **frontière d'erreur React** pour le segment : elle capture les erreurs **de rendu** (et d'exécution dans les composants enfants) et affiche une interface de repli, sans casser le reste de l'application (les layouts parents restent affichés).
 
@@ -961,7 +945,7 @@ export default function Error({
 - `reset()` tente de **re-rendre** le segment.
 - **`error.digest`** : identifiant d'erreur. En **production**, les erreurs levées dans les Server Components sont **masquées** au client (le message réel pourrait contenir des informations sensibles) ; seul un `digest` générique est transmis, que l'on retrouve dans les **logs serveur**.
 - **Ne capture pas** : les erreurs dans les **gestionnaires d'événements** (utilisez `try` / `catch` et `useState`), les erreurs asynchrones hors du rendu, les erreurs du layout du même segment.
-- Pour les **erreurs attendues** dans les Server Actions (validation, conflit), **ne levez pas d'exception** : retournez un objet d'erreur (chapitre 9).
+- Pour les **erreurs attendues** dans les Server Actions (validation, conflit), **ne levez pas d'exception** : retournez un objet d'erreur (section « Server Actions et mutations »).
 
 **`global-error.tsx`.** Il capture les erreurs du **layout racine** et **remplace complètement** ce layout : il doit donc définir `<html>` et `<body>`.
 
@@ -981,7 +965,7 @@ export default function GlobalError({ reset }: { error: Error; reset: () => void
 }
 ```
 
-### 4.4 Frontières d'erreur personnalisées : `catchError` *(ajout, 16.3)*
+## Frontières d'erreur personnalisées : `catchError` *(ajout, 16.3)*
 
 Les frontières d'erreur de fichier (`error.tsx`) ont deux limites : elles interféraient avec le code qui appelle `notFound()` ou `redirect()`, et `reset()` ne réinitialisait que l'**état côté client**, sans permettre de **relancer les Server Components** qui avaient échoué.
 
@@ -1007,7 +991,7 @@ export default catchError(ErrorFallback);
 
 Utilisation : on enveloppe la zone concernée avec le composant retourné (`<MonErrorBoundary titre="Statistiques">…</MonErrorBoundary>`). C'est la bonne approche pour isoler **un widget** plutôt qu'un segment entier.
 
-### 4.5 `not-found.tsx` et `notFound()`
+## `not-found.tsx` et `notFound()`
 
 ```tsx
 // app/blog/[slug]/page.tsx
@@ -1032,7 +1016,7 @@ export default function NotFound() {
 - Un `app/not-found.tsx` à la racine gère **toutes les URLs non correspondantes** de l'application.
 - En *streaming*, si les en-têtes ont déjà été envoyés, le statut peut rester 200 ; Next.js ajoute alors une balise `noindex` automatiquement.
 
-### 4.6 Redirections : `redirect` et `permanentRedirect`
+## Redirections : `redirect` et `permanentRedirect`
 
 ```tsx
 import { redirect, permanentRedirect } from "next/navigation";
@@ -1043,9 +1027,9 @@ permanentRedirect("/nouvelle-url"); // 308 (permanente)
 
 - Utilisables dans les Server Components, Server Actions et Route Handlers.
 - **Elles lèvent une exception interne** : ne les placez **pas** dans un `try` / `catch` (vous interceptez la redirection). Appelez-les en dehors du bloc, ou utilisez `unstable_rethrow(error)` dans le `catch`.
-- Côté client (événement) : préférez `router.push` (chapitre 12).
+- Côté client (événement) : préférez `router.push` (section « Navigation »).
 
-### 4.7 `forbidden()` et `unauthorized()` *(expérimental)*
+## `forbidden()` et `unauthorized()` *(expérimental)*
 
 Pages dédiées aux statuts **403** et **401**, à activer :
 
@@ -1065,12 +1049,12 @@ if (!session) unauthorized();                 // affiche app/unauthorized.tsx (4
 if (session.role !== "admin") forbidden();    // affiche app/forbidden.tsx (403)
 ```
 
-### 4.8 `route.ts` et `default.tsx`
+## `route.ts` et `default.tsx`
 
-- **`route.ts`** définit un **endpoint HTTP** (chapitre 10). Un dossier ne peut pas contenir **à la fois** `page.tsx` et `route.ts` pour la même URL : séparez-les.
-- **`default.tsx`** est le repli d'un slot de route parallèle (chapitre 3) ; **obligatoire** dans Next.js 16.
+- **`route.ts`** définit un **endpoint HTTP** (section « Route Handlers (API) »). Un dossier ne peut pas contenir **à la fois** `page.tsx` et `route.ts` pour la même URL : séparez-les.
+- **`default.tsx`** est le repli d'un slot de route parallèle (section « Routing (App Router) ») ; **obligatoire** dans Next.js 16.
 
-### 4.9 `instrumentation.ts`
+## `instrumentation.ts`
 
 Ce fichier est exécuté **une fois au démarrage** du serveur. Il sert à brancher **OpenTelemetry**, Sentry, Datadog, etc.
 
@@ -1093,7 +1077,7 @@ export async function onRequestError(
 
 `register()` s'exécute au démarrage ; `onRequestError()` est appelée à **chaque erreur** survenue lors du traitement d'une requête, avec le contexte (route, type de rendu) nécessaire à un diagnostic.
 
-### 4.10 Fichiers de métadonnées
+## Fichiers de métadonnées
 
 **Icônes** : `app/favicon.ico`, `app/icon.png|jpg|svg`, `app/apple-icon.png`. Génération dynamique : `app/icon.tsx` retournant une `ImageResponse`.
 
@@ -1120,9 +1104,9 @@ export default async function Image({ params }: { params: Promise<{ slug: string
 }
 ```
 
-**`sitemap.ts`, `robots.ts`, `manifest.ts`** : voir chapitre 15.
+**`sitemap.ts`, `robots.ts`, `manifest.ts`** : voir la section « Métadonnées et SEO ».
 
-### 4.11 Pièges fréquents
+## Pièges fréquents
 
 - **Oublier `"use client"`** dans `error.tsx` : erreur de build.
 - **Attendre que `error.tsx` capture une erreur de son propre `layout.tsx`** : placez-le dans le parent.
@@ -1131,7 +1115,7 @@ export default async function Image({ params }: { params: Promise<{ slug: string
 - **Oublier `default.tsx`** dans un slot : build en échec.
 - **Utiliser `loading.tsx` comme unique stratégie de chargement** : il couvre tout le segment, alors qu'un `<Suspense>` ciblé isole mieux les parties lentes.
 
-### 4.12 Glossaire du chapitre
+## Glossaire
 
 | Terme | Définition courte |
 | --- | --- |
@@ -1143,17 +1127,11 @@ export default async function Image({ params }: { params: Promise<{ slug: string
 | `instrumentation.ts` | Fichier de démarrage pour l'observabilité |
 | `ImageResponse` | Générateur d'images (Open Graph, icônes) à partir de JSX |
 
-### Synthèse du chapitre 4
-
-Les fichiers spéciaux composent une **hiérarchie de frontières** : Layout > Template > Error > Suspense (`loading`) > NotFound > Page. `loading` = Suspense automatique ; `error` = *error boundary* **cliente** ; `not-found` = 404 ; `redirect` et `notFound` interrompent le rendu en **levant une exception**. `catchError` (16.3) ajoute des frontières locales avec `retry()`, et `instrumentation.ts` branche le monitoring.
-
----
-
-## 5. Server Components et Client Components
+# Server Components et Client Components
 
 **Objectifs d'apprentissage.** Comprendre le modèle des **React Server Components (RSC)** ; savoir quand choisir un Server ou un Client Component ; maîtriser la frontière **`"use client"`** et les règles de composition ; sérialiser correctement les props ; fournir des contextes ; intégrer des bibliothèques tierces ; protéger le code et les données sensibles ; comprendre et corriger les erreurs d'hydratation.
 
-### 5.1 Le modèle mental
+## Le modèle mental
 
 Dans l'App Router, **tout composant est un Server Component par défaut**. On bascule vers le client **seulement quand c'est nécessaire**.
 
@@ -1202,7 +1180,7 @@ export default function Compteur() {
 | Réduire le JavaScript envoyé | Oui | Non |
 | Bibliothèque dépendant du navigateur | Non | Oui |
 
-### 5.2 La directive `"use client"`
+## La directive `"use client"`
 
 - À placer **tout en haut du fichier**, avant les imports.
 - Elle déclare une **frontière client–serveur** : **ce fichier et tous les modules qu'il importe** (directement ou indirectement) font partie du **bundle client**.
@@ -1216,7 +1194,7 @@ import { Bouton } from "./Bouton";   // Bouton devient automatiquement client
 
 **Composants « partagés ».** Un composant **sans** directive, sans API serveur ni client spécifique, peut être utilisé **des deux côtés** : il s'exécute selon l'endroit d'où il est importé (serveur s'il est importé par un Server Component, client s'il est importé par un Client Component).
 
-### 5.3 Que se passe-t-il à l'exécution ?
+## Que se passe-t-il à l'exécution ?
 
 **Au chargement initial (rendu serveur) :**
 
@@ -1227,9 +1205,9 @@ import { Bouton } from "./Bouton";   // Bouton devient automatiquement client
 
 **Navigations suivantes :** le navigateur demande uniquement le **payload RSC** des segments qui changent ; les Client Components déjà chargés sont réutilisés ; **pas de rechargement complet**.
 
-### 5.4 Règles de composition
+## Règles de composition
 
-**5.4.1 Un Server Component peut importer un Client Component**
+**Un Server Component peut importer un Client Component**
 
 ```tsx
 // Server Component
@@ -1245,9 +1223,9 @@ export default function Page() {
 }
 ```
 
-**5.4.2 Un Client Component ne peut pas *importer* un Server Component.** Si un fichier `"use client"` importe un composant serveur, ce dernier **devient client** et perd ses capacités serveur (`async`, `server-only`…).
+**Un Client Component ne peut pas *importer* un Server Component.** Si un fichier `"use client"` importe un composant serveur, ce dernier **devient client** et perd ses capacités serveur (`async`, `server-only`…).
 
-**5.4.3 …mais il peut en *recevoir* un en `children` ou en prop.** C'est le **motif d'entrelacement** (*interleaving*) :
+**…mais il peut en *recevoir* un en `children` ou en prop.** C'est le **motif d'entrelacement** (*interleaving*) :
 
 ```tsx
 // Modal.tsx
@@ -1281,7 +1259,7 @@ export default function Page() {
 
 Le Server Component est rendu **d'abord sur le serveur** ; le résultat sérialisé est passé au Client Component comme un « trou » à remplir. Le client n'a pas besoin de son code.
 
-**5.4.4 Sérialisation des props.** Les props passées d'un Server Component à un Client Component doivent être **sérialisables par React** :
+**Sérialisation des props.** Les props passées d'un Server Component à un Client Component doivent être **sérialisables par React** :
 
 | Autorisé | Interdit |
 | --- | --- |
@@ -1293,7 +1271,7 @@ Le Server Component est rendu **d'abord sur le serveur** ; le résultat sériali
 
 Astuce : pour passer une fonction, passez plutôt une **Server Action**, ou déclarez la fonction côté client.
 
-**5.4.5 Promesses comme props et hook `use`.** Un Server Component peut passer une **promesse non attendue** à un Client Component, qui la lit avec `use()` (sous `Suspense`) : la requête démarre côté serveur, le rendu se fait côté client.
+**Promesses comme props et hook `use`.** Un Server Component peut passer une **promesse non attendue** à un Client Component, qui la lit avec `use()` (sous `Suspense`) : la requête démarre côté serveur, le rendu se fait côté client.
 
 ```tsx
 // Server Component
@@ -1321,7 +1299,7 @@ export default function Posts({ posts }: { posts: Promise<{ id: string; title: s
 }
 ```
 
-### 5.5 Placer la frontière le plus bas possible
+## Placer la frontière le plus bas possible
 
 Marquer un **grand** composant `"use client"` envoie tout son sous-arbre au navigateur. Préférez **isoler la partie interactive** dans un petit composant.
 
@@ -1355,7 +1333,7 @@ export default function Page() {
 }
 ```
 
-### 5.6 Fournisseurs de contexte (*Context Providers*)
+## Fournisseurs de contexte (*Context Providers*)
 
 `createContext` n'est pas disponible dans les Server Components. On crée un **Client Component Provider** et on l'insère **le plus bas possible** dans l'arbre.
 
@@ -1390,7 +1368,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
 Les `children` (Server Components) restent rendus côté serveur grâce à l'entrelacement.
 
-### 5.7 Bibliothèques tierces
+## Bibliothèques tierces
 
 Beaucoup de bibliothèques utilisent `useState` ou des effets **sans** déclarer `"use client"`. Les importer directement dans un Server Component provoque une erreur. Solution : un **wrapper** :
 
@@ -1401,7 +1379,7 @@ import { Carousel } from "acme-carousel";
 export default Carousel;
 ```
 
-### 5.8 Protéger le code serveur : `server-only` et `client-only`
+## Protéger le code serveur : `server-only` et `client-only`
 
 ```bash
 npm install server-only client-only
@@ -1415,10 +1393,10 @@ export async function getSecrets() { /* ... */ }
 
 - **`server-only`** empêche un module (qui utilise des secrets, la base de données) d'être importé côté client.
 - **`client-only`** empêche l'inverse (module dépendant de `window`).
-- **Variables d'environnement** : seules celles préfixées **`NEXT_PUBLIC_`** sont inlinées dans le code client (chapitre 19).
+- **Variables d'environnement** : seules celles préfixées **`NEXT_PUBLIC_`** sont inlinées dans le code client (section « Variables d'environnement »).
 - **API de *taint* (expérimentale)** : React propose `experimental_taintObjectReference` et `experimental_taintUniqueValue` pour **interdire** qu'un objet ou une valeur sensible (jeton, utilisateur complet) soit passé à un Client Component ; à activer via `experimental.taint`. Elle **complète**, sans le remplacer, une bonne **couche d'accès aux données (DAL)** qui ne renvoie que des **DTO** (objets minimaux, 6.11).
 
-### 5.9 Chargement dynamique et `ssr: false`
+## Chargement dynamique et `ssr: false`
 
 ```tsx
 // Client Component
@@ -1433,7 +1411,7 @@ const Carte = dynamic(() => import("./Carte"), {
 
 Attention : `ssr: false` n'est **autorisé que dans un Client Component** (version 15+).
 
-### 5.10 Erreurs d'hydratation
+## Erreurs d'hydratation
 
 Une **erreur d'hydratation** survient quand le HTML produit par le serveur diffère du premier rendu du client. Causes fréquentes :
 
@@ -1444,7 +1422,7 @@ Une **erreur d'hydratation** survient quand le HTML produit par le serveur diff�
 
 **Solutions :** déplacer le code dépendant du client dans `useEffect` ; utiliser un état « monté » ; ou `suppressHydrationWarning` (avec parcimonie, sur un seul niveau d'élément).
 
-### 5.11 Pièges fréquents
+## Pièges fréquents
 
 - **Marquer toute la page `"use client"` « pour que ça marche »** : perte des bénéfices des RSC.
 - **Importer un module serveur secret dans un composant client** sans `server-only`.
@@ -1453,7 +1431,7 @@ Une **erreur d'hydratation** survient quand le HTML produit par le serveur diff�
 - **Utiliser `useContext` dans un Server Component**.
 - **Confondre « Client Component » et « rendu côté client uniquement »** : un Client Component est **aussi pré-rendu** sur le serveur.
 
-### 5.12 Glossaire du chapitre
+## Glossaire
 
 | Terme | Définition courte |
 | --- | --- |
@@ -1466,17 +1444,11 @@ Une **erreur d'hydratation** survient quand le HTML produit par le serveur diff�
 | DTO | Objet de transfert de données, version minimale d'une entité |
 | Erreur d'hydratation | Différence entre HTML serveur et premier rendu client |
 
-### Synthèse du chapitre 5
-
-Par défaut : **Server Component**. `"use client"` **seulement** pour l'interactivité. La frontière est définie au niveau du **module**. **Entrelacez** : un Server Component en `children` d'un Client Component. Props **sérialisables** ; secrets protégés (`server-only`, DAL, DTO) ; frontière **la plus basse possible**.
-
----
-
-## 6. Récupération de données (*Data Fetching*)
+# Récupération de données (*Data Fetching*)
 
 **Objectifs d'apprentissage.** Charger des données dans les Server Components (`fetch`, ORM, fichiers) ; dédupliquer les requêtes ; organiser les requêtes **en parallèle ou en séquence** ; utiliser le **streaming** avec `Suspense` ; charger des données côté client lorsque c'est nécessaire ; connaître les **API de requête** dynamiques ; exécuter du code après la réponse ; gérer les erreurs ; sécuriser l'accès aux données avec une **DAL**.
 
-### 6.1 Principe
+## Principe
 
 Dans l'App Router, **un composant serveur peut être `async`** et attendre directement ses données :
 
@@ -1498,15 +1470,15 @@ export default async function Page() {
 
 Pas de `useEffect`, pas d'état de chargement manuel : la requête s'exécute **sur le serveur**, avant l'envoi du HTML.
 
-### 6.2 Sources de données
+## Sources de données
 
-**6.2.1 `fetch` (API externes).**
+**`fetch` (API externes).**
 
 - L'API Web standard `fetch` est **étendue** par Next.js (options `cache`, `next.revalidate`, `next.tags` dans le modèle classique).
-- **Version 15+** : les requêtes `fetch` **ne sont plus mises en cache par défaut**. Avec Cache Components, on met en cache **la fonction ou le composant** qui encapsule le `fetch` avec `"use cache"` (chapitre 7).
+- **Version 15+** : les requêtes `fetch` **ne sont plus mises en cache par défaut**. Avec Cache Components, on met en cache **la fonction ou le composant** qui encapsule le `fetch` avec `"use cache"` (section « Mise en cache »).
 - Gérez toujours les erreurs : `res.ok`, codes HTTP, expirations (`fetch` ne lève **pas** d'exception sur un 404 ou un 500).
 
-**6.2.2 Base de données, ORM, SDK.** Le code s'exécutant sur le serveur, on appelle directement Prisma, Drizzle, un client SQL ou un SDK de CMS :
+**Base de données, ORM, SDK.** Le code s'exécutant sur le serveur, on appelle directement Prisma, Drizzle, un client SQL ou un SDK de CMS :
 
 ```tsx
 import { db } from "@/lib/db";
@@ -1517,7 +1489,7 @@ export default async function Utilisateurs() {
 }
 ```
 
-**6.2.3 Système de fichiers.**
+**Système de fichiers.**
 
 ```tsx
 import { readFile } from "node:fs/promises";
@@ -1531,7 +1503,7 @@ export default async function Page() {
 
 *(ajout, 16.3)* Pour charger **plusieurs fichiers locaux** (articles Markdown, par exemple), Turbopack prend en charge `import.meta.glob`, avec rechargement à chaud : `import.meta.glob("./posts/*.md", { eager: true })` (un loader doit être déclaré dans la configuration pour les fichiers `.md`).
 
-### 6.3 Déduplication des requêtes
+## Déduplication des requêtes
 
 Dans **un même passage de rendu**, plusieurs composants peuvent demander les mêmes données sans surcoût : Next.js **mémoïse** les `fetch` GET identiques (*Request Memoization*). Pour les accès **sans `fetch`** (ORM, SDK), utilisez **`React.cache`** :
 
@@ -1545,11 +1517,11 @@ export const getUser = cache(async (id: string) => {
 });
 ```
 
-Le layout, la page et un composant enfant peuvent tous appeler `getUser("42")` : **une seule** requête est faite par rendu. Ce cache vit **le temps d'une requête serveur** ; il est distinct du cache persistant du chapitre 7.
+Le layout, la page et un composant enfant peuvent tous appeler `getUser("42")` : **une seule** requête est faite par rendu. Ce cache vit **le temps d'une requête serveur** ; il est distinct du cache persistant de la section « Mise en cache ».
 
 > **Conseil.** Au lieu de « remonter » les données dans un parent pour les passer en props, **récupérez-les là où vous en avez besoin**, grâce à la déduplication.
 
-### 6.4 Requêtes parallèles et séquentielles
+## Requêtes parallèles et séquentielles
 
 **Séquentielles (cascade, *waterfall*) :**
 
@@ -1578,7 +1550,7 @@ const albums = await promesse;        // probablement déjà prête
 
 **Cascades implicites par composants.** Si un parent `async` attend ses données avant de rendre un enfant `async`, les requêtes s'enchaînent. Atténuez avec **`Suspense`** (les deux composants rendent indépendamment) ou en remontant les requêtes avec `Promise.all`.
 
-### 6.5 Streaming avec Suspense et `loading.tsx`
+## Streaming avec Suspense et `loading.tsx`
 
 Le **streaming** envoie le HTML **par morceaux** : la coque de la page arrive tout de suite, puis chaque zone lente arrive quand elle est prête.
 
@@ -1602,11 +1574,11 @@ export default function Dashboard() {
 
 *Avantages :* meilleur **TTFB** perçu, interaction plus précoce (**hydratation sélective**), isolement des lenteurs.
 
-### 6.6 Données dans les Client Components
+## Données dans les Client Components
 
 Quand les données dépendent de l'interactivité (saisie, *polling*, temps réel), plusieurs options :
 
-1. **Promesse passée depuis le serveur** + `use()` (voir 5.4.5).
+1. **Promesse passée depuis le serveur** + `use()` (voir la section « Règles de composition »).
 2. **Bibliothèques** : **SWR** ou **TanStack Query** (cache, revalidation, déduplication, états de chargement).
 3. **Route Handler** (`/api/...`) appelé depuis le client.
 
@@ -1626,7 +1598,7 @@ export default function Profil() {
 
 > **À éviter.** Appeler **depuis un Server Component** votre propre Route Handler (`fetch("/api/...")`) : cela ajoute un aller-retour réseau inutile. Appelez directement la fonction partagée.
 
-### 6.7 API de requête dynamiques
+## API de requête dynamiques
 
 Ces API lisent des informations **propres à la requête** : leur utilisation rend la portion concernée **dynamique**.
 
@@ -1649,9 +1621,9 @@ await connection(); // « attendre une vraie requête » avant de continuer (ren
 
 - `cookies()` : **lecture seule** dans les Server Components ; **écriture** (`set`, `delete`) uniquement dans les **Server Actions** et **Route Handlers** (les en-têtes sont déjà partis lors d'un rendu en *streaming*).
 - `connection()` remplace l'ancien `unstable_noStore()` pour signaler « ne pas pré-rendre ceci ».
-- Avec **Cache Components**, ces API ne sont **pas utilisables à l'intérieur** d'un périmètre `"use cache"` : lisez-les **à l'extérieur** et passez les valeurs en arguments (chapitre 7).
+- Avec **Cache Components**, ces API ne sont **pas utilisables à l'intérieur** d'un périmètre `"use cache"` : lisez-les **à l'extérieur** et passez les valeurs en arguments (section « Mise en cache »).
 
-### 6.8 Exemple : pagination et filtre via l'URL
+## Exemple : pagination et filtre via l'URL
 
 L'URL est une excellente source d'état **partageable**.
 
@@ -1680,7 +1652,7 @@ export default async function Produits({
 }
 ```
 
-### 6.9 Exécuter du code **après** la réponse : `after()`
+## Exécuter du code **après** la réponse : `after()`
 
 Pour la journalisation, les statistiques ou les notifications **sans retarder** la réponse :
 
@@ -1697,7 +1669,7 @@ export default async function Page() {
 
 Utilisable dans les Server Components, Server Actions, Route Handlers et Proxy (stable depuis Next.js 15.1).
 
-### 6.10 Gestion des erreurs de données
+## Gestion des erreurs de données
 
 | Situation | Stratégie |
 | --- | --- |
@@ -1711,7 +1683,7 @@ Utilisable dans les Server Components, Server Actions, Route Handlers et Proxy (
 const res = await fetch(url, { signal: AbortSignal.timeout(5000) });
 ```
 
-### 6.11 Sécurité des données : la couche d'accès (DAL)
+## Sécurité des données : la couche d'accès (DAL)
 
 **Principes :**
 
@@ -1732,7 +1704,7 @@ export const getProfil = cache(async () => {
 });
 ```
 
-### 6.12 Pièges fréquents
+## Pièges fréquents
 
 - **Cascades involontaires** : `await` en série de requêtes indépendantes.
 - **Fetch côté client « par réflexe »** alors qu'un Server Component suffit.
@@ -1741,7 +1713,7 @@ export const getProfil = cache(async () => {
 - **Retourner des objets entiers de la base de données** au client.
 - **Appeler son propre Route Handler** depuis un Server Component.
 
-### 6.13 Glossaire du chapitre
+## Glossaire
 
 | Terme | Définition courte |
 | --- | --- |
@@ -1754,21 +1726,13 @@ export const getProfil = cache(async () => {
 | `after()` | Exécute du code après l'envoi de la réponse |
 | DAL | Couche centralisant l'accès aux données et l'autorisation |
 
-### Synthèse du chapitre 6
-
-Les Server Components chargent les données **directement**, en `async`. `React.cache` déduplique les accès sans `fetch` ; `Promise.all` parallélise. `Suspense` et le streaming réduisent le temps d'affichage perçu. Les API de requête (`cookies`, `headers`, `searchParams`) sont **asynchrones** et rendent le rendu **dynamique**. Sécurisez via une **DAL** et des **DTO**.
-
----
-
-# Partie II — Rendu, cache et mutations
-
-## 7. Mise en cache (*Caching*)
+# Mise en cache (*Caching*)
 
 **Objectifs d'apprentissage.** Comprendre pourquoi et où Next.js met des choses en cache ; maîtriser le modèle **Cache Components** (`"use cache"`, `cacheLife`, `cacheTag`) ; distinguer contenu statique, mis en cache et dynamique ; utiliser les API de **revalidation** (`revalidateTag`, `updateTag`, `refresh`, `revalidatePath`) ; comprendre l'effet du cache sur la navigation côté client ; lire et maintenir du code du **modèle classique** (Next.js ≤ 15).
 
-> **Version.** Le cache est **le sujet qui a le plus évolué**. Next.js 13 et 14 mettaient beaucoup de choses en cache **implicitement** ; Next.js 15 a supprimé la plupart des caches par défaut ; **Next.js 16 introduit un modèle explicite : Cache Components**, recommandé pour **toute** application depuis **16.4** et activé par défaut dans les nouveaux projets. Ce chapitre présente d'abord le modèle actuel, puis le modèle classique.
+> **Version.** Le cache est **le sujet qui a le plus évolué**. Next.js 13 et 14 mettaient beaucoup de choses en cache **implicitement** ; Next.js 15 a supprimé la plupart des caches par défaut ; **Next.js 16 introduit un modèle explicite : Cache Components**, recommandé pour **toute** application depuis **16.4** et activé par défaut dans les nouveaux projets. Cette section présente d'abord le modèle actuel, puis le modèle classique.
 
-### 7.1 Pourquoi mettre en cache ?
+## Pourquoi mettre en cache ?
 
 Le cache évite de **refaire un travail coûteux** (requête de base de données, appel d'API, rendu d'un composant) quand le résultat n'a pas changé. Bénéfices : **rapidité**, **moindre charge**, **coût réduit**. Risque : **servir des données périmées** (*stale*). Toute stratégie de cache consiste donc à décider :
 
@@ -1788,7 +1752,7 @@ Le cache évite de **refaire un travail coûteux** (requête de base de données
 | **Invalidation** | Marquer une entrée comme périmée |
 | **Mémoïsation** | Réutiliser un résultat pendant un temps très court (ici : une requête de rendu) |
 
-### 7.2 Le modèle Cache Components
+## Le modèle Cache Components
 
 **Principe.** Avec **Cache Components**, le comportement par défaut est : **le code s'exécute à la requête (dynamique)**. Vous **choisissez explicitement** ce qui est mis en cache avec la directive **`"use cache"`**. On peut la comprendre comme une version, au niveau d'un composant, de l'en-tête HTTP `Cache-Control`.
 
@@ -1808,7 +1772,7 @@ const nextConfig: NextConfig = {
 export default nextConfig;
 ```
 
-> **À savoir.** Depuis **16.4**, les projets créés avec `create-next-app` activent déjà ce modèle, et l'équipe annonce qu'il sera **le défaut de Next.js 17**. L'option `partialPrefetching` apporte le préchargement fin décrit au chapitre 12.
+> **À savoir.** Depuis **16.4**, les projets créés avec `create-next-app` activent déjà ce modèle, et l'équipe annonce qu'il sera **le défaut de Next.js 17**. L'option `partialPrefetching` apporte le préchargement fin décrit dans la section « Navigation ».
 
 **Les trois catégories de contenu.** Avec Cache Components, chaque morceau de rendu relève de l'une d'elles :
 
@@ -1861,7 +1825,7 @@ export default function Page() {
 
 Next.js sert l'élément en cache (comme un fichier de `public/` ou un CDN) et rend l'élément dynamique **à la requête**, **dans la même réponse HTTP**.
 
-### 7.3 La directive `"use cache"`
+## La directive `"use cache"`
 
 **Où la placer ?**
 
@@ -1928,7 +1892,7 @@ async function Contenu({ lang }: { lang: string }) {
 
 Ces variantes sont plus récentes et spécialisées : consultez la documentation de votre version avant de les adopter.
 
-### 7.4 `cacheLife` : la durée de vie
+## `cacheLife` : la durée de vie
 
 ```ts
 import { cacheLife } from "next/cache";
@@ -1976,7 +1940,7 @@ const nextConfig = {
 cacheLife("editorial");
 ```
 
-### 7.5 `cacheTag` : étiqueter pour invalider
+## `cacheTag` : étiqueter pour invalider
 
 ```ts
 import { cacheTag } from "next/cache";
@@ -1990,7 +1954,7 @@ async function getPosts() {
 
 Plusieurs étiquettes sont possibles : `cacheTag("posts", "homepage")`. On invalide ensuite **toutes les entrées portant cette étiquette**, quel que soit l'endroit où elles sont utilisées.
 
-### 7.6 Revalidation et invalidation
+## Revalidation et invalidation
 
 Toutes ces fonctions viennent de **`next/cache`**.
 
@@ -2076,11 +2040,11 @@ export async function POST(request: Request) {
 }
 ```
 
-### 7.7 Le cache côté client avec Cache Components *(ajout)*
+## Le cache côté client avec Cache Components *(ajout)*
 
-Avec Cache Components, `"use cache"` ne gère plus seulement le **cache serveur** : Next.js peut aussi conserver l'interface mise en cache **dans le navigateur** pendant les navigations côté client. Ce cache client est ce qui permet de revenir instantanément sur une page déjà visitée. Il est piloté par les mêmes profils (`stale` notamment) et est déjà évoqué avec les préchargements partiels du chapitre 12. Retenez que **`stale`** dans `cacheLife` règle précisément **combien de temps le navigateur réutilise une valeur sans interroger le serveur**.
+Avec Cache Components, `"use cache"` ne gère plus seulement le **cache serveur** : Next.js peut aussi conserver l'interface mise en cache **dans le navigateur** pendant les navigations côté client. Ce cache client est ce qui permet de revenir instantanément sur une page déjà visitée. Il est piloté par les mêmes profils (`stale` notamment) et est déjà évoqué avec les préchargements partiels de la section « Navigation ». Retenez que **`stale`** dans `cacheLife` règle précisément **combien de temps le navigateur réutilise une valeur sans interroger le serveur**.
 
-### 7.8 Ce que Cache Components change pour les anciennes options
+## Ce que Cache Components change pour les anciennes options
 
 Avec `cacheComponents: true` :
 
@@ -2091,7 +2055,7 @@ Avec `cacheComponents: true` :
 
 **Migrer un projet existant.** Next.js fournit un guide de migration vers Cache Components et, depuis 16.4, la commande `next upgrade --agent` ainsi que des *Skills* pour agents de codage qui guident cette migration. Procédez route par route : activez le modèle, corrigez les erreurs « accès dynamique hors `Suspense` », puis ajoutez `"use cache"` là où l'ancien code comptait sur le cache implicite.
 
-### 7.9 Le modèle classique (Next.js ≤ 15, ou sans Cache Components) *(héritage)*
+## Le modèle classique (Next.js ≤ 15, ou sans Cache Components) *(héritage)*
 
 Utile pour comprendre et maintenir du code existant.
 
@@ -2150,7 +2114,7 @@ const nextConfig = {
 
 Le routeur côté client peut aussi être rafraîchi avec `router.refresh()`.
 
-### 7.10 Cache du navigateur et en-têtes HTTP
+## Cache du navigateur et en-têtes HTTP
 
 En complément du cache de Next.js, les **en-têtes `Cache-Control`** pilotent les caches du navigateur et des CDN :
 
@@ -2158,16 +2122,16 @@ En complément du cache de Next.js, les **en-têtes `Cache-Control`** pilotent l
 - Images optimisées : `images.minimumCacheTTL` (défaut de 4 heures en Next.js 16).
 - Pages : `s-maxage` et `stale-while-revalidate` sont ajoutés automatiquement pour l'ISR sur certaines plateformes ; personnalisables via `headers()` dans `next.config`.
 
-### 7.11 Auto-hébergement et cache partagé
+## Auto-hébergement et cache partagé
 
-Par défaut, le cache est **local au processus / serveur** (mémoire + disque `.next/`). En **multi-instances** (plusieurs conteneurs, Kubernetes), chaque instance a **son propre cache** : la revalidation n'est pas partagée. Solutions : un **gestionnaire de cache personnalisé** (`cacheHandler`, `cacheHandlers` pour Cache Components) branché sur Redis ou S3, ou une plateforme qui fournit un cache partagé (chapitre 22).
+Par défaut, le cache est **local au processus / serveur** (mémoire + disque `.next/`). En **multi-instances** (plusieurs conteneurs, Kubernetes), chaque instance a **son propre cache** : la revalidation n'est pas partagée. Solutions : un **gestionnaire de cache personnalisé** (`cacheHandler`, `cacheHandlers` pour Cache Components) branché sur Redis ou S3, ou une plateforme qui fournit un cache partagé (section « Déploiement »).
 
-### 7.12 Cache et sécurité
+## Cache et sécurité
 
 - **Ne mettez jamais en cache des données propres à un utilisateur** dans un cache **partagé** : la fuite entre utilisateurs est le risque principal. Avec `"use cache"`, **lisez les cookies / en-têtes à l'extérieur** et incluez l'identifiant dans les arguments, ou utilisez `"use cache: private"`.
 - Un cache mal configuré derrière un CDN peut servir une page personnalisée à un autre visiteur : vérifiez les en-têtes `Vary` et `Cache-Control`.
 
-### 7.13 Pièges fréquents
+## Pièges fréquents
 
 - **Oublier d'invalider** après une mutation : l'utilisateur voit des données obsolètes.
 - **Mettre en cache une fonction qui lit des cookies** : erreur ou fuite entre utilisateurs.
@@ -2177,7 +2141,7 @@ Par défaut, le cache est **local au processus / serveur** (mémoire + disque `.
 - **Penser que le mode développement reflète la production** : testez avec `build` + `start`.
 - **Appeler `revalidateTag("x")` sans second argument** (Next.js 16) : forme dépréciée.
 
-### 7.14 Glossaire du chapitre
+## Glossaire
 
 | Terme | Définition courte |
 | --- | --- |
@@ -2192,17 +2156,11 @@ Par défaut, le cache est **local au processus / serveur** (mémoire + disque `.
 | SWR | *Stale-while-revalidate* |
 | Data Cache / Router Cache | Caches du modèle classique (serveur / client) |
 
-### Synthèse du chapitre 7
-
-**Next.js 16 : dynamique par défaut, cache explicite avec `"use cache"`.** `cacheLife` règle `stale` / `revalidate` / `expire` ; `cacheTag` étiquette. `updateTag` (immédiat, Server Actions) ≠ `revalidateTag` (SWR) ≠ `refresh` (hors cache). Tout ce qui est dynamique doit être sous `Suspense`. Le modèle classique (options de `fetch`, ISR, `unstable_cache`) reste à connaître pour maintenir du code existant.
-
----
-
-## 8. Stratégies de rendu : SSR, SSG, ISR, PPR, CSR
+# Stratégies de rendu : SSR, SSG, ISR, PPR, CSR
 
 **Objectifs d'apprentissage.** Définir précisément chaque stratégie de rendu ; savoir comment Next.js décide qu'une route est statique ou dynamique ; comprendre la coque statique de Cache Components et l'ISR amélioré de 16.3 ; garantir qu'une page reste statique avec `ensureStatic` ; choisir la stratégie adaptée à un cas d'usage ; connaître les runtimes et l'export statique ; comprendre les **Core Web Vitals**.
 
-### 8.1 Définitions
+## Définitions
 
 | Stratégie | Quand le HTML est-il produit ? | Où ? | Idéal pour |
 | --- | --- | --- | --- |
@@ -2230,9 +2188,9 @@ Par défaut, le cache est **local au processus / serveur** (mémoire + disque `.
 1. une **coque statique** (layout, titres, navigation, éléments en cache) servie instantanément depuis un CDN ;
 2. des **trous dynamiques** (`Suspense`) remplis en streaming depuis le serveur.
 
-C'est le modèle recommandé de Next.js 16.4 (chapitre 7).
+C'est le modèle recommandé de Next.js 16.4 (section « Mise en cache »).
 
-### 8.2 Comment Next.js choisit : statique ou dynamique ?
+## Comment Next.js choisit : statique ou dynamique ?
 
 **Modèle classique (sans Cache Components).** Une route est **statique par défaut** et devient **dynamique** quand elle utilise :
 
@@ -2245,13 +2203,13 @@ C'est le modèle recommandé de Next.js 16.4 (chapitre 7).
 
 **Avec Cache Components.** Tout ce qui est **dynamique** doit être sous **`<Suspense>`** (ou mis en cache avec `"use cache"`). Ce qui est déterministe et mis en cache est inclus dans la **coque statique**. Le tableau des routes affiché par `next build` indique alors, par exemple, les routes **partiellement pré-rendues**.
 
-### 8.3 Pré-génération de routes dynamiques
+## Pré-génération de routes dynamiques
 
-`generateStaticParams` (chapitre 3) génère au build les pages d'une route dynamique. Stratégie courante : **pré-générer les pages les plus visitées** (liste courte) et laisser les autres être générées **à la demande**, puis mises en cache.
+`generateStaticParams` (section « Routing (App Router) ») génère au build les pages d'une route dynamique. Stratégie courante : **pré-générer les pages les plus visitées** (liste courte) et laisser les autres être générées **à la demande**, puis mises en cache.
 
 **ISR amélioré avec Cache Components (16.3).** Quand vous ne pré-rendez qu'**une partie** des pages d'une route, les autres posaient un dilemme : afficher une coque de chargement sans jamais être pré-rendues, ou bloquer le premier visiteur. Désormais, **une page non pré-rendue sert une coque de chargement instantanée à sa première visite, puis est mise à niveau en arrière-plan** vers la page complète ; les visiteurs suivants reçoivent le contenu final depuis le cache.
 
-### 8.4 Garantir qu'une page reste statique : `ensureStatic` *(ajout, 16.4)*
+## Garantir qu'une page reste statique : `ensureStatic` *(ajout, 16.4)*
 
 Avec Cache Components, un seul composant dynamique glissé par erreur dans une page peut dégrader ses performances et son coût. `ensureStatic` fait **échouer le build** si du contenu dynamique apparaît :
 
@@ -2277,7 +2235,7 @@ export default function Page() {
 
 On peut l'ajouter à un **layout** pour appliquer la garantie à toutes les pages qu'il enveloppe, puis la relâcher plus bas pour les pages qui ont besoin de dynamique. Utile pour les boutiques, pages marketing et blogs.
 
-### 8.5 Runtimes d'exécution
+## Runtimes d'exécution
 
 | Runtime | Description | Remarques |
 | --- | --- | --- |
@@ -2288,7 +2246,7 @@ On peut l'ajouter à un **layout** pour appliquer la garantie à toutes les page
 export const runtime = "nodejs"; // (modèle classique) ou "edge" pour un Route Handler / une page concernée
 ```
 
-### 8.6 Core Web Vitals : mesurer le résultat
+## Core Web Vitals : mesurer le résultat
 
 | Métrique | Définition | Seuil « bon » |
 | --- | --- | --- |
@@ -2312,7 +2270,7 @@ export function WebVitals() {
 }
 ```
 
-### 8.7 Guide de décision
+## Guide de décision
 
 | Contenu | Stratégie conseillée |
 | --- | --- |
@@ -2324,7 +2282,7 @@ export function WebVitals() {
 | Recherche | Dynamique (`searchParams`) ou CSR avec SWR |
 | Contenu très personnalisé | SSR / `Suspense` |
 
-### 8.8 Export statique
+## Export statique
 
 ```ts
 // next.config.ts
@@ -2334,7 +2292,7 @@ export default nextConfig;
 
 Génère un dossier `out/` de fichiers HTML / CSS / JS à héberger sur n'importe quel serveur statique. **Limites** : pas de Server Actions, pas de Route Handlers dynamiques, pas de Proxy, pas de rendu dynamique, pas d'optimisation d'images par défaut (loader personnalisé nécessaire), pas d'ISR.
 
-### 8.9 Pièges fréquents
+## Pièges fréquents
 
 - **Croire qu'une page est statique** alors qu'un composant lit `cookies()` ou `searchParams`.
 - **Ne pas lire le tableau de build** pour vérifier le mode de rendu.
@@ -2343,7 +2301,7 @@ Génère un dossier `out/` de fichiers HTML / CSS / JS à héberger sur n'import
 - **Utiliser `export const dynamic`** avec Cache Components : non supporté.
 - **Oublier qu'un layout racine dynamique** (lecture de cookies hors `Suspense`) casse la coque statique de **toutes** les pages.
 
-### 8.10 Glossaire du chapitre
+## Glossaire
 
 | Terme | Définition courte |
 | --- | --- |
@@ -2355,17 +2313,11 @@ Génère un dossier `out/` de fichiers HTML / CSS / JS à héberger sur n'import
 | LCP / INP / CLS / TTFB | Métriques de performance perçue |
 | Export statique | Sortie de fichiers sans serveur (`output: "export"`) |
 
-### Synthèse du chapitre 8
-
-SSG = au build ; SSR = à la requête ; ISR = statique régénéré ; CSR = navigateur ; **PPR / Cache Components = coque statique + trous dynamiques**. Le caractère statique ou dynamique découle de **ce que vos composants utilisent**. `ensureStatic` verrouille la nature statique d'une route. Mesurez avec les Core Web Vitals.
-
----
-
-## 9. Server Actions et mutations
+# Server Actions et mutations
 
 **Objectifs d'apprentissage.** Définir et appeler des **Server Actions** (formulaires et événements) ; gérer **validation**, **erreurs**, **états de chargement** et **mises à jour optimistes** ; revalider le cache et rediriger après une mutation ; téléverser des fichiers ; **sécuriser** les actions ; choisir entre Server Action et Route Handler.
 
-### 9.1 Définition
+## Définition
 
 Une **Server Action** (plus largement, une **Server Function**) est une **fonction asynchrone exécutée sur le serveur**, appelable depuis le client. Elle sert aux **mutations** (créer, modifier, supprimer) et à tout traitement qui ne doit pas s'exécuter dans le navigateur.
 
@@ -2378,7 +2330,7 @@ Une **Server Action** (plus largement, une **Server Function**) est une **foncti
 - Les actions d'un même client sont traitées **l'une après l'autre** (file d'attente).
 - Les variables capturées par fermeture sont **chiffrées** ; les actions **non utilisées** sont éliminées du build.
 
-### 9.2 Créer une Server Action
+## Créer une Server Action
 
 **Option 1 : dans un fichier dédié (recommandé).**
 
@@ -2416,7 +2368,7 @@ export default function Page() {
 
 > Dans un **Client Component**, on **ne peut pas** définir une action en ligne : il faut l'**importer** depuis un fichier `"use server"`.
 
-### 9.3 Utilisation dans un formulaire
+## Utilisation dans un formulaire
 
 Passer l'action à l'attribut **`action`** de `<form>` :
 
@@ -2438,7 +2390,7 @@ export default function Formulaire() {
 - **Amélioration progressive** : dans un Server Component, le formulaire **fonctionne même sans JavaScript** (soumission HTML classique) ; après hydratation, il est envoyé sans rechargement.
 - Lire les champs : `formData.get("nom")`, `formData.getAll("tags")`, `Object.fromEntries(formData)`.
 
-### 9.4 Passer des arguments supplémentaires : `bind`
+## Passer des arguments supplémentaires : `bind`
 
 ```tsx
 import { supprimerPost } from "./actions";
@@ -2457,7 +2409,7 @@ export function BoutonSupprimer({ id }: { id: string }) {
 export async function supprimerPost(id: string, formData: FormData) { /* ... */ }
 ```
 
-### 9.5 Appels depuis des Client Components
+## Appels depuis des Client Components
 
 **Depuis un gestionnaire d'événement :**
 
@@ -2481,7 +2433,7 @@ export function Like({ id }: { id: string }) {
 
 **Depuis `useEffect`** : possible, mais à réserver aux cas particuliers (par exemple un compteur de vues).
 
-### 9.6 État du formulaire : `useActionState`
+## État du formulaire : `useActionState`
 
 ```tsx
 "use client";
@@ -2525,7 +2477,7 @@ export async function inscrire(prev: unknown, formData: FormData) {
 
 `useActionState` retourne `[état, actionEnveloppée, enCours]`.
 
-### 9.7 Indicateur de chargement : `useFormStatus`
+## Indicateur de chargement : `useFormStatus`
 
 ```tsx
 "use client";
@@ -2539,7 +2491,7 @@ export function BoutonEnvoyer() {
 
 Attention : `useFormStatus` doit être appelé dans un composant **enfant** du `<form>`, pas dans le composant qui rend le `<form>`.
 
-### 9.8 Mises à jour optimistes : `useOptimistic`
+## Mises à jour optimistes : `useOptimistic`
 
 Afficher **immédiatement** le résultat attendu, puis le réconcilier avec la réponse du serveur.
 
@@ -2571,7 +2523,7 @@ export function Taches({ taches }: { taches: { id: string; titre: string }[] }) 
 
 En cas d'échec, l'état **revient automatiquement** à la valeur réelle.
 
-### 9.9 Validation des données
+## Validation des données
 
 **Ne faites jamais confiance au client.** Validez **toujours côté serveur** (schémas **Zod**, Valibot, ArkType…), même si le formulaire valide déjà côté client : la validation client n'est qu'un confort.
 
@@ -2589,7 +2541,7 @@ const parsed = Schema.safeParse({
 });
 ```
 
-### 9.10 Gestion des erreurs
+## Gestion des erreurs
 
 | Type | Traitement |
 | --- | --- |
@@ -2598,7 +2550,7 @@ const parsed = Schema.safeParse({
 
 Évitez `throw` pour les erreurs de validation : l'utilisateur perdrait la saisie du formulaire.
 
-### 9.11 Revalider, rafraîchir, rediriger
+## Revalider, rafraîchir, rediriger
 
 ```ts
 "use server";
@@ -2617,7 +2569,7 @@ export async function modifierPost(id: string, data: FormData) {
 
 Attention : **`redirect()` doit venir après** la revalidation et **hors `try` / `catch`**.
 
-### 9.12 Cookies dans les actions
+## Cookies dans les actions
 
 ```ts
 "use server";
@@ -2631,7 +2583,7 @@ export async function choisirTheme(theme: "clair" | "sombre") {
 
 Les Server Actions et Route Handlers sont les **seuls** endroits où l'on peut **écrire** des cookies côté serveur.
 
-### 9.13 Téléversement de fichiers
+## Téléversement de fichiers
 
 ```ts
 "use server";
@@ -2654,7 +2606,7 @@ const nextConfig = { experimental: { serverActions: { bodySizeLimit: "5mb" } } }
 
 Pour de gros fichiers : **URL pré-signées** pour téléverser directement vers le stockage. Le type MIME déclaré par le client est falsifiable : contrôlez aussi le contenu réel (signature du fichier) pour les cas sensibles.
 
-### 9.14 Le composant `<Form>` de `next/form`
+## Le composant `<Form>` de `next/form`
 
 ```tsx
 import Form from "next/form";
@@ -2671,7 +2623,7 @@ export default function Recherche() {
 
 Pour les formulaires de **recherche (GET)** : navigation **côté client** avec préchargement de l'interface de chargement et conservation de l'état des layouts, avec **amélioration progressive**.
 
-### 9.15 Sécurité des Server Actions
+## Sécurité des Server Actions
 
 Les Server Actions sont des **endpoints HTTP publics**. Appliquez la même rigueur qu'à une API :
 
@@ -2683,9 +2635,9 @@ Les Server Actions sont des **endpoints HTTP publics**. Appliquez la même rigue
 6. **Ne jamais renvoyer** de données sensibles superflues.
 7. Les identifiants d'actions non utilisées ne sont pas exposés, mais **les actions exportées restent appelables** : vérifiez toujours les droits.
 
-> **Mises à jour de sécurité.** Les Server Functions ont déjà fait l'objet de correctifs importants dans l'écosystème React / Next.js. Appliquez systématiquement les versions de sécurité (programme formel depuis juillet 2026, chapitre 24).
+> **Mises à jour de sécurité.** Les Server Functions ont déjà fait l'objet de correctifs importants dans l'écosystème React / Next.js. Appliquez systématiquement les versions de sécurité (programme formel depuis juillet 2026, voir la section « Bonnes pratiques »).
 
-### 9.16 Quand préférer un Route Handler ?
+## Quand préférer un Route Handler ?
 
 | Server Action | Route Handler |
 | --- | --- |
@@ -2693,7 +2645,7 @@ Les Server Actions sont des **endpoints HTTP publics**. Appliquez la même rigue
 | Formulaires, amélioration progressive | **Webhooks**, endpoints REST / GraphQL |
 | Revalidation intégrée | Réponses non-JSON, streaming, formats personnalisés |
 
-### 9.17 Pièges fréquents
+## Pièges fréquents
 
 - **Oublier l'autorisation** dans l'action (« la page est protégée, donc l'action aussi » : faux).
 - **`redirect()` dans un `try` / `catch`**.
@@ -2703,7 +2655,7 @@ Les Server Actions sont des **endpoints HTTP publics**. Appliquez la même rigue
 - **Valider seulement côté client**.
 - **Oublier d'invalider le cache** après la mutation.
 
-### 9.18 Glossaire du chapitre
+## Glossaire
 
 | Terme | Définition courte |
 | --- | --- |
@@ -2716,17 +2668,11 @@ Les Server Actions sont des **endpoints HTTP publics**. Appliquez la même rigue
 | CSRF | Falsification de requête inter-sites |
 | `bind` | Pré-remplissage d'arguments d'une fonction |
 
-### Synthèse du chapitre 9
-
-`"use server"` + `<form action>` = **mutation avec amélioration progressive**. `useActionState`, `useFormStatus`, `useOptimistic` soignent l'expérience. Après mutation : `updateTag` / `revalidateTag` / `revalidatePath`, **puis** `redirect`. **Toujours valider et autoriser côté serveur** : une action est un endpoint public.
-
----
-
-## 10. Route Handlers (API)
+# Route Handlers (API)
 
 **Objectifs d'apprentissage.** Créer des endpoints HTTP avec `route.ts` ; utiliser `Request`, `NextRequest` et `NextResponse` ; gérer paramètres dynamiques, cookies, en-têtes, codes de statut, cache, CORS, streaming et webhooks ; appeler un Route Handler ; appliquer les bonnes pratiques d'API.
 
-### 10.1 Principe
+## Principe
 
 Un **Route Handler** est défini dans un fichier **`route.ts`** (ou `.js`) à l'intérieur d'`app/`. Il exporte des **fonctions nommées d'après les méthodes HTTP** : `GET`, `POST`, `PUT`, `PATCH`, `DELETE`, `HEAD`, `OPTIONS`. Il s'appuie sur les API Web standard **`Request`** et **`Response`**.
 
@@ -2741,7 +2687,7 @@ export async function GET() {
 - Une méthode non exportée renvoie **405 *Method Not Allowed***.
 - Un dossier ne peut pas avoir à la fois un `page` et un `route` pour la **même URL**.
 
-### 10.2 Lire la requête
+## Lire la requête
 
 ```ts
 import { NextRequest, NextResponse } from "next/server";
@@ -2760,7 +2706,7 @@ export async function POST(request: Request) {
 }
 ```
 
-### 10.3 Segments dynamiques
+## Segments dynamiques
 
 ```ts
 // app/api/posts/[id]/route.ts
@@ -2781,9 +2727,9 @@ export async function DELETE(_req: Request, ctx: RouteContext<"/api/posts/[id]">
 }
 ```
 
-(`RouteContext<...>` est un helper de types généré par Next.js ; voir chapitre 20.)
+(`RouteContext<...>` est un helper de types généré par Next.js ; voir la section « TypeScript ».)
 
-### 10.4 Construire des réponses
+## Construire des réponses
 
 ```ts
 // JSON
@@ -2809,7 +2755,7 @@ const store = await cookies();
 store.set("a", "b");
 ```
 
-### 10.5 Codes de statut courants
+## Codes de statut courants
 
 | Code | Sens | Usage |
 | --- | --- | --- |
@@ -2827,7 +2773,7 @@ store.set("a", "b");
 | 429 | Too Many Requests | Limitation de débit |
 | 500 | Internal Server Error | Erreur serveur |
 
-### 10.6 Mise en cache des Route Handlers
+## Mise en cache des Route Handlers
 
 - **Version 15+** : les handlers `GET` **ne sont pas mis en cache par défaut**.
 - **Modèle classique** : `export const dynamic = "force-static"` permet de les pré-rendre au build (flux RSS, `sitemap` personnalisé) ; `export const revalidate = 3600` pour une régénération temporelle.
@@ -2848,7 +2794,7 @@ export async function GET() {
 }
 ```
 
-### 10.7 CORS
+## CORS
 
 ```ts
 const entetesCors = {
@@ -2868,7 +2814,7 @@ export async function GET() {
 
 Évitez `Access-Control-Allow-Origin: *` pour les API qui exigent des identifiants.
 
-### 10.8 Webhooks
+## Webhooks
 
 Réception d'un webhook avec **vérification de signature** (le **corps brut** est nécessaire) :
 
@@ -2891,7 +2837,7 @@ export async function POST(request: Request) {
 }
 ```
 
-### 10.9 Streaming et Server-Sent Events
+## Streaming et Server-Sent Events
 
 ```ts
 export async function GET() {
@@ -2911,7 +2857,7 @@ export async function GET() {
 }
 ```
 
-### 10.10 Appeler un Route Handler
+## Appeler un Route Handler
 
 - Depuis un **Client Component** : `fetch("/api/...")`, SWR, TanStack Query.
 - Depuis un **client externe** : `curl`, application mobile, service tiers.
@@ -2923,7 +2869,7 @@ curl -X POST http://localhost:3000/api/posts \
     -d '{"titre":"Salut"}'
 ```
 
-### 10.11 Bonnes pratiques d'API
+## Bonnes pratiques d'API
 
 - Valider les entrées (Zod) ; renvoyer des erreurs **cohérentes** (`{ erreur, details }`).
 - Authentifier et autoriser **chaque** handler.
@@ -2932,7 +2878,7 @@ curl -X POST http://localhost:3000/api/posts \
 - Journalisation et identifiants de corrélation.
 - Versionner si l'API est publique (`/api/v1/...`).
 
-### 10.12 Pièges fréquents
+## Pièges fréquents
 
 - **Lire le corps deux fois** (`json()` puis `text()`) : le flux est consommé.
 - **Oublier `await params`**.
@@ -2941,7 +2887,7 @@ curl -X POST http://localhost:3000/api/posts \
 - **Écrire un Route Handler pour ce qu'une Server Action ferait mieux** (formulaires internes).
 - **Placer `"use cache"` directement dans le handler** avec Cache Components : extrayez une fonction.
 
-### 10.13 Glossaire du chapitre
+## Glossaire
 
 | Terme | Définition courte |
 | --- | --- |
@@ -2953,17 +2899,11 @@ curl -X POST http://localhost:3000/api/posts \
 | SSE | *Server-Sent Events* : flux serveur → navigateur |
 | Idempotence | Répéter une opération produit le même résultat |
 
-### Synthèse du chapitre 10
-
-`route.ts` + fonctions `GET` / `POST` / … fondées sur `Request` / `Response`. `NextRequest` / `NextResponse` ajoutent `nextUrl`, `cookies` et les helpers de redirection. Idéal pour **API publiques, webhooks, flux, endpoints non-JSON** ; pour les mutations de votre propre interface, préférez les Server Actions.
-
----
-
-## 11. Proxy (ex-Middleware)
+# Proxy (ex-Middleware)
 
 **Objectifs d'apprentissage.** Comprendre le rôle et les **limites** du Proxy ; écrire des règles de redirection, réécriture, en-têtes et cookies ; configurer le `matcher` ; connaître l'ordre d'exécution ; mesurer les enjeux de sécurité ; migrer de `middleware.ts` vers `proxy.ts`.
 
-### 11.1 Définition
+## Définition
 
 Le **Proxy** est un code qui s'exécute **avant** qu'une requête n'atteigne une route (page, Route Handler, fichier statique). Il peut **lire** la requête et **modifier** la réponse : rediriger, réécrire l'URL, ajouter des en-têtes ou des cookies, ou répondre directement.
 
@@ -2975,7 +2915,7 @@ Le **Proxy** est un code qui s'exécute **avant** qu'une requête n'atteigne une
 npx @next/codemod@canary middleware-to-proxy .
 ```
 
-### 11.2 Emplacement et structure
+## Emplacement et structure
 
 Un seul fichier à la **racine du projet** (ou dans `src/` si utilisé), au même niveau que `app/`.
 
@@ -3008,7 +2948,7 @@ export const config = {
 };
 ```
 
-### 11.3 Opérations possibles
+## Opérations possibles
 
 | Opération | Code |
 | --- | --- |
@@ -3044,7 +2984,7 @@ return reponse;
 - Détection d'appareil, de robot, géolocalisation (selon la plateforme).
 - Réécriture multi-locataire (`client.exemple.com` → `/client`).
 
-### 11.4 Le `matcher`
+## Le `matcher`
 
 Sans `matcher`, le proxy s'exécute sur **toutes** les requêtes, y compris les fichiers statiques. Filtrez :
 
@@ -3083,7 +3023,7 @@ export const config = {
 
 Les valeurs du `matcher` doivent être des **constantes** analysables au build.
 
-### 11.5 Ordre d'exécution
+## Ordre d'exécution
 
 Pour une requête entrante :
 
@@ -3096,7 +3036,7 @@ Pour une requête entrante :
 7. Routes dynamiques
 8. `rewrites` `fallback`
 
-### 11.6 Limites et bonnes pratiques
+## Limites et bonnes pratiques
 
 - **Léger et rapide** : le Proxy s'exécute sur chaque requête concernée. Évitez les appels réseau lents et les requêtes de base de données.
 - **Pas de source de vérité pour l'autorisation.** Utilisez le Proxy pour des **contrôles rapides** (cookie présent, redirection), puis **revérifiez** identité et droits **au plus près des données** (DAL, Server Actions, Route Handlers).
@@ -3105,7 +3045,7 @@ Pour une requête entrante :
 - Pas d'accès direct à vos composants React ni aux Server Actions.
 - Utilisez `config.matcher` pour limiter l'exécution.
 
-### 11.7 Proxy, Route Handlers ou `next.config` ?
+## Proxy, Route Handlers ou `next.config` ?
 
 | Besoin | Outil |
 | --- | --- |
@@ -3114,7 +3054,7 @@ Pour une requête entrante :
 | Logique conditionnelle sur la requête | **Proxy** |
 | Logique métier, accès aux données | Route Handler / Server Action |
 
-### 11.8 Pièges fréquents
+## Pièges fréquents
 
 - **Matcher trop large** : proxy exécuté sur des images et fichiers `_next`.
 - **Boucles de redirection** (`/login` redirige vers `/login`).
@@ -3123,7 +3063,7 @@ Pour une requête entrante :
 - **Requêtes lourdes** dans le proxy.
 - **Placer `proxy.ts` à la racine** alors que le projet utilise `src/`.
 
-### 11.9 Glossaire du chapitre
+## Glossaire
 
 | Terme | Définition courte |
 | --- | --- |
@@ -3134,17 +3074,11 @@ Pour une requête entrante :
 | Redirection | Changer l'URL du navigateur (307 / 308) |
 | Nonce | Valeur aléatoire à usage unique pour une CSP |
 
-### Synthèse du chapitre 11
-
-Le Proxy intercepte **avant** les routes ; il s'exécute sur **Node.js** dans Next.js 16. Il redirige, réécrit, ajoute en-têtes et cookies. Le `matcher` cible les chemins ; le proxy n'est **jamais la seule barrière de sécurité**.
-
----
-
-## 12. Navigation
+# Navigation
 
 **Objectifs d'apprentissage.** Naviguer avec `<Link>`, `useRouter` et `redirect` ; comprendre le **préchargement** (*prefetching*), les navigations douces et dures, la restauration du défilement ; utiliser les préchargements partiels et les **Instant Navigations** (16.3 / 16.4) ; connaître `next/form`, `useLinkStatus`, l'API History et `useOffline`.
 
-### 12.1 Mécanisme de navigation
+## Mécanisme de navigation
 
 Next.js remplace le comportement par défaut du navigateur par une **navigation côté client** :
 
@@ -3157,7 +3091,7 @@ Une **navigation dure (*hard*)** (rechargement complet) a lieu pour un lien `<a>
 
 > **Version 16.** Le routage a été optimisé : **déduplication des layouts** lors du préchargement (un layout partagé n'est téléchargé qu'une fois) et **préchargement incrémental** (seules les parties absentes du cache sont demandées, avec annulation des requêtes de liens qui sortent de la vue). Depuis **16.3**, les petits préchargements sont aussi **regroupés** pour réduire le nombre de requêtes.
 
-### 12.2 Le composant `<Link>`
+## Le composant `<Link>`
 
 ```tsx
 import Link from "next/link";
@@ -3196,7 +3130,7 @@ export default function Menu({ slug }: { slug: string }) {
 
 **Ancres :** `<Link href="/doc#installation">Installation</Link>`.
 
-### 12.3 Navigations instantanées et préchargement partiel *(ajout, 16.3–16.4)*
+## Navigations instantanées et préchargement partiel *(ajout, 16.3–16.4)*
 
 Les Server Components évitent les cascades réseau, mais rendaient certaines navigations **moins réactives** qu'une SPA : chaque clic pouvait attendre le serveur. Next.js 16.3 introduit **Instant Navigations**, un ensemble d'outils (activés avec `cacheComponents: true` et `partialPrefetching: true`) qui rend les navigations aussi vives qu'une SPA.
 
@@ -3235,9 +3169,9 @@ async function Fil({ id }: { id: string }) {
 | --- | --- |
 | **Instant Insights** | Panneau des DevTools qui signale les navigations **non instantanées** et fournit une consigne de correction pour un agent |
 | **Navigation Inspector** | Met en pause un chargement à l'état de coque pour **voir** ce que l'utilisateur verrait (le préchargement est désactivé en développement) |
-| **Helper Playwright `instant()`** | Test E2E qui vérifie ce qui doit être visible **sans attendre le réseau** (chapitre 21) |
+| **Helper Playwright `instant()`** | Test E2E qui vérifie ce qui doit être visible **sans attendre le réseau** (section « Tests ») |
 
-### 12.4 Navigation impérative : `useRouter`
+## Navigation impérative : `useRouter`
 
 ```tsx
 "use client";
@@ -3268,7 +3202,7 @@ export function Actions() {
 
 Attention : `useRouter` de **`next/navigation`** (App Router) diffère de celui de `next/router` (Pages Router) : il n'expose pas `router.events`, ni `pathname` / `query` (utilisez `usePathname`, `useSearchParams`).
 
-### 12.5 Redirection côté serveur
+## Redirection côté serveur
 
 ```tsx
 import { redirect } from "next/navigation";
@@ -3280,9 +3214,9 @@ export default async function Page() {
 }
 ```
 
-Voir chapitre 4 pour `permanentRedirect`, `notFound`, `forbidden`, `unauthorized`.
+Voir la section « Fichiers spéciaux » pour `permanentRedirect`, `notFound`, `forbidden`, `unauthorized`.
 
-### 12.6 Lire l'URL côté client
+## Lire l'URL côté client
 
 ```tsx
 "use client";
@@ -3318,7 +3252,7 @@ export function Filtre() {
 }
 ```
 
-### 12.7 Indicateur de navigation : `useLinkStatus`
+## Indicateur de navigation : `useLinkStatus`
 
 ```tsx
 "use client";
@@ -3336,7 +3270,7 @@ export function LienAvecIndicateur({ href, children }: { href: string; children:
 
 `useLinkStatus` doit être utilisé **dans un enfant** de `<Link>` ; il indique si la navigation de ce lien est en cours (utile quand le préchargement n'a pas eu lieu).
 
-### 12.8 API History native
+## API History native
 
 `window.history.pushState` et `replaceState` sont **intégrés au routeur** : ils mettent à jour `usePathname` et `useSearchParams` **sans rechargement ni requête serveur**. Pratique pour trier ou filtrer instantanément côté client.
 
@@ -3351,13 +3285,13 @@ export function Tri() {
 }
 ```
 
-### 12.9 Défilement (*scroll*)
+## Défilement (*scroll*)
 
 - Par défaut, après une navigation, Next.js **fait défiler jusqu'en haut** du nouveau segment (ou jusqu'à l'ancre), **sauf** s'il est déjà visible.
 - Désactiver : `<Link scroll={false}>` ou `router.push(url, { scroll: false })`.
 - Boutons précédent / suivant : restauration de la position.
 
-### 12.10 Résilience réseau : `useOffline` *(expérimental, 16.3)*
+## Résilience réseau : `useOffline` *(expérimental, 16.3)*
 
 Avec `experimental.useOffline: true`, une navigation douce, une récupération de données ou une Server Action n'échoue plus quand le réseau tombe : elle reste **en attente** et est **relancée au retour de la connexion**. Un préchargement partiel ayant déjà mis la coque d'une route en cache, cette coque s'affiche même hors ligne.
 
@@ -3372,11 +3306,11 @@ export function BanniereHorsLigne() {
 }
 ```
 
-### 12.11 Transitions de vue
+## Transitions de vue
 
 Avec React 19.3, les **View Transitions** (animations natives entre états) sont **stables** dans React. Next.js les expose via un réglage expérimental (`experimental.viewTransition`) : consultez la documentation de votre version.
 
-### 12.12 Pièges fréquents
+## Pièges fréquents
 
 - **Utiliser `<a>` pour une navigation interne** : rechargement complet, perte d'état.
 - **Appeler `router.push` dans le rendu** (au lieu d'un événement ou d'un effet).
@@ -3385,7 +3319,7 @@ Avec React 19.3, les **View Transitions** (animations natives entre états) sont
 - **Tester le préchargement en développement** (il est désactivé) : utilisez le Navigation Inspector ou un build de production.
 - **`prefetch` sur des centaines de liens** sans `navigation()` ni limites : charge serveur inutile.
 
-### 12.13 Glossaire du chapitre
+## Glossaire
 
 | Terme | Définition courte |
 | --- | --- |
@@ -3397,19 +3331,11 @@ Avec React 19.3, les **View Transitions** (animations natives entre états) sont
 | `useOffline` | Hook (expérimental) signalant la perte de réseau |
 | `router.refresh()` | Rafraîchit les données de la route courante |
 
-### Synthèse du chapitre 12
-
-`<Link>` pour la navigation déclarative ; `useRouter` pour l'impératif ; `redirect` côté serveur. **Préchargement + layouts persistants + streaming** donnent une navigation fluide ; avec Cache Components, le **préchargement partiel**, `navigation()` et Instant Insights permettent d'atteindre des navigations **instantanées**. L'URL reste un excellent conteneur d'état partageable (`searchParams`).
-
----
-
-# Partie III — Interface et optimisation
-
-## 13. Styles
+# Styles
 
 **Objectifs d'apprentissage.** Utiliser le **CSS global**, les **CSS Modules**, **Tailwind CSS** et **Sass** ; comprendre la compatibilité du **CSS-in-JS** avec les Server Components ; mettre en place un **thème clair / sombre** sans flash ; comprendre l'ordre et le chargement du CSS.
 
-### 13.1 Vue d'ensemble
+## Vue d'ensemble
 
 | Approche | Portée | Quand l'utiliser |
 | --- | --- | --- |
@@ -3420,7 +3346,7 @@ Avec React 19.3, les **View Transitions** (animations natives entre états) sont
 | **CSS-in-JS** | Composant | Avec précautions (Client Components) |
 | **Styles en ligne** | Élément | Valeurs dynamiques ponctuelles |
 
-### 13.2 CSS global
+## CSS global
 
 ```css
 /* app/globals.css */
@@ -3442,7 +3368,7 @@ import "./globals.css";
 
 **Bonnes pratiques :** importez le CSS global **dans le layout racine** ; limitez-le aux styles réellement globaux (reset, variables, typographie de base).
 
-### 13.3 CSS Modules
+## CSS Modules
 
 Un fichier **`nom.module.css`** génère des **noms de classes uniques** (hachés) : aucune collision.
 
@@ -3470,7 +3396,7 @@ export default function Bouton({ children }: { children: React.ReactNode }) {
 - Sélecteurs globaux explicites : `:global(.nom)`.
 - *(16.4)* En production, Turbopack génère des **noms de classes plus courts** pour alléger CSS et HTML ; le développement garde les noms longs pour faciliter le débogage.
 
-### 13.4 Tailwind CSS
+## Tailwind CSS
 
 Framework de **classes utilitaires** (`flex`, `p-4`, `text-lg`). `create-next-app` peut le configurer. Principe avec Tailwind v4 :
 
@@ -3505,7 +3431,7 @@ export default function Carte() {
 - Pour fusionner des classes conditionnelles : `clsx` + `tailwind-merge` (utilitaire `cn()`).
 - Les classes doivent apparaître **en entier** dans le code (pas de concaténation dynamique `text-${couleur}-500`) pour être détectées.
 
-### 13.5 Sass
+## Sass
 
 ```bash
 npm install --save-dev sass
@@ -3519,14 +3445,14 @@ const nextConfig = { sassOptions: { includePaths: ["./styles"] } };
 
 Attention : **Turbopack** : l'import avec tilde (`@import "~bibliotheque/..."`) **n'est pas supporté** ; utilisez des chemins standards sans `~`.
 
-### 13.6 CSS-in-JS
+## CSS-in-JS
 
 - Les bibliothèques **à l'exécution** (styled-components, Emotion) reposent sur le contexte React et les effets : elles ne fonctionnent que dans les **Client Components** et demandent un **registre de styles** pour le rendu serveur.
 - **styled-jsx** (livré avec Next.js) ne fonctionne que dans les Client Components.
 - Alternatives compatibles RSC : **CSS Modules**, **Tailwind**, et les solutions **« zero-runtime »** (vanilla-extract, Panda CSS, StyleX).
 - **Recommandation :** préférez une approche qui génère du **CSS statique** pour tirer parti des Server Components.
 
-### 13.7 Mode sombre (thème)
+## Mode sombre (thème)
 
 **Avec CSS et `prefers-color-scheme` :**
 
@@ -3556,13 +3482,13 @@ export function Providers({ children }: { children: React.ReactNode }) {
 </html>
 ```
 
-### 13.8 Ordre et chargement du CSS
+## Ordre et chargement du CSS
 
 - Le CSS est **découpé par route** et chargé uniquement quand nécessaire.
 - L'**ordre d'import** détermine la priorité de cascade : gardez un ordre cohérent entre composants (évitez de dépendre de l'ordre pour la correction visuelle).
 - Les feuilles externes peuvent être déclarées avec `<link rel="stylesheet" href="..." precedence="default" />` (React 19).
 
-### 13.9 Pièges fréquents
+## Pièges fréquents
 
 - **Importer du CSS global dans plusieurs composants** : effets de bord imprévisibles.
 - **Classes Tailwind construites dynamiquement** (non détectées).
@@ -3570,7 +3496,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
 - **Flash de thème** (FOUC) mal géré lors du mode sombre.
 - **Import Sass avec `~`** sous Turbopack.
 
-### 13.10 Glossaire du chapitre
+## Glossaire
 
 | Terme | Définition courte |
 | --- | --- |
@@ -3581,17 +3507,11 @@ export function Providers({ children }: { children: React.ReactNode }) {
 | FOUC | Flash de contenu non stylé (ou mal thémé) |
 | `prefers-color-scheme` | Préférence claire / sombre du système |
 
-### Synthèse du chapitre 13
-
-**CSS Modules** et **Tailwind** conviennent bien aux Server Components. Le CSS-in-JS d'exécution est **réservé aux Client Components**. **Variables CSS + `next-themes`** pour le mode sombre sans flash.
-
----
-
-## 14. Optimisations
+# Optimisations
 
 **Objectifs d'apprentissage.** Optimiser **images**, **polices** et **scripts** avec les composants natifs ; réduire la taille des bundles (chargement dynamique, imports ciblés, analyse) ; utiliser le **React Compiler** ; éviter les décalages de mise en page ; mesurer les performances ; appliquer une liste de contrôle de production.
 
-### 14.1 Images : `next/image`
+## Images : `next/image`
 
 **Problèmes résolus.** Les images sont la **première source de poids** et de **décalages visuels (CLS)**. `next/image` fournit : **redimensionnement** selon l'appareil (`srcset` généré), **formats modernes** (WebP, AVIF), **chargement paresseux** par défaut, **réservation d'espace** (évite le CLS), **optimisation à la demande** (mise en cache sur le serveur).
 
@@ -3673,7 +3593,7 @@ Toujours **restreindre** les domaines (sécurité, coûts d'optimisation).
 
 **Bonnes pratiques :** fournissez **toujours** `alt` et des dimensions (ou `fill` + parent dimensionné) ; marquez l'image **LCP** avec `preload` / `priority` ; utilisez des `sizes` précis ; préférez les SVG pour logos et icônes.
 
-### 14.2 Polices : `next/font`
+## Polices : `next/font`
 
 Avantages : **auto-hébergement** (aucune requête vers Google à l'exécution, meilleure confidentialité), **zéro décalage de mise en page** (métriques de repli ajustées), chargement optimisé.
 
@@ -3714,7 +3634,7 @@ const maPolice = localFont({
 });
 ```
 
-### 14.3 Scripts : `next/script`
+## Scripts : `next/script`
 
 ```tsx
 import Script from "next/script";
@@ -3738,7 +3658,7 @@ import { GoogleAnalytics } from "@next/third-parties/google";
 <GoogleAnalytics gaId="G-XXXXXXX" />
 ```
 
-### 14.4 Réduire le JavaScript envoyé
+## Réduire le JavaScript envoyé
 
 1. **Server Components par défaut** : la logique reste côté serveur.
 2. **Chargement dynamique** (`next/dynamic`, `React.lazy`) pour les composants lourds non critiques :
@@ -3765,7 +3685,7 @@ async function exporter() {
 
 *(16.4, expérimental)* `turbopackLazyDynamicImports` ne compile en développement les imports dynamiques côté client que lorsque le navigateur les demande ; `turbopackGc` nettoie du cache disque le travail devenu inutile.
 
-### 14.5 React Compiler
+## React Compiler
 
 Outil de build qui **mémoïse automatiquement** composants et valeurs (équivalent d'un `useMemo` / `useCallback` / `memo` posé partout où c'est utile), sans changer votre code.
 
@@ -3784,7 +3704,7 @@ const nextConfig = { reactCompiler: true };
 - Respectez les **règles de React** (composants purs, pas de mutation d'état).
 - **Version Rust (expérimentale, 16.3 / 16.4).** `experimental.turbopackRustReactCompiler: true` exécute le compilateur **directement dans Turbopack**, sans passer par Babel : démarrage du développement nettement plus rapide sur de grosses applications, à condition de ne plus dépendre de Babel pour d'autres transformations.
 
-### 14.6 Précharger et préconnecter
+## Précharger et préconnecter
 
 ```tsx
 import { preload, preconnect } from "react-dom";
@@ -3793,33 +3713,33 @@ preconnect("https://api.exemple.com");   // ouvre tôt la connexion
 preload("/hero.jpg", { as: "image" });   // précharge une ressource critique
 ```
 
-### 14.7 Éviter les décalages de mise en page (CLS)
+## Éviter les décalages de mise en page (CLS)
 
 - Dimensions explicites pour images, vidéos, iframes.
 - `next/font` pour éviter les sauts de police.
 - Réserver l'espace des contenus chargés tardivement (squelettes de même taille).
 - Ne pas insérer de contenu au-dessus du contenu existant après chargement.
 
-### 14.8 Mesurer
+## Mesurer
 
 - **Lighthouse**, **PageSpeed Insights**, onglet *Performance* de Chrome DevTools.
-- `useReportWebVitals` (chapitre 8), **Vercel Speed Insights** ou un outil RUM (*Real User Monitoring*).
+- `useReportWebVitals` (section « Stratégies de rendu »), **Vercel Speed Insights** ou un outil RUM (*Real User Monitoring*).
 - `next build` : taille de chaque route (« First Load JS »).
 - Surveillez régulièrement : LCP, INP, CLS, TTFB, taille de bundle.
 
-### 14.9 Liste de contrôle de production
+## Liste de contrôle de production
 
 - Images via `next/image`, `sizes` correctes, LCP préchargé.
 - Polices via `next/font`.
 - Scripts tiers via `next/script` ou `@next/third-parties`.
 - Composants lourds chargés dynamiquement.
-- Cache configuré (chapitre 7) ; routes dynamiques justifiées.
+- Cache configuré (section « Mise en cache ») ; routes dynamiques justifiées.
 - `loading.tsx` / `Suspense` aux bons endroits.
-- Métadonnées complètes (chapitre 15).
-- En-têtes de sécurité (chapitre 18).
+- Métadonnées complètes (section « Métadonnées et SEO »).
+- En-têtes de sécurité (section « Configuration »).
 - Monitoring et suivi des erreurs.
 
-### 14.10 Pièges fréquents
+## Pièges fréquents
 
 - **Oublier `sizes`** avec `fill` : l'image la plus grande est téléchargée.
 - **Autoriser tous les hôtes distants** (`hostname: "**"`) : risque d'abus.
@@ -3827,7 +3747,7 @@ preload("/hero.jpg", { as: "image" });   // précharge une ressource critique
 - **Charger Google Analytics en `beforeInteractive`** : bloque le rendu.
 - **Activer le React Compiler sur du code qui mute son état** : comportements inattendus.
 
-### 14.11 Glossaire du chapitre
+## Glossaire
 
 | Terme | Définition courte |
 | --- | --- |
@@ -3839,23 +3759,17 @@ preload("/hero.jpg", { as: "image" });   // précharge une ressource critique
 | React Compiler | Compilateur de mémoïsation automatique |
 | RUM | Mesure des performances sur de vrais utilisateurs |
 
-### Synthèse du chapitre 14
-
-`next/image`, `next/font` et `next/script` automatisent des optimisations majeures. **Moins de JavaScript** = Server Components + chargement dynamique + imports ciblés. Le **React Compiler** supprime la mémoïsation manuelle. **Mesurez avant et après** chaque optimisation.
-
----
-
-## 15. Métadonnées et SEO
+# Métadonnées et SEO
 
 **Objectifs d'apprentissage.** Définir des métadonnées **statiques et dynamiques** ; comprendre fusion et héritage ; configurer `viewport` ; générer images Open Graph, `sitemap`, `robots`, `manifest` ; ajouter des **données structurées** JSON-LD ; appliquer les bonnes pratiques de SEO technique.
 
-### 15.1 Pourquoi les métadonnées ?
+## Pourquoi les métadonnées ?
 
 Les **métadonnées** (`<title>`, `<meta name="description">`, Open Graph, Twitter Cards, `<link rel="canonical">`…) décrivent la page aux **moteurs de recherche**, aux **réseaux sociaux** et aux **navigateurs**. L'API Metadata de Next.js les gère de façon **typée** et **côté serveur**.
 
 > Les métadonnées se définissent **uniquement dans les Server Components** (`layout.tsx` et `page.tsx`).
 
-### 15.2 Métadonnées statiques
+## Métadonnées statiques
 
 ```tsx
 import type { Metadata } from "next";
@@ -3880,7 +3794,7 @@ export const metadata: Metadata = {
 };
 ```
 
-### 15.3 Métadonnées dynamiques
+## Métadonnées dynamiques
 
 ```tsx
 import type { Metadata, ResolvingMetadata } from "next";
@@ -3905,7 +3819,7 @@ export async function generateMetadata(
 - Les requêtes de données sont **dédupliquées** avec celles de la page (via `fetch` ou `React.cache`).
 - Le **streaming des métadonnées** est géré : la page peut commencer à s'envoyer pendant le calcul (les robots reçoivent les métadonnées dans le `<head>` ; pour les navigateurs, elles peuvent être injectées plus tard).
 
-### 15.4 Fusion et héritage
+## Fusion et héritage
 
 - Les métadonnées se **fusionnent** du layout racine vers la page (la plus profonde l'emporte, **champ par champ au premier niveau**) : un `openGraph` défini dans une page **remplace entièrement** l'objet `openGraph` du layout parent (pas de fusion profonde).
 - **Template de titre :**
@@ -3926,7 +3840,7 @@ export const metadata: Metadata = { title: { absolute: "Titre exact" } };
 
 - **`metadataBase`** : indispensable pour des URLs relatives dans `openGraph.images`, `alternates`, etc.
 
-### 15.5 Viewport et couleur de thème
+## Viewport et couleur de thème
 
 Depuis Next.js 14, `viewport` est séparé :
 
@@ -3944,7 +3858,7 @@ export const viewport: Viewport = {
 // ou : export function generateViewport() { ... }
 ```
 
-### 15.6 Autres champs utiles
+## Autres champs utiles
 
 | Champ | Rôle |
 | --- | --- |
@@ -3956,11 +3870,11 @@ export const viewport: Viewport = {
 | `appleWebApp`, `formatDetection` | Options mobiles |
 | `other` | Balises `<meta>` personnalisées |
 
-### 15.7 Fichiers de métadonnées (conventions)
+## Fichiers de métadonnées (conventions)
 
 **Icônes.** `app/favicon.ico` ; `app/icon.(png|svg|jpg)` ; `app/apple-icon.png`. Génération dynamique : `app/icon.tsx` (retourne une `ImageResponse`).
 
-**Images Open Graph / Twitter.** Statiques : `opengraph-image.png`, `twitter-image.png` (+ `.alt.txt`). Dynamiques : `opengraph-image.tsx` (voir 4.10) avec `ImageResponse` de `next/og`. Limites d'`ImageResponse` : sous-ensemble de CSS (flexbox, pas de grid), taille de bundle limitée (~500 Ko), polices à charger explicitement.
+**Images Open Graph / Twitter.** Statiques : `opengraph-image.png`, `twitter-image.png` (+ `.alt.txt`). Dynamiques : `opengraph-image.tsx` (voir la section « Fichiers de métadonnées ») avec `ImageResponse` de `next/og`. Limites d'`ImageResponse` : sous-ensemble de CSS (flexbox, pas de grid), taille de bundle limitée (~500 Ko), polices à charger explicitement.
 
 **`sitemap.ts` :**
 
@@ -4009,7 +3923,7 @@ export default function manifest(): MetadataRoute.Manifest {
 }
 ```
 
-### 15.8 Données structurées (JSON-LD)
+## Données structurées (JSON-LD)
 
 ```tsx
 export default async function Page({ params }: { params: Promise<{ slug: string }> }) {
@@ -4038,7 +3952,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
 
 Le remplacement de `<` évite l'injection de balises (XSS) si des champs proviennent d'utilisateurs.
 
-### 15.9 Bonnes pratiques de SEO technique
+## Bonnes pratiques de SEO technique
 
 1. **Titres uniques** (≈ 50–60 caractères) et **descriptions** (≈ 150–160) par page.
 2. **Structure HTML sémantique** : un seul `<h1>`, hiérarchie `h2` / `h3`, `<main>`, `<nav>`, `<article>`.
@@ -4053,7 +3967,7 @@ Le remplacement de `<` évite l'injection de balises (XSS) si des champs provien
 11. **Données structurées** pertinentes.
 12. **Accessibilité** : bénéfique aussi au SEO.
 
-### 15.10 Pièges fréquents
+## Pièges fréquents
 
 - **Oublier `metadataBase`** : URLs relatives incorrectes dans Open Graph.
 - **Croire que `openGraph` fusionne en profondeur** (il remplace).
@@ -4061,7 +3975,7 @@ Le remplacement de `<` évite l'injection de balises (XSS) si des champs provien
 - **Exporter `metadata` et `generateMetadata` dans le même segment** : conflit.
 - **Pages privées indexées** par oubli de `noindex`.
 
-### 15.11 Glossaire du chapitre
+## Glossaire
 
 | Terme | Définition courte |
 | --- | --- |
@@ -4072,19 +3986,11 @@ Le remplacement de `<` évite l'injection de balises (XSS) si des champs provien
 | JSON-LD | Données structurées au format JSON liées (schema.org) |
 | `noindex` | Consigne de ne pas indexer une page |
 
-### Synthèse du chapitre 15
-
-`metadata` (statique) ou `generateMetadata` (dynamique), **côté serveur uniquement**. Fichiers conventionnels pour icônes, images OG, `sitemap`, `robots`, `manifest`. Le SEO repose autant sur le **contenu et les performances** que sur les balises.
-
----
-
-# Partie IV — Applications de production
-
-## 16. Authentification
+# Authentification
 
 **Objectifs d'apprentissage.** Distinguer **authentification**, **session** et **autorisation** ; implémenter une session sécurisée (cookies, JWT) ; écrire connexion et déconnexion avec des Server Actions ; appliquer l'autorisation **à plusieurs niveaux** (proxy, DAL, composants, actions) ; choisir une bibliothèque ou un service ; connaître les défenses complémentaires (CSRF, XSS, limitation de débit).
 
-### 16.1 Concepts
+## Concepts
 
 | Notion | Définition |
 | --- | --- |
@@ -4118,7 +4024,7 @@ Le remplacement de `<` évite l'injection de balises (XSS) si des champs provien
 | `Path=/` | Portée |
 | `Expires` / `Max-Age` | Durée de vie |
 
-### 16.2 Session sans état avec `jose`
+## Session sans état avec `jose`
 
 ```bash
 npm install jose
@@ -4172,7 +4078,7 @@ export async function supprimerSession() {
 
 > Un JWT **signé** (HS256) est **lisible** par le client (non chiffré). N'y placez aucune donnée sensible ; utilisez un chiffrement (JWE) si nécessaire.
 
-### 16.3 Connexion et déconnexion (Server Actions)
+## Connexion et déconnexion (Server Actions)
 
 ```ts
 // app/login/actions.ts
@@ -4207,7 +4113,7 @@ export async function deconnexion() {
 
 **Bonnes pratiques de connexion :** message d'erreur **générique**, **limitation de débit**, **délai constant** de comparaison, verrouillage progressif, MFA pour les comptes sensibles.
 
-### 16.4 Autoriser à plusieurs niveaux
+## Autoriser à plusieurs niveaux
 
 **Niveau 1 — Proxy : vérification *optimiste*.**
 
@@ -4281,7 +4187,7 @@ export async function supprimerUtilisateur(id: string) {
 
 **Piège majeur : les layouts.** Un **layout ne se re-rend pas** à chaque navigation entre pages enfants (rendu partiel). **Ne placez pas votre contrôle d'accès uniquement dans un layout** : une page enfant pourrait être servie sans revérification. Vérifiez l'accès **dans la page** et/ou **au moment de l'accès aux données** (DAL).
 
-**Avec Cache Components.** La session dépend de la requête (`cookies()`) : les composants qui la lisent sont **dynamiques** et doivent se trouver sous `<Suspense>`. Lisez la session **à l'extérieur** d'un périmètre `"use cache"` et passez-en l'identifiant en argument si vous mettez en cache des données propres à l'utilisateur (chapitre 7).
+**Avec Cache Components.** La session dépend de la requête (`cookies()`) : les composants qui la lisent sont **dynamiques** et doivent se trouver sous `<Suspense>`. Lisez la session **à l'extérieur** d'un périmètre `"use cache"` et passez-en l'identifiant en argument si vous mettez en cache des données propres à l'utilisateur (section « Mise en cache »).
 
 **Autorisation par rôles (RBAC) :**
 
@@ -4294,7 +4200,7 @@ export function peut(role: keyof typeof permissions, action: string) {
 
 Pour des règles plus fines : **ABAC** (basé sur attributs), **ReBAC** (relations), ou des bibliothèques dédiées (CASL, Oso, OpenFGA).
 
-### 16.5 Bibliothèques et services
+## Bibliothèques et services
 
 | Solution | Type | Notes |
 | --- | --- | --- |
@@ -4306,7 +4212,7 @@ Pour des règles plus fines : **ABAC** (basé sur attributs), **ReBAC** (relatio
 
 **Critères de choix :** coût, hébergement des données, SSO, MFA, passkeys, personnalisation de l'interface, verrouillage fournisseur, maturité et maintenance.
 
-### 16.6 Sécurité complémentaire
+## Sécurité complémentaire
 
 - **CSRF** : cookies `SameSite`, contrôle d'origine des Server Actions (intégré).
 - **XSS** : échappement par défaut de React ; **ne jamais** utiliser `dangerouslySetInnerHTML` avec du contenu non nettoyé (utilisez DOMPurify) ; **CSP** avec *nonce* (via proxy).
@@ -4317,7 +4223,7 @@ Pour des règles plus fines : **ABAC** (basé sur attributs), **ReBAC** (relatio
 - **Mots de passe** : longueur minimale, vérification contre les fuites connues, pas de règles de composition rigides.
 - **Réinitialisation de mot de passe** : jetons à usage unique, courte durée, stockés hachés.
 
-### 16.7 Pièges fréquents
+## Pièges fréquents
 
 - **Vérifier l'authentification seulement dans le proxy ou le layout.**
 - **Stocker des données sensibles dans un JWT non chiffré.**
@@ -4326,7 +4232,7 @@ Pour des règles plus fines : **ABAC** (basé sur attributs), **ReBAC** (relatio
 - **Renvoyer l'objet utilisateur complet** (avec hash) aux composants.
 - **Mettre en cache, dans un cache partagé, des données propres à un utilisateur.**
 
-### 16.8 Glossaire du chapitre
+## Glossaire
 
 | Terme | Définition courte |
 | --- | --- |
@@ -4339,17 +4245,11 @@ Pour des règles plus fines : **ABAC** (basé sur attributs), **ReBAC** (relatio
 | MFA | Authentification multifacteur |
 | DAL | Couche d'accès aux données qui impose l'autorisation |
 
-### Synthèse du chapitre 16
-
-**Authentifier → créer une session → autoriser au plus près des données.** Proxy = optimiste ; **DAL = source de vérité**. Cookies `HttpOnly` + `Secure` + `SameSite`. Ne réinventez pas la cryptographie : envisagez une bibliothèque éprouvée.
-
----
-
-## 17. Internationalisation (i18n)
+# Internationalisation (i18n)
 
 **Objectifs d'apprentissage.** Distinguer i18n et l10n ; choisir une stratégie de routage par langue ; mettre en place un segment `[lang]` avec des **dictionnaires côté serveur** ; détecter la langue dans le proxy ; accéder à la langue partout avec les *root params* ; gérer le **SEO multilingue** ; formater dates, nombres et pluriels avec `Intl` ; choisir une bibliothèque.
 
-### 17.1 Concepts
+## Concepts
 
 | Terme | Définition |
 | --- | --- |
@@ -4359,7 +4259,7 @@ Pour des règles plus fines : **ABAC** (basé sur attributs), **ReBAC** (relatio
 | **RTL** | Écriture de droite à gauche (arabe, hébreu) : `dir="rtl"` |
 | **Pluriels / genre / ICU** | Règles linguistiques complexes (`{count, plural, one {# élément} other {# éléments}}`) |
 
-### 17.2 Stratégies de routage
+## Stratégies de routage
 
 | Stratégie | Exemple | Remarques |
 | --- | --- | --- |
@@ -4368,7 +4268,7 @@ Pour des règles plus fines : **ABAC** (basé sur attributs), **ReBAC** (relatio
 | **Domaine dédié** | `exemple.fr`, `exemple.com` | Marché par pays |
 | **Cookie / en-tête** (sans URL) | `/blog` | Moins bon pour le SEO (une URL, plusieurs contenus) |
 
-### 17.3 Mise en place avec un segment `[lang]`
+## Mise en place avec un segment `[lang]`
 
 > **App Router :** pas d'option `i18n` intégrée dans `next.config`. On utilise un **segment dynamique** et le **proxy**.
 
@@ -4461,7 +4361,7 @@ export async function Pied() {
 
 Le support des Route Handlers et des Server Actions est annoncé pour une version ultérieure.
 
-### 17.4 Détection de la langue et redirection (Proxy)
+## Détection de la langue et redirection (Proxy)
 
 ```bash
 npm install @formatjs/intl-localematcher negotiator
@@ -4500,7 +4400,7 @@ export const config = {
 
 **Ordre de détection habituel :** **URL** > **cookie** (choix mémorisé) > **`Accept-Language`** > langue par défaut.
 
-### 17.5 SEO multilingue
+## SEO multilingue
 
 ```tsx
 export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }) {
@@ -4519,7 +4419,7 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
 - **Sitemap** listant toutes les versions linguistiques.
 - Ne **pas** rediriger automatiquement les robots uniquement selon `Accept-Language` sans offrir d'URL stables par langue.
 
-### 17.6 Formatage selon la locale
+## Formatage selon la locale
 
 Utilisez l'API native **`Intl`** :
 
@@ -4533,7 +4433,7 @@ new Intl.ListFormat("fr", { type: "conjunction" }).format(["a", "b", "c"]);     
 
 **Pièges de formats :** séparateurs décimaux et de milliers, ordre jour-mois-année, **fuseaux horaires** (stocker en UTC, afficher dans le fuseau de l'utilisateur), devise **distincte** de la langue, premier jour de la semaine.
 
-### 17.7 Bibliothèques
+## Bibliothèques
 
 | Bibliothèque | Points forts |
 | --- | --- |
@@ -4545,7 +4445,7 @@ new Intl.ListFormat("fr", { type: "conjunction" }).format(["a", "b", "c"]);     
 
 Avec une bibliothèque, vous gagnez : pluriels ICU, interpolation sûre, typage des clés, outils d'extraction, gestion du routage.
 
-### 17.8 Pages Router *(héritage)*
+## Pages Router *(héritage)*
 
 Le Pages Router propose une configuration **native** :
 
@@ -4558,7 +4458,7 @@ const nextConfig = {
 
 Next.js gère alors le préfixe de locale et l'objet `locale` (`useRouter().locale`). Cette option **n'existe pas** dans l'App Router.
 
-### 17.9 Pièges fréquents
+## Pièges fréquents
 
 - **Oublier `await params`** avant de lire `lang`.
 - **Charger tous les dictionnaires côté client** : bundle gonflé.
@@ -4566,7 +4466,7 @@ Next.js gère alors le préfixe de locale et l'objet `locale` (`useRouter().loca
 - **Concaténer des chaînes** au lieu d'utiliser des messages ICU (pluriels, ordre des mots).
 - **Oublier `dir="rtl"`** pour les langues RTL.
 
-### 17.10 Glossaire du chapitre
+## Glossaire
 
 | Terme | Définition courte |
 | --- | --- |
@@ -4578,17 +4478,11 @@ Next.js gère alors le préfixe de locale et l'objet `locale` (`useRouter().loca
 | `hreflang` | Lien entre versions linguistiques |
 | *Root param* | Paramètre situé au-dessus du layout racine |
 
-### Synthèse du chapitre 17
-
-**Sous-chemin `[lang]`** + proxy de détection + **dictionnaires côté serveur**. `next/root-params` rend la langue accessible partout. SEO : `hreflang`, canonical, sitemap par langue. `Intl` pour formater dates, nombres et pluriels.
-
----
-
-## 18. Configuration
+# Configuration
 
 **Objectifs d'apprentissage.** Maîtriser `next.config.ts` : redirections, réécritures, en-têtes, images, sortie ; configurer Turbopack et Webpack, les paquets externes et les options expérimentales ; appliquer des **en-têtes de sécurité** et une CSP ; connaître les adaptateurs de build.
 
-### 18.1 Le fichier de configuration
+## Le fichier de configuration
 
 Fichiers acceptés : `next.config.ts`, `next.config.js`, `next.config.mjs`, `next.config.cjs`.
 
@@ -4618,7 +4512,7 @@ export default function (phase: string): NextConfig {
 
 Le fichier est lu **au démarrage** de Next.js (pas à chaque requête, pas inclus dans le bundle client) : **redémarrez** le serveur après modification.
 
-### 18.2 Options générales
+## Options générales
 
 | Option | Rôle |
 | --- | --- |
@@ -4632,7 +4526,7 @@ Le fichier est lu **au démarrage** de Next.js (pas à chaque requête, pas incl
 | `compress` | Compression gzip des réponses (désactivez si un reverse proxy compresse) |
 | `poweredByHeader` | `false` pour retirer l'en-tête `X-Powered-By` |
 | `pageExtensions` | Extensions considérées comme pages |
-| `typedRoutes` | Routes typées (chapitre 20) |
+| `typedRoutes` | Routes typées (section « TypeScript ») |
 | `cacheComponents` | Active le modèle Cache Components |
 | `partialPrefetching` | Préchargement partiel (modèle Cache Components, 16.3+) |
 | `cacheLife` | Profils de durée de cache personnalisés |
@@ -4644,7 +4538,7 @@ Le fichier est lu **au démarrage** de Next.js (pas à chaque requête, pas incl
 | `env` | Variables inlinées au build (préférez les fichiers `.env`) |
 | `experimental` | Fonctionnalités non stables |
 
-### 18.3 Redirections
+## Redirections
 
 ```ts
 async redirects() {
@@ -4659,9 +4553,9 @@ async redirects() {
 
 - `permanent: true` → **308** ; `false` → **307**.
 - Paramètres de chemin (`:slug`, `:path*`), conditions `has` / `missing` (en-tête, cookie, query, host).
-- Exécutées **avant** le proxy (chapitre 11).
+- Exécutées **avant** le proxy (section « Proxy »).
 
-### 18.4 Réécritures
+## Réécritures
 
 ```ts
 async rewrites() {
@@ -4677,7 +4571,7 @@ async rewrites() {
 - Usages : masquer un domaine d'API (évite le CORS), migration progressive d'un ancien site (`fallback`), multi-zones.
 - Forme simple : retourner directement un tableau (équivalent à `afterFiles`).
 
-### 18.5 En-têtes HTTP
+## En-têtes HTTP
 
 ```ts
 async headers() {
@@ -4716,15 +4610,15 @@ async headers() {
 | `Strict-Transport-Security` | Rétrogradation HTTP |
 | `Permissions-Policy` | Accès non voulu aux API du navigateur |
 
-### 18.6 Sortie de build : `output`
+## Sortie de build : `output`
 
 | Valeur | Effet |
 | --- | --- |
 | (absent) | Build standard ; nécessite `node_modules` à l'exécution |
 | `"standalone"` | Produit `.next/standalone` : serveur minimal avec **uniquement** les dépendances utilisées (idéal pour Docker) |
-| `"export"` | Site statique dans `out/` (voir chapitre 8) |
+| `"export"` | Site statique dans `out/` (voir la section « Stratégies de rendu ») |
 
-### 18.7 Turbopack et Webpack
+## Turbopack et Webpack
 
 ```ts
 const nextConfig: NextConfig = {
@@ -4751,11 +4645,11 @@ webpack: (config, { isServer }) => {
 
 **Options Turbopack récentes :** cache disque (`turbopackFileSystemCache`, activé par défaut depuis 16.3 pour `next dev` et `next build`), éviction mémoire, et, en expérimental (16.4), `turbopackAdditionalRoots` (dépendances liées hors du dossier du projet, magasins virtuels globaux de pnpm / Bun), `turbopackPluginRuntimeStrategy` (outils exécutés dans des *worker threads*).
 
-### 18.8 Adaptateurs de build
+## Adaptateurs de build
 
-Next.js propose une **API d'adaptateurs de build** (apparue en 16.2) : des plateformes d'hébergement fournissent un adaptateur qui transforme la sortie de build selon leur infrastructure (fonctions, CDN, cache). Elle permet de prendre en charge l'ensemble des fonctionnalités (proxy, cache, ISR) hors de Vercel. Consultez la documentation de votre hébergeur pour savoir quel adaptateur utiliser (chapitre 22).
+Next.js propose une **API d'adaptateurs de build** (apparue en 16.2) : des plateformes d'hébergement fournissent un adaptateur qui transforme la sortie de build selon leur infrastructure (fonctions, CDN, cache). Elle permet de prendre en charge l'ensemble des fonctionnalités (proxy, cache, ISR) hors de Vercel. Consultez la documentation de votre hébergeur pour savoir quel adaptateur utiliser (section « Déploiement »).
 
-### 18.9 Autres notions de configuration
+## Autres notions de configuration
 
 - **Alias de chemins** : `tsconfig.json` (`paths`) — Next.js les lit automatiquement.
 - **Monorepo** : `transpilePackages`, `outputFileTracingRoot`.
@@ -4767,7 +4661,7 @@ Next.js propose une **API d'adaptateurs de build** (apparue en 16.2) : des plate
 - **Rappels de mise à niveau** : `experimental.agentUpgrade` (`"security"` par défaut, `"latest"`, ou `false`).
 - **TypeScript / ESLint au build** : `typescript: { ignoreBuildErrors: true }` (déconseillé).
 
-### 18.10 Pièges fréquents
+## Pièges fréquents
 
 - **Modifier `next.config` sans redémarrer**.
 - **`rewrites` vers une API sans contrôle d'accès**.
@@ -4775,7 +4669,7 @@ Next.js propose une **API d'adaptateurs de build** (apparue en 16.2) : des plate
 - **Mélanger options Webpack et Turbopack**.
 - **Laisser `ignoreBuildErrors` activé** : bugs de typage en production.
 
-### 18.11 Glossaire du chapitre
+## Glossaire
 
 | Terme | Définition courte |
 | --- | --- |
@@ -4786,17 +4680,11 @@ Next.js propose une **API d'adaptateurs de build** (apparue en 16.2) : des plate
 | Adaptateur | Module qui adapte la sortie de build à une plateforme |
 | `basePath` | Préfixe de chemin de l'application |
 
-### Synthèse du chapitre 18
-
-`next.config.ts` centralise **redirections, réécritures, en-têtes, images, sortie et bundler**. Appliquez systématiquement des **en-têtes de sécurité**. `output: "standalone"` pour Docker ; les **adaptateurs** étendent la prise en charge des plateformes.
-
----
-
-## 19. Variables d'environnement
+# Variables d'environnement
 
 **Objectifs d'apprentissage.** Utiliser les fichiers `.env` et comprendre leur **ordre de priorité** ; distinguer variables **serveur** et **publiques** (`NEXT_PUBLIC_`) ; lire des valeurs à l'exécution ; valider et sécuriser la configuration.
 
-### 19.1 Fichiers `.env`
+## Fichiers `.env`
 
 | Fichier | Environnement | Commité ? |
 | --- | --- | --- |
@@ -4826,7 +4714,7 @@ CALLBACK=$APP_URL/auth/callback      # expansion de variable
 
 (`\$` pour un dollar littéral.)
 
-### 19.2 Variables côté serveur et côté client
+## Variables côté serveur et côté client
 
 ```ts
 process.env.DATABASE_URL                 // serveur uniquement
@@ -4846,7 +4734,7 @@ process.env.NEXT_PUBLIC_API_URL          // disponible aussi côté navigateur
 
 Attention : `serverRuntimeConfig` et `publicRuntimeConfig` ont été **supprimés** (Next.js 16).
 
-### 19.3 Validation de la configuration
+## Validation de la configuration
 
 Échouez **tôt** si une variable manque ou est invalide :
 
@@ -4866,7 +4754,7 @@ export const env = schema.parse(process.env);
 
 Pour un schéma client / serveur unifié : des bibliothèques comme `@t3-oss/env-nextjs`.
 
-### 19.4 Variables hors de Next.js (scripts, tests)
+## Variables hors de Next.js (scripts, tests)
 
 Hors de Next.js (scripts, tests Jest / Vitest), chargez les fichiers `.env` avec `@next/env` :
 
@@ -4875,7 +4763,7 @@ import { loadEnvConfig } from "@next/env";
 loadEnvConfig(process.cwd());
 ```
 
-### 19.5 Bonnes pratiques
+## Bonnes pratiques
 
 - **Jamais** de secrets dans le dépôt, ni dans `NEXT_PUBLIC_*`.
 - Fournir un **`.env.example`** (sans valeurs sensibles) pour l'équipe.
@@ -4884,7 +4772,7 @@ loadEnvConfig(process.cwd());
 - Principe du **moindre privilège** (clé d'API restreinte).
 - Valider les variables au démarrage.
 
-### 19.6 Pièges fréquents
+## Pièges fréquents
 
 - **Préfixer par `NEXT_PUBLIC_` une clé secrète** : exposée publiquement.
 - **Changer une variable `NEXT_PUBLIC_` sans rebuild**.
@@ -4892,7 +4780,7 @@ loadEnvConfig(process.cwd());
 - **Oublier de définir les variables dans l'environnement de production**.
 - **Lire `process.env[nom]` dynamiquement côté client** : la valeur n'est pas inlinée.
 
-### 19.7 Glossaire du chapitre
+## Glossaire
 
 | Terme | Définition courte |
 | --- | --- |
@@ -4902,17 +4790,11 @@ loadEnvConfig(process.cwd());
 | `process.env` | Objet des variables d'environnement Node.js |
 | `.env.example` | Modèle documentant les variables attendues |
 
-### Synthèse du chapitre 19
-
-**Sans préfixe = serveur ; `NEXT_PUBLIC_` = public et figé au build.** Priorité : `process.env` > `.env.*.local` > `.env.local` > `.env.*` > `.env`. **Validez** avec un schéma.
-
----
-
-## 20. TypeScript
+# TypeScript
 
 **Objectifs d'apprentissage.** Configurer TypeScript pour Next.js ; utiliser les types fournis (`Metadata`, `NextConfig`, props de pages) et les helpers générés (`PageProps`, `LayoutProps`, `RouteContext`) ; activer les **routes typées** ; typer Server Actions, `params` et données ; reconnaître les erreurs fréquentes.
 
-### 20.1 Mise en place
+## Mise en place
 
 - Créez un fichier `.ts` / `.tsx` : Next.js propose d'installer TypeScript et génère `tsconfig.json` et `next-env.d.ts`.
 - Exigence : TypeScript ≥ 5.1 (version 16). **TypeScript 7** (port natif, jusqu'à dix fois plus rapide) peut vérifier les types pendant `next build` depuis 16.3 : `npm install -D typescript@^7` (voir l'option `useTypeScriptCli`).
@@ -4942,7 +4824,7 @@ loadEnvConfig(process.cwd());
 - `strict: true` : fortement recommandé.
 - La vérification de types s'exécute pendant `next build` : une erreur de type fait échouer le build.
 
-### 20.2 Types fournis par Next.js
+## Types fournis par Next.js
 
 ```ts
 import type { Metadata, Viewport, NextConfig } from "next";
@@ -4984,7 +4866,7 @@ export async function GET(_req: Request, ctx: RouteContext<"/api/posts/[id]">) {
 }
 ```
 
-### 20.3 Routes typées (`typedRoutes`)
+## Routes typées (`typedRoutes`)
 
 ```ts
 // next.config.ts
@@ -5001,7 +4883,7 @@ import Link from "next/link";
 
 Pour un lien dynamique construit à l'exécution : `href={url as Route}` (avec prudence).
 
-### 20.4 Bonnes pratiques de typage
+## Bonnes pratiques de typage
 
 - **Valider à la frontière** (Zod) puis **inférer** les types : `type Entree = z.infer<typeof Schema>`.
 - Typer les **DTO** retournés par la couche d'accès aux données.
@@ -5022,7 +4904,7 @@ export async function sauver(_prev: Etat | null, fd: FormData): Promise<Etat> { 
 - **Variables d'environnement** : déclarez-les (schéma Zod ou `declare namespace NodeJS { interface ProcessEnv { ... } }`).
 - Éviter `any` ; préférer `unknown` + validation.
 
-### 20.5 Erreurs fréquentes
+## Erreurs fréquentes
 
 | Erreur | Cause | Correctif |
 | --- | --- | --- |
@@ -5031,7 +4913,7 @@ export async function sauver(_prev: Etat | null, fd: FormData): Promise<Etat> { 
 | `Cannot find module '@/...'` | Alias non configuré | `paths` dans `tsconfig` |
 | Build échoue sur un type | Vérification de types à la compilation | Corriger (éviter `ignoreBuildErrors`) |
 
-### 20.6 Glossaire du chapitre
+## Glossaire
 
 | Terme | Définition courte |
 | --- | --- |
@@ -5042,19 +4924,11 @@ export async function sauver(_prev: Etat | null, fd: FormData): Promise<Etat> { 
 | `z.infer` | Déduction d'un type à partir d'un schéma Zod |
 | `next-env.d.ts` | Déclarations de types générées |
 
-### Synthèse du chapitre 20
-
-`strict`, plugin `next`, `next-env.d.ts`. Helpers `PageProps` / `LayoutProps` / `RouteContext` + `typedRoutes`. **Validez puis inférez** ; typez les frontières (actions, handlers, DTO).
-
----
-
-# Partie V — Qualité et exploitation
-
-## 21. Tests
+# Tests
 
 **Objectifs d'apprentissage.** Choisir le bon type de test pour chaque couche (pyramide de tests) ; configurer **Vitest** ou **Jest** avec React Testing Library ; mocker les modules de Next.js ; tester une Server Action ; écrire des tests **E2E** avec Playwright (dont le helper `instant()`) ; automatiser des contrôles d'accessibilité ; appliquer les bonnes pratiques.
 
-### 21.1 Pyramide de tests
+## Pyramide de tests
 
 | Niveau | Outils | Cible | Quantité |
 | --- | --- | --- | --- |
@@ -5066,7 +4940,7 @@ export async function sauver(_prev: Etat | null, fd: FormData): Promise<Etat> { 
 
 > **Important.** Les **Server Components asynchrones** sont mal supportés par les outils de test unitaire (React Testing Library ne sait pas les rendre). **Testez-les en E2E**, ou extrayez leur logique dans des fonctions testables unitairement.
 
-### 21.2 Vitest et React Testing Library
+## Vitest et React Testing Library
 
 ```bash
 npm install -D vitest @vitejs/plugin-react jsdom @testing-library/react @testing-library/dom @testing-library/jest-dom vite-tsconfig-paths
@@ -5105,7 +4979,7 @@ test("incrémente au clic", async () => {
 
 Script : `"test": "vitest"`.
 
-### 21.3 Jest
+## Jest
 
 ```bash
 npm install -D jest jest-environment-jsdom @testing-library/react @testing-library/jest-dom ts-node @types/jest
@@ -5124,7 +4998,7 @@ export default createJestConfig({
 });
 ```
 
-### 21.4 Mocker des modules Next.js
+## Mocker des modules Next.js
 
 ```tsx
 import { vi } from "vitest";
@@ -5140,7 +5014,7 @@ vi.mock("next/navigation", () => ({
 - `next/headers` (`cookies`, `headers`) : mockez pour tester la DAL et les actions.
 - Réseau : **MSW** (*Mock Service Worker*) pour simuler les API.
 
-### 21.5 Tester une Server Action ou la logique serveur
+## Tester une Server Action ou la logique serveur
 
 Une Server Action est une **fonction asynchrone** : testez-la comme telle en mockant ses dépendances.
 
@@ -5156,7 +5030,7 @@ test("refuse sans droits", async () => {
 });
 ```
 
-### 21.6 Playwright (E2E)
+## Playwright (E2E)
 
 ```bash
 npm init playwright@latest
@@ -5214,15 +5088,15 @@ test("le titre du produit est disponible immédiatement", async ({ page }) => {
 
 Le test échoue dès que l'interface instantanée change, quelle qu'en soit la cause.
 
-### 21.7 Cypress
+## Cypress
 
 Alternative à Playwright : tests E2E et **tests de composants** (`cypress run --component`). Le support des Server Components asynchrones est limité côté composant ; privilégiez l'E2E.
 
-### 21.8 Accessibilité automatisée
+## Accessibilité automatisée
 
 `@axe-core/playwright` ou `jest-axe` détectent une partie des problèmes (contraste, libellés, rôles). Ils **ne remplacent pas** un audit manuel (clavier, lecteurs d'écran).
 
-### 21.9 Bonnes pratiques
+## Bonnes pratiques
 
 - Tester le **comportement** visible, pas l'implémentation.
 - Extraire la logique métier hors des composants pour la tester simplement.
@@ -5230,14 +5104,14 @@ Alternative à Playwright : tests E2E et **tests de composants** (`cypress run -
 - Intégrer tests, lint, vérification de types et build dans la **CI**.
 - Couverture : un indicateur, pas un objectif absolu.
 
-### 21.10 Pièges fréquents
+## Pièges fréquents
 
 - **Essayer de rendre un Server Component `async` avec RTL**.
 - **Tests E2E fragiles** (sélecteurs CSS, attentes fixes `waitForTimeout`).
 - **Tester en mode développement** (comportement de cache et de préchargement différent).
 - **Dépendre de services externes réels** dans les tests.
 
-### 21.11 Glossaire du chapitre
+## Glossaire
 
 | Terme | Définition courte |
 | --- | --- |
@@ -5249,17 +5123,11 @@ Alternative à Playwright : tests E2E et **tests de composants** (`cypress run -
 | `instant()` | Helper Playwright des navigations instantanées |
 | axe | Moteur de détection de problèmes d'accessibilité |
 
-### Synthèse du chapitre 21
-
-Unitaires et composants (Vitest / Jest + RTL), plus E2E (Playwright / Cypress). Les **Server Components asynchrones** se testent surtout en E2E. Mockez `next/navigation`, `next/headers` et `next/cache`. `instant()` protège contre les régressions de navigation.
-
----
-
-## 22. Déploiement
+# Déploiement
 
 **Objectifs d'apprentissage.** Connaître les modes de déploiement (Node.js, Docker, statique, plateformes) ; construire une **image Docker** optimisée ; gérer cache, variables, reverse proxy et streaming en production ; mettre en place observabilité et CI/CD ; appliquer une liste de contrôle avant mise en production.
 
-### 22.1 Options de déploiement
+## Options de déploiement
 
 | Option | Description | Fonctionnalités |
 | --- | --- | --- |
@@ -5271,7 +5139,7 @@ Unitaires et composants (Vitest / Jest + RTL), plus E2E (Playwright / Cypress). 
 
 > **Adaptateurs de build.** Next.js propose une **API d'adaptateurs** (16.2) pour que les plateformes tierces prennent en charge l'ensemble des fonctionnalités (proxy, cache, ISR). Consultez la documentation de votre hébergeur pour savoir ce qu'il supporte.
 
-### 22.2 Serveur Node.js
+## Serveur Node.js
 
 ```bash
 npm ci
@@ -5283,7 +5151,7 @@ npm run start      # écoute sur le port 3000 (variable PORT, option -p)
 - Gestionnaire de processus : **PM2**, systemd, Kubernetes.
 - `HOSTNAME=0.0.0.0` pour écouter sur toutes les interfaces en conteneur.
 
-### 22.3 Docker avec `standalone`
+## Docker avec `standalone`
 
 ```ts
 // next.config.ts
@@ -5329,18 +5197,18 @@ CMD ["node", "server.js"]
 - L'optimisation d'images nécessite `sharp` (vérifiez son inclusion pour votre version).
 - Le **cache disque de Turbopack** (`.next/cache`) accélère les builds répétés en CI : conservez-le entre deux exécutions (cache de la CI).
 
-### 22.4 Export statique
+## Export statique
 
-`output: "export"` + `next build` → dossier `out/` à déposer sur un hébergeur statique (S3 + CloudFront, GitHub Pages, Netlify). Limites : voir chapitre 8. Pensez à `images.unoptimized` ou à un loader externe, et à `trailingSlash` selon l'hébergeur.
+`output: "export"` + `next build` → dossier `out/` à déposer sur un hébergeur statique (S3 + CloudFront, GitHub Pages, Netlify). Limites : voir la section « Stratégies de rendu ». Pensez à `images.unoptimized` ou à un loader externe, et à `trailingSlash` selon l'hébergeur.
 
-### 22.5 Cache, ISR et multi-instances
+## Cache, ISR et multi-instances
 
 - Par défaut, le cache est **local à chaque instance** : avec plusieurs conteneurs, les revalidations ne se propagent pas.
 - Solution : **gestionnaire de cache partagé** (`cacheHandler` / `cacheHandlers`) sur Redis, S3, etc. ; ou plateforme avec cache distribué.
 - Un **CDN** devant l'application met en cache les ressources (`/_next/static/*` : immuables, 1 an) et, selon l'en-tête `Cache-Control`, certaines pages. Depuis 16.3, les ressources immuables peuvent être **réutilisées entre déploiements**.
 - Cohérence de **build** : utilisez le même `buildId` (`generateBuildId`) sur toutes les instances d'un même déploiement pour éviter les incohérences d'actions et de ressources (*version skew*).
 
-### 22.6 Streaming derrière un proxy
+## Streaming derrière un proxy
 
 Le streaming nécessite que le proxy **ne mette pas les réponses en tampon**. Exemple Nginx :
 
@@ -5357,13 +5225,13 @@ location / {
 
 (Ou renvoyer l'en-tête `X-Accel-Buffering: no`.)
 
-### 22.7 Variables d'environnement en production
+## Variables d'environnement en production
 
 - `NEXT_PUBLIC_*` : à fournir **au build**.
 - Secrets : à l'**exécution**, depuis le gestionnaire de secrets de la plateforme.
 - Distinguer `NODE_ENV=production` (défini par `next build` / `next start`) des environnements applicatifs (staging, prod) : utilisez une variable dédiée (`APP_ENV`).
 
-### 22.8 Observabilité
+## Observabilité
 
 - **Journaux** structurés (JSON), niveaux, identifiants de corrélation.
 - **Erreurs** : `instrumentation.ts` + `onRequestError` vers Sentry, Datadog, etc.
@@ -5371,11 +5239,11 @@ location / {
 - **Métriques** : latence, taux d'erreur, mémoire, taux de réussite du cache.
 - **Santé** : endpoint `/api/health` (vérifie base de données et dépendances) pour les sondes de *liveness* / *readiness*.
 
-### 22.9 Intégration et livraison continues (CI/CD)
+## Intégration et livraison continues (CI/CD)
 
 Pipeline type : `npm ci` → lint → vérification de types (`tsc --noEmit`) → tests unitaires → `next build` → tests E2E sur le build → image Docker → déploiement (*blue/green* ou *canary*) → vérifications post-déploiement.
 
-### 22.10 Liste de contrôle avant la mise en production
+## Liste de contrôle avant la mise en production
 
 - `next build` sans erreur ; tableau des routes conforme.
 - Variables d'environnement définies ; `NEXT_PUBLIC_*` présentes au build.
@@ -5390,16 +5258,16 @@ Pipeline type : `npm ci` → lint → vérification de types (`tsc --noEmit`) �
 - Plan de retour arrière (*rollback*).
 - **Version de Next.js à jour** des derniers correctifs de sécurité.
 
-### 22.11 Pièges fréquents
+## Pièges fréquents
 
 - **Oublier de copier `public/` et `.next/static`** dans l'image standalone.
 - **Valeurs `NEXT_PUBLIC_` incorrectes** car absentes au build.
 - **Cache non partagé** entre instances.
 - **Proxy qui met le streaming en tampon**.
 - **Exécuter le conteneur en root**.
-- **Déployer sans suivre les correctifs de sécurité** (voir 24.3).
+- **Déployer sans suivre les correctifs de sécurité** (voir la section « Sécurité »).
 
-### 22.12 Glossaire du chapitre
+## Glossaire
 
 | Terme | Définition courte |
 | --- | --- |
@@ -5411,17 +5279,11 @@ Pipeline type : `npm ci` → lint → vérification de types (`tsc --noEmit`) �
 | Rollback | Retour à la version précédente |
 | Sonde de santé | Requête vérifiant qu'une instance fonctionne |
 
-### Synthèse du chapitre 22
-
-Node et Docker prennent en charge **toutes** les fonctionnalités ; l'export statique est limité. **`standalone` + Docker multi-étapes**. Pensez au **cache partagé**, à un `buildId` cohérent et à un streaming **non bufférisé** ; surveillez erreurs et performances, et gardez Next.js **à jour**.
-
----
-
-## 23. Pages Router (historique et migration)
+# Pages Router (historique et migration)
 
 **Objectifs d'apprentissage.** Lire et maintenir une application **Pages Router** ; connaître ses fonctions de données (`getStaticProps`, `getServerSideProps`, `getStaticPaths`) et les API Routes ; savoir **dater** un exemple de code ; utiliser la table d'équivalences avec l'App Router ; planifier une **migration progressive**.
 
-### 23.1 Structure
+## Structure
 
 ```text
 pages/
@@ -5441,7 +5303,7 @@ pages/
 - Le **chemin du fichier** détermine l'URL ; chaque fichier = une page.
 - Tous les composants sont des composants « classiques » (pré-rendus puis hydratés) ; **pas de Server Components**.
 
-### 23.2 `_app.tsx` et `_document.tsx`
+## `_app.tsx` et `_document.tsx`
 
 ```tsx
 // pages/_app.tsx
@@ -5474,7 +5336,7 @@ export default function Document() {
 }
 ```
 
-### 23.3 Récupération de données
+## Récupération de données
 
 **`getStaticProps` (SSG / ISR) :**
 
@@ -5521,7 +5383,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res, params,
 
 **Autres :** `getInitialProps` (hérité, déconseillé : désactive l'optimisation statique) ; récupération **côté client** : SWR / TanStack Query.
 
-### 23.4 API Routes
+## API Routes
 
 ```ts
 // pages/api/posts/[id].ts
@@ -5541,7 +5403,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 }
 ```
 
-### 23.5 Métadonnées, navigation, styles
+## Métadonnées, navigation, styles
 
 - **Métadonnées** : `<Head>` de `next/head`.
 - **Navigation** : `useRouter` de **`next/router`** (expose `pathname`, `query`, `asPath`, `locale`, `events`).
@@ -5553,7 +5415,7 @@ import Head from "next/head";
 <Head><title>Mon titre</title><meta name="description" content="..." /></Head>
 ```
 
-### 23.6 Dater un exemple de code
+## Dater un exemple de code
 
 | Indice dans le code | Époque probable |
 | --- | --- |
@@ -5564,7 +5426,7 @@ import Head from "next/head";
 | `proxy.ts`, `"use cache"`, `updateTag` | Next.js 16 |
 | `partialPrefetching`, `ensureStatic`, `navigation()`, `catchError` | Next.js 16.3–16.4 |
 
-### 23.7 Table d'équivalences
+## Table d'équivalences
 
 | Pages Router | App Router |
 | --- | --- |
@@ -5585,7 +5447,7 @@ import Head from "next/head";
 | `next.config` `i18n` | Segment `[lang]` + proxy |
 | `middleware.ts` | `proxy.ts` (identique entre routeurs) |
 
-### 23.8 Stratégie de migration progressive
+## Stratégie de migration progressive
 
 Les deux routeurs **coexistent** : on peut migrer **route par route**.
 
@@ -5602,7 +5464,7 @@ Les deux routeurs **coexistent** : on peut migrer **route par route**.
 
 **Points d'attention :** `getServerSideProps` + `req` / `res` → `cookies()` / `headers()` ; les bibliothèques sans `"use client"` ; l'ordre du CSS global ; les tests E2E comme **filet de sécurité** pendant toute la migration.
 
-### 23.9 Glossaire du chapitre
+## Glossaire
 
 | Terme | Définition courte |
 | --- | --- |
@@ -5613,17 +5475,11 @@ Les deux routeurs **coexistent** : on peut migrer **route par route**.
 | `_app` / `_document` | Composants racine et HTML du Pages Router |
 | Codemod | Script qui réécrit automatiquement du code |
 
-### Synthèse du chapitre 23
-
-Pages Router = pages classiques + fonctions de données dédiées + API Routes ; il reste **supporté**. L'App Router apporte RSC, layouts imbriqués, streaming, Server Actions et le modèle Cache Components. La migration est possible **progressivement, route par route**.
-
----
-
-## 24. Bonnes pratiques
+# Bonnes pratiques
 
 **Objectifs d'apprentissage.** Structurer une application par fonctionnalité ; appliquer les bonnes pratiques de **données et de cache**, de **sécurité**, de **performance**, d'**accessibilité** et d'**observabilité** ; adopter une **stratégie de mise à jour** (y compris les versions de sécurité) ; repérer les anti-patrons ; utiliser une liste de contrôle de revue de code.
 
-### 24.1 Architecture
+## Architecture
 
 - **Server Components par défaut** ; frontière `"use client"` la plus basse possible.
 - **Colocation** logique ; organisation par fonctionnalité pour les gros projets.
@@ -5632,7 +5488,7 @@ Pages Router = pages classiques + fonctions de données dédiées + API Routes ;
 - Fonctions **pures** et testables, séparées de l'interface.
 - Éviter les composants « dieux » ; composition plutôt qu'héritage.
 
-### 24.2 Données et cache
+## Données et cache
 
 - Charger les données **là où elles servent**, en **parallèle** ; éviter les cascades.
 - **Streaming** (`Suspense`, `loading.tsx`) pour les zones lentes.
@@ -5642,7 +5498,7 @@ Pages Router = pages classiques + fonctions de données dédiées + API Routes ;
 - Dédupliquer avec `React.cache`.
 - Garder les pages vitrines **statiques** avec `ensureStatic`.
 
-### 24.3 Sécurité
+## Sécurité
 
 - **Autorisation côté serveur** dans chaque action, handler et accès aux données.
 - **Cookies** `HttpOnly`, `Secure`, `SameSite`.
@@ -5654,7 +5510,7 @@ Pages Router = pages classiques + fonctions de données dédiées + API Routes ;
 - **Programme de versions de sécurité (depuis juillet 2026).** L'équipe Next.js publie des **correctifs de sécurité planifiés** (annoncés à l'avance, par exemple en juillet, août, septembre et novembre 2026), accompagnés si besoin de mises à jour hors calendrier pour des failles critiques en amont. Ces correctifs concernent les lignes de versions maintenues (par exemple 16.x et 15.5). Suivez le blog officiel, installez les versions corrigées de **votre ligne** et utilisez le rappel automatique `experimental.agentUpgrade: "security"` (valeur par défaut) pour être averti pendant `next dev` et `next build`.
 - Ne pas exposer d'erreurs détaillées aux utilisateurs.
 
-### 24.4 Performance
+## Performance
 
 - Réduire le JavaScript client ; `next/dynamic` pour le non critique.
 - `next/image`, `next/font`, `next/script`.
@@ -5663,7 +5519,7 @@ Pages Router = pages classiques + fonctions de données dédiées + API Routes ;
 - Mesurer : Core Web Vitals, Lighthouse, RUM.
 - Surveiller la taille de bundle en CI (Turbopack Bundle Analyzer).
 
-### 24.5 Accessibilité
+## Accessibilité
 
 - HTML sémantique, hiérarchie de titres, `alt`, libellés de formulaire (`<label>`).
 - Navigation **au clavier**, focus visible, gestion du focus dans les modales.
@@ -5671,14 +5527,14 @@ Pages Router = pages classiques + fonctions de données dédiées + API Routes ;
 - ARIA seulement si le HTML natif ne suffit pas.
 - Annoncer les changements de route et les erreurs (`role="alert"`).
 
-### 24.6 Gestion des erreurs et observabilité
+## Gestion des erreurs et observabilité
 
 - `error.tsx` par segment critique, `global-error.tsx`, `not-found.tsx`, `catchError` pour les widgets isolés.
 - Erreurs **attendues** → valeurs retournées ; **inattendues** → exceptions.
 - Journalisation structurée ; suivi des erreurs ; alertes.
 - Identifiants de requête pour corréler logs, traces, erreurs.
 
-### 24.7 Qualité de code et outillage
+## Qualité de code et outillage
 
 - TypeScript `strict`, ESLint, Prettier, hooks Git (Husky, lint-staged).
 - Revues de code avec liste de contrôle (24.10).
@@ -5687,7 +5543,7 @@ Pages Router = pages classiques + fonctions de données dédiées + API Routes ;
 - Mises à jour **régulières** et progressives (ne pas accumuler des versions de retard).
 - **Agents de codage** : `next dev` maintient un bloc `AGENTS.md` pointant vers la documentation **de votre version** ; adoptez-le plutôt que de laisser un agent travailler avec une documentation périmée.
 
-### 24.8 Stratégie de mise à jour
+## Stratégie de mise à jour
 
 ```bash
 npx @next/codemod@canary upgrade latest             # met à niveau Next.js / React et applique les codemods
@@ -5701,7 +5557,7 @@ npx next@canary upgrade --agent=latest              # (16.4) mise à niveau guid
 3. Tester en **staging**.
 4. Déployer progressivement.
 
-### 24.9 Anti-patrons fréquents
+## Anti-patrons fréquents
 
 | Anti-patron | Pourquoi c'est un problème | Alternative |
 | --- | --- | --- |
@@ -5717,7 +5573,7 @@ npx next@canary upgrade --agent=latest              # (16.4) mise à niveau guid
 | Valider seulement côté client | Contournable | Validation serveur |
 | Rester sur une version non corrigée | Failles connues exploitables | Suivre les versions de sécurité |
 
-### 24.10 Liste de contrôle de revue de code
+## Liste de contrôle de revue de code
 
 - Composant serveur ou client : choix justifié ?
 - Requêtes en parallèle ? Pas de cascade inutile ?
@@ -5732,7 +5588,7 @@ npx next@canary upgrade --agent=latest              # (16.4) mise à niveau guid
 - Tests ajoutés ou mis à jour ?
 - Aucune variable d'environnement exposée par erreur ?
 
-### 24.11 Glossaire du chapitre
+## Glossaire
 
 | Terme | Définition courte |
 | --- | --- |
@@ -5742,17 +5598,11 @@ npx next@canary upgrade --agent=latest              # (16.4) mise à niveau guid
 | Codemod | Réécriture automatique de code lors d'une migration |
 | `AGENTS.md` | Fichier orientant les agents vers la documentation de la version |
 
-### Synthèse du chapitre 24
-
-**Server Components par défaut, DAL pour les données, cache explicite, autorisation au plus près des données, mesure continue.** Gardez Next.js **à jour** (programme de versions de sécurité), relisez le code avec une liste de contrôle et évitez les anti-patrons.
-
----
-
-## 25. Aide-mémoire et glossaire
+# Aide-mémoire et glossaire
 
 **Objectifs d'apprentissage.** Retrouver rapidement les importations, directives, fichiers, segments de route et API de cache ; choisir entre Server Component, Server Action et Route Handler ; disposer d'un glossaire complet ; suivre un parcours d'apprentissage.
 
-### 25.1 Importations fréquentes
+## Importations fréquentes
 
 ```ts
 import Link from "next/link";
@@ -5779,7 +5629,7 @@ import { ImageResponse } from "next/og";
 import type { Metadata, Viewport, NextConfig, MetadataRoute } from "next";
 ```
 
-### 25.2 Directives
+## Directives
 
 | Directive | Effet |
 | --- | --- |
@@ -5788,7 +5638,7 @@ import type { Metadata, Viewport, NextConfig, MetadataRoute } from "next";
 | `"use cache"` | Met en cache le résultat (Cache Components) |
 | `"use cache: private"` / `"use cache: remote"` | Variantes avancées |
 
-### 25.3 Fichiers de l'App Router
+## Fichiers de l'App Router
 
 | Fichier | Rôle |
 | --- | --- |
@@ -5806,7 +5656,7 @@ import type { Metadata, Viewport, NextConfig, MetadataRoute } from "next";
 | `icon`, `apple-icon`, `opengraph-image`, `twitter-image` | Images de métadonnées |
 | `sitemap`, `robots`, `manifest` | SEO / PWA |
 
-### 25.4 Segments de route
+## Segments de route
 
 | Dossier | Signification |
 | --- | --- |
@@ -5819,7 +5669,7 @@ import type { Metadata, Viewport, NextConfig, MetadataRoute } from "next";
 | `(.)x`, `(..)x`, `(..)(..)x`, `(...)x` | Route interceptée |
 | `_x` | Dossier privé |
 
-### 25.5 API de cache
+## API de cache
 
 | API | Rôle | Où |
 | --- | --- | --- |
@@ -5833,7 +5683,7 @@ import type { Metadata, Viewport, NextConfig, MetadataRoute } from "next";
 | `React.cache(fn)` | Déduplication sur la durée d'une requête | Serveur |
 | `navigation()` / `prefetch()` | Exclut du contenu d'un préchargement | Composants sous Cache Components |
 
-### 25.6 Hooks et API (client)
+## Hooks et API (client)
 
 | Hook | Rôle |
 | --- | --- |
@@ -5851,7 +5701,7 @@ import type { Metadata, Viewport, NextConfig, MetadataRoute } from "next";
 | `use` | Lire une promesse ou un contexte |
 | `useReportWebVitals` | Mesure des Web Vitals |
 
-### 25.7 Options de `fetch` (modèle classique)
+## Options de `fetch` (modèle classique)
 
 | Option | Effet |
 | --- | --- |
@@ -5861,11 +5711,11 @@ import type { Metadata, Viewport, NextConfig, MetadataRoute } from "next";
 | `next: { tags: [...] }` | Étiquettes |
 | `signal: AbortSignal.timeout(ms)` | Délai d'expiration |
 
-### 25.8 Options de segment (modèle classique ; incompatibles avec `cacheComponents`)
+## Options de segment (modèle classique ; incompatibles avec `cacheComponents`)
 
 `dynamic`, `dynamicParams`, `revalidate`, `fetchCache`, `runtime`, `preferredRegion`, `maxDuration`. À l'inverse, `ensureStatic` (16.4) est propre au modèle Cache Components.
 
-### 25.9 Commandes CLI
+## Commandes CLI
 
 | Commande | Rôle |
 | --- | --- |
@@ -5878,7 +5728,7 @@ import type { Metadata, Viewport, NextConfig, MetadataRoute } from "next";
 | `--webpack` | Utiliser Webpack au lieu de Turbopack |
 | `-p`, `--port` | Port |
 
-### 25.10 Choisir : Server Action, Route Handler ou Server Component ?
+## Choisir : Server Action, Route Handler ou Server Component ?
 
 | Besoin | Choix |
 | --- | --- |
@@ -5888,7 +5738,7 @@ import type { Metadata, Viewport, NextConfig, MetadataRoute } from "next";
 | Interactivité (état, événements) | Client Component |
 | Intercepter avant routage | Proxy |
 
-### 25.11 Glossaire (A–Z)
+## Glossaire (A–Z)
 
 | Terme | Définition |
 | --- | --- |
@@ -5941,15 +5791,15 @@ import type { Metadata, Viewport, NextConfig, MetadataRoute } from "next";
 | **TTFB** | Délai avant le premier octet |
 | **Typed Routes** | Vérification statique des liens |
 
-### 25.12 Parcours d'apprentissage suggéré
+## Parcours d'apprentissage suggéré
 
-1. **Semaine 1** : chapitres 1 à 4 (bases, routing) → site statique multi-pages.
-2. **Semaine 2** : chapitres 5 et 6 → blog avec données chargées côté serveur.
-3. **Semaine 3** : chapitres 7 et 8 → cache, ISR, streaming, mesure de performance.
-4. **Semaine 4** : chapitres 9 à 12 → formulaires, API, proxy, navigation fluide.
-5. **Semaine 5** : chapitres 13 à 17 → design, SEO, authentification, i18n.
-6. **Semaine 6** : chapitres 18 à 22 → configuration, tests, déploiement.
-7. **Semaine 7** : chapitres 23 et 24 → migration, revue qualité, projet final.
+1. **Semaine 1** : de « Introduction et installation » à « Fichiers spéciaux » (bases, routing) → site statique multi-pages.
+2. **Semaine 2** : « Server Components et Client Components » et « Récupération de données » → blog avec données chargées côté serveur.
+3. **Semaine 3** : « Mise en cache » et « Stratégies de rendu » → cache, ISR, streaming, mesure de performance.
+4. **Semaine 4** : de « Server Actions et mutations » à « Navigation » → formulaires, API, proxy, navigation fluide.
+5. **Semaine 5** : de « Styles » à « Internationalisation » → design, SEO, authentification, i18n.
+6. **Semaine 6** : de « Configuration » à « Déploiement » → configuration, tests, déploiement.
+7. **Semaine 7** : « Pages Router (historique et migration) » et « Bonnes pratiques » → migration, revue qualité, projet final.
 
 **Projet fil rouge proposé : « Blog + espace membre ».**
 
@@ -5960,7 +5810,7 @@ import type { Metadata, Viewport, NextConfig, MetadataRoute } from "next";
 - **API publique** : Route Handler `/api/articles` + webhook de revalidation.
 - **Qualité** : i18n FR / EN, tests Vitest + Playwright, en-têtes de sécurité, Docker, CI/CD.
 
-### 25.13 Ressources
+## Ressources
 
 - **Documentation officielle** : <https://nextjs.org/docs>
 - **Tutoriel officiel « Learn Next.js »** : <https://nextjs.org/learn>
@@ -5970,10 +5820,6 @@ import type { Metadata, Viewport, NextConfig, MetadataRoute } from "next";
 - **Documentation React** : <https://react.dev>
 
 > Les API de Next.js évoluent. En cas de divergence entre ce cours et votre version, **la documentation officielle de votre version fait foi.**
-
-### Synthèse du chapitre 25
-
-L'aide-mémoire rassemble **importations, directives, fichiers, segments, API de cache, hooks et commandes**. Choisissez : **Server Component** pour afficher, **Server Action** pour muter depuis votre interface, **Route Handler** pour une API publique, **Client Component** pour l'interactivité, **Proxy** pour intercepter avant le routage.
 
 ---
 

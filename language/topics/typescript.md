@@ -1,12 +1,10 @@
-# TypeScript — Cours complet
+# Avant de commencer : comment utiliser ce cours
 
 *Cours magistral et module d'apprentissage exhaustif, fondé sur le plan « TypeScript — Guide complet » — TypeScript 6.0 / 7.0 (octobre 2026)*
 
-## Avant de commencer : comment utiliser ce cours
+Ce cours couvre TypeScript de bout en bout, des premiers types jusqu'à l'écosystème et aux bonnes pratiques.
 
-Ce cours développe, chapitre par chapitre, l'intégralité du plan en **24 chapitres**, regroupés en quatre parties : **Débutant** (1 à 7), **Intermédiaire** (8 à 12), **Avancé** (13 à 21) et **Bonus** (22 à 24).
-
-Chaque chapitre suit la même trame : *objectifs d'apprentissage → notions et définitions → exemples de code commentés → pièges fréquents → synthèse*.
+Les sections du cours suivent la même trame : *objectifs d'apprentissage → notions et définitions → exemples de code commentés → pièges fréquents → synthèse*.
 
 **Conventions de lecture**
 
@@ -15,17 +13,15 @@ Chaque chapitre suit la même trame : *objectifs d'apprentissage → notions et 
 - Le cours enseigne le TypeScript **actuel** (mode strict par défaut, unions discriminées, `satisfies`, décorateurs standard, ESM, TypeScript 6 et compilateur natif de TypeScript 7) **et** explique l'ancien (`enum`, `namespace`, décorateurs expérimentaux…) pour que vous sachiez lire du code existant.
 - **Prérequis** : connaître les bases de JavaScript (variables, fonctions, objets, tableaux, classes, promesses). Aucun prérequis en typage.
 
-**Parcours conseillé** : lisez les chapitres 1 à 7 dans l'ordre (ils se construisent les uns sur les autres), puis choisissez librement dans les parties suivantes selon vos besoins.
+**Parcours conseillé** : commencez par les bases du langage, dans l'ordre (elles se construisent les unes sur les autres), puis choisissez librement parmi les sections suivantes selon vos besoins.
 
 ---
 
-# Partie I — TypeScript débutant
-
-## 1. Introduction à TypeScript
+# Introduction à TypeScript
 
 **Objectifs d'apprentissage.** Comprendre ce qu'est TypeScript, pourquoi il existe, comment il s'installe, se compile et s'exécute, et où il en est en 2026.
 
-### 1.1 Qu'est-ce que TypeScript ?
+## Qu'est-ce que TypeScript ?
 
 **TypeScript (TS)** est un langage de programmation développé par Microsoft (équipe d'Anders Hejlsberg, première version publique en 2012). C'est un **sur-ensemble syntaxique et typé de JavaScript** : tout programme JavaScript valide est un programme TypeScript valide, et TypeScript y ajoute :
 
@@ -44,9 +40,9 @@ code .ts → vérification des types → suppression des types → code .js → 
             (erreurs à la compilation)                        (navigateur, Node.js…)
 ```
 
-**Conséquence capitale** : TypeScript garantit la cohérence **interne** de votre code, pas la forme des données qui entrent à l'exécution (réponse d'API, saisie utilisateur, fichier JSON). Pour cela, il faut une **validation à l'exécution** (voir chapitre 19).
+**Conséquence capitale** : TypeScript garantit la cohérence **interne** de votre code, pas la forme des données qui entrent à l'exécution (réponse d'API, saisie utilisateur, fichier JSON). Pour cela, il faut une **validation à l'exécution** (voir *Valider les données*).
 
-#### Le typage structurel
+### Le typage structurel
 
 TypeScript est **structurel** (et non nominal) : deux types sont compatibles si leurs **formes** sont compatibles, indépendamment de leur nom ou de leur origine. C'est le *duck typing* vérifié statiquement : « si ça a un `nom` de type `string`, ça convient ».
 
@@ -59,7 +55,7 @@ const chien = { nom: 'Rex', race: 'Labrador' };
 saluer(chien); // OK : chien possède (au moins) la propriété nom
 ```
 
-### 1.2 Pourquoi utiliser TypeScript ?
+## Pourquoi utiliser TypeScript ?
 
 | Avantage | Explication détaillée |
 | --- | --- |
@@ -73,7 +69,7 @@ saluer(chien); // OK : chien possède (au moins) la propriété nom
 
 **Limites à connaître** : une étape de vérification supplémentaire, une courbe d'apprentissage pour les types avancés, et l'absence de garantie à l'exécution sur les données externes.
 
-### 1.3 L'état de TypeScript en 2026 *(à jour)*
+## L'état de TypeScript en 2026 *(à jour)*
 
 | Version | Date | Points marquants |
 | --- | --- | --- |
@@ -84,10 +80,10 @@ saluer(chien); // OK : chien possède (au moins) la propriété nom
 Ce qu'il faut en retenir :
 
 1. Le **langage** (la syntaxe des types) reste stable : ce que vous apprenez ici est valable pour toutes ces versions.
-2. La **configuration** change : défauts plus stricts, options historiques supprimées (chapitre 20).
+2. La **configuration** change : défauts plus stricts, options historiques supprimées (voir *Configuration du projet*).
 3. La commande reste **`tsc`**.
 
-### 1.4 Installer TypeScript
+## Installer TypeScript
 
 Prérequis : **Node.js** (version LTS récente) et un gestionnaire de paquets (npm, pnpm, yarn ou bun).
 
@@ -106,7 +102,7 @@ npm install -D typescript@latest
 npx tsc -p .
 ```
 
-### 1.5 Écrire, compiler et exécuter un premier fichier
+## Écrire, compiler et exécuter un premier fichier
 
 ```typescript
 // bonjour.ts
@@ -135,7 +131,7 @@ console.log(saluer('Alice'));
 
 **Mode « effaçable »** : l'option `--erasableSyntaxOnly` (TS 5.8) interdit les syntaxes qui produisent du code JavaScript (`enum`, `namespace`, propriétés de paramètres de constructeur), afin que le code reste exécutable par simple effacement de types.
 
-### 1.6 Démarrer un projet
+## Démarrer un projet
 
 ```bash
 mkdir mon-projet && cd mon-projet
@@ -153,9 +149,9 @@ mon-projet/
 └── tsconfig.json
 ```
 
-Le chapitre 20 détaille le `tsconfig.json`.
+La section *Configuration du projet* détaille le `tsconfig.json`.
 
-### 1.7 Les outils du quotidien
+## Les outils du quotidien
 
 | Outil | Rôle |
 | --- | --- |
@@ -166,7 +162,7 @@ Le chapitre 20 détaille le `tsconfig.json`.
 | **typescript-eslint, Prettier, Biome** | Qualité et formatage |
 | **Vitest, Jest** | Tests |
 
-### 1.8 Glossaire du chapitre
+## Glossaire
 
 | Terme | Définition courte |
 | --- | --- |
@@ -179,17 +175,13 @@ Le chapitre 20 détaille le `tsconfig.json`.
 | Service de langage | Moteur qui alimente l'éditeur (autocomplétion, navigation, refactorisation) |
 | Mode strict | Famille d'options qui durcit la vérification des types |
 
-### Synthèse du chapitre 1
-
-TypeScript = JavaScript + types statiques ; les types **disparaissent** à l'exécution. Typage **structurel** : la forme compte, pas le nom. `tsc --noEmit` vérifie ; les autres outils exécutent ou empaquettent. TS 6 a durci les défauts ; TS 7 est le compilateur natif en Go.
-
 ---
 
-## 2. Types de base
+# Types de base
 
 **Objectifs d'apprentissage.** Maîtriser les types primitifs, l'inférence, les types spéciaux (`any`, `unknown`, `void`, `never`), la gestion de `null`/`undefined`, les assertions, `as const` et `satisfies`.
 
-### 2.1 Les types primitifs
+## Les types primitifs
 
 JavaScript possède sept types primitifs ; TypeScript les nomme en **minuscules** :
 
@@ -207,7 +199,7 @@ let indefini: undefined = undefined;
 
 `number` ne distingue pas entier et flottant. Pour les entiers de grande taille (identifiants 64 bits), utilisez `bigint`, **non mélangeable** avec `number` dans une opération arithmétique.
 
-### 2.2 L'inférence de types
+## L'inférence de types
 
 TypeScript **déduit** les types à partir des valeurs. Annoter partout est inutile et alourdit le code.
 
@@ -229,9 +221,9 @@ const personne = { nom: 'Alice', age: 30 }; // { nom: string; age: number }
 | Retour des fonctions exportées | `function f(): string` |
 | Quand l'inférence est trop large ou étroite | `let x: string \| null = null;` |
 
-### 2.3 Les types spéciaux
+## Les types spéciaux
 
-#### `any` : l'échappatoire (à éviter)
+### `any` : l'échappatoire (à éviter)
 
 `any` **désactive** la vérification : on peut tout faire avec, et il se propage (« contamination »). C'est un retour au JavaScript non typé.
 
@@ -241,7 +233,7 @@ x = 42;
 x.nimporteQuoi(); // accepté à la compilation, plante à l'exécution
 ```
 
-#### `unknown` : la version sûre
+### `unknown` : la version sûre
 
 On peut y ranger n'importe quoi, mais on ne peut **rien en faire** avant de l'avoir **restreint** (*narrowing*).
 
@@ -256,7 +248,7 @@ function traiter(valeur: unknown) {
 
 Règle : pour toute donnée dont le type n'est pas connu (résultat de `JSON.parse`, entrée utilisateur, erreur attrapée), utilisez **`unknown`**, pas `any`.
 
-#### `void`, `never`, `object`, `{}`
+### `void`, `never`, `object`, `{}`
 
 ```typescript
 function journaliser(msg: string): void { console.log(msg); }   // ne retourne rien d'utile
@@ -274,11 +266,11 @@ let q: {} = 5;               // tout sauf null et undefined
 | `void` | Absence de valeur de retour | Fonctions à effet de bord |
 | `never` | Valeur impossible | Erreurs, boucles infinies, exhaustivité |
 
-`never` est aussi le **type vide** : une union où l'on a tout éliminé devient `never`, d'où son rôle dans les vérifications d'exhaustivité (3.7).
+`never` est aussi le **type vide** : une union où l'on a tout éliminé devient `never`, d'où son rôle dans les vérifications d'exhaustivité (voir *`never` et vérification d'exhaustivité*).
 
 Activez `noImplicitAny` (inclus dans `strict`) : TypeScript refuse alors les `any` implicites.
 
-### 2.4 `null` et `undefined` en mode strict
+## `null` et `undefined` en mode strict
 
 Avec `strictNullChecks` (inclus dans `strict`, **activé par défaut depuis TS 6.0**), `null` et `undefined` ne sont **pas** assignables aux autres types. Cela supprime la célèbre « erreur à un milliard de dollars » (déréférencer `null`).
 
@@ -295,7 +287,7 @@ function longueur(s: string | null): number {
 - **Fusion nulle `??`** : valeur par défaut **uniquement** pour `null`/`undefined` (contrairement à `||` qui réagit aussi à `0`, `''`, `false`).
 - **Assertion non nulle `!`** : `element!.textContent` affirme « ceci n'est pas nul » sans vérification ; si c'est faux, plantage à l'exécution. À éviter.
 
-### 2.5 Assertions de type
+## Assertions de type
 
 Une **assertion** (`as`) dit au compilateur « je sais mieux que toi ». **Aucune conversion, aucune vérification** n'a lieu à l'exécution.
 
@@ -308,7 +300,7 @@ const forcer = 5 as unknown as string;      // double assertion : dernier recour
 
 Une assertion n'est **pas** un cast au sens d'autres langages. Préférez la **restriction de type** (`typeof`, `instanceof`, `in`, gardes personnalisées, validation de schéma). Les assertions sont acceptables quand vous détenez une information que le compilateur ne peut pas connaître (par exemple le type d'un élément DOM) — et même alors un générique (`querySelector<HTMLInputElement>`) est préférable.
 
-### 2.6 `as const` et `satisfies`
+## `as const` et `satisfies`
 
 **`as const`** produit des types **littéraux** et rend l'objet **`readonly` en profondeur** :
 
@@ -337,7 +329,7 @@ palette.vert.toUpperCase();     // reste connu comme string
 
 Avec une annotation `: Couleurs`, `palette.rouge` serait `string | number[]` et les deux lignes ci-dessus échoueraient. `satisfies` combine **validation** et **précision**.
 
-### 2.7 Aperçu des types composés
+## Aperçu des types composés
 
 ```typescript
 let utilisateur: { nom: string; age?: number } = { nom: 'Alice' };
@@ -346,26 +338,22 @@ let ids: number[] = [1, 2, 3];
 let paire: [string, number] = ['Alice', 30];
 ```
 
-Chacun est étudié en détail dans les chapitres suivants.
+Chacun est étudié en détail dans les sections suivantes.
 
-### 2.8 Pièges fréquents
+## Pièges fréquents
 
 - Croire que `: string` convertit ou valide : ce n'est qu'une promesse au compilateur.
 - Utiliser `any` « temporairement » : il contamine tout ce qu'il touche.
 - Confondre `void` (fonction sans retour) et `undefined` (valeur).
 - Oublier que `typeof null === 'object'` en JavaScript : testez `=== null` explicitement.
 
-### Synthèse du chapitre 2
-
-Laissez l'inférence travailler ; annotez paramètres et API publiques. `unknown` > `any`. `never` marque l'impossible. Mode strict : `null`/`undefined` sont des types à part entière. Assertion ≠ vérification. `as const` fige, `satisfies` valide sans élargir.
-
 ---
 
-## 3. Fonctions et annotations de types
+# Fonctions et annotations de types
 
 **Objectifs d'apprentissage.** Typer paramètres et retours, utiliser paramètres optionnels, par défaut et *rest*, écrire des surcharges, maîtriser la restriction de type, les gardes et assertions, et l'exhaustivité.
 
-### 3.1 Annoter paramètres et retour
+## Annoter paramètres et retour
 
 ```typescript
 function additionner(a: number, b: number): number {
@@ -377,7 +365,7 @@ const saluer = (nom: string): void => console.log(`Salut ${nom}`);
 
 Les **paramètres** doivent toujours être annotés (sauf quand le contexte les infère, comme dans un callback). Le **type de retour** est inféré ; l'annoter sur les fonctions publiques documente le contrat, détecte les retours accidentels et accélère le compilateur.
 
-### 3.2 Paramètres optionnels, par défaut et *rest*
+## Paramètres optionnels, par défaut et *rest*
 
 ```typescript
 function presenter(nom: string, age?: number): string {   // age : number | undefined
@@ -397,7 +385,7 @@ function somme(...nombres: number[]): number {
 - Un paramètre **par défaut** est implicitement optionnel pour l'appelant.
 - Un paramètre **rest** (`...x`) collecte les arguments restants dans un tableau (ou un tuple : `...args: [string, number]`).
 
-### 3.3 Types de fonctions
+## Types de fonctions
 
 ```typescript
 type Operation = (a: number, b: number) => number;
@@ -415,7 +403,7 @@ Le **typage contextuel** déduit les types des paramètres d'un callback à part
 
 **Compatibilité des fonctions** : une fonction avec **moins** de paramètres est assignable à un type de fonction qui en prévoit plus (on peut ignorer des arguments), pas l'inverse. Les types des paramètres sont **contravariants** (avec `strictFunctionTypes`) et le type de retour **covariant**.
 
-### 3.4 Surcharges de fonctions
+## Surcharges de fonctions
 
 Plusieurs **signatures** publiques pour une seule **implémentation**, dont la signature n'est pas visible de l'extérieur :
 
@@ -433,7 +421,7 @@ formater(3.14159, 2);   // OK
 
 Préférez une **union** ou un **générique** aux surcharges quand c'est possible : elles sont plus simples et se composent mieux. Les surcharges sont utiles quand le **type de retour dépend** des arguments.
 
-### 3.5 Le paramètre `this`
+## Le paramètre `this`
 
 En JavaScript, `this` dépend de l'appel. TypeScript permet de le typer via un **faux premier paramètre** (effacé à la compilation) :
 
@@ -448,7 +436,7 @@ afficher.call({ etiquette: 'OK' });
 
 Avec `noImplicitThis` (dans `strict`), un `this` de type implicite `any` est refusé. Les fonctions fléchées capturent le `this` de leur contexte lexical.
 
-### 3.6 Restriction de type (*narrowing*)
+## Restriction de type (*narrowing*)
 
 Le compilateur **affine** le type d'une variable selon les tests rencontrés dans le **flux de contrôle** (analyse de flux).
 
@@ -473,7 +461,7 @@ function afficher(valeur: string | number | null) {
 | Discriminant | `x.etat === 'succes'` | Aux unions discriminées |
 | `Array.isArray` |  | Aux tableaux |
 
-#### Gardes de type personnalisées (*type predicates*)
+### Gardes de type personnalisées (*type predicates*)
 
 Une fonction dont le retour s'écrit `param is Type` indique au compilateur : « si je renvoie `true`, le paramètre est de ce type ».
 
@@ -494,7 +482,7 @@ const nombres = [1, undefined, 3].filter(x => x !== undefined); // number[]
 
 **Attention** : le compilateur **fait confiance** au prédicat. Un prédicat faux (qui renvoie `true` à tort) crée une faille de typage.
 
-#### Fonctions d'assertion
+### Fonctions d'assertion
 
 Une fonction `asserts` **lève une exception** si la condition échoue ; sinon le type est raffiné pour la suite du code.
 
@@ -511,7 +499,7 @@ assertString(valeur);
 valeur.toUpperCase(); // valeur est string ici
 ```
 
-### 3.7 `never` et vérification d'exhaustivité
+## `never` et vérification d'exhaustivité
 
 Quand on a traité tous les cas d'une union discriminée, la variable restante est de type `never`. L'affecter à un `never` fait échouer la compilation si un cas est oublié.
 
@@ -534,32 +522,28 @@ function aire(f: Forme): number {
 
 La règle ESLint `switch-exhaustiveness-check` automatise cette vérification.
 
-### 3.8 Aperçu des génériques
+## Aperçu des génériques
 
 ```typescript
 function premier<T>(elements: T[]): T | undefined { return elements[0]; }
 ```
 
-`T` est un **paramètre de type** : un « trou » rempli à l'appel. Voir chapitre 9.
+`T` est un **paramètre de type** : un « trou » rempli à l'appel. Voir *Génériques*.
 
-### 3.9 Pièges fréquents
+## Pièges fréquents
 
 - Un paramètre optionnel placé avant un paramètre obligatoire : erreur.
 - Confondre signature de surcharge et implémentation : l'implémentation n'est pas appelable directement.
 - Un prédicat de type incorrect : le compilateur ne le détecte pas.
 - `async` sans annoter `Promise<T>` : le type est inféré, mais pensez à l'annoter sur l'API publique.
 
-### Synthèse du chapitre 3
-
-Annotez les paramètres ; inférez ou annotez le retour selon la visibilité. Restreignez avec `typeof`, `instanceof`, `in`, discriminants, gardes. `never` + `switch` = exhaustivité garantie. Surcharges seulement quand le retour dépend des arguments.
-
 ---
 
-## 4. Tableaux et tuples
+# Tableaux et tuples
 
 **Objectifs d'apprentissage.** Typer les tableaux, utiliser les méthodes typées, gérer la lecture seule et l'accès sûr aux indices, et maîtriser les tuples.
 
-### 4.1 Les tableaux
+## Les tableaux
 
 Un tableau TypeScript est une collection **homogène** d'éléments de même type. Deux syntaxes équivalentes :
 
@@ -577,7 +561,7 @@ nombres.push(4);
 
 **Syntaxe `T[]` ou `Array<T>` ?** Strictement équivalentes. Par convention, `T[]` pour les types simples, `Array<...>` quand le type d'élément est complexe (par exemple `Array<{ id: number; nom: string }>`).
 
-#### Méthodes typées et inférence des callbacks
+### Méthodes typées et inférence des callbacks
 
 Toutes les méthodes de `Array` sont typées ; les paramètres des callbacks sont inférés.
 
@@ -596,7 +580,7 @@ const textes = nombres.map(String);                 // string[]
 
 Méthodes récentes typées en TS 5.x/6 : `toSorted`, `toReversed`, `toSpliced`, `with`, `findLast`, `at`, `flatMap`, `Object.groupBy` (selon `lib`/`target`).
 
-#### Tableaux en lecture seule
+### Tableaux en lecture seule
 
 ```typescript
 const figes: readonly number[] = [1, 2, 3];
@@ -608,7 +592,7 @@ lire(['a', 'b']);       // un tableau mutable est assignable à readonly
 
 `readonly T[]` (ou `ReadonlyArray<T>`) retire toutes les méthodes mutatrices. C'est un contrat **à la compilation** : l'objet reste modifiable en JavaScript. Règle d'or : déclarez `readonly` tout paramètre tableau que la fonction ne modifie pas ; cela rend la fonction utilisable avec des tableaux `readonly` et documentée comme « pure ».
 
-#### Accès aux indices et `noUncheckedIndexedAccess`
+### Accès aux indices et `noUncheckedIndexedAccess`
 
 ```typescript
 const t: string[] = ['a'];
@@ -623,11 +607,11 @@ if (v !== undefined) console.log(v.toUpperCase());
 for (const s of t) console.log(s.toUpperCase()); // sans risque : pas d'indice
 ```
 
-#### Itération
+### Itération
 
 `for...of` conserve le type d'élément ; `for...in` itère sur des **clés** (`string`) : à éviter pour les tableaux. `Object.entries(obj)` renvoie `[string, T][]`.
 
-### 4.2 Les tuples
+## Les tuples
 
 Un **tuple** est un tableau de **longueur fixe** dont le type de chaque **position** est connu.
 
@@ -638,7 +622,7 @@ const [nom, age] = personne;   // décomposition typée : nom string, age number
 // personne = ['Alice', 30, true]; // ERREUR : longueur incorrecte
 ```
 
-#### Variantes de tuples
+### Variantes de tuples
 
 ```typescript
 let optionnel: [string, number?] = ['Alice'];            // élément optionnel
@@ -650,7 +634,7 @@ let fige: readonly [number, number] = [1, 2];           // lecture seule
 - Les **étiquettes** (`nom:`) n'ont aucun effet de typage mais apparaissent dans l'autocomplétion et les messages d'erreur.
 - Un tuple peut contenir un **élément reste** n'importe où (`[...string[], number]`).
 
-#### Usages typiques
+### Usages typiques
 
 ```typescript
 function minMax(valeurs: number[]): [min: number, max: number] {
@@ -668,17 +652,13 @@ const [mini, maxi] = minMax([3, 1, 4]);
 
 **Inférence** : `const t = ['a', 1]` donne `(string | number)[]`, pas un tuple. Pour obtenir un tuple, annotez le type, ou utilisez `as const` (qui produit `readonly ['a', 1]`).
 
-### Synthèse du chapitre 4
-
-`T[]` pour des collections homogènes ; `readonly T[]` pour les paramètres non modifiés. `noUncheckedIndexedAccess` rend les accès par indice sûrs. Un tuple fixe longueur et type par position ; `as const` ou annotation pour l'obtenir.
-
 ---
 
-## 5. Énumérations (`enum`) et alternatives
+# Énumérations (`enum`) et alternatives
 
 **Objectifs d'apprentissage.** Connaître les enums numériques, de chaînes, `const enum`, leurs limites, et savoir choisir entre enum, union de littéraux et objet `as const`.
 
-### 5.1 Enums numériques
+## Enums numériques
 
 Un **`enum`** est un ensemble de **constantes nommées**. Contrairement à presque tout le reste de TypeScript, un enum **génère du code JavaScript** (un objet).
 
@@ -700,7 +680,7 @@ Les membres sont numérotés à partir de `0`, ou de la dernière valeur explici
 
 **Piège historique** : avant TS 5.0, n'importe quel `number` était assignable à un enum numérique (`let d: Direction = 99` compilait). TS 5.0 a unifié les enums et resserré les vérifications pour les littéraux, mais les enums numériques restent plus laxistes que les unions.
 
-### 5.2 Enums de chaînes
+## Enums de chaînes
 
 ```typescript
 enum Role {
@@ -718,7 +698,7 @@ Avantages : valeurs **lisibles** dans les journaux, le réseau et la base de don
 
 **Enums hétérogènes** (mélange nombres/chaînes) existent mais sont déconseillés.
 
-### 5.3 `const enum` et `declare enum`
+## `const enum` et `declare enum`
 
 ```typescript
 const enum Couleur { Rouge = 'R', Vert = 'V' }
@@ -729,11 +709,11 @@ console.log(Couleur.Rouge); // remplacé en ligne par 'R' : aucun objet génér�
 - **Problème** : cela exige de connaître la définition de l'enum à la compilation de chaque fichier. Les outils qui compilent **fichier par fichier** (`isolatedModules`, Vite, esbuild, SWC, Babel) ne peuvent pas le garantir. **À éviter** dans le code partagé ou publié.
 - **`declare enum`** : décrit un enum défini ailleurs (dans un `.d.ts`).
 
-### 5.4 Les alternatives modernes
+## Les alternatives modernes
 
 Les enums posent trois difficultés : ils **génèrent du code**, ils sont **interdits avec `erasableSyntaxOnly`**, et leur nature **nominale** gêne l'interopérabilité avec du JavaScript ou du JSON.
 
-#### Union de littéraux (défaut recommandé)
+### Union de littéraux (défaut recommandé)
 
 ```typescript
 type Role = 'admin' | 'editeur' | 'lecteur';
@@ -744,7 +724,7 @@ let r: Role = 'admin';
 - Aucun code généré, autocomplétion parfaite, compatible JSON.
 - Non itérable à l'exécution (le type disparaît).
 
-#### Objet `as const` + type dérivé
+### Objet `as const` + type dérivé
 
 ```typescript
 const Role = {
@@ -760,7 +740,7 @@ Object.values(Role); // itérable à l'exécution
 
 On y gagne un **objet itérable** (pour remplir un menu déroulant, valider une entrée) **et** un type, sans syntaxe spéciale : le **même identifiant** sert de valeur et de type (espaces de noms de valeurs et de types distincts).
 
-#### Comparatif
+### Comparatif
 
 |  | `enum` | Union de littéraux | Objet `as const` |
 | --- | --- | --- | --- |
@@ -770,17 +750,13 @@ On y gagne un **objet itérable** (pour remplir un menu déroulant, valider une 
 | Interopérabilité JSON/JS | Moyenne | Excellente | Excellente |
 | Recommandation | Code existant, Angular/NestJS | **Défaut** | Quand on a besoin des valeurs |
 
-### Synthèse du chapitre 5
-
-Un enum est un **objet réel** : il coûte du code et impose un typage nominal. Préférez union de littéraux ou objet `as const`. Évitez `const enum` en dehors d'un code compilé d'un bloc.
-
 ---
 
-## 6. Interfaces
+# Interfaces
 
 **Objectifs d'apprentissage.** Décrire la forme d'objets avec des interfaces, maîtriser propriétés optionnelles, `readonly`, signatures d'index, héritage, implémentation par des classes, fusion de déclarations, et savoir choisir entre `interface` et `type`.
 
-### 6.1 Définir une interface
+## Définir une interface
 
 Une **interface** nomme et décrit la **forme** d'un objet : ses propriétés et leurs types, ses méthodes. Comme le typage est **structurel**, tout objet de forme compatible convient, sans déclaration `implements` explicite.
 
@@ -807,7 +783,7 @@ const ok: Utilisateur = extra; // accepté
 
 `readonly` est une contrainte **de compilation** ; avec `exactOptionalPropertyTypes`, `email?: string` interdit d'assigner explicitement `undefined`.
 
-### 6.2 Méthodes, fonctions, signatures d'index
+## Méthodes, fonctions, signatures d'index
 
 ```typescript
 interface Calculatrice {
@@ -829,7 +805,7 @@ interface Fabrique { new (nom: string): Utilisateur; }               // construc
 - Avec `noUncheckedIndexedAccess`, `stock.pommes` devient `number | undefined`.
 - Pour un dictionnaire, `Record<string, number>` ou `Map<string, number>` sont souvent préférables.
 
-### 6.3 Héritage d'interfaces
+## Héritage d'interfaces
 
 ```typescript
 interface Personne { nom: string; age: number }
@@ -842,7 +818,7 @@ interface Manager extends Employe, Journalisable { equipe: Employe[] } // hérit
 
 Une interface peut aussi étendre un **alias d'objet** ou une **classe** (elle hérite alors des membres, y compris `private`/`protected`, et seules les sous-classes peuvent l'implémenter).
 
-### 6.4 Implémentation par une classe
+## Implémentation par une classe
 
 ```typescript
 interface Imprimable { imprimer(): void }
@@ -854,7 +830,7 @@ class Rapport implements Imprimable {
 
 `implements` **vérifie** que la classe respecte le contrat ; il **ne change pas** son type (ne fournit pas les types des paramètres des méthodes implémentées si vous ne les annotez pas).
 
-### 6.5 Fusion de déclarations
+## Fusion de déclarations
 
 Deux interfaces de même nom **fusionnent** (propriété propre aux interfaces) :
 
@@ -864,9 +840,9 @@ interface Config { delai: number }
 const c: Config = { url: 'x', delai: 5 }; // les deux propriétés sont requises
 ```
 
-Ce mécanisme permet d'**étendre des types globaux ou de bibliothèques** (par exemple `interface Window { monApp: ... }`), voir chapitre 12.
+Ce mécanisme permet d'**étendre des types globaux ou de bibliothèques** (par exemple `interface Window { monApp: ... }`), voir *Augmentation de modules*.
 
-### 6.6 `interface` ou `type` ?
+## `interface` ou `type` ?
 
 | Critère | `interface` | `type` |
 | --- | --- | --- |
@@ -879,17 +855,13 @@ Ce mécanisme permet d'**étendre des types globaux ou de bibliothèques** (par 
 
 **Règle pratique** : `interface` pour les **formes d'objets** et les contrats de classes ; `type` pour **tout le reste**. Ce qui compte le plus est la **cohérence** au sein du projet.
 
-### Synthèse du chapitre 6
-
-Une interface décrit une **forme** ; la compatibilité est structurelle. Propriétés optionnelles (`?`), `readonly`, signatures d'index, appelables, constructibles. Les interfaces s'étendent, se fusionnent et s'implémentent.
-
 ---
 
-## 7. Alias de types, unions et types littéraux
+# Alias de types, unions et types littéraux
 
 **Objectifs d'apprentissage.** Créer des alias, composer des types avec unions et intersections, modéliser des états avec les unions discriminées, utiliser les types littéraux et les types littéraux de gabarit.
 
-### 7.1 Alias de types
+## Alias de types
 
 Un **alias** (`type`) donne un **nom** à n'importe quel type. Il ne crée pas un nouveau type : c'est une étiquette.
 
@@ -900,9 +872,9 @@ type Rappel = (erreur: Error | null, donnees?: string) => void;
 type Matrice = number[][];
 ```
 
-Avantages : réutilisation, lisibilité, modification en un seul endroit. Un alias peut être **générique** (`type Pagine<T> = { elements: T[]; page: number }`) et **récursif** (chapitre 11).
+Avantages : réutilisation, lisibilité, modification en un seul endroit. Un alias peut être **générique** (`type Pagine<T> = { elements: T[]; page: number }`) et **récursif** (voir *Types récursifs*).
 
-### 7.2 Types union (`|`) : « l'un OU l'autre »
+## Types union (`|`) : « l'un OU l'autre »
 
 Une **union** `A | B` décrit une valeur qui est de type `A` **ou** de type `B`. On ne peut utiliser sur une union que ce qui est **commun** à tous ses membres, sauf restriction préalable.
 
@@ -915,7 +887,7 @@ function afficherId(id: ID) {
 }
 ```
 
-#### Unions discriminées
+### Unions discriminées
 
 Une **union discriminée** (*discriminated union*, *tagged union*) est une union d'objets qui partagent une propriété **commune de type littéral** : la **balise**. Tester la balise restreint automatiquement le type.
 
@@ -934,9 +906,9 @@ function afficher(r: Requete): string {
 }
 ```
 
-C'est **le** motif idiomatique pour modéliser des **états** : on rend les combinaisons impossibles **inexprimables**. Comparez avec `{ chargement: boolean; donnees?: string[]; erreur?: string }`, qui autorise `chargement: true` avec `erreur` renseigné. Combiné avec la vérification d'exhaustivité (3.7), le compilateur signale tout état oublié.
+C'est **le** motif idiomatique pour modéliser des **états** : on rend les combinaisons impossibles **inexprimables**. Comparez avec `{ chargement: boolean; donnees?: string[]; erreur?: string }`, qui autorise `chargement: true` avec `erreur` renseigné. Combiné avec la vérification d'exhaustivité (voir *`never` et vérification d'exhaustivité*), le compilateur signale tout état oublié.
 
-### 7.3 Types intersection (`&`) : « l'un ET l'autre »
+## Types intersection (`&`) : « l'un ET l'autre »
 
 Une **intersection** `A & B` décrit une valeur qui possède **toutes** les propriétés de `A` et de `B`.
 
@@ -948,7 +920,7 @@ type Article = Identifiable & Horodate & { titre: string };
 
 Points d'attention : l'intersection de types **incompatibles** produit `never` (par exemple `string & number`), et celle d'objets dont une propriété a des types différents rend cette propriété `never`. Pour composer des objets, `interface ... extends` offre de meilleurs messages d'erreur.
 
-### 7.4 Types littéraux
+## Types littéraux
 
 Un **type littéral** représente **une seule valeur** précise (`'S'`, `42`, `true`). Combinés en union, ils définissent un ensemble fermé de valeurs.
 
@@ -975,7 +947,7 @@ requete('/x', config2.methode);               // OK
 
 Trois rempèdes : `as const`, annoter l'objet (`const config: { methode: Methode }`), ou `satisfies`.
 
-### 7.5 Types littéraux de gabarit (*template literal types*)
+## Types littéraux de gabarit (*template literal types*)
 
 Ils reprennent la syntaxe des gabarits de chaînes **au niveau des types** et calculent des unions de chaînes.
 
@@ -988,29 +960,23 @@ let r: Route = '/api/utilisateurs';
 type Marge = `${'haut' | 'bas'}-${'gauche' | 'droite'}`; // produit cartésien : 4 combinaisons
 ```
 
-Utilitaires de manipulation : `Uppercase`, `Lowercase`, `Capitalize`, `Uncapitalize`. Associés à `infer`, ils permettent d'analyser des chaînes au niveau des types (chapitre 11).
+Utilitaires de manipulation : `Uppercase`, `Lowercase`, `Capitalize`, `Uncapitalize`. Associés à `infer`, ils permettent d'analyser des chaînes au niveau des types (voir *Types littéraux de gabarit avancés*).
 
-### 7.6 Récapitulatif sur la restriction de type
+## Récapitulatif sur la restriction de type
 
-Les unions n'ont d'intérêt que si l'on sait les **restreindre** (section 3.6) : `typeof`, `instanceof`, `in`, égalité stricte, vérité, propriété discriminante, garde personnalisée, `Array.isArray`.
+Les unions n'ont d'intérêt que si l'on sait les **restreindre** (voir *Restriction de type*) : `typeof`, `instanceof`, `in`, égalité stricte, vérité, propriété discriminante, garde personnalisée, `Array.isArray`.
 
-### 7.7 `type` ou `interface` ?
+## `type` ou `interface` ?
 
-Voir 6.6. Les alias sont **indispensables** pour unions, intersections, tuples, types calculés et alias de primitives.
-
-### Synthèse du chapitre 7
-
-Union = **ou**, intersection = **et**. Union discriminée + `switch` = modélisation d'états sûre et exhaustive. Un littéral dans un objet est élargi, sauf `as const`. Les types littéraux de gabarit calculent des chaînes au niveau des types.
+Voir *`interface` ou `type` ?* dans la section *Interfaces*. Les alias sont **indispensables** pour unions, intersections, tuples, types calculés et alias de primitives.
 
 ---
 
-# Partie II — TypeScript intermédiaire
-
-## 8. Classes et programmation orientée objet
+# Classes et programmation orientée objet
 
 **Objectifs d'apprentissage.** Écrire des classes typées, maîtriser modificateurs d'accès, accesseurs, propriétés de paramètres, héritage, classes abstraites, `override`, et comprendre le typage structurel des classes.
 
-### 8.1 Définir une classe
+## Définir une classe
 
 Une **classe** est un modèle qui regroupe des **propriétés** (données) et des **méthodes** (comportement). En TypeScript, les propriétés doivent être **déclarées** et typées.
 
@@ -1036,7 +1002,7 @@ const alice = new Personne('Alice', 30);
 
 Le **nom d'une classe est à la fois une valeur** (le constructeur) **et un type** (celui de ses instances).
 
-### 8.2 Modificateurs d'accès
+## Modificateurs d'accès
 
 | Modificateur | Accessible depuis | Vérifié à |
 | --- | --- | --- |
@@ -1073,7 +1039,7 @@ class CompteBancaire {
 - `private` est **contournable** (`obj['solde']`, `as any`) et reste visible dans le JavaScript généré. Pour une encapsulation **garantie**, utilisez `#champ`.
 - `readonly` est une protection de compilation.
 
-### 8.3 Propriétés de paramètres
+## Propriétés de paramètres
 
 Un raccourci qui **déclare et initialise** des propriétés directement depuis les paramètres du constructeur :
 
@@ -1089,7 +1055,7 @@ class Produit {
 
 Cette syntaxe génère du code : elle est **interdite avec `--erasableSyntaxOnly`**. Dans ce cas, déclarez les propriétés explicitement et affectez-les dans le constructeur.
 
-### 8.4 Membres statiques
+## Membres statiques
 
 ```typescript
 class Compteur {
@@ -1102,7 +1068,7 @@ Compteur.incrementer();
 
 Les membres statiques appartiennent à la **classe**, pas aux instances. Les modificateurs d'accès s'appliquent aussi (`private static`, `static #x`).
 
-### 8.5 Héritage
+## Héritage
 
 ```typescript
 class Animal {
@@ -1123,9 +1089,9 @@ class Chien extends Animal {
 - `extends` : la sous-classe hérite des membres `public`/`protected`.
 - `super(...)` appelle le constructeur parent ; `super.methode()` appelle la méthode parente.
 - **`override`** (TS 4.3) : erreur si la méthode n'existe pas dans le parent. Avec **`noImplicitOverride`**, le mot-clé devient obligatoire pour toute redéfinition, ce qui protège contre les renommages silencieux.
-- Une classe ne peut étendre qu'**une seule** classe ; pour combiner des comportements, voir chapitre 17.
+- Une classe ne peut étendre qu'**une seule** classe ; pour combiner des comportements, voir *Mixins et composition*.
 
-### 8.6 Classes abstraites
+## Classes abstraites
 
 Une classe **abstraite** ne peut pas être instanciée ; elle définit un squelette, avec des méthodes `abstract` que les sous-classes **doivent** implémenter.
 
@@ -1144,7 +1110,7 @@ class Cercle extends Forme {
 
 Patron **méthode gabarit** : la classe abstraite décrit l'algorithme (`decrire`) et laisse des étapes (`aire`) aux sous-classes.
 
-### 8.7 Implémenter des interfaces
+## Implémenter des interfaces
 
 ```typescript
 interface Serialisable { versJson(): string }
@@ -1158,7 +1124,7 @@ class Article implements Serialisable, Identifiable {
 
 Une classe peut implémenter **plusieurs** interfaces. Les interfaces décrivent ce qu'un objet **sait faire**, l'héritage ce qu'il **est**.
 
-### 8.8 Le mot-clé `accessor`, la classe comme type et comme constructeur
+## Le mot-clé `accessor`, la classe comme type et comme constructeur
 
 ```typescript
 class Etat {
@@ -1174,7 +1140,7 @@ const construire: Constructeur = Personne;
 
 Pour obtenir le type de l'instance à partir d'un constructeur générique : `InstanceType<typeof Personne>`.
 
-### 8.9 Typage structurel : les surprises
+## Typage structurel : les surprises
 
 Deux classes de **même forme** sont compatibles, même sans lien d'héritage :
 
@@ -1186,24 +1152,20 @@ const a: A = new B(); // accepté
 
 **Exception** : si une classe possède un membre `private`, `protected` ou `#privé`, seules ses sous-classes (ou elle-même) lui sont compatibles : le typage devient alors quasi **nominal** pour cette classe. Technique utile pour empêcher des substitutions accidentelles.
 
-### 8.10 Bonnes pratiques
+## Bonnes pratiques
 
-- **Composition plutôt qu'héritage** profond (chapitre 17).
+- **Composition plutôt qu'héritage** profond (voir *Mixins et composition*).
 - Programmez **vers des interfaces** : injection de dépendances, tests.
 - Marquez `readonly` les propriétés qui ne changent pas.
 - Dans le code récent, des **fonctions et types** remplacent souvent des classes ; gardez les classes pour des entités avec **état et comportement**, et quand un framework l'impose (Angular, NestJS).
 
-### Synthèse du chapitre 8
-
-`private` = compilation ; `#champ` = exécution. Propriétés de paramètres = raccourci, mais incompatible avec le mode effaçable. `override` + `noImplicitOverride` sécurisent l'héritage. Typage structurel : la forme prime, sauf membres privés.
-
 ---
 
-## 9. Génériques
+# Génériques
 
 **Objectifs d'apprentissage.** Écrire du code réutilisable sans perdre le typage ; maîtriser paramètres de type, contraintes, valeurs par défaut, classes et interfaces génériques, `const T`, `NoInfer`, variance.
 
-### 9.1 Le problème
+## Le problème
 
 Comment écrire une fonction qui marche pour **plusieurs types** tout en **conservant** l'information de type ? `any` la perd.
 
@@ -1218,7 +1180,7 @@ const c = identiteSure<boolean>(true);  // T donné explicitement
 
 `T` est un **paramètre de type** : une variable **de type**, instanciée à chaque appel, soit par **inférence** (cas général), soit **explicitement** entre chevrons.
 
-### 9.2 Fonctions génériques
+## Fonctions génériques
 
 ```typescript
 function premier<T>(elements: T[]): T | undefined { return elements[0]; }
@@ -1234,7 +1196,7 @@ Dans un fichier `.tsx`, écrivez `<T,>(x: T) => ...` ou `<T extends unknown>(...
 
 **Règle de conception** : un paramètre de type doit apparaître **au moins deux fois** (par exemple en entrée et en sortie) ; sinon, il ne relie rien et un simple type suffit. Un générique utilisé une seule fois est souvent un `unknown` déguisé.
 
-### 9.3 Contraintes : `extends`
+## Contraintes : `extends`
 
 Une **contrainte** limite les types acceptables pour `T` et donne accès à leurs membres.
 
@@ -1253,7 +1215,7 @@ lire({ nom: 'A', age: 3 }, 'age'); // number
 
 Le motif `K extends keyof T` est l'un des plus importants : il garantit qu'une clé existe et que le type de retour (`T[K]`) est précis. Un paramètre de type peut en contraindre un autre.
 
-### 9.4 Interfaces et alias génériques
+## Interfaces et alias génériques
 
 ```typescript
 interface Reponse<T> {
@@ -1267,7 +1229,7 @@ type Resultat<T, E = Error> = { ok: true; valeur: T } | { ok: false; erreur: E }
 type Pagine<T> = { elements: T[]; page: number; total: number };
 ```
 
-### 9.5 Classes génériques
+## Classes génériques
 
 ```typescript
 class Pile<T> {
@@ -1287,7 +1249,7 @@ interface Depot<T extends { id: number }> {
 
 Les membres **statiques** d'une classe générique ne peuvent pas utiliser `T` (il appartient aux instances).
 
-### 9.6 Valeurs par défaut des paramètres de type
+## Valeurs par défaut des paramètres de type
 
 ```typescript
 interface Evenement<T = string> { nom: string; charge: T }
@@ -1297,7 +1259,7 @@ const f: Evenement<number> = { nom: 'y', charge: 42 };
 
 Les paramètres avec défaut viennent **après** ceux sans défaut.
 
-### 9.7 Paramètres de type `const` (TS 5.0)
+## Paramètres de type `const` (TS 5.0)
 
 ```typescript
 function creer<const T extends readonly unknown[]>(valeurs: T): T { return valeurs; }
@@ -1306,7 +1268,7 @@ const t = creer(['a', 'b']); // readonly ['a', 'b'] au lieu de string[]
 
 Ils demandent à l'inférence de conserver les **types littéraux** comme si l'argument avait `as const`.
 
-### 9.8 `NoInfer` (TS 5.4)
+## `NoInfer` (TS 5.4)
 
 `NoInfer<T>` empêche un argument de **participer à l'inférence** de `T`.
 
@@ -1318,7 +1280,7 @@ creerSignal(['rouge', 'vert'], 'rouge');   // OK
 
 Sans `NoInfer`, `T` serait inféré comme `'rouge' | 'vert' | 'bleu'` et l'erreur serait manquée.
 
-### 9.9 Variance et annotations `in` / `out`
+## Variance et annotations `in` / `out`
 
 La **variance** décrit comment la relation de sous-typage se transmet à travers un type générique :
 
@@ -1333,7 +1295,7 @@ interface Consommateur<in T> { consommer(x: T): void }
 
 Les annotations explicites documentent l'intention et accélèrent la vérification sur des types complexes.
 
-### 9.10 Exemple concret : requête typée
+## Exemple concret : requête typée
 
 ```typescript
 async function getJson<T>(url: string): Promise<T> {
@@ -1346,25 +1308,21 @@ interface Utilisateur { id: number; nom: string }
 const u = await getJson<Utilisateur>('/api/users/1');
 ```
 
-Le paramètre de type est ici une **promesse du développeur**, pas une garantie. Validez la réponse avec un schéma (section 19.5).
+Le paramètre de type est ici une **promesse du développeur**, pas une garantie. Validez la réponse avec un schéma (voir *Valider les données*).
 
-### 9.11 Pièges fréquents
+## Pièges fréquents
 
 - Spécifier `T` explicitement quand l'inférence suffit.
 - Un générique qui n'apparaît qu'une fois.
 - Utiliser `T` comme valeur : `T` n'existe qu'à la compilation (`new T()` est impossible).
 
-### Synthèse du chapitre 9
-
-Un générique **relie** des types entre eux (entrée → sortie). `extends` contraint ; `K extends keyof T` sécurise l'accès par clé. `const T`, `NoInfer`, `in`/`out` : outils de précision.
-
 ---
 
-## 10. Modules et espaces de noms
+# Modules et espaces de noms
 
 **Objectifs d'apprentissage.** Organiser le code en modules ES, maîtriser imports/exports (y compris de types), comprendre CommonJS vs ESM, importer du JSON, et situer les `namespace` dans l'histoire.
 
-### 10.1 Les modules ES
+## Les modules ES
 
 Tout fichier contenant un `import` ou un `export` de niveau supérieur est un **module** : il possède sa **propre portée** (ses déclarations ne sont pas globales). Un fichier sans import/export est un **script** dont les déclarations sont globales.
 
@@ -1389,11 +1347,11 @@ import { type Point as P, additionner } from './mathematiques.js'; // import mé
 - **Export par défaut** (`export default`) : un seul par module ; le nom est choisi à l'import. Les exports nommés sont généralement préférés (meilleure refactorisation et autocomplétion).
 - **`import type`** : garantit que l'import est **effacé** à la compilation (utile pour les cycles, les performances et la clarté).
 
-#### Extensions et résolution
+### Extensions et résolution
 
 Avec les **modules ES natifs** (`"module": "nodenext"`), les imports relatifs doivent inclure l'extension de **sortie** : `./fichier.js` (même si le fichier source est `.ts`), car Node.js ne réécrit pas les chemins. Avec un **bundler** (`"moduleResolution": "bundler"`), on peut omettre l'extension. TS 5.7 propose `--rewriteRelativeImportExtensions` pour écrire `./fichier.ts` dans les sources.
 
-#### Réexporter (fichiers « barrel »)
+### Réexporter (fichiers « barrel »)
 
 ```typescript
 export { additionner } from './mathematiques.js';
@@ -1403,11 +1361,11 @@ export type { Point } from './types.js';
 
 Un fichier `index.ts` qui réexporte facilite les imports, mais les gros barrels peuvent ralentir les outils et empêcher l'élagage (*tree shaking*) : à utiliser avec modération.
 
-#### `verbatimModuleSyntax`
+### `verbatimModuleSyntax`
 
 L'option **`verbatimModuleSyntax`** impose l'usage de `import type` / `export type` pour les types, et garantit que **ce qui est écrit est ce qui est généré** : tout import sans `type` est conservé. Elle remplace `importsNotUsedAsValues` et `preserveValueImports`. C'est la configuration moderne recommandée.
 
-### 10.2 CommonJS et ES modules
+## CommonJS et ES modules
 
 |  | ES modules | CommonJS |
 | --- | --- | --- |
@@ -1420,7 +1378,7 @@ Pour Node.js : `"module": "nodenext"` et `"type": "module"` dans `package.json` 
 
 `export =` et `import x = require()` sont des syntaxes **CommonJS** historiques ; `esModuleInterop` (toujours actif depuis TS 6.0) facilite l'import par défaut de modules CommonJS.
 
-### 10.3 Importer du JSON
+## Importer du JSON
 
 ```typescript
 import config from './config.json' with { type: 'json' }; // attributs d'import (remplace `assert`)
@@ -1429,7 +1387,7 @@ import config from './config.json' with { type: 'json' }; // attributs d'import 
 
 Le type du JSON est inféré depuis son contenu.
 
-### 10.4 Imports dynamiques
+## Imports dynamiques
 
 ```typescript
 const { default: marked } = await import('marked'); // chargement à la demande
@@ -1437,7 +1395,7 @@ const { default: marked } = await import('marked'); // chargement à la demande
 
 Renvoie une `Promise` du module ; permet le découpage de code (*code splitting*) et le chargement conditionnel. Le type du module est préservé.
 
-### 10.5 Espaces de noms (*namespaces*) : historique *(héritage)*
+## Espaces de noms (*namespaces*) : historique *(héritage)*
 
 Avant les modules ES, les **namespaces** (anciennement « modules internes ») regroupaient du code dans un objet global.
 
@@ -1455,7 +1413,7 @@ Utilitaires.Maths.carre(4);
 
 - **Évitez les `namespace` dans le nouveau code** : utilisez des modules ES. Ils génèrent du code et sont **interdits avec `erasableSyntaxOnly`**.
 - TypeScript 6.0 **déprécie l'ancienne syntaxe `module Nom { }`** (utilisez le mot-clé `namespace`).
-- Les **`declare namespace`** restent **légitimes** dans les fichiers `.d.ts` pour décrire des bibliothèques globales (chapitre 12).
+- Les **`declare namespace`** restent **légitimes** dans les fichiers `.d.ts` pour décrire des bibliothèques globales (voir *Fichiers de déclaration de types*).
 
 |  | Module ES | Namespace |
 | --- | --- | --- |
@@ -1463,21 +1421,17 @@ Utilitaires.Maths.carre(4);
 | Chargement | Natif, élagage possible | Concaténation / balises `<script>` |
 | Usage conseillé | **Toujours** | Code hérité ou `.d.ts` |
 
-### 10.6 Alias de chemins
+## Alias de chemins
 
-Pour éviter les imports `../../../x`, on définit des alias (`@/...`) ; voir 20.4. Attention : `paths` ne configure **que TypeScript** ; l'exécution doit connaître l'alias aussi.
-
-### Synthèse du chapitre 10
-
-Un fichier avec import/export est un module ; préférez les exports nommés. `import type` + `verbatimModuleSyntax` rendent les imports prévisibles. Node.js ESM : extensions `.js` obligatoires ; bundler : facultatives. Les `namespace` sont hérités ; gardez-les pour les `.d.ts`.
+Pour éviter les imports `../../../x`, on définit des alias (`@/...`) ; voir *Alias de chemins*. Attention : `paths` ne configure **que TypeScript** ; l'exécution doit connaître l'alias aussi.
 
 ---
 
-## 11. Types avancés
+# Types avancés
 
 **Objectifs d'apprentissage.** Maîtriser `keyof`, `typeof`, types indexés, types mappés, conditionnels, `infer`, types littéraux de gabarit, types récursifs et types marqués. Ces outils permettent de **calculer** des types à partir d'autres types.
 
-### 11.1 `keyof`, `typeof` et types indexés
+## `keyof`, `typeof` et types indexés
 
 ```typescript
 interface Utilisateur { id: number; nom: string; email: string }
@@ -1497,7 +1451,7 @@ type Jour = (typeof jours)[number];         // 'lun' | 'mar'
 - **`typeof valeur`** (dans une position de type) : le **type d'une valeur** existante. Ne pas confondre avec l'opérateur JavaScript `typeof` (qui renvoie une chaîne).
 - **`T[K]`** : type de la propriété `K` de `T`. `T[number]` : type des éléments d'un tableau/tuple.
 
-### 11.2 Types mappés (*mapped types*)
+## Types mappés (*mapped types*)
 
 Un type mappé **transforme chaque propriété** d'un type : `{ [K in keyof T]: ... }`.
 
@@ -1523,9 +1477,9 @@ type SansFonctions<T> = {
 };
 ```
 
-Les utilitaires `Partial`, `Required`, `Readonly`, `Pick`, `Record` du chapitre 13 sont tous des types mappés. Appliqués à un type paramétré par `keyof T`, ils sont dits **homomorphes** et préservent les modificateurs (`readonly`, `?`) de l'original.
+Les utilitaires `Partial`, `Required`, `Readonly`, `Pick`, `Record` (voir *Types utilitaires*) sont tous des types mappés. Appliqués à un type paramétré par `keyof T`, ils sont dits **homomorphes** et préservent les modificateurs (`readonly`, `?`) de l'original.
 
-### 11.3 Types conditionnels
+## Types conditionnels
 
 Syntaxe : `T extends U ? X : Y`, « si `T` est assignable à `U`, alors `X`, sinon `Y` ».
 
@@ -1544,7 +1498,7 @@ type EstNever<T> = [T] extends [never] ? true : false;
 
 **Distributivité** : quand `T` est un paramètre de type **nu** (non enveloppe) et reçoit une union, le conditionnel est appliqué à **chaque membre** puis les résultats sont réunis. C'est ce qui permet à `Exclude<'a'|'b', 'a'>` de donner `'b'`. `never` est l'union vide : un conditionnel distributif sur `never` donne `never`.
 
-### 11.4 `infer` : extraire un type
+## `infer` : extraire un type
 
 `infer X` déclare une variable de type **dans la branche `extends`** d'un conditionnel pour **capturer** une partie d'un type.
 
@@ -1562,7 +1516,7 @@ type ElementDe<T> = T extends readonly (infer E)[] ? E : never;
 
 `ReturnType`, `Parameters`, `Awaited` sont définis ainsi. On peut contraindre `infer` : `infer S extends string` (TS 4.7).
 
-### 11.5 Types littéraux de gabarit avancés
+## Types littéraux de gabarit avancés
 
 Combinés avec `infer` et la récursion, ils analysent des chaînes :
 
@@ -1578,7 +1532,7 @@ type Handlers = { [E in 'clic' | 'survol' as `on${Capitalize<E>}`]: () => void }
 
 C'est la technique derrière les routeurs et clients d'API fortement typés.
 
-### 11.6 Types récursifs
+## Types récursifs
 
 ```typescript
 type JSONValeur = string | number | boolean | null | JSONValeur[] | { [cle: string]: JSONValeur };
@@ -1590,7 +1544,7 @@ type ProfondementPartiel<T> = {
 
 TypeScript limite la profondeur de récursion (environ 50 niveaux pour les conditionnels, davantage avec une récursion terminale) ; des types trop récursifs ralentissent le compilateur.
 
-### 11.7 Types marqués (*branded types*)
+## Types marqués (*branded types*)
 
 Pour distinguer des valeurs de même type primitif (unités, identifiants), on les « marque » par une intersection phantom :
 
@@ -1607,29 +1561,25 @@ payer(euros(10));
 
 La marque n'existe qu'au niveau des types (aucune propriété réelle). On crée les valeurs marquées via des **fonctions de construction** qui valident.
 
-### 11.8 Autres outils
+## Autres outils
 
-- `satisfies` et `as const` (2.6), l'opérateur `typeof` sur les valeurs, `ReturnType<typeof f>`, `Awaited<T>`.
+- `satisfies` et `as const`, l'opérateur `typeof` sur les valeurs, `ReturnType<typeof f>`, `Awaited<T>`.
 - **Types `unique symbol`** pour un typage quasi nominal.
-- **Signatures d'index** et `Record` (6.2).
+- **Signatures d'index** et `Record` (voir *Méthodes, fonctions, signatures d'index*).
 
-### 11.9 Conseils
+## Conseils
 
 - Commencez **simple** : un type complexe ne se justifie que s'il élimine réellement des erreurs.
-- Nommez et **commentez** les types utilitaires ; testez-les (23.5).
-- Préférez les **utilitaires intégrés** (chapitre 13) aux réécritures maison.
-
-### Synthèse du chapitre 11
-
-`keyof`/`typeof`/indexés extraient des types ; mappés les transforment ; conditionnels et `infer` calculent. Les conditionnels sont **distributifs** sur les unions nues. Les types marqués distinguent des primitifs sans coût à l'exécution.
+- Nommez et **commentez** les types utilitaires ; testez-les (voir *Tester les types*).
+- Préférez les **utilitaires intégrés** (voir *Types utilitaires*) aux réécritures maison.
 
 ---
 
-## 12. Fichiers de déclaration de types
+# Fichiers de déclaration de types
 
 **Objectifs d'apprentissage.** Comprendre les `.d.ts`, utiliser DefinitelyTyped, écrire ses propres déclarations, augmenter des modules et des types globaux.
 
-### 12.1 Qu'est-ce qu'un fichier `.d.ts` ?
+## Qu'est-ce qu'un fichier `.d.ts` ?
 
 Un fichier de **déclaration** (`.d.ts`) contient **uniquement des types** (aucun code exécutable). Il décrit à TypeScript la forme d'une bibliothèque écrite en **JavaScript**, ou publie les types d'une bibliothèque TypeScript.
 
@@ -1639,7 +1589,7 @@ Un fichier de **déclaration** (`.d.ts`) contient **uniquement des types** (aucu
 | **DefinitelyTyped** | Paquets `@types/xxx` |
 | Vos déclarations | Fichiers `.d.ts` du projet |
 
-### 12.2 Générer des déclarations
+## Générer des déclarations
 
 ```json
 { "compilerOptions": { "declaration": true, "declarationMap": true, "emitDeclarationOnly": false } }
@@ -1647,7 +1597,7 @@ Un fichier de **déclaration** (`.d.ts`) contient **uniquement des types** (aucu
 
 `tsc` génère un `.d.ts` par `.ts`. Avec **`isolatedDeclarations`** (TS 5.5), les outils tiers peuvent générer les déclarations **fichier par fichier**, très vite, à condition que les types exportés soient annotés explicitement.
 
-### 12.3 DefinitelyTyped : `@types`
+## DefinitelyTyped : `@types`
 
 ```bash
 npm install -D @types/node @types/express @types/lodash
@@ -1661,15 +1611,15 @@ npm install -D @types/node @types/express @types/lodash
 
 Les `import` explicites (`import express from 'express'`) chargent leurs types sans passer par `types`.
 
-### 12.4 Où TypeScript cherche-t-il les types ?
+## Où TypeScript cherche-t-il les types ?
 
 1. Les types **fournis par le paquet** (`types` / `exports` dans `package.json`).
 2. Les paquets **`@types/...`** listés dans `types` (ou importés explicitement).
 3. Les `.d.ts` inclus par `include`/`files` et les `typeRoots`.
 
-### 12.5 Écrire ses propres déclarations
+## Écrire ses propres déclarations
 
-#### Module sans types
+### Module sans types
 
 ```typescript
 // types/ancienne-lib.d.ts
@@ -1691,7 +1641,7 @@ declare module '*.module.css' {
 
 Pour débloquer rapidement une lib sans types : `declare module 'ancienne-lib';` (tout est `any`), puis affinez.
 
-#### Variables et fonctions globales
+### Variables et fonctions globales
 
 ```typescript
 // types/global.d.ts
@@ -1701,7 +1651,7 @@ declare function ga(commande: string, ...args: unknown[]): void;
 interface Window { dataLayer: unknown[]; monApp: { version: string } } // fusion de déclarations
 ```
 
-#### Augmentation de modules
+### Augmentation de modules
 
 ```typescript
 // types/express.d.ts
@@ -1725,7 +1675,7 @@ declare global {
 
 L'implémentation réelle (`Array.prototype.dernier = ...`) doit exister séparément : un `.d.ts` n'ajoute que des types, jamais du comportement.
 
-### 12.6 Configuration
+## Configuration
 
 ```json
 {
@@ -1736,7 +1686,7 @@ L'implémentation réelle (`Array.prototype.dernier = ...`) doit exister sépar�
 
 `skipLibCheck: true` accélère la compilation en ignorant la vérification interne des `.d.ts` de vos dépendances (ne masque pas les erreurs dans **votre** code).
 
-### 12.7 Conseils
+## Conseils
 
 - **Ne modifiez jamais** `node_modules/@types` : utilisez l'augmentation.
 - Gardez vos `.d.ts` **petits et ciblés** dans un dossier `types/`.
@@ -1744,21 +1694,15 @@ L'implémentation réelle (`Array.prototype.dernier = ...`) doit exister sépar�
 - Pour **publier** : générez et distribuez les `.d.ts` (`types` et `exports` dans `package.json`).
 - Utilisez les directives triple-barre (`/// <reference types="..." />`) uniquement pour des cas particuliers de fichiers globaux.
 
-### Synthèse du chapitre 12
-
-`.d.ts` = types seulement ; `@types/*` pour les bibliothèques JS ; depuis TS 6, `types` explicite. `declare module`, `declare global` et la fusion d'interfaces permettent d'enrichir. Un `.d.ts` avec import/export est un module, sans c'est un script global.
-
 ---
 
-# Partie III — TypeScript avancé
-
-## 13. Types utilitaires
+# Types utilitaires
 
 **Objectifs d'apprentissage.** Connaître et composer tous les types utilitaires intégrés, comprendre comment ils sont construits, et écrire les siens.
 
-### 13.1 Les types intégrés
+## Les types intégrés
 
-TypeScript fournit des **types utilitaires** globaux, construits avec les outils du chapitre 11 (mappés, conditionnels, `infer`).
+TypeScript fournit des **types utilitaires** globaux, construits avec les outils de la section *Types avancés* (mappés, conditionnels, `infer`).
 
 | Utilitaire | Rôle | Exemple |
 | --- | --- | --- |
@@ -1780,7 +1724,7 @@ TypeScript fournit des **types utilitaires** globaux, construits avec les outils
 | `ThisParameterType<F>` / `OmitThisParameter<F>` | Manipulent `this` |  |
 | `Uppercase`, `Lowercase`, `Capitalize`, `Uncapitalize` | Chaînes littérales |  |
 
-#### Comment ils sont définis (pour comprendre)
+### Comment ils sont définis (pour comprendre)
 
 ```typescript
 type MonPartial<T> = { [K in keyof T]?: T[K] };
@@ -1791,7 +1735,7 @@ type MonOmit<T, K extends keyof any> = Pick<T, Exclude<keyof T, K>>;
 type MonReturnType<T extends (...a: any) => any> = T extends (...a: any) => infer R ? R : any;
 ```
 
-#### Exemple d'ensemble
+### Exemple d'ensemble
 
 ```typescript
 interface Utilisateur {
@@ -1818,7 +1762,7 @@ type Charge = Awaited<ReturnType<typeof charger>>;       // { ok: boolean; donne
 - `Readonly`, `Partial` et `Required` sont **superficiels** (premier niveau).
 - `Record<string, V>` + `noUncheckedIndexedAccess` donne `V | undefined`.
 
-### 13.2 Combiner des utilitaires
+## Combiner des utilitaires
 
 ```typescript
 type PartielProfond<T> = { [K in keyof T]?: T[K] extends object ? PartielProfond<T[K]> : T[K] };
@@ -1832,7 +1776,7 @@ type Aplati<T> = { [K in keyof T]: T[K] } & {};  // simplifie l'affichage d'inte
 
 `Aplati` (ou *Prettify*) ne change pas la sémantique mais produit un type d'affichage lisible dans l'éditeur.
 
-### 13.3 Cas d'usage
+## Cas d'usage
 
 | Besoin | Solution |
 | --- | --- |
@@ -1846,7 +1790,7 @@ type Aplati<T> = { [K in keyof T]: T[K] } & {};  // simplifie l'affichage d'inte
 
 `Record<Union, V>` est un excellent outil d'**exhaustivité** : si vous ajoutez un membre à l'union, tous les `Record` correspondants signalent l'oubli.
 
-### 13.4 Écrire ses propres utilitaires
+## Écrire ses propres utilitaires
 
 ```typescript
 type Egaux<A, B> =
@@ -1854,19 +1798,15 @@ type Egaux<A, B> =
 type Test = Egaux<Pick<{ a: 1; b: 2 }, 'a'>, { a: 1 }>; // true
 ```
 
-Ce test d'égalité « strict » sert aux tests de types (23.5). Bonnes pratiques : nommer clairement, documenter par un commentaire TSDoc, tester sur des cas limites (`never`, `any`, unions, optionnels, `readonly`).
-
-### Synthèse du chapitre 13
-
-Les utilitaires sont des types mappés/conditionnels : savoir les relire aide à les composer. `Pick` vérifie les clés, `Omit` non ; `Omit` n'est pas distributif. `Record` sur une union de clés garantit l'exhaustivité.
+Ce test d'égalité « strict » sert aux tests de types (voir *Tester les types*). Bonnes pratiques : nommer clairement, documenter par un commentaire TSDoc, tester sur des cas limites (`never`, `any`, unions, optionnels, `readonly`).
 
 ---
 
-## 14. Décorateurs
+# Décorateurs
 
 **Objectifs d'apprentissage.** Comprendre les deux générations de décorateurs, écrire des décorateurs standard (classe, méthode, champ), connaître les décorateurs historiques utilisés par Angular/NestJS/TypeORM, et savoir quand les utiliser.
 
-### 14.1 Deux versions à distinguer
+## Deux versions à distinguer
 
 Un **décorateur** est une **fonction** appliquée à une classe ou à un de ses membres avec la syntaxe `@nom`, pour **observer, modifier ou remplacer** l'élément décoré.
 
@@ -1880,11 +1820,11 @@ Un **décorateur** est une **fonction** appliquée à une classe ou à un de ses
 
 Les deux modèles sont **incompatibles** : un décorateur écrit pour l'un ne fonctionne pas avec l'autre. Vérifiez ce qu'exige votre framework avant de choisir.
 
-### 14.2 Décorateurs standard (TS 5.x)
+## Décorateurs standard (TS 5.x)
 
 Un décorateur standard reçoit la **valeur décorée** (classe, méthode, accesseur…) et un objet **contexte**, et peut **renvoyer un remplaçant**.
 
-#### Décorateur de classe
+### Décorateur de classe
 
 ```typescript
 function journalise<T extends new (...args: any[]) => object>(
@@ -1905,7 +1845,7 @@ class Service {}
 new Service();
 ```
 
-#### Décorateur de méthode
+### Décorateur de méthode
 
 ```typescript
 function chronometre<This, Args extends unknown[], Ret>(
@@ -1927,7 +1867,7 @@ class Calcul {
 
 La signature générique préserve les types de la méthode décorée.
 
-#### Décorateur de champ et `accessor`
+### Décorateur de champ et `accessor`
 
 ```typescript
 function valeurParDefaut<T>(defaut: T) {   // fabrique de décorateur : fonction qui RENVOIE un décorateur
@@ -1943,7 +1883,7 @@ class Options {
 
 Avec le mot-clé `accessor`, un décorateur peut intercepter `get`/`set` d'un champ (`ClassAccessorDecoratorContext`).
 
-#### Contexte et initialiseurs
+### Contexte et initialiseurs
 
 L'objet **contexte** fournit : `kind` (`'class'`, `'method'`, `'getter'`, `'setter'`, `'field'`, `'accessor'`), `name`, `static`, `private`, `access` (lecture/écriture), `addInitializer()` (code exécuté à l'initialisation) et `metadata` (données partagées entre décorateurs d'une classe).
 
@@ -1964,7 +1904,7 @@ cliquer(); // `this` reste lié
 
 **Ordre d'évaluation** : les expressions de décorateurs sont évaluées de haut en bas, et les décorateurs eux-mêmes appliqués de **bas en haut** (composition de fonctions) ; membres avant la classe.
 
-### 14.3 Décorateurs expérimentaux *(héritage)*
+## Décorateurs expérimentaux *(héritage)*
 
 ```json
 { "compilerOptions": { "experimentalDecorators": true, "emitDecoratorMetadata": true } }
@@ -1991,7 +1931,7 @@ Avec `emitDecoratorMetadata`, TypeScript émet les **types de conception** (`des
 
 Ces décorateurs ne sont **pas standard** ; leur avenir dépend de la migration des frameworks.
 
-### 14.4 Cas d'usage
+## Cas d'usage
 
 | Usage | Exemple |
 | --- | --- |
@@ -2003,23 +1943,19 @@ Ces décorateurs ne sont **pas standard** ; leur avenir dépend de la migration 
 | Mémoïsation, anti-rebond | `@memo`, `@debounce` |
 | Liaison de `this` | `@lie`, `@autobind` |
 
-### 14.5 Bonnes pratiques
+## Bonnes pratiques
 
 - Gardez les décorateurs **simples et sans effets de bord cachés**.
 - **Documentez** leur comportement : ils sont « magiques » et rendent le flux moins visible.
 - Hors framework imposé, préférez les décorateurs **standard**, ou des **fonctions d'ordre supérieur** et la **composition**, souvent plus explicites.
 
-### Synthèse du chapitre 14
-
-Standard : `(valeur, contexte)`, sans option ; historiques : `experimentalDecorators` + métadonnées. Une **fabrique** de décorateur permet de paramétrer (`@Get('/')`). Angular, NestJS, TypeORM reposent encore sur l'ancien modèle.
-
 ---
 
-## 15. Programmation asynchrone
+# Programmation asynchrone
 
 **Objectifs d'apprentissage.** Typer promesses, `async`/`await`, erreurs, parallélisme, annulation, générateurs asynchrones, rappels, et connaître RxJS.
 
-### 15.1 Promesses typées
+## Promesses typées
 
 Une **`Promise<T>`** représente une valeur de type `T` disponible **plus tard** (ou une erreur). Trois états : *pending*, *fulfilled*, *rejected*.
 
@@ -2042,7 +1978,7 @@ chargerNombre()
 
 `then` renvoie une nouvelle promesse dont le type dépend de la valeur retournée (aplatie automatiquement si c'est une promesse). Le type `Awaited<T>` modélise ce « déballage ». Le `reason` d'un rejet est de type `any`/`unknown`.
 
-### 15.2 `async` / `await`
+## `async` / `await`
 
 Une fonction `async` **renvoie toujours une promesse** ; son type de retour s'écrit `Promise<T>`. `await` suspend la fonction jusqu'à résolution et **déballe** la valeur.
 
@@ -2060,7 +1996,7 @@ const u = await chargerUtilisateur(1); // await de haut niveau, dans un module E
 
 Points à retenir : un `await` de haut niveau (*top-level await*) exige un module ES et `target`/`module` adaptés ; `fetch` ne rejette que sur erreur réseau (testez `reponse.ok`).
 
-### 15.3 Gérer les erreurs
+## Gérer les erreurs
 
 Avec `strict` (`useUnknownInCatchVariables`), la variable du `catch` est de type **`unknown`** : il faut la **restreindre**.
 
@@ -2079,7 +2015,7 @@ function messageDErreur(e: unknown): string {
 
 Tout peut être levé en JavaScript (`throw 'texte'`, `throw 42`) : c'est pourquoi `unknown` est le type honnête.
 
-#### Le motif « résultat » (alternative aux exceptions)
+### Le motif « résultat » (alternative aux exceptions)
 
 ```typescript
 type Resultat<T, E = Error> = { ok: true; valeur: T } | { ok: false; erreur: E };
@@ -2095,7 +2031,7 @@ if (r.ok) console.log(r.valeur.nom); else console.error(r.erreur.message);
 
 Avantage : l'erreur apparaît **dans le type** et le compilateur oblige à la traiter ; inconvénient : plus verbeux. Les exceptions restent adaptées aux erreurs **inattendues**.
 
-### 15.4 Exécution parallèle
+## Exécution parallèle
 
 ```typescript
 // Séquentiel (lent) : attend A avant de lancer B
@@ -2123,7 +2059,7 @@ const premiereReussite = await Promise.any([chargerUtilisateur(1), chargerUtilis
 | `Promise.any` | La première **réussie** (rejette si toutes échouent) |
 | `Promise.try` (ES2025) | Enveloppe une fonction sync/async dans une promesse |
 
-### 15.5 Annulation et délai d'expiration
+## Annulation et délai d'expiration
 
 ```typescript
 async function chargerAvecDelai(url: string, ms = 5000): Promise<unknown> {
@@ -2138,7 +2074,7 @@ controleur.abort(); // le fetch rejette avec une AbortError
 
 `AbortController`/`AbortSignal` est le mécanisme standard d'annulation (fetch, flux, vos propres fonctions via un paramètre `signal?: AbortSignal`).
 
-### 15.6 Itérateurs et générateurs asynchrones
+## Itérateurs et générateurs asynchrones
 
 ```typescript
 async function* paginer<T>(charger: (page: number) => Promise<T[]>): AsyncGenerator<T[], void, void> {
@@ -2154,7 +2090,7 @@ for await (const lot of paginer(chargerPage)) console.log(lot.length);
 
 `AsyncGenerator<T, TReturn, TNext>` décrit les valeurs produites, la valeur finale et la valeur reçue par `next()`. `for await...of` consomme tout `AsyncIterable<T>`.
 
-### 15.7 Rappels (*callbacks*) et conversion en promesses
+## Rappels (*callbacks*) et conversion en promesses
 
 ```typescript
 import { promisify } from 'node:util';
@@ -2165,7 +2101,7 @@ const lireFichier = promisify(fs.readFile);   // convertit un callback Node en p
 // ou : import { readFile } from 'node:fs/promises';
 ```
 
-### 15.8 Programmation réactive avec RxJS
+## Programmation réactive avec RxJS
 
 ```typescript
 import { fromEvent, debounceTime, map, distinctUntilChanged, switchMap } from 'rxjs';
@@ -2182,7 +2118,7 @@ fromEvent(champ, 'input').pipe(
 
 Une `Observable<T>` est un **flux** de valeurs dans le temps (plusieurs valeurs, annulable), là où une `Promise<T>` n'en produit qu'**une**. Utile pour saisie, WebSockets, événements ; omniprésent dans Angular. Pour de simples requêtes, `async/await` suffit.
 
-### 15.9 Bonnes pratiques
+## Bonnes pratiques
 
 - **Toujours** gérer les erreurs ; jamais de promesse **flottante** (règle ESLint `no-floating-promises`).
 - Paralléliser avec `Promise.all` les tâches **indépendantes**.
@@ -2190,19 +2126,15 @@ Une `Observable<T>` est un **flux** de valeurs dans le temps (plusieurs valeurs,
 - **Valider** les données reçues : le type générique de `json()` n'est qu'une promesse.
 - Définir des **délais d'expiration** et permettre l'**annulation**.
 
-### Synthèse du chapitre 15
-
-`Promise<T>` et `async` sont typés ; `catch` donne `unknown`. `Promise.all` conserve les types dans un tuple. `AbortSignal` pour annuler, `async function*` pour flux paginables.
-
 ---
 
-## 16. Manipuler le DOM
+# Manipuler le DOM
 
 **Objectifs d'apprentissage.** Typer les éléments et événements du DOM, gérer `null`, créer des éléments génériques, typer des événements personnalisés et les API du navigateur.
 
 > Les exemples de ce module s'exécutent dans un **navigateur** (ils utilisent `document` et `window`).
 
-### 16.1 Typer les éléments
+## Typer les éléments
 
 La bibliothèque de types **`lib.dom`** décrit tout le DOM. Activez-la dans le `tsconfig` : `"lib": ["es2023", "dom", "dom.iterable"]`.
 
@@ -2224,7 +2156,7 @@ const canvas = document.createElement('canvas');              // HTMLCanvasEleme
 
 Les surcharges de `querySelector('a')` et `createElement('canvas')` s'appuient sur l'interface `HTMLElementTagNameMap` (nom de balise → type). Pour un sélecteur CSS arbitraire (`'#nom'`), TypeScript ne peut pas deviner : on précise via le générique, qui reste une **promesse** du développeur.
 
-### 16.2 Gestion de la valeur `null`
+## Gestion de la valeur `null`
 
 ```typescript
 const titre = document.querySelector('h1');
@@ -2242,7 +2174,7 @@ const app = requis<HTMLDivElement>('#app');
 
 Évitez l'assertion non nulle `!` : un utilitaire qui lève une erreur **explicite** facilite le débogage et reste sûr au niveau des types.
 
-### 16.3 Événements typés
+## Événements typés
 
 `addEventListener` est typé par `HTMLElementEventMap` / `DocumentEventMap` / `WindowEventMap` : le nom de l'événement détermine le type de l'objet reçu.
 
@@ -2285,7 +2217,7 @@ document.querySelector<HTMLFormElement>('form')?.addEventListener('submit', (e: 
 | `drag*` | `DragEvent` |
 | Personnalisé | `CustomEvent<T>` |
 
-### 16.4 Événements personnalisés typés
+## Événements personnalisés typés
 
 ```typescript
 interface EvenementsApp { 'panier:ajout': CustomEvent<{ id: number }> }
@@ -2298,9 +2230,9 @@ document.addEventListener('panier:ajout', (e) => console.log(e.detail.id)); // t
 document.dispatchEvent(new CustomEvent('panier:ajout', { detail: { id: 7 } }));
 ```
 
-Par fusion de déclarations (section 6.5), on enrichit la table des événements connus.
+Par fusion de déclarations (voir *Fusion de déclarations*), on enrichit la table des événements connus.
 
-### 16.5 Créer et modifier des éléments
+## Créer et modifier des éléments
 
 ```typescript
 function creer<K extends keyof HTMLElementTagNameMap>(
@@ -2316,7 +2248,7 @@ document.body.append(lien);
 
 Le générique `K extends keyof HTMLElementTagNameMap` relie la balise au type retourné : `creer('input')` donne `HTMLInputElement`, avec ses propriétés propres (`value`, `type`).
 
-### 16.6 Observateurs et API du navigateur
+## Observateurs et API du navigateur
 
 `IntersectionObserver`, `ResizeObserver`, `MutationObserver`, `localStorage` (valeurs `string | null`), `fetch`, `FormData`, `URLSearchParams`, `AbortController`, `History`, `Canvas`, `WebSocket`, `Web Workers` sont tous typés.
 
@@ -2334,24 +2266,20 @@ const stockage = {
 
 Ce wrapper reste une **promesse** de type (le JSON stocké pourrait avoir une autre forme) : validez-le si la donnée est critique.
 
-### 16.7 Bonnes pratiques
+## Bonnes pratiques
 
 - `querySelector<T>()` plutôt que des assertions `as`.
 - `textContent` plutôt que `innerHTML` pour du texte (prévention XSS).
 - Délégation d'événements : un seul écouteur sur un parent, `e.target` restreint par `instanceof HTMLElement`.
 - Pour des interfaces non triviales, utilisez un **framework** ou des **composants web** (modules 17 et 18).
 
-### Synthèse du chapitre 16
-
-Les sélecteurs renvoient des types **nullables** : restreignez ou levez une erreur explicite. Le nom de l'événement détermine le type du paramètre ; `currentTarget` est bien typé. La fusion de déclarations étend les tables d'événements.
-
 ---
 
-## 17. Mixins et composition
+# Mixins et composition
 
 **Objectifs d'apprentissage.** Comprendre les limites de l'héritage simple, écrire des mixins de classes typés, composer par objets et par délégation, et savoir choisir.
 
-### 17.1 Pourquoi ?
+## Pourquoi ?
 
 L'héritage simple limite une classe à **un seul parent** et engendre des hiérarchies rigides (problème du « gorille et de la banane » : on veut une banane, on obtient le gorille et toute la jungle). Deux réponses :
 
@@ -2360,7 +2288,7 @@ L'héritage simple limite une classe à **un seul parent** et engendre des hiér
 
 > « Préférez la composition à l'héritage. »
 
-### 17.2 Mixins de classes
+## Mixins de classes
 
 Un **mixin** est une **fonction** qui prend une classe de base et renvoie une classe qui l'étend.
 
@@ -2396,7 +2324,7 @@ console.log(u.nom, u.actif, u.creeLe); // les types sont combinés
 
 **Comment ça se type** : `Constructeur<T>` décrit n'importe quel constructeur. Le mixin est générique sur `TBase` ; la classe renvoyée a pour type l'**intersection** de `TBase` et des nouveaux membres. Le constructeur du mixin doit accepter `...args: any[]` (exigence du langage).
 
-### 17.3 Mixins avec contraintes
+## Mixins avec contraintes
 
 Un mixin peut **exiger** certains membres de la classe de base :
 
@@ -2415,7 +2343,7 @@ new PersonneAimable('Alice').saluer();
 // Salutation(class {}); // ERREUR : pas de propriété 'nom'
 ```
 
-### 17.4 Composition par objets et fonctions
+## Composition par objets et fonctions
 
 ```typescript
 interface PeutVoler { voler(): string }
@@ -2431,7 +2359,7 @@ function canard(nom: string): PeutVoler & PeutNager {
 
 On assemble des **capacités** par fusion d'objets ; le type est une **intersection**. Pas de hiérarchie, pas de `this` fragile.
 
-#### Composition par délégation (injection)
+### Composition par délégation (injection)
 
 ```typescript
 interface Journal { ecrire(msg: string): void }
@@ -2446,7 +2374,7 @@ new Service({ ecrire: console.log }).executer();
 
 Relation **« a un »** (composition) contre **« est un »** (héritage). Avantages : la dépendance est déclarée par une **interface**, remplacable (test, autre implémentation), et le couplage faible.
 
-### 17.5 Pièges
+## Pièges
 
 | Piège | Remède |
 | --- | --- |
@@ -2456,7 +2384,7 @@ Relation **« a un »** (composition) contre **« est un »** (héritage). Avant
 | Mixins et membres `private`/`#champs` | Limites avec `declaration: true` (types de classes anonymes) |
 | `instanceof` | Un mixin n'ajoute pas d'identité : utiliser `Symbol.hasInstance` ou des gardes |
 
-### 17.6 Mixins ou composition ?
+## Mixins ou composition ?
 
 | Besoin | Choix |
 | --- | --- |
@@ -2465,17 +2393,13 @@ Relation **« a un »** (composition) contre **« est un »** (héritage). Avant
 | Remplacer un comportement à l'exécution | Délégation / stratégie (injection) |
 | Hiérarchie claire « est un » | Héritage |
 
-### Synthèse du chapitre 17
-
-Un mixin = fonction `Base => class extends Base`, typé avec `Constructeur<T>`. La composition d'objets et l'injection de dépendances réduisent le couplage. Rester sobre : trop de mixins nuit à la lisibilité.
-
 ---
 
-## 18. TypeScript et frameworks front-end
+# TypeScript et frameworks front-end
 
 **Objectifs d'apprentissage.** Démarrer un projet avec Vite, typer React, Angular et Vue, connaître les autres frameworks et adopter les bonnes pratiques de typage d'interface.
 
-### 18.1 Démarrer un projet : Vite
+## Démarrer un projet : Vite
 
 `create-react-app` est **déprécié** (plus maintenu). On utilise **Vite** ou le méta-framework du choix (Next.js, React Router, Nuxt, SvelteKit, Astro, Angular CLI).
 
@@ -2484,11 +2408,11 @@ npm create vite@latest mon-app -- --template react-ts   # ou vue-ts, svelte-ts, 
 cd mon-app && npm install && npm run dev
 ```
 
-Vite **ne vérifie pas** les types (il les efface via esbuild/Oxc) : ajoutez `tsc --noEmit` (ou `vue-tsc --noEmit`) à vos scripts et à la CI. Le `tsconfig` d'un projet Vite utilise `moduleResolution: bundler`, `noEmit: true`, `verbatimModuleSyntax` et `isolatedModules` (chapitre 20).
+Vite **ne vérifie pas** les types (il les efface via esbuild/Oxc) : ajoutez `tsc --noEmit` (ou `vue-tsc --noEmit`) à vos scripts et à la CI. Le `tsconfig` d'un projet Vite utilise `moduleResolution: bundler`, `noEmit: true`, `verbatimModuleSyntax` et `isolatedModules` (voir *Configuration du projet*).
 
-### 18.2 React
+## React
 
-#### Composants et props
+### Composants et props
 
 ```tsx
 import { useState, useRef, useEffect, type ReactNode, type ChangeEvent } from 'react';
@@ -2509,7 +2433,7 @@ function Bouton({ etiquette, variante = 'primaire', onClic, children }: BoutonPr
 - Avec **React 19**, `ref` est une **prop ordinaire** (`ref?: Ref<HTMLInputElement>`) : `forwardRef` n'est plus requis pour les nouveaux composants.
 - `ReactNode` : tout ce qui est rendable ; `ReactElement` : un élément JSX ; `PropsWithChildren<P>` ajoute `children`.
 
-#### Hooks
+### Hooks
 
 ```tsx
 interface Utilisateur { id: number; nom: string }
@@ -2541,7 +2465,7 @@ function Profil() {
 
 Points : `useState<T | null>(null)` pour une valeur absente au départ ; `useRef<T>(null)` pour une référence DOM (type `RefObject<T | null>`) ; `useReducer` se type avec une **union discriminée** d'actions.
 
-#### Composants génériques et `useReducer`
+### Composants génériques et `useReducer`
 
 ```tsx
 interface ListeProps<T> {
@@ -2564,7 +2488,7 @@ function reducteur(etat: number, action: Action): number {
 
 Types utiles : `ComponentProps<typeof X>`, `PropsWithChildren`, `ReactNode`, `MouseEvent<HTMLButtonElement>`, `FormEvent`, `CSSProperties`. **Context** : `createContext<Valeur | null>(null)` + un hook personnalisé qui vérifie la présence du fournisseur et lève une erreur sinon.
 
-### 18.3 Angular
+## Angular
 
 Angular est **écrit en TypeScript** et le **requiert**.
 
@@ -2605,9 +2529,9 @@ export class CompteurComponent {
 - **`inject()`** pour l'injection de dépendances ; `HttpClient.get<T>` pour typer les réponses.
 - Nouvelle syntaxe de **contrôle de flux** de gabarit (`@if`, `@for`, `@switch`).
 - Mode **strict** (TypeScript et gabarits) activé par défaut dans les nouveaux projets.
-- Les décorateurs d'Angular reposent sur la version **expérimentale** (chapitre 14).
+- Les décorateurs d'Angular reposent sur la version **expérimentale** (voir *Décorateurs expérimentaux*).
 
-### 18.4 Vue
+## Vue
 
 ```bash
 npm create vue@latest   # choisir « TypeScript »
@@ -2639,7 +2563,7 @@ function incrementer(): void {
 - `ref<T>()` et `computed()` sont génériques ; `defineModel<T>()` pour `v-model`.
 - Utilisez **`vue-tsc`** pour vérifier les types (`vue-tsc --noEmit`) et l'extension **Vue (Volar)** dans VS Code.
 
-### 18.5 Autres frameworks
+## Autres frameworks
 
 | Framework | Notes TypeScript |
 | --- | --- |
@@ -2647,7 +2571,7 @@ function incrementer(): void {
 | **Svelte** | `<script lang="ts">`, runes typées |
 | **Solid**, **Qwik**, **Lit** (composants web) | TS de premier ordre |
 
-### 18.6 Bonnes pratiques
+## Bonnes pratiques
 
 - Activez `strict` ; typez **props, états et événements**.
 - Dérivez les types des **données d'API** d'un schéma (OpenAPI, Zod, tRPC, GraphQL Codegen) plutôt que de les réécrire.
@@ -2655,17 +2579,13 @@ function incrementer(): void {
 - **Unions discriminées** pour les états d'interface (`chargement | succes | erreur`).
 - Placez les types partagés dans un module dédié pour éviter les dépendances circulaires.
 
-### Synthèse du chapitre 18
-
-Vite (ou un méta-framework) pour démarrer ; il ne vérifie pas les types. React : interfaces de props, hooks génériques ; Angular : signaux et `inject()` ; Vue : `defineProps<T>()`. Les états d'interface se modélisent en unions discriminées.
-
 ---
 
-## 19. TypeScript côté serveur
+# TypeScript côté serveur
 
 **Objectifs d'apprentissage.** Configurer et exécuter un projet Node.js en TypeScript, typer une API Express, découvrir NestJS, centraliser les erreurs, et surtout **valider les données à l'exécution**.
 
-### 19.1 Node.js avec TypeScript
+## Node.js avec TypeScript
 
 ```bash
 mkdir api && cd api
@@ -2675,7 +2595,7 @@ npm install -D typescript @types/node @types/express tsx
 npx tsc --init
 ```
 
-#### Exécuter du TypeScript
+### Exécuter du TypeScript
 
 | Besoin | Outil |
 | --- | --- |
@@ -2698,7 +2618,7 @@ npx tsc --init
 
 Le script `typecheck` est **indispensable** : `tsx` et l'exécution native de Node.js n'effectuent aucune vérification de types.
 
-### 19.2 Express (v5)
+## Express (v5)
 
 ```typescript
 // src/index.ts
@@ -2734,11 +2654,11 @@ app.listen(3000, () => console.log('Serveur sur http://localhost:3000'));
 - Les quatre paramètres génériques de `Request<Params, ResBody, ReqBody, Query>` typent l'URL, la réponse, le corps et la chaîne de requête.
 - **Les paramètres d'URL sont toujours des `string`** : convertissez et validez.
 - **Express 5** transmet automatiquement au gestionnaire d'erreurs les rejets des gestionnaires `async` ; avec Express 4 il fallait `next(err)` ou un enrobage.
-- `req.body` **n'est pas vérifié** à l'exécution : le type est une promesse. Validez-le (19.5).
+- `req.body` **n'est pas vérifié** à l'exécution : le type est une promesse. Validez-le (voir *Valider les données*).
 
 Alternatives très typées : **Fastify** (schémas JSON), **Hono**, **Elysia**, **tRPC** (types partagés client-serveur sans génération de code).
 
-### 19.3 NestJS
+## NestJS
 
 Framework **TypeScript d'abord** (architecture modulaire inspirée d'Angular : modules, contrôleurs, services, injection de dépendances).
 
@@ -2787,9 +2707,9 @@ export class UtilisateursController {
 export class UtilisateursModule {}
 ```
 
-Concepts : **module** (regroupe), **contrôleur** (routes), **fournisseur/service** (logique, injectable), **pipe** (transformation/validation), **guard** (autorisation), **intercepteur**, **filtre d'exceptions**. NestJS s'appuie sur les décorateurs **expérimentaux** et `emitDecoratorMetadata` (chapitre 14). Le `ValidationPipe` global avec `class-validator` valide les DTO à l'exécution.
+Concepts : **module** (regroupe), **contrôleur** (routes), **fournisseur/service** (logique, injectable), **pipe** (transformation/validation), **guard** (autorisation), **intercepteur**, **filtre d'exceptions**. NestJS s'appuie sur les décorateurs **expérimentaux** et `emitDecoratorMetadata` (voir *Décorateurs expérimentaux*). Le `ValidationPipe` global avec `class-validator` valide les DTO à l'exécution.
 
-### 19.4 Gestion des erreurs côté serveur
+## Gestion des erreurs côté serveur
 
 ```typescript
 export class ErreurHttp extends Error {
@@ -2814,7 +2734,7 @@ app.use((err: unknown, _req: Request, res: Response, _next: NextFunction) => {
 
 Principes : des **classes d'erreur** typées avec un statut ; un **gestionnaire centralisé** ; la cause originale conservée (`cause`) ; **jamais** de trace de pile renvoyée au client.
 
-### 19.5 Valider les données : types **et** exécution
+## Valider les données : types **et** exécution
 
 Les types sont **effacés** : une API qui reçoit `{ "age": "abc" }` ne plante pas à la compilation. Utilisez un **schéma** qui **valide à l'exécution** et **produit** le type TypeScript, donc une seule source de vérité :
 
@@ -2845,7 +2765,7 @@ app.post('/users', (req, res) => {
 
 `parse` lève une exception, `safeParse` renvoie un résultat discriminé (`success: true | false`). Les schémas peuvent aussi transformer (`z.coerce.number()`) et fournir des valeurs par défaut.
 
-### 19.6 Bonnes pratiques serveur
+## Bonnes pratiques serveur
 
 - Séparez **routes → services → accès aux données** (architecture en couches).
 - Typez les **DTO** (entrées/sorties) et validez-les ; ne renvoyez pas directement les entités de base de données.
@@ -2854,17 +2774,13 @@ app.post('/users', (req, res) => {
 - Vérifiez les types **en CI** : `tsc --noEmit`.
 - Arrêt propre : gérez `SIGTERM`, fermez les connexions.
 
-### Synthèse du chapitre 19
-
-`tsx`/Node exécutent sans vérifier ; `tsc --noEmit` vérifie. Les paramètres génériques de `Request` typent l'API, mais ne la **valident** pas. Un schéma (Zod) donne validation + type : **source unique de vérité**.
-
 ---
 
-## 20. Configuration du projet (`tsconfig.json`)
+# Configuration du projet (`tsconfig.json`)
 
 **Objectifs d'apprentissage.** Comprendre le rôle de `tsconfig.json`, connaître les défauts de TS 6.0 et les options supprimées en TS 7, maîtriser les options essentielles, la résolution des modules, les alias et l'héritage de configurations.
 
-### 20.1 Rôle
+## Rôle
 
 Le fichier **`tsconfig.json`** définit la **racine du projet**, **quels fichiers** sont inclus et **avec quelles options** ils sont compilés. `npx tsc --init` en génère un exemple.
 
@@ -2878,7 +2794,7 @@ Le fichier **`tsconfig.json`** définit la **racine du projet**, **quels fichier
 
 `include`/`exclude` acceptent des motifs *glob* ; `files` liste des fichiers précis. Le fichier est du JSON **avec commentaires** et virgules finales tolérées.
 
-### 20.2 Nouveaux défauts de TypeScript 6.0 *(à jour)*
+## Nouveaux défauts de TypeScript 6.0 *(à jour)*
 
 | Option | Défaut avant | **Défaut en TS 6.0** |
 | --- | --- | --- |
@@ -2890,7 +2806,7 @@ Le fichier **`tsconfig.json`** définit la **racine du projet**, **quels fichier
 | `noUncheckedSideEffectImports` | `false` | **`true`** |
 | `esModuleInterop`, `allowSyntheticDefaultImports` | `false` | **toujours `true`** (`false` déprécié) |
 
-#### Options dépréciées en 6.0, supprimées en 7.0
+### Options dépréciées en 6.0, supprimées en 7.0
 
 | Option dépréciée | Remplacement |
 | --- | --- |
@@ -2905,7 +2821,7 @@ Le fichier **`tsconfig.json`** définit la **racine du projet**, **quels fichier
 
 Pour migrer progressivement vers TS 6 : `"ignoreDeprecations": "6.0"`. **TypeScript 7.0 ne prend plus en charge ces options** : corrigez-les avant de passer au compilateur natif.
 
-### 20.3 Options essentielles
+## Options essentielles
 
 | Catégorie | Option | Rôle |
 | --- | --- | --- |
@@ -2933,11 +2849,11 @@ Pour migrer progressivement vers TS 6 : `"ignoreDeprecations": "6.0"`. **TypeScr
 |  | `jsx` | `react-jsx`, `preserve`… |
 |  | `allowJs`, `checkJs` | Mélanger JS et TS |
 
-#### Ce que contient `strict`
+### Ce que contient `strict`
 
 `noImplicitAny`, `strictNullChecks`, `strictFunctionTypes`, `strictBindCallApply`, `strictPropertyInitialization`, `noImplicitThis`, `useUnknownInCatchVariables`, `alwaysStrict`. Les futures options strictes sont ajoutées à `strict` au fil des versions.
 
-### 20.4 Alias de chemins (`paths`)
+## Alias de chemins (`paths`)
 
 ```json
 {
@@ -2961,7 +2877,7 @@ import { Bouton } from '@composants/Bouton';
 { "imports": { "#utils/*": "./src/utils/*.js" } }
 ```
 
-### 20.5 Résolution des modules
+## Résolution des modules
 
 | `moduleResolution` | Quand l'utiliser |
 | --- | --- |
@@ -2970,9 +2886,9 @@ import { Bouton } from '@composants/Bouton';
 | `node` / `node10` | **Déprécié** |
 | `classic` | **Déprécié** |
 
-### 20.6 Configurations types
+## Configurations types
 
-#### Application Node.js
+### Application Node.js
 
 ```json
 {
@@ -2995,7 +2911,7 @@ import { Bouton } from '@composants/Bouton';
 }
 ```
 
-#### Application front-end (Vite)
+### Application front-end (Vite)
 
 ```json
 {
@@ -3018,7 +2934,7 @@ import { Bouton } from '@composants/Bouton';
 }
 ```
 
-### 20.7 Héritage et projets multiples
+## Héritage et projets multiples
 
 ```json
 // tsconfig.base.json
@@ -3030,7 +2946,7 @@ import { Bouton } from '@composants/Bouton';
 
 `extends` fusionne les options (le fichier fils l'emporte ; `include`/`exclude`/`files` **remplacent** ceux du parent). Les **références de projets** (`"references": [{ "path": "../lib" }]`, `"composite": true`, `tsc -b`) accélèrent les **monorepos** par compilation incrémentale. Bases prêtes à l'emploi : `@tsconfig/node24`, `@tsconfig/strictest`, `@tsconfig/recommended`. Pour séparer sources, tests et scripts : plusieurs fichiers (`tsconfig.app.json`, `tsconfig.node.json`) référencés depuis un `tsconfig.json` racine.
 
-### 20.8 Erreurs fréquentes
+## Erreurs fréquentes
 
 | Problème | Solution |
 | --- | --- |
@@ -3044,23 +2960,19 @@ import { Bouton } from '@composants/Bouton';
 | *Option ... has been removed* avec TS 7 | Retirer/remplacer l'option dépréciée en 6.0 |
 | Beaucoup d'erreurs après la mise à jour vers TS 6 | `strict` est actif : corriger, ou `"strict": false` temporairement |
 
-### 20.9 TypeScript 7 et le compilateur natif *(à jour)*
+## TypeScript 7 et le compilateur natif *(à jour)*
 
 - Même **commande `tsc`**, mêmes types, mais un compilateur écrit en **Go** : **plusieurs fois plus rapide**, avec un vérificateur **parallèle**.
 - Il **ne supporte pas** les options dépréciées en 6.0 ni l'ancienne **API de compilateur** JavaScript : les outils qui l'utilisent (certaines règles ESLint avec types, générateurs de code, plugins) doivent s'adapter ; gardez TypeScript 6 installé en parallèle si besoin.
 - Le service de langage (VS Code, Visual Studio…) bénéficie du même gain : complétion et diagnostics plus réactifs sur les gros projets.
 
-### Synthèse du chapitre 20
-
-TS 6 : `strict` et `module: esnext` par défaut, `types: []`, de nombreuses dépréciations ; TS 7 les supprime. `nodenext` pour Node.js, `bundler` pour les empaqueteurs. `paths` ne suffit pas à l'exécution. Ajoutez `noUncheckedIndexedAccess`, `noImplicitOverride`, `verbatimModuleSyntax`.
-
 ---
 
-## 21. Linting et formatage
+# Linting et formatage
 
 **Objectifs d'apprentissage.** Distinguer vérification de types, linting et formatage ; configurer ESLint (flat config) avec typescript-eslint, Prettier, Biome, l'éditeur et la CI.
 
-### 21.1 Pourquoi ?
+## Pourquoi ?
 
 | Outil | Rôle |
 | --- | --- |
@@ -3070,7 +2982,7 @@ TS 6 : `strict` et `module: esnext` par défaut, `types: []`, de nombreuses dép
 
 **TSLint est abandonné depuis 2019** : utilisez **typescript-eslint**.
 
-### 21.2 ESLint avec typescript-eslint (configuration « flat »)
+## ESLint avec typescript-eslint (configuration « flat »)
 
 ```bash
 npm install -D eslint @eslint/js typescript-eslint
@@ -3107,7 +3019,7 @@ Les anciens fichiers `.eslintrc.*` sont **remplacés** par le format « flat » 
 { "scripts": { "lint": "eslint .", "lint:fix": "eslint . --fix" } }
 ```
 
-#### Règles à retenir
+### Règles à retenir
 
 | Règle | Intérêt |
 | --- | --- |
@@ -3119,7 +3031,7 @@ Les anciens fichiers `.eslintrc.*` sont **remplacés** par le format « flat » 
 | `strict-boolean-expressions` | Conditions explicites |
 | `prefer-readonly`, `no-non-null-assertion` | Immutabilité, pas de `!` |
 
-### 21.3 Prettier
+## Prettier
 
 ```bash
 npm install -D prettier eslint-config-prettier
@@ -3155,7 +3067,7 @@ const utilisateur = {
 
 **ESLint** s'occupe de la **qualité**, **Prettier** du **formatage** ; `eslint-config-prettier` désactive les règles ESLint de style qui entreraient en conflit. Un fichier `.editorconfig` harmonise indentation et fins de ligne entre éditeurs.
 
-### 21.4 Alternative tout-en-un : Biome
+## Alternative tout-en-un : Biome
 
 **Biome** (écrit en Rust) remplace ESLint **et** Prettier dans un seul outil, très rapide, avec une configuration unique. Ses règles nécessitant les informations de types sont moins complètes que celles de typescript-eslint.
 
@@ -3164,7 +3076,7 @@ npm install -D --save-exact @biomejs/biome
 npx biome init && npx biome check --write .
 ```
 
-### 21.5 Intégration à l'éditeur et à la CI
+## Intégration à l'éditeur et à la CI
 
 ```json
 // .vscode/settings.json
@@ -3182,7 +3094,7 @@ npx biome init && npx biome check --write .
 
 **Hooks Git** : `lint-staged` + `husky` (ou `lefthook`) exécutent lint et format **uniquement sur les fichiers modifiés** avant chaque commit. En **CI**, lancez `verifier` sur chaque requête de fusion : c'est le garde-fou final.
 
-### 21.6 Organisation type d'un projet
+## Organisation type d'un projet
 
 ```text
 mon-projet/
@@ -3196,26 +3108,20 @@ mon-projet/
 └── package.json
 ```
 
-### Synthèse du chapitre 21
-
-Trois outils complémentaires : `tsc` (types), ESLint (qualité), Prettier/Biome (style). La configuration « flat » remplace `.eslintrc` ; `projectService` active les règles avec types. Automatisez : éditeur à la sauvegarde, hooks Git, CI.
-
 ---
 
-# Partie IV — Bonus : écosystème et pratique
-
-## 22. TypeScript et bases de données
+# TypeScript et bases de données
 
 **Objectifs d'apprentissage.** Typer modèles et résultats de requêtes, utiliser PostgreSQL, MongoDB, les ORM modernes (Prisma, Drizzle, Kysely, TypeORM), le motif dépôt, et appliquer les bonnes pratiques.
 
-### 22.1 Principes
+## Principes
 
 - Typez les **modèles** (entités) **et** les **résultats de requêtes**.
 - Les types TypeScript **ne vérifient pas** ce que renvoie réellement la base : préférez des outils qui **génèrent les types depuis le schéma** (Prisma, Drizzle, Kysely avec générateurs) ou validez les lignes (Zod).
 - Utilisez toujours des **requêtes paramétrées** : c'est la défense de base contre l'**injection SQL**. Jamais de concaténation de chaînes avec des entrées utilisateur.
 - Attention aux conversions : `bigint`/`numeric` de PostgreSQL arrivent souvent en `string`, les dates en `Date` ou `string` selon le pilote.
 
-### 22.2 PostgreSQL avec `pg`
+## PostgreSQL avec `pg`
 
 ```bash
 npm install pg
@@ -3248,7 +3154,7 @@ export async function creer(nom: string, email: string): Promise<Utilisateur> {
 
 Le générique de `query<T>` est une **promesse** : le compilateur ne compare pas `T` aux colonnes sélectionnées.
 
-#### Transactions
+### Transactions
 
 ```typescript
 const client = await pool.connect();
@@ -3266,9 +3172,9 @@ try {
 
 Une **transaction** regroupe plusieurs opérations en un tout atomique (tout réussit ou rien ne change) ; elle exige la **même connexion** pour toutes les requêtes, d'où `pool.connect()`.
 
-### 22.3 MongoDB
+## MongoDB
 
-#### Pilote officiel
+### Pilote officiel
 
 ```typescript
 import { MongoClient, ObjectId, type Collection } from 'mongodb';
@@ -3290,7 +3196,7 @@ const recents = await articles.find({ tags: 'ts' }).sort({ publieLe: -1 }).limit
 
 Le type `Collection<Article>` s'applique aux **filtres**, aux **insertions** et aux **résultats** : c'est un typage plus profond qu'avec `pg`.
 
-#### Mongoose
+### Mongoose
 
 ```typescript
 import { Schema, model, type InferSchemaType } from 'mongoose';
@@ -3310,7 +3216,7 @@ const trouve = await Utilisateur.findOne({ email: 'alice@exemple.com' }).lean();
 
 `lean()` renvoie des objets simples (plus rapides) plutôt que des documents Mongoose.
 
-### 22.4 ORM et constructeurs de requêtes
+## ORM et constructeurs de requêtes
 
 | Outil | Approche | Points forts |
 | --- | --- | --- |
@@ -3320,7 +3226,7 @@ const trouve = await Utilisateur.findOne({ email: 'alice@exemple.com' }).lean();
 | **TypeORM** | Entités avec **décorateurs** | Très répandu, intégré à NestJS |
 | **MikroORM**, **Sequelize**, **Objection** | Alternatives |  |
 
-#### Prisma
+### Prisma
 
 ```prisma
 // prisma/schema.prisma
@@ -3351,7 +3257,7 @@ const avecArticles = await prisma.utilisateur.findUnique({
 
 Point fort : le type du résultat **s'adapte** aux options `select`/`include`. Le client est généré par `prisma generate` après chaque changement de schéma.
 
-#### Drizzle
+### Drizzle
 
 ```typescript
 import { pgTable, serial, text } from 'drizzle-orm/pg-core';
@@ -3372,7 +3278,7 @@ const u: Utilisateur[] = await db.select().from(utilisateurs).where(eq(utilisate
 
 Le **schéma est du code TypeScript** : il sert à la fois de définition de table et de source des types (`$inferSelect`, `$inferInsert`), sans étape de génération.
 
-#### TypeORM
+### TypeORM
 
 ```typescript
 import { Entity, PrimaryGeneratedColumn, Column, DataSource } from 'typeorm';
@@ -3392,7 +3298,7 @@ const u = await depot.findOneBy({ email: 'a@b.fr' });
 
 TypeORM exige les décorateurs **expérimentaux** (`experimentalDecorators`, `emitDecoratorMetadata`) ; `strictPropertyInitialization` impose le `!` sur les colonnes. Ne mettez jamais `synchronize: true` en production.
 
-### 22.5 Le motif « dépôt » (*repository*)
+## Le motif « dépôt » (*repository*)
 
 Il **isole** l'accès aux données derrière une interface, ce qui facilite les tests et le changement de technologie.
 
@@ -3418,7 +3324,7 @@ class MemoireDepot implements DepotUtilisateurs {   // pour les tests
 
 La **logique métier** dépend de l'interface `DepotUtilisateurs`, jamais d'un pilote précis (inversion de dépendance).
 
-### 22.6 Bonnes pratiques
+## Bonnes pratiques
 
 - **Migrations versionnées** (Prisma Migrate, Drizzle Kit, Flyway…) : jamais de modification manuelle du schéma en production.
 - **Variables d'environnement** pour les chaînes de connexion ; jamais dans le dépôt Git.
@@ -3426,17 +3332,13 @@ La **logique métier** dépend de l'interface `DepotUtilisateurs`, jamais d'un p
 - Ne renvoyez jamais directement des entités contenant des champs sensibles (`Omit<..., 'motDePasseHache'>`).
 - Pagination, limites et délais d'expiration sur les requêtes.
 
-### Synthèse du chapitre 22
-
-Les types de requêtes ne sont fiables que s'ils **dérivent du schéma** de la base. Requêtes paramétrées, transactions, pool de connexions. Le motif dépôt découple métier et persistance.
-
 ---
 
-## 23. TypeScript et tests
+# TypeScript et tests
 
 **Objectifs d'apprentissage.** Choisir un outil de test, écrire des tests unitaires typés (Vitest, Jest, Mocha), tester les types, utiliser des doublures (mocks, stubs, espions) et appliquer les bonnes pratiques.
 
-### 23.1 Choisir un outil de test
+## Choisir un outil de test
 
 | Outil | Points forts |
 | --- | --- |
@@ -3448,7 +3350,7 @@ Les types de requêtes ne sont fiables que s'ils **dérivent du schéma** de la 
 
 **Pyramide des tests** : beaucoup de tests **unitaires** (rapides, isolés), quelques tests d'**intégration** (plusieurs composants, vraie base de test), peu de tests **E2E** (parcours complets).
 
-### 23.2 Vitest
+## Vitest
 
 ```bash
 npm install -D vitest
@@ -3488,7 +3390,7 @@ describe('diviser', () => {
 
 `toBe` compare avec `Object.is` (primitifs), `toEqual` compare **structurellement** (objets), `toStrictEqual` est plus strict (propriétés `undefined`, classes). `it.each` paramètre un test ; `beforeEach`/`afterEach` préparent et nettoient l'état.
 
-### 23.3 Jest avec TypeScript
+## Jest avec TypeScript
 
 ```bash
 npm install -D jest @types/jest ts-jest
@@ -3502,7 +3404,7 @@ export default { preset: 'ts-jest', testEnvironment: 'node', testMatch: ['**/*.t
 
 L'API (`describe`, `it`, `expect`, `jest.fn()`, `jest.mock()`) est quasi identique à Vitest ; avec TypeScript 6, ajoutez `"types": ["jest"]` dans le `tsconfig`. Note : `ts-jest` vérifie les types pendant les tests (plus lent) ; `@swc/jest` les efface seulement.
 
-### 23.4 Mocha + Chai
+## Mocha + Chai
 
 ```bash
 npm install -D mocha chai tsx @types/mocha @types/chai
@@ -3522,7 +3424,7 @@ describe('diviser', () => {
 mocha --import=tsx 'tests/**/*.test.ts'
 ```
 
-### 23.5 Tester les types
+## Tester les types
 
 Les **types** aussi se testent : on vérifie qu'un utilitaire produit le type attendu et qu'un mauvais usage est refusé.
 
@@ -3544,7 +3446,7 @@ diviser('a', 1);
 
 **`@ts-expect-error`** exige qu'il y ait une erreur sur la ligne suivante : si l'erreur disparaît, le test de compilation échoue. Il est préférable à `@ts-ignore`. Alternatives : **tsd**, ou `tsc --noEmit` sur des fichiers `*.test-d.ts`.
 
-### 23.6 Doublures : mocks, stubs, espions
+## Doublures : mocks, stubs, espions
 
 ```typescript
 import { vi, expect, it } from 'vitest';
@@ -3580,7 +3482,7 @@ vi.useFakeTimers();                                                             
 
 Outils complémentaires : **MSW** (simuler l'API réseau), `sinon`, `ts-mockito`, `jest-mock-extended`. Réinitialisez les doublures entre les tests (`vi.restoreAllMocks`).
 
-### 23.7 Sécurité des types dans les tests
+## Sécurité des types dans les tests
 
 - Programmez **vers des interfaces** et injectez les dépendances : les doublures restent **vérifiées** par le compilateur.
 - Évitez `as any` ; préférez `Partial<T>` + une assertion limitée, ou une **fabrique de données** :
@@ -3595,7 +3497,7 @@ function faireUtilisateur(surcharges: Partial<Utilisateur> = {}): Utilisateur {
 
 - Incluez les tests dans la vérification de types (`tsc --noEmit`) ; ajoutez `"types": ["vitest/globals"]` si vous utilisez les API globales.
 
-### 23.8 Bonnes pratiques
+## Bonnes pratiques
 
 - **Arrange – Act – Assert** : préparer, agir, vérifier ; **un comportement par test**, noms explicites.
 - Testez les **cas limites** et les **erreurs**.
@@ -3603,17 +3505,13 @@ function faireUtilisateur(surcharges: Partial<Utilisateur> = {}): Utilisateur {
 - Tests **déterministes** : horloge, aléatoire et réseau contrôlés.
 - Visez une couverture **utile** (pas 100 % à tout prix) et exécutez les tests en **CI**.
 
-### Synthèse du chapitre 23
-
-Vitest : TypeScript natif ; Jest : transformateur ; `node:test` : sans dépendance. `expectTypeOf` et `@ts-expect-error` testent les types. Interfaces + injection = doublures sûres.
-
 ---
 
-## 24. Nouveautés par version et bonnes pratiques
+# Nouveautés par version et bonnes pratiques
 
 **Objectifs d'apprentissage.** Situer chaque fonctionnalité majeure dans la chronologie de TypeScript, découvrir `using`, et récapituler les bonnes pratiques de tout le cours.
 
-### 24.1 Chronologie des fonctionnalités
+## Chronologie des fonctionnalités
 
 | Version | À retenir |
 | --- | --- |
@@ -3630,7 +3528,7 @@ Vitest : TypeScript natif ; Jest : transformateur ; `node:test` : sans dépendan
 
 **Stratégie de mise à jour** : passer par TS 6 (qui avertit des dépréciations), corriger la configuration, puis adopter TS 7. Garder les outils (typescript-eslint, frameworks) à jour de façon coordonnée.
 
-### 24.2 Gestion de ressources : `using` (TS 5.2) *(ajout)*
+## Gestion de ressources : `using` (TS 5.2) *(ajout)*
 
 La déclaration **`using`** garantit qu'une ressource est **libérée automatiquement** à la sortie du bloc, même en cas d'exception (comme `try/finally`, mais déclaratif).
 
@@ -3651,7 +3549,7 @@ async function travaillerAsync() {
 
 Les ressources sont libérées dans l'**ordre inverse** de leur déclaration. Cela nécessite un runtime qui prend en charge `Symbol.dispose`, ou un *polyfill*. Cas d'usage : connexions, fichiers, verrous, transactions, abonnements.
 
-### 24.3 Bonnes pratiques
+## Bonnes pratiques
 
 | Pratique | Pourquoi |
 | --- | --- |
@@ -3667,7 +3565,7 @@ Les ressources sont libérées dans l'**ordre inverse** de leur déclaration. Ce
 | `tsc --noEmit` **en CI** | Vite, esbuild et `tsx` ne vérifient pas les types |
 | Garder TypeScript et `@types/*` **à jour** | Corrections et nouvelles fonctionnalités |
 
-### 24.4 Récapitulatif du cours en dix principes
+## Récapitulatif du cours en dix principes
 
 1. Les types sont une **aide au raisonnement** et disparaissent à l'exécution.
 2. Laissez l'**inférence** travailler ; annotez les frontières (paramètres, API publiques).
@@ -3680,7 +3578,7 @@ Les ressources sont libérées dans l'**ordre inverse** de leur déclaration. Ce
 9. **Automatisez** : `tsc --noEmit`, ESLint, Prettier, tests, CI.
 10. Restez **simple** : le meilleur type est celui que l'équipe comprend.
 
-### 24.5 Ressources
+## Ressources
 
 - **Documentation officielle** : https://www.typescriptlang.org/docs/
 - **TypeScript Handbook** et **notes de version** : https://www.typescriptlang.org/docs/handbook/release-notes/overview.html
@@ -3689,10 +3587,6 @@ Les ressources sont libérées dans l'**ordre inverse** de leur déclaration. Ce
 - **DefinitelyTyped** : https://github.com/DefinitelyTyped/DefinitelyTyped
 - **typescript-eslint** : https://typescript-eslint.io
 - *Effective TypeScript* — Dan Vanderkam
-
-### Synthèse du chapitre 24
-
-TypeScript évolue vite, mais sa philosophie reste stable : **des types qui aident à raisonner** et qui disparaissent à l'exécution. Retenez les nouveautés marquantes (décorateurs standard, `using`, `const` sur les paramètres de type, `NoInfer`, compilateur natif de TypeScript 7), appliquez les bonnes pratiques (`strict`, `unknown`, unions discriminées, validation des données externes, `tsc --noEmit` en CI) et gardez les **dix principes** à l'esprit. Restez **simple** : le meilleur type est celui que l'équipe comprend.
 
 ---
 

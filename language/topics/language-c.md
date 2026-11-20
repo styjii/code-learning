@@ -1,8 +1,6 @@
-# Langage C — Cours complet
+# Avant de commencer : comment utiliser ce cours
 
-*Module d'apprentissage détaillé · Normes C17 / C23 · Sections 1 à 30*
-
-## Avant de commencer : comment utiliser ce cours
+*Module d'apprentissage détaillé · Normes C17 / C23*
 
 Ce cours développe, section par section, le plan « Langage C — Guide complet ». Chaque section suit la même démarche : **un principe** (ce qu'est la notion et pourquoi elle existe), **un fonctionnement** (comment le compilateur et la machine la traitent), **des exemples commentés**, puis **les pièges** et **les bonnes pratiques**.
 
@@ -13,9 +11,9 @@ Ce cours développe, section par section, le plan « Langage C — Guide complet
 
 **Prérequis** : savoir ouvrir un terminal et créer un fichier texte. Aucune connaissance préalable en programmation n'est nécessaire.
 
-## 1. Introduction au C
+# Introduction au C
 
-### 1.1 Qu'est-ce que le C ?
+## Qu'est-ce que le C ?
 
 Le **C** est un langage de programmation **compilé, impératif et procédural**. Chacun de ces trois mots a un sens précis :
 
@@ -38,7 +36,7 @@ On qualifie souvent le C de langage **de niveau intermédiaire** : il offre des 
 
 **Ce que le C ne fait pas pour vous** : il ne vérifie pas les bornes des tableaux, ne protège pas la mémoire contre vos propres erreurs et n'offre pas de types « haut niveau » (pas de chaîne de caractères native, pas de liste, pas de dictionnaire). Cette absence de filet est la contrepartie de sa vitesse et de son contrôle.
 
-### 1.2 Pourquoi apprendre le C ?
+## Pourquoi apprendre le C ?
 
 1. **Programmation système** : les noyaux de Linux, de Windows et de macOS/BSD, les pilotes de périphériques et les systèmes embarqués sont écrits en C.
 2. **Performance** : bases de données (SQLite, PostgreSQL), moteurs de jeux, bibliothèques de calcul, et même les interpréteurs d'autres langages (CPython, Lua, Ruby) sont écrits en C.
@@ -46,9 +44,9 @@ On qualifie souvent le C de langage **de niveau intermédiaire** : il offre des 
 4. **Comprendre l'ordinateur** : en C, vous manipulez explicitement la mémoire, la pile, le tas, les adresses, la compilation. Ces notions éclairent tous les autres langages.
 5. **Interopérabilité** : l'**ABI** (*Application Binary Interface*) du C sert de « langue commune » entre langages. Python, Rust, Go, Java (via JNI) appellent du code C ; presque toutes les bibliothèques système exposent une interface C.
 
-> **Attention** : le revers de la médaille est que le C **ne vous protège pas**. Dépassements de tampon, pointeurs invalides, fuites mémoire sont les causes d'une part considérable des failles de sécurité. Une discipline rigoureuse et des outils d'analyse sont indispensables (section 29).
+> **Attention** : le revers de la médaille est que le C **ne vous protège pas**. Dépassements de tampon, pointeurs invalides, fuites mémoire sont les causes d'une part considérable des failles de sécurité. Une discipline rigoureuse et des outils d'analyse sont indispensables (voir *Comportements indéfinis et sécurité*).
 
-### 1.3 Histoire et normes
+## Histoire et normes
 
 Au début, le C n'avait pas de norme : sa définition était le livre *The C Programming Language* de Brian Kernighan et Dennis Ritchie (1978), d'où le nom **K&R C**. Les compilateurs divergeaient ; la normalisation a corrigé cela.
 
@@ -64,7 +62,7 @@ Au début, le C n'avait pas de norme : sa définition était le livre *The C Pro
 
 **Choisir la norme** : avec l'option `-std=`. `-std=c17` ou `-std=c23` sont des normes strictes ; `-std=gnu17` / `-std=gnu23` ajoutent les extensions de GCC. **GCC 15 et suivants utilisent C23 par défaut** ; Clang et MSVC ont d'autres défauts selon leur version. **Indiquez toujours `-std=` explicitement** pour que votre code compile de la même façon partout.
 
-### 1.4 Fonctionnement d'un programme C
+## Fonctionnement d'un programme C
 
 Produire un programme exécutable comporte trois gestes pour le programmeur, mais plusieurs étapes pour la chaîne de compilation :
 
@@ -86,7 +84,7 @@ hello.c ──▶ préprocesseur ──▶ compilateur ──▶ assembleur ─�
 
 Vous pouvez observer chaque étape : `gcc -E hello.c` (préprocesseur), `gcc -S hello.c` (assembleur), `gcc -c hello.c` (objet).
 
-### 1.5 Installer un compilateur
+## Installer un compilateur
 
 | Système | Installation |
 | --- | --- |
@@ -102,7 +100,7 @@ gcc --version
 
 **Éditeurs et IDE** : VS Code (extension C/C++), CLion, Code::Blocks, Vim/Neovim. **En ligne** : Compiler Explorer (godbolt.org), très utile pour voir l'assembleur généré, et OnlineGDB.
 
-### 1.6 Premier programme : « Hello, World ! »
+## Premier programme : « Hello, World ! »
 
 ```c
 #include <stdio.h>               // fonctions d'entrée/sortie
@@ -125,7 +123,7 @@ Analyse ligne par ligne :
 
 > **Remarque** : `int main(void)` est préférable à `int main()`. Avant C23, les parenthèses vides signifient « arguments non spécifiés » (aucune vérification). En **C23**, `()` équivaut à `(void)`.
 
-### 1.7 Compiler et exécuter
+## Compiler et exécuter
 
 ```bash
 gcc -Wall -Wextra -std=c17 hello.c -o hello     # compiler
@@ -138,7 +136,7 @@ hello.exe                                       # exécuter (Windows)
 - `-o hello` nomme l'exécutable (sinon `a.out` sous Linux/macOS).
 - Le préfixe `./` est nécessaire sous Linux/macOS car le répertoire courant n'est pas dans le `PATH`.
 
-### 1.8 Erreurs fréquentes de débutant
+## Erreurs fréquentes de débutant
 
 | Erreur | Exemple | Correction et explication |
 | --- | --- | --- |
@@ -151,9 +149,9 @@ hello.exe                                       # exécuter (Windows)
 
 **Lire un message d'erreur** : le format est `fichier:ligne:colonne: error: description`. Corrigez **toujours la première erreur** : les suivantes en découlent souvent. Une *erreur* empêche la compilation ; un *avertissement* (`warning`) signale du code suspect mais compilable : ne l'ignorez pas.
 
-## 2. Structure d'un programme C
+# Structure d'un programme C
 
-### 2.1 Organisation générale
+## Organisation générale
 
 Un fichier source C suit une organisation conventionnelle, du haut vers le bas :
 
@@ -178,7 +176,7 @@ int carre(int x) {          // 5. Définitions des autres fonctions
 
 **Pourquoi cet ordre ?** Le compilateur lit le fichier **une seule fois, de haut en bas**. Un identifiant doit être **déclaré avant d'être utilisé**. C'est pourquoi `carre` est annoncée par un **prototype** avant `main` : sans lui, l'appel `carre(n)` surviendrait avant que le compilateur ne connaisse la fonction.
 
-### 2.2 Les composants
+## Les composants
 
 | Composant | Rôle |
 | --- | --- |
@@ -192,7 +190,7 @@ int carre(int x) {          // 5. Définitions des autres fonctions
 
 **Déclaration et définition** : une *déclaration* dit au compilateur qu'un nom existe et quel est son type (le prototype `int carre(int x);`). Une *définition* fournit en plus le **corps** (pour une fonction) ou **réserve la mémoire** (pour une variable). Une entité peut être déclarée plusieurs fois mais définie **une seule fois**.
 
-### 2.3 Commentaires
+## Commentaires
 
 ```c
 #include <stdio.h>
@@ -211,9 +209,9 @@ int main(void) {
 - `//` s'étend jusqu'à la fin de la ligne (C99 et suivants).
 - `/* … */` peut couvrir plusieurs lignes mais **ne s'imbrique pas** : le premier `*/` ferme le commentaire, même s'il y a eu un autre `/*` entre-temps.
 - Un bon commentaire explique **pourquoi**, pas **quoi** : `i++; // incrémente i` n'apporte rien.
-- Pour désactiver temporairement du code, préférez `#if 0 … #endif` (section 24), qui s'imbrique correctement.
+- Pour désactiver temporairement du code, préférez `#if 0 … #endif` (voir *Directives du préprocesseur*), qui s'imbrique correctement.
 
-### 2.4 Variables et instructions
+## Variables et instructions
 
 ```c
 #include <stdio.h>
@@ -231,7 +229,7 @@ Une **variable** est un emplacement de mémoire **nommé** et **typé**. La **d�
 
 > **Bonne pratique** : depuis C99, on peut déclarer une variable **n'importe où** dans un bloc, et dans l'en-tête d'un `for`. Déclarez-la au plus près de son premier usage, et initialisez-la immédiatement.
 
-### 2.5 Code de sortie
+## Code de sortie
 
 ```c
 #include <stdio.h>
@@ -251,27 +249,27 @@ int main(void) {
 
 La valeur retournée par `main` est le **code de sortie** du processus. Par convention, **0 = succès**, toute autre valeur = échec. Les macros portables sont `EXIT_SUCCESS` et `EXIT_FAILURE` (`<stdlib.h>`). Le shell le lit avec `echo $?` (Linux/macOS) ou `echo %ERRORLEVEL%` (Windows). Il permet à des scripts d'enchaîner des programmes : `./prog && echo OK`.
 
-Notez l'usage de `stderr` pour les messages d'erreur : ce flux est séparé de la sortie normale (section 7.5).
+Notez l'usage de `stderr` pour les messages d'erreur : ce flux est séparé de la sortie normale (voir *Autres fonctions d'E/S*).
 
-### 2.6 Les étapes de la compilation (rappel)
+## Les étapes de la compilation (rappel)
 
 1. **Préprocessing** : traitement de `#include`, `#define`, compilation conditionnelle.
 2. **Compilation** : `.c` → assembleur → `.o` (fichier objet).
 3. **Édition de liens** : assemblage des `.o` et des bibliothèques en un exécutable.
 4. **Exécution** : le système charge le programme en mémoire et appelle `main`.
 
-Les détails (options, erreurs de liens, `make`, bibliothèques) sont traités en section 28.
+Les détails (options, erreurs de liens, `make`, bibliothèques) sont traités dans *Compilation et exécution*.
 
-## 3. Syntaxe et mots-clés
+# Syntaxe et mots-clés
 
-### 3.1 Règles de syntaxe
+## Règles de syntaxe
 
 - C est **sensible à la casse** : `Valeur` et `valeur` sont deux identifiants distincts.
 - Chaque **instruction** se termine par `;`. Un bloc `{ }` n'est pas suivi de `;` (sauf après une définition de `struct`, `union`, `enum`, ou un initialiseur).
 - Les **blocs** sont délimités par `{ }` ; l'indentation est libre pour le compilateur mais **indispensable à la lisibilité humaine**.
 - Les espaces, tabulations et sauts de ligne n'ont pas de signification particulière, hors des littéraux de chaîne et des directives `#` (qui occupent une ligne).
 
-### 3.2 Identifiants
+## Identifiants
 
 Un **identifiant** est un nom donné à une variable, une fonction, un type, etc. Règles :
 
@@ -298,7 +296,7 @@ int main(void) {
 
 **Conventions de nommage** : `snake_case` pour les variables et fonctions (`nombre_eleves`), `MAJUSCULES` pour les constantes et macros (`TAILLE_MAX`), `Majuscule` ou `_t` pour les types. Choisissez des noms **parlants** : `compteur_erreurs` vaut mieux que `ce` ou `x`.
 
-### 3.3 Mots-clés du langage (C23)
+## Mots-clés du langage (C23)
 
 Les **mots-clés** sont réservés par le langage : on ne peut pas les utiliser comme identifiants.
 
@@ -313,9 +311,9 @@ Les **mots-clés** sont réservés par le langage : on ne peut pas les utiliser 
 
 > **À retenir** : en **C23**, `bool`, `true`, `false`, `nullptr`, `alignas`, `alignof`, `static_assert` et `thread_local` deviennent de vrais **mots-clés**. On n'a plus besoin de `<stdbool.h>` ni des anciennes formes `_Bool`, `_Alignas`, `_Static_assert`. Pour du code destiné aux normes antérieures, incluez `<stdbool.h>`.
 
-Le sens de ces mots est détaillé dans les sections suivantes : types (section 4), contrôle (section 8), classes de stockage (section 10), `struct`/`union`/`enum`/`typedef` (sections 18 à 20).
+Le sens de ces mots est détaillé dans les sections suivantes : types, contrôle, classes de stockage, `struct`/`union`/`enum`/`typedef`.
 
-### 3.4 Ponctuation et délimiteurs
+## Ponctuation et délimiteurs
 
 | Symbole | Usage |
 | --- | --- |
@@ -329,7 +327,7 @@ Le sens de ces mots est détaillé dans les sections suivantes : types (section 
 | `->` `.` | Accès aux membres d'une structure |
 | `" "` `' '` | Littéral de chaîne ; littéral de caractère |
 
-### 3.5 Attributs (C23)
+## Attributs (C23)
 
 C23 introduit une syntaxe **standard** `[[ ... ]]` pour donner des indications au compilateur sans changer le sens du programme. Auparavant, il fallait des extensions propres à chaque compilateur (`__attribute__` de GCC, `__declspec` de MSVC).
 
@@ -374,13 +372,13 @@ int main(void) {
 
 Un attribut **n'est jamais obligatoire** pour la correction du programme : un compilateur qui ne le connaît pas doit l'ignorer. Il sert à documenter l'intention et à renforcer les avertissements.
 
-## 4. Types de données et variables
+# Types de données et variables
 
-### 4.1 Pourquoi des types ?
+## Pourquoi des types ?
 
 La mémoire d'un ordinateur n'est qu'une suite d'**octets** (groupes de 8 bits). Le même motif de bits peut représenter un entier, un réel ou un caractère. Le **type** d'une variable indique au compilateur **combien d'octets** réserver et **comment interpréter** ces octets. C'est aussi ce qui détermine les opérations permises.
 
-### 4.2 Types fondamentaux
+## Types fondamentaux
 
 | Type | Rôle | Taille usuelle\* | Format `printf` |
 | --- | --- | --- | --- |
@@ -419,7 +417,7 @@ int main(void) {
 - On **ne compare pas** deux réels avec `==` ; on teste que la différence est petite : `fabs(a - b) < 1e-9`.
 - `float` offre environ 7 chiffres significatifs, `double` environ 15 à 16. **Utilisez `double` par défaut.**
 
-### 4.3 Modificateurs : `signed`, `unsigned`, `short`, `long`
+## Modificateurs : `signed`, `unsigned`, `short`, `long`
 
 Les modificateurs ajustent un type entier :
 
@@ -450,7 +448,7 @@ Un entier signé sur *n* bits couvre −2^(n−1) à 2^(n−1)−1 (représentat
 
 > **Attention** : le débordement d'un entier **signé** est un **comportement indéfini** (le compilateur peut supposer qu'il n'arrive jamais). Celui d'un entier **non signé** est défini : le résultat « boucle » modulo 2^n. Ainsi `UINT_MAX + 1` vaut `0`.
 
-### 4.4 Entiers à taille fixe : `<stdint.h>`
+## Entiers à taille fixe : `<stdint.h>`
 
 Pour écrire du code **portable** ou manipuler des formats binaires, utilisez des types dont la taille est garantie :
 
@@ -483,7 +481,7 @@ int main(void) {
 
 **Règle pratique** : `int` pour un compteur ordinaire ; `size_t` pour une taille ou un indice de tableau ; `int32_t`/`uint8_t`… dès que la taille exacte compte (fichiers, réseau, matériel).
 
-### 4.5 Booléens
+## Booléens
 
 Historiquement, C n'avait **pas** de type booléen : toute expression numérique pouvait servir de condition. **Zéro est faux, toute autre valeur est vraie.** C99 a ajouté `_Bool` (et `<stdbool.h>` pour les noms `bool`, `true`, `false`) ; **C23** fait de `bool`, `true` et `false` des mots-clés.
 
@@ -503,7 +501,7 @@ int main(void) {
 
 Point important : convertir une valeur en `bool` donne **toujours 0 ou 1**, jamais autre chose. Les comparaisons (`==`, `<`, `&&`…) produisent un `int` valant 0 ou 1.
 
-### 4.6 Déclarer, initialiser, affecter
+## Déclarer, initialiser, affecter
 
 ```c
 #include <stdio.h>
@@ -523,7 +521,7 @@ Distinction essentielle : **initialiser** (donner une valeur à la naissance de 
 
 **Initialisation par défaut** : seules les variables **statiques ou globales** sont automatiquement mises à zéro. Les variables **locales** ne le sont pas. Dans le doute, initialisez toujours.
 
-#### Inférence de type avec `auto` (C23)
+### Inférence de type avec `auto` (C23)
 
 ```c
 // Compiler avec : gcc -std=c23 inference.c -o inference
@@ -540,7 +538,7 @@ int main(void) {
 
 Le compilateur **déduit** le type depuis l'initialiseur. Il faut donc **obligatoirement** un initialiseur. Utilisez `auto` avec parcimonie : un type écrit explicitement documente mieux l'intention.
 
-### 4.7 Conversions de types (*casts*)
+## Conversions de types (*casts*)
 
 Quand une expression mélange des types, le compilateur applique des **conversions implicites** selon des règles précises :
 
@@ -568,7 +566,7 @@ int main(void) {
 
 Le **cast** `(type)expression` force une conversion. Il supprime les avertissements : à utiliser en connaissance de cause, jamais pour « faire taire » le compilateur.
 
-### 4.8 Bonnes pratiques
+## Bonnes pratiques
 
 - Initialisez chaque variable à sa déclaration.
 - Donnez à chaque variable la **portée la plus étroite** possible.
@@ -577,9 +575,9 @@ Le **cast** `(type)expression` force une conversion. Il supprime les avertisseme
 - Utilisez `<stdint.h>` quand la taille exacte importe.
 - Ne comparez jamais des réels avec `==`.
 
-## 5. Constantes et littéraux
+# Constantes et littéraux
 
-### 5.1 Littéraux
+## Littéraux
 
 Un **littéral** est une valeur écrite directement dans le code. Son **type** dépend de sa forme.
 
@@ -598,7 +596,7 @@ Un **littéral** est une valeur écrite directement dans le code. Son **type** d
 
 En **C23**, le séparateur de chiffres `'` rend les grands nombres lisibles : `1'000'000`, `0xFF'FF`. Le zéro initial est un piège : `010` vaut **8** (octal), pas 10.
 
-#### Séquences d'échappement
+### Séquences d'échappement
 
 | Séquence | Signification |
 | --- | --- |
@@ -615,7 +613,7 @@ En **C23**, le séparateur de chiffres `'` rend les grands nombres lisibles : `1
 
 Pour afficher un `%` avec `printf`, écrivez `%%`.
 
-### 5.2 Définir des constantes
+## Définir des constantes
 
 Il y a quatre manières de nommer une constante, avec des différences réelles :
 
@@ -642,11 +640,11 @@ int main(void) {
 
 > **Bonne pratique** : préférez `constexpr` (C23), `enum` ou `const` à `#define` pour les constantes. Elles sont typées, respectent la portée et facilitent le débogage.
 
-> **Attention** : en C avant C23, `const int n = 5; int t[n];` ne définit pas un tableau de taille constante mais un VLA (section 11.4). Une variable `const` n'est pas une « expression constante » en C, contrairement à C++.
+> **Attention** : en C avant C23, `const int n = 5; int t[n];` ne définit pas un tableau de taille constante mais un VLA (voir *Tableaux à taille variable (VLA)*). Une variable `const` n'est pas une « expression constante » en C, contrairement à C++.
 
 Le qualificatif `const` demande au compilateur de **refuser toute modification**. Modifier malgré tout une variable déclarée `const` (par un cast) est un comportement indéfini.
 
-### 5.3 `const` et pointeurs
+## `const` et pointeurs
 
 Avec les pointeurs, `const` peut s'appliquer à **deux choses différentes** : ce qui est pointé, et le pointeur lui-même.
 
@@ -672,9 +670,9 @@ int main(void) {
 
 **Astuce de lecture** : lisez la déclaration **de droite à gauche**. `int *const p2` se lit « p2 est une constante (`const`), pointeur (`*`) vers un `int` ». `const int *p1` se lit « p1 est un pointeur vers un `int` constant ».
 
-Les pointeurs sont étudiés en détail en section 13 ; retenez ici que `const` sur un paramètre pointeur (`const char *s`) **promet** que la fonction ne modifiera pas les données.
+Les pointeurs sont étudiés en détail dans *Pointeurs* ; retenez ici que `const` sur un paramètre pointeur (`const char *s`) **promet** que la fonction ne modifiera pas les données.
 
-### 5.4 Constantes prédéfinies utiles
+## Constantes prédéfinies utiles
 
 ```c
 #include <float.h>
@@ -694,9 +692,9 @@ int main(void) {
 
 `CHAR_BIT` (`<limits.h>`) donne le nombre de bits d'un octet. `__FILE__`, `__LINE__` et `__func__` indiquent le fichier, la ligne et la fonction courants : précieux pour les messages de diagnostic.
 
-## 6. Opérateurs et expressions
+# Opérateurs et expressions
 
-### 6.1 Expressions et catégories d'opérateurs
+## Expressions et catégories d'opérateurs
 
 Une **expression** est une combinaison de valeurs, de variables et d'opérateurs qui produit une **valeur**. Une **instruction** est une expression suivie de `;`, exécutée pour son effet.
 
@@ -730,7 +728,7 @@ Règles à connaître :
 - **Affectation composée** : `x += 3` équivaut à `x = x + 3` (mais `x` n'est évalué qu'une fois).
 - **L'affectation est une expression** : `a = b = 0` est valide (associativité de droite à gauche).
 
-### 6.2 Incrémentation : préfixe et suffixe
+## Incrémentation : préfixe et suffixe
 
 ```c
 #include <stdio.h>
@@ -744,9 +742,9 @@ int main(void) {
 }
 ```
 
-Les deux formes augmentent la variable de 1. Elles diffèrent par la **valeur de l'expression** : `i++` vaut l'ancienne valeur, `++i` la nouvelle. Seule, l'instruction `i++;` ou `++i;` produit le même effet. Ne mélangez pas plusieurs modifications de la même variable dans une expression (voir 6.7).
+Les deux formes augmentent la variable de 1. Elles diffèrent par la **valeur de l'expression** : `i++` vaut l'ancienne valeur, `++i` la nouvelle. Seule, l'instruction `i++;` ou `++i;` produit le même effet. Ne mélangez pas plusieurs modifications de la même variable dans une expression (voir *Comportements à éviter*).
 
-### 6.3 Opérateurs logiques et évaluation paresseuse
+## Opérateurs logiques et évaluation paresseuse
 
 ```c
 #include <stdio.h>
@@ -775,7 +773,7 @@ int main(void) {
 - **Court-circuit** : `&&` et `||` évaluent de gauche à droite et **s'arrêtent dès que le résultat est connu**. Avec `A && B`, si `A` est faux, `B` n'est **pas évalué**. On s'en sert pour protéger une opération dangereuse (`p != NULL && p->valeur > 0`).
 - Le résultat est toujours `1` ou `0`.
 
-### 6.4 Ternaire
+## Ternaire
 
 ```c
 #include <stdio.h>
@@ -790,7 +788,7 @@ int main(void) {
 
 L'opérateur `condition ? valeur_si_vrai : valeur_si_faux` est une **expression** (contrairement à `if`, qui est une instruction). Il est pratique pour les choix simples ; ne l'imbriquez pas sur plusieurs niveaux, la lisibilité s'effondre.
 
-### 6.5 `sizeof` et opérateur virgule
+## `sizeof` et opérateur virgule
 
 ```c
 #include <stdio.h>
@@ -806,10 +804,10 @@ int main(void) {
 }
 ```
 
-- `sizeof` est évalué **à la compilation** (sauf pour les VLA) et ne s'applique correctement au tableau que là où il est **déclaré**. Sur un paramètre de fonction déclaré `int t[]`, c'est la taille d'un **pointeur** (section 11.5).
+- `sizeof` est évalué **à la compilation** (sauf pour les VLA) et ne s'applique correctement au tableau que là où il est **déclaré**. Sur un paramètre de fonction déclaré `int t[]`, c'est la taille d'un **pointeur** (voir *Tableaux et fonctions*).
 - L'**opérateur virgule** évalue ses opérandes de gauche à droite et vaut le dernier. On le rencontre surtout dans les `for` : `for (i = 0, j = 9; i < j; i++, j--)`.
 
-### 6.6 Priorité et associativité
+## Priorité et associativité
 
 La **priorité** dit quel opérateur s'applique en premier ; l'**associativité** départage ceux de même priorité. De la plus haute à la plus basse :
 
@@ -832,7 +830,7 @@ La **priorité** dit quel opérateur s'applique en premier ; l'**associativité*
 
 Dans le doute, parenthésez. Cela coûte peu et lève toute ambiguïté.
 
-### 6.7 Comportements à éviter
+## Comportements à éviter
 
 Certaines expressions sont **valides syntaxiquement** mais **indéfinies** : la norme n'impose aucun résultat.
 
@@ -876,7 +874,7 @@ int main(void) {
 
 La technique est toujours la même : **vérifier la condition avant** de faire l'opération, jamais après (après, il est trop tard : le comportement est déjà indéfini).
 
-### 6.8 Arithmétique vérifiée (C23)
+## Arithmétique vérifiée (C23)
 
 `<stdckdint.h>` détecte les débordements **sans comportement indéfini** : les fonctions `ckd_add`, `ckd_sub` et `ckd_mul` stockent le résultat dans une variable et **renvoient `true` s'il y a eu débordement**.
 
@@ -904,15 +902,15 @@ int main(void) {
 }
 ```
 
-C'est l'outil idéal pour calculer une taille d'allocation (`n * taille`) sans risque (section 29).
+C'est l'outil idéal pour calculer une taille d'allocation (`n * taille`) sans risque (voir *Comportements indéfinis et sécurité*).
 
-## 7. Entrées et sorties
+# Entrées et sorties
 
-### 7.1 Flux, tampons et fonctions d'E/S
+## Flux, tampons et fonctions d'E/S
 
-En C, les entrées/sorties passent par des **flux** (*streams*) : des suites d'octets lues ou écrites séquentiellement. Trois flux sont ouverts automatiquement au lancement du programme (voir 7.5). Les fonctions de `<stdio.h>` utilisent des **tampons** (zones mémoire intermédiaires) : l'écriture sur le terminal est généralement **tamponnée par ligne** ; le texte n'apparaît donc qu'à la fin de la ligne (`\n`) ou lors d'un `fflush(stdout)`.
+En C, les entrées/sorties passent par des **flux** (*streams*) : des suites d'octets lues ou écrites séquentiellement. Trois flux sont ouverts automatiquement au lancement du programme (voir *Autres fonctions d'E/S*). Les fonctions de `<stdio.h>` utilisent des **tampons** (zones mémoire intermédiaires) : l'écriture sur le terminal est généralement **tamponnée par ligne** ; le texte n'apparaît donc qu'à la fin de la ligne (`\n`) ou lors d'un `fflush(stdout)`.
 
-### 7.2 Affichage : `printf` et `puts`
+## Affichage : `printf` et `puts`
 
 ```c
 #include <stdio.h>
@@ -930,7 +928,7 @@ int main(void) {
 
 `printf(format, arguments…)` écrit le texte du **format** en remplaçant chaque **spécificateur** (`%…`) par l'argument correspondant, dans l'ordre. `puts(chaîne)` écrit une chaîne puis un `\n`.
 
-#### Spécificateurs de format
+### Spécificateurs de format
 
 | Spécificateur | Type attendu | Remarque |
 | --- | --- | --- |
@@ -949,7 +947,7 @@ int main(void) {
 
 > **Attention** : le format doit **correspondre exactement** au type de l'argument. Un `%d` avec un `double`, ou un nombre d'arguments insuffisant, est un **comportement indéfini**. Activez `-Wall` : GCC vérifie les formats `printf` à la compilation.
 
-#### Largeur, alignement, remplissage
+### Largeur, alignement, remplissage
 
 ```c
 #include <stdio.h>
@@ -968,7 +966,7 @@ int main(void) {
 
 Forme générale : `%[drapeaux][largeur][.précision][longueur]type`. Les drapeaux courants sont `-` (gauche), `0` (zéros), `+` (signe), ` ` (espace pour les positifs).
 
-### 7.3 Lecture : `scanf`
+## Lecture : `scanf`
 
 ```c
 #include <stdio.h>
@@ -997,7 +995,7 @@ Règles fondamentales :
 - Les espaces, tabulations et sauts de ligne sont des séparateurs : `%s` s'arrête au premier espace et ne lit donc pas une phrase.
 - En cas d'échec de conversion, les caractères invalides **restent dans le tampon** et bloqueront les lectures suivantes (voir plus bas).
 
-### 7.4 Lire une ligne : `fgets`
+## Lire une ligne : `fgets`
 
 Pour lire une **ligne entière** de façon sûre, utilisez `fgets(tampon, taille, flux)`. Elle lit **au plus `taille − 1` caractères**, s'arrête après le `\n` (qu'elle **conserve**), et termine toujours par `'\0'`. Elle renvoie `NULL` en cas d'erreur ou de fin de fichier.
 
@@ -1021,7 +1019,7 @@ int main(void) {
 
 > **Attention** : **`gets()` n'existe plus** (supprimée en C11) car elle ne permet pas de limiter la taille lue : elle est la cause de failles historiques célèbres. N'utilisez jamais `gets`.
 
-#### Lecture sûre d'un nombre
+### Lecture sûre d'un nombre
 
 Le schéma recommandé est **`fgets` puis `strtol` / `strtod`**, qui permet de détecter les erreurs précisément :
 
@@ -1057,7 +1055,7 @@ int main(void) {
 
 Pourquoi c'est meilleur que `scanf("%d")` : la ligne est **toujours consommée en entier** (pas de reste dans le tampon), et chaque type d'erreur est distinguable.
 
-#### Vider le tampon d'entrée
+### Vider le tampon d'entrée
 
 Quand on mélange `scanf` et `fgets`, un `\n` resté dans le tampon fait que `fgets` lit une ligne vide. Pour vider jusqu'à la fin de la ligne :
 
@@ -1084,7 +1082,7 @@ int main(void) {
 
 Notez que `c` est un **`int`**, pas un `char` : `EOF` est une valeur négative qui ne tiendrait pas toujours dans un `char`. **N'écrivez jamais `fflush(stdin)`** : son comportement est indéfini en C standard.
 
-### 7.5 Autres fonctions d'E/S
+## Autres fonctions d'E/S
 
 | Fonction | Rôle |
 | --- | --- |
@@ -1111,7 +1109,7 @@ int main(void) {
 
 `snprintf` n'écrit jamais plus de `n` octets (zéro final compris) et **renvoie le nombre de caractères qui auraient été écrits** : si le résultat est ≥ `n`, la sortie a été tronquée. Elle remplace avantageusement `sprintf`, qui n'a aucune limite.
 
-### 7.6 Flux standard
+## Flux standard
 
 | Flux | Rôle | Défaut |
 | --- | --- | --- |
@@ -1121,7 +1119,7 @@ int main(void) {
 
 La séparation `stdout`/`stderr` permet de **rediriger** la sortie sans perdre les erreurs : `./prog > resultat.txt 2> erreurs.txt`. Les messages d'erreur doivent donc aller sur `stderr`.
 
-### 7.7 Erreurs courantes
+## Erreurs courantes
 
 | Erreur | Conséquence | Solution |
 | --- | --- | --- |
@@ -1132,11 +1130,11 @@ La séparation `stdout`/`stderr` permet de **rediriger** la sortie sans perdre l
 | `printf(texte_utilisateur)` | **Faille de chaîne de format** | `printf("%s", texte)` |
 | `\n` oublié, `stdout` tamponné | Texte qui n'apparaît pas | `\n` ou `fflush(stdout)` |
 
-## 8. Structures de contrôle
+# Structures de contrôle
 
 Par défaut, les instructions s'exécutent **dans l'ordre**. Les structures de contrôle permettent de **choisir** (conditions) et de **répéter** (boucles).
 
-### 8.1 Conditions : `if`, `else if`, `else`
+## Conditions : `if`, `else if`, `else`
 
 ```c
 #include <stdio.h>
@@ -1160,7 +1158,7 @@ La condition est une **expression** : nulle = faux, non nulle = vrai. Les branch
 
 **Le « else pendant »** : un `else` se rattache au **`if` le plus proche**, quelle que soit l'indentation. Les accolades lèvent l'ambiguïté.
 
-### 8.2 `switch`
+## `switch`
 
 ```c
 #include <stdio.h>
@@ -1187,7 +1185,7 @@ Fonctionnement et pièges :
 - `default` traite tous les autres cas ; il est conseillé de toujours le prévoir.
 - Une déclaration de variable juste après une étiquette `case` pose problème : encadrez le corps du `case` d'accolades.
 
-### 8.3 Boucles
+## Boucles
 
 ```c
 #include <stdio.h>
@@ -1215,7 +1213,7 @@ int main(void) {
 
 La boucle `for (init; cond; progression)` équivaut à : `init; while (cond) { corps; progression; }`. Chacune des trois parties est **facultative**. Depuis C99, la variable déclarée dans l'en-tête (`int k`) n'existe que **dans la boucle**.
 
-#### Boucle infinie
+### Boucle infinie
 
 ```c
 for (;;) {            // idiome classique ; équivalent : while (1)
@@ -1225,7 +1223,7 @@ for (;;) {            // idiome classique ; équivalent : while (1)
 
 Une boucle infinie est légitime quand la sortie se fait par `break` ou `return` (boucle d'événements, serveur, menu).
 
-### 8.4 `break`, `continue`, `goto`
+## `break`, `continue`, `goto`
 
 ```c
 #include <stdio.h>
@@ -1265,7 +1263,7 @@ fin:
 int main(void) { return traiter() == 0 ? 0 : 1; }
 ```
 
-### 8.5 Boucles imbriquées
+## Boucles imbriquées
 
 ```c
 #include <stdio.h>
@@ -1283,7 +1281,7 @@ int main(void) {
 
 La boucle interne s'exécute **entièrement** à chaque tour de la boucle externe : 3 × 4 = 12 passages. Un `break` dans la boucle interne ne quitte **que** celle-ci. Le nombre d'opérations croît comme le **produit** des bornes : prudence avec trois niveaux ou plus.
 
-### 8.6 Pièges classiques
+## Pièges classiques
 
 | Piège | Exemple | Explication |
 | --- | --- | --- |
@@ -1297,9 +1295,9 @@ La boucle interne s'exécute **entièrement** à chaque tour de la boucle extern
 
 Pour parcourir un tableau à l'envers avec un indice non signé : `for (size_t i = n; i-- > 0; )`.
 
-## 9. Fonctions
+# Fonctions
 
-### 9.1 Pourquoi des fonctions ?
+## Pourquoi des fonctions ?
 
 Une **fonction** est un bloc de code nommé, réutilisable, qui reçoit éventuellement des **paramètres** et renvoie éventuellement une **valeur**. Elle sert à :
 
@@ -1308,7 +1306,7 @@ Une **fonction** est un bloc de code nommé, réutilisable, qui reçoit éventue
 - **Tester** et **documenter** chaque morceau isolément.
 - **Abstraire** : l'appelant n'a besoin de connaître que ce que la fonction fait, pas comment.
 
-### 9.2 Définir et appeler
+## Définir et appeler
 
 ```c
 #include <stdio.h>
@@ -1344,7 +1342,7 @@ Vocabulaire précis :
 
 > **Attention** : ne pas oublier le `return` dans une fonction non `void` : utiliser la valeur d'une fonction qui ne retourne rien est un comportement indéfini (sauf pour `main`).
 
-### 9.3 Passage des arguments : toujours **par valeur**
+## Passage des arguments : toujours **par valeur**
 
 En C, les arguments sont **copiés** dans les paramètres. Modifier un paramètre ne modifie **pas** la variable de l'appelant.
 
@@ -1369,7 +1367,7 @@ int main(void) {
 }
 ```
 
-Pour **simuler** un passage par référence, on passe l'**adresse** de la variable (`&x`) ; la fonction reçoit un **pointeur** (copie de l'adresse) et modifie l'original par `*a`. Les pointeurs sont étudiés en section 13.
+Pour **simuler** un passage par référence, on passe l'**adresse** de la variable (`&x`) ; la fonction reçoit un **pointeur** (copie de l'adresse) et modifie l'original par `*a`. Les pointeurs sont étudiés dans *Pointeurs*.
 
 **Cas des tableaux** : un tableau passé à une fonction est **converti en pointeur** vers son premier élément ; la fonction travaille donc sur le tableau **original** et ne connaît pas sa taille. On passe toujours la taille en paramètre séparé :
 
@@ -1399,7 +1397,7 @@ int main(void) {
 }
 ```
 
-### 9.4 Plusieurs fichiers : en-têtes et sources
+## Plusieurs fichiers : en-têtes et sources
 
 Dès qu'un programme grossit, on le répartit en **modules** : un fichier **`.h`** (interface : prototypes, types, constantes) et un fichier **`.c`** (implémentation).
 
@@ -1438,11 +1436,11 @@ gcc -Wall -Wextra -std=c17 main.c maths.c -o programme
 ```
 
 - On inclut les en-têtes du système avec `<…>` et les vôtres avec `"…"`.
-- Les **gardes d'inclusion** (`#ifndef … #define … #endif`) empêchent qu'un en-tête soit inclus deux fois (section 24.5).
+- Les **gardes d'inclusion** (`#ifndef … #define … #endif`) empêchent qu'un en-tête soit inclus deux fois (voir *Gardes d'inclusion*).
 - Une fonction **`static`** au niveau du fichier est **privée** à ce fichier (liaison interne) : elle ne peut pas être appelée depuis un autre `.c`.
 - Mettez dans le `.h` les **déclarations**, pas les définitions de fonctions ni de variables : sinon l'éditeur de liens signalera des définitions multiples.
 
-### 9.5 Fonctions variadiques
+## Fonctions variadiques
 
 Certaines fonctions acceptent un **nombre variable d'arguments** (`printf`). On les déclare avec `...` et on utilise `<stdarg.h>` :
 
@@ -1469,14 +1467,14 @@ int main(void) {
 
 Le compilateur **ne vérifie ni le nombre ni le type** des arguments variables : c'est à vous de les connaître (par un compteur, une valeur sentinelle ou une chaîne de format). Une erreur est un comportement indéfini. Les arguments `char` et `short` sont promus en `int`, et `float` en `double`, ce qui impose `va_arg(args, int)` et `va_arg(args, double)`.
 
-### 9.6 Fonctions et mémoire : points d'attention
+## Fonctions et mémoire : points d'attention
 
-- **Ne retournez jamais l'adresse d'une variable locale** : elle disparaît à la sortie de la fonction (section 15).
+- **Ne retournez jamais l'adresse d'une variable locale** : elle disparaît à la sortie de la fonction (voir *Retourner des tableaux et des chaînes*).
 - Les **paramètres et variables locales** vivent sur la **pile** ; une fonction qui appelle une autre empile un nouveau cadre. Les très gros tableaux locaux ou une récursion trop profonde provoquent un **débordement de pile**.
 - Un paramètre **pointeur** doit être validé (`!= NULL`) si la fonction peut le recevoir nul.
 - Documentez qui **possède** la mémoire pointée et si la fonction la modifie (`const` pour le dire).
 
-### 9.7 Bonnes pratiques
+## Bonnes pratiques
 
 - Une fonction fait **une seule chose** et tient sur un écran.
 - Nom d'un **verbe** pour une action (`calculer_moyenne`), d'un **prédicat** pour un test (`est_premier`).
@@ -1485,14 +1483,14 @@ Le compilateur **ne vérifie ni le nombre ni le type** des arguments variables :
 - Évitez les **effets de bord** cachés (variables globales modifiées).
 - Écrivez un **prototype** pour chaque fonction partagée, dans un `.h`.
 
-## 10. Portée et durée de vie des variables
+# Portée et durée de vie des variables
 
 Deux notions distinctes, souvent confondues :
 
 - La **portée** (*scope*) : **où dans le code** un nom est visible.
 - La **durée de vie** (*lifetime*) : **pendant combien de temps** l'objet existe en mémoire à l'exécution.
 
-### 10.1 Les portées
+## Les portées
 
 | Portée | Où | Visible… |
 | --- | --- | --- |
@@ -1521,7 +1519,7 @@ int main(void) {
 
 Quand un nom interne **masque** un nom externe, le nom externe reste inaccessible dans le bloc interne. Ce **masquage** est source de confusion : `-Wshadow` le signale.
 
-### 10.2 Classes de stockage et durée de vie
+## Classes de stockage et durée de vie
 
 | Mot-clé | Effet | Durée de vie |
 | --- | --- | --- |
@@ -1559,7 +1557,7 @@ extern int niveau_debug;           // DÉCLARATION (incluse partout)
 
 **Initialisation** : les variables à durée **statique** (globales et `static`) sont mises à **zéro** par défaut ; les variables **automatiques** ne sont **pas** initialisées. Un initialiseur de variable statique doit être une **expression constante**.
 
-### 10.3 Organisation de la mémoire d'un programme
+## Organisation de la mémoire d'un programme
 
 Un processus en cours d'exécution dispose de plusieurs zones :
 
@@ -1593,7 +1591,7 @@ int main(void) {
 
 Retenez le contraste fondamental : la **pile** se gère toute seule mais est **éphémère** (les objets disparaissent à la sortie du bloc) ; le **tas** est **durable** mais **vous** devez le libérer.
 
-### 10.4 Bonnes pratiques
+## Bonnes pratiques
 
 - **Réduisez la portée** : déclarez au plus près de l'usage.
 - **Évitez les variables globales** : elles créent des dépendances cachées, empêchent les tests et sont dangereuses avec plusieurs fils d'exécution. Si nécessaire, rendez-les `static` (privées au fichier).
@@ -1601,21 +1599,13 @@ Retenez le contraste fondamental : la **pile** se gère toute seule mais est **�
 - Évitez le **masquage** de noms ; compilez avec `-Wshadow`.
 - **Ne retournez jamais** un pointeur vers une variable automatique.
 
-## Synthèse du niveau débutant
+# Tableaux
 
-Vous maîtrisez maintenant le socle du langage : produire un exécutable (1–2), écrire du code valide (3), choisir et convertir des types (4), nommer des constantes (5), construire des expressions sans comportement indéfini (6), dialoguer avec l'utilisateur (7), organiser le flux d'exécution (8), structurer en fonctions et en modules (9) et raisonner sur la portée et la mémoire (10).
-
-**À suivre — niveau intermédiaire** : tableaux (11), chaînes (12), pointeurs (13), allocation dynamique (14), structures de données (15–17), `struct`/`union`/`enum`/`typedef` (18–20) et pointeurs de fonctions (21).
-
-# Niveau intermédiaire
-
-## 11. Tableaux
-
-### 11.1 Principe
+## Principe
 
 Un **tableau** est une suite d'éléments **de même type**, stockés **côte à côte** (de façon contiguë) en mémoire et accessibles par un **indice**. Les indices commencent à **0** : un tableau de `n` éléments a pour indices valides `0` à `n − 1`. L'élément d'indice `i` se trouve à l'adresse `début + i × taille_élément`, ce qui rend l'accès **instantané**, quel que soit `i`.
 
-### 11.2 Déclarer et initialiser
+## Déclarer et initialiser
 
 ```c
 #include <stdio.h>
@@ -1642,9 +1632,9 @@ Points essentiels :
 - Un tableau **local** non initialisé contient des valeurs indéterminées ; un tableau **global ou `static`** est mis à zéro.
 - Si l'initialiseur est **plus court** que le tableau, le reste est mis à **zéro** ; s'il est **plus long**, c'est une erreur.
 - **On ne peut pas affecter un tableau** entier avec `=` (`a = b;` est une erreur) ni le comparer avec `==` (on comparerait des adresses). Pour copier : `memcpy` ; pour comparer : `memcmp` ou une boucle.
-- La taille doit être connue : constante (ou VLA, voir 11.5).
+- La taille doit être connue : constante (ou VLA, voir *Tableaux à taille variable (VLA)*).
 
-### 11.3 Parcourir
+## Parcourir
 
 ```c
 #include <stdio.h>
@@ -1664,7 +1654,7 @@ int main(void) {
 
 > **Attention** : le C **ne vérifie pas les bornes**. Écrire `t[6]` ou `t[-1]` est un comportement indéfini : il peut écraser une autre variable, planter, ou sembler fonctionner. C'est le **dépassement de tampon**, première cause de failles de sécurité du langage. Contrôlez toujours vos indices.
 
-### 11.4 Tableaux multidimensionnels
+## Tableaux multidimensionnels
 
 ```c
 #include <stdio.h>
@@ -1682,7 +1672,7 @@ int main(void) {
 
 En mémoire, un tableau 2D est un **tableau de tableaux**, rangé **ligne par ligne** (*row-major*) : `m[0][0], m[0][1], m[0][2], m[1][0]…`. Parcourir **ligne par ligne** (boucle interne sur la colonne) est plus rapide, car il suit l'ordre de la mémoire et exploite le cache du processeur.
 
-### 11.5 Tableaux à taille variable (VLA)
+## Tableaux à taille variable (VLA)
 
 Depuis C99, la taille d'un tableau local peut être une **variable** :
 
@@ -1698,9 +1688,9 @@ int main(void) {
 }
 ```
 
-Les VLA vivent sur la **pile** : une taille trop grande provoque un débordement de pile **sans aucun moyen de le détecter**. Ils ne peuvent pas être initialisés avec `{…}`. Ils sont devenus **facultatifs** en C11 (certains compilateurs, dont MSVC, ne les supportent pas). Pour une taille inconnue ou grande, préférez `malloc` (section 14).
+Les VLA vivent sur la **pile** : une taille trop grande provoque un débordement de pile **sans aucun moyen de le détecter**. Ils ne peuvent pas être initialisés avec `{…}`. Ils sont devenus **facultatifs** en C11 (certains compilateurs, dont MSVC, ne les supportent pas). Pour une taille inconnue ou grande, préférez `malloc` (voir *Allocation dynamique de mémoire*).
 
-### 11.6 Tableaux et fonctions
+## Tableaux et fonctions
 
 Un tableau passé à une fonction est **converti en pointeur vers son premier élément** (on dit qu'il se *dégrade*). La fonction ne connaît **pas** sa taille :
 
@@ -1728,7 +1718,7 @@ int main(void) {
 
 > **Attention** : dans `somme`, `sizeof t` vaudrait la taille d'un **pointeur** (8 octets), pas celle du tableau. **Passez toujours la taille** en paramètre. Pour un tableau 2D, toutes les dimensions sauf la première doivent être précisées : `void f(int m[][3], size_t lignes)`.
 
-### 11.7 Opérations courantes
+## Opérations courantes
 
 ```c
 #include <stdio.h>
@@ -1761,9 +1751,9 @@ int main(void) {
 }
 ```
 
-#### Tri avec `qsort`
+### Tri avec `qsort`
 
-La bibliothèque standard fournit un tri générique. Il reçoit le tableau, le nombre d'éléments, la taille d'un élément et une **fonction de comparaison** (pointeur de fonction, section 21) :
+La bibliothèque standard fournit un tri générique. Il reçoit le tableau, le nombre d'éléments, la taille d'un élément et une **fonction de comparaison** (pointeur de fonction, voir *Pointeurs de fonctions*) :
 
 ```c
 #include <stdio.h>
@@ -1789,7 +1779,7 @@ int main(void) {
 
 La fonction de comparaison renvoie un nombre **négatif, nul ou positif** selon que le premier élément est inférieur, égal ou supérieur au second. N'écrivez pas `return a - b;` : la soustraction peut déborder.
 
-### 11.8 Erreurs courantes
+## Erreurs courantes
 
 | Erreur | Conséquence |
 | --- | --- |
@@ -1800,9 +1790,9 @@ La fonction de comparaison renvoie un nombre **négatif, nul ou positif** selon 
 | Lire un tableau local non initialisé | Valeurs indéterminées |
 | VLA trop grand | Débordement de pile |
 
-## 12. Chaînes de caractères
+# Chaînes de caractères
 
-### 12.1 Définition
+## Définition
 
 En C, il n'y a **pas de type chaîne**. Une **chaîne** est un **tableau de `char`** dont la fin est marquée par le caractère nul **`'\0'`** (valeur 0). Une chaîne de *n* caractères occupe donc **n + 1 octets**.
 
@@ -1831,7 +1821,7 @@ Distinction capitale entre :
 
 > **Attention** : oublier le `'\0'` (ou ne pas prévoir sa place) fait que toutes les fonctions de chaîne lisent **au-delà** du tableau jusqu'à trouver un zéro quelque part en mémoire. C'est un comportement indéfini.
 
-### 12.2 Fonctions de `<string.h>`
+## Fonctions de `<string.h>`
 
 | Fonction | Rôle | Remarque |
 | --- | --- | --- |
@@ -1849,7 +1839,7 @@ Distinction capitale entre :
 | `memset(p, v, n)` | Remplit `n` octets avec `v` |  |
 | `memcmp(a, b, n)` | Compare `n` octets |  |
 
-### 12.3 Copier et concaténer en sécurité
+## Copier et concaténer en sécurité
 
 Les fonctions classiques `strcpy`, `strcat` et `sprintf` ne contrôlent **aucune taille** : le moindre débordement écrase la mémoire voisine. Utilisez **`snprintf`**, qui est borné, tronque proprement et termine toujours par `'\0'` :
 
@@ -1878,7 +1868,7 @@ int main(void) {
 
 La valeur de retour de `snprintf` est la longueur **qu'aurait eue** le résultat : si elle est supérieure ou égale à la taille du tampon, il y a eu troncature. Pour mesurer la place disponible, ne dupliquez pas de nombres magiques : utilisez `sizeof` sur le tableau.
 
-### 12.4 Lire et parcourir
+## Lire et parcourir
 
 Parcourir une chaîne se fait **jusqu'au `'\0'`**, sans avoir besoin de la longueur :
 
@@ -1898,9 +1888,9 @@ int main(void) {
 }
 ```
 
-Pour la lecture, utilisez `fgets` (section 7.4) et supprimez le `'\n'` final avec `strcspn`.
+Pour la lecture, utilisez `fgets` (voir *Lire une ligne : `fgets`*) et supprimez le `'\n'` final avec `strcspn`.
 
-### 12.5 `<ctype.h>` : tester et convertir les caractères
+## `<ctype.h>` : tester et convertir les caractères
 
 | Fonction | Teste / convertit |
 | --- | --- |
@@ -1911,9 +1901,9 @@ Pour la lecture, utilisez `fgets` (section 7.4) et supprimez le `'\n'` final ave
 
 > **Important** : ces fonctions attendent un `int` valant `EOF` ou un `unsigned char`. Avec un `char` signé contenant un caractère accentué (valeur négative), le comportement est **indéfini**. Écrivez donc `isalpha((unsigned char)c)`.
 
-Elles ne gèrent que l'ASCII et la locale courante, pas l'Unicode (section 27).
+Elles ne gèrent que l'ASCII et la locale courante, pas l'Unicode (voir *Unicode et caractères larges*).
 
-### 12.6 Conversions chaîne ⇄ nombre
+## Conversions chaîne ⇄ nombre
 
 ```c
 #include <errno.h>
@@ -1941,7 +1931,7 @@ int main(void) {
 
 `strtol`, `strtoll`, `strtoul`, `strtod` permettent de **détecter les erreurs** (via `fin` et `errno`). **N'utilisez pas `atoi`/`atof`** : elles renvoient 0 en cas d'erreur, ce qui est indiscernable d'une vraie valeur nulle, et leur comportement est indéfini en cas de dépassement.
 
-### 12.7 Tableau de chaînes
+## Tableau de chaînes
 
 ```c
 #include <stdio.h>
@@ -1960,7 +1950,7 @@ int main(void) {
 
 Le premier est compact et ses chaînes sont en lecture seule ; le second réserve **un espace fixe** par chaîne (gaspillage possible) mais les contenus sont **modifiables**.
 
-### 12.8 Bonnes pratiques
+## Bonnes pratiques
 
 - Prévoyez **toujours** la place du `'\0'`.
 - **Passez la taille du tampon** à toute fonction qui écrit dans une chaîne.
@@ -1969,9 +1959,9 @@ Le premier est compact et ses chaînes sont en lecture seule ; le second réserv
 - Comparez avec `strcmp`, jamais avec `==`.
 - Ne modifiez **jamais** un littéral de chaîne.
 
-## 13. Pointeurs
+# Pointeurs
 
-### 13.1 Qu'est-ce qu'un pointeur ?
+## Qu'est-ce qu'un pointeur ?
 
 Chaque octet de la mémoire possède une **adresse** (un numéro). Un **pointeur** est une variable qui **contient une adresse**. Un pointeur de type `T *` pointe vers un objet de type `T` : le type indique **comment interpréter** ce qui se trouve à l'adresse et **de combien avancer** en arithmétique.
 
@@ -2004,7 +1994,7 @@ int main(void) {
 
 Attention à la double signification de `*` : dans une **déclaration** (`int *p;`), il indique le type pointeur ; dans une **expression** (`*p`), c'est l'opérateur de **déréférencement**. Pour afficher une adresse avec `%p`, convertissez en `(void *)`.
 
-### 13.2 Pointeur nul
+## Pointeur nul
 
 Un pointeur qui ne pointe sur rien vaut **`NULL`** (ou **`nullptr`** en C23). **Déréférencer un pointeur nul est un comportement indéfini** (en pratique : plantage, *segmentation fault*).
 
@@ -2030,7 +2020,7 @@ int main(void) {
 
 Règles : initialisez tous les pointeurs (à une adresse valide ou à `NULL`), testez avant de déréférencer, mettez à `NULL` après `free`.
 
-### 13.3 Arithmétique des pointeurs
+## Arithmétique des pointeurs
 
 Ajouter `n` à un pointeur `T *` le déplace de **`n × sizeof(T)` octets**, c'est-à-dire de `n` éléments, pas de `n` octets :
 
@@ -2057,7 +2047,7 @@ int main(void) {
 
 Opérations permises : `p + n`, `p - n`, `p++`, `p--`, `p1 - p2` (nombre d'éléments, si les deux pointent **dans le même tableau**), et comparaisons `<`, `==`. L'**arithmétique en dehors d'un tableau** (au-delà de la case suivant le dernier élément) est un **comportement indéfini**. L'identité fondamentale est : **`t[i]` est exactement `*(t + i)`**.
 
-### 13.4 Tableaux ≠ pointeurs
+## Tableaux ≠ pointeurs
 
 Un nom de tableau **se convertit** presque toujours en pointeur vers son premier élément, ce qui fait croire qu'ils sont identiques. Ils ne le sont pas :
 
@@ -2070,7 +2060,7 @@ Un nom de tableau **se convertit** presque toujours en pointeur vers son premier
 
 La conversion n'a **pas** lieu avec `sizeof` et `&`. C'est pourquoi un paramètre `int t[]` est, en réalité, un `int *`.
 
-### 13.5 Pointeurs et fonctions
+## Pointeurs et fonctions
 
 Passer un pointeur permet à une fonction de **modifier** les données de l'appelant ou d'éviter une grosse copie :
 
@@ -2098,7 +2088,7 @@ int main(void) {
 
 Piège de priorité : `*n++` incrémente le **pointeur** puis déréférence, alors que `(*n)++` incrémente la **valeur pointée**.
 
-### 13.6 `const` et pointeurs (rappel)
+## `const` et pointeurs (rappel)
 
 | Déclaration | Peut changer `*p` ? | Peut changer `p` ? |
 | --- | --- | --- |
@@ -2109,7 +2099,7 @@ Piège de priorité : `*n++` incrémente le **pointeur** puis déréférence, al
 
 Un paramètre `const T *` est un **contrat** : « je ne modifie pas ce que vous me donnez ». Appliquez-le systématiquement aux paramètres d'entrée.
 
-### 13.7 `void *` : pointeur générique
+## `void *` : pointeur générique
 
 Un `void *` peut contenir l'adresse de **n'importe quel** objet, mais on **ne peut ni le déréférencer ni faire d'arithmétique** dessus : il faut d'abord le convertir vers un type précis. C'est le mécanisme de `malloc`, `qsort`, `memcpy`.
 
@@ -2131,7 +2121,7 @@ int main(void) {
 
 En C (contrairement à C++), les conversions depuis et vers `void *` sont **implicites** : ne castez pas le résultat de `malloc`.
 
-### 13.8 Pointeur vers une structure
+## Pointeur vers une structure
 
 ```c
 #include <stdio.h>
@@ -2151,9 +2141,9 @@ int main(void) {
 }
 ```
 
-On utilise `.` sur une **structure** et `->` sur un **pointeur vers une structure** (section 18).
+On utilise `.` sur une **structure** et `->` sur un **pointeur vers une structure** (voir *Structures et unions*).
 
-### 13.9 `restrict` (C99)
+## `restrict` (C99)
 
 `restrict` est une **promesse** faite au compilateur : durant la vie du pointeur, l'objet pointé n'est accessible **que** par ce pointeur. Cela autorise des optimisations (comme dans `memcpy`, dont les zones ne doivent pas se chevaucher) :
 
@@ -2165,7 +2155,7 @@ void ajouter(int *restrict dest, const int *restrict src, size_t n) {
 
 Si la promesse est violée (les zones se chevauchent), le comportement est **indéfini**.
 
-### 13.10 Erreurs classiques
+## Erreurs classiques
 
 | Erreur | Exemple | Conséquence |
 | --- | --- | --- |
@@ -2180,13 +2170,13 @@ Si la promesse est violée (les zones se chevauchent), le comportement est **ind
 
 **Règle d'or** : un pointeur n'est utilisable que s'il pointe vers un objet **vivant** et **assez grand**. Posez-vous toujours : *qui possède cet objet ? sera-t-il encore valide quand j'y accède ?*
 
-## 14. Allocation dynamique de mémoire
+# Allocation dynamique de mémoire
 
-### 14.1 Pourquoi ?
+## Pourquoi ?
 
 Les variables locales vivent sur la **pile** : leur taille est fixée à la compilation et elles disparaissent à la sortie du bloc. L'**allocation dynamique** réserve de la mémoire sur le **tas** pendant l'exécution, avec une **taille choisie à l'exécution** et une **durée de vie contrôlée** par le programmeur. Elle est indispensable quand la taille dépend des données (nombre de lignes d'un fichier), quand l'objet doit survivre à la fonction qui le crée, ou quand il est trop gros pour la pile.
 
-### 14.2 Les fonctions de `<stdlib.h>`
+## Les fonctions de `<stdlib.h>`
 
 | Fonction | Rôle |
 | --- | --- |
@@ -2217,7 +2207,7 @@ int main(void) {
 
 Bonnes habitudes visibles ici : écrire `sizeof *t` plutôt que `sizeof(int)` ; ne **pas** caster le résultat de `malloc` ; tester `NULL` ; libérer puis mettre à `NULL`.
 
-### 14.3 `calloc`
+## `calloc`
 
 ```c
 int *t = calloc(n, sizeof *t);     // n entiers, tous à 0
@@ -2225,7 +2215,7 @@ int *t = calloc(n, sizeof *t);     // n entiers, tous à 0
 
 `calloc` est préférable à `malloc(n * taille)` quand `n` vient de l'extérieur : elle **détecte le dépassement** de `n × taille` (et renvoie `NULL`), alors que la multiplication manuelle peut déborder silencieusement et allouer **trop peu** (faille classique). Avec `malloc`, utilisez `ckd_mul` (C23) ou une vérification explicite.
 
-### 14.4 `realloc` : la bonne façon
+## `realloc` : la bonne façon
 
 ```c
 #include <stdio.h>
@@ -2252,7 +2242,7 @@ int main(void) {
 
 **Ne jamais écrire `t = realloc(t, …)`** : en cas d'échec, `realloc` renvoie `NULL` et l'ancien bloc est **perdu** (fuite). De plus, après un succès, le bloc a pu changer d'adresse : **tous les anciens pointeurs** vers son contenu deviennent invalides.
 
-### 14.5 Erreurs classiques de gestion mémoire
+## Erreurs classiques de gestion mémoire
 
 | Erreur | Description | Conséquence |
 | --- | --- | --- |
@@ -2264,11 +2254,11 @@ int main(void) {
 | **Oubli du test de `malloc`** | Déréférencer `NULL` | Plantage |
 | **Mauvaise taille** | `malloc(n)` au lieu de `n * sizeof *p` | Dépassement |
 
-### 14.6 Règle de propriété
+## Règle de propriété
 
 À tout bloc alloué doit correspondre **un propriétaire unique**, responsable de sa libération. Documentez-le : « la fonction `creer()` renvoie un objet que l'appelant doit libérer avec `detruire()` ». Une paire de fonctions **`creer` / `detruire`** par type est la convention la plus sûre.
 
-### 14.7 Outils de détection
+## Outils de détection
 
 ```bash
 gcc -g -fsanitize=address,undefined -std=c17 prog.c -o prog && ./prog   # AddressSanitizer + UBSan
@@ -2277,9 +2267,9 @@ valgrind --leak-check=full ./prog                                       # Valgri
 
 **AddressSanitizer** détecte dépassements, use-after-free, double free et fuites ; **Valgrind** rapporte les fuites et les lectures de mémoire non initialisée. Utilisez-les **systématiquement** pendant le développement.
 
-## 15. Retourner des tableaux et des chaînes
+# Retourner des tableaux et des chaînes
 
-### 15.1 Le problème
+## Le problème
 
 Une fonction ne peut pas retourner un tableau par valeur. Et surtout, retourner un **pointeur vers une variable locale** est une erreur grave : l'objet disparaît à la sortie de la fonction.
 
@@ -2290,9 +2280,9 @@ char *mauvais(void) {
 }
 ```
 
-### 15.2 Les quatre solutions
+## Les quatre solutions
 
-#### 1. L'appelant fournit le tampon (recommandé)
+### L'appelant fournit le tampon (recommandé)
 
 ```c
 #include <stdio.h>
@@ -2312,7 +2302,7 @@ int main(void) {
 
 Avantages : aucune allocation, aucune fuite possible, taille contrôlée. C'est le modèle de la bibliothèque standard (`fgets`, `snprintf`).
 
-#### 2. Allocation dynamique
+### Allocation dynamique
 
 ```c
 #include <stdio.h>
@@ -2346,7 +2336,7 @@ int main(void) {
 
 La fonction **alloue**, l'appelant **libère** : la propriété est transférée. Il faut le documenter. (`strdup` existe en POSIX et en C23.)
 
-#### 3. Variable `static` (à éviter)
+### Variable `static` (à éviter)
 
 ```c
 const char *nom_du_jour(int j) {
@@ -2358,7 +2348,7 @@ const char *nom_du_jour(int j) {
 
 Cela fonctionne, mais **chaque appel écrase le résultat précédent** et la fonction n'est **pas réentrante** (dangereuse avec plusieurs fils d'exécution). Réservez-la aux **constantes** : retourner un littéral de chaîne est sûr.
 
-#### 4. Structure
+### Structure
 
 ```c
 typedef struct { char texte[32]; } Etiquette;       // la structure CONTIENT le tableau
@@ -2372,16 +2362,16 @@ static Etiquette creer_etiquette(int n) {
 
 Une structure est copiée en entier, tableau compris : c'est la seule façon de « retourner un tableau » par valeur. Adapté aux **petites** tailles fixes.
 
-### 15.3 Ce qu'il ne faut jamais faire
+## Ce qu'il ne faut jamais faire
 
 - Retourner l'adresse d'une variable **locale** (tableau ou scalaire).
 - Retourner un pointeur vers un **paramètre** passé par valeur.
 - Allouer sans documenter qui libère.
 - Libérer un pointeur obtenu autrement qu'avec `malloc`/`calloc`/`realloc` (littéral, tableau local).
 
-## 16. Structures de données dynamiques
+# Structures de données dynamiques
 
-### 16.1 Liste simplement chaînée
+## Liste simplement chaînée
 
 Une **liste chaînée** est une suite de **nœuds** alloués séparément ; chaque nœud contient une valeur et un pointeur vers le suivant. Le dernier pointe vers `NULL`.
 
@@ -2465,9 +2455,9 @@ int main(void) {
 }
 ```
 
-Points à retenir : le `struct Noeud *` auto-référencé exige le **nom de balise** dans la définition ; on **sauvegarde `suivant` avant `free`** ; la fonction qui modifie la tête **retourne** la nouvelle tête (ou reçoit un `Noeud **`, section 17).
+Points à retenir : le `struct Noeud *` auto-référencé exige le **nom de balise** dans la définition ; on **sauvegarde `suivant` avant `free`** ; la fonction qui modifie la tête **retourne** la nouvelle tête (ou reçoit un `Noeud **`, voir *Pointeurs doubles*).
 
-### 16.2 Autres structures
+## Autres structures
 
 | Structure | Principe | Atouts / limites |
 | --- | --- | --- |
@@ -2480,7 +2470,7 @@ Points à retenir : le `struct Noeud *` auto-référencé exige le **nom de bali
 
 **Tableau ou liste ?** Le tableau offre un accès par indice en O(1) et une excellente localité de cache ; la liste offre des insertions/suppressions en O(1) quand on tient le nœud, mais un accès en O(n) et un surcoût de pointeurs. En pratique, le **tableau dynamique** est le meilleur choix par défaut.
 
-### 16.3 Tableau dynamique extensible (vecteur)
+## Tableau dynamique extensible (vecteur)
 
 ```c
 #include <stdio.h>
@@ -2523,9 +2513,9 @@ int main(void) {
 
 La stratégie du **doublement de capacité** rend l'ajout en moyenne très peu coûteux, car les copies rares sont amorties sur de nombreux ajouts.
 
-### 16.4 Matrices dynamiques
+## Matrices dynamiques
 
-#### Méthode A : tableau de pointeurs (lignes indépendantes)
+### Méthode A : tableau de pointeurs (lignes indépendantes)
 
 ```c
 #include <stdio.h>
@@ -2563,7 +2553,7 @@ int main(void) {
 
 Souple (lignes de longueurs différentes, échange de lignes par simple échange de pointeurs), mais **plusieurs allocations** et mémoire **non contiguë**.
 
-#### Méthode B : bloc unique contigu (plus efficace)
+### Méthode B : bloc unique contigu (plus efficace)
 
 ```c
 #include <stdio.h>
@@ -2586,9 +2576,9 @@ int main(void) {
 
 Un seul bloc : meilleure **localité de cache**, une seule libération. L'indice `i * C + j` convertit les coordonnées en position linéaire.
 
-## 17. Pointeurs doubles
+# Pointeurs doubles
 
-### 17.1 Définition
+## Définition
 
 Un **pointeur double** (`T **`) est un pointeur vers un pointeur vers un `T`. Il contient l'adresse d'une variable qui est elle-même un pointeur.
 
@@ -2612,9 +2602,9 @@ int main(void) {
 | `*pp` | `int *` | Valeur de `p` (adresse de `x`) |
 | `**pp` | `int` | Valeur de `x` |
 
-### 17.2 Usages principaux
+## Usages principaux
 
-#### 1. Modifier un pointeur depuis une fonction
+### Modifier un pointeur depuis une fonction
 
 Puisque les arguments sont passés **par valeur**, pour qu'une fonction **modifie un pointeur** de l'appelant, il faut lui passer l'**adresse du pointeur** :
 
@@ -2640,9 +2630,9 @@ int main(void) {
 
 Sans le double pointeur, la fonction modifierait une **copie** du pointeur et l'appelant verrait toujours `NULL`.
 
-#### 2. Tableau de chaînes / matrices
+### Tableau de chaînes / matrices
 
-`char **` désigne un tableau de chaînes ; `int **` une matrice (section 16.4) :
+`char **` désigne un tableau de chaînes ; `int **` une matrice (voir *Matrices dynamiques*) :
 
 ```c
 #include <stdio.h>
@@ -2658,7 +2648,7 @@ int main(void) {
 }
 ```
 
-#### 3. Listes chaînées (insertion et suppression élégantes)
+### Listes chaînées (insertion et suppression élégantes)
 
 Avec un `Noeud **`, on traite la tête comme n'importe quel maillon, sans cas particulier :
 
@@ -2698,11 +2688,11 @@ int main(void) {
 }
 ```
 
-#### 4. `argv` : `char **argv`
+### `argv` : `char **argv`
 
-Les arguments de la ligne de commande sont fournis comme un tableau de chaînes (section 23).
+Les arguments de la ligne de commande sont fournis comme un tableau de chaînes (voir *Arguments de la ligne de commande*).
 
-### 17.3 Libération
+## Libération
 
 Il faut libérer **dans l'ordre inverse** de l'allocation : d'abord les **éléments** pointés (chaque ligne, chaque chaîne), puis le **tableau de pointeurs**. Libérer le tableau en premier perdrait les adresses des éléments (fuite) ou provoquerait un use-after-free.
 
@@ -2713,9 +2703,9 @@ for (size_t i = 0; i < 3; i++) free(mots[i]);   // 1. les éléments
 free(mots);                                      // 2. puis le tableau
 ```
 
-## 18. Structures et unions
+# Structures et unions
 
-### 18.1 Structures (`struct`)
+## Structures (`struct`)
 
 Une **structure** regroupe plusieurs données, de **types éventuellement différents**, sous un seul nom. Chaque donnée est un **membre** (ou *champ*). C'est le moyen de créer ses propres types composés : un point, un étudiant, une date.
 
@@ -2747,14 +2737,14 @@ int main(void) {
 
 Vocabulaire : `struct Etudiant` est le **type** ; `Etudiant` seul est la **balise** (*tag*). Les membres s'accèdent avec **`.`** sur une variable et **`->`** sur un pointeur.
 
-#### Opérations
+### Opérations
 
 | Opération | Possible ? | Remarque |
 | --- | --- | --- |
 | Affectation `a = b;` | **Oui** | Copie membre à membre (y compris les tableaux membres) |
 | Passage par valeur / retour par valeur | Oui | Copie complète ; coûteux pour de grosses structures |
 | Comparaison `a == b` | **Non** | Comparer champ par champ (n'utilisez pas `memcmp` : le *padding* est indéterminé) |
-| `sizeof(struct S)` | Oui | Peut dépasser la somme des membres (voir 18.2) |
+| `sizeof(struct S)` | Oui | Peut dépasser la somme des membres (voir *Alignement et remplissage*) |
 
 ```c
 #include <stdio.h>
@@ -2779,11 +2769,11 @@ int main(void) {
 }
 ```
 
-#### Littéraux composés (C99)
+### Littéraux composés (C99)
 
 On peut créer une structure (ou un tableau) **anonyme** à la volée : `(Point){3, 4}` ou `(int[]){1, 2, 3}`. Très pratique pour passer un argument temporaire : `afficher((Point){3, 4});`.
 
-#### Structures imbriquées et tableaux de structures
+### Structures imbriquées et tableaux de structures
 
 ```c
 #include <stdio.h>
@@ -2806,9 +2796,9 @@ int main(void) {
 }
 ```
 
-#### Structure auto-référencée
+### Structure auto-référencée
 
-Une structure ne peut **pas se contenir elle-même** (taille infinie), mais elle peut contenir un **pointeur** vers son propre type : c'est la base des listes et des arbres (section 16).
+Une structure ne peut **pas se contenir elle-même** (taille infinie), mais elle peut contenir un **pointeur** vers son propre type : c'est la base des listes et des arbres (voir *Structures de données dynamiques*).
 
 ```c
 struct Noeud {
@@ -2817,7 +2807,7 @@ struct Noeud {
 };
 ```
 
-### 18.2 Alignement et remplissage (*padding*)
+## Alignement et remplissage (*padding*)
 
 Les processeurs accèdent plus efficacement aux données **alignées** sur un multiple de leur taille. Le compilateur insère donc des octets de **remplissage** entre les membres et à la fin de la structure.
 
@@ -2837,7 +2827,7 @@ int main(void) {
 
 **Conseil** : ordonnez les membres du plus **grand** au plus **petit** pour réduire le remplissage. Les tailles exactes dépendent de la plateforme ; n'écrivez jamais une structure brute dans un fichier destiné à être lu sur une autre machine (formats, boutisme, remplissage divergent). `alignof` (C23) et `alignas` contrôlent l'alignement.
 
-### 18.3 Champs de bits
+## Champs de bits
 
 Pour économiser de la place ou décrire un format matériel, on peut spécifier la **largeur en bits** de chaque membre entier :
 
@@ -2857,9 +2847,9 @@ int main(void) {
 }
 ```
 
-**Limites** : l'ordre des bits, l'alignement et le comportement des champs signés **dépendent de l'implémentation** ; on ne peut pas prendre l'adresse d'un champ de bits. Pour un format binaire portable, préférez des **masques et des décalages** (section 25).
+**Limites** : l'ordre des bits, l'alignement et le comportement des champs signés **dépendent de l'implémentation** ; on ne peut pas prendre l'adresse d'un champ de bits. Pour un format binaire portable, préférez des **masques et des décalages** (voir *Opérateurs bit à bit*).
 
-### 18.4 Membre de tableau flexible (C99)
+## Membre de tableau flexible (C99)
 
 Le **dernier** membre d'une structure peut être un tableau **sans taille**, alloué avec la structure en un seul bloc :
 
@@ -2891,7 +2881,7 @@ int main(void) {
 
 Une seule allocation, une seule libération. Une telle structure ne peut pas être copiée par affectation (seule la partie fixe le serait) ni être membre d'une autre structure.
 
-### 18.5 Unions
+## Unions
 
 Une **union** déclare des membres qui **partagent la même zone mémoire** : à un instant donné, **un seul** est valide. Sa taille est celle de son plus grand membre.
 
@@ -2916,7 +2906,7 @@ int main(void) {
 
 Lire un membre **différent** de celui qui a été écrit réinterprète les octets ; c'est permis en C (contrairement à C++) pour du *type punning*, mais le résultat dépend de la machine. Pour copier des octets de façon portable, utilisez `memcpy`.
 
-#### Union étiquetée (*tagged union*) : usage sûr
+### Union étiquetée (*tagged union*) : usage sûr
 
 Pour savoir quel membre est actif, on associe l'union à un **tag** (une `enum`). C'est l'équivalent d'un **type somme** (variante) :
 
@@ -2951,7 +2941,7 @@ int main(void) {
 }
 ```
 
-### 18.6 Structure ou union ?
+## Structure ou union ?
 
 |  | `struct` | `union` |
 | --- | --- | --- |
@@ -2959,9 +2949,9 @@ int main(void) {
 | Taille | Somme (plus remplissage) | Plus grand membre |
 | Usage | Regrouper des données liées | Alternatives exclusives, économie mémoire, interprétations d'octets |
 
-## 19. Énumérations (`enum`)
+# Énumérations (`enum`)
 
-### 19.1 Définition
+## Définition
 
 Une **énumération** définit un **ensemble de constantes entières nommées**. Elle remplace avantageusement les « nombres magiques » et les séries de `#define`.
 
@@ -2979,15 +2969,15 @@ int main(void) {
 
 Par défaut, la première constante vaut **0** et chaque suivante vaut la précédente **+ 1**.
 
-#### Valeurs explicites
+### Valeurs explicites
 
 ```c
 enum Niveau { BAS = 10, MOYEN = 20, HAUT = 30 };
 enum Mois   { JAN = 1, FEV, MAR, AVR };     // FEV = 2, MAR = 3, AVR = 4
-enum Droits { LIRE = 1, ECRIRE = 2, EXEC = 4 };   // puissances de 2 : combinables avec | (section 25)
+enum Droits { LIRE = 1, ECRIRE = 2, EXEC = 4 };   // puissances de 2 : combinables avec |
 ```
 
-#### Type sous-jacent (C23)
+### Type sous-jacent (C23)
 
 C23 permet de **fixer le type entier** d'une énumération, utile pour les formats binaires et le contrôle de la taille :
 
@@ -2996,7 +2986,7 @@ C23 permet de **fixer le type entier** d'une énumération, utile pour les forma
 enum Etat : unsigned char { INACTIF, ACTIF, ERREUR };   // tient sur 1 octet
 ```
 
-### 19.2 Avec `typedef` et `switch`
+## Avec `typedef` et `switch`
 
 ```c
 #include <stdio.h>
@@ -3020,16 +3010,16 @@ int main(void) {
 
 Avec GCC/Clang, `-Wswitch` avertit si un `switch` sur une énumération **oublie** une constante (à condition de ne pas mettre de `default`, qui masquerait l'oubli). La dernière constante `NB_JOURS` sert à **compter** les valeurs et à dimensionner des tableaux.
 
-### 19.3 Particularités
+## Particularités
 
 - Les constantes d'une `enum` sont des **`int`** (avant C23) : elles ont la **portée du bloc englobant**. Deux énumérations ne peuvent donc pas partager un même nom de constante.
 - Une variable de type `enum` est essentiellement un **entier** : le C **n'empêche pas** d'y ranger une valeur hors énumération (`c = 42;`). Le typage est faible.
 - Deux constantes peuvent avoir la **même valeur**.
 - Une `enum` anonyme est un excellent moyen de définir des **constantes entières de compilation** : `enum { TAILLE = 64 };` (utilisable pour dimensionner un tableau).
 
-## 20. `typedef`
+# `typedef`
 
-### 20.1 Créer un alias de type
+## Créer un alias de type
 
 `typedef` ne crée **pas** un nouveau type : il donne un **nouveau nom** à un type existant. La syntaxe est celle d'une déclaration de variable précédée de `typedef` : le nom déclaré devient le nom du type.
 
@@ -3052,7 +3042,7 @@ int main(void) {
 }
 ```
 
-### 20.2 Usages courants
+## Usages courants
 
 ```c
 typedef char *Chaine;                       // déconseillé : masque le pointeur (const Chaine ≠ const char *)
@@ -3063,9 +3053,9 @@ typedef int (*Comparateur)(const void *, const void *);
 
 - **Raccourcir** `struct X` en `X`.
 - **Abstraire** un type (`typedef int32_t Identifiant;`) : un changement ultérieur ne se fait qu'en un endroit.
-- **Simplifier** les déclarations complexes, surtout les pointeurs de fonctions (section 21).
+- **Simplifier** les déclarations complexes, surtout les pointeurs de fonctions (voir *Pointeurs de fonctions*).
 
-### 20.3 `typedef` ou `#define` ?
+## `typedef` ou `#define` ?
 
 |  | `typedef` | `#define` |
 | --- | --- | --- |
@@ -3076,15 +3066,15 @@ typedef int (*Comparateur)(const void *, const void *);
 
 Préférez toujours `typedef` pour les types.
 
-### 20.4 Bonnes pratiques
+## Bonnes pratiques
 
 - Ne cachez pas un **pointeur** derrière un `typedef` : le lecteur ne voit plus qu'il manipule une adresse.
 - Utilisez une convention de nommage claire (`Point`, `point_t`). Attention : le suffixe `_t` est **réservé par POSIX** ; si vous publiez une bibliothèque, préférez un préfixe (`mylib_point`).
 - Un `typedef` de pointeur de fonction améliore beaucoup la lisibilité.
 
-## 21. Pointeurs de fonctions
+# Pointeurs de fonctions
 
-### 21.1 Principe
+## Principe
 
 En mémoire, le code d'une fonction a une **adresse**. Un **pointeur de fonction** stocke cette adresse et permet d'**appeler une fonction choisie à l'exécution** : c'est le mécanisme des **callbacks**, des tables de dispatch et des « méthodes » en C.
 
@@ -3106,7 +3096,7 @@ int main(void) {
 
 **Lecture de la déclaration** : `int (*op)(int, int)` se lit « `op` est un pointeur (`*op`) vers une fonction prenant deux `int` et retournant un `int` ». **Les parenthèses autour de `*op` sont indispensables** : `int *op(int, int)` déclarerait une fonction retournant un `int *`.
 
-### 21.2 Avec `typedef`
+## Avec `typedef`
 
 ```c
 typedef int (*Operation)(int, int);       // Operation : type « pointeur vers fonction (int, int) -> int »
@@ -3116,7 +3106,7 @@ static int appliquer(Operation f, int a, int b) { return f(a, b); }
 
 Sans `typedef`, un paramètre s'écrit `int (*f)(int, int)`, ce qui devient vite illisible.
 
-### 21.3 Callbacks : `qsort`
+## Callbacks : `qsort`
 
 Un **callback** est une fonction passée en argument pour être appelée **plus tard** par une autre. C'est ainsi que `qsort` reste générique : le tri est écrit une fois, le critère de comparaison est fourni par l'appelant.
 
@@ -3150,7 +3140,7 @@ int main(void) {
 
 Pour qu'un callback puisse recevoir du contexte, on ajoute classiquement un paramètre `void *contexte` transmis tel quel.
 
-### 21.4 Table de fonctions
+## Table de fonctions
 
 Un **tableau de pointeurs de fonctions** remplace avantageusement une longue cascade de `if`/`switch` :
 
@@ -3178,7 +3168,7 @@ int main(void) {
 
 Ajouter une opération revient à ajouter une ligne dans la table, sans toucher à la logique de recherche.
 
-### 21.5 Simuler des méthodes (« objets » en C)
+## Simuler des méthodes (« objets » en C)
 
 En plaçant des pointeurs de fonctions **dans une structure**, on obtient un **polymorphisme** rudimentaire :
 
@@ -3208,7 +3198,7 @@ int main(void) {
 
 C'est le principe des *vtables* de C++ et des interfaces des pilotes de périphériques (le noyau Linux utilise massivement ce modèle).
 
-### 21.6 Sélection générique : `_Generic` (C11)
+## Sélection générique : `_Generic` (C11)
 
 `_Generic` choisit une expression **à la compilation** selon le **type** d'un argument : c'est la base d'une surcharge rudimentaire.
 
@@ -3235,17 +3225,9 @@ int main(void) {
 
 Le choix a lieu à la compilation : aucun coût à l'exécution. Les fonctions doivent être déclarées **avant** la macro utilisée (ici, avant `main`).
 
-## Synthèse du niveau intermédiaire
+# Gestion des fichiers
 
-Vous savez maintenant raisonner sur la mémoire : les **tableaux** et les **chaînes** (11–12) reposent sur la contiguïté ; les **pointeurs** (13) donnent accès aux adresses ; l'**allocation dynamique** (14) permet de choisir la taille et la durée de vie ; retourner des données (15), construire des structures dynamiques (16) et manipuler des pointeurs doubles (17) en découlent. Les **types composés** (`struct`, `union`, `enum`, `typedef`, sections 18–20) permettent de modéliser des données, et les **pointeurs de fonctions** (21) d'abstraire des comportements.
-
-**À suivre — niveau avancé** : fichiers (22), arguments de la ligne de commande (23), préprocesseur (24), opérations bit à bit (25), récursivité (26), Unicode (27), compilation et débogage (28), comportements indéfinis et sécurité (29), bibliothèque standard et aide-mémoire (30).
-
-# Niveau avancé
-
-## 22. Gestion des fichiers
-
-### 22.1 Le type `FILE *` et les opérations
+## Le type `FILE *` et les opérations
 
 Pour lire ou écrire dans un fichier, on l'**ouvre** : la bibliothèque renvoie un pointeur vers une structure opaque de type **`FILE`** qui représente un **flux** (position courante, tampon, indicateurs d'erreur et de fin de fichier). Le cycle est toujours : **ouvrir → vérifier → utiliser → fermer**.
 
@@ -3261,7 +3243,7 @@ Pour lire ou écrire dans un fichier, on l'**ouvre** : la bibliothèque renvoie 
 | `feof` / `ferror` | Fin de fichier / erreur |
 | `fflush` | Force l'écriture du tampon |
 
-### 22.2 Ouvrir et fermer
+## Ouvrir et fermer
 
 | Mode | Signification |
 | --- | --- |
@@ -3293,7 +3275,7 @@ int main(void) {
 
 **Toujours tester `fopen`**. `errno` (rempli par la bibliothèque) et `strerror`/`perror` donnent la cause (fichier absent, permission refusée…). Pensez à **fermer** : les données tamponnées ne sont écrites qu'à la fermeture ou lors d'un `fflush`.
 
-### 22.3 Écrire du texte
+## Écrire du texte
 
 ```c
 #include <stdio.h>
@@ -3314,9 +3296,9 @@ int main(void) {
 }
 ```
 
-### 22.4 Lire du texte
+## Lire du texte
 
-#### Ligne par ligne (recommandé)
+### Ligne par ligne (recommandé)
 
 ```c
 #include <stdio.h>
@@ -3342,7 +3324,7 @@ int main(void) {
 
 Si une ligne dépasse la taille du tampon, `fgets` la lit **en plusieurs fois** : vérifiez la présence du `'\n'` si la ligne entière est nécessaire.
 
-#### Caractère par caractère
+### Caractère par caractère
 
 ```c
 #include <stdio.h>
@@ -3362,7 +3344,7 @@ int main(void) {
 }
 ```
 
-#### Formaté avec `fscanf`
+### Formaté avec `fscanf`
 
 ```c
 #include <stdio.h>
@@ -3387,7 +3369,7 @@ int main(void) {
 
 `fscanf` est fragile devant des données mal formées (elle s'arrête au premier échec sans consommer le reste de la ligne). Pour des fichiers non fiables, lisez **ligne par ligne** avec `fgets`, puis analysez avec `sscanf` ou `strtol`/`strtod`.
 
-### 22.5 Fichiers binaires
+## Fichiers binaires
 
 `fwrite` et `fread` transfèrent des **octets bruts**, sans conversion :
 
@@ -3417,7 +3399,7 @@ int main(void) {
 
 Signature : `fwrite(adresse, taille_élément, nombre, flux)`, valeur de retour = nombre d'éléments réellement transférés (comparez-la à `nombre`).
 
-#### Texte ou binaire ?
+### Texte ou binaire ?
 
 |  | Texte | Binaire |
 | --- | --- | --- |
@@ -3428,7 +3410,7 @@ Signature : `fwrite(adresse, taille_élément, nombre, flux)`, valeur de retour 
 
 > **Attention** : écrire une `struct` directement avec `fwrite` produit un fichier **lié à la machine et au compilateur** (remplissage, taille de `long`, ordre des octets). Pour un format d'échange, écrivez **champ par champ** avec des types à taille fixe (`uint32_t`…) et un ordre d'octets défini.
 
-### 22.6 Se positionner dans un fichier
+## Se positionner dans un fichier
 
 | Fonction | Effet |
 | --- | --- |
@@ -3436,7 +3418,7 @@ Signature : `fwrite(adresse, taille_élément, nombre, flux)`, valeur de retour 
 | `fseek(f, déplacement, origine)` | Se déplace ; origine : `SEEK_SET` (début), `SEEK_CUR` (courant), `SEEK_END` (fin) |
 | `rewind(f)` | Retour au début |
 
-#### Lire un fichier entier en mémoire
+### Lire un fichier entier en mémoire
 
 ```c
 #include <stdio.h>
@@ -3474,7 +3456,7 @@ int main(void) {
 
 `ftell` renvoie un `long` : sur les plateformes où `long` fait 32 bits, les fichiers de plus de 2 Go posent problème. Sous POSIX, utilisez `fseeko`/`ftello` avec `off_t`.
 
-### 22.7 Opérations sur les fichiers
+## Opérations sur les fichiers
 
 ```c
 #include <stdio.h>
@@ -3490,17 +3472,17 @@ int main(void) {
 
 Le test d'existence par `fopen(…, "r")` est valable mais à **éviter pour décider d'écrire** : entre le test et l'écriture, la situation peut changer (*race condition*). Préférez le mode `"wx"`, qui échoue de façon atomique si le fichier existe.
 
-### 22.8 Bonnes pratiques
+## Bonnes pratiques
 
 - **Vérifiez** chaque `fopen`, et chaque valeur de retour de `fread`/`fwrite`/`fclose`.
-- **Fermez** tout fichier ouvert, y compris sur les chemins d'erreur (le schéma `goto fin` de la section 8.4 est idéal).
+- **Fermez** tout fichier ouvert, y compris sur les chemins d'erreur (le schéma `goto fin` de la section *`break`, `continue`, `goto`* est idéal).
 - Lisez en texte **ligne par ligne** avec `fgets` ; n'utilisez pas `feof` comme condition de boucle.
 - Pour les fichiers venant de l'extérieur, **ne faites pas confiance** aux tailles et formats lus (validez-les avant d'allouer).
 - Utilisez `"wx"` ou une écriture dans un fichier temporaire puis `rename` pour éviter la perte de données.
 
-## 23. Arguments de la ligne de commande
+# Arguments de la ligne de commande
 
-### 23.1 `argc` et `argv`
+## `argc` et `argv`
 
 La fonction `main` peut recevoir les arguments passés au programme :
 
@@ -3528,7 +3510,7 @@ int main(int argc, char *argv[]) {
 
 Les guillemets du shell permettent de passer un argument contenant des espaces. **Tous les arguments sont des chaînes** : même `42` doit être converti en nombre.
 
-### 23.2 Convertir en nombres (avec contrôle d'erreurs)
+## Convertir en nombres (avec contrôle d'erreurs)
 
 ```c
 #include <errno.h>
@@ -3564,7 +3546,7 @@ int main(int argc, char *argv[]) {
 
 Affichez toujours un message d'**usage** sur `stderr` quand les arguments sont incorrects et retournez `EXIT_FAILURE`.
 
-### 23.3 Exemple : somme d'entiers
+## Exemple : somme d'entiers
 
 ```c
 #include <errno.h>
@@ -3588,7 +3570,7 @@ int main(int argc, char *argv[]) {
 }
 ```
 
-### 23.4 Options et drapeaux
+## Options et drapeaux
 
 Pour des options simples (`-v`, `-n 5`, `--aide`), on compare les chaînes avec `strcmp` :
 
@@ -3620,7 +3602,7 @@ int main(int argc, char *argv[]) {
 }
 ```
 
-#### `getopt` (POSIX, Linux/macOS)
+### `getopt` (POSIX, Linux/macOS)
 
 `getopt` (`<unistd.h>`) analyse les options courtes `-v`, `-o valeur`, y compris regroupées (`-vo fichier`) :
 
@@ -3650,7 +3632,7 @@ int main(int argc, char *argv[]) {
 
 `getopt` n'est **pas dans le C standard** (POSIX seulement) ; `getopt_long` gère aussi les options longues (`--verbose`).
 
-### 23.5 Variables d'environnement
+## Variables d'environnement
 
 ```c
 #include <stdio.h>
@@ -3665,17 +3647,17 @@ int main(void) {
 
 La chaîne renvoyée par `getenv` appartient à l'environnement : **ne la modifiez pas** et ne la libérez pas. Traitez ces valeurs comme **non fiables** (elles viennent de l'utilisateur).
 
-### 23.6 Bonnes pratiques
+## Bonnes pratiques
 
 - Vérifiez `argc` **avant** d'accéder à `argv[i]`.
 - Convertissez avec `strtol`/`strtod` et **validez** plage et format.
 - Affichez un message d'**usage** clair ; supportez `--aide`.
 - Retournez `EXIT_SUCCESS`/`EXIT_FAILURE` (le code de sortie sert aux scripts).
-- Ne supposez rien sur le contenu des arguments : ils sont contrôlés par l'utilisateur (voir section 29).
+- Ne supposez rien sur le contenu des arguments : ils sont contrôlés par l'utilisateur (voir *Comportements indéfinis et sécurité*).
 
-## 24. Directives du préprocesseur
+# Directives du préprocesseur
 
-### 24.1 Rôle
+## Rôle
 
 Le **préprocesseur** est la première étape de la compilation : il traite les lignes commençant par `#` et produit un texte C « pur » **avant** que le compilateur ne l'analyse. Il travaille sur du **texte**, sans connaître les types ni la syntaxe du C. Pour voir son résultat : `gcc -E fichier.c`.
 
@@ -3688,16 +3670,16 @@ Le **préprocesseur** est la première étape de la compilation : il traite les 
 | `#pragma` | Instruction propre au compilateur (`#pragma once`…) |
 | `#embed` (C23) | Insère le contenu binaire d'un fichier |
 
-### 24.2 `#include`
+## `#include`
 
 ```c
 #include <stdio.h>        // cherché d'abord dans les répertoires du SYSTÈME
 #include "mon_module.h"   // cherché d'abord dans le répertoire du fichier courant, puis comme <…>
 ```
 
-L'option `-I répertoire` ajoute un dossier de recherche. L'inclusion est une simple **copie de texte** : un en-tête inclus deux fois serait dupliqué, d'où les gardes d'inclusion (24.5).
+L'option `-I répertoire` ajoute un dossier de recherche. L'inclusion est une simple **copie de texte** : un en-tête inclus deux fois serait dupliqué, d'où les gardes d'inclusion (voir *Gardes d'inclusion*).
 
-### 24.3 `#define` : macros
+## `#define` : macros
 
 ```c
 #include <stdio.h>
@@ -3713,7 +3695,7 @@ int main(void) {
 }
 ```
 
-#### Pièges des macros
+### Pièges des macros
 
 ```c
 #define CARRE_MAUVAIS(x) x * x
@@ -3726,7 +3708,7 @@ int b = DOUBLE(i++);                  // i++ évalué DEUX fois : comportement i
 
 **Règles** : (1) **parenthésez** chaque paramètre et l'ensemble de l'expression ; (2) ne passez **jamais** d'argument à effet de bord (`i++`, appel de fonction) à une macro ; (3) préférez une fonction `static inline` quand c'est possible : elle est typée, évalue ses arguments une fois et est débogable.
 
-#### Macros multi-instructions : `do { … } while (0)`
+### Macros multi-instructions : `do { … } while (0)`
 
 ```c
 #define RESET(p) do { free(p); (p) = NULL; } while (0)
@@ -3737,7 +3719,7 @@ else      autre();
 
 Sans l'enveloppe `do … while (0)`, un bloc `{ … }` suivi d'un `;` casserait un `if … else`.
 
-#### Opérateurs `#` et `##`
+### Opérateurs `#` et `##`
 
 ```c
 #include <stdio.h>
@@ -3755,7 +3737,7 @@ int main(void) {
 }
 ```
 
-#### Macros variadiques
+### Macros variadiques
 
 ```c
 #include <stdio.h>
@@ -3769,11 +3751,11 @@ int main(void) {
 }
 ```
 
-#### `#undef`
+### `#undef`
 
 `#undef NOM` supprime la définition d'une macro, ce qui permet de la redéfinir ou d'éviter les collisions.
 
-### 24.4 Compilation conditionnelle
+## Compilation conditionnelle
 
 ```c
 #include <stdio.h>
@@ -3810,7 +3792,7 @@ int main(void) {
 
 On définit une macro à la compilation avec `-D` : `gcc -DDEBUG=1 prog.c`. Usages : code **spécifique à une plateforme**, **options** de compilation, **tests**, **désactivation** temporaire de code (`#if 0`). L'opérateur `defined(X)` est utilisable dans `#if`. C23 ajoute `__has_include`, `__has_embed` et `__has_c_attribute` pour tester la disponibilité de fonctionnalités.
 
-### 24.5 Gardes d'inclusion
+## Gardes d'inclusion
 
 Un en-tête inclus plusieurs fois (directement ou par d'autres en-têtes) provoquerait des **redéfinitions**. On le protège ainsi :
 
@@ -3827,7 +3809,7 @@ Vecteur ajouter(Vecteur a, Vecteur b);
 
 Au premier passage, `VECTEUR_H` n'est pas défini : le contenu est inclus et la macro définie. Aux suivants, tout le contenu est ignoré. `#pragma once` (non standard mais universellement supporté) joue le même rôle en une ligne. **Choisissez des noms de garde uniques** (`NOMPROJET_FICHIER_H`).
 
-### 24.6 `#embed` (C23)
+## `#embed` (C23)
 
 `#embed` insère directement le **contenu binaire** d'un fichier sous forme de liste d'entiers : plus besoin de générateurs externes pour intégrer une image ou une police dans l'exécutable.
 
@@ -3839,7 +3821,7 @@ static const unsigned char logo[] = {
 // sizeof logo = nombre d'octets du fichier
 ```
 
-### 24.7 Macros prédéfinies
+## Macros prédéfinies
 
 | Macro | Valeur |
 | --- | --- |
@@ -3851,7 +3833,7 @@ static const unsigned char logo[] = {
 | `__STDC_VERSION__` | Version de la norme (`201710L` pour C17, `202311L` pour C23) |
 | `__cplusplus` | Définie **seulement** par un compilateur C++ |
 
-### 24.8 Exemple : bascule de débogage
+## Exemple : bascule de débogage
 
 ```c
 #include <stdio.h>
@@ -3872,7 +3854,7 @@ int main(void) {
 
 `gcc -DDEBUG prog.c` active les traces ; sans `-DDEBUG`, elles disparaissent complètement de l'exécutable.
 
-### 24.9 `static_assert` : vérifications à la compilation
+## `static_assert` : vérifications à la compilation
 
 ```c
 #include <limits.h>
@@ -3885,9 +3867,9 @@ static_assert(CHAR_BIT == 8, "octets de 8 bits requis");
 
 Si la condition (une **expression constante**) est fausse, la compilation **échoue** avec le message donné. C'est idéal pour vérifier des hypothèses sur les tailles de types, l'alignement ou la taille d'une structure.
 
-## 25. Opérateurs bit à bit
+# Opérateurs bit à bit
 
-### 25.1 Principe
+## Principe
 
 Ces opérateurs agissent sur les **bits individuels** des entiers. Ils sont indispensables pour les **drapeaux**, les protocoles, la programmation matérielle, la compression et le chiffrement.
 
@@ -3902,7 +3884,7 @@ Ces opérateurs agissent sur les **bits individuels** des entiers. Ils sont indi
 
 > **À ne pas confondre** : `&` et `|` (bit à bit) avec `&&` et `||` (logiques, avec court-circuit). `5 & 2` vaut 0 mais `5 && 2` vaut 1.
 
-### 25.2 Manipuler des bits individuels
+## Manipuler des bits individuels
 
 ```c
 #include <stdio.h>
@@ -3922,7 +3904,7 @@ int main(void) {
 
 Les quatre idiomes à connaître : **activer** `x |= masque`, **désactiver** `x &= ~masque`, **basculer** `x ^= masque`, **tester** `(x & masque) != 0`. Utilisez `1u` (non signé) pour éviter les décalages sur un entier signé.
 
-### 25.3 Drapeaux (*flags*) et masques
+## Drapeaux (*flags*) et masques
 
 ```c
 #include <stdio.h>
@@ -3941,7 +3923,7 @@ int main(void) {
 
 Chaque drapeau occupe **un bit** (puissances de 2), ce qui permet d'en stocker 32 ou 64 dans un seul entier. Le double `!!` ramène toute valeur non nulle à 1.
 
-### 25.4 Afficher en binaire
+## Afficher en binaire
 
 ```c
 #include <stdint.h>
@@ -3961,7 +3943,7 @@ int main(void) {
 
 Le format `%b` existe en C23 pour `printf`, mais n'est pas encore partout disponible.
 
-### 25.5 Échange sans variable temporaire (curiosité)
+## Échange sans variable temporaire (curiosité)
 
 ```c
 a ^= b;  b ^= a;  a ^= b;      // échange a et b ; ÉCHOUE si a et b sont le MÊME objet (résultat 0)
@@ -3969,7 +3951,7 @@ a ^= b;  b ^= a;  a ^= b;      // échange a et b ; ÉCHOUE si a et b sont le M�
 
 C'est une curiosité : avec un compilateur moderne, une variable temporaire est **aussi rapide** et plus lisible.
 
-### 25.6 Fonctions de `<stdbit.h>` (C23)
+## Fonctions de `<stdbit.h>` (C23)
 
 ```c
 // Compiler avec : gcc -std=c23 (GCC 14+ / glibc récente)
@@ -3987,7 +3969,7 @@ int main(void) {
 
 Elles remplacent les extensions propres à chaque compilateur (`__builtin_popcount`, `__builtin_clz`…).
 
-### 25.7 Précautions
+## Précautions
 
 - **Décalage à gauche d'un signé** vers/dans le bit de signe, ou décalage d'un nombre de bits **négatif ou ≥ largeur du type** : comportement **indéfini**.
 - **`>>` sur un entier signé négatif** : le résultat est **défini par l'implémentation** (décalage arithmétique le plus souvent). Faites vos manipulations de bits sur des types **non signés**.
@@ -3995,9 +3977,9 @@ Elles remplacent les extensions propres à chaque compilateur (`__builtin_popcou
 - **Priorité** : `==` est plus prioritaire que `&` : écrivez `(x & m) == 0`.
 - **Boutisme** (*endianness*) : l'ordre des octets en mémoire diffère selon les machines ; ne réinterprétez pas des octets sans y penser.
 
-## 26. Récursivité
+# Récursivité
 
-### 26.1 Principe
+## Principe
 
 Une fonction est **récursive** lorsqu'elle **s'appelle elle-même**. Elle exprime naturellement les problèmes qui se décomposent en **sous-problèmes de même nature** plus petits. Toute fonction récursive correcte comporte deux éléments :
 
@@ -4021,7 +4003,7 @@ int main(void) {
 
 Sans cas de base, ou si le cas récursif **ne converge pas** vers lui, les appels ne s'arrêtent jamais : la pile se remplit et le programme plante (**débordement de pile**, *stack overflow*).
 
-### 26.2 Fonctionnement : la pile d'appels
+## Fonctionnement : la pile d'appels
 
 À chaque appel, le système réserve sur la **pile** un **cadre** (*stack frame*) contenant les paramètres, les variables locales et l'adresse de retour. Pour `factorielle(3)` :
 
@@ -4034,9 +4016,9 @@ retour : 1  →  2 × 1 = 2  →  3 × 2 = 6
 
 Les cadres s'**empilent** pendant la descente et se **dépilent** pendant la remontée. La mémoire consommée est proportionnelle à la **profondeur** de récursion ; la pile étant limitée (souvent 8 Mo sous Linux, 1 Mo sous Windows), une profondeur de plusieurs centaines de milliers d'appels est dangereuse.
 
-### 26.3 Exemples
+## Exemples
 
-#### Puissance rapide (diviser pour régner)
+### Puissance rapide (diviser pour régner)
 
 ```c
 #include <stdio.h>
@@ -4053,7 +4035,7 @@ int main(void) {
 }
 ```
 
-#### Suite de Fibonacci : le piège de la double récursion
+### Suite de Fibonacci : le piège de la double récursion
 
 ```c
 #include <stdio.h>
@@ -4076,7 +4058,7 @@ int main(void) {
 
 `fib_naif(40)` effectue plus de 300 millions d'appels, alors que la version itérative est instantanée. Une troisième voie est la **mémoïsation** : stocker les résultats déjà calculés dans un tableau.
 
-#### Plus grand commun diviseur (algorithme d'Euclide)
+### Plus grand commun diviseur (algorithme d'Euclide)
 
 ```c
 static unsigned pgcd(unsigned a, unsigned b) {
@@ -4084,7 +4066,7 @@ static unsigned pgcd(unsigned a, unsigned b) {
 }
 ```
 
-#### Parcours d'une liste ou d'un arbre
+### Parcours d'une liste ou d'un arbre
 
 ```c
 #include <stdio.h>
@@ -4130,7 +4112,7 @@ int main(void) {
 
 Pour les structures **arborescentes** (arbres, répertoires, expressions), la récursivité est souvent **la solution la plus claire**.
 
-#### Les tours de Hanoï
+### Les tours de Hanoï
 
 ```c
 #include <stdio.h>
@@ -4145,7 +4127,7 @@ static void hanoi(int n, char de, char vers, char via) {
 int main(void) { hanoi(3, 'A', 'C', 'B'); return 0; }     // 2^3 - 1 = 7 déplacements
 ```
 
-### 26.4 Récursivité terminale
+## Récursivité terminale
 
 Un appel est **terminal** lorsqu'il est la **toute dernière opération** de la fonction (rien n'est fait après son retour). On y arrive souvent avec un **accumulateur** :
 
@@ -4163,7 +4145,7 @@ int main(void) { printf("%llu\n", fact(10)); return 0; }
 
 Un compilateur peut transformer un appel terminal en **simple boucle** (*optimisation des appels terminaux*) et éviter la croissance de la pile. **Le C ne le garantit pas** : GCC et Clang le font généralement avec `-O2`, mais pas en mode débogage. Ne comptez pas dessus pour des profondeurs importantes.
 
-### 26.5 Récursivité ou itération ?
+## Récursivité ou itération ?
 
 |  | Récursivité | Itération |
 | --- | --- | --- |
@@ -4174,7 +4156,7 @@ Un compilateur peut transformer un appel terminal en **simple boucle** (*optimis
 
 Toute récursion peut s'écrire de façon itérative (au besoin avec une **pile explicite** gérée en mémoire dynamique). Choisissez la récursivité quand elle reflète **la structure du problème** et que la profondeur reste bornée (ex. O(log n) ou hauteur d'un arbre équilibré).
 
-### 26.6 Pièges
+## Pièges
 
 - **Cas de base manquant** ou jamais atteint (`fact(-1)` avec un type signé, par exemple).
 - **Profondeur excessive** : listes de 10⁶ éléments parcourues récursivement.
@@ -4182,9 +4164,9 @@ Toute récursion peut s'écrire de façon itérative (au besoin avec une **pile 
 - **Gros tableaux locaux** dans une fonction récursive : chaque cadre les duplique.
 - **Débordement arithmétique** du résultat (`21!` dépasse 64 bits) : vérifiez avec `ckd_mul`.
 
-## 27. Unicode et caractères larges
+# Unicode et caractères larges
 
-### 27.1 Le problème
+## Le problème
 
 Le `char` du C est un **octet** : il suffit pour l'ASCII (128 caractères, 7 bits), pas pour le monde. **Unicode** attribue un numéro unique (un **point de code**, noté `U+XXXX`) à plus d'un million de caractères possibles (lettres de toutes les écritures, symboles, émojis). Il faut ensuite un **encodage** pour représenter ces nombres en octets :
 
@@ -4196,9 +4178,9 @@ Le `char` du C est un **octet** : il suffit pour l'ASCII (128 caractères, 7 bit
 
 Conséquences pour une chaîne UTF-8 : `"é"` occupe **2 octets** ; `strlen("é")` vaut donc **2** (octets, pas caractères) ; `s[i]` n'est pas « le i-ème caractère » ; couper ou inverser une chaîne octet par octet peut produire du texte **invalide**.
 
-### 27.2 Les approches
+## Les approches
 
-#### Approche 1 : UTF-8 dans des `char` (recommandée)
+### UTF-8 dans des `char` (recommandée)
 
 On garde `char *` et les fonctions habituelles ; on sait simplement que **octet ≠ caractère**. Les octets de continuation UTF-8 ont la forme `10xxxxxx`, ce qui permet de compter les caractères :
 
@@ -4223,7 +4205,7 @@ int main(void) {
 
 En C11/C23, le préfixe **`u8"…"`** garantit un littéral UTF-8, et C23 introduit le type **`char8_t`** (`<uchar.h>`). Le terminal doit lui aussi être en UTF-8 pour un bon affichage (Windows : `chcp 65001`, ou un terminal moderne).
 
-#### Approche 2 : `wchar_t` (`<wchar.h>`)
+### `wchar_t` (`<wchar.h>`)
 
 ```c
 #include <locale.h>
@@ -4240,7 +4222,7 @@ int main(void) {
 
 `wchar_t` a une taille **variable selon la plateforme** : 4 octets (UTF-32) sous Linux/macOS, **2 octets** (UTF-16) sous Windows, où il ne contient donc pas un caractère entier pour les points de code hors du plan de base. Ce manque de portabilité le rend peu recommandé pour du code multiplateforme.
 
-#### Approche 3 : `char16_t` et `char32_t` (`<uchar.h>`, C11)
+### `char16_t` et `char32_t` (`<uchar.h>`, C11)
 
 ```c
 #include <uchar.h>
@@ -4251,7 +4233,7 @@ const char32_t *s32 = U"héllo 世";      // UTF-32 : un élément = un point de
 
 `char32_t` est pratique pour manipuler des **points de code** individuels ; les fonctions de conversion (`mbrtoc32`, `c32rtomb`) font le pont avec les `char *`.
 
-### 27.3 Conseils pratiques
+## Conseils pratiques
 
 - **Stockez, transmettez et traitez en UTF-8** ; ne convertissez qu'aux frontières imposées par une API (Windows en UTF-16).
 - Ne supposez pas que **1 caractère = 1 octet** ; ne tronquez pas une chaîne n'importe où (un caractère peut être coupé en deux).
@@ -4259,9 +4241,9 @@ const char32_t *s32 = U"héllo 世";      // UTF-32 : un élément = un point de
 - Pour le **tri, la casse et la normalisation** Unicode, utilisez une bibliothèque dédiée (**ICU**, **libunistring**, **utf8proc**) ; `toupper` et `isalpha` ne gèrent pas les caractères non ASCII.
 - **Déclarez** l'encodage de vos fichiers source (UTF-8) et validez les entrées : un UTF-8 mal formé est un vecteur d'attaque.
 
-## 28. Compilation et exécution
+# Compilation et exécution
 
-### 28.1 Les étapes détaillées
+## Les étapes détaillées
 
 | Étape | Commande | Entrée → Sortie | Rôle |
 | --- | --- | --- | --- |
@@ -4272,7 +4254,7 @@ const char32_t *s32 = U"héllo 世";      // UTF-32 : un élément = un point de
 
 Le fichier objet contient une **table de symboles** (les fonctions et variables qu'il définit et celles qu'il attend d'ailleurs). L'éditeur de liens les met en correspondance. `nm` et `objdump -d` permettent de les inspecter.
 
-### 28.2 Options essentielles de `gcc` / `clang`
+## Options essentielles de `gcc` / `clang`
 
 | Option | Effet |
 | --- | --- |
@@ -4297,7 +4279,7 @@ gcc -std=c17 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -g -O0 \
     -fsanitize=address,undefined prog.c -o prog
 ```
 
-### 28.3 Erreurs de compilation et d'édition de liens
+## Erreurs de compilation et d'édition de liens
 
 | Message | Cause probable |
 | --- | --- |
@@ -4310,7 +4292,7 @@ gcc -std=c17 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -g -O0 \
 
 Distinguez bien les **erreurs de compilation** (le code est invalide) des **erreurs de liens** (le code est valide mais incomplet) et des **erreurs d'exécution** (le programme compile mais se comporte mal). Corrigez toujours **la première** erreur affichée.
 
-### 28.4 Projets multi-fichiers
+## Projets multi-fichiers
 
 ```bash
 gcc -Wall -Wextra -std=c17 main.c maths.c outils.c -o programme     # tout en une commande
@@ -4323,7 +4305,7 @@ gcc main.o maths.o -o programme
 
 Compiler **séparément** chaque `.c` en `.o` puis lier fait gagner du temps sur de gros projets : seuls les fichiers modifiés sont recompilés.
 
-### 28.5 Automatiser avec `make`
+## Automatiser avec `make`
 
 ```makefile
 CC      = gcc
@@ -4348,7 +4330,7 @@ clean:
 
 Chaque **règle** a la forme `cible: dépendances` suivie de commandes **indentées par une tabulation**. `make` compare les dates de modification et ne reconstruit que ce qui est périmé. Les variables automatiques : `$@` (cible), `$<` (première dépendance), `$^` (toutes). Pour des projets plus vastes, on utilise **CMake**, **Meson** ou **Ninja**.
 
-### 28.6 Bibliothèques
+## Bibliothèques
 
 ```bash
 # Bibliothèque statique (.a) : copiée dans l'exécutable
@@ -4371,9 +4353,9 @@ LD_LIBRARY_PATH=. ./programme
 
 N'oubliez pas `-lm` pour `<math.h>` sous Linux (`gcc prog.c -lm`).
 
-### 28.7 Débogage
+## Débogage
 
-#### `gdb`
+### `gdb`
 
 ```bash
 gcc -g -O0 -std=c17 prog.c -o prog        # -g indispensable, -O0 pour un déroulement fidèle
@@ -4393,7 +4375,7 @@ gdb ./prog
 
 Après un *segmentation fault*, `gdb ./prog` puis `run` puis `bt` indique **la ligne exacte** et **la chaîne d'appels** qui ont conduit au plantage.
 
-#### Détecteurs d'erreurs
+### Détecteurs d'erreurs
 
 | Outil | Détecte |
 | --- | --- |
@@ -4403,7 +4385,7 @@ Après un *segmentation fault*, `gdb ./prog` puis `run` puis `bt` indique **la l
 | **ThreadSanitizer** (`-fsanitize=thread`) | Conditions de concurrence |
 | **Valgrind** (`valgrind --leak-check=full ./prog`) | Fuites, accès invalides (sans recompiler) |
 
-### 28.8 Optimisation
+## Optimisation
 
 - **`-O0`** : aucune optimisation, idéal pour déboguer. **`-O2`** : standard pour la production. **`-O3`** : plus agressif. **`-Os`** : taille minimale.
 - Le compilateur **suppose l'absence de comportement indéfini** : un bug latent peut n'apparaître qu'à `-O2`. Testez les deux.
@@ -4411,11 +4393,11 @@ Après un *segmentation fault*, `gdb ./prog` puis `run` puis `bt` indique **la l
 - **Mesurez avant d'optimiser** (`gprof`, `perf`, `valgrind --tool=callgrind`) ; la clarté prime, et le bon algorithme vaut mieux que la micro-optimisation.
 - `-flto` active l'optimisation à l'édition de liens (*link-time optimization*), à travers les fichiers.
 
-### 28.9 Compilation croisée
+## Compilation croisée
 
 La **compilation croisée** produit un exécutable pour une **autre architecture** (ARM, RISC-V, microcontrôleur) que celle de la machine de développement : `arm-linux-gnueabihf-gcc prog.c -o prog_arm`, ou `clang --target=aarch64-linux-gnu`. Il faut la **chaîne d'outils** cible et une copie de la bibliothèque C de la cible. On peut tester avec un émulateur (`qemu-arm`).
 
-### 28.10 Environnement d'exécution
+## Environnement d'exécution
 
 À l'exécution : (1) le système **charge** l'exécutable en mémoire et mappe les bibliothèques dynamiques ; (2) le code de démarrage (*crt0*) initialise la bibliothèque C, prépare `argc`/`argv` ; (3) il appelle **`main`** ; (4) à la fin de `main` (ou à l'appel de `exit()`), les fichiers ouverts sont fermés, les fonctions `atexit` sont exécutées, puis le **code de sortie** est transmis au système.
 
@@ -4448,9 +4430,9 @@ int main(void) {
 
 `printf` finit par appeler `write` ; `malloc` s'appuie sur `brk`/`mmap`. La bibliothèque C ajoute **tampons** et **portabilité**. `strace ./prog` (Linux) affiche les appels système effectués.
 
-## 29. Comportements indéfinis et sécurité
+# Comportements indéfinis et sécurité
 
-### 29.1 Comportement indéfini (UB)
+## Comportement indéfini (UB)
 
 Quand un programme viole une règle du langage, **la norme n'impose aucun résultat** : plantage, résultat faux, **ou apparente normalité** (avant de casser avec un autre compilateur, une autre version ou un autre niveau d'optimisation). Le compilateur est en droit de **supposer que l'UB n'arrive jamais** et d'optimiser en conséquence : le code qui le contient peut être **supprimé ou transformé** de façon surprenante.
 
@@ -4477,7 +4459,7 @@ int f(int *p) {
 
 Le test de nullité placé **après** le déréférencement est éliminé, car si `p` était nul l'UB aurait déjà eu lieu. Vérifiez **avant** d'utiliser.
 
-### 29.2 Les failles de sécurité typiques
+## Les failles de sécurité typiques
 
 | Faille | Cause | Parade |
 | --- | --- | --- |
@@ -4492,7 +4474,7 @@ Le test de nullité placé **après** le déréférencement est éliminé, car s
 
 Principe directeur : **toute donnée venant de l'extérieur est hostile** (arguments, variables d'environnement, fichiers, réseau, saisie). On la **valide** (taille, plage, format) **avant** de s'en servir.
 
-### 29.3 Hygiène de programmation
+## Hygiène de programmation
 
 - Compilez avec `-Wall -Wextra -Wpedantic` et corrigez **tous** les avertissements.
 - Développez avec **AddressSanitizer + UBSan** activés ; testez aussi avec **Valgrind**.
@@ -4525,9 +4507,9 @@ int main(void) {
 
 `assert` sert à vérifier des **invariants internes** (« cela ne peut pas arriver »), **pas** à gérer des erreurs d'exécution normales (fichier absent, saisie invalide) : il disparaît avec `-DNDEBUG`.
 
-## 30. Bibliothèque standard et aide-mémoire
+# Bibliothèque standard et aide-mémoire
 
-### 30.1 En-têtes principaux
+## En-têtes principaux
 
 | En-tête | Contenu |
 | --- | --- |
@@ -4549,7 +4531,7 @@ int main(void) {
 | `<stdbit.h>` / `<stdckdint.h>` | Manipulation de bits, arithmétique vérifiée (C23) |
 | `<wchar.h>` / `<uchar.h>` / `<locale.h>` | Caractères larges, Unicode, localisation |
 
-#### Nombres aléatoires
+### Nombres aléatoires
 
 ```c
 #include <stdio.h>
@@ -4568,7 +4550,7 @@ int main(void) {
 
 `rand()` est un générateur **pseudo-aléatoire** prévisible : sans `srand`, il produit la **même suite** à chaque exécution ; le `% n` introduit un léger biais. Pour de la sécurité, utilisez les sources du système d'exploitation.
 
-### 30.2 Récapitulatif par thème
+## Récapitulatif par thème
 
 | Besoin | Outil |
 | --- | --- |
@@ -4585,7 +4567,7 @@ int main(void) {
 | Tri | `qsort` |
 | Nettoyage en cas d'erreur | `goto fin;` |
 
-### 30.3 Les 12 règles d'or du C
+## Les 12 règles d'or du C
 
 1. **Initialisez** tout.
 2. **Vérifiez** chaque valeur de retour (`malloc`, `fopen`, `scanf`…).
@@ -4600,7 +4582,7 @@ int main(void) {
 11. **Découpez** en petites fonctions et en modules (`.h` / `.c`).
 12. **Documentez** qui possède la mémoire et quelles sont les préconditions.
 
-### 30.4 Ressources pour progresser
+## Ressources pour progresser
 
 - **cppreference (C)** : https://en.cppreference.com/w/c
 - *Le langage C* — Kernighan & Ritchie (*The C Programming Language*, 2ᵉ éd.)
@@ -4609,9 +4591,3 @@ int main(void) {
 - **Compiler Explorer** : https://godbolt.org
 - **Brouillons de la norme (WG14)** : https://www.open-std.org/jtc1/sc22/wg14/
 - **Normes ISO/IEC 9899** : https://www.iso.org/standard/82075.html
-
-## Conclusion
-
-Vous avez parcouru l'ensemble du langage : de la syntaxe et des types (niveau débutant), à la maîtrise de la mémoire, des pointeurs et des types composés (niveau intermédiaire), puis aux fichiers, au préprocesseur, aux bits, à la compilation et à la sécurité (niveau avancé). Le C récompense la **rigueur** : vérifier, initialiser, borner, libérer, et laisser les outils (avertissements, sanitizers, analyseurs) traquer ce que l'œil manque.
-
-*Bon code, et que vos pointeurs soient toujours valides !*

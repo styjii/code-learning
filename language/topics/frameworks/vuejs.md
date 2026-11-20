@@ -1,12 +1,16 @@
+<div align="center">
+
 # Vue.js 3 et TypeScript — Cours complet
 
 *Cours magistral et module d'apprentissage exhaustif, fondé sur le plan « Vue.js 3 + TypeScript » — Vue 3.5 (version stable) et Vue 3.6 (candidate à la sortie) — novembre 2026*
 
-## Avant de commencer : comment utiliser ce cours
+</div>
 
-Ce cours développe, chapitre par chapitre, l'intégralité du plan en **26 chapitres**, regroupés en six parties : **Fondamentaux** (1 à 9), **Composants et réutilisation** (10 à 16), **Écosystème officiel** (17 à 19), **Avancé** (20 et 21), **Tests et performance** (22 et 23) et **Essentiels** (24 à 26). Deux annexes (glossaire et aide-mémoire) complètent l'ensemble.
+# Avant de commencer : comment utiliser ce cours
 
-Chaque chapitre suit la même trame : *objectifs d'apprentissage → notions et définitions → exemples de code commentés → pièges fréquents → synthèse*.
+Ce cours couvre l'intégralité de Vue.js 3 avec TypeScript, du débutant à l'expert, en sections détaillées : les **fondamentaux** (installation, composants monofichiers, template, réactivité, formulaires, cycle de vie), les **composants et la réutilisation** (slots, composables, directives, plugins, composants intégrés), l'**écosystème officiel** (Vue Router, Pinia, TypeScript), le **Vue avancé** (Options API, fonctions de rendu), les **tests et la performance**, puis les **essentiels** (SSR et Nuxt, outils, bonnes pratiques). Un glossaire et un aide-mémoire complètent l'ensemble.
+
+Chaque section suit la même trame : *objectifs d'apprentissage → notions et définitions → exemples de code commentés → pièges fréquents → synthèse*.
 
 **Conventions de lecture**
 
@@ -16,19 +20,15 @@ Chaque chapitre suit la même trame : *objectifs d'apprentissage → notions et 
 - Le cours enseigne le Vue **actuel** (Composition API, `<script setup>`, `defineModel`, `useTemplateRef`, Pinia, Vue Router, Vite) **et** explique l'ancien (Options API, mixins, `Vue.set`, Vuex) pour que vous sachiez lire du code existant.
 - **Prérequis** : HTML et CSS, JavaScript moderne (ES2015 et suivants : modules, `const` / `let`, fonctions fléchées, déstructuration, opérateur de décomposition, classes, `Promise` et `async` / `await`) et des notions de base de TypeScript (types, interfaces, génériques).
 
-**État de l'écosystème à la date de rédaction.** La version stable de Vue est la branche **3.5** (correctifs fréquents). La branche **3.6** est en **candidate à la sortie** : elle réécrit le moteur de réactivité (sur la base de la bibliothèque *alien-signals*) et introduit le **mode Vapor** (optionnel, chapitre 23). Elle ne doit pas être utilisée en production tant que la version finale n'est pas publiée. **Vue Router 5** (routage par fichiers intégré au cœur), **Pinia 3**, **Nuxt 4** et **Vitest** sont les versions de référence de l'écosystème. Les détails de version sont à vérifier sur la documentation officielle avant tout projet.
+**État de l'écosystème à la date de rédaction.** La version stable de Vue est la branche **3.5** (correctifs fréquents). La branche **3.6** est en **candidate à la sortie** : elle réécrit le moteur de réactivité (sur la base de la bibliothèque *alien-signals*) et introduit le **mode Vapor** (optionnel, section « Performance »). Elle ne doit pas être utilisée en production tant que la version finale n'est pas publiée. **Vue Router 5** (routage par fichiers intégré au cœur), **Pinia 3**, **Nuxt 4** et **Vitest** sont les versions de référence de l'écosystème. Les détails de version sont à vérifier sur la documentation officielle avant tout projet.
 
-**Parcours conseillé** : lisez les chapitres 1 à 10 dans l'ordre (ils se construisent les uns sur les autres), puis choisissez librement dans les parties suivantes selon vos besoins.
+**Parcours conseillé** : lisez dans l'ordre les sections « Introduction et installation » à « Composants » (elles se construisent les unes sur les autres), puis choisissez librement dans les sections suivantes selon vos besoins.
 
----
+# Introduction et installation
 
-# Partie I — Fondamentaux
+**Objectifs d'apprentissage.** À la fin de cette section, vous saurez : définir Vue et expliquer ce qui le distingue ; décrire les deux piliers du framework (rendu déclaratif et réactivité) ; expliquer le modèle de composants, le DOM virtuel et le compilateur ; distinguer Vue 2 et Vue 3, Options API et Composition API ; comparer Vue à Angular et à React ; situer les versions dans le temps ; créer un projet Vue + TypeScript avec `create-vue` ; comprendre le rôle de chaque fichier généré ; configurer TypeScript et les outils de vérification de types.
 
-## 1. Introduction et installation
-
-**Objectifs d'apprentissage.** À la fin de ce chapitre, vous saurez : définir Vue et expliquer ce qui le distingue ; décrire les deux piliers du framework (rendu déclaratif et réactivité) ; expliquer le modèle de composants, le DOM virtuel et le compilateur ; distinguer Vue 2 et Vue 3, Options API et Composition API ; comparer Vue à Angular et à React ; situer les versions dans le temps ; créer un projet Vue + TypeScript avec `create-vue` ; comprendre le rôle de chaque fichier généré ; configurer TypeScript et les outils de vérification de types.
-
-### 1.1 Qu'est-ce que Vue ?
+## Qu'est-ce que Vue ?
 
 **Vue** (prononcé « vioue », comme *view* en anglais) est un **framework JavaScript** open source pour construire des **interfaces utilisateur** et des **applications monopages** (*SPA*, *Single Page Applications*). Il a été créé en **2014** par **Evan You**, ancien ingénieur chez Google, et il est aujourd'hui maintenu par une équipe cœur et une large communauté. Il est entièrement écrit en **TypeScript**.
 
@@ -44,7 +44,7 @@ Vue est qualifié de **progressif** : on peut l'adopter **graduellement**, de la
 
 **Framework ou bibliothèque ?** Vue se situe entre les deux. Son **cœur** ne s'occupe que de la couche d'affichage (comme une bibliothèque), mais il est entouré d'un **écosystème officiel** cohérent : **Vue Router** (navigation), **Pinia** (état global), **Vite** (outil de build), **Vitest** (tests), **Nuxt** (méta-framework full-stack). Contrairement à Angular, ces briques sont **séparées** et optionnelles ; contrairement à React, elles sont **officielles** et maintenues par la même équipe.
 
-#### Les deux piliers de Vue
+### Les deux piliers de Vue
 
 1. **Le rendu déclaratif.** On décrit **ce que** l'interface doit afficher en fonction de l'état, et non **comment** manipuler le DOM étape par étape. On écrit un gabarit HTML étendu ; Vue se charge des mises à jour.
 2. **La réactivité.** Vue **suit automatiquement** les changements de l'état JavaScript et met à jour le DOM de façon efficace, sans que vous ayez à signaler quoi que ce soit.
@@ -79,25 +79,25 @@ btn.addEventListener('click', () => {
 
 Plus l'interface grandit, plus l'approche impérative devient difficile à maintenir : chaque modification de l'état exige de se souvenir de **tous** les endroits du DOM à mettre à jour. L'approche déclarative élimine cette catégorie d'erreurs.
 
-### 1.2 Les concepts fondateurs
+## Les concepts fondateurs
 
-Voici le vocabulaire minimal. Chaque terme sera approfondi dans un chapitre dédié.
+Voici le vocabulaire minimal. Chaque terme sera approfondi dans une section dédiée.
 
 - **Composant** : brique d'interface qui encapsule un **gabarit** (HTML), une **logique** (TypeScript) et des **styles** (CSS). Une application est un **arbre de composants**.
-- **Composant monofichier (SFC)** : fichier `.vue` qui regroupe le gabarit, le script et le style d'un composant (chapitre 2).
-- **Gabarit (*template*)** : HTML enrichi de la syntaxe Vue (interpolation `{{ }}`, directives `v-…`), compilé en fonction de rendu (chapitre 3).
+- **Composant monofichier (SFC)** : fichier `.vue` qui regroupe le gabarit, le script et le style d'un composant (section « Structure d'un composant (SFC) »).
+- **Gabarit (*template*)** : HTML enrichi de la syntaxe Vue (interpolation `{{ }}`, directives `v-…`), compilé en fonction de rendu (section « Syntaxe de template »).
 - **Directive** : attribut spécial préfixé par `v-` qui applique un comportement réactif au DOM (`v-if`, `v-for`, `v-model`…).
-- **État réactif** : données dont la modification déclenche automatiquement des mises à jour (`ref`, `reactive`, chapitre 4).
+- **État réactif** : données dont la modification déclenche automatiquement des mises à jour (`ref`, `reactive`, section « Réactivité »).
 - **Propriété calculée (`computed`)** : valeur **dérivée** d'autres données, mise en cache.
 - **Observateur (`watch`)** : fonction exécutée en réaction à un changement, pour produire un **effet de bord**.
-- **Prop** : donnée transmise d'un composant **parent** à un composant **enfant** (chapitre 10).
+- **Prop** : donnée transmise d'un composant **parent** à un composant **enfant** (section « Composants »).
 - **Événement émis (`emit`)** : notification envoyée d'un enfant vers son parent.
-- **Slot** : emplacement dans un composant où le parent injecte du contenu (chapitre 11).
-- **Composable** : fonction réutilisable qui encapsule une **logique à état** en s'appuyant sur la Composition API (chapitre 13).
-- **Plugin** : extension qui ajoute des fonctionnalités à l'échelle de l'application (chapitre 15).
-- **Routeur** et **store** : navigation entre pages et état global partagé (chapitres 17 et 18).
+- **Slot** : emplacement dans un composant où le parent injecte du contenu (section « Slots »).
+- **Composable** : fonction réutilisable qui encapsule une **logique à état** en s'appuyant sur la Composition API (section « Composables »).
+- **Plugin** : extension qui ajoute des fonctionnalités à l'échelle de l'application (section « Plugins »).
+- **Routeur** et **store** : navigation entre pages et état global partagé (sections « Vue Router » et « Pinia (gestion d'état) »).
 
-### 1.3 Architecture générale d'une application
+## Architecture générale d'une application
 
 Une application Vue est un **arbre de composants**. Le composant racine est monté dans un élément de la page HTML ; il contient des composants enfants, qui en contiennent d'autres.
 
@@ -126,22 +126,22 @@ Stores Pinia, plugins, provide/inject ←— état et services partagés, access
 3. Vue sait quels effets (rendu de composants, propriétés calculées, observateurs) **dépendent** de cette donnée et les **replanifie**.
 4. Au prochain « tick », Vue re-génère l'arbre virtuel des composants concernés, le compare au précédent et applique au DOM **uniquement les différences**.
 
-#### Le DOM virtuel et le compilateur
+### Le DOM virtuel et le compilateur
 
 - Un **DOM virtuel** (*Virtual DOM*) est une représentation légère en mémoire de l'arbre DOM réel, faite d'objets JavaScript appelés **nœuds virtuels** (*VNodes*).
 - À chaque changement d'état, Vue produit un nouvel arbre virtuel, le **compare** au précédent (*diffing*) et applique au DOM réel les seules différences (*patch*).
 - Vue ajoute une **optimisation par le compilateur** : le gabarit est analysé **à la compilation**, ce qui permet d'isoler les parties **statiques** (créées une seule fois et jamais re-comparées) des parties **dynamiques** (marquées par des *patch flags* indiquant ce qui peut changer : texte, classe, props…). Le moteur d'exécution ne traite alors que le strict nécessaire. C'est une approche **hybride** : gabarits compilés + DOM virtuel optimisé.
 
-#### Le système de réactivité
+### Le système de réactivité
 
 Vue 3 utilise les **`Proxy`** d'ES2015 pour intercepter la lecture (`get`) et l'écriture (`set`) des propriétés d'un objet.
 
 - **Lecture** d'une propriété à l'intérieur d'un *effet* (rendu, `computed`, `watch`) : Vue **enregistre la dépendance** (*track*).
 - **Écriture** : Vue **notifie** les effets dépendants (*trigger*), qui sont replanifiés.
 
-Les mises à jour du DOM sont **groupées** (*batched*) et exécutées de façon asynchrone. Le chapitre 4 détaille ce mécanisme.
+Les mises à jour du DOM sont **groupées** (*batched*) et exécutées de façon asynchrone. La section « Réactivité » détaille ce mécanisme.
 
-#### Composition API et Options API
+### Composition API et Options API
 
 | | **Options API** | **Composition API** |
 | --- | --- | --- |
@@ -150,9 +150,9 @@ Les mises à jour du DOM sont **groupées** (*batched*) et exécutées de façon
 | TypeScript | Correct, inférence parfois lourde | **Excellent** |
 | Syntaxe recommandée | Héritage de Vue 2, toujours supportée | **`<script setup>`** |
 
-Ce cours privilégie la **Composition API avec `<script setup lang="ts">`**, voie recommandée pour les nouveaux projets. L'Options API est traitée au chapitre 20.
+Ce cours privilégie la **Composition API avec `<script setup lang="ts">`**, voie recommandée pour les nouveaux projets. L'Options API est traitée dans la section « Options API ».
 
-### 1.4 Les applications monopages (SPA)
+## Les applications monopages (SPA)
 
 Une **SPA** ne charge **qu'une seule page HTML**. Lors d'un clic sur un lien, le routeur intercepte la navigation, modifie l'URL grâce à l'**API History** du navigateur (`pushState`) et remplace le contenu affiché, **sans recharger la page**. Les données sont obtenues par des appels HTTP en arrière-plan (généralement du JSON).
 
@@ -164,9 +164,9 @@ Une **SPA** ne charge **qu'une seule page HTML**. Lors d'un clic sur un lien, le
 | Référencement (SEO) | Naturel | Demande du **SSR** ou du **pré-rendu** |
 | Logique | Principalement serveur | Répartie entre client et serveur |
 
-**Limites et remèdes.** Le premier chargement d'une SPA pure peut être lent et mal indexé par certains robots. Vue répond par le **rendu côté serveur (SSR)**, la **génération statique (SSG)** et l'**hydratation** (chapitre 24), ainsi que par le **chargement paresseux** de routes et de composants (chapitres 10, 17 et 23).
+**Limites et remèdes.** Le premier chargement d'une SPA pure peut être lent et mal indexé par certains robots. Vue répond par le **rendu côté serveur (SSR)**, la **génération statique (SSG)** et l'**hydratation** (section « Rendu côté serveur (SSR), génération statique (SSG) et Nuxt »), ainsi que par le **chargement paresseux** de routes et de composants (sections « Composants », « Vue Router » et « Performance »).
 
-### 1.5 Vue 2 et Vue 3 : histoire et confusion à éviter
+## Vue 2 et Vue 3 : histoire et confusion à éviter
 
 - **2014** : première version de Vue, par Evan You.
 - **2016** : **Vue 2**, fondée sur l'Options API et sur `Object.defineProperty` pour la réactivité.
@@ -191,7 +191,7 @@ Une **SPA** ne charge **qu'une seule page HTML**. Lors d'un clic sur un lien, le
 
 > **Attention.** Ne mélangez jamais les deux versions. Beaucoup de tutoriels anciens décrivent Vue 2. **Comment dater un exemple de code ?** `new Vue({ … })`, `Vue.use`, `Vue.set`, `this.$set`, `Vuex` → Vue 2 ; `createApp`, `defineComponent`, `export default { data() {…} }` → Vue 3 en Options API ; `<script setup>`, `ref()`, `defineProps` → Vue 3 moderne.
 
-### 1.6 Pourquoi choisir Vue ? Forces et limites
+## Pourquoi choisir Vue ? Forces et limites
 
 **Forces**
 
@@ -206,7 +206,7 @@ Une **SPA** ne charge **qu'une seule page HTML**. Lors d'un clic sur un lien, le
 
 **Limites**
 
-- **Moins de conventions imposées** qu'Angular : deux projets Vue peuvent être organisés très différemment. Il faut définir des règles d'équipe (chapitre 26).
+- **Moins de conventions imposées** qu'Angular : deux projets Vue peuvent être organisés très différemment. Il faut définir des règles d'équipe (section « Bonnes pratiques et architecture »).
 - **Plusieurs styles coexistent** (Options API, Composition API, `<script setup>`, JSX), ce qui peut dérouter dans une équipe non alignée.
 - **Écosystème plus petit** que celui de React pour certaines bibliothèques spécialisées.
 - Une partie du contenu en ligne est **obsolète** (Vue 2, Vuex, Vue CLI).
@@ -222,7 +222,7 @@ Une **SPA** ne charge **qu'une seule page HTML**. Lors d'un clic sur un lien, le
 
 **Quand choisir Vue ?** Équipe mixte ou débutante, besoin de livrer vite, adoption progressive dans un site existant, applications de taille petite à grande avec des conventions d'équipe claires. **Quand hésiter ?** Très grande organisation qui exige des conventions strictes imposées par l'outil (Angular peut convenir mieux), ou besoin d'un écosystème de bibliothèques très spécialisé (React).
 
-### 1.7 Versions, publications et support *(à jour)*
+## Versions, publications et support *(à jour)*
 
 Vue suit le **versionnement sémantique** : les versions mineures ajoutent des fonctionnalités sans casser l'existant, les correctifs sont publiés fréquemment.
 
@@ -239,7 +239,7 @@ Vue suit le **versionnement sémantique** : les versions mineures ajoutent des f
 - **Mises à jour** : le passage d'une version mineure à l'autre est en général sans heurts. Consultez toujours les notes de version sur GitHub (`vuejs/core`) et le blog officiel.
 - **Prochaines évolutions** : les propositions de changement passent par les **RFC** publiques (`github.com/vuejs/rfcs`).
 
-### 1.8 Prérequis et environnement de travail
+## Prérequis et environnement de travail
 
 **Connaissances requises**
 
@@ -254,7 +254,7 @@ Vue suit le **versionnement sémantique** : les versions mineures ajoutent des f
 - **Vue DevTools** : extension de navigateur (ou plugin Vite) pour inspecter composants, état, routeur, store et performances.
 - Un navigateur moderne.
 
-### 1.9 Création d'un projet avec `create-vue`
+## Création d'un projet avec `create-vue`
 
 L'outil officiel de génération de projet est **`create-vue`**, fondé sur **Vite**.
 
@@ -267,7 +267,7 @@ L'assistant propose des options à activer :
 | Option | Rôle |
 | --- | --- |
 | TypeScript | Ajoute `tsconfig`, `vue-tsc` et les types |
-| JSX Support | Plugin `@vitejs/plugin-vue-jsx` (chapitre 21) |
+| JSX Support | Plugin `@vitejs/plugin-vue-jsx` (section « Fonctions de rendu et JSX ») |
 | Vue Router | Routage de l'application monopage |
 | Pinia | Gestion d'état globale |
 | Vitest | Tests unitaires et de composants |
@@ -283,7 +283,7 @@ npm run build      # build de production (vérification de types + vite build)
 npm run preview    # prévisualiser le build de production
 ```
 
-#### Structure d'un projet généré
+### Structure d'un projet généré
 
 ```text
 mon-projet/
@@ -306,7 +306,7 @@ mon-projet/
     └── composables/      # (convention) logique réutilisable
 ```
 
-#### Le point d'entrée
+### Le point d'entrée
 
 ```ts
 // src/main.ts
@@ -325,7 +325,7 @@ app.mount('#app')             // 3. monte dans <div id="app"></div>
 - `app.mount(sélecteur)` rend l'application dans l'élément ciblé et **retourne l'instance du composant racine**. Il doit être appelé **en dernier** (après `use`, `component`, `provide`…).
 - **Plusieurs applications indépendantes** peuvent coexister sur la même page, chacune montée sur son propre élément.
 
-#### Utilisation sans étape de build (CDN)
+### Utilisation sans étape de build (CDN)
 
 ```html
 <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
@@ -343,7 +343,7 @@ app.mount('#app')             // 3. monte dans <div id="app"></div>
 
 > **Limites de ce mode.** Pas de composants monofichiers, pas de TypeScript natif, et le gabarit est analysé **dans le navigateur** (compilateur embarqué, plus lourd). Réservé au prototypage et à l'amélioration progressive d'une page. Pour un vrai projet : `create-vue` + Vite.
 
-### 1.10 Configuration de TypeScript
+## Configuration de TypeScript
 
 **Pourquoi TypeScript avec Vue ?** Détection des erreurs **à la compilation** (props, événements, store, routes), **autocomplétion** et refactorisation sûre, documentation vivante par les types.
 
@@ -355,7 +355,7 @@ app.mount('#app')             // 3. monte dans <div id="app"></div>
 
 > **Attention.** **Vite ne vérifie pas les types** : il se contente de supprimer les annotations. Le contrôle de types est assuré par l'éditeur et par **`vue-tsc`**, à exécuter **en intégration continue et avant chaque build**.
 
-#### `tsconfig` recommandé
+### `tsconfig` recommandé
 
 ```json
 {
@@ -384,7 +384,7 @@ app.mount('#app')             // 3. monte dans <div id="app"></div>
 | `jsx: "preserve"` | Pour le TSX avec le plugin JSX de Vue |
 | `paths` | Alias `@/` (à **dupliquer** dans `vite.config.ts` via `resolve.alias`) |
 
-#### Alias dans Vite
+### Alias dans Vite
 
 ```ts
 // vite.config.ts
@@ -400,7 +400,7 @@ export default defineConfig({
 })
 ```
 
-#### Importer des types
+### Importer des types
 
 ```ts
 import type { Ref } from 'vue'   // import de type uniquement : effacé à la compilation
@@ -408,7 +408,7 @@ import type { Ref } from 'vue'   // import de type uniquement : effacé à la co
 
 Avec `verbatimModuleSyntax`, un import qui ne sert qu'aux types **doit** utiliser `import type` (ou la forme `import { type Ref }`), sinon l'import resterait dans le code JavaScript produit.
 
-### 1.11 Glossaire du chapitre
+## Glossaire
 
 | Terme | Définition courte |
 | --- | --- |
@@ -425,7 +425,7 @@ Avec `verbatimModuleSyntax`, un import qui ne sert qu'aux types **doit** utilise
 | Hydratation | Rattachement de l'application Vue au HTML produit par le serveur |
 | Vapor | Mode de compilation optionnel de Vue 3.6, sans DOM virtuel |
 
-### 1.12 Pièges fréquents
+## Pièges fréquents
 
 - Oublier `lang="ts"` sur `<script setup>` : le composant n'est alors plus typé.
 - Croire que `npm run dev` détecte les erreurs de types : il faut lancer `vue-tsc`.
@@ -434,17 +434,11 @@ Avec `verbatimModuleSyntax`, un import qui ne sert qu'aux types **doit** utilise
 - Utiliser une version en candidate à la sortie (Vue 3.6) dans un projet de production.
 - Oublier de dupliquer l'alias `@/` dans `vite.config.ts` **et** dans `tsconfig`.
 
-### Synthèse du chapitre 1
-
-Vue est un **framework progressif, déclaratif et réactif**, fondé sur des **composants**. Vue 3 utilise des **`Proxy`**, un **compilateur optimisant** et un **DOM virtuel** allégé ; Vue 2 est en fin de vie. Le standard de création de projet est **`create-vue` + Vite**. **Vue - Official** et **`vue-tsc`** assurent le typage : **Vite ne vérifie pas les types**. La Composition API avec `<script setup lang="ts">` est la voie recommandée.
-
----
-
-## 2. Structure d'un composant (SFC)
+# Structure d'un composant (SFC)
 
 **Objectifs d'apprentissage.** Maîtriser l'anatomie d'un **composant monofichier** (`.vue`) ; distinguer `<script setup>` et `<script>` classique ; utiliser les **macros du compilateur** ; comprendre le bloc `<template>` ; maîtriser les styles : `scoped`, CSS Modules, `v-bind()` en CSS, sélecteurs spéciaux (`:deep`, `:slotted`, `:global`) ; connaître les blocs personnalisés et les imports de fichiers externes.
 
-### 2.1 Définition et rôle
+## Définition et rôle
 
 Un **composant monofichier** (*Single-File Component*, **SFC**) est un fichier `.vue` qui regroupe, dans un seul fichier, jusqu'à trois types de blocs de premier niveau : `<template>`, `<script>` et `<style>`. Ce n'est **pas** du JavaScript valide : le fichier est **compilé** par `@vitejs/plugin-vue` (qui s'appuie sur `@vue/compiler-sfc`) en un module JavaScript ordinaire.
 
@@ -475,7 +469,7 @@ const message = ref('Bonjour')
 
 **Séparation des préoccupations ?** Le principe n'est pas de séparer les **technologies** (HTML / JS / CSS) mais les **préoccupations** : le composant est l'unité de découpage. On peut malgré tout externaliser un bloc : `<script src="./logique.ts">`, `<style src="./style.css">`, `<template src="./vue.html">`.
 
-### 2.2 Le bloc `<script setup>`
+## Le bloc `<script setup>`
 
 `<script setup>` est un **sucre syntaxique de compilation** de la Composition API dans un SFC. Deux règles le résument :
 
@@ -521,15 +515,15 @@ export default defineComponent({
 - **Meilleures performances** : le gabarit est compilé dans la **même portée** que le script (accès direct aux variables, sans passer par un proxy de rendu).
 - **Meilleure inférence** dans l'éditeur.
 
-#### Utilisation de composants, directives et variables dans le gabarit
+### Utilisation de composants, directives et variables dans le gabarit
 
 - Un composant **importé** est utilisable dans le gabarit sous son nom (PascalCase recommandé) : `<LigneProduit />`.
-- Une variable nommée **`vNomDirective`** est utilisable comme directive `v-nom-directive` (chapitre 14).
+- Une variable nommée **`vNomDirective`** est utilisable comme directive `v-nom-directive` (section « Directives personnalisées »).
 - Les composants dynamiques s'écrivent `<component :is="monComposant" />`.
-- Un composant récursif peut s'appeler **par le nom de son fichier** sans import (chapitre 10).
+- Un composant récursif peut s'appeler **par le nom de son fichier** sans import (section « Composants »).
 - Les composants à espace de noms sont possibles : `<Formulaire.Champ />` si `Formulaire` est un objet exportant des composants.
 
-#### `await` de premier niveau
+### `await` de premier niveau
 
 ```vue
 <script setup lang="ts">
@@ -537,9 +531,9 @@ const donnees = await fetch('/api/articles').then((r) => r.json())
 </script>
 ```
 
-Le composant devient **asynchrone** : il doit être utilisé dans un `<Suspense>` (chapitre 16). Après un `await`, Vue **restaure automatiquement** le contexte de l'instance, ce qui permet d'appeler encore des hooks et `provide` / `inject` dans `<script setup>`.
+Le composant devient **asynchrone** : il doit être utilisé dans un `<Suspense>` (section « Composants intégrés »). Après un `await`, Vue **restaure automatiquement** le contexte de l'instance, ce qui permet d'appeler encore des hooks et `provide` / `inject` dans `<script setup>`.
 
-### 2.3 Le bloc `<script>` classique
+## Le bloc `<script>` classique
 
 Un SFC peut contenir **à la fois** un `<script>` classique et un `<script setup>`. Le bloc classique est exécuté **une seule fois**, à l'import du module (et non à chaque instance). Il sert à :
 
@@ -560,7 +554,7 @@ instancesCreees++                                     // exécuté par chaque in
 
 > Les deux blocs doivent utiliser le **même attribut `lang`**.
 
-### 2.4 Les macros du compilateur
+## Les macros du compilateur
 
 Les **macros** sont des fonctions **résolues à la compilation** : elles ne sont **pas importées**, ne sont valides que dans `<script setup>` et sont transformées par le compilateur en code d'options.
 
@@ -574,19 +568,19 @@ Les **macros** sont des fonctions **résolues à la compilation** : elles ne son
 | `defineSlots` | **Type** les slots (aide de l'éditeur) |
 | `withDefaults` | Valeurs par défaut pour un `defineProps` fondé sur les types |
 
-Elles sont détaillées au chapitre 10 (sauf `defineModel`, chapitre 8). Une macro doit apparaître au **niveau supérieur** de `<script setup>` ; elle peut référencer des constantes importées mais **pas** des variables locales du script (car elle est « remontée » hors de `setup()`).
+Elles sont détaillées dans la section « Composants » (sauf `defineModel`, section « Formulaires et `v-model` »). Une macro doit apparaître au **niveau supérieur** de `<script setup>` ; elle peut référencer des constantes importées mais **pas** des variables locales du script (car elle est « remontée » hors de `setup()`).
 
-### 2.5 Le bloc `<template>`
+## Le bloc `<template>`
 
 - Contient le **HTML enrichi** de la syntaxe Vue (interpolations, directives).
 - **Un seul** `<template>` de premier niveau par SFC.
-- Depuis Vue 3, un gabarit peut avoir **plusieurs racines** (*fragments*) ; mais le **transfert d'attributs** (*fallthrough*, chapitre 10) exige alors un traitement explicite.
+- Depuis Vue 3, un gabarit peut avoir **plusieurs racines** (*fragments*) ; mais le **transfert d'attributs** (*fallthrough*, section « Composants ») exige alors un traitement explicite.
 - Il est **compilé en fonction de rendu** : aucun gabarit n'est analysé dans le navigateur avec un projet à étape de build.
 - L'attribut `lang="pug"` permet d'utiliser un autre langage de gabarit (nécessite le préprocesseur).
 
-### 2.6 Le bloc `<style>`
+## Le bloc `<style>`
 
-#### `scoped` : styles limités au composant
+### `scoped` : styles limités au composant
 
 L'attribut `scoped` ajoute un **attribut de données unique** (`data-v-xxxx`) aux éléments du composant et aux sélecteurs, de sorte que les règles ne s'appliquent **qu'à ce composant**.
 
@@ -609,7 +603,7 @@ L'attribut `scoped` ajoute un **attribut de données unique** (`data-v-xxxx`) au
 </style>
 ```
 
-#### CSS Modules (`<style module>`)
+### CSS Modules (`<style module>`)
 
 ```vue
 <script setup lang="ts">
@@ -629,9 +623,9 @@ const classes = useCssModule()              // ou useCssModule('nom') pour un mo
 
 - Les noms de classes sont **hachés** : aucune collision possible.
 - Module **nommé** : `<style module="monModule">` expose `$monModule.classe`.
-- Les classes sont **injectées comme propriété calculée** (`$style`) ; elles peuvent donc se combiner aux liaisons `:class` du chapitre 5.
+- Les classes sont **injectées comme propriété calculée** (`$style`) ; elles peuvent donc se combiner aux liaisons `:class` de la section « Liaisons de classes et de styles ».
 
-#### `v-bind()` en CSS
+### `v-bind()` en CSS
 
 `v-bind()` lie une **variable réactive** à une valeur CSS. Vue la transforme en variable CSS appliquée en ligne sur l'élément racine du composant.
 
@@ -653,18 +647,18 @@ const theme = { taille: '2rem' }
 </style>
 ```
 
-#### Préprocesseurs et plusieurs blocs
+### Préprocesseurs et plusieurs blocs
 
 - `<style lang="scss">`, `lang="less"`, `lang="stylus"` : installez le préprocesseur correspondant (`npm i -D sass`).
 - Un SFC peut contenir **plusieurs blocs `<style>`** (par exemple un bloc `scoped` et un bloc global).
 
-### 2.7 Blocs personnalisés et ordre des blocs
+## Blocs personnalisés et ordre des blocs
 
 Les **blocs personnalisés** (`<i18n>`, `<docs>`…) nécessitent un **plugin de build** pour être traités ; sans plugin, ils sont **ignorés**. Ils servent à colocaliser des métadonnées (traductions, documentation, configuration de route).
 
 **Ordre des blocs** : le style officiel recommande de garder un ordre **cohérent** dans tout le projet ; la convention actuelle est `<script setup>` → `<template>` → `<style>`.
 
-### 2.8 Pièges fréquents
+## Pièges fréquents
 
 - Mélanger `<script>` et `<script setup>` avec des attributs `lang` **différents**.
 - Compter sur `scoped` pour styler l'**intérieur** d'un composant enfant sans `:deep()`.
@@ -673,17 +667,11 @@ Les **blocs personnalisés** (`<i18n>`, `<docs>`…) nécessitent un **plugin de
 - Oublier que les variables du **`<script>` classique** sont partagées entre toutes les instances.
 - Abuser de `:deep()` : cela rompt l'encapsulation ; préférez les variables CSS ou les slots.
 
-### Synthèse du chapitre 2
-
-Un **SFC** regroupe `<script>`, `<template>` et `<style>` et est **compilé en module JavaScript**. **`<script setup>`** est la syntaxe recommandée : tout ce qui est de premier niveau est **exposé au gabarit**. Les **macros** (`defineProps`, `defineEmits`, `defineModel`, `defineExpose`, `defineOptions`, `defineSlots`, `withDefaults`) sont des instructions du compilateur. **`scoped`**, **`module`** et **`v-bind()`** en CSS offrent l'isolation et le dynamisme des styles.
-
----
-
-## 3. Syntaxe de template
+# Syntaxe de template
 
 **Objectifs d'apprentissage.** Maîtriser l'**interpolation** et les **expressions** autorisées ; connaître **toutes** les directives intégrées et leur syntaxe (arguments, modificateurs, arguments dynamiques) ; utiliser `v-bind` sous toutes ses formes ; mesurer les risques de `v-html` ; utiliser `v-once`, `v-pre`, `v-memo`, `v-cloak` ; comprendre l'accès aux globales, la gestion des espaces blancs et l'élément `<template>`.
 
-### 3.1 Les gabarits Vue
+## Les gabarits Vue
 
 Les gabarits Vue sont du **HTML syntaxiquement valide** (donc analysable par les navigateurs et les outils HTML), étendu par :
 
@@ -691,9 +679,9 @@ Les gabarits Vue sont du **HTML syntaxiquement valide** (donc analysable par les
 - les **directives** (attributs préfixés `v-`) ;
 - deux **raccourcis** très utilisés : `:` pour `v-bind` et `@` pour `v-on` (et `#` pour `v-slot`).
 
-Sous le capot, Vue **compile** le gabarit en fonctions de rendu optimisées qui produisent des nœuds virtuels. Le compilateur peut ainsi repérer les parties statiques et dynamiques (chapitre 23).
+Sous le capot, Vue **compile** le gabarit en fonctions de rendu optimisées qui produisent des nœuds virtuels. Le compilateur peut ainsi repérer les parties statiques et dynamiques (section « Performance »).
 
-### 3.2 Interpolation de texte
+## Interpolation de texte
 
 La syntaxe « **moustache** » `{{ }}` évalue une **expression JavaScript** et affiche le résultat sous forme de **texte**.
 
@@ -718,9 +706,9 @@ const html = '<strong>gras</strong>'
 
 - Le contenu est **échappé** : c'est une protection native contre les attaques XSS.
 - L'interpolation se met à jour **automatiquement** quand ses dépendances changent.
-- Les `ref` de premier niveau sont **déballés** dans le gabarit : on écrit `{{ message }}` et non `{{ message.value }}` (chapitre 4).
+- Les `ref` de premier niveau sont **déballés** dans le gabarit : on écrit `{{ message }}` et non `{{ message.value }}` (section « Réactivité »).
 
-#### Qu'est-ce qu'une « expression » ?
+### Qu'est-ce qu'une « expression » ?
 
 Une expression est tout ce qui peut apparaître **après un `return`** : une valeur, une opération, un appel de fonction, un ternaire, un accès de propriété. Une expression ne peut **pas** être une **instruction**.
 
@@ -732,23 +720,23 @@ Une expression est tout ce qui peut apparaître **après un `return`** : une val
 | `{{ obj?.prop }}` | `{{ a = 5 }}` dans une interpolation |
 | `@click="a = 5"` (affectation autorisée dans un gestionnaire) | |
 
-#### Accès aux variables globales
+### Accès aux variables globales
 
-Les expressions ont accès à une **liste restreinte** de globales : `Math`, `Date`, `parseInt`, `parseFloat`, `JSON`, `Array`, `Number`, `String`, `Object`, `isNaN`, `Intl`, etc. Les autres (`window`, `document`, `localStorage`) ne sont **pas** accessibles : exposez-les depuis le script ou via `app.config.globalProperties` (chapitre 15).
+Les expressions ont accès à une **liste restreinte** de globales : `Math`, `Date`, `parseInt`, `parseFloat`, `JSON`, `Array`, `Number`, `String`, `Object`, `isNaN`, `Intl`, etc. Les autres (`window`, `document`, `localStorage`) ne sont **pas** accessibles : exposez-les depuis le script ou via `app.config.globalProperties` (section « Plugins »).
 
-#### Appel de fonctions dans le gabarit
+### Appel de fonctions dans le gabarit
 
 ```vue
 <span :title="versTitre(date)">{{ formaterDate(date) }}</span>
 ```
 
-Les fonctions appelées dans le gabarit sont **réexécutées à chaque rendu** du composant : elles doivent être **légères** et **sans effet de bord** (ne jamais modifier l'état, faire une requête ou toucher au DOM). Pour un calcul coûteux, utilisez une **propriété calculée** (`computed`, chapitre 4).
+Les fonctions appelées dans le gabarit sont **réexécutées à chaque rendu** du composant : elles doivent être **légères** et **sans effet de bord** (ne jamais modifier l'état, faire une requête ou toucher au DOM). Pour un calcul coûteux, utilisez une **propriété calculée** (`computed`, section « Réactivité »).
 
-### 3.3 Les directives
+## Les directives
 
 Une **directive** est un attribut spécial préfixé par `v-` dont la valeur est **une expression JavaScript unique** (exceptions : `v-for`, `v-on` et `v-slot`, qui ont une syntaxe propre).
 
-#### Anatomie complète
+### Anatomie complète
 
 ```text
 v-on:click.prevent="envoyer"
@@ -772,25 +760,25 @@ v-on:click.prevent="envoyer"
 
 **Contraintes des arguments dynamiques.** L'expression doit s'évaluer en une **chaîne** (ou `null`, qui désactive la liaison). Évitez les espaces et les guillemets dans les crochets (utilisez une propriété calculée) et les majuscules si le gabarit est écrit **directement dans le HTML de la page** (le navigateur met alors les noms d'attributs en minuscules).
 
-#### Liste complète des directives intégrées
+### Liste complète des directives intégrées
 
 | Directive | Rôle |
 | --- | --- |
 | `v-text` | Définit le `textContent` de l'élément |
 | `v-html` | Définit le `innerHTML` de l'élément |
 | `v-show` | Bascule la propriété CSS `display` |
-| `v-if` / `v-else-if` / `v-else` | Rendu conditionnel (chapitre 6) |
-| `v-for` | Rendu de listes (chapitre 6) |
-| `v-on` (`@`) | Écoute d'événements (chapitre 7) |
+| `v-if` / `v-else-if` / `v-else` | Rendu conditionnel (section « Rendu conditionnel et listes ») |
+| `v-for` | Rendu de listes (section « Rendu conditionnel et listes ») |
+| `v-on` (`@`) | Écoute d'événements (section « Gestion des événements ») |
 | `v-bind` (`:`) | Liaison d'attributs et de props |
-| `v-model` | Liaison bidirectionnelle (chapitre 8) |
-| `v-slot` (`#`) | Slots nommés et à portée (chapitre 11) |
+| `v-model` | Liaison bidirectionnelle (section « Formulaires et `v-model` ») |
+| `v-slot` (`#`) | Slots nommés et à portée (section « Slots ») |
 | `v-pre` | Saute la compilation de l'élément |
 | `v-once` | Rend l'élément une seule fois |
 | `v-memo` | Mémoïsation conditionnelle d'un sous-arbre |
 | `v-cloak` | Masque l'élément jusqu'à la fin de la compilation |
 
-### 3.4 `v-bind` en détail
+## `v-bind` en détail
 
 `v-bind` lie dynamiquement un **attribut HTML** ou une **prop de composant** à une expression.
 
@@ -799,7 +787,7 @@ v-on:click.prevent="envoyer"
 <button :disabled="enChargement">Valider</button>
 ```
 
-#### Raccourci « même nom » *(ajout, 3.4)*
+### Raccourci « même nom » *(ajout, 3.4)*
 
 Quand le nom de l'attribut est identique à celui de la variable :
 
@@ -807,11 +795,11 @@ Quand le nom de l'attribut est identique à celui de la variable :
 <img :src :alt />          <!-- équivaut à :src="src" :alt="alt" -->
 ```
 
-#### Attributs booléens
+### Attributs booléens
 
 Une valeur **vraie** (*truthy*) fait **apparaître** l'attribut ; une valeur **fausse** (*falsy*) le **supprime**. Exception : la chaîne vide `""` le fait apparaître (comme `<button disabled>`).
 
-#### Lier plusieurs attributs à la fois
+### Lier plusieurs attributs à la fois
 
 ```vue
 <script setup lang="ts">
@@ -823,7 +811,7 @@ const attrs = { id: 'conteneur', class: 'boite' }
 </template>
 ```
 
-#### Modificateurs de `v-bind`
+### Modificateurs de `v-bind`
 
 | Modificateur | Effet |
 | --- | --- |
@@ -831,11 +819,11 @@ const attrs = { id: 'conteneur', class: 'boite' }
 | `.attr` | Force la liaison comme **attribut** (raccourci : préfixe `^`) |
 | `.camel` | Transforme un nom en kebab-case en camelCase (gabarits dans le DOM) |
 
-#### Casse des props
+### Casse des props
 
 En SFC, on peut écrire `:maProp` (camelCase) ou `:ma-prop` (kebab-case). La convention est **kebab-case dans le gabarit** et **camelCase dans le script**.
 
-### 3.5 `v-text` et `v-html`
+## `v-text` et `v-html`
 
 ```vue
 <span v-text="msg"></span>       <!-- équivaut à <span>{{ msg }}</span> -->
@@ -844,7 +832,7 @@ En SFC, on peut écrire `:maProp` (camelCase) ou `:ma-prop` (kebab-case). La con
 
 > **Sécurité.** `v-html` sur un contenu **non fiable** ouvre une faille **XSS** (injection de scripts). À réserver à du contenu **maîtrisé** ou **assaini** (bibliothèque **DOMPurify**). De plus, `v-html` **ne compile pas** de gabarit Vue : les directives et composants qu'il contiendrait ne fonctionnent pas. Les styles `scoped` ne s'appliquent pas non plus au HTML injecté (utilisez `:deep()`).
 
-### 3.6 `v-once`, `v-pre`, `v-memo` et `v-cloak`
+## `v-once`, `v-pre`, `v-memo` et `v-cloak`
 
 ```vue
 <span v-once>Ne change jamais : {{ msg }}</span>
@@ -855,20 +843,20 @@ En SFC, on peut écrire `:maProp` (camelCase) ou `:ma-prop` (kebab-case). La con
 
 - **`v-once`** : rend l'élément et ses enfants **une seule fois** ; les rendus suivants les considèrent comme statiques.
 - **`v-pre`** : ignore la compilation et affiche les moustaches **telles quelles** (utile pour documenter la syntaxe de Vue).
-- **`v-memo="[dépendances]"`** : le sous-arbre n'est **re-rendu que si l'une des valeurs** du tableau change. Utile dans de **très grandes listes** (chapitre 23). `v-memo="[]"` équivaut à `v-once`.
+- **`v-memo="[dépendances]"`** : le sous-arbre n'est **re-rendu que si l'une des valeurs** du tableau change. Utile dans de **très grandes listes** (section « Performance »). `v-memo="[]"` équivaut à `v-once`.
 - **`v-cloak`** : reste sur l'élément jusqu'à la fin de la compilation du gabarit ; avec la règle CSS `[v-cloak] { display: none }`, il évite l'affichage des moustaches brutes. Utile **uniquement sans étape de build**.
 
-### 3.7 Modificateurs : vue d'ensemble
+## Modificateurs : vue d'ensemble
 
-Les modificateurs sont détaillés dans les chapitres concernés : **événements** (`.stop`, `.prevent`, touches, souris, chapitre 7) et **`v-model`** (`.lazy`, `.number`, `.trim`, chapitre 8). Ceux de `v-bind` (`.prop`, `.attr`, `.camel`) ont été vus plus haut.
+Les modificateurs sont détaillés dans les sections concernées : **événements** (`.stop`, `.prevent`, touches, souris, section « Gestion des événements ») et **`v-model`** (`.lazy`, `.number`, `.trim`, section « Formulaires et `v-model` »). Ceux de `v-bind` (`.prop`, `.attr`, `.camel`) ont été vus plus haut.
 
-### 3.8 Commentaires, espaces blancs et élément `<template>`
+## Commentaires, espaces blancs et élément `<template>`
 
 - `<!-- commentaire -->` : conservé ou supprimé selon la configuration du compilateur (supprimé en production par défaut).
 - Vue **condense** les espaces blancs par défaut (`whitespace: 'condense'`) : plusieurs espaces ou retours à la ligne consécutifs entre éléments sont réduits à un seul espace, et les espaces en début et fin sont supprimés. L'option `'preserve'` les conserve tels quels.
 - La balise **`<template>` sans directive** est un **élément de groupement invisible** : elle n'apparaît pas dans le DOM. Utilisée avec `v-if`, `v-for` ou `v-slot`, elle permet d'appliquer une directive à **plusieurs éléments frères** sans ajouter d'élément parasite.
 
-### 3.9 Pièges fréquents
+## Pièges fréquents
 
 - Mettre des **instructions** (`if`, `let`) dans un `{{ }}` : seules les expressions sont permises.
 - Appeler des fonctions **coûteuses** dans le gabarit (réexécutées à chaque rendu).
@@ -877,21 +865,15 @@ Les modificateurs sont détaillés dans les chapitres concernés : **événement
 - Oublier que `:disabled=""` **active** l'attribut (chaîne vide = présent).
 - Attendre d'un `v-html` qu'il traite des composants ou directives Vue.
 
-### Synthèse du chapitre 3
-
-`{{ }}` accepte **une expression** et produit du **texte échappé**. Une directive s'écrit `v-nom:argument.modificateur="expression"`. Les raccourcis sont `:` pour `v-bind`, `@` pour `v-on` et `#` pour `v-slot`. **`v-html`** expose à des failles XSS ; **`v-once`** et **`v-memo`** servent à l'optimisation ; **`v-cloak`** ne sert que sans étape de build.
-
----
-
-## 4. Réactivité
+# Réactivité
 
 **Objectifs d'apprentissage.** Comprendre en profondeur le **système de réactivité** de Vue 3 (suivi et déclenchement, mises à jour groupées) ; maîtriser `ref`, `reactive`, `computed`, `watch` et `watchEffect` ; choisir entre `ref` et `reactive` ; utiliser les utilitaires avancés (`toRef`, `toRefs`, `toValue`, `shallowRef`, `readonly`, `markRaw`, `customRef`, `effectScope`) ; utiliser les **références de gabarit** (`useTemplateRef`), `nextTick` et `useId` ; connaître les cas où la réactivité se perd.
 
-### 4.1 Principe de la réactivité
+## Principe de la réactivité
 
 L'**état réactif** est un état JavaScript dont les modifications déclenchent **automatiquement** des mises à jour : du DOM, de valeurs dérivées, d'effets de bord. En JavaScript pur, modifier une variable ne prévient personne ; Vue doit donc **intercepter** les lectures et écritures.
 
-#### Mécanisme interne (simplifié)
+### Mécanisme interne (simplifié)
 
 ```ts
 // Idée simplifiée (pseudo-code) : la réactivité par Proxy
@@ -914,13 +896,13 @@ function reactive<T extends object>(obj: T): T {
 - Quand un effet s'exécute, **toute propriété réactive lue** est enregistrée comme dépendance (*track*). Quand elle change, l'effet est **replanifié** (*trigger*). Le suivi est **dynamique** : à chaque exécution, les dépendances sont recalculées.
 - Les **primitives** (`number`, `string`, `boolean`) ne peuvent pas être interceptées en JavaScript. Vue les enveloppe donc dans un objet `{ value }` doté d'un accesseur : c'est le **`ref`**.
 
-#### Mises à jour asynchrones et groupées
+### Mises à jour asynchrones et groupées
 
-Plusieurs modifications successives dans le même « tick » entraînent **un seul rendu**. Si vous écrivez `count.value++` trois fois de suite, le DOM n'est mis à jour qu'une fois, avec la valeur finale. Pour attendre que le DOM soit à jour, on utilise `nextTick()` (section 4.9).
+Plusieurs modifications successives dans le même « tick » entraînent **un seul rendu**. Si vous écrivez `count.value++` trois fois de suite, le DOM n'est mis à jour qu'une fois, avec la valeur finale. Pour attendre que le DOM soit à jour, on utilise `nextTick()` (sous-section « `nextTick()` »).
 
 > **Vue 3.6 (candidate à la sortie).** Le noyau de réactivité est réécrit sur la base de la bibliothèque *alien-signals* : l'API reste **identique**, seules les performances et la consommation mémoire s'améliorent. Aucune modification de code n'est nécessaire.
 
-### 4.2 `ref()`
+## `ref()`
 
 `ref()` crée une **référence réactive** qui contient une valeur (primitive ou objet) accessible par **`.value`**.
 
@@ -935,7 +917,7 @@ const utilisateur = ref({ nom: 'Alice', age: 30 })   // un objet devient profond
 utilisateur.value.age++                               // réactif
 ```
 
-#### Déballage automatique (*unwrapping*)
+### Déballage automatique (*unwrapping*)
 
 - **Dans le gabarit** : un `ref` de **premier niveau** est déballé automatiquement : `{{ count }}` (sans `.value`).
 - **Dans un objet `reactive`** : un `ref` placé en propriété est déballé (`etat.count`).
@@ -958,7 +940,7 @@ const obj = { id: ref(1) }       // objet ordinaire (non réactif) contenant un 
 
 **Astuce.** En déstructurant (`const { id } = obj`), `id` redevient une variable de premier niveau et sera déballée dans le gabarit.
 
-#### Profondeur et typage
+### Profondeur et typage
 
 `ref` rend un objet **profondément réactif** : les propriétés imbriquées sont aussi proxifiées.
 
@@ -968,7 +950,7 @@ const s = ref<string | null>(null)     // Ref<string | null>
 const u = ref<Utilisateur>()           // Ref<Utilisateur | undefined>
 ```
 
-### 4.3 `reactive()`
+## `reactive()`
 
 `reactive()` retourne un **proxy réactif profond** d'un objet.
 
@@ -983,7 +965,7 @@ etat.user.nom = 'Bob'
 etat.items.push('x')
 ```
 
-#### Limitations de `reactive`
+### Limitations de `reactive`
 
 1. **Types limités** : objets, tableaux, `Map`, `Set`. **Pas** de primitives.
 2. **Impossible de remplacer l'objet entier** : la référence réactive de l'ancien proxy est perdue.
@@ -1001,7 +983,7 @@ f(etat.count)                      // on passe un nombre, pas une dépendance
 
 **Solutions** : `toRefs(etat)`, `toRef(etat, 'count')`, ou utiliser **`ref`**, recommandé comme API principale.
 
-#### Identité du proxy
+### Identité du proxy
 
 ```ts
 const brut = { a: 1 }
@@ -1013,7 +995,7 @@ reactive(proxy) === proxy       // true : un proxy n'est pas ré-enveloppé
 
 Conséquence : **comparez toujours des proxies avec des proxies**, et modifiez l'état via le proxy (modifier l'objet brut ne déclenche rien).
 
-### 4.4 `ref` ou `reactive` ?
+## `ref` ou `reactive` ?
 
 | Critère | **`ref`** | **`reactive`** |
 | --- | --- | --- |
@@ -1025,7 +1007,7 @@ Conséquence : **comparez toujours des proxies avec des proxies**, et modifiez l
 
 > **Règle.** **`ref` par défaut** ; `reactive` pour un petit objet local dont on ne remplacera jamais la référence.
 
-### 4.5 `computed()`
+## `computed()`
 
 `computed()` crée une **propriété calculée** : une valeur **dérivée**, **mise en cache**, recalculée **uniquement** quand ses dépendances changent.
 
@@ -1037,7 +1019,7 @@ const nom = ref('Dupont')
 const complet = computed(() => `${prenom.value} ${nom.value}`)   // ComputedRef<string>
 ```
 
-#### Calculée ou méthode ?
+### Calculée ou méthode ?
 
 | | **`computed`** | **Méthode / fonction** |
 | --- | --- | --- |
@@ -1048,7 +1030,7 @@ const complet = computed(() => `${prenom.value} ${nom.value}`)   // ComputedRef<
 
 Dans le gabarit, `{{ complet }}` ne recalcule pas tant que `prenom` et `nom` ne changent pas, alors qu'`{{ fonctionComplet() }}` est réexécutée à **chaque rendu**.
 
-#### Propriété calculée modifiable
+### Propriété calculée modifiable
 
 ```ts
 const complet = computed({
@@ -1060,7 +1042,7 @@ const complet = computed({
 complet.value = 'Marie Curie'    // appelle le mutateur
 ```
 
-#### Règles d'or
+### Règles d'or
 
 1. Le **getter ne doit pas avoir d'effets de bord** : pas de modification d'état, pas de requête, pas de manipulation du DOM.
 2. **Ne modifiez pas** la valeur retournée : c'est un **instantané** de l'état dérivé ; modifiez l'état source.
@@ -1071,11 +1053,11 @@ complet.value = 'Marie Curie'    // appelle le mutateur
 const compte = computed<number>((precedent) => (precedent ?? 0) + 1)
 ```
 
-### 4.6 `watch()`
+## `watch()`
 
 `watch()` exécute un **effet de bord** en réaction au changement d'une ou plusieurs **sources réactives**.
 
-#### Types de sources
+### Types de sources
 
 ```ts
 import { ref, reactive, watch } from 'vue'
@@ -1091,7 +1073,7 @@ watch(etat, (n, a) => { /* … */ })                                  // un reac
 
 > **Erreur classique.** `watch(etat.count, …)` est **invalide** : on passe un nombre, pas une source. Il faut un **getter** : `watch(() => etat.count, …)`.
 
-#### Options
+### Options
 
 | Option | Effet |
 | --- | --- |
@@ -1104,13 +1086,13 @@ watch(etat, (n, a) => { /* … */ })                                  // un reac
 watch(source, callback, { immediate: true, deep: true, flush: 'post', once: false })
 ```
 
-#### Observation profonde
+### Observation profonde
 
 - Un `watch` sur un **getter** qui retourne un objet ne se déclenche **que si l'objet est remplacé**, sauf avec `deep: true`.
 - `deep: true` sur de grosses structures est **coûteux** : préférez observer un getter précis.
 - Lors d'une **mutation profonde**, `nouveau === ancien` (même objet) : clonez si vous devez comparer.
 
-#### Effets asynchrones et nettoyage
+### Effets asynchrones et nettoyage
 
 ```ts
 import { watch, onWatcherCleanup } from 'vue'          // onWatcherCleanup : 3.5+
@@ -1125,7 +1107,7 @@ watch(id, async (nouvelId, ancienId, onCleanup) => {
 
 La fonction **`onWatcherCleanup()`** *(3.5)* permet d'enregistrer le nettoyage depuis n'importe où dans l'exécution **synchrone** du callback (avant tout `await`).
 
-#### Arrêt et pause *(3.5)*
+### Arrêt et pause *(3.5)*
 
 ```ts
 const { stop, pause, resume } = watch(source, callback)
@@ -1137,11 +1119,11 @@ resume()    // reprend
 - Un observateur créé **de façon synchrone dans `setup`** est **arrêté automatiquement** au démontage du composant.
 - Un observateur créé **de façon asynchrone** (après un `await`) n'est **pas** lié au composant : arrêtez-le **manuellement** (`stop()`), sous peine de fuite mémoire.
 
-#### `flush` et accès au DOM
+### `flush` et accès au DOM
 
 Par défaut, les callbacks s'exécutent **avant** la mise à jour du DOM (`'pre'`). Pour lire le DOM **déjà mis à jour**, utilisez `flush: 'post'` ou `watchPostEffect`.
 
-### 4.7 `watchEffect()`
+## `watchEffect()`
 
 `watchEffect()` exécute **immédiatement** une fonction et **suit automatiquement** toutes les dépendances réactives lues **de façon synchrone**.
 
@@ -1167,9 +1149,9 @@ Variantes : `watchPostEffect(fn)` équivaut à `watchEffect(fn, { flush: 'post' 
 
 > **Seules les dépendances lues avant le premier `await`** sont suivies dans un `watchEffect` asynchrone. Lisez tous les états nécessaires au début de la fonction.
 
-### 4.8 Utilitaires de réactivité
+## Utilitaires de réactivité
 
-#### Conversions et lecture
+### Conversions et lecture
 
 | API | Description |
 | --- | --- |
@@ -1187,7 +1169,7 @@ const { foo, bar } = toRefs(etat)    // refs liés : la réactivité est conserv
 foo.value++                          // etat.foo vaut maintenant 2
 ```
 
-#### Réactivité superficielle
+### Réactivité superficielle
 
 ```ts
 import { shallowRef, shallowReactive, triggerRef } from 'vue'
@@ -1202,9 +1184,9 @@ sr.a = { b: 2 }            // réactif
 sr.a.b++                   // non réactif
 ```
 
-Usage : **gros objets ou listes** traités de façon immuable, instances de classes externes, optimisation de performance (chapitre 23).
+Usage : **gros objets ou listes** traités de façon immuable, instances de classes externes, optimisation de performance (section « Performance »).
 
-#### Lecture seule
+### Lecture seule
 
 ```ts
 import { readonly, shallowReadonly } from 'vue'
@@ -1216,7 +1198,7 @@ copie.count++                  // avertissement en développement, ignoré
 
 Utile pour **exposer** un état sans permettre sa modification (depuis un composable, un store, un `provide`).
 
-#### Échapper à la réactivité
+### Échapper à la réactivité
 
 ```ts
 import { toRaw, markRaw } from 'vue'
@@ -1225,7 +1207,7 @@ const brut = toRaw(proxy)                  // l'objet d'origine
 const obj = markRaw({ lourd: 1 })          // ne sera jamais proxifié
 ```
 
-#### `customRef`
+### `customRef`
 
 `customRef()` crée un `ref` avec un **contrôle total** de `get` et `set` (via `track` et `trigger`).
 
@@ -1244,7 +1226,7 @@ export function useRefAntiRebond<T>(valeur: T, delai = 200) {
 }
 ```
 
-#### `effectScope`
+### `effectScope`
 
 `effectScope()` **regroupe** des effets (`computed`, `watch`…) pour les **arrêter ensemble**.
 
@@ -1262,7 +1244,7 @@ scope.stop()   // arrête tous les effets du scope et appelle onScopeDispose
 
 Usage avancé : bibliothèques, composables partagés (par exemple `createSharedComposable` de VueUse).
 
-### 4.9 `nextTick()`
+## `nextTick()`
 
 `nextTick()` attend que Vue ait **appliqué les modifications au DOM**.
 
@@ -1279,7 +1261,7 @@ async function incrementer() {
 }
 ```
 
-### 4.10 Références de gabarit (*template refs*)
+## Références de gabarit (*template refs*)
 
 Elles donnent un accès **direct** à un élément DOM ou à une instance de composant enfant.
 
@@ -1308,7 +1290,7 @@ onMounted(() => {
 - Avant le montage, après le démontage, ou si l'élément est masqué par `v-if`, la valeur est **`null`** : utilisez `?.`.
 - **`ref` dans un `v-for`** : la référence est un **tableau** d'éléments (l'ordre n'est pas garanti identique à celui de la source).
 - **Référence fonction** : `:ref="(el) => { … }"`, appelée au montage avec l'élément et au démontage avec `null`.
-- **Référence sur un composant** : donne l'instance publique. Dans `<script setup>`, ses membres ne sont **pas exposés** sauf via `defineExpose` (chapitre 10).
+- **Référence sur un composant** : donne l'instance publique. Dans `<script setup>`, ses membres ne sont **pas exposés** sauf via `defineExpose` (section « Composants »).
 
 ```vue
 <template>
@@ -1318,7 +1300,7 @@ onMounted(() => {
 
 > **Pourquoi `useTemplateRef` ?** Il découple le nom de la variable du nom de l'attribut, fonctionne avec les composables et permet un **typage** plus fiable que la convention d'homonymie.
 
-### 4.11 `useId()` *(ajout, 3.5)*
+## `useId()` *(ajout, 3.5)*
 
 `useId()` génère des **identifiants uniques et stables entre le serveur et le client** (utile pour `for` / `id` et `aria-*`).
 
@@ -1335,9 +1317,9 @@ const id = useId()
 </template>
 ```
 
-Chaque appel produit un identifiant distinct dans l'application, ce qui évite les collisions quand un composant est instancié plusieurs fois, et les **désaccords d'hydratation** en SSR (chapitre 24).
+Chaque appel produit un identifiant distinct dans l'application, ce qui évite les collisions quand un composant est instancié plusieurs fois, et les **désaccords d'hydratation** en SSR (section « Rendu côté serveur (SSR), génération statique (SSG) et Nuxt »).
 
-### 4.12 Cas particuliers
+## Cas particuliers
 
 - **Ajout de propriétés** à un objet réactif : fonctionne en Vue 3 (plus besoin de `Vue.set`).
 - **Tableaux** : toute modification par les méthodes (`push`, `splice`…) ou par **index** est réactive.
@@ -1345,7 +1327,7 @@ Chaque appel produit un identifiant distinct dans l'application, ce qui évite l
 - **Classes** : une instance de classe stockée dans un `ref` ou un `reactive` est proxifiée ; ses méthodes appelées via le proxy ont `this` égal au **proxy**. Utilisez `markRaw` pour l'éviter.
 - **Pertes de réactivité fréquentes** : déstructuration d'un `reactive`, remplacement d'un `reactive`, passage de valeurs primitives, lecture après `await` dans un `watchEffect`.
 
-### 4.13 Pièges fréquents
+## Pièges fréquents
 
 - Oublier `.value` dans le **script** (mais pas dans le gabarit).
 - Écrire `watch(etat.count, …)` au lieu de `watch(() => etat.count, …)`.
@@ -1356,23 +1338,17 @@ Chaque appel produit un identifiant distinct dans l'application, ce qui évite l
 - Muter un tableau ou un objet dans un `shallowRef` sans `triggerRef` ni remplacement.
 - Utiliser un `watch` pour **calculer** une valeur : c'est le rôle de `computed`.
 
-### Synthèse du chapitre 4
-
-`ref` (valeur + `.value`) et `reactive` (proxy d'objet) sont les deux primitives de la réactivité ; **`ref` par défaut**. **`computed`** est une dérivée mise en cache **sans effet de bord** ; **`watch`** réagit avec des sources explicites ; **`watchEffect`** suit automatiquement ses dépendances (lues avant tout `await`). `shallowRef`, `markRaw`, `readonly`, `customRef` et `effectScope` servent aux cas avancés. **`nextTick`** attend le DOM ; **`useTemplateRef`** donne accès au DOM ; **`useId`** produit des identifiants stables.
-
----
-
-## 5. Liaisons de classes et de styles
+# Liaisons de classes et de styles
 
 **Objectifs d'apprentissage.** Lier dynamiquement `class` et `style` avec les syntaxes **chaîne, objet et tableau** ; comprendre la **fusion** avec les classes statiques et celles du composant parent ; gérer les préfixes automatiques et les valeurs multiples ; utiliser les variables CSS ; typer `class` et `style` en TypeScript.
 
-### 5.1 Pourquoi une liaison spéciale ?
+## Pourquoi une liaison spéciale ?
 
 `class` et `style` sont des attributs **manipulés très fréquemment**. Vue les traite de façon particulière avec `v-bind:class` et `v-bind:style` (raccourcis `:class` et `:style`) : en plus des chaînes, ils acceptent des **objets** et des **tableaux**, ce qui évite de concaténer des chaînes à la main.
 
-### 5.2 Liaison de `class`
+## Liaison de `class`
 
-#### Syntaxe objet
+### Syntaxe objet
 
 Les **clés** sont les noms de classes, les **valeurs** sont des booléens (*truthy* ou *falsy*) qui activent la classe.
 
@@ -1401,7 +1377,7 @@ Résultat (si `actif` est vrai et `erreur` faux) : `<div class="statique actif">
 - L'objet peut être **en ligne**, un `ref` ou un `reactive`, ou une **propriété calculée** (recommandée dès que la logique se complexifie).
 - Les clés contenant un tiret doivent être **entre guillemets** : `{ 'text-danger': x }`.
 
-#### Syntaxe tableau
+### Syntaxe tableau
 
 ```vue
 <div :class="[classeA, classeB]"></div>
@@ -1409,7 +1385,7 @@ Résultat (si `actif` est vrai et `erreur` faux) : `<div class="statique actif">
 <div :class="[{ actif: estActif }, classeB]"></div>      <!-- un objet dans un tableau -->
 ```
 
-#### Sur un composant
+### Sur un composant
 
 Quand `class` est appliquée à un composant, elle est **ajoutée à l'élément racine** du composant (transfert d'attributs).
 
@@ -1422,11 +1398,11 @@ Quand `class` est appliquée à un composant, elle est **ajoutée à l'élément
 <!-- rendu : <p class="enfant ajoutee actif">Salut</p> -->
 ```
 
-Si le composant possède **plusieurs racines**, il faut lier explicitement `$attrs` (chapitre 10).
+Si le composant possède **plusieurs racines**, il faut lier explicitement `$attrs` (section « Composants »).
 
-### 5.3 Liaison de `style`
+## Liaison de `style`
 
-#### Syntaxe objet
+### Syntaxe objet
 
 Les propriétés CSS s'écrivent en **camelCase** ou en **kebab-case** (entre guillemets).
 
@@ -1446,7 +1422,7 @@ const styleObjet = reactive({ color: 'blue', fontSize: '20px' })
 </template>
 ```
 
-#### Syntaxe tableau
+### Syntaxe tableau
 
 Elle **fusionne** plusieurs objets de style ; les derniers l'emportent.
 
@@ -1454,11 +1430,11 @@ Elle **fusionne** plusieurs objets de style ; les derniers l'emportent.
 <div :style="[styleBase, styleSurcharge]"></div>
 ```
 
-#### Préfixes automatiques
+### Préfixes automatiques
 
 Vue ajoute **automatiquement** les préfixes de navigateur (`-webkit-`, etc.) quand cela est nécessaire.
 
-#### Valeurs multiples
+### Valeurs multiples
 
 Un tableau permet de fournir plusieurs valeurs de repli ; seule **la dernière valeur supportée** par le navigateur est utilisée.
 
@@ -1466,7 +1442,7 @@ Un tableau permet de fournir plusieurs valeurs de repli ; seule **la dernière v
 <div :style="{ display: ['-webkit-box', '-ms-flexbox', 'flex'] }"></div>
 ```
 
-#### Propriétés CSS personnalisées (variables CSS)
+### Propriétés CSS personnalisées (variables CSS)
 
 ```vue
 <div :style="{ '--couleur-principale': couleur }" class="carte"></div>
@@ -1478,7 +1454,7 @@ Un tableau permet de fournir plusieurs valeurs de repli ; seule **la dernière v
 
 C'est la technique recommandée pour thématiser un composant sans multiplier les classes.
 
-### 5.4 Typage TypeScript
+## Typage TypeScript
 
 ```ts
 import type { StyleValue, CSSProperties } from 'vue'
@@ -1490,24 +1466,18 @@ const sv: StyleValue = [style, { margin: 0 }]
 defineProps<{ class?: any; style?: StyleValue }>()
 ```
 
-### 5.5 Pièges fréquents
+## Pièges fréquents
 
 - Oublier les **guillemets** autour des clés avec tiret : `{ text-danger: x }` est invalide.
 - Fournir une valeur numérique **sans unité** : `fontSize: 30` n'est **pas** converti en `px`.
 - Utiliser des styles en ligne pour tout : préférez des **classes** et des variables CSS.
 - Écraser par inadvertance : avec plusieurs `class` sur un composant, vérifiez que la racine reçoit bien les classes.
 
-### Synthèse du chapitre 5
-
-`:class` et `:style` acceptent une **chaîne, un objet ou un tableau**. Les classes dynamiques sont **fusionnées** avec les classes statiques et celles du parent. Préférez une **propriété calculée** pour les classes complexes et les **variables CSS** pour le thème.
-
----
-
-## 6. Rendu conditionnel et listes
+# Rendu conditionnel et listes
 
 **Objectifs d'apprentissage.** Maîtriser `v-if`, `v-else-if`, `v-else` et `v-show` et savoir les choisir ; maîtriser `v-for` sur les tableaux, objets, plages, itérables, `<template>` et composants ; comprendre le rôle et les règles de **`key`** ; connaître la stratégie de mise à jour des listes ; détecter les changements de tableaux ; afficher des listes filtrées et triées sans muter l'état.
 
-### 6.1 `v-if`, `v-else-if` et `v-else`
+## `v-if`, `v-else-if` et `v-else`
 
 ```vue
 <script setup lang="ts">
@@ -1527,7 +1497,7 @@ const type = ref<'A' | 'B' | 'C'>('A')
 - Le bloc est **réellement ajouté ou retiré du DOM** ; les composants et écouteurs internes sont **détruits puis recréés** à chaque bascule.
 - `v-if` est **paresseux** : si la condition est fausse au premier rendu, **rien n'est rendu**.
 
-#### Groupe conditionnel avec `<template>`
+### Groupe conditionnel avec `<template>`
 
 ```vue
 <template v-if="connecte">
@@ -1538,7 +1508,7 @@ const type = ref<'A' | 'B' | 'C'>('A')
 
 L'élément `<template>` n'apparaît pas dans le DOM final.
 
-#### Forcer la réinitialisation avec `key`
+### Forcer la réinitialisation avec `key`
 
 Vue **réutilise** les éléments existants quand c'est possible. Dans l'exemple ci-dessous, passer de `email` à `mdp` conserverait le texte saisi. Pour forcer la **recréation**, donnez des `key` distinctes.
 
@@ -1547,7 +1517,7 @@ Vue **réutilise** les éléments existants quand c'est possible. Dans l'exemple
 <input v-else key="mdp" placeholder="Mot de passe" />
 ```
 
-### 6.2 `v-show`
+## `v-show`
 
 ```vue
 <h1 v-show="ok">Bonjour</h1>
@@ -1556,7 +1526,7 @@ Vue **réutilise** les éléments existants quand c'est possible. Dans l'exemple
 - Bascule la propriété CSS **`display`** : l'élément **reste dans le DOM**.
 - **Ne supporte pas** `<template>` ni `v-else`.
 
-#### Comparaison
+### Comparaison
 
 | | **`v-if`** | **`v-show`** |
 | --- | --- | --- |
@@ -1566,7 +1536,7 @@ Vue **réutilise** les éléments existants quand c'est possible. Dans l'exemple
 | Usage | Condition **rarement** modifiée | Bascule **fréquente** |
 | `<template>` et `v-else` | Oui | Non |
 
-### 6.3 `v-if` et `v-for` ensemble
+## `v-if` et `v-for` ensemble
 
 En Vue 3, **`v-if` a une priorité plus haute que `v-for`** : le `v-if` n'a donc **pas accès** à la variable de la boucle sur le même élément. Il est **déconseillé** de les combiner.
 
@@ -1585,9 +1555,9 @@ En Vue 3, **`v-if` a une priorité plus haute que `v-for`** : le `v-if` n'a donc
 
 > **Attention, changement par rapport à Vue 2.** Dans Vue 2, `v-for` avait la priorité sur `v-if`. Les anciens exemples qui combinent les deux sont à réécrire.
 
-### 6.4 `v-for` : listes
+## `v-for` : listes
 
-#### Tableaux
+### Tableaux
 
 ```vue
 <script setup lang="ts">
@@ -1610,7 +1580,7 @@ const items = ref<Item[]>([{ id: 1, message: 'A' }, { id: 2, message: 'B' }])
 
 La portée de la boucle est la même que celle des fonctions JavaScript : les variables `item` et `index` sont accessibles à l'intérieur du bloc. La **déstructuration** est possible : `v-for="{ id, message } in items"`.
 
-#### Objets
+### Objets
 
 L'ordre d'itération suit `Object.keys()`.
 
@@ -1620,13 +1590,13 @@ L'ordre d'itération suit `Object.keys()`.
 </li>
 ```
 
-#### Plage d'entiers
+### Plage d'entiers
 
 ```vue
 <span v-for="n in 10" :key="n">{{ n }}</span>     <!-- de 1 à 10 : la plage commence à 1 -->
 ```
 
-#### Sur un `<template>`
+### Sur un `<template>`
 
 ```vue
 <template v-for="item in items" :key="item.id">
@@ -1637,11 +1607,11 @@ L'ordre d'itération suit `Object.keys()`.
 
 La `key` se place alors sur le `<template>`, et non sur ses enfants.
 
-#### Itérables
+### Itérables
 
 `v-for` fonctionne avec tout **itérable** : `Map`, `Set`, générateurs, chaînes de caractères.
 
-#### Sur un composant
+### Sur un composant
 
 Les données ne sont **pas** injectées automatiquement dans le composant : il faut les passer par des **props**.
 
@@ -1655,24 +1625,24 @@ Les données ne sont **pas** injectées automatiquement dans le composant : il f
 />
 ```
 
-### 6.5 La directive `key`
+## La directive `key`
 
-#### Rôle
+### Rôle
 
 L'attribut spécial `key` aide l'algorithme de **comparaison** (*diffing*) à **identifier chaque nœud** pour le **réutiliser, le réordonner ou le retirer**, au lieu de tout modifier « sur place ».
 
-#### Règles
+### Règles
 
 - **Toujours** fournir une `key` dans un `v-for` (sauf si le contenu est trivial et que la réutilisation en place est voulue).
 - La clé doit être **unique parmi les frères**, **stable** dans le temps et de type **primitif** (`string`, `number` ou `symbol`).
 - **N'utilisez pas l'index** comme clé si la liste peut être **réordonnée, filtrée ou modifiée** (l'état local des éléments se retrouverait sur le mauvais item).
 - **N'utilisez pas un objet** comme clé.
 
-#### Stratégie de mise à jour « en place » (sans `key`)
+### Stratégie de mise à jour « en place » (sans `key`)
 
 Sans `key`, si l'ordre des données change, Vue **modifie chaque élément en place** plutôt que de déplacer les éléments du DOM. C'est efficace tant que le rendu ne dépend que des données ; mais l'**état local** des éléments (valeur d'un `<input>`, état d'un composant enfant) peut se retrouver **sur le mauvais item**.
 
-#### `key` hors `v-for`
+### `key` hors `v-for`
 
 `key` force aussi la **recréation** d'un composant (donc la réinitialisation de son état) quand sa valeur change :
 
@@ -1680,7 +1650,7 @@ Sans `key`, si l'ordre des données change, Vue **modifie chaque élément en pl
 <Formulaire :key="utilisateurId" />     <!-- recréé à chaque changement d'utilisateur -->
 ```
 
-### 6.6 Détection des changements d'un tableau
+## Détection des changements d'un tableau
 
 **Méthodes mutantes** (la modification est détectée) : `push`, `pop`, `shift`, `unshift`, `splice`, `sort`, `reverse`.
 
@@ -1692,7 +1662,7 @@ items.value = items.value.filter((i) => i.message.match(/A/))
 
 > Vue optimise le remplacement d'un tableau en **réutilisant au maximum** les éléments du DOM : remplacer un tableau entier est donc efficace. L'affectation par index (`items.value[0] = x`) est aussi réactive en Vue 3.
 
-### 6.7 Afficher des résultats filtrés ou triés
+## Afficher des résultats filtrés ou triés
 
 Utilisez une **propriété calculée** (ou une méthode si elle est paramétrée). Attention : `sort()` et `reverse()` **mutent** le tableau d'origine ; travaillez sur une **copie**.
 
@@ -1702,7 +1672,7 @@ const tries = computed(() => [...nombres.value].sort((a, b) => a - b))    // cop
 const tries2 = computed(() => nombres.value.toSorted((a, b) => a - b))    // ES2023, ne mute pas
 ```
 
-### 6.8 Pièges fréquents
+## Pièges fréquents
 
 - `v-for` **sans `key`** sur des listes ayant un état local.
 - `key` égale à l'**index** sur une liste modifiable.
@@ -1711,17 +1681,11 @@ const tries2 = computed(() => nombres.value.toSorted((a, b) => a - b))    // ES2
 - Penser que `v-for="n in 10"` démarre à 0 (il démarre à **1**).
 - Utiliser `v-show` avec `<template>` ou `v-else` : non supporté.
 
-### Synthèse du chapitre 6
-
-**`v-if`** ajoute ou retire réellement les éléments du DOM ; **`v-show`** ne change que `display`. **`v-for`** avec une **`key` unique et stable** donne des listes correctes et performantes. Ne combinez pas `v-if` et `v-for` sur le même élément. Filtrez et triez par des **propriétés calculées**, sur des copies.
-
----
-
-## 7. Gestion des événements
+# Gestion des événements
 
 **Objectifs d'apprentissage.** Écouter des événements DOM avec `v-on` / `@` ; distinguer gestionnaires en ligne et gestionnaires de méthode ; maîtriser les **modificateurs** d'événements, de touches et de souris ; typer les événements en TypeScript ; connaître les bonnes pratiques de nettoyage d'écouteurs.
 
-### 7.1 `v-on` et `@`
+## `v-on` et `@`
 
 La directive `v-on` (raccourci `@`) écoute les événements DOM et exécute du JavaScript.
 
@@ -1741,7 +1705,7 @@ function saluer(event: MouseEvent) {
 </template>
 ```
 
-#### Deux types de gestionnaires
+### Deux types de gestionnaires
 
 | Type | Détection | Exemple |
 | --- | --- | --- |
@@ -1750,27 +1714,27 @@ function saluer(event: MouseEvent) {
 
 Un identifiant valide ou un chemin d'accès est traité comme une **méthode** (Vue lui passe l'événement natif) ; tout le reste est un gestionnaire **en ligne**.
 
-#### Accéder à l'événement natif
+### Accéder à l'événement natif
 
 ```vue
 <button @click="saluer('Bonjour', $event)">OK</button>
 <button @click="(e) => saluer('Salut', e)">OK</button>
 ```
 
-#### Plusieurs instructions
+### Plusieurs instructions
 
 ```vue
 <button @click="a(), b()">Les deux</button>
 ```
 
-#### Arguments dynamiques et écouteurs multiples
+### Arguments dynamiques et écouteurs multiples
 
 ```vue
 <button @[evenement]="gerer">…</button>
 <button v-on="{ mousedown: onDown, mouseup: onUp }"></button>
 ```
 
-### 7.2 Modificateurs d'événements
+## Modificateurs d'événements
 
 Les modificateurs évitent d'écrire `event.preventDefault()` et consorts dans les méthodes, qui restent ainsi **pures** (centrées sur la logique, sans détails DOM).
 
@@ -1792,7 +1756,7 @@ Les modificateurs évitent d'écrire `event.preventDefault()` et consorts dans l
 
 > **L'ordre compte.** `@click.prevent.self` empêche le comportement par défaut de **tous** les clics ; `@click.self.prevent` seulement de ceux qui ont lieu sur l'élément lui-même.
 
-### 7.3 Modificateurs de touches
+## Modificateurs de touches
 
 ```vue
 <input @keyup.enter="soumettre" />
@@ -1801,7 +1765,7 @@ Les modificateurs évitent d'écrire `event.preventDefault()` et consorts dans l
 
 Alias fournis : `.enter`, `.tab`, `.delete` (couvre Suppr et Retour arrière), `.esc`, `.space`, `.up`, `.down`, `.left`, `.right`. Toute valeur de `KeyboardEvent.key` écrite en **kebab-case** peut servir de modificateur (`.page-down`, `.caps-lock`).
 
-#### Touches système
+### Touches système
 
 `.ctrl`, `.alt`, `.shift`, `.meta` (Cmd sur Mac, Windows sur PC).
 
@@ -1810,7 +1774,7 @@ Alias fournis : `.enter`, `.tab`, `.delete` (couvre Suppr et Retour arrière), `
 <div @click.ctrl="faireQuelqueChose">Ctrl + clic</div>
 ```
 
-#### `.exact`
+### `.exact`
 
 `.exact` impose la combinaison **exacte** de touches système.
 
@@ -1819,19 +1783,19 @@ Alias fournis : `.enter`, `.tab`, `.delete` (couvre Suppr et Retour arrière), `
 <button @click.exact="aucuneTouche">Aucune touche système</button>
 ```
 
-### 7.4 Modificateurs de souris
+## Modificateurs de souris
 
 `.left`, `.right` et `.middle` restreignent le gestionnaire à un bouton précis de la souris.
 
-### 7.5 Événements de composants (rappel)
+## Événements de composants (rappel)
 
 ```vue
 <Enfant @changer="(valeur) => console.log(valeur)" />
 ```
 
-Les événements **personnalisés** s'émettent avec `emit` (chapitre 10). Les modificateurs `.once` fonctionnent aussi sur eux ; `.native` n'existe plus en Vue 3 (les écouteurs natifs non déclarés tombent dans `$attrs`).
+Les événements **personnalisés** s'émettent avec `emit` (section « Composants »). Les modificateurs `.once` fonctionnent aussi sur eux ; `.native` n'existe plus en Vue 3 (les écouteurs natifs non déclarés tombent dans `$attrs`).
 
-### 7.6 Typage TypeScript des événements
+## Typage TypeScript des événements
 
 ```ts
 function onInput(event: Event) {
@@ -1845,7 +1809,7 @@ function onSubmit(event: SubmitEvent) { /* … */ }
 
 > Dans un gestionnaire **en ligne**, `$event` est typé automatiquement. Dans une **fonction externe**, il faut **annoter** le paramètre.
 
-### 7.7 Bonnes pratiques
+## Bonnes pratiques
 
 - Gardez la logique **hors du gabarit** (méthodes nommées).
 - Préférez les **modificateurs** à `preventDefault()` manuel.
@@ -1866,24 +1830,18 @@ export function useEventListener<K extends keyof WindowEventMap>(
 }
 ```
 
-### 7.8 Pièges fréquents
+## Pièges fréquents
 
 - Oublier `.prevent` sur un `<form @submit>` : la page se recharge.
 - Écouter un événement natif (`@keyup.enter`) sur un **composant** qui n'émet pas cet événement ni ne le transmet à sa racine.
 - Combiner `.passive` et `.prevent` : conflit.
 - Appeler la méthode au lieu de la **référencer** : `@click="faire()"` est un gestionnaire en ligne qui l'appelle au clic (correct), mais `:onClick="faire()"` l'exécute au **rendu**.
 
-### Synthèse du chapitre 7
-
-`@evenement="gestionnaire"` accepte du code **en ligne** ou une **méthode**. Les modificateurs `.stop .prevent .self .capture .once .passive`, les modificateurs de **touches**, de **souris** et `.exact` couvrent les besoins courants. `$event` donne accès à l'événement natif ; typez-le dans les fonctions externes.
-
----
-
-## 8. Formulaires et `v-model`
+# Formulaires et `v-model`
 
 **Objectifs d'apprentissage.** Maîtriser `v-model` sur tous les types de champs ; comprendre son fonctionnement interne ; utiliser ses modificateurs ; créer des **composants compatibles `v-model`** avec `defineModel` (un ou plusieurs modèles, modificateurs personnalisés) ; concevoir validation et soumission ; connaître les cas particuliers (fichiers, composition IME).
 
-### 8.1 Principe de `v-model`
+## Principe de `v-model`
 
 `v-model` crée une **liaison bidirectionnelle** entre un champ de formulaire (ou un composant) et une donnée. C'est un **sucre syntaxique** pour la combinaison d'une liaison de valeur et d'un écouteur d'événement.
 
@@ -1901,9 +1859,9 @@ export function useEventListener<K extends keyof WindowEventMap>(
 | `<input type="checkbox">`, `<input type="radio">` | `checked` | `change` |
 | `<select>` | `value` | `change` |
 
-### 8.2 Types de champs
+## Types de champs
 
-#### Texte
+### Texte
 
 ```vue
 <input v-model="message" />
@@ -1912,7 +1870,7 @@ export function useEventListener<K extends keyof WindowEventMap>(
 
 > **Composition IME** (chinois, japonais, coréen). Pendant la composition d'un caractère, `v-model` **attend la fin** de celle-ci avant de mettre à jour la donnée. Pour réagir pendant la composition, utilisez `:value` avec `@input`.
 
-#### Case à cocher
+### Case à cocher
 
 ```vue
 <input type="checkbox" v-model="coche" />                                      <!-- booléen -->
@@ -1923,14 +1881,14 @@ export function useEventListener<K extends keyof WindowEventMap>(
 <input type="checkbox" value="B" v-model="choix" />      <!-- choix : ref<string[]>([]) -->
 ```
 
-#### Boutons radio
+### Boutons radio
 
 ```vue
 <input type="radio" value="Un" v-model="selection" />
 <input type="radio" value="Deux" v-model="selection" />
 ```
 
-#### Liste déroulante
+### Liste déroulante
 
 ```vue
 <select v-model="option">
@@ -1944,14 +1902,14 @@ export function useEventListener<K extends keyof WindowEventMap>(
 
 > Avec `v-model` sur un `<select>`, si la valeur initiale ne correspond à aucune option, le `<select>` est rendu dans un état « non sélectionné » : sur iOS, l'utilisateur ne peut alors pas choisir. Fournissez une **première option désactivée** avec une valeur vide.
 
-#### Valeurs non textuelles avec `:value`
+### Valeurs non textuelles avec `:value`
 
 ```vue
 <input type="radio" v-model="choix" :value="{ id: 1 }" />
 <select v-model="obj"><option :value="{ id: 1 }">A</option></select>
 ```
 
-### 8.3 Modificateurs
+## Modificateurs
 
 | Modificateur | Effet |
 | --- | --- |
@@ -1965,9 +1923,9 @@ export function useEventListener<K extends keyof WindowEventMap>(
 <input v-model.trim="nom" />
 ```
 
-### 8.4 `v-model` sur un composant
+## `v-model` sur un composant
 
-#### Avec `defineModel()` *(à jour, 3.4)*
+### Avec `defineModel()` *(à jour, 3.4)*
 
 ```vue
 <!-- src/components/ChampTexte.vue -->
@@ -2000,7 +1958,7 @@ const nom = ref('')
 
 Si le parent n'utilise pas `v-model`, le `ref` retourné se comporte comme un état **local** (il garde sa propre valeur), ce qui rend le composant utilisable des deux manières.
 
-#### Options
+### Options
 
 ```ts
 const modele = defineModel<string>({ required: true })
@@ -2012,7 +1970,7 @@ const modele3 = defineModel<string>({
 })
 ```
 
-#### Plusieurs `v-model` (avec argument)
+### Plusieurs `v-model` (avec argument)
 
 ```vue
 <!-- Parent -->
@@ -2025,7 +1983,7 @@ const nom = defineModel<string>('nom')
 </script>
 ```
 
-#### Modificateurs personnalisés
+### Modificateurs personnalisés
 
 ```vue
 <ChampTexte v-model.capitalize="texte" />
@@ -2040,7 +1998,7 @@ const [valeur, modificateurs] = defineModel<string, 'capitalize'>({
 })
 ```
 
-#### Approche manuelle (équivalente, héritage de Vue 3.0 à 3.3)
+### Approche manuelle (équivalente, héritage de Vue 3.0 à 3.3)
 
 ```vue
 <script setup lang="ts">
@@ -2056,7 +2014,7 @@ const emit = defineEmits<{ 'update:modelValue': [valeur: string] }>()
 </template>
 ```
 
-#### Variante avec `computed`
+### Variante avec `computed`
 
 ```ts
 const valeur = computed({
@@ -2065,7 +2023,7 @@ const valeur = computed({
 })
 ```
 
-### 8.5 Validation et soumission
+## Validation et soumission
 
 ```vue
 <script setup lang="ts">
@@ -2106,14 +2064,14 @@ async function soumettre() {
 
 **Bibliothèques de validation** : **VeeValidate**, **FormKit**, **Vuelidate**, avec des schémas **Zod** ou **Valibot** pour un typage de bout en bout (le schéma produit à la fois la validation à l'exécution et le type TypeScript).
 
-### 8.6 Cas particuliers
+## Cas particuliers
 
 - **`<input type="file">`** : `v-model` n'est pas supporté ; utilisez `@change` et `event.target.files`.
 - **`<input type="range">`, `date`, `color`** : fonctionnent avec `v-model` (valeur sous forme de chaîne).
 - **Éléments personnalisés natifs** : `v-model` utilise par défaut `value` et `input`.
 - **`v-model` sur un `ref` de tableau ou d'objet** : la mutation interne est détectée ; pour une valeur non primitive dans un composant, préférez remplacer la valeur entière.
 
-### 8.7 Pièges fréquents
+## Pièges fréquents
 
 - `<textarea>{{ x }}</textarea>` ne crée aucune liaison : utilisez `v-model`.
 - Oublier `.number` pour récupérer des nombres.
@@ -2122,17 +2080,11 @@ async function soumettre() {
 - Initialiser un champ avec l'attribut HTML `value` : il est ignoré.
 - Valider uniquement côté client.
 
-### Synthèse du chapitre 8
-
-`v-model` équivaut à une liaison de valeur plus un écouteur d'événement, adaptés à chaque élément. Modificateurs : **`.lazy`**, **`.number`**, **`.trim`**. Pour les composants : **`defineModel()`** (prop + événement), **plusieurs `v-model:argument`**, modificateurs personnalisés. Validez avec des propriétés calculées ou des schémas **Zod** / **Valibot**, et **toujours aussi côté serveur**.
-
----
-
-## 9. Cycle de vie
+# Cycle de vie
 
 **Objectifs d'apprentissage.** Connaître les phases de vie d'un composant et leurs **hooks** ; savoir où placer chaque type de logique (initialisation, accès au DOM, nettoyage) ; enregistrer correctement les hooks (y compris dans un composable) ; comprendre l'ordre parent / enfants ; gérer les erreurs avec `onErrorCaptured` ; utiliser `onActivated` et `onDeactivated` avec `KeepAlive`.
 
-### 9.1 Vue d'ensemble
+## Vue d'ensemble
 
 Chaque composant passe par quatre grandes étapes : **création → montage → mises à jour → démontage**. Vue offre des **hooks** (fonctions de rappel) pour exécuter du code à chacune de ces étapes.
 
@@ -2155,7 +2107,7 @@ setup()  /  <script setup>
 
 Dans `<script setup>`, le **code de premier niveau** remplace les hooks `beforeCreate` et `created` de l'Options API : il s'exécute à la création de l'instance.
 
-### 9.2 Les hooks
+## Les hooks
 
 | Hook | Moment | Usage typique |
 | --- | --- | --- |
@@ -2172,9 +2124,9 @@ Dans `<script setup>`, le **code de premier niveau** remplace les hooks `beforeC
 | `onActivated` / `onDeactivated` | Composant mis en cache par `<KeepAlive>` | Reprendre ou suspendre une activité |
 | `onServerPrefetch` | **SSR uniquement** | Précharger des données côté serveur |
 
-> **En SSR**, `onBeforeMount`, `onMounted`, `onBeforeUpdate`, `onUpdated`, `onBeforeUnmount` et `onUnmounted` ne s'exécutent **pas** côté serveur. Tout code qui touche au navigateur doit donc se trouver dans `onMounted` (chapitre 24).
+> **En SSR**, `onBeforeMount`, `onMounted`, `onBeforeUpdate`, `onUpdated`, `onBeforeUnmount` et `onUnmounted` ne s'exécutent **pas** côté serveur. Tout code qui touche au navigateur doit donc se trouver dans `onMounted` (section « Rendu côté serveur (SSR), génération statique (SSG) et Nuxt »).
 
-### 9.3 Utilisation
+## Utilisation
 
 ```vue
 <script setup lang="ts">
@@ -2197,13 +2149,13 @@ onUnmounted(() => {
 </script>
 ```
 
-#### Règles d'enregistrement
+### Règles d'enregistrement
 
 - Les hooks doivent être appelés **de façon synchrone** pendant l'exécution de `setup()` (ou d'un composable appelé depuis `setup()`).
 - Ils sont **liés à l'instance courante**. Appelés après un `await` dans un `setup()` classique, ils **ne fonctionnent pas** ; dans `<script setup>`, le compilateur restaure le contexte après un `await` de premier niveau.
 - On peut déclarer **plusieurs fois** le même hook : ils s'exécutent dans l'ordre de déclaration.
 
-### 9.4 Ordre entre parent et enfants
+## Ordre entre parent et enfants
 
 **Montage** : le parent exécute `setup` et `onBeforeMount`, puis chaque enfant fait de même, puis les `onMounted` des enfants s'exécutent **avant** celui du parent.
 
@@ -2217,7 +2169,7 @@ Autrement dit, quand `onMounted` du parent s'exécute, **tout l'arbre est monté
 
 **Démontage** : `beforeUnmount` du parent, puis `beforeUnmount` des enfants, puis `unmounted` des enfants, puis `unmounted` du parent.
 
-### 9.5 `onErrorCaptured`
+## `onErrorCaptured`
 
 ```ts
 import { onErrorCaptured } from 'vue'
@@ -2228,9 +2180,9 @@ onErrorCaptured((err, instance, info) => {
 })
 ```
 
-Le hook capture les erreurs de **rendu**, de **hooks**, d'**observateurs** et de **gestionnaires d'événements** des composants **descendants**. Sans retour `false`, l'erreur continue de remonter jusqu'au gestionnaire global `app.config.errorHandler` (chapitre 15). Il permet de construire une **frontière d'erreur** qui affiche un message de repli.
+Le hook capture les erreurs de **rendu**, de **hooks**, d'**observateurs** et de **gestionnaires d'événements** des composants **descendants**. Sans retour `false`, l'erreur continue de remonter jusqu'au gestionnaire global `app.config.errorHandler` (section « Plugins »). Il permet de construire une **frontière d'erreur** qui affiche un message de repli.
 
-### 9.6 `<KeepAlive>` : activation et désactivation
+## `<KeepAlive>` : activation et désactivation
 
 ```ts
 import { onActivated, onDeactivated } from 'vue'
@@ -2241,7 +2193,7 @@ onDeactivated(() => { /* composant mis en cache (aussi appelé au démontage) */
 
 Dans un composant mis en cache, `onMounted` ne se déclenche **qu'une fois** ; utilisez `onActivated` pour actualiser les données à chaque retour sur la vue.
 
-### 9.7 Où placer quoi ? Guide pratique
+## Où placer quoi ? Guide pratique
 
 | Besoin | Où |
 | --- | --- |
@@ -2252,7 +2204,7 @@ Dans un composant mis en cache, `onMounted` ne se déclenche **qu'une fois** ; u
 | Écouteurs globaux | `onMounted` / `onUnmounted` |
 | Minuteurs (`setInterval`) | Démarrage dans `onMounted`, `clearInterval` dans `onUnmounted` |
 
-### 9.8 Pièges fréquents
+## Pièges fréquents
 
 - Accéder au DOM dans `<script setup>` (premier niveau) : le DOM n'existe pas encore.
 - Oublier de **nettoyer** : fuites de mémoire et écouteurs en double.
@@ -2261,19 +2213,11 @@ Dans un composant mis en cache, `onMounted` ne se déclenche **qu'une fois** ; u
 - Supposer que `onMounted` s'exécute côté serveur.
 - Attendre que `onMounted` s'exécute à chaque affichage d'un composant mis en cache par `KeepAlive`.
 
-### Synthèse du chapitre 9
-
-`setup` équivaut à `beforeCreate` plus `created`. **`onMounted`** signifie « DOM prêt » ; **`onUnmounted`** sert au **nettoyage**. Les hooks s'enregistrent **de façon synchrone** pendant `setup`. Les enfants sont montés **avant** le parent. `onErrorCaptured` capture les erreurs des descendants ; `onActivated` et `onDeactivated` gèrent le cache de `KeepAlive`.
-
----
-
-# Partie II — Composants et réutilisation
-
-## 10. Composants
+# Composants
 
 **Objectifs d'apprentissage.** Définir, enregistrer et utiliser des composants ; maîtriser les **props** (déclaration par types, valeurs par défaut, déstructuration réactive, validation, flux unidirectionnel), les **événements** (`defineEmits`), `defineExpose`, `defineOptions` et `defineSlots` ; comprendre le **transfert d'attributs** (`$attrs`) ; utiliser les composants **dynamiques**, **asynchrones**, **génériques**, **fonctionnels**, **récursifs** et les éléments personnalisés ; choisir le bon mode de communication entre composants.
 
-### 10.1 Définition et philosophie
+## Définition et philosophie
 
 Un **composant** est une unité d'interface **réutilisable** qui encapsule structure, comportement et style. Il reçoit des **entrées** (props, slots) et produit des **sorties** (événements, valeurs exposées).
 
@@ -2285,16 +2229,16 @@ Un **composant** est une unité d'interface **réutilisable** qui encapsule stru
 
 **Principe fondamental : « props vers le bas, événements vers le haut ».** Les données descendent (parent vers enfant), les événements remontent (enfant vers parent). Un composant ne modifie **jamais** directement les données de son parent.
 
-#### Conventions de nommage
+### Conventions de nommage
 
 - Fichiers : **PascalCase** (`CarteUtilisateur.vue`) ou kebab-case (`carte-utilisateur.vue`) ; restez **cohérent**.
 - Composants **multi-mots** (`TodoItem`, pas `Item`) pour éviter les collisions avec les éléments HTML existants et futurs.
 - Dans le gabarit : PascalCase (`<CarteUtilisateur />`) ou kebab-case (`<carte-utilisateur>`) ; **PascalCase recommandé** dans les SFC.
 - Composants **de base** (présentation, sans état global) : préfixe `Base`, `App` ou `V` (`BaseButton`) ; composants **uniques** (une seule instance par page) : préfixe `The` (`TheHeader`) ; composants **étroitement couplés** : nom du parent en préfixe (`TodoListItem`).
 
-### 10.2 Enregistrement des composants
+## Enregistrement des composants
 
-#### Local *(recommandé)*
+### Local *(recommandé)*
 
 ```vue
 <script setup lang="ts">
@@ -2304,7 +2248,7 @@ import CarteUtilisateur from './CarteUtilisateur.vue'   // disponible dans le ga
 <template><CarteUtilisateur /></template>
 ```
 
-#### Global
+### Global
 
 ```ts
 // src/main.ts
@@ -2320,14 +2264,14 @@ app.component('BaseButton', BaseButton)      // disponible dans tous les gabarit
 | --- | --- | --- |
 | Élimination du code inutilisé (*tree-shaking*) | Oui | Non |
 | Dépendances explicites | Oui | Non |
-| Typage | Automatique | Nécessite `GlobalComponents` (chapitre 19) |
+| Typage | Automatique | Nécessite `GlobalComponents` (section « TypeScript avancé avec Vue ») |
 | Usage | Par défaut | Composants vraiment omniprésents |
 
-### 10.3 Props
+## Props
 
 Une **prop** est un attribut personnalisé qu'un composant déclare pour **recevoir des données** de son parent.
 
-#### Déclaration par types *(recommandée)*
+### Déclaration par types *(recommandée)*
 
 ```vue
 <!-- src/components/CarteArticle.vue -->
@@ -2347,7 +2291,7 @@ const props = defineProps<Props>()
 
 Le compilateur lit le type pour **générer la déclaration d'exécution** des props. Les types importés depuis un autre fichier sont supportés, tant qu'ils sont **analysables statiquement** (types simples, unions, intersections, `Pick`, `Omit`, `Partial`) ; certains types conditionnels complexes ne le sont pas.
 
-#### Valeurs par défaut
+### Valeurs par défaut
 
 **Avec `withDefaults`** :
 
@@ -2368,7 +2312,7 @@ const { titre, compteur = 0, tags = [] } = defineProps<Props>()
 
 > **Dans un `watch` ou un composable**, une prop déstructurée doit être passée **dans un getter** : `watch(() => compteur, …)` ou `useTruc(() => compteur)`. Passer `compteur` directement transmettrait une valeur figée.
 
-#### Déclaration à l'exécution (*runtime*)
+### Déclaration à l'exécution (*runtime*)
 
 ```ts
 import type { PropType } from 'vue'
@@ -2386,12 +2330,12 @@ const props = defineProps({
 
 Options : `type` (`String`, `Number`, `Boolean`, `Array`, `Object`, `Date`, `Function`, `Symbol`, une classe, ou un tableau de types), `required`, `default`, `validator`. Utilisez cette forme dans une bibliothèque qui doit contrôler finement les types à l'exécution ; pour une application, la déclaration par types est plus simple.
 
-#### Casse
+### Casse
 
 - **Déclaration** : camelCase (`titreArticle`).
 - **Utilisation dans le gabarit** : kebab-case (`titre-article`) ou camelCase ; les deux fonctionnent en SFC.
 
-#### Passage de valeurs
+### Passage de valeurs
 
 ```vue
 <Article titre="Bonjour" />                    <!-- chaîne statique -->
@@ -2402,7 +2346,7 @@ Options : `type` (`String`, `Number`, `Boolean`, `Array`, `Object`, `Date`, `Fun
 
 > **Piège.** `compteur="42"` (sans deux-points) passe la **chaîne** `"42"`, pas le nombre.
 
-#### Cast des booléens
+### Cast des booléens
 
 ```vue
 <Bouton disabled />              <!-- disabled vaut true -->
@@ -2411,7 +2355,7 @@ Options : `type` (`String`, `Number`, `Boolean`, `Array`, `Object`, `Date`, `Fun
 
 Si la prop est déclarée de type `Boolean`, un attribut sans valeur ou avec une chaîne vide vaut **`true`**, et son **absence** vaut **`false`** (même si elle est optionnelle).
 
-#### Flux de données unidirectionnel
+### Flux de données unidirectionnel
 
 **Ne modifiez jamais une prop** : Vue affiche un avertissement en développement. Deux situations courantes et leur solution :
 
@@ -2425,11 +2369,11 @@ const majuscules = computed(() => props.titre.toUpperCase())
 
 > Les props **objets et tableaux** sont passées **par référence** : modifier `props.objet.x` ne déclenche **pas** d'avertissement, mais viole le flux de données et rend le code difficile à suivre. À éviter ; émettez un événement ou utilisez `defineModel`.
 
-#### Validation
+### Validation
 
 Les erreurs de validation des props (type incorrect, prop requise absente, `validator` négatif) produisent des **avertissements en développement uniquement**.
 
-### 10.4 Événements (`defineEmits`)
+## Événements (`defineEmits`)
 
 ```vue
 <script setup lang="ts">
@@ -2452,14 +2396,14 @@ function valider() { emit('changer', 42) }
 <Enfant @changer="(v) => console.log(v)" @fermer="ouvert = false" />
 ```
 
-#### Règles
+### Règles
 
 - Les noms d'événements sont **sensibles à la casse**. Convention : **camelCase** à l'émission, **kebab-case** à l'écoute (`@ma-valeur`) ; les deux fonctionnent avec `@`.
 - **Déclarez** les événements : cela documente le composant, active le typage et **exclut** ces écouteurs du transfert d'attributs (`$attrs`).
 - Les événements de composants **ne remontent pas** (pas de propagation en bulle) : seul le parent **direct** les reçoit. Pour une communication à distance : `provide` / `inject`, store ou bus d'événements externe.
 - Nommez les événements par un **verbe ou un fait** (`soumettre`, `selection-change`) ; la convention `update:xxx` est réservée à `v-model`.
 
-#### Validation à l'exécution
+### Validation à l'exécution
 
 ```ts
 const emit = defineEmits({
@@ -2467,13 +2411,13 @@ const emit = defineEmits({
 })
 ```
 
-#### Dans un `<script>` classique (Options API)
+### Dans un `<script>` classique (Options API)
 
 ```ts
 this.$emit('changer', valeur)
 ```
 
-### 10.5 `defineExpose`
+## `defineExpose`
 
 Dans `<script setup>`, un composant est **fermé par défaut** : une référence de gabarit côté parent **ne voit rien** de ses variables. Pour exposer explicitement une API publique :
 
@@ -2504,7 +2448,7 @@ function go() { compteur.value?.reinitialiser() }
 
 > À utiliser **avec parcimonie** : le modèle **props / événements** reste préférable ; l'exposition crée un couplage **impératif** (le parent « commande » l'enfant). Cas légitimes : `focus()` sur un champ, ouverture d'une modale, lecteur multimédia.
 
-### 10.6 `defineOptions` et `defineSlots`
+## `defineOptions` et `defineSlots`
 
 ```vue
 <script setup lang="ts">
@@ -2522,7 +2466,7 @@ defineSlots<{
 
 `defineSlots` ne produit **aucun code d'exécution** : il sert uniquement au **typage** (autocomplétion et vérification des variables de slot côté parent).
 
-### 10.7 Transfert d'attributs (`$attrs`)
+## Transfert d'attributs (`$attrs`)
 
 Les **attributs** et **écouteurs** passés à un composant mais **non déclarés** comme `props` ou `emits` sont **automatiquement appliqués à l'élément racine** : c'est le *fallthrough*.
 
@@ -2535,13 +2479,13 @@ Les **attributs** et **écouteurs** passés à un composant mais **non déclaré
 <!-- rendu : <button class="btn large" id="b1" …> : classes fusionnées, écouteur attaché -->
 ```
 
-#### Règles de fusion
+### Règles de fusion
 
 - `class` et `style` sont **fusionnés**.
 - Les autres attributs sont **écrasés** par la valeur du parent.
 - Les écouteurs d'un même événement sont **chaînés** (les deux s'exécutent).
 
-#### Désactiver et cibler manuellement
+### Désactiver et cibler manuellement
 
 ```vue
 <script setup lang="ts">
@@ -2555,7 +2499,7 @@ defineOptions({ inheritAttrs: false })
 </template>
 ```
 
-#### Accès depuis le script
+### Accès depuis le script
 
 ```ts
 import { useAttrs } from 'vue'
@@ -2563,11 +2507,11 @@ import { useAttrs } from 'vue'
 const attrs = useAttrs()     // non réactif : valeurs à jour à chaque rendu, mais non observables par watch
 ```
 
-#### Racines multiples
+### Racines multiples
 
 Un composant à **plusieurs racines** n'a **pas** de transfert automatique : Vue avertit tant que `$attrs` n'est pas lié explicitement (`<header v-bind="$attrs">`).
 
-### 10.8 Composants dynamiques
+## Composants dynamiques
 
 ```vue
 <script setup lang="ts">
@@ -2585,11 +2529,11 @@ const courant = shallowRef(A)      // shallowRef : évite de rendre le composant
 </template>
 ```
 
-- Associé à **`<KeepAlive>`**, il conserve l'état des vues désactivées (chapitre 16).
+- Associé à **`<KeepAlive>`**, il conserve l'état des vues désactivées (section « Composants intégrés »).
 - Évitez de rendre un composant **réactif** (avec `ref`) : utilisez `shallowRef` ou `markRaw`.
 - `:is` accepte aussi le **nom** d'un composant enregistré (`resolveComponent`) ou une chaîne désignant un élément HTML.
 
-### 10.9 Composants asynchrones
+## Composants asynchrones
 
 ```ts
 import { defineAsyncComponent } from 'vue'
@@ -2606,9 +2550,9 @@ const AvecEtats = defineAsyncComponent({
 })
 ```
 
-Un composant asynchrone permet le **découpage du code** (*code splitting*) : son code n'est téléchargé qu'au moment de son premier affichage. Il s'associe à **`<Suspense>`** pour gérer les dépendances asynchrones (chapitre 16) et aux **stratégies d'hydratation paresseuse** (chapitre 24).
+Un composant asynchrone permet le **découpage du code** (*code splitting*) : son code n'est téléchargé qu'au moment de son premier affichage. Il s'associe à **`<Suspense>`** pour gérer les dépendances asynchrones (section « Composants intégrés ») et aux **stratégies d'hydratation paresseuse** (section « Rendu côté serveur (SSR), génération statique (SSG) et Nuxt »).
 
-### 10.10 Composants génériques *(ajout, 3.3)*
+## Composants génériques *(ajout, 3.3)*
 
 ```vue
 <!-- src/components/ListeSelectionnable.vue -->
@@ -2630,7 +2574,7 @@ Le type `T` est **inféré à l'utilisation**, avec autocomplétion et vérifica
 
 L'attribut `generic` accepte plusieurs paramètres séparés par des virgules et les mêmes contraintes `extends` que TypeScript.
 
-### 10.11 Composants fonctionnels
+## Composants fonctionnels
 
 Un **composant fonctionnel** est une fonction pure qui reçoit `props` et un contexte (`attrs`, `slots`, `emit`) et retourne des nœuds virtuels. Il n'a **ni état propre ni cycle de vie**.
 
@@ -2646,9 +2590,9 @@ Titre.props = ['niveau']
 Titre.emits = ['clic']
 ```
 
-Sans déclaration de `props`, **tous** les attributs sont transmis comme `props`. Les composants fonctionnels sont rarement utiles dans une application ; ils servent surtout dans des bibliothèques (chapitre 21).
+Sans déclaration de `props`, **tous** les attributs sont transmis comme `props`. Les composants fonctionnels sont rarement utiles dans une application ; ils servent surtout dans des bibliothèques (section « Fonctions de rendu et JSX »).
 
-### 10.12 Composants récursifs
+## Composants récursifs
 
 Un SFC peut **s'appeler lui-même** par le nom de son fichier (ou son option `name`).
 
@@ -2671,7 +2615,7 @@ defineProps<{ noeud: Noeud }>()
 
 Prévoyez toujours une **condition d'arrêt** (ici `v-if`), sous peine de récursion infinie.
 
-### 10.13 Éléments personnalisés (*Web Components*)
+## Éléments personnalisés (*Web Components*)
 
 ```ts
 import { defineCustomElement } from 'vue'
@@ -2683,17 +2627,17 @@ customElements.define('mon-element', MonElement)
 
 Un composant Vue peut être exporté comme **élément personnalisé natif**, utilisable dans n'importe quel framework ou page HTML. Les props deviennent des propriétés et attributs, les événements émis des `CustomEvent`, les styles sont encapsulés dans un *shadow DOM*. Le fichier se nomme conventionnellement `.ce.vue` pour que ses styles soient injectés dans le shadow DOM.
 
-### 10.14 Communication entre composants : vue d'ensemble
+## Communication entre composants : vue d'ensemble
 
 | Direction / portée | Mécanisme |
 | --- | --- |
 | Parent vers enfant | **Props**, slots |
 | Enfant vers parent | **Événements (`emit`)**, `v-model` |
 | Parent vers enfant (impératif) | **Référence de gabarit + `defineExpose`** |
-| Ancêtre vers descendants | **`provide` / `inject`** (chapitre 12) |
+| Ancêtre vers descendants | **`provide` / `inject`** (section « Provide / Inject ») |
 | Global ou sans lien | **Store (Pinia)**, composable partagé, bus d'événements (bibliothèque) |
 
-### 10.15 Pièges fréquents
+## Pièges fréquents
 
 - **Modifier une prop**.
 - Donner pour valeur par défaut un **objet ou tableau** sans fonction de fabrique (`default: () => ({})`).
@@ -2703,17 +2647,11 @@ Un composant Vue peut être exporté comme **élément personnalisé natif**, ut
 - Mettre `inheritAttrs: false` sans lier `$attrs`.
 - Passer `:titre="'x'"` sans nécessité, ou oublier les deux-points pour un nombre.
 
-### Synthèse du chapitre 10
-
-**Props vers le bas, événements vers le haut.** `defineProps<T>()`, `defineEmits<T>()` et `defineModel<T>()` offrent une API **typée**. `$attrs` transmet attributs et écouteurs non déclarés à la racine. Les composants **génériques**, **asynchrones**, **dynamiques** et **fonctionnels** couvrent les cas avancés ; `defineExpose` reste une exception à utiliser avec parcimonie.
-
----
-
-## 11. Slots
+# Slots
 
 **Objectifs d'apprentissage.** Distribuer du contenu depuis le parent vers un composant enfant ; maîtriser les slots **par défaut**, **nommés**, **à portée** et **dynamiques** ; définir un **contenu de repli** ; tester l'existence d'un slot ; typer les slots avec `defineSlots` ; comprendre les composants sans rendu (*renderless*) et leurs usages.
 
-### 11.1 Définition
+## Définition
 
 Les **slots** (« emplacements ») permettent au **parent** de **passer du contenu de gabarit** (HTML, autres composants) à l'**enfant**, qui décide **où** l'afficher grâce à l'élément `<slot>`. Ils inversent le contrôle du rendu : le composant fournit la **structure**, le parent fournit le **contenu**.
 
@@ -2734,11 +2672,11 @@ Les props transmettent des **données** ; les slots transmettent du **balisage**
 <Carte />        <!-- affiche le contenu de repli -->
 ```
 
-#### Portée de compilation
+### Portée de compilation
 
-Le contenu d'un slot est défini **dans le parent** : il a accès à la portée **du parent**, **pas** à celle de l'enfant (sauf par les *props de slot*, section 11.5). Règle simple : **tout ce qui est dans le gabarit du parent est compilé dans la portée du parent**.
+Le contenu d'un slot est défini **dans le parent** : il a accès à la portée **du parent**, **pas** à celle de l'enfant (sauf par les *props de slot*, sous-section « Slots à portée (*scoped slots*) »). Règle simple : **tout ce qui est dans le gabarit du parent est compilé dans la portée du parent**.
 
-### 11.2 Slot par défaut et contenu de repli
+## Slot par défaut et contenu de repli
 
 Le contenu placé entre `<slot>` et `</slot>` est affiché **si aucun contenu n'est fourni** (*fallback content*).
 
@@ -2748,7 +2686,7 @@ Le contenu placé entre `<slot>` et `</slot>` est affiché **si aucun contenu n'
 
 Un slot avec contenu de repli rend le composant utilisable **sans configuration**, tout en restant personnalisable.
 
-### 11.3 Slots nommés
+## Slots nommés
 
 Un composant peut offrir **plusieurs emplacements** distingués par un attribut `name`.
 
@@ -2774,7 +2712,7 @@ Un composant peut offrir **plusieurs emplacements** distingués par un attribut 
 - **Évitez d'ambiguïté** : si vous utilisez des slots nommés, écrivez aussi `<template #default>` explicitement plutôt que de mélanger contenu libre et `<template #…>`. Utiliser `v-slot` directement sur le composant **et** sur des `<template>` imbriqués provoque une erreur de compilation.
 - Une même `<template #nom>` ne s'écrit **qu'une fois** par composant utilisé.
 
-### 11.4 Slots dynamiques
+## Slots dynamiques
 
 Le nom d'un slot peut être calculé :
 
@@ -2785,7 +2723,7 @@ Le nom d'un slot peut être calculé :
 
 Même contrainte que pour les arguments dynamiques de directives (chaîne, sans espaces).
 
-### 11.5 Slots à portée (*scoped slots*)
+## Slots à portée (*scoped slots*)
 
 L'enfant peut **passer des données** au contenu fourni par le parent, au moyen de **props de slot** (attributs placés sur `<slot>`).
 
@@ -2818,7 +2756,7 @@ defineProps<{ items: T[] }>()
 
 On peut voir un slot à portée comme une **fonction** : l'enfant l'appelle avec des arguments (les props de slot) et le parent fournit le corps qui produit du balisage.
 
-#### Slots nommés à portée
+### Slots nommés à portée
 
 ```vue
 <Carte>
@@ -2828,13 +2766,13 @@ On peut voir un slot à portée comme une **fonction** : l'enfant l'appelle avec
 
 > **`name` est un attribut réservé** de `<slot>` : ne l'utilisez pas comme nom de prop de slot.
 
-#### Déstructuration et valeurs par défaut
+### Déstructuration et valeurs par défaut
 
 ```vue
 <template #default="{ item = { nom: 'inconnu' } }">…</template>
 ```
 
-#### Composants sans rendu (*renderless*)
+### Composants sans rendu (*renderless*)
 
 Un composant *renderless* encapsule de la **logique** (état, comportement) et délègue **tout le rendu** au slot à portée.
 
@@ -2858,9 +2796,9 @@ onUnmounted(() => window.removeEventListener('mousemove', maj))
 <SuiviSouris v-slot="{ x, y }">Souris : {{ x }}, {{ y }}</SuiviSouris>
 ```
 
-Cette technique est aujourd'hui **largement remplacée par les composables** (chapitre 13), qui évitent le coût d'une instance de composant supplémentaire. Elle reste pertinente quand la logique est **étroitement liée** à un balisage (listes virtuelles, éléments de formulaire accessibles).
+Cette technique est aujourd'hui **largement remplacée par les composables** (section « Composables »), qui évitent le coût d'une instance de composant supplémentaire. Elle reste pertinente quand la logique est **étroitement liée** à un balisage (listes virtuelles, éléments de formulaire accessibles).
 
-### 11.6 Tester l'existence d'un slot
+## Tester l'existence d'un slot
 
 ```vue
 <script setup lang="ts">
@@ -2877,7 +2815,7 @@ const aEntete = !!slots.entete        // lecture ponctuelle : non réactive
 
 Utilisez `$slots` directement dans le gabarit : la présence est **réévaluée à chaque rendu**, alors qu'une constante calculée dans le script est figée. Cela évite d'afficher un conteneur vide (`<header></header>`) quand le parent ne fournit rien.
 
-### 11.7 Typage avec `defineSlots`
+## Typage avec `defineSlots`
 
 ```vue
 <script setup lang="ts" generic="T">
@@ -2893,7 +2831,7 @@ defineSlots<{
 
 Le parent bénéficie alors de la **vérification** et de l'**autocomplétion** des variables de slot ; les slots optionnels sont marqués par `?`. Pour les composants génériques, c'est la manière de lier le type `T` des props au type des variables de slot.
 
-### 11.8 Cas d'usage
+## Cas d'usage
 
 | Cas | Exemple |
 | --- | --- |
@@ -2903,7 +2841,7 @@ Le parent bénéficie alors de la **vérification** et de l'**autocomplétion** 
 | Composants de formulaire | Slots `label`, `erreur`, `aide` |
 | Listes avec états | Slots `vide`, `chargement`, `erreur` |
 
-### 11.9 Pièges fréquents
+## Pièges fréquents
 
 - Chercher à utiliser l'état de **l'enfant** dans un slot **sans** props de slot.
 - Mélanger `v-slot` sur le composant et sur des `<template>` imbriqués.
@@ -2912,17 +2850,11 @@ Le parent bénéficie alors de la **vérification** et de l'**autocomplétion** 
 - Passer des **données** par un slot alors qu'une simple prop suffirait.
 - Oublier que les styles `scoped` du parent s'appliquent bien au contenu du slot (il est compilé dans la portée du parent) mais que ceux de l'enfant ne l'atteignent pas sans `:slotted()`.
 
-### Synthèse du chapitre 11
-
-`<slot>` définit un **emplacement**, avec un **repli** s'il est vide. Les slots **nommés** (`#nom`) et **à portée** (`#nom="{ props }"`) permettent de multiplier les emplacements et de transmettre des données à contre-sens. Le contenu d'un slot est compilé dans la **portée du parent**. `defineSlots` sert au **typage**.
-
----
-
-## 12. Provide / Inject
+# Provide / Inject
 
 **Objectifs d'apprentissage.** Comprendre et éviter le *prop drilling* ; partager des données **réactives** et **typées** entre un ancêtre et ses descendants ; utiliser `InjectionKey` ; fournir au niveau de l'application ; connaître les bonnes pratiques, les limites et les alternatives (props, store).
 
-### 12.1 Le problème : le *prop drilling*
+## Le problème : le *prop drilling*
 
 Transmettre une donnée à un descendant **profond** par des props **intermédiaires** qui n'en ont pas l'usage alourdit le code et le rend fragile.
 
@@ -2932,7 +2864,7 @@ App → MiseEnPage → BarreLaterale → Menu → ElementMenu     (le thème n'e
 
 Chaque composant entre `App` et `ElementMenu` doit déclarer la prop `theme` et la retransmettre, uniquement pour qu'elle arrive à destination.
 
-### 12.2 `provide` et `inject`
+## `provide` et `inject`
 
 Un **ancêtre** *fournit* une valeur ; **n'importe quel descendant**, quelle que soit sa profondeur, peut l'*injecter*.
 
@@ -2954,16 +2886,16 @@ const theme2 = inject('theme', 'clair')          // valeur par défaut si rien n
 
 La recherche remonte l'**arbre des composants** jusqu'au premier ancêtre qui fournit la clé : un composant intermédiaire peut donc **redéfinir** la valeur pour son sous-arbre.
 
-#### Fournir au niveau de l'application
+### Fournir au niveau de l'application
 
 ```ts
 // src/main.ts
 app.provide('urlApi', 'https://api.exemple.com')       // disponible dans tous les composants
 ```
 
-C'est la méthode utilisée par les **plugins** pour exposer leurs services (chapitre 15).
+C'est la méthode utilisée par les **plugins** pour exposer leurs services (section « Plugins »).
 
-### 12.3 Réactivité
+## Réactivité
 
 Si la valeur fournie est un **`ref`** ou un **`reactive`**, elle reste **réactive** chez le consommateur.
 
@@ -2986,7 +2918,7 @@ import { inject, type Ref } from 'vue'
 const { theme, basculer } = inject('theme') as { theme: Readonly<Ref<string>>; basculer: () => void }
 ```
 
-### 12.4 Typage avec `InjectionKey`
+## Typage avec `InjectionKey`
 
 Une clé de type **`Symbol`** typée évite les collisions de noms et permet l'**inférence** automatique des types.
 
@@ -3010,13 +2942,13 @@ const ctx2 = inject(CleTheme, contexteParDefaut)   // ContexteTheme
 const ctx3 = inject(CleTheme)!                // assertion « non nul » : si la présence est garantie
 ```
 
-#### Valeur par défaut « fabrique »
+### Valeur par défaut « fabrique »
 
 ```ts
 const x = inject('cle', () => new ObjetCouteux(), true)   // 3e argument true : le 2e est une fabrique
 ```
 
-#### Injection obligatoire (schéma sûr)
+### Injection obligatoire (schéma sûr)
 
 ```ts
 // src/composables/useTheme.ts
@@ -3032,15 +2964,15 @@ export function useTheme(): ContexteTheme {
 
 Encapsuler `inject` dans un composable `useXxx` donne un **message d'erreur explicite** et supprime le type `undefined` chez tous les consommateurs.
 
-#### `hasInjectionContext()` *(3.3)*
+### `hasInjectionContext()` *(3.3)*
 
 Vérifie qu'un contexte d'injection existe. Utile aux **bibliothèques** dont les fonctions peuvent être appelées à l'intérieur ou à l'extérieur d'un composant.
 
-### 12.5 Contraintes d'appel
+## Contraintes d'appel
 
-`provide` et `inject` doivent être appelés **de façon synchrone** dans `setup()` (ou dans un composable appelé depuis `setup`). Hors composant, utilisez `app.runWithContext(() => inject(...))` (chapitre 15).
+`provide` et `inject` doivent être appelés **de façon synchrone** dans `setup()` (ou dans un composable appelé depuis `setup`). Hors composant, utilisez `app.runWithContext(() => inject(...))` (section « Plugins »).
 
-### 12.6 `provide` / `inject`, props ou store ?
+## `provide` / `inject`, props ou store ?
 
 | Critère | **Props** | **provide / inject** | **Pinia** |
 | --- | --- | --- | --- |
@@ -3049,13 +2981,13 @@ Vérifie qu'un contexte d'injection existe. Utile aux **bibliothèques** dont le
 | Couplage | Explicite | Implicite | Global |
 | Usage | Cas par défaut | Contexte d'un **sous-arbre** (thème, formulaire, i18n, composants composés) | État **global ou partagé** |
 
-#### Cas d'usage typiques
+### Cas d'usage typiques
 
 - **Composants composés** (*compound components*) : `Onglets` / `Onglet`, `Accordeon` / `ElementAccordeon`, `Formulaire` / `ChampFormulaire` coopèrent par un contexte partagé.
 - Thème, langue, configuration régionale.
 - Bibliothèques : le routeur, les stores et les outils d'internationalisation utilisent `inject` en interne.
 
-### 12.7 Pièges fréquents
+## Pièges fréquents
 
 - **Modifier** la valeur injectée depuis un **descendant** : la modification est difficile à tracer.
 - Utiliser des clés de type **chaîne** : risque de collision entre bibliothèques ; préférez `InjectionKey`.
@@ -3063,17 +2995,11 @@ Vérifie qu'un contexte d'injection existe. Utile aux **bibliothèques** dont le
 - Oublier la **valeur par défaut** : l'injection vaut `undefined` et provoque des erreurs tardives.
 - Fournir une valeur **non réactive** (`provide('x', unRef.value)`) et s'étonner qu'elle ne change pas.
 
-### Synthèse du chapitre 12
-
-`provide(clé, valeur)` et `inject(clé, défaut?)` partagent une donnée dans un **sous-arbre**, sans *prop drilling*. La valeur est réactive si c'est un `ref` ou un `reactive` ; **les modifications restent côté fournisseur**. **`InjectionKey<T>`** (un `Symbol`) assure le **typage** et évite les collisions ; encapsulez l'injection dans un composable.
-
----
-
-## 13. Composables
+# Composables
 
 **Objectifs d'apprentissage.** Définir et écrire des **composables** (logique à état réutilisable) ; appliquer les conventions et bonnes pratiques ; gérer les **arguments réactifs** (`MaybeRefOrGetter`, `toValue`), les effets de bord et le nettoyage ; choisir la valeur de retour ; partager un état entre composants ; comparer aux mixins, aux composants *renderless* et aux fonctions utilitaires ; tester un composable ; connaître VueUse.
 
-### 13.1 Définition
+## Définition
 
 Un **composable** est une **fonction** qui encapsule et réutilise une **logique à état** (*stateful logic*) en s'appuyant sur la **Composition API** : refs, propriétés calculées, observateurs, hooks de cycle de vie.
 
@@ -3083,14 +3009,14 @@ Un **composable** est une **fonction** qui encapsule et réutilise une **logique
 | Exemple | `formaterDate(d)`, `slugify(s)` | `useSouris()`, `useRequete(url)` |
 | Dépend de l'instance ? | Non | Souvent (hooks) |
 
-#### Conventions
+### Conventions
 
 - Nom en **camelCase** préfixé par **`use`** : `useSouris`, `useRequete`.
 - Fichier dans un dossier `composables/`, un composable par fichier.
 - Appelé **de façon synchrone** dans `setup()` / `<script setup>` ou dans un autre composable : les hooks ont besoin de l'**instance courante**.
 - Retourne un **objet de `ref`** (plutôt qu'un `reactive`) pour autoriser la **déstructuration sans perte de réactivité**.
 
-### 13.2 Exemple fondamental : `useSouris`
+## Exemple fondamental : `useSouris`
 
 ```ts
 // src/composables/useSouris.ts
@@ -3124,7 +3050,7 @@ const { x, y } = useSouris()
 
 **Chaque appel crée un état indépendant** : deux composants qui appellent `useSouris()` ont chacun leurs propres `x` et `y` et leurs propres écouteurs. Le composable regroupe **toute** la logique d'une préoccupation (état, effet, nettoyage) au même endroit.
 
-#### Composition de composables
+### Composition de composables
 
 Un composable peut en utiliser d'autres.
 
@@ -3143,7 +3069,7 @@ export function useSourisDansElement(el: Ref<HTMLElement | null>) {
 }
 ```
 
-### 13.3 Arguments réactifs : `toValue` et `MaybeRefOrGetter`
+## Arguments réactifs : `toValue` et `MaybeRefOrGetter`
 
 Un composable robuste accepte des **valeurs brutes, des refs ou des getters**, et **réagit** quand l'argument change.
 
@@ -3184,7 +3110,7 @@ const id = ref(1)
 const { data } = useRequete<Utilisateur>(() => `/api/users/${id.value}`)    // se relance quand `id` change
 ```
 
-#### Types utiles
+### Types utiles
 
 ```ts
 import type { MaybeRef, MaybeRefOrGetter, Ref } from 'vue'
@@ -3193,9 +3119,9 @@ import type { MaybeRef, MaybeRefOrGetter, Ref } from 'vue'
 // MaybeRefOrGetter<T> = T | Ref<T> | (() => T)
 ```
 
-`toValue()` normalise ces trois formes ; `unref()` ne gère pas les getters. Une prop déstructurée (chapitre 10) se passe aussi sous forme de getter.
+`toValue()` normalise ces trois formes ; `unref()` ne gère pas les getters. Une prop déstructurée (section « Composants ») se passe aussi sous forme de getter.
 
-### 13.4 Effets de bord et nettoyage
+## Effets de bord et nettoyage
 
 - **Toujours nettoyer** : `onUnmounted`, `onScopeDispose` ou `onCleanup`.
 - N'exécutez les effets qui touchent au **DOM** ou au navigateur que dans `onMounted`, afin que le composable soit utilisable en **SSR**.
@@ -3211,7 +3137,7 @@ export function useIntervalle(fn: () => void, ms: number) {
 
 `onScopeDispose` est plus général que `onUnmounted` : il fonctionne aussi hors composant (tests, composables partagés).
 
-### 13.5 Valeur de retour : `ref` ou `reactive` ?
+## Valeur de retour : `ref` ou `reactive` ?
 
 ```ts
 // Retour d'un objet de refs : déstructurable
@@ -3224,7 +3150,7 @@ souris.x          // déballé automatiquement
 
 Retournez des **`ref`** : l'appelant choisit librement entre déstructuration (avec renommage possible : `const { x: sourisX } = useSouris()`) et enveloppe `reactive`.
 
-### 13.6 Composables à état partagé
+## Composables à état partagé
 
 Un état déclaré **en dehors** de la fonction est un **singleton** partagé entre tous les composants qui l'importent.
 
@@ -3240,19 +3166,19 @@ export function useCompteurGlobal() {
 }
 ```
 
-> Pour de l'état global structuré, utilisez **Pinia** (chapitre 18) : traçabilité dans les DevTools, SSR sûr, tests. **Attention au SSR** : un état de niveau module est **partagé entre toutes les requêtes** du serveur, donc entre utilisateurs (fuite de données).
+> Pour de l'état global structuré, utilisez **Pinia** (section « Pinia (gestion d'état) ») : traçabilité dans les DevTools, SSR sûr, tests. **Attention au SSR** : un état de niveau module est **partagé entre toutes les requêtes** du serveur, donc entre utilisateurs (fuite de données).
 
-### 13.7 Composables asynchrones et `Suspense`
+## Composables asynchrones et `Suspense`
 
 Un composable ne doit pas faire d'`await` de premier niveau **avant** d'appeler des hooks : le contexte d'instance serait perdu. Préférez **retourner un état** (`chargement`, `data`, `erreur`) plutôt que de bloquer, comme dans `useRequete`.
 
-### 13.8 Restrictions d'usage
+## Restrictions d'usage
 
 - Appelés **uniquement** dans `<script setup>`, `setup()` ou un autre composable, et **de façon synchrone**.
 - Pas dans des boucles ni des conditions non déterministes : l'ordre des appels doit rester stable.
 - Un composable qui n'utilise **ni hook ni état** est probablement une simple fonction utilitaire.
 
-### 13.9 Comparaison avec d'autres techniques de réutilisation
+## Comparaison avec d'autres techniques de réutilisation
 
 | Technique | Problèmes ou avantages |
 | --- | --- |
@@ -3260,11 +3186,11 @@ Un composable ne doit pas faire d'`await` de premier niveau **avant** d'appeler 
 | **Composants *renderless*** | Surcoût d'une instance de composant, logique cachée dans le gabarit |
 | **Composables** | **Sources explicites**, pas de collision (renommage à la déstructuration), typage excellent, composables imbriquables |
 
-### 13.10 La bibliothèque VueUse
+## La bibliothèque VueUse
 
 **VueUse** est une collection de plus de 200 composables prêts à l'emploi : `useStorage`, `useDark`, `useDebounceFn`, `useIntersectionObserver`, `useFetch`, `useEventListener`, `useClipboard`, `useMagicKeys`, `useVModel`, `useTitle`, `useMediaQuery`… Elle est tree-shakable et compatible SSR. **Cherchez-y d'abord** avant de réécrire un composable courant.
 
-### 13.11 Tester un composable
+## Tester un composable
 
 - **Sans hooks ni injection** : appelez directement la fonction.
 - **Avec hooks ou injection** : montez-la dans un composant « hôte » éphémère.
@@ -3286,7 +3212,7 @@ export function avecSetup<T>(composable: () => T): [T, ReturnType<typeof createA
 }
 ```
 
-### 13.12 Pièges fréquents
+## Pièges fréquents
 
 - Retourner un `reactive` puis **le déstructurer**.
 - Lire un argument réactif **après** un `await` dans un `watchEffect`.
@@ -3295,17 +3221,11 @@ export function avecSetup<T>(composable: () => T): [T, ReturnType<typeof createA
 - Appeler un composable dans un callback ou après un `await`.
 - Écrire un composable monolithique qui mélange plusieurs préoccupations.
 
-### Synthèse du chapitre 13
-
-Un composable est une fonction `useXxx` qui retourne un **état réactif et des actions**. Acceptez **`MaybeRefOrGetter`** et lisez avec **`toValue`** ; **nettoyez** les effets ; **retournez des refs**. C'est l'alternative moderne aux mixins et aux composants *renderless* ; consultez **VueUse** avant de réinventer.
-
----
-
-## 14. Directives personnalisées
+# Directives personnalisées
 
 **Objectifs d'apprentissage.** Savoir quand recourir à une directive personnalisée plutôt qu'à un composant ou un composable ; maîtriser les **hooks** et leurs arguments (`el`, `binding`, `vnode`) ; utiliser la forme abrégée ; écrire des directives réelles (focus, clic extérieur) ; les enregistrer et les typer ; comprendre leur comportement avec le SSR et les fonctions de rendu.
 
-### 14.1 Définition et cas d'usage
+## Définition et cas d'usage
 
 Une **directive personnalisée** est un moyen de **réutiliser une logique de manipulation bas niveau du DOM** sur des éléments simples. Les composants et composables sont l'abstraction par défaut ; la directive est l'outil **précis** quand il faut agir directement sur un élément du DOM.
 
@@ -3313,7 +3233,7 @@ Une **directive personnalisée** est un moyen de **réutiliser une logique de ma
 - **À éviter** si le besoin peut s'exprimer **de façon déclarative** (props, composants, composables).
 - Les directives s'appliquent à des **éléments**. Sur un composant, elles s'appliquent à son **élément racine** ; sur un composant à racines multiples, Vue avertit et la directive est ignorée.
 
-### 14.2 Définition dans `<script setup>`
+## Définition dans `<script setup>`
 
 Toute variable locale nommée **`vNomDirective`** est utilisable dans le gabarit sous la forme `v-nom-directive`.
 
@@ -3329,7 +3249,7 @@ const vFocus = {
 </template>
 ```
 
-### 14.3 Hooks d'une directive
+## Hooks d'une directive
 
 ```ts
 import type { Directive } from 'vue'
@@ -3345,7 +3265,7 @@ const maDirective: Directive<HTMLElement, string> = {
 }
 ```
 
-#### Arguments des hooks
+### Arguments des hooks
 
 | Argument | Contenu |
 | --- | --- |
@@ -3354,7 +3274,7 @@ const maDirective: Directive<HTMLElement, string> = {
 | `vnode` | Nœud virtuel sous-jacent |
 | `prevVnode` | Nœud virtuel précédent (hooks `beforeUpdate` et `updated` uniquement) |
 
-#### L'objet `binding`
+### L'objet `binding`
 
 ```vue
 <div v-exemple:argument.mod1.mod2="valeur + 1"></div>
@@ -3373,7 +3293,7 @@ Les **arguments dynamiques** sont supportés : `v-exemple:[arg]="valeur"`.
 
 > **Règle.** `el` est **à vous** pour lire et modifier le DOM ; en revanche, **ne modifiez pas** les propriétés de `binding` (en lecture seule) et gardez les informations propres à l'élément dans un `WeakMap` ou dans une propriété de `el` (ne supposez jamais qu'une directive n'est utilisée qu'une fois).
 
-### 14.4 Forme abrégée
+## Forme abrégée
 
 Si l'on ne veut que `mounted` et `updated` avec **le même comportement**, une simple fonction suffit.
 
@@ -3383,7 +3303,7 @@ const vCouleur: Directive<HTMLElement, string> = (el, binding) => {
 }
 ```
 
-### 14.5 Exemple : clic extérieur
+## Exemple : clic extérieur
 
 ```ts
 // src/directives/clicExterieur.ts
@@ -3418,7 +3338,7 @@ function fermer() { /* … */ }
 <template><div v-clic-exterieur="fermer">Menu</div></template>
 ```
 
-### 14.6 Enregistrement global et typage
+## Enregistrement global et typage
 
 ```ts
 // src/main.ts
@@ -3436,7 +3356,7 @@ declare module 'vue' {
 export {}
 ```
 
-### 14.7 Directives et SSR
+## Directives et SSR
 
 Les hooks de directive qui manipulent le DOM **ne s'exécutent pas côté serveur**. Pour fournir des **propriétés** au rendu serveur, définissez `getSSRProps(binding, vnode)` dans la directive :
 
@@ -3446,7 +3366,7 @@ const vMonAttribut: Directive = {
 }
 ```
 
-### 14.8 Directives et fonctions de rendu
+## Directives et fonctions de rendu
 
 ```ts
 import { h, withDirectives, resolveDirective } from 'vue'
@@ -3460,7 +3380,7 @@ return withDirectives(h('div'), [
 ])
 ```
 
-### 14.9 Pièges fréquents
+## Pièges fréquents
 
 - Utiliser une directive pour de la logique **réalisable avec un composant ou un composable**.
 - Appliquer une directive à un **composant à racines multiples**.
@@ -3469,17 +3389,11 @@ return withDirectives(h('div'), [
 - Écrire dans l'état réactif Vue sans nécessité depuis une directive (elle doit travailler sur le DOM).
 - Se reposer sur une directive pour de la **sécurité** (par exemple `v-can` seulement visuel : le contrôle réel reste côté serveur).
 
-### Synthèse du chapitre 14
-
-`vNom` dans `<script setup>` devient `v-nom` dans le gabarit. Les hooks suivent l'ordre `created` → `beforeMount` → `mounted` → `beforeUpdate` → `updated` → `beforeUnmount` → `unmounted`. `binding` donne `value`, `oldValue`, `arg` et `modifiers`. Réservez les directives à la **manipulation directe du DOM** et **nettoyez** dans `unmounted`.
-
----
-
-## 15. Plugins
+# Plugins
 
 **Objectifs d'apprentissage.** Définir et écrire un plugin Vue ; comprendre `app.use`, `app.config`, `globalProperties` et `provide` ; typer les extensions globales ; accéder aux services depuis `<script setup>` ; connaître la configuration d'application et les autres méthodes de l'instance.
 
-### 15.1 Définition
+## Définition
 
 Un **plugin** est un code **autonome** qui ajoute des fonctionnalités **à l'échelle de l'application**. Il peut :
 
@@ -3490,7 +3404,7 @@ Un **plugin** est un code **autonome** qui ajoute des fonctionnalités **à l'é
 
 Exemples officiels : **Vue Router**, **Pinia**, **Vue I18n**. Un plugin est ce qu'on installe avec `app.use(…)` dans `main.ts`.
 
-### 15.2 Écriture d'un plugin
+## Écriture d'un plugin
 
 Un plugin est soit un **objet** doté d'une méthode `install(app, options)`, soit directement une **fonction** `(app, options) => void`.
 
@@ -3516,7 +3430,7 @@ export default {
 }
 ```
 
-#### Version fonction
+### Version fonction
 
 ```ts
 import type { Plugin } from 'vue'
@@ -3526,7 +3440,7 @@ export const monPlugin: Plugin<[options: { debug: boolean }]> = (app, options) =
 }
 ```
 
-#### Installation
+### Installation
 
 ```ts
 // src/main.ts
@@ -3537,7 +3451,7 @@ app.use(i18n, { locale: 'fr', messages: { fr: { bonjour: 'Bonjour' } } })
 
 `app.use()` **ignore les installations en double** d'un même plugin et **retourne l'application**, ce qui permet de chaîner les appels : `app.use(a).use(b)`.
 
-### 15.3 Typage des extensions globales
+## Typage des extensions globales
 
 ```ts
 // src/types/vue.d.ts
@@ -3553,7 +3467,7 @@ export {}
 
 L'ajout à `ComponentCustomProperties` fait connaître `$t` aux gabarits et à l'Options API. Sans cette déclaration, `vue-tsc` signale une propriété inconnue.
 
-### 15.4 Accès depuis `<script setup>`
+## Accès depuis `<script setup>`
 
 `globalProperties` n'est **pas** accessible dans `<script setup>` (il n'y a pas de `this`). Utilisez **`provide` / `inject`** (recommandé) ; `getCurrentInstance()` existe mais est **déconseillé** (API interne).
 
@@ -3565,9 +3479,9 @@ const i18n = inject(cleI18n)!
 i18n.t('bonjour')
 ```
 
-Une écriture encore plus propre consiste à fournir un composable `useI18n()` qui encapsule `inject` et vérifie sa présence (chapitre 12).
+Une écriture encore plus propre consiste à fournir un composable `useI18n()` qui encapsule `inject` et vérifie sa présence (section « Provide / Inject »).
 
-### 15.5 Configuration de l'application (`app.config`)
+## Configuration de l'application (`app.config`)
 
 | Option | Rôle |
 | --- | --- |
@@ -3588,7 +3502,7 @@ app.config.compilerOptions.isCustomElement = (tag) => tag.startsWith('ion-')
 
 `errorHandler` est le **dernier filet** : il reçoit les erreurs de rendu, de hooks, d'observateurs et de gestionnaires d'événements qui n'ont été interceptées par aucun `onErrorCaptured`.
 
-### 15.6 Autres méthodes de l'application
+## Autres méthodes de l'application
 
 | Méthode | Rôle |
 | --- | --- |
@@ -3601,7 +3515,7 @@ app.config.compilerOptions.isCustomElement = (tag) => tag.startsWith('ion-')
 | `app.runWithContext(fn)` *(3.3)* | Exécute `fn` dans le contexte de l'application : permet d'appeler `inject` hors composant |
 | `app.onUnmount(fn)` *(3.5)* | Enregistre un nettoyage exécuté au démontage de l'application |
 
-### 15.7 Un plugin de notifications (exemple complet)
+## Un plugin de notifications (exemple complet)
 
 ```ts
 // src/plugins/notifications.ts
@@ -3646,7 +3560,7 @@ export function useNotifications() {
 }
 ```
 
-### 15.8 Pièges fréquents
+## Pièges fréquents
 
 - Utiliser `globalProperties` partout : perte de traçabilité, typage manuel. Préférez `provide` / `inject`.
 - Oublier le **typage** des extensions globales.
@@ -3654,19 +3568,13 @@ export function useNotifications() {
 - Écrire un plugin qui dépend de l'ordre d'installation sans le documenter.
 - Utiliser un **état de module** dans un plugin en SSR (partagé entre requêtes) : créez l'état **dans `install`**, à chaque application.
 
-### Synthèse du chapitre 15
-
-Un plugin est un objet avec **`install(app, options)`** (ou une fonction). Préférez **`provide` / `inject`** à `globalProperties` ; typez les extensions par `declare module 'vue'`. `app.config` centralise la configuration globale (erreurs, avertissements, compilateur).
-
----
-
-## 16. Composants intégrés
+# Composants intégrés
 
 **Objectifs d'apprentissage.** Maîtriser `Transition`, `TransitionGroup`, `KeepAlive`, `Teleport` et `Suspense` ; connaître leurs props, classes, hooks et limites ; les combiner (routeur, modales, listes) ; respecter l'accessibilité des animations.
 
 Les composants intégrés sont **disponibles dans tous les gabarits sans enregistrement** et sont **tree-shakables** (absents du bundle s'ils ne sont pas utilisés).
 
-### 16.1 `<Transition>`
+## `<Transition>`
 
 `<Transition>` applique des **animations d'entrée et de sortie** à **un seul** élément ou composant lorsqu'il est inséré ou retiré du DOM, par :
 
@@ -3695,7 +3603,7 @@ const visible = ref(true)
 </style>
 ```
 
-#### Les six classes de transition
+### Les six classes de transition
 
 | Classe | Moment |
 | --- | --- |
@@ -3708,7 +3616,7 @@ const visible = ref(true)
 
 Le préfixe `v-` est remplacé par la valeur de `name` (`fondu-enter-from`). Sans `name`, le préfixe est `v-`. Des **classes personnalisées** sont possibles (`enter-active-class`, `leave-to-class`…) : pratique avec **Animate.css** ou **Tailwind**.
 
-#### Propriétés
+### Propriétés
 
 | Prop | Rôle |
 | --- | --- |
@@ -3720,7 +3628,7 @@ Le préfixe `v-` est remplacé par la valeur de `name` (`fondu-enter-from`). San
 | `css` | `false` pour des animations **purement JavaScript** |
 | `enter-*-class`, `leave-*-class` | Classes personnalisées |
 
-#### Animations CSS `@keyframes`
+### Animations CSS `@keyframes`
 
 ```css
 .rebond-enter-active { animation: rebond-entree 0.5s; }
@@ -3733,7 +3641,7 @@ Le préfixe `v-` est remplacé par la valeur de `name` (`fondu-enter-from`). San
 }
 ```
 
-#### Hooks JavaScript
+### Hooks JavaScript
 
 ```vue
 <Transition
@@ -3751,7 +3659,7 @@ Le préfixe `v-` est remplacé par la valeur de `name` (`fondu-enter-from`). San
 
 Le hook `@enter` reçoit `(el, done)` : avec `:css="false"`, appelez `done()` pour signaler la fin. Compatible avec **GSAP**, **Motion** et autres bibliothèques d'animation. Avec `:css="false"`, Vue ne cherche pas de classes CSS et ne détermine plus la fin de la transition : appelez `done()` vous-même.
 
-#### Transition entre composants ou vues
+### Transition entre composants ou vues
 
 ```vue
 <Transition name="glisse" mode="out-in">
@@ -3763,7 +3671,7 @@ Le hook `@enter` reçoit `(el, done)` : avec `:css="false"`, appelez `done()` po
 </RouterView>
 ```
 
-#### Règles
+### Règles
 
 - **Un seul enfant racine** (pas de liste ; pour une liste, voir `TransitionGroup`).
 - Pour une transition **réutilisable**, créez un composant enveloppe avec un slot.
@@ -3776,7 +3684,7 @@ Le hook `@enter` reçoit `(el, done)` : avec `:css="false"`, appelez `done()` po
 }
 ```
 
-### 16.2 `<TransitionGroup>`
+## `<TransitionGroup>`
 
 Anime l'**insertion, le retrait et le déplacement** des éléments d'une **liste** (`v-for`).
 
@@ -3798,7 +3706,7 @@ Anime l'**insertion, le retrait et le déplacement** des éléments d'une **list
 - La classe `-move` anime le **déplacement** (technique FLIP).
 - Pour des animations **échelonnées**, utilisez des attributs de données et des hooks JavaScript.
 
-### 16.3 `<KeepAlive>`
+## `<KeepAlive>`
 
 `<KeepAlive>` **met en cache** les instances de composants dynamiques lorsqu'elles sont désactivées, au lieu de les détruire : l'**état** (saisies, défilement, données chargées) est conservé.
 
@@ -3808,7 +3716,7 @@ Anime l'**insertion, le retrait et le déplacement** des éléments d'une **list
 </KeepAlive>
 ```
 
-#### Props
+### Props
 
 | Prop | Rôle |
 | --- | --- |
@@ -3823,10 +3731,10 @@ Anime l'**insertion, le retrait et le déplacement** des éléments d'une **list
 ```
 
 - Le nom provient de l'option `name` (`defineOptions({ name: 'VueA' })`) ou du nom de fichier inféré pour les SFC.
-- Hooks : **`onActivated`** et **`onDeactivated`** (chapitre 9).
+- Hooks : **`onActivated`** et **`onDeactivated`** (section « Cycle de vie »).
 - `KeepAlive` n'accepte qu'**un seul composant enfant direct** (pas un élément DOM).
 
-### 16.4 `<Teleport>`
+## `<Teleport>`
 
 `<Teleport>` rend une partie du gabarit **ailleurs dans le DOM**, tout en conservant la **hiérarchie logique** : props, événements et `provide` / `inject` continuent de fonctionner comme si le contenu était resté en place.
 
@@ -3841,7 +3749,7 @@ Anime l'**insertion, le retrait et le déplacement** des éléments d'une **list
 </Teleport>
 ```
 
-#### Props
+### Props
 
 | Prop | Rôle |
 | --- | --- |
@@ -3851,9 +3759,9 @@ Anime l'**insertion, le retrait et le déplacement** des éléments d'une **list
 
 - Plusieurs `<Teleport>` peuvent viser la **même cible** : leur contenu s'ajoute dans l'ordre de montage.
 - Usage : **modales, popovers, notifications, infobulles**. Cela évite les problèmes de `z-index`, d'`overflow` et de `transform` hérités des ancêtres.
-- En **SSR**, la cible doit se trouver **hors** du conteneur de l'application, ou on utilise un marqueur spécifique (chapitre 24).
+- En **SSR**, la cible doit se trouver **hors** du conteneur de l'application, ou on utilise un marqueur spécifique (section « Rendu côté serveur (SSR), génération statique (SSG) et Nuxt »).
 
-### 16.5 `<Suspense>` *(expérimental)*
+## `<Suspense>` *(expérimental)*
 
 `<Suspense>` orchestre les **dépendances asynchrones** dans l'arbre de composants et affiche un **état d'attente** (*fallback*) jusqu'à leur résolution.
 
@@ -3873,12 +3781,12 @@ Anime l'**insertion, le retrait et le déplacement** des éléments d'une **list
 </Suspense>
 ```
 
-#### Événements et props
+### Événements et props
 
 - Événements : `@pending` (entrée en attente), `@resolve` (contenu prêt), `@fallback` (affichage du repli).
 - Props : `timeout` (délai avant d'afficher le repli après un changement de contenu) ; `suspensible` côté composants asynchrones.
 
-#### Gestion d'erreurs
+### Gestion d'erreurs
 
 `<Suspense>` ne gère pas les rejets : combinez-le avec **`onErrorCaptured`** pour afficher un état d'erreur.
 
@@ -3890,7 +3798,7 @@ Anime l'**insertion, le retrait et le déplacement** des éléments d'une **list
 
 > **API expérimentale.** Son interface peut évoluer ; consultez la documentation avant de l'adopter. Nuxt l'utilise pour la navigation asynchrone.
 
-### 16.6 Éléments spéciaux du gabarit
+## Éléments spéciaux du gabarit
 
 | Composant / élément | Usage |
 | --- | --- |
@@ -3898,7 +3806,7 @@ Anime l'**insertion, le retrait et le déplacement** des éléments d'une **list
 | `<slot>` | Emplacement |
 | `<template>` | Groupement invisible |
 
-### 16.7 Pièges fréquents
+## Pièges fréquents
 
 - `Transition` avec **plusieurs** éléments racines.
 - Oublier `key` dans `TransitionGroup`.
@@ -3907,19 +3815,11 @@ Anime l'**insertion, le retrait et le déplacement** des éléments d'une **list
 - Oublier `done()` dans un hook `@enter` ou `@leave` avec `:css="false"`.
 - Transitionner une propriété coûteuse (`height`, `top`) : privilégiez `transform` et `opacity`.
 
-### Synthèse du chapitre 16
-
-`Transition` (un élément), `TransitionGroup` (listes), `KeepAlive` (cache), `Teleport` (rendu ailleurs dans le DOM) et `Suspense` (asynchrone, **expérimental**). Six classes de transition et des hooks JavaScript offrent un contrôle fin ; respectez `prefers-reduced-motion`.
-
----
-
-# Partie III — Écosystème officiel
-
-## 17. Vue Router
+# Vue Router
 
 **Objectifs d'apprentissage.** Installer et configurer **Vue Router** ; définir des routes (statiques, dynamiques, imbriquées, nommées, avec redirections et alias) ; naviguer par liens et par code ; lire paramètres, requêtes et métadonnées ; protéger la navigation avec des **gardes** ; charger paresseusement ; contrôler le défilement ; gérer dynamiquement les routes ; typer le routeur ; connaître le routage par fichiers et la récupération de données.
 
-### 17.1 Qu'est-ce que Vue Router ?
+## Qu'est-ce que Vue Router ?
 
 **Vue Router** est le routeur **officiel** de Vue : il associe des **URL** à des **composants** dans une application monopage, **sans recharger la page**, grâce à l'API History du navigateur (ou au *hash*).
 
@@ -3927,9 +3827,9 @@ Anime l'**insertion, le retrait et le déplacement** des éléments d'une **list
 npm install vue-router
 ```
 
-> **Version.** **Vue Router 5** est une version de transition : elle intègre dans le paquet principal le **routage par fichiers** (ancien `unplugin-vue-router`) et reste **sans changement incompatible** pour qui utilisait Vue Router 4 sans ce plugin (la mise à jour se limite à `npm update vue-router`). L'API présentée dans ce chapitre est valable pour les versions 4 et 5.
+> **Version.** **Vue Router 5** est une version de transition : elle intègre dans le paquet principal le **routage par fichiers** (ancien `unplugin-vue-router`) et reste **sans changement incompatible** pour qui utilisait Vue Router 4 sans ce plugin (la mise à jour se limite à `npm update vue-router`). L'API présentée dans cette section est valable pour les versions 4 et 5.
 
-### 17.2 Configuration de base
+## Configuration de base
 
 ```ts
 // src/router/index.ts
@@ -3965,7 +3865,7 @@ app.use(router)
 </template>
 ```
 
-#### Modes d'historique
+### Modes d'historique
 
 | Fonction | URL | Remarques |
 | --- | --- | --- |
@@ -3975,19 +3875,19 @@ app.use(router)
 
 > **Déploiement.** Avec `createWebHistory`, un rechargement sur `/utilisateurs/1` renvoie une erreur 404 si le serveur n'est pas configuré pour retourner `index.html`. Prévoyez la règle de repli sur votre hébergeur.
 
-### 17.3 `RouterLink` et `RouterView`
+## `RouterLink` et `RouterView`
 
-#### `RouterLink`
+### `RouterLink`
 
 Lien de navigation **sans rechargement de page** ; il ajoute automatiquement deux classes : **`router-link-active`** (correspondance partielle) et **`router-link-exact-active`** (correspondance exacte).
 
 Props : `to`, `replace`, `active-class`, `exact-active-class`, `custom` avec un slot `v-slot` (`href`, `navigate`, `isActive`, `isExactActive`).
 
-#### `RouterView`
+### `RouterView`
 
 Affiche le composant qui correspond à la route courante. Props : **`name`** (vues nommées) et **`route`**. Son slot `v-slot="{ Component, route }"` permet de l'envelopper dans `Transition`, `KeepAlive` ou `Suspense`.
 
-### 17.4 Routes dynamiques et paramètres
+## Routes dynamiques et paramètres
 
 ```ts
 { path: '/users/:id', name: 'utilisateur', component: VueUtilisateur, props: true }
@@ -4002,7 +3902,7 @@ route.params.id           // string | string[]
 </script>
 ```
 
-#### Paramètres avancés
+### Paramètres avancés
 
 | Syntaxe | Signification |
 | --- | --- |
@@ -4013,11 +3913,11 @@ route.params.id           // string | string[]
 | `/users/:id(\\d+)` | Avec **expression régulière** (ici un nombre) |
 | `/:pathMatch(.*)*` | **Fourre-tout** (page 404) |
 
-#### Réagir au changement de paramètre
+### Réagir au changement de paramètre
 
 Pour passer de `/users/1` à `/users/2`, le **même composant est réutilisé** (il n'est ni détruit ni recréé) : `onMounted` ne se redéclenche pas. Réagissez par `watch(() => route.params.id, …)` ou par le garde `onBeforeRouteUpdate`.
 
-#### Props de route
+### Props de route
 
 ```ts
 { path: '/users/:id', component: VueUtilisateur, props: true }                         // params vers props
@@ -4027,7 +3927,7 @@ Pour passer de `/users/1` à `/users/2`, le **même composant est réutilisé** 
 
 Passer les paramètres en **props** découple le composant du routeur : il devient réutilisable et plus facile à tester.
 
-### 17.5 Routes imbriquées
+## Routes imbriquées
 
 ```ts
 {
@@ -4045,7 +3945,7 @@ Passer les paramètres en **props** découple le composant du routeur : il devie
 - Un enfant avec `path: ''` constitue la route **par défaut** du parent.
 - Chaque niveau d'imbrication correspond à un **`<RouterView>`** supplémentaire dans le composant parent.
 
-### 17.6 Routes nommées, redirections et alias
+## Routes nommées, redirections et alias
 
 ```ts
 { path: '/accueil', redirect: '/' }
@@ -4056,7 +3956,7 @@ Passer les paramètres en **props** découple le composant du routeur : il devie
 
 Une **redirection** change l'URL affichée ; un **alias** conserve l'URL tapée tout en affichant la même vue. Préférez les **routes nommées** pour naviguer : changer un chemin n'oblige pas à modifier tous les liens.
 
-### 17.7 Navigation programmatique
+## Navigation programmatique
 
 ```ts
 import { useRouter } from 'vue-router'
@@ -4079,7 +3979,7 @@ const echec = await router.push('/x')
 if (isNavigationFailure(echec, NavigationFailureType.duplicated)) { /* déjà sur cette route */ }
 ```
 
-#### `useRoute`, `useRouter`, `useLink`
+### `useRoute`, `useRouter`, `useLink`
 
 - **`useRoute()`** : la route courante **réactive** (`path`, `params`, `query`, `hash`, `name`, `meta`, `matched`, `fullPath`).
 - **`useRouter()`** : l'instance du routeur (navigation, `addRoute`, `removeRoute`, `hasRoute`, `getRoutes`, gardes).
@@ -4087,7 +3987,7 @@ if (isNavigationFailure(echec, NavigationFailureType.duplicated)) { /* déjà su
 
 > **Ne déstructurez pas `useRoute()`** : la réactivité serait perdue. Utilisez `toRefs(route)` ou `computed(() => route.params.id)`.
 
-### 17.8 Vues nommées
+## Vues nommées
 
 ```ts
 { path: '/', components: { default: Principal, barre: BarreLaterale, entete: Entete } }
@@ -4099,11 +3999,11 @@ if (isNavigationFailure(echec, NavigationFailureType.duplicated)) { /* déjà su
 <RouterView name="barre" />
 ```
 
-### 17.9 Gardes de navigation
+## Gardes de navigation
 
 Les **gardes** contrôlent la navigation : authentification, permissions, confirmation, chargement de données.
 
-#### Valeurs retournées par un garde
+### Valeurs retournées par un garde
 
 | Retour | Effet |
 | --- | --- |
@@ -4114,7 +4014,7 @@ Les **gardes** contrôlent la navigation : authentification, permissions, confir
 
 > Les gardes utilisent le **retour de valeur** ; l'ancien paramètre `next()` n'est plus nécessaire (il reste possible, mais ne l'appelez pas deux fois).
 
-#### Gardes globaux
+### Gardes globaux
 
 ```ts
 router.beforeEach(async (to, from) => {
@@ -4128,13 +4028,13 @@ router.beforeResolve(async (to) => { /* après les gardes de composants, avant l
 router.afterEach((to, from, echec) => { /* statistiques, titre de page… (pas de redirection possible) */ })
 ```
 
-#### Garde par route
+### Garde par route
 
 ```ts
 { path: '/admin', component: Admin, beforeEnter: (to, from) => (estAdmin() ? true : '/') }
 ```
 
-#### Gardes de composant (Composition API)
+### Gardes de composant (Composition API)
 
 ```ts
 import { onBeforeRouteLeave, onBeforeRouteUpdate } from 'vue-router'
@@ -4146,7 +4046,7 @@ onBeforeRouteLeave((to, from) => {
 onBeforeRouteUpdate(async (to, from) => { /* même composant, paramètres modifiés */ })
 ```
 
-#### Ordre complet de résolution
+### Ordre complet de résolution
 
 1. La navigation est déclenchée.
 2. `beforeRouteLeave` (composants désactivés).
@@ -4160,7 +4060,7 @@ onBeforeRouteUpdate(async (to, from) => { /* même composant, paramètres modifi
 10. `afterEach`.
 11. Mise à jour du DOM.
 
-### 17.10 Métadonnées (`meta`) et typage
+## Métadonnées (`meta`) et typage
 
 ```ts
 { path: '/admin', component: Admin, meta: { requiresAuth: true, roles: ['admin'], titre: 'Administration' } }
@@ -4182,7 +4082,7 @@ export {}
 
 `to.matched.some((r) => r.meta.requiresAuth)` vérifie aussi les routes **parentes** : `to.meta` ne fusionne que les métadonnées de la route finale (et des parents, qui sont **fusionnés** de façon superficielle), alors que `matched` expose chaque niveau.
 
-### 17.11 Comportement de défilement
+## Comportement de défilement
 
 ```ts
 const router = createRouter({
@@ -4196,15 +4096,15 @@ const router = createRouter({
 })
 ```
 
-### 17.12 Chargement paresseux et découpage du code
+## Chargement paresseux et découpage du code
 
 ```ts
 component: () => import('@/views/VueAdmin.vue')
 ```
 
-Chaque `import()` dynamique produit un **fragment** (*chunk*) chargé à la première visite de la route. Pour regrouper des routes dans un même fragment, utilisez les options `manualChunks` de Rollup dans la configuration Vite (chapitre 23).
+Chaque `import()` dynamique produit un **fragment** (*chunk*) chargé à la première visite de la route. Pour regrouper des routes dans un même fragment, utilisez les options `manualChunks` de Rollup dans la configuration Vite (section « Performance »).
 
-### 17.13 Gestion dynamique des routes
+## Gestion dynamique des routes
 
 ```ts
 router.addRoute({ path: '/nouvelle', name: 'nouvelle', component: X })
@@ -4216,23 +4116,23 @@ router.getRoutes()
 
 Utile pour ajouter des routes **selon les permissions** de l'utilisateur ou pour des modules chargés à la demande.
 
-### 17.14 Récupération de données
+## Récupération de données
 
 - **Après la navigation** : on affiche la vue immédiatement et on charge les données dans le composant (`watch` sur les paramètres, `Suspense`) ; l'utilisateur voit un état de chargement.
 - **Avant la navigation** : on charge dans un garde (`beforeEnter`) ; l'utilisateur reste sur la page précédente jusqu'à la fin.
 - **Chargeurs de données** : Vue Router 5 propose des **chargeurs expérimentaux** (`vue-router/experimental`), avec une variante fondée sur **Pinia Colada** pour la mise en cache ; leur API peut évoluer.
 - Bibliothèques : **TanStack Query**, **Pinia Colada**, **Nuxt** (`useFetch` / `useAsyncData`).
 
-### 17.15 Autres notions
+## Autres notions
 
 - **Routage par fichiers** : les routes sont générées à partir de l'arborescence `src/pages/` et **typées** (intégré à Vue Router 5 ; auparavant `unplugin-vue-router`) ; c'est aussi le modèle de **Nuxt**.
 - **Accessibilité** : après une navigation, déplacez le **focus** (ou annoncez le changement de page à un lecteur d'écran) ; mettez à jour le **titre** du document.
-- **Transitions de page** : `Transition` autour de `RouterView` (chapitre 16).
+- **Transitions de page** : `Transition` autour de `RouterView` (section « Composants intégrés »).
 - **Erreurs de navigation** : `router.onError`.
 - **`router.isReady()`** : attend la résolution de la navigation initiale (SSR).
 - **Base d'URL** : argument de `createWebHistory(base)`.
 
-### 17.16 Pièges fréquents
+## Pièges fréquents
 
 - Oublier la **configuration du serveur** pour `createWebHistory` (erreur 404 au rechargement).
 - **Déstructurer** `useRoute()`.
@@ -4242,17 +4142,11 @@ Utile pour ajouter des routes **selon les permissions** de l'utilisateur ou pour
 - Appeler `useAuthStore()` au **niveau du module** du routeur, avant l'installation de Pinia.
 - Croire que le contrôle d'accès du routeur est une **sécurité** : le serveur doit aussi autoriser.
 
-### Synthèse du chapitre 17
-
-`createRouter`, `RouterLink` et `RouterView` forment le socle. Les routes peuvent être **dynamiques, imbriquées et nommées** ; les **gardes**, les **métadonnées** et le **chargement paresseux** complètent le tout. `useRoute` lit la route (de façon réactive), `useRouter` navigue. Vue Router 5 intègre le **routage par fichiers** sans casser l'API existante.
-
----
-
-## 18. Pinia (gestion d'état)
+# Pinia (gestion d'état)
 
 **Objectifs d'apprentissage.** Comprendre le rôle d'un **store** et savoir quand l'utiliser ; définir des stores (**Setup** et **Option**) ; consommer l'état, les getters et les actions avec `storeToRefs` ; modifier l'état (`$patch`, `$reset`) ; observer un store (`$subscribe`, `$onAction`) ; composer des stores ; typer ; écrire des plugins ; utiliser Pinia hors composants, en SSR et dans les tests.
 
-### 18.1 Qu'est-ce que Pinia ?
+## Qu'est-ce que Pinia ?
 
 **Pinia** est la bibliothèque **officielle** de gestion d'état de Vue (successeur de **Vuex**). Elle fournit un **état global réactif** partagé entre composants, avec un support **TypeScript** natif, l'intégration aux **DevTools**, le **remplacement à chaud** (HMR) et le **SSR**.
 
@@ -4267,9 +4161,9 @@ import { createPinia } from 'pinia'
 app.use(createPinia())
 ```
 
-> **Version.** Pinia 3 est une version « tranquille » : elle supprime les API dépréciées et le support de Vue 2, sans nouvelle fonctionnalité majeure. Le code de ce chapitre fonctionne avec les versions 2 et 3 de Pinia sous Vue 3.
+> **Version.** Pinia 3 est une version « tranquille » : elle supprime les API dépréciées et le support de Vue 2, sans nouvelle fonctionnalité majeure. Le code de cette section fonctionne avec les versions 2 et 3 de Pinia sous Vue 3.
 
-#### Quand utiliser un store ?
+### Quand utiliser un store ?
 
 - État partagé par **plusieurs composants éloignés** dans l'arbre (utilisateur connecté, panier, préférences).
 - État qui doit **survivre à la navigation**.
@@ -4277,7 +4171,7 @@ app.use(createPinia())
 
 > Un état **local** à un composant, ou à un sous-arbre, reste dans le composant ou dans `provide` / `inject`. Mettre tout l'état dans un store est un anti-modèle.
 
-#### Pinia et Vuex
+### Pinia et Vuex
 
 | | **Vuex 4** | **Pinia** |
 | --- | --- | --- |
@@ -4287,11 +4181,11 @@ app.use(createPinia())
 | API | Options | Options **ou** Setup (Composition) |
 | Statut | Mode maintenance | **Recommandé** |
 
-### 18.2 Définir un store
+## Définir un store
 
 `defineStore(id, définition)` crée un store ; l'**`id` doit être unique** dans l'application. Convention de nommage : **`useXxxStore`**.
 
-#### Setup Store *(recommandé)*
+### Setup Store *(recommandé)*
 
 ```ts
 // src/stores/compteur.ts
@@ -4318,7 +4212,7 @@ export const useCompteurStore = defineStore('compteur', () => {
 
 > En Setup Store, **retournez toutes** les propriétés d'état pour que Pinia les reconnaisse (SSR, DevTools, plugins). N'utilisez pas de propriétés d'état **privées**.
 
-#### Option Store
+### Option Store
 
 ```ts
 export const useUtilisateurStore = defineStore('utilisateur', {
@@ -4350,7 +4244,7 @@ export const useUtilisateurStore = defineStore('utilisateur', {
 
 Le **Setup Store** est plus flexible (observateurs, composables, injection) et reprend les conventions de la Composition API ; l'**Option Store** est plus proche de Vuex et d'une lecture rapide.
 
-### 18.3 Utiliser un store
+## Utiliser un store
 
 ```vue
 <script setup lang="ts">
@@ -4377,7 +4271,7 @@ const { incrementer } = store
 - Appelez `useXxxStore()` **après** `app.use(pinia)`, dans `setup`, un garde, une action…
 - Hors composant (par exemple dans le routeur), appelez `useXxxStore()` **à l'intérieur** de la fonction (garde), jamais au niveau du module.
 
-### 18.4 Modifier l'état
+## Modifier l'état
 
 ```ts
 store.count++                                              // 1. modification directe
@@ -4391,16 +4285,16 @@ store.$reset()                                             // 5. réinitialisati
 
 `$patch` **regroupe** les modifications (une seule entrée dans les DevTools). Pour des tableaux et objets, la forme fonctionnelle évite de recréer l'ensemble de la collection.
 
-#### Réinitialisation en Setup Store
+### Réinitialisation en Setup Store
 
 ```ts
 function $reset() { count.value = 0 }      // à écrire manuellement
 // ou utiliser un plugin qui l'implémente pour tous les stores
 ```
 
-### 18.5 Observer un store
+## Observer un store
 
-#### `$subscribe`
+### `$subscribe`
 
 ```ts
 store.$subscribe((mutation, state) => {
@@ -4410,7 +4304,7 @@ store.$subscribe((mutation, state) => {
 }, { detached: true })            // detached : l'abonnement survit au démontage du composant
 ```
 
-#### `$onAction`
+### `$onAction`
 
 ```ts
 const desabonner = store.$onAction(({ name, store, args, after, onError }) => {
@@ -4422,7 +4316,7 @@ const desabonner = store.$onAction(({ name, store, args, after, onError }) => {
 
 `$onAction` intercepte **chaque action** (avant, après, en cas d'erreur) : idéal pour la journalisation et la mesure. Le `watch` classique fonctionne aussi : `watch(() => store.count, …)`.
 
-### 18.6 Composer des stores
+## Composer des stores
 
 ```ts
 export const usePanierStore = defineStore('panier', () => {
@@ -4436,7 +4330,7 @@ export const usePanierStore = defineStore('panier', () => {
 
 **Évitez les dépendances circulaires** entre stores : ne lisez l'autre store que dans des actions ou des getters, jamais au niveau de la configuration lors de l'initialisation.
 
-### 18.7 Actions asynchrones
+## Actions asynchrones
 
 ```ts
 actions: {
@@ -4451,7 +4345,7 @@ actions: {
 
 Les actions peuvent `await`, appeler d'autres stores et retourner des valeurs. Modélisez explicitement l'état de chargement (`chargement`, `erreur`) pour que les composants affichent les cas « en cours » et « en échec ».
 
-### 18.8 Typage
+## Typage
 
 - **Setup Store** : les types sont **inférés** depuis `ref<T>()`, `computed` et les fonctions.
 - **Option Store** : typez l'état (`state: () => ({ x: [] as string[] })`) et annotez le **type de retour** des getters qui utilisent `this`.
@@ -4463,7 +4357,7 @@ import type { Store } from 'pinia'
 type CompteurStore = ReturnType<typeof useCompteurStore>
 ```
 
-### 18.9 Plugins Pinia
+## Plugins Pinia
 
 ```ts
 import { createPinia, type PiniaPluginContext } from 'pinia'
@@ -4486,7 +4380,7 @@ declare module 'pinia' {
 }
 ```
 
-### 18.10 Pinia hors composants et en SSR
+## Pinia hors composants et en SSR
 
 ```ts
 // Hors composant : fournissez l'instance de Pinia
@@ -4502,7 +4396,7 @@ router.beforeEach(() => {
 
 **SSR** : créez **une instance de Pinia par requête** ; l'état est **sérialisé** (`pinia.state.value`) côté serveur, puis **hydraté** côté client. Avec Nuxt, utilisez le module `@pinia/nuxt`.
 
-### 18.11 Tests
+## Tests
 
 ```ts
 import { setActivePinia, createPinia } from 'pinia'
@@ -4520,13 +4414,13 @@ describe('compteur', () => {
 })
 ```
 
-Pour tester des **composants** : `createTestingPinia({ createSpy: vi.fn, initialState: {…}, stubActions: false })` du paquet `@pinia/testing` (chapitre 22).
+Pour tester des **composants** : `createTestingPinia({ createSpy: vi.fn, initialState: {…}, stubActions: false })` du paquet `@pinia/testing` (section « Tests »).
 
-### 18.12 DevTools
+## DevTools
 
 Les Vue DevTools permettent d'inspecter l'état des stores, de **voyager dans le temps** (*time travel*), de modifier l'état à chaud, de suivre les actions et de bénéficier du HMR des stores.
 
-### 18.13 Pièges fréquents
+## Pièges fréquents
 
 - **Déstructurer** l'état sans `storeToRefs`.
 - Appeler `useStore()` **avant** `app.use(pinia)`.
@@ -4536,17 +4430,11 @@ Les Vue DevTools permettent d'inspecter l'état des stores, de **voyager dans le
 - En SSR, utiliser un état de **module** partagé entre requêtes.
 - Stocker des données **non sérialisables** (instances de classe, fonctions) dans l'état, ce qui casse la sérialisation SSR et les DevTools.
 
-### Synthèse du chapitre 18
-
-Un store, c'est **état + getters + actions** ; le **Setup Store** est recommandé. Utilisez **`storeToRefs`** pour l'état et les getters, et déstructurez les actions directement. `$patch`, `$reset`, `$subscribe`, `$onAction` et les plugins complètent l'API. Pinia n'a **pas de mutations**, offre un typage natif et gère le SSR comme les tests.
-
----
-
-## 19. TypeScript avancé avec Vue
+# TypeScript avancé avec Vue
 
 **Objectifs d'apprentissage.** Typer **tous** les éléments d'un composant Vue (état, props, événements, `defineModel`, slots, `provide` / `inject`, références de gabarit, événements DOM) ; utiliser les **types utilitaires** de Vue ; écrire des **composants génériques** ; étendre les types globaux par **augmentation de modules** ; typer les variables d'environnement et les données d'API ; diagnostiquer les problèmes de typage courants.
 
-### 19.1 Vue d'ensemble du support TypeScript
+## Vue d'ensemble du support TypeScript
 
 Vue 3 est **écrit en TypeScript** et fournit ses **définitions de types**. Deux niveaux de vérification coexistent :
 
@@ -4559,7 +4447,7 @@ Les **gabarits sont eux aussi vérifiés** : prop inconnue, événement mal typ�
 
 **Options recommandées** : `"strict": true`, `"verbatimModuleSyntax": true` (imports de types par `import type`), et la version de TypeScript **du projet** dans l'éditeur (plus besoin de l'ancien mode « Take Over » de Volar).
 
-### 19.2 Typer l'état réactif
+## Typer l'état réactif
 
 ```ts
 import { ref, reactive, computed, shallowRef, type Ref, type ComputedRef } from 'vue'
@@ -4585,7 +4473,7 @@ const c: ComputedRef<number> = computed(() => r.value)
 
 **Règle d'inférence.** Laissez TypeScript **inférer** quand l'initialisation est suffisante (`ref(0)`) ; ajoutez un **générique** quand elle ne l'est pas (`ref<'a' | 'b'>('a')`, `ref<Item[]>([])`, `ref<T | null>(null)`).
 
-#### `UnwrapRef`
+### `UnwrapRef`
 
 `ref<T>()` retourne `Ref<UnwrapRef<T>>` : les `ref` imbriqués sont **déballés au niveau du type**, comme à l'exécution.
 
@@ -4593,9 +4481,9 @@ const c: ComputedRef<number> = computed(() => r.value)
 const x = ref({ a: ref(1) })      // x.value.a est de type number (et non Ref<number>)
 ```
 
-### 19.3 Typer les props
+## Typer les props
 
-#### Approche par types *(recommandée)*
+### Approche par types *(recommandée)*
 
 ```vue
 <script setup lang="ts">
@@ -4623,7 +4511,7 @@ const props = withDefaults(defineProps<Props>(), {
 const { compteur = 0, items = [] } = defineProps<Props>()
 ```
 
-#### Approche à l'exécution avec inférence
+### Approche à l'exécution avec inférence
 
 ```ts
 const props = defineProps({
@@ -4632,7 +4520,7 @@ const props = defineProps({
 })
 ```
 
-#### Types complexes
+### Types complexes
 
 ```ts
 import type { PropType } from 'vue'
@@ -4643,15 +4531,15 @@ defineProps({
 })
 ```
 
-#### Props booléennes
+### Props booléennes
 
 Avec la syntaxe par types, `disabled?: boolean` est converti en `Boolean` à l'exécution : le **cast booléen** s'applique (`<Composant disabled />`).
 
-#### Limites de l'analyse statique
+### Limites de l'analyse statique
 
 Le compilateur doit pouvoir **résoudre** le type de `defineProps<T>()`. Les types **importés**, **intersections**, **unions simples**, `Pick`, `Omit` et `Partial` sont supportés ; certains **types conditionnels complexes** ne le sont pas.
 
-### 19.4 Typer les événements (`defineEmits`)
+## Typer les événements (`defineEmits`)
 
 ```ts
 const emit = defineEmits<{
@@ -4680,7 +4568,7 @@ Côté **parent**, le type du paramètre du gestionnaire est **inféré** :
 <Enfant @changer="(v) => console.log(v.toFixed(2))" />      <!-- v : number -->
 ```
 
-### 19.5 Typer `defineModel`
+## Typer `defineModel`
 
 ```ts
 const modele = defineModel<string>()                          // Ref<string | undefined>
@@ -4689,7 +4577,7 @@ const nombre = defineModel<number>('compteur', { default: 0 })
 const [valeur, modificateurs] = defineModel<string, 'trim' | 'capitalize'>()
 ```
 
-### 19.6 Typer les slots
+## Typer les slots
 
 ```vue
 <script setup lang="ts" generic="T">
@@ -4702,7 +4590,7 @@ defineSlots<{
 </script>
 ```
 
-### 19.7 Typer `provide` et `inject`
+## Typer `provide` et `inject`
 
 ```ts
 import type { InjectionKey } from 'vue'
@@ -4713,7 +4601,7 @@ provide(CleConfig, { debug: true })         // type vérifié
 const cfg = inject(CleConfig)               // { debug: boolean } | undefined
 ```
 
-### 19.8 Typer les références de gabarit
+## Typer les références de gabarit
 
 ```ts
 // Élément DOM
@@ -4732,7 +4620,7 @@ const gen = ref<ComponentExposed<typeof MonGenerique> | null>(null)
 
 > L'instance n'expose que ce que déclare **`defineExpose`** : le type reflète cet objet. Le type utilitaire `ComponentInstance<typeof C>` est l'alias moderne d'`InstanceType<typeof C>` pour les composants.
 
-### 19.9 Typer les événements du DOM
+## Typer les événements du DOM
 
 ```ts
 function onInput(e: Event) { const el = e.target as HTMLInputElement }
@@ -4745,7 +4633,7 @@ function onChange(e: Event) {}
 
 Dans le gabarit, `$event` est typé **automatiquement** dans un gestionnaire en ligne (`@input="(e) => …"`).
 
-### 19.10 Types utilitaires de Vue
+## Types utilitaires de Vue
 
 ```ts
 import type {
@@ -4770,7 +4658,7 @@ import type {
 | `ComponentInstance<typeof C>` | Alias moderne de `InstanceType<typeof C>` |
 | `StyleValue` | Type d'une prop `style` |
 
-#### Hériter des attributs HTML natifs
+### Hériter des attributs HTML natifs
 
 ```ts
 import type { InputHTMLAttributes } from 'vue'
@@ -4780,7 +4668,7 @@ interface Props extends /* @vue-ignore */ InputHTMLAttributes { label: string }
 
 Le commentaire `@vue-ignore` indique au compilateur de ne pas tenter de résoudre ce type pour la déclaration d'exécution des props, tout en gardant le typage dans l'éditeur.
 
-### 19.11 Composants génériques
+## Composants génériques
 
 ```vue
 <script setup lang="ts" generic="T extends { id: string | number }, K extends keyof T">
@@ -4797,7 +4685,7 @@ const modele = defineModel<T | undefined>()
 - Plusieurs paramètres génériques sont séparés par des **virgules** ; les contraintes `extends` sont supportées.
 - L'inférence s'effectue **à partir des props passées** au composant.
 
-### 19.12 Typage des composants fonctionnels
+## Typage des composants fonctionnels
 
 ```ts
 import { h, type FunctionalComponent } from 'vue'
@@ -4809,7 +4697,7 @@ Icone.props = ['nom']
 Icone.emits = ['clic']
 ```
 
-### 19.13 Augmentation de modules (types globaux)
+## Augmentation de modules (types globaux)
 
 ```ts
 // src/types/vue.d.ts
@@ -4846,7 +4734,7 @@ declare module 'vue' {
 export {}        // transforme le fichier en module
 ```
 
-#### Imports de ressources et variables d'environnement
+### Imports de ressources et variables d'environnement
 
 ```ts
 // env.d.ts
@@ -4859,9 +4747,9 @@ interface ImportMetaEnv {
 interface ImportMeta { readonly env: ImportMetaEnv }
 ```
 
-Les variables d'environnement exposées au client **doivent** être préfixées par `VITE_` ; elles sont **publiques** (chapitre 25).
+Les variables d'environnement exposées au client **doivent** être préfixées par `VITE_` ; elles sont **publiques** (section « Outils et écosystème »).
 
-### 19.14 Typage de Vue Router et de Pinia (rappel)
+## Typage de Vue Router et de Pinia (rappel)
 
 ```ts
 // Routeur
@@ -4874,7 +4762,7 @@ declare module 'vue-router' {
 type UtilisateurStore = ReturnType<typeof useUtilisateurStore>
 ```
 
-### 19.15 Typage de l'API et des données
+## Typage de l'API et des données
 
 ```ts
 // Types d'API partagés
@@ -4902,7 +4790,7 @@ type Utilisateur = z.infer<typeof SchemaUtilisateur>
 const u: Utilisateur = SchemaUtilisateur.parse(await reponse.json())     // lève une erreur si la forme est incorrecte
 ```
 
-### 19.16 Problèmes courants et solutions
+## Problèmes courants et solutions
 
 | Problème | Cause / solution |
 | --- | --- |
@@ -4914,7 +4802,7 @@ const u: Utilisateur = SchemaUtilisateur.parse(await reponse.json())     // lèv
 | Inférence de `reactive` avec `ref` imbriqués | Garder à l'esprit `UnwrapRef` |
 | `$refs` non typé (Options API) | Préférer les références de gabarit typées |
 
-### 19.17 Pièges fréquents
+## Pièges fréquents
 
 - Croire que Vite **vérifie** les types.
 - Typer des props par `any` ou `Object` générique.
@@ -4923,19 +4811,11 @@ const u: Utilisateur = SchemaUtilisateur.parse(await reponse.json())     // lèv
 - Employer des assertions `as` pour contourner le compilateur au lieu de corriger le type.
 - Faire confiance au typage des réponses d'API sans validation.
 
-### Synthèse du chapitre 19
-
-Typez par **types** `defineProps`, `defineEmits`, `defineModel` et `defineSlots`. Utilisez **`InjectionKey<T>`**, `InstanceType<typeof C>` et les **composants génériques** (`generic="T"`). L'**augmentation de modules** (`ComponentCustomProperties`, `GlobalComponents`, `RouteMeta`) étend les types globaux. **`vue-tsc` en CI**, et **Zod** pour valider à l'exécution ce que TypeScript ne peut pas garantir.
-
----
-
-# Partie IV — Vue avancé
-
-## 20. Options API
+# Options API
 
 **Objectifs d'apprentissage.** Lire, comprendre et maintenir du code en **Options API** (Vue 2 et Vue 3) ; connaître chaque option et l'instance `this` ; typer l'Options API avec TypeScript ; comprendre les mixins et leurs défauts ; mélanger Options et Composition ; migrer progressivement vers la Composition API.
 
-### 20.1 Principe
+## Principe
 
 L'**Options API** définit un composant par un **objet d'options** (`data`, `computed`, `methods`, `watch`, hooks…) qui accède à l'état par **`this`**. Elle reste **entièrement supportée** en Vue 3 et très répandue dans les projets existants (dont tous les projets Vue 2).
 
@@ -4973,9 +4853,9 @@ export default defineComponent({
 
 **Modèle mental.** Chaque option a un **rôle** : `data` contient l'état, `computed` les dérivées, `methods` les actions, `watch` les réactions, les hooks le cycle de vie. L'inconvénient : la logique d'une **même préoccupation** est **dispersée** entre plusieurs options, ce qui devient pénible dans les gros composants.
 
-### 20.2 Les options
+## Les options
 
-#### État
+### État
 
 | Option | Rôle |
 | --- | --- |
@@ -4987,22 +4867,22 @@ export default defineComponent({
 | `emits` | Événements émis |
 | `expose` | Membres publics pour les références du parent |
 
-#### Rendu
+### Rendu
 
 | Option | Rôle |
 | --- | --- |
 | `template` | Gabarit sous forme de chaîne (nécessite le compilateur d'exécution) |
-| `render` | Fonction de rendu (chapitre 21) |
+| `render` | Fonction de rendu (section « Fonctions de rendu et JSX ») |
 | `compilerOptions` | Options du compilateur d'exécution |
 | `slots` | Aide au typage des slots avec fonction de rendu |
 
-#### Cycle de vie
+### Cycle de vie
 
 `beforeCreate`, `created`, `beforeMount`, `mounted`, `beforeUpdate`, `updated`, `beforeUnmount`, `unmounted`, `errorCaptured`, `renderTracked`, `renderTriggered`, `activated`, `deactivated`, `serverPrefetch`.
 
 > **Équivalence.** `beforeCreate` et `created` correspondent au code de premier niveau de `setup`. En Vue 2, `beforeDestroy` et `destroyed` ont été **renommés** `beforeUnmount` et `unmounted`.
 
-#### Composition
+### Composition
 
 | Option | Rôle |
 | --- | --- |
@@ -5013,11 +4893,11 @@ export default defineComponent({
 | `directives` | Directives locales |
 | `setup()` | Pont vers la Composition API |
 
-#### Divers
+### Divers
 
 `name`, `inheritAttrs`, options personnalisées (`ComponentCustomOptions`).
 
-### 20.3 L'instance `this`
+## L'instance `this`
 
 | Propriété | Contenu |
 | --- | --- |
@@ -5036,7 +4916,7 @@ export default defineComponent({
 
 Tous les membres (`data`, `computed`, `methods`, props, `setup`) sont placés dans le **même espace de noms** sur `this` : un nom en collision est un bogue.
 
-### 20.4 `watch` en Options API
+## `watch` en Options API
 
 ```ts
 watch: {
@@ -5047,7 +4927,7 @@ watch: {
 },
 ```
 
-### 20.5 Mixins
+## Mixins
 
 ```ts
 const mixinJournal = {
@@ -5058,15 +4938,15 @@ const mixinJournal = {
 export default { mixins: [mixinJournal] }
 ```
 
-**Inconvénients** : **origine des propriétés obscure** (d'où vient `this.journaliser` ?), **collisions** de noms, couplage implicite entre mixin et composant, typage faible. **Remplacez-les par des composables** (chapitre 13).
+**Inconvénients** : **origine des propriétés obscure** (d'où vient `this.journaliser` ?), **collisions** de noms, couplage implicite entre mixin et composant, typage faible. **Remplacez-les par des composables** (section « Composables »).
 
-#### Stratégies de fusion
+### Stratégies de fusion
 
 - `data` : fusion récursive (le **composant** l'emporte).
 - **Hooks** : tous sont appelés (ceux des mixins **d'abord**).
 - `methods`, `components`, `computed` : le **composant** est prioritaire.
 
-### 20.6 Typage de l'Options API
+## Typage de l'Options API
 
 - Utilisez **`defineComponent()`** pour activer l'inférence.
 - **Annotez le type de retour** des `computed` qui utilisent `this`.
@@ -5086,7 +4966,7 @@ export default defineComponent({
 })
 ```
 
-### 20.7 Mélanger Options et Composition
+## Mélanger Options et Composition
 
 L'option `setup()` s'exécute **avant** les autres options ; ce qu'elle retourne est exposé à `this` et au gabarit.
 
@@ -5107,7 +4987,7 @@ export default defineComponent({
 - Les valeurs retournées par `setup` **ne sont pas** accessibles dans `data()`.
 - Cette cohabitation sert surtout à **migrer progressivement** ou à utiliser un composable dans un composant existant.
 
-### 20.8 Comparaison et choix
+## Comparaison et choix
 
 | Critère | **Options API** | **Composition API** |
 | --- | --- | --- |
@@ -5118,7 +4998,7 @@ export default defineComponent({
 | Taille du bundle | Légèrement supérieure | Meilleure élimination du code inutilisé |
 | Recommandé pour | Projets existants, composants simples | **Nouveaux projets** |
 
-### 20.9 Migration vers la Composition API
+## Migration vers la Composition API
 
 | Options API | Composition API |
 | --- | --- |
@@ -5136,7 +5016,7 @@ export default defineComponent({
 
 **Stratégie.** Migrez **composant par composant**, en commençant par les nouveaux composants et ceux que vous modifiez de toute façon ; les deux styles **cohabitent** sans problème dans la même application.
 
-### 20.10 Pièges fréquents
+## Pièges fréquents
 
 - **Fonctions fléchées** dans `methods`, `computed` ou les hooks : `this` est incorrect.
 - Déclarer `data` comme un **objet** : c'est obligatoirement une **fonction**.
@@ -5144,17 +5024,11 @@ export default defineComponent({
 - **Collisions** de noms entre mixins et composant.
 - Mélanger des tutoriels Vue 2 et Vue 3 (`beforeDestroy`, `this.$set`, `.sync`).
 
-### Synthèse du chapitre 20
-
-L'Options API repose sur un **objet d'options** et sur **`this`**. Utilisez `defineComponent` et des annotations pour TypeScript. Remplacez les **mixins par des composables**. Les deux API **cohabitent** grâce à `setup()`, ce qui permet de migrer progressivement.
-
----
-
-## 21. Fonctions de rendu et JSX
+# Fonctions de rendu et JSX
 
 **Objectifs d'apprentissage.** Comprendre la **fonction de rendu** générée par le compilateur ; maîtriser `h()` et les nœuds virtuels ; écrire un composant en fonction de rendu ; utiliser **JSX / TSX** avec Vue ; traduire les directives de gabarit en fonction de rendu ; savoir quand privilégier chaque approche.
 
-### 21.1 Gabarits et fonctions de rendu
+## Gabarits et fonctions de rendu
 
 Un **gabarit** est compilé en une **fonction de rendu** qui retourne un arbre de **nœuds virtuels**. On peut écrire **directement** cette fonction pour bénéficier de la **puissance complète de JavaScript** (boucles, composition dynamique).
 
@@ -5164,9 +5038,9 @@ Un **gabarit** est compilé en une **fonction de rendu** qui retourne un arbre d
 - **bibliothèques de composants** et abstractions de bas niveau ;
 - préférence d'équipe pour **JSX / TSX**.
 
-> Les gabarits sont **plus optimisables** par le compilateur (indicateurs de modification, remontée du statique) ; les fonctions de rendu écrites à la main sont plus flexibles mais **ne profitent pas de ces optimisations** (chapitre 23).
+> Les gabarits sont **plus optimisables** par le compilateur (indicateurs de modification, remontée du statique) ; les fonctions de rendu écrites à la main sont plus flexibles mais **ne profitent pas de ces optimisations** (section « Performance »).
 
-### 21.2 `h()` : créer des nœuds virtuels
+## `h()` : créer des nœuds virtuels
 
 Signature : `h(type, props?, enfants?)`.
 
@@ -5185,11 +5059,11 @@ h(MonComposant, { titre: 'x' }, {                              // slots = objet 
 })
 ```
 
-#### Propriétés et attributs
+### Propriétés et attributs
 
 `h('input', { value: 'x' })` : Vue choisit automatiquement entre **propriété DOM** et **attribut**. Forcez avec le préfixe `.` (propriété) ou `^` (attribut).
 
-#### Événements et modificateurs
+### Événements et modificateurs
 
 ```ts
 import { h, withModifiers } from 'vue'
@@ -5198,7 +5072,7 @@ h('input', { onInput: gestionnaire, onClickCapture: gestionnaire, onKeyupOnce: g
 h('button', { onClick: withModifiers(gestionnaire, ['stop', 'prevent']) })
 ```
 
-#### Constantes fournies
+### Constantes fournies
 
 `Fragment` (racines multiples), `Text`, `Comment`, `Teleport`, `Suspense`, `KeepAlive`, `Transition`.
 
@@ -5208,7 +5082,7 @@ import { h, Fragment } from 'vue'
 h(Fragment, [h('p', 'a'), h('p', 'b')])
 ```
 
-### 21.3 Un composant en fonction de rendu
+## Un composant en fonction de rendu
 
 ```ts
 import { defineComponent, h, ref } from 'vue'
@@ -5230,14 +5104,14 @@ export default defineComponent({
 - Les **dépendances** lues dans la fonction de rendu sont suivies : le composant se re-rend quand elles changent.
 - Pour **exposer** des méthodes : `expose({ methode })` dans `setup`.
 
-#### Slots
+### Slots
 
 ```ts
 slots.default?.()                          // slot par défaut : tableau de nœuds virtuels
 slots.entete?.({ titre: 'x' })             // slot à portée
 ```
 
-#### Directives intégrées en fonction de rendu
+### Directives intégrées en fonction de rendu
 
 | Gabarit | Fonction de rendu |
 | --- | --- |
@@ -5255,7 +5129,7 @@ h(Champ, {
 })
 ```
 
-#### Résolution de composants et directives
+### Résolution de composants et directives
 
 ```ts
 import { resolveComponent, resolveDirective } from 'vue'
@@ -5263,11 +5137,11 @@ import { resolveComponent, resolveDirective } from 'vue'
 const Bouton = resolveComponent('MonBouton')      // composant enregistré globalement
 ```
 
-### 21.4 Autres utilitaires
+## Autres utilitaires
 
 `createVNode` (version de bas niveau de `h`), `cloneVNode`, `isVNode`, `mergeProps` (fusion d'attributs), `render(vnode, conteneur)` (rendu impératif hors application).
 
-### 21.5 JSX / TSX
+## JSX / TSX
 
 Plugin : **`@vitejs/plugin-vue-jsx`**.
 
@@ -5308,7 +5182,7 @@ export default defineComponent({
 })
 ```
 
-#### Différences avec React
+### Différences avec React
 
 - L'attribut s'écrit **`class`** (et non `className`), `for`, et les événements `onClick`.
 - Les `ref` doivent être lus avec **`.value`** dans le JSX.
@@ -5316,7 +5190,7 @@ export default defineComponent({
 - Slots : `v-slots={{ default: () => 'x' }}` ou enfants sous forme de fonctions.
 - Pas de « hooks » à ordre contraint : le composant n'est exécuté **qu'une fois** (`setup`), seule la fonction retournée est rappelée à chaque rendu.
 
-#### Composant fonctionnel en JSX
+### Composant fonctionnel en JSX
 
 ```tsx
 import type { FunctionalComponent } from 'vue'
@@ -5324,7 +5198,7 @@ import type { FunctionalComponent } from 'vue'
 const Item: FunctionalComponent<{ label: string }> = ({ label }) => <li>{label}</li>
 ```
 
-### 21.6 Gabarit, JSX ou fonction de rendu ?
+## Gabarit, JSX ou fonction de rendu ?
 
 | | **Gabarit** | **JSX / TSX** | **`h()`** |
 | --- | --- | --- | --- |
@@ -5333,7 +5207,7 @@ const Item: FunctionalComponent<{ label: string }> = ({ label }) => <li>{label}<
 | Souplesse logique | Moyenne | **Haute** | **Haute** |
 | Usage recommandé | **Par défaut** | Composants très dynamiques | Bibliothèques, bas niveau |
 
-### 21.7 Pièges fréquents
+## Pièges fréquents
 
 - Oublier que `setup` doit **retourner une fonction** (et non un objet) pour produire le rendu.
 - Réutiliser **le même nœud virtuel** à plusieurs endroits : chaque nœud doit être **unique**.
@@ -5341,19 +5215,11 @@ const Item: FunctionalComponent<{ label: string }> = ({ label }) => <li>{label}<
 - Mauvais format de slots dans `h()` : c'est un **objet de fonctions**, pas un tableau.
 - Lire un `ref` sans `.value` dans la fonction de rendu.
 
-### Synthèse du chapitre 21
-
-Gabarit → **fonction de rendu** → **nœuds virtuels**. `h(type, props, enfants)`, `Fragment`, `withModifiers` et `withDirectives` constituent la boîte à outils ; le **JSX** (via `@vitejs/plugin-vue-jsx`) est proche de React, avec `class`. Le **gabarit reste le choix par défaut** pour ses optimisations.
-
----
-
-# Partie V — Tests et performance
-
-## 22. Tests
+# Tests
 
 **Objectifs d'apprentissage.** Définir une stratégie de test ; mettre en place **Vitest** et **Vue Test Utils** ; tester composants, composables, stores Pinia et routes ; gérer l'asynchrone, les doublures (*mocks*) et les minuteries ; écrire des tests **de bout en bout** avec Playwright ou Cypress ; intégrer accessibilité et qualité ; connaître les bonnes pratiques.
 
-### 22.1 Stratégie de test
+## Stratégie de test
 
 | Niveau | Cible | Outils |
 | --- | --- | --- |
@@ -5365,7 +5231,7 @@ Gabarit → **fonction de rendu** → **nœuds virtuels**. `h(type, props, enfan
 
 **Principe directeur** : testez le **comportement observable** (ce que l'utilisateur voit et fait), **pas les détails d'implémentation** (état interne, noms de méthodes). Un bon test survit à une refonte interne du composant.
 
-### 22.2 Installation
+## Installation
 
 ```bash
 npm i -D vitest @vue/test-utils jsdom @vitest/coverage-v8
@@ -5387,7 +5253,7 @@ export default mergeConfig(viteConfig, defineConfig({
 
 Scripts : `"test": "vitest"` (mode veille) et `"coverage": "vitest run --coverage"`. `create-vue` génère cette configuration si l'option Vitest est cochée. **Vitest** réutilise la configuration de Vite : mêmes alias, mêmes plugins.
 
-### 22.3 Tester un composant avec Vue Test Utils
+## Tester un composant avec Vue Test Utils
 
 ```ts
 // src/components/__tests__/Compteur.spec.ts
@@ -5416,7 +5282,7 @@ describe('Compteur', () => {
 })
 ```
 
-#### API principales
+### API principales
 
 | API | Rôle |
 | --- | --- |
@@ -5432,7 +5298,7 @@ describe('Compteur', () => {
 | `wrapper.unmount()` | Démonte |
 | `flushPromises()` | Résout les promesses en attente |
 
-#### Options de `mount`
+### Options de `mount`
 
 ```ts
 mount(Comp, {
@@ -5450,11 +5316,11 @@ mount(Comp, {
 })
 ```
 
-#### Sélecteurs robustes
+### Sélecteurs robustes
 
 Utilisez des attributs dédiés **`data-test="…"`** ou, mieux, des **rôles ARIA et libellés** (Testing Library) plutôt que des classes de style : elles changent lors d'une refonte graphique.
 
-### 22.4 Asynchronisme
+## Asynchronisme
 
 ```ts
 await wrapper.setValue('abc')                         // met à jour et attend le prochain cycle
@@ -5464,7 +5330,7 @@ vi.useFakeTimers(); vi.advanceTimersByTime(1000)      // minuteries simulées
 
 Toute interaction qui modifie le DOM (`trigger`, `setValue`, `setProps`) retourne une promesse : **attendez-la** avant l'assertion.
 
-### 22.5 Doublures (*mocks*)
+## Doublures (*mocks*)
 
 ```ts
 import { vi } from 'vitest'
@@ -5484,7 +5350,7 @@ vi.spyOn(window, 'fetch').mockResolvedValue(new Response(JSON.stringify({ ok: tr
 
 > **Règle.** Remplacez par des doublures **aux frontières** du système (réseau, horloge, stockage), pas les modules internes que vous êtes censé tester.
 
-### 22.6 Tester un composable
+## Tester un composable
 
 ```ts
 import { avecSetup } from '@/test/utils'
@@ -5499,9 +5365,9 @@ it('useCompteur', () => {
 ```
 
 - Sans hooks : appel direct de la fonction.
-- Avec hooks ou injection : composant hôte (chapitre 13, section 13.11).
+- Avec hooks ou injection : composant hôte (section « Composables », sous-section « Tester un composable »).
 
-### 22.7 Tester Pinia
+## Tester Pinia
 
 ```ts
 import { createTestingPinia } from '@pinia/testing'
@@ -5521,9 +5387,9 @@ const store = usePanierStore()
 expect(store.ajouter).toHaveBeenCalled()
 ```
 
-Pour tester un store **seul** : `setActivePinia(createPinia())` dans `beforeEach` (chapitre 18).
+Pour tester un store **seul** : `setActivePinia(createPinia())` dans `beforeEach` (section « Pinia (gestion d'état) »).
 
-### 22.8 Tester avec Vue Router
+## Tester avec Vue Router
 
 ```ts
 import { createRouter, createMemoryHistory } from 'vue-router'
@@ -5537,13 +5403,13 @@ const wrapper = mount(App, { global: { plugins: [router] } })
 
 Ou **simulez** le routeur : `RouterLinkStub`, `mocks: { $route }`, `vi.mock('vue-router')` (utile pour un composant qui appelle seulement `useRoute`).
 
-### 22.9 Tests d'instantané (*snapshots*)
+## Tests d'instantané (*snapshots*)
 
 `expect(wrapper.html()).toMatchSnapshot()` compare le HTML à une version enregistrée. À utiliser **avec parcimonie** : ces tests sont **fragiles** (tout changement de balisage les casse) et leurs échecs sont souvent validés sans lecture.
 
-### 22.10 Tests de bout en bout
+## Tests de bout en bout
 
-#### Playwright
+### Playwright
 
 ```bash
 npm init playwright@latest
@@ -5561,7 +5427,7 @@ test('connexion', async ({ page }) => {
 })
 ```
 
-#### Cypress
+### Cypress
 
 ```ts
 describe('accueil', () => {
@@ -5574,14 +5440,14 @@ describe('accueil', () => {
 
 Les deux outils supportent aussi les **tests de composants dans un vrai navigateur** (Playwright CT, Cypress Component Testing, mode navigateur de Vitest), utiles pour ce qui dépend du rendu réel (focus, mise en page, glisser-déposer).
 
-### 22.11 Accessibilité et qualité
+## Accessibilité et qualité
 
 - **Testing Library** (`@testing-library/vue`) : requêtes par **rôle, libellé et texte** (`getByRole`, `getByLabelText`), qui reflètent l'expérience de l'utilisateur.
 - **axe-core**, `vitest-axe` et `@axe-core/playwright` : audit **d'accessibilité** automatisé.
 - **Couverture** : un indicateur, **pas un objectif** en soi.
 - **Intégration continue** : exécutez `vue-tsc`, ESLint, tests unitaires et E2E à chaque modification.
 
-### 22.12 Pièges fréquents
+## Pièges fréquents
 
 - Oublier `await` sur `trigger`, `setValue` ou `setProps` : l'assertion s'exécute trop tôt.
 - Tester l'**implémentation** (`wrapper.vm.x`) plutôt que le rendu.
@@ -5591,17 +5457,11 @@ Les deux outils supportent aussi les **tests de composants dans un vrai navigate
 - Oublier `attachTo: document.body` pour tester le focus.
 - Viser 100 % de couverture au détriment de la pertinence des tests.
 
-### Synthèse du chapitre 22
-
-**Vitest + Vue Test Utils** couvrent le niveau unitaire et composant ; **Playwright** et **Cypress** le niveau E2E. Testez le **comportement**, pas l'implémentation. Attendez (`await`) toute mise à jour du DOM, utilisez `flushPromises` pour l'asynchrone, `@pinia/testing` pour Pinia et `createMemoryHistory` pour le routeur.
-
----
-
-## 23. Performance
+# Performance
 
 **Objectifs d'apprentissage.** Comprendre ce qui détermine la performance d'une application Vue ; appliquer les techniques d'optimisation du **chargement** et des **mises à jour** ; connaître les optimisations automatiques du compilateur et le **mode Vapor** ; mesurer et diagnostiquer avec les bons outils ; maîtriser la mémoire.
 
-### 23.1 Deux axes de performance
+## Deux axes de performance
 
 | Axe | Mesures | Leviers |
 | --- | --- | --- |
@@ -5610,21 +5470,21 @@ Les deux outils supportent aussi les **tests de composants dans un vrai navigate
 
 > **Règle : mesurez d'abord** (Lighthouse, Chrome Performance, Vue DevTools), **optimisez ensuite**, puis **mesurez de nouveau**. Une optimisation sans mesure est un pari.
 
-### 23.2 Optimisation du chargement
+## Optimisation du chargement
 
-#### Choix d'architecture
+### Choix d'architecture
 
-- **SSG** (pré-rendu) pour le contenu statique ; **SSR** pour le contenu dynamique référencé ; **SPA** pour les applications internes (chapitre 24).
+- **SSG** (pré-rendu) pour le contenu statique ; **SSR** pour le contenu dynamique référencé ; **SPA** pour les applications internes (section « Rendu côté serveur (SSR), génération statique (SSG) et Nuxt »).
 - **Hydratation paresseuse** *(3.5)* : `defineAsyncComponent({ hydrate: hydrateOnIdle() | hydrateOnVisible() | hydrateOnMediaQuery() | hydrateOnInteraction() })`.
 
-#### Taille du bundle
+### Taille du bundle
 
 - **Élimination du code inutilisé** (*tree-shaking*) : imports **nommés** (`import { debounce } from 'lodash-es'`).
 - Préférez des **dépendances légères** (`date-fns` ou `dayjs` plutôt que `moment`).
 - **Analysez** : `rollup-plugin-visualizer`, `vite-bundle-visualizer`.
 - Évitez les plugins globaux et composants globaux inutiles.
 
-#### Découpage du code et chargement à la demande
+### Découpage du code et chargement à la demande
 
 ```ts
 const routes = [{ path: '/admin', component: () => import('@/views/VueAdmin.vue') }]      // routes
@@ -5633,16 +5493,16 @@ const Graphique = defineAsyncComponent(() => import('./Graphique.vue'))         
 
 Préchargement : `<link rel="modulepreload">`, commentaires de préchargement, ou `import()` au survol d'un lien.
 
-#### Ressources
+### Ressources
 
 - **Images** : formats modernes (WebP, AVIF), `loading="lazy"`, `srcset`, dimensions explicites.
 - **Polices** : `font-display: swap`, préchargement, sous-ensembles de caractères.
 - **Cache** : noms de fichiers à empreinte, en-têtes `Cache-Control`, **CDN**, compression **Brotli** ou gzip.
 - **PWA et service workers** : `vite-plugin-pwa`.
 
-### 23.3 Optimisation des mises à jour
+## Optimisation des mises à jour
 
-#### 1. Stabilité des props
+### Stabilité des props
 
 Un composant enfant ne se re-rend que si ses **props ont changé**. Passez des **valeurs primitives stables** plutôt que des objets recréés à chaque rendu.
 
@@ -5654,7 +5514,7 @@ Un composant enfant ne se re-rend que si ses **props ont changé**. Passez des *
 <ElementListe v-for="i in items" :key="i.id" :actif="i.id === selectionId" />
 ```
 
-#### 2. `v-once` et `v-memo`
+### `v-once` et `v-memo`
 
 ```vue
 <div v-once>{{ contenuStatique }}</div>
@@ -5666,11 +5526,11 @@ Un composant enfant ne se re-rend que si ses **props ont changé**. Passez des *
 
 `v-memo` : à réserver aux **très grandes listes** (plus d'un millier d'éléments) ; avec `v-for`, il se place **sur le même élément**.
 
-#### 3. Propriétés calculées stables *(3.4)*
+### Propriétés calculées stables *(3.4)*
 
 Un `computed` ne **notifie** ses dépendants que si sa valeur change réellement : retourner des **primitives** évite des déclenchements superflus.
 
-#### 4. Réactivité superficielle
+### Réactivité superficielle
 
 ```ts
 const grosseListe = shallowRef<Item[]>([])
@@ -5679,32 +5539,32 @@ grosseListe.value = nouvelleListe                  // remplacez pour déclencher
 const instance = markRaw(new BibliothequeCarte())  // jamais proxifié
 ```
 
-#### 5. Limiter l'abstraction en composants
+### Limiter l'abstraction en composants
 
 Chaque **instance de composant** a un coût. Pour de très longues listes, ne créez pas un composant par ligne si un élément simple suffit, ou virtualisez la liste.
 
-#### 6. Virtualisation des listes
+### Virtualisation des listes
 
 Ne rendez que les éléments **visibles** à l'écran : `vue-virtual-scroller`, `@tanstack/vue-virtual`.
 
-#### 7. Optimiser les observateurs
+### Optimiser les observateurs
 
 - Évitez `deep: true` sur de grosses structures : observez un **getter précis**.
 - Ne créez pas d'observateurs dans des boucles.
 
-#### 8. Fonctions dans le gabarit
+### Fonctions dans le gabarit
 
 Évitez les calculs coûteux dans le gabarit : utilisez une propriété calculée.
 
-#### 9. `KeepAlive`
+### `KeepAlive`
 
 Évite de recréer des vues coûteuses ; limitez la mémoire par `max`.
 
-#### 10. `key` pertinentes
+### `key` pertinentes
 
 Une `key` stable permet la **réutilisation** ; une `key` qui change provoque la **recréation** (outil de réinitialisation volontaire).
 
-### 23.4 Optimisations de compilation (automatiques)
+## Optimisations de compilation (automatiques)
 
 Le compilateur de gabarits applique :
 
@@ -5714,9 +5574,9 @@ Le compilateur de gabarits applique :
 - la **mise en cache des gestionnaires** en ligne ;
 - la **transformation en chaîne** des gros blocs statiques (insérés par `innerHTML`).
 
-Ces optimisations s'appliquent **aux gabarits**, pas aux fonctions de rendu écrites à la main (chapitre 21).
+Ces optimisations s'appliquent **aux gabarits**, pas aux fonctions de rendu écrites à la main (section « Fonctions de rendu et JSX »).
 
-### 23.5 Vue 3.6 et le mode Vapor
+## Vue 3.6 et le mode Vapor
 
 La branche **3.6**, en candidate à la sortie à la date de rédaction, apporte deux changements :
 
@@ -5739,7 +5599,7 @@ const count = ref(0)
 - **Sous-ensemble d'API** : certaines fonctionnalités ne sont pas prises en charge dans un composant Vapor (consultez les notes de version).
 - **Statut** : fonctionnellement complet mais **non stable** tant que la version 3.6 finale n'est pas publiée. À évaluer sur une page isolée où un goulot est déjà **mesuré** ; ne pas déployer en production avant la version stable.
 
-### 23.6 Mesure et diagnostic
+## Mesure et diagnostic
 
 | Outil | Usage |
 | --- | --- |
@@ -5756,7 +5616,7 @@ import { onRenderTriggered } from 'vue'
 onRenderTriggered((e) => console.log(e.key, e.target, e.type))      // quelle donnée a déclenché le rendu ?
 ```
 
-### 23.7 Mémoire
+## Mémoire
 
 - Nettoyez **minuteurs**, **écouteurs**, **observateurs** et **WebSocket** dans `onUnmounted`.
 - Arrêtez les `watch` créés de façon **asynchrone**.
@@ -5764,7 +5624,7 @@ onRenderTriggered((e) => console.log(e.key, e.target, e.type))      // quelle do
 - Limitez le cache `KeepAlive` (`max`).
 - Surveillez les **états de module** qui grossissent sans fin (caches, journaux).
 
-### 23.8 Pièges fréquents
+## Pièges fréquents
 
 - Optimiser **sans mesurer**.
 - `deep: true` sur de grosses données.
@@ -5773,19 +5633,11 @@ onRenderTriggered((e) => console.log(e.key, e.target, e.type))      // quelle do
 - Bundle gonflé par des imports globaux (`import _ from 'lodash'`).
 - Mettre en production une version candidate (3.6 RC) pour gagner quelques millisecondes.
 
-### Synthèse du chapitre 23
-
-**Mesurez → optimisez → mesurez.** Chargement : **découpage du code, SSR / SSG, images, cache**. Mises à jour : **props stables, `shallowRef`, virtualisation, `v-memo`, `computed` stables**. Le compilateur optimise automatiquement les **gabarits** ; Vue 3.6 prépare un nouveau noyau de réactivité et le **mode Vapor** (optionnel, à n'utiliser qu'en version stable).
-
----
-
-# Partie VI — Essentiels
-
-## 24. Rendu côté serveur (SSR), génération statique (SSG) et Nuxt
+# Rendu côté serveur (SSR), génération statique (SSG) et Nuxt
 
 **Objectifs d'apprentissage.** Distinguer **CSR**, **SSR**, **SSG** et rendu **hybride** ; comprendre l'**hydratation** et les **désaccords d'hydratation** ; connaître les principes du code universel et de l'isolation par requête ; prendre en main **Nuxt** (routage par fichiers, récupération de données, serveur Nitro, rendu hybride) ; connaître VitePress et la génération statique ; choisir le bon mode.
 
-### 24.1 Modes de rendu
+## Modes de rendu
 
 | Mode | Où le HTML est produit | Avantages | Inconvénients |
 | --- | --- | --- | --- |
@@ -5797,11 +5649,11 @@ onRenderTriggered((e) => console.log(e.key, e.target, e.type))      // quelle do
 
 Un même projet peut **mélanger** ces modes **par route** (les `routeRules` de Nuxt).
 
-### 24.2 L'hydratation
+## L'hydratation
 
 Le serveur envoie du **HTML** ; le client **« hydrate »** l'application : il construit l'arbre de nœuds virtuels, **associe** les éléments DOM existants et **attache** les écouteurs, **sans recréer le DOM**. Résultat : l'utilisateur voit le contenu immédiatement, et la page devient interactive dès que le JavaScript est chargé.
 
-#### Désaccord d'hydratation (*hydration mismatch*)
+### Désaccord d'hydratation (*hydration mismatch*)
 
 Quand le HTML produit par le serveur **diffère** du premier rendu côté client, Vue **avertit** et peut devoir corriger le DOM. **Causes fréquentes :**
 
@@ -5811,7 +5663,7 @@ Quand le HTML produit par le serveur **diffère** du premier rendu côté client
 
 **Solutions :** déplacer le code dépendant du navigateur dans `onMounted`, utiliser `useId`, `<ClientOnly>` (Nuxt), initialiser avec des valeurs **identiques** côté serveur et client ; l'attribut `data-allow-mismatch` *(3.5)* tolère volontairement un écart connu (par exemple une date).
 
-#### Stratégies d'hydratation paresseuse *(3.5)*
+### Stratégies d'hydratation paresseuse *(3.5)*
 
 ```ts
 import {
@@ -5827,7 +5679,7 @@ const Carte = defineAsyncComponent({
 
 Les autres stratégies : `hydrateOnIdle()` (quand le navigateur est inactif), `hydrateOnInteraction()` (au premier clic ou survol), `hydrateOnMediaQuery('(max-width: 500px)')`. Elles retardent le coût du JavaScript pour les zones peu importantes.
 
-### 24.3 SSR avec l'API Vue (bas niveau)
+## SSR avec l'API Vue (bas niveau)
 
 ```ts
 // serveur (Node)
@@ -5846,7 +5698,7 @@ import App from './App.vue'
 createSSRApp(App).mount('#app')          // hydrate le HTML existant
 ```
 
-#### Principes à respecter
+### Principes à respecter
 
 - **Code universel** : le même code s'exécute côté serveur et côté navigateur ; **pas d'API du navigateur** directement au niveau racine.
 - **Hooks** : seuls `setup` et `onServerPrefetch` s'exécutent côté serveur ; `onMounted` et les suivants **non**.
@@ -5857,7 +5709,7 @@ createSSRApp(App).mount('#app')          // hydrate le HTML existant
 
 > En pratique, on utilise un **framework** (Nuxt) ou le mode SSR de Vite plutôt que d'assembler tout cela soi-même.
 
-### 24.4 Nuxt
+## Nuxt
 
 **Nuxt** est le **méta-framework full-stack** officiel de l'écosystème Vue : routage par fichiers, importations automatiques, SSR / SSG / hybride, serveur intégré (**Nitro**), modules.
 
@@ -5868,7 +5720,7 @@ cd mon-app && npm run dev
 
 > **Version.** **Nuxt 4** (publié en 2025) est la version de référence ; elle place le code de l'application dans un dossier **`app/`** et garde `server/`, `public/` et la configuration à la racine. Les projets **Nuxt 3** utilisent la même organisation mais avec les dossiers directement à la racine ; la plupart des concepts ci-dessous s'appliquent aux deux.
 
-#### Structure (Nuxt 4)
+### Structure (Nuxt 4)
 
 ```text
 mon-app/
@@ -5894,7 +5746,7 @@ mon-app/
 └── nuxt.config.ts              # configuration
 ```
 
-#### Fonctionnalités clés
+### Fonctionnalités clés
 
 | Fonctionnalité | Description |
 | --- | --- |
@@ -5952,17 +5804,17 @@ export default defineNuxtConfig({
 - `runtimeConfig` : les clés **à la racine** restent **côté serveur** (secrets) ; seules celles sous `public` sont exposées au client.
 - **`useFetch` / `useAsyncData`** évitent la double requête (serveur puis client) en **transférant** le résultat au client ; la clé d'identification permet la mise en cache et la déduplication. Dans Nuxt 4, les données retournées sont dans un **`shallowRef`** par défaut.
 
-#### TypeScript dans Nuxt
+### TypeScript dans Nuxt
 
 Les types sont **générés automatiquement** (dossier `.nuxt/` : routes, composants, importations automatiques). Vérification : `npx nuxi typecheck`.
 
-### 24.5 Génération statique et sites de contenu
+## Génération statique et sites de contenu
 
 - **Nuxt** : `nuxt generate` (pré-rendu de toutes les routes) et **Nuxt Content** (Markdown et composants dans le contenu).
 - **VitePress** : générateur de sites statiques (documentation) fondé sur **Vite + Vue**, avec du contenu en **Markdown** pouvant intégrer des composants Vue.
 - **vite-ssg** : génération statique pour des applications Vite + Vue Router.
 
-### 24.6 Choisir le mode
+## Choisir le mode
 
 | Besoin | Choix |
 | --- | --- |
@@ -5971,7 +5823,7 @@ Les types sont **générés automatiquement** (dossier `.nuxt/` : routes, compos
 | Commerce en ligne, contenu dynamique référencé | **SSR / hybride** (Nuxt) |
 | Grosse application avec zones statiques et dynamiques | **Hybride** (`routeRules`) |
 
-### 24.7 Pièges fréquents
+## Pièges fréquents
 
 - Utiliser `window` ou `document` **à la racine** de `<script setup>` en SSR.
 - **État global partagé** entre requêtes serveur (variable de module).
@@ -5980,17 +5832,11 @@ Les types sont **générés automatiquement** (dossier `.nuxt/` : routes, compos
 - Exposer des secrets dans `runtimeConfig.public`.
 - Oublier que `onMounted` ne s'exécute pas sur le serveur.
 
-### Synthèse du chapitre 24
-
-**CSR / SSR / SSG / hybride** : choisissez selon le référencement, le dynamisme et l'infrastructure. **Hydratation** : le HTML du serveur doit correspondre au premier rendu du client. **Nuxt** apporte routage par fichiers, importations automatiques, récupération de données isomorphe et serveur Nitro. Respectez le **code universel** et l'**isolation par requête**.
-
----
-
-## 25. Outils et écosystème
+# Outils et écosystème
 
 **Objectifs d'apprentissage.** Connaître les outils officiels et incontournables ; choisir bibliothèques d'interface, utilitaires, formulaires, internationalisation, requêtes serveur ; gérer les variables d'environnement ; mettre en place la chaîne de qualité (lint, formatage, types, intégration continue) ; savoir où trouver l'information officielle.
 
-### 25.1 Construction et outillage
+## Construction et outillage
 
 | Outil | Rôle |
 | --- | --- |
@@ -6001,7 +5847,7 @@ Les types sont **générés automatiquement** (dossier `.nuxt/` : routes, compos
 | **Webpack / Rspack** | Alternatives (projets existants) |
 | **`unplugin-*`** | `unplugin-auto-import`, `unplugin-vue-components`, `unplugin-icons` (le routage par fichiers est désormais dans Vue Router 5) |
 
-#### Variables d'environnement (Vite)
+### Variables d'environnement (Vite)
 
 ```text
 .env                # toutes les configurations
@@ -6017,7 +5863,7 @@ import.meta.env.MODE / DEV / PROD
 
 > **Tout ce qui est exposé au client est public** : ne mettez **jamais de secrets** dans une variable `VITE_*`, ils seraient lisibles dans le bundle.
 
-### 25.2 Outils de développement
+## Outils de développement
 
 | Outil | Description |
 | --- | --- |
@@ -6028,7 +5874,7 @@ import.meta.env.MODE / DEV / PROD
 | **Prettier**, **Oxlint**, **Biome** | Formatage et analyse rapide |
 | **Husky + lint-staged** | Hooks Git avant commit |
 
-### 25.3 Bibliothèques d'interface
+## Bibliothèques d'interface
 
 | Bibliothèque | Caractéristiques |
 | --- | --- |
@@ -6044,7 +5890,7 @@ import.meta.env.MODE / DEV / PROD
 
 **Styles** : **Tailwind CSS**, **UnoCSS** (CSS atomique), **Sass / SCSS**, **CSS Modules**, **PostCSS**. **Icônes** : **Iconify** et `unplugin-icons`.
 
-### 25.4 Utilitaires et composables
+## Utilitaires et composables
 
 | Domaine | Outils |
 | --- | --- |
@@ -6065,23 +5911,23 @@ import.meta.env.MODE / DEV / PROD
 
 **Requêtes serveur.** Pour le **cache**, la déduplication, le rafraîchissement et les états de chargement des requêtes, une bibliothèque dédiée (TanStack Query, Pinia Colada) est préférable à des requêtes écrites à la main dans un store.
 
-### 25.5 Pinia, Router et extensions
+## Pinia, Router et extensions
 
 - **Pinia** : `pinia-plugin-persistedstate`, `@pinia/colada`, `@pinia/testing`.
 - **Vue Router** : routage par fichiers intégré (v5), `vue-router-mock` pour les tests.
 
-### 25.6 Tests
+## Tests
 
 **Vitest**, **Vue Test Utils**, **Testing Library**, **Playwright**, **Cypress**, **MSW**, **Storybook** (documentation et tests de composants).
 
-### 25.7 Documentation et système de conception
+## Documentation et système de conception
 
 - **Storybook** : catalogue interactif de composants.
 - **Histoire** : alternative native à Vue.
 - **VitePress** : documentation.
 - **VueUse** : exemple de bibliothèque de composables bien documentée.
 
-### 25.8 Mobile et bureau
+## Mobile et bureau
 
 | Cible | Solutions |
 | --- | --- |
@@ -6091,7 +5937,7 @@ import.meta.env.MODE / DEV / PROD
 | **PWA** | `vite-plugin-pwa` |
 | **Extensions de navigateur** | `vite-plugin-web-extension` |
 
-### 25.9 Chaîne de qualité (intégration et déploiement continus)
+## Chaîne de qualité (intégration et déploiement continus)
 
 ```yaml
 # Exemple GitHub Actions (extrait)
@@ -6108,7 +5954,7 @@ steps:
 
 Autres pratiques : **Conventional Commits**, **Renovate** ou **Dependabot** (mises à jour de dépendances), analyse de sécurité (`npm audit`), **budgets de performance**, **Lighthouse CI**.
 
-### 25.10 Ressources officielles
+## Ressources officielles
 
 - Documentation : <https://vuejs.org> (guide, API, exemples, tutoriel interactif)
 - **Terrain de jeu des SFC** : <https://play.vuejs.org>
@@ -6116,7 +5962,7 @@ Autres pratiques : **Conventional Commits**, **Renovate** ou **Dependabot** (mis
 - VueUse : <https://vueuse.org> · Vue Test Utils : <https://test-utils.vuejs.org> · VitePress : <https://vitepress.dev>
 - Communauté : Discord Vue Land, GitHub Discussions, **RFC** (`github.com/vuejs/rfcs`), Vue.js Newsletter, conférences (VueConf, Vue.js Amsterdam, VueDay).
 
-### 25.11 Pièges fréquents
+## Pièges fréquents
 
 - Choisir une bibliothèque **sans vérifier** sa compatibilité avec Vue 3, TypeScript et SSR.
 - Exposer des secrets dans les variables `VITE_*`.
@@ -6124,19 +5970,13 @@ Autres pratiques : **Conventional Commits**, **Renovate** ou **Dependabot** (mis
 - Négliger les **mises à jour de sécurité** des dépendances.
 - Utiliser des outils **abandonnés** (Vue CLI, Vuex, Vetur) dans un nouveau projet.
 
-### Synthèse du chapitre 25
-
-**Vite + Vue DevTools + Vue - Official + ESLint + `vue-tsc`** forment le socle de développement. **Pinia, Vue Router, VueUse et Vitest** sont les briques officielles ou quasi officielles ; **Nuxt** couvre le full-stack et le SSR. Choisissez vos bibliothèques selon **accessibilité, typage, maintenance et taille**.
-
----
-
-## 26. Bonnes pratiques et architecture
+# Bonnes pratiques et architecture
 
 **Objectifs d'apprentissage.** Structurer un projet Vue de façon évolutive ; appliquer le **guide de style officiel** ; adopter des conventions de nommage et de typage ; concevoir des composants cohérents ; choisir où placer l'état ; gérer erreurs, accessibilité, sécurité et internationalisation ; migrer de Vue 2 vers Vue 3 ; disposer de listes de contrôle de revue de code et de mise en production.
 
-### 26.1 Organiser le projet
+## Organiser le projet
 
-#### Par type technique (petits projets)
+### Par type technique (petits projets)
 
 ```text
 src/
@@ -6145,7 +5985,7 @@ src/
 ├── services/ (API)  ├── types/           └── utils/
 ```
 
-#### Par fonctionnalité (*feature-based*, projets moyens et grands) *(recommandé)*
+### Par fonctionnalité (*feature-based*, projets moyens et grands) *(recommandé)*
 
 ```text
 src/
@@ -6175,9 +6015,9 @@ src/
 - **Composants de présentation** (props → rendu, événements) et **composants conteneurs** (accès au store, requêtes).
 - Une **couche d'accès à l'API** (`api.ts`, `services/`) : les composants n'appellent pas `fetch` directement.
 
-### 26.2 Le guide de style officiel (résumé par priorités)
+## Le guide de style officiel (résumé par priorités)
 
-#### Priorité A — Essentielles (évitent les erreurs)
+### Priorité A — Essentielles (évitent les erreurs)
 
 - Noms de composants **multi-mots** (sauf `App` et les composants intégrés).
 - Définition **détaillée** des props (types, `required`, valeurs par défaut).
@@ -6186,7 +6026,7 @@ src/
 - **Styles `scoped`** (ou modules) pour les composants.
 - **Éviter l'état partagé implicite** et les noms de propriétés privées conflictuels.
 
-#### Priorité B — Fortement recommandées (lisibilité)
+### Priorité B — Fortement recommandées (lisibilité)
 
 - **Un composant par fichier**.
 - Noms de fichiers **cohérents** (PascalCase ou kebab-case).
@@ -6197,16 +6037,16 @@ src/
 - Expressions de gabarit **simples** (déplacer la logique dans des propriétés calculées).
 - Propriétés calculées **simples**, attributs **entre guillemets**, raccourcis de directives **systématiques** (`:`, `@`, `#`).
 
-#### Priorité C — Recommandées (cohérence)
+### Priorité C — Recommandées (cohérence)
 
 - **Ordre des options** et des attributs sur les éléments (`v-if`, `v-for`, `key`, `ref`, `v-model`, `:props`, `@événements`…).
 - **Ordre des blocs** de SFC (`script`, `template`, `style`).
 
-#### Priorité D — À utiliser avec précaution (modèles risqués)
+### Priorité D — À utiliser avec précaution (modèles risqués)
 
 - `v-if` avec `v-else` sans `key` ; sélecteurs d'élément dans `scoped` ; communication implicite parent-enfant ; accès à `$parent` ; état global hors Pinia.
 
-### 26.3 Conception des composants
+## Conception des composants
 
 - **Responsabilité unique** : un composant fait **une chose**. Si le nom contient « et » ou si le fichier dépasse quelques centaines de lignes, découpez.
 - **Props descendantes, événements montants** ; **aucune mutation** de props.
@@ -6216,7 +6056,7 @@ src/
 - **Logique extraite** en composables ; **accès aux données** dans une couche dédiée.
 - **Limitez la profondeur** de l'arbre et le nombre de props (au-delà de 6 à 8, repensez le découpage).
 
-### 26.4 Où placer l'état ?
+## Où placer l'état ?
 
 | Portée | Emplacement |
 | --- | --- |
@@ -6230,13 +6070,13 @@ src/
 
 **Mettez dans l'URL ce qui doit pouvoir être partagé ou restauré** (filtres, page courante) ; **dérivez** plutôt que de dupliquer : un état dérivé est un `computed`, jamais un second état synchronisé à la main.
 
-### 26.5 TypeScript au quotidien
+## TypeScript au quotidien
 
 - `strict: true` ; **pas de `any`** (préférez `unknown` et le rétrécissement de type).
 - **Types d'API** dans un module partagé ; **validation à l'exécution** (Zod, Valibot) aux frontières.
 - Types **nominaux** (types de marque) pour les identifiants si nécessaire (`type UserId = number & { __brand: 'UserId' }`).
 - **Unions discriminées** pour modéliser les états : `{ status: 'chargement' } | { status: 'ok'; data: T } | { status: 'erreur'; erreur: Error }`.
-- Typer les **props, événements, slots et injections** (chapitre 19).
+- Typer les **props, événements, slots et injections** (section « TypeScript avancé avec Vue »).
 - `vue-tsc` en **intégration continue**.
 
 ```ts
@@ -6249,7 +6089,7 @@ type EtatRequete<T> =
 
 Cette modélisation rend **impossibles** les états incohérents (par exemple `chargement` et `erreur` simultanés).
 
-### 26.6 Conventions de code
+## Conventions de code
 
 | Élément | Convention |
 | --- | --- |
@@ -6265,7 +6105,7 @@ Cette modélisation rend **impossibles** les états incohérents (par exemple `c
 
 Tout ce qui est **mécanisable** (formatage, imports, règles) doit l'être (Prettier, ESLint) : les revues de code se concentrent sur la conception.
 
-### 26.7 Gestion des erreurs
+## Gestion des erreurs
 
 - **Frontière d'erreur** : composant qui utilise `onErrorCaptured` et affiche un repli.
 - **Gestionnaire global** : `app.config.errorHandler` pour la journalisation (Sentry, etc.).
@@ -6295,7 +6135,7 @@ onErrorCaptured((e) => {
 </template>
 ```
 
-### 26.8 Accessibilité (a11y)
+## Accessibilité (a11y)
 
 - **HTML sémantique** (`<button>`, `<nav>`, `<main>`) avant les `role` et attributs ARIA.
 - **Libellés** associés aux champs (`<label for>` + `useId`).
@@ -6304,7 +6144,7 @@ onErrorCaptured((e) => {
 - **Contrastes** suffisants, texte alternatif des images, respect de `prefers-reduced-motion`.
 - **Tests** : `eslint-plugin-vuejs-accessibility`, axe, Lighthouse, tests manuels au clavier et avec un lecteur d'écran.
 
-### 26.9 Sécurité
+## Sécurité
 
 - **XSS** : n'utilisez `v-html` qu'avec un contenu **assaini** (DOMPurify) ; ne construisez jamais de gabarits à partir d'une entrée utilisateur ; évitez d'injecter des valeurs non maîtrisées dans `href` (`javascript:`), `style` ou `srcdoc`.
 - **Secrets** : jamais dans le code client (`VITE_*` est **public**).
@@ -6313,13 +6153,13 @@ onErrorCaptured((e) => {
 - **Politique de sécurité du contenu (CSP)**, dépendances à jour (`npm audit`), intégrité des paquets (fichier de verrouillage).
 - **SSR** : isolation par requête, échappement du JSON sérialisé dans la page.
 
-### 26.10 Internationalisation et formats
+## Internationalisation et formats
 
 - **Vue I18n** (`useI18n()`, `t('cle')`, pluriel, formats de nombres et de dates) ; **ne concaténez jamais** de phrases traduites.
 - Utilisez `Intl.DateTimeFormat`, `Intl.NumberFormat` et `Intl.RelativeTimeFormat` pour les formats régionaux.
 - Prévoyez les **langues écrites de droite à gauche** (propriétés logiques CSS : `margin-inline-start`) et l'**extensibilité du texte** (les traductions sont plus longues).
 
-### 26.11 Migration de Vue 2 vers Vue 3
+## Migration de Vue 2 vers Vue 3
 
 **Stratégie recommandée**
 
@@ -6351,7 +6191,7 @@ onErrorCaptured((e) => {
 
 Les **outils** : le **build de compatibilité** `@vue/compat` (Vue 3 avec un mode de comportement Vue 2 et des avertissements ciblés) facilite une migration progressive pour de **grands** projets ; l'outil d'audit de migration officiel recense les points à traiter. Vue 2 n'étant **plus maintenu**, la migration est aussi une question de **sécurité**.
 
-### 26.12 Liste de contrôle de revue de code
+## Liste de contrôle de revue de code
 
 **Conception**
 
@@ -6375,7 +6215,7 @@ Les **outils** : le **build de compatibilité** `@vue/compat` (Vue 3 avec un mod
 - [ ] Tests pertinents (comportement) ; textes **traduits**.
 - [ ] Performance : chargement paresseux des routes et gros composants.
 
-### 26.13 Liste de contrôle de mise en production
+## Liste de contrôle de mise en production
 
 - [ ] `vue-tsc`, ESLint et tests **réussissent** en intégration continue.
 - [ ] Build de production : taille du bundle analysée, découpage du code, sourcemaps conservés **hors** du public.
@@ -6386,7 +6226,7 @@ Les **outils** : le **build de compatibilité** `@vue/compat` (Vue 3 avec un mod
 - [ ] Accessibilité et Lighthouse vérifiés ; balises `meta` et SEO (SSR / pré-rendu si nécessaire).
 - [ ] Plan de **retour arrière** et surveillance après le déploiement.
 
-### 26.14 Pièges fréquents
+## Pièges fréquents
 
 - **Sur-ingénierie** : introduire Pinia, des abstractions et des couches avant d'en avoir le besoin.
 - **Sous-ingénierie** : composants de 1 000 lignes, état dupliqué, appels réseau dans les composants.
@@ -6395,15 +6235,7 @@ Les **outils** : le **build de compatibilité** `@vue/compat` (Vue 3 avec un mod
 - **Réinventer** ce que fournissent VueUse, Vue Router, Pinia ou la plateforme.
 - Mélanger **plusieurs styles** (Options API, Composition API, mixins) sans règle d'équipe.
 
-### Synthèse du chapitre 26
-
-Organisez **par fonctionnalité**, appliquez le **guide de style officiel**, gardez des composants **petits, typés et accessibles**, placez l'état au **bon niveau**, **validez** aux frontières, **testez** le comportement et **automatisez** la qualité. Migrer de Vue 2 est une affaire de **dépendances et de conventions**, pas seulement de syntaxe.
-
----
-
-# Annexes
-
-## Annexe A — Glossaire
+# Glossaire
 
 | Terme | Définition |
 | --- | --- |
@@ -6466,11 +6298,9 @@ Organisez **par fonctionnalité**, appliquez le **guide de style officiel**, gar
 | **`vue-tsc`** | Vérificateur de types pour les fichiers Vue |
 | **VueUse** | Collection de composables utilitaires |
 
----
+# Aide-mémoire
 
-## Annexe B — Aide-mémoire
-
-### B.1 Directives
+## Directives
 
 | Directive | Exemple |
 | --- | --- |
@@ -6483,7 +6313,7 @@ Organisez **par fonctionnalité**, appliquez le **guide de style officiel**, gar
 | Slot | `<slot name="a" :x="x">`, `#a="{ x }"` |
 | Divers | `v-once`, `v-pre`, `v-memo="[a]"`, `v-cloak` |
 
-### B.2 Réactivité
+## Réactivité
 
 | API | Rôle |
 | --- | --- |
@@ -6497,7 +6327,7 @@ Organisez **par fonctionnalité**, appliquez le **guide de style officiel**, gar
 | `customRef`, `effectScope` | Cas avancés |
 | `nextTick`, `useTemplateRef`, `useId` | DOM et identifiants |
 
-### B.3 Macros de `<script setup>`
+## Macros de `<script setup>`
 
 ```ts
 const props = defineProps<{ a: string; b?: number }>()
@@ -6509,11 +6339,11 @@ defineOptions({ name: 'X', inheritAttrs: false })
 defineSlots<{ default(p: { x: number }): any }>()
 ```
 
-### B.4 Hooks de cycle de vie
+## Hooks de cycle de vie
 
 `onBeforeMount` · `onMounted` · `onBeforeUpdate` · `onUpdated` · `onBeforeUnmount` · `onUnmounted` · `onErrorCaptured` · `onActivated` · `onDeactivated` · `onServerPrefetch` · `onRenderTracked` · `onRenderTriggered` · `onWatcherCleanup` · `onScopeDispose`
 
-### B.5 Vue Router
+## Vue Router
 
 ```ts
 const route = useRoute()      // params, query, hash, name, meta, fullPath, matched
@@ -6522,7 +6352,7 @@ onBeforeRouteLeave(() => {})
 onBeforeRouteUpdate(() => {})
 ```
 
-### B.6 Pinia
+## Pinia
 
 ```ts
 const s = useStore()
@@ -6531,7 +6361,7 @@ const { action } = s
 s.$patch({ x: 1 }); s.$reset(); s.$subscribe(cb); s.$onAction(cb)
 ```
 
-### B.7 Commandes usuelles
+## Commandes usuelles
 
 | Commande | Rôle |
 | --- | --- |

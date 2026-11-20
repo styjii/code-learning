@@ -1,14 +1,12 @@
-# PHP — Cours complet
+# Avant de commencer : comment utiliser ce cours
 
 *Cours magistral et module d'apprentissage exhaustif, du débutant à l'avancé — PHP 8.5*
 
-## Avant de commencer : comment utiliser ce cours
+Ce cours couvre PHP de bout en bout, des premiers scripts jusqu'à l'écosystème, aux tests et aux API.
 
-Ce cours développe, chapitre par chapitre, l'intégralité du programme en **22 chapitres**, regroupés en cinq parties : **Fondamentaux** (1 à 13), **Avancé** (14 à 16), **Écosystème** (17 et 18), **Tests et qualité** (19) et **Essentiels** (20 à 22).
+**Public visé.** Ce cours s'adresse à toute personne sachant utiliser un ordinateur et un éditeur de texte. Aucune connaissance préalable de PHP n'est exigée ; la connaissance de HTML (balises, formulaires) est un plus pour les sections consacrées aux formulaires et au web. Les sections avancées supposent que les fondamentaux sont acquis.
 
-**Public visé.** Ce cours s'adresse à toute personne sachant utiliser un ordinateur et un éditeur de texte. Aucune connaissance préalable de PHP n'est exigée ; la connaissance de HTML (balises, formulaires) est un plus pour les chapitres 9 à 15. Les chapitres 14 à 21 supposent que les chapitres 1 à 13 sont acquis.
-
-Chaque chapitre suit la même trame : *objectifs d'apprentissage → notions et définitions → exemples de code commentés → pièges fréquents → synthèse*.
+Les sections du cours suivent la même trame : *objectifs d'apprentissage → notions et définitions → exemples de code commentés → pièges fréquents → synthèse*.
 
 **Conventions de lecture**
 
@@ -17,18 +15,15 @@ Chaque chapitre suit la même trame : *objectifs d'apprentissage → notions et 
 - Les commentaires `// →` indiquent la sortie obtenue.
 - Les exemples sont volontairement **exécutables tels quels**.
 
-**Parcours conseillé** : lisez les chapitres dans l'ordre (chacun s'appuie sur les notions des précédents) ; les chapitres 14 à 21 supposent les chapitres 1 à 13 acquis.
+**Parcours conseillé** : lisez les sections dans l'ordre (chacune s'appuie sur les notions des précédentes) ; les sections avancées supposent les fondamentaux acquis.
 
 ---
 
+# Introduction et installation
 
-# Partie I — Fondamentaux
+**Objectifs d'apprentissage.** À la fin de cette section, vous saurez : définir ce qu'est PHP et situer son rôle dans l'architecture du web ; expliquer le cycle de vie d'une requête PHP ; installer PHP, vérifier l'installation et lancer un premier script ; choisir une structure de projet saine.
 
-## 1. Introduction et installation
-
-**Objectifs d'apprentissage.** À la fin de ce chapitre, vous saurez : définir ce qu'est PHP et situer son rôle dans l'architecture du web ; expliquer le cycle de vie d'une requête PHP ; installer PHP, vérifier l'installation et lancer un premier script ; choisir une structure de projet saine.
-
-### 1.1 Qu'est-ce que PHP ?
+## Qu'est-ce que PHP ?
 
 **PHP** (acronyme récursif : *PHP: Hypertext Preprocessor*) est un **langage de programmation de script**, **interprété**, **open source**, conçu à l'origine pour produire des pages web dynamiques. Détaillons chaque terme :
 
@@ -47,7 +42,7 @@ Chaque chapitre suit la même trame : *objectifs d'apprentissage → notions et 
 | Gestionnaire de dépendances | Composer, dépôt Packagist |
 | Écosystème | Laravel, Symfony, WordPress, Drupal… |
 
-### 1.2 Brève histoire
+## Brève histoire
 
 | Année | Événement |
 | --- | --- |
@@ -62,7 +57,7 @@ Chaque chapitre suit la même trame : *objectifs d'apprentissage → notions et 
 | 2025 | **PHP 8.5** : opérateur pipe \` |
 | 2026 | PHP 8.6 en phase de test |
 
-### 1.3 Versions et cycle de support
+## Versions et cycle de support
 
 Chaque branche mineure de PHP (8.3, 8.4, 8.5…) est publiée en novembre. Elle bénéficie de **2 ans de support actif** (correctifs de bugs et de sécurité) puis de **2 ans de support de sécurité seul**. Une version sortie du support ne reçoit **plus aucun correctif de sécurité** : l'utiliser en production est une faute professionnelle.
 
@@ -75,7 +70,7 @@ Chaque branche mineure de PHP (8.3, 8.4, 8.5…) est publiée en novembre. Elle 
 
 **Règle :** pour un nouveau projet, choisissez PHP 8.4 ou 8.5. PHP 8.1 et les versions antérieures ne sont plus supportées. Consultez toujours la page officielle des versions supportées (php.net/supported-versions.php).
 
-### 1.4 Ce que PHP sait faire
+## Ce que PHP sait faire
 
 - Générer du **HTML dynamique** et traiter des **formulaires**.
 - Gérer l'état d'un visiteur avec des **sessions** et des **cookies**.
@@ -85,7 +80,7 @@ Chaque branche mineure de PHP (8.3, 8.4, 8.5…) est publiée en novembre. Elle 
 - Écrire des **scripts en ligne de commande** (tâches planifiées, outils).
 - Faire tourner de grands frameworks (Laravel, Symfony) et des CMS (WordPress, Drupal).
 
-### 1.5 Comment PHP fonctionne : le cycle de vie d'une requête
+## Comment PHP fonctionne : le cycle de vie d'une requête
 
 Le web repose sur le protocole **HTTP**, de type **requête/réponse** : un **client** (le navigateur) envoie une requête, un **serveur** renvoie une réponse. Pour une page PHP :
 
@@ -99,7 +94,7 @@ Ce dernier point est fondamental : PHP suit traditionnellement le modèle **« s
 
 > **SAPI** (*Server API*) : c'est l'interface par laquelle PHP est appelé. Les principales sont `cli` (terminal), `fpm-fcgi` (PHP-FPM), `apache2handler` (module Apache) et `cli-server` (serveur intégré). La constante `PHP_SAPI` indique laquelle est active.
 
-### 1.6 Installer PHP
+## Installer PHP
 
 **Option 1 : paquets du système (recommandé).**
 
@@ -130,7 +125,7 @@ php -m        # extensions chargées (mbstring, pdo_mysql, curl, intl…)
 php --ini     # fichiers de configuration lus (php.ini)
 ```
 
-### 1.7 Le fichier de configuration `php.ini`
+## Le fichier de configuration `php.ini`
 
 Le comportement de PHP se règle dans **`php.ini`** (dont l'emplacement est donné par `php --ini`). Les directives que vous rencontrerez le plus souvent :
 
@@ -146,7 +141,7 @@ Le comportement de PHP se règle dans **`php.ini`** (dont l'emplacement est donn
 
 On peut aussi modifier certains réglages à l'exécution avec `ini_set('clé', 'valeur')` et les lire avec `ini_get('clé')`.
 
-### 1.8 Le serveur de développement intégré
+## Le serveur de développement intégré
 
 PHP embarque un petit serveur web, très pratique pour apprendre :
 
@@ -157,7 +152,7 @@ php -S localhost:8000 -t public       # définit public/ comme racine web
 
 Ouvrez ensuite `http://localhost:8000` dans le navigateur. **Ce serveur est réservé au développement** : il n'est ni sécurisé ni conçu pour supporter une charge réelle.
 
-### 1.9 Premier script
+## Premier script
 
 Créez un fichier `index.php` :
 
@@ -185,9 +180,9 @@ PHP peut être **mêlé à du HTML**. Tout ce qui est hors des balises `<?php �
 </html>
 ```
 
-Ici, `<?= … ?>` est la forme abrégée de `<?php echo … ; ?>`, et `htmlspecialchars()` protège l'affichage (voir section 7.5).
+Ici, `<?= … ?>` est la forme abrégée de `<?php echo … ; ?>`, et `htmlspecialchars()` protège l'affichage (voir *Échapper pour la sortie*).
 
-### 1.10 Structure de projet recommandée
+## Structure de projet recommandée
 
 Même pour un petit projet, adoptez dès le départ une organisation propre :
 
@@ -206,24 +201,20 @@ mon-projet/
 
 Seul le dossier `public/` est exposé au web : ainsi, vos fichiers de configuration et votre code ne peuvent pas être téléchargés par un visiteur.
 
-### 1.11 Outils du développeur
+## Outils du développeur
 
 - **Éditeur / IDE** : PhpStorm (payant, très complet), VS Code avec l'extension *PHP Intelephense*.
 - **Débogueur** : **Xdebug** (points d'arrêt, profilage).
-- **Git** pour versionner, **Composer** pour les dépendances (chapitre 17).
+- **Git** pour versionner, **Composer** pour les dépendances (voir *Composer et gestion des dépendances*).
 - **Outils en ligne** : 3v4l.org exécute un code sur toutes les versions de PHP.
-
-### Synthèse du chapitre 1
-
-PHP s'exécute sur le serveur et renvoie du HTML/JSON ; le visiteur ne voit jamais le code. Chaque requête repart de zéro (*shared nothing*). Utilisez une version supportée (8.4 ou 8.5) et exposez uniquement `public/`. `php -S` sert au développement uniquement.
 
 ---
 
-## 2. Syntaxe et bases
+# Syntaxe et bases
 
-**Objectifs d'apprentissage.** À la fin de ce chapitre, vous saurez : écrire un script PHP syntaxiquement correct ; manipuler variables, types et constantes ; maîtriser les conversions ; comprendre la portée des variables et les superglobales ; activer le typage strict.
+**Objectifs d'apprentissage.** À la fin de cette section, vous saurez : écrire un script PHP syntaxiquement correct ; manipuler variables, types et constantes ; maîtriser les conversions ; comprendre la portée des variables et les superglobales ; activer le typage strict.
 
-### 2.1 Balises PHP
+## Balises PHP
 
 ```php
 <?php
@@ -234,9 +225,9 @@ $variable = 'Bonjour';
 <p><?php echo $variable; ?></p>
 ```
 
-Le code PHP doit être entouré de `<?php … ?>`. La forme `<?= $x ?>` équivaut à `<?php echo $x; ?>`. **Bonne pratique :** dans un fichier contenant **uniquement du PHP**, **omettez la balise fermante `?>`**. Un espace ou un saut de ligne oublié après `?>` serait envoyé au navigateur avant les en-têtes HTTP et provoquerait l'erreur *« headers already sent »* (section 15.1).
+Le code PHP doit être entouré de `<?php … ?>`. La forme `<?= $x ?>` équivaut à `<?php echo $x; ?>`. **Bonne pratique :** dans un fichier contenant **uniquement du PHP**, **omettez la balise fermante `?>`**. Un espace ou un saut de ligne oublié après `?>` serait envoyé au navigateur avant les en-têtes HTTP et provoquerait l'erreur *« headers already sent »* (voir *Rappels sur HTTP*).
 
-### 2.2 Instructions et commentaires
+## Instructions et commentaires
 
 Chaque **instruction** se termine par un point-virgule `;`. PHP est **insensible à la casse** pour les mots-clés (`echo`, `ECHO`, `Echo`) et les noms de fonctions, mais **sensible à la casse pour les variables et constantes** : `$nom` et `$Nom` sont deux variables différentes.
 
@@ -254,7 +245,7 @@ echo "$nom et $Nom" . PHP_EOL;       // → Alice et Bob
 ECHO 'Mots-clés insensibles à la casse' . PHP_EOL;
 ```
 
-### 2.3 Le typage strict
+## Le typage strict
 
 Placez **en toute première instruction** du fichier :
 
@@ -285,7 +276,7 @@ try {
 
 Le mode strict est propre **au fichier où il est déclaré** et concerne les appels effectués depuis ce fichier. Adoptez-le systématiquement : il transforme des bugs silencieux en erreurs immédiates et explicites.
 
-### 2.4 Afficher des données
+## Afficher des données
 
 | Construction | Rôle |
 | --- | --- |
@@ -312,7 +303,7 @@ $ligne = sprintf('%s a %d ans', $nom, $age); // retourne la chaîne sans l'affic
 
 Spécificateurs de format courants : `%s` chaîne, `%d` entier, `%f` flottant, `%05.2f` flottant sur 5 caractères avec 2 décimales complétés par des zéros, `%x` hexadécimal, `%b` binaire, `%%` pour un `%` littéral.
 
-### 2.5 Variables
+## Variables
 
 Une **variable** est un nom associé à une valeur en mémoire. Elle commence par **`$`**, ne nécessite **aucune déclaration préalable**, et son type est déduit de la valeur.
 
@@ -353,7 +344,7 @@ echo $x . PHP_EOL;       // → 5
 - `empty($v)` : vrai si la valeur est « vide » (voir *falsy* ci-dessous) ou n'existe pas.
 - `unset($v)` : détruit la variable.
 
-### 2.6 Types de données
+## Types de données
 
 PHP distingue trois familles de types.
 
@@ -387,7 +378,7 @@ var_dump(PHP_INT_MAX + 1);                                      // → float(9.2
 
 **Valeurs « fausses » (*falsy*)** : converties en `false` dans un contexte booléen : `false`, `0`, `0.0`, `''` (chaîne vide), `'0'`, `[]` (tableau vide), `null`. **Tout le reste est « vrai »**, y compris `'0.0'`, `' '` et `'false'`.
 
-### 2.7 Conversion de types (*casting*)
+## Conversion de types (*casting*)
 
 PHP convertit parfois automatiquement (**jonglage de types**), mais vous pouvez forcer la conversion :
 
@@ -405,7 +396,7 @@ var_dump((int) 3.99);       // → int(3) : troncature, pas d'arrondi
 
 Pour arrondir, utilisez `round()`, `floor()` (inférieur), `ceil()` (supérieur). Pour tester qu'une chaîne représente bien un nombre : `is_numeric()` ou `filter_var($s, FILTER_VALIDATE_INT)`.
 
-### 2.8 Constantes
+## Constantes
 
 Une **constante** est une valeur nommée qui ne peut plus changer. Convention : `MAJUSCULES_AVEC_TIRETS_BAS`, **sans `$`**.
 
@@ -422,7 +413,7 @@ echo Config::VERSION . PHP_EOL;         // → 1.0
 
 **Constantes magiques** (leur valeur dépend de l'endroit où elles sont écrites) : `__FILE__` (chemin du fichier), `__DIR__` (son dossier), `__LINE__`, `__FUNCTION__`, `__CLASS__`, `__METHOD__`, `__NAMESPACE__`. **Constantes prédéfinies** utiles : `PHP_EOL` (saut de ligne), `PHP_VERSION`, `PHP_INT_MAX`, `M_PI`, `DIRECTORY_SEPARATOR`.
 
-### 2.9 Chaînes : guillemets simples et doubles
+## Chaînes : guillemets simples et doubles
 
 ```php
 <?php
@@ -434,11 +425,11 @@ echo "Âge : {$utilisateur['age']}" . PHP_EOL;    // expressions complexes entre
 echo 'Bonjour $nom' . PHP_EOL;                   // → Bonjour $nom (texte brut)
 ```
 
-Entre **guillemets doubles**, PHP interprète les variables et les séquences d'échappement (`\n`, `\t`, `\\`, `\"`, `\$`). Entre **guillemets simples**, seuls `\\` et `\'` sont interprétés : c'est plus rapide à lire et à écrire quand aucune interpolation n'est nécessaire. Voir le chapitre 7 pour les détails.
+Entre **guillemets doubles**, PHP interprète les variables et les séquences d'échappement (`\n`, `\t`, `\\`, `\"`, `\$`). Entre **guillemets simples**, seuls `\\` et `\'` sont interprétés : c'est plus rapide à lire et à écrire quand aucune interpolation n'est nécessaire. Voir *Chaînes de caractères* pour les détails.
 
-### 2.10 Portée des variables et superglobales
+## Portée des variables et superglobales
 
-La **portée** (*scope*) est la zone du code où une variable est visible. Une variable définie hors d'une fonction (**globale**) n'est **pas** visible à l'intérieur ; une variable définie dans une fonction (**locale**) disparaît à la fin de l'appel (section 5.5).
+La **portée** (*scope*) est la zone du code où une variable est visible. Une variable définie hors d'une fonction (**globale**) n'est **pas** visible à l'intérieur ; une variable définie dans une fonction (**locale**) disparaît à la fin de l'appel (voir *La portée des variables*).
 
 Les **superglobales** font exception : elles sont accessibles partout, sans `global`.
 
@@ -454,9 +445,9 @@ Les **superglobales** font exception : elles sont accessibles partout, sans `glo
 | `$_ENV` | Variables d'environnement |
 | `$GLOBALS` | Toutes les variables globales |
 
-> **Règle de sécurité :** `$_GET`, `$_POST`, `$_COOKIE`, `$_FILES` et une grande partie de `$_SERVER` sont **contrôlés par l'utilisateur** : ne leur faites jamais confiance (chapitre 16).
+> **Règle de sécurité :** `$_GET`, `$_POST`, `$_COOKIE`, `$_FILES` et une grande partie de `$_SERVER` sont **contrôlés par l'utilisateur** : ne leur faites jamais confiance (voir *Sécurité*).
 
-### 2.11 Exemple complet
+## Exemple complet
 
 ```php
 <?php
@@ -469,24 +460,20 @@ $prixTTC = $prixHT * (1 + TVA);
 echo 'Prix TTC : ' . number_format($prixTTC, 2, ',', ' ') . ' €' . PHP_EOL;   // → Prix TTC : 120,00 €
 ```
 
-### 2.12 Pièges fréquents
+## Pièges fréquents
 
 - Oublier le `;` ou un `$` devant une variable : erreur d'analyse (*Parse error*).
 - Confondre `=` (affectation) et `==` / `===` (comparaison).
 - Utiliser une variable non définie : *Warning: Undefined variable*. Initialisez toujours vos variables.
 - Comparer des flottants avec `===`.
 
-### Synthèse du chapitre 2
-
-`declare(strict_types=1);` en tête de chaque fichier. Les variables commencent par `$` et sont sensibles à la casse ; les constantes non. `var_dump()` est l'outil de débogage de base. Falsy : `false, 0, 0.0, '', '0', [], null`. Les superglobales viennent du client : à valider.
-
 ---
 
-## 3. Opérateurs
+# Opérateurs
 
-**Objectifs d'apprentissage.** À la fin de ce chapitre, vous saurez : utiliser correctement tous les opérateurs courants ; distinguer `==` et `===` et connaître les règles de comparaison de PHP 8 ; maîtriser les opérateurs modernes (`??`, `?->`, `match`, `...`, `|>`) ; raisonner sur la priorité des opérateurs.
+**Objectifs d'apprentissage.** À la fin de cette section, vous saurez : utiliser correctement tous les opérateurs courants ; distinguer `==` et `===` et connaître les règles de comparaison de PHP 8 ; maîtriser les opérateurs modernes (`??`, `?->`, `match`, `...`, `|>`) ; raisonner sur la priorité des opérateurs.
 
-### 3.1 Opérateurs arithmétiques
+## Opérateurs arithmétiques
 
 | Opérateur | Rôle | Exemple |
 | --- | --- | --- |
@@ -499,7 +486,7 @@ echo 'Prix TTC : ' . number_format($prixTTC, 2, ',', ' ') . ' €' . PHP_EOL;   
 
 `/` renvoie un `int` seulement si le résultat est exact (`6 / 3` → `2`), sinon un `float`. Depuis PHP 8, une **division par zéro** lève une `DivisionByZeroError` ; le modulo par zéro aussi. Le modulo prend le signe du **dividende** : `-7 % 3` → `-1`. Pour un modulo mathématique sur flottants : `fmod()`.
 
-### 3.2 Opérateurs d'affectation
+## Opérateurs d'affectation
 
 ```php
 <?php
@@ -519,9 +506,9 @@ $y ??= 'défaut';                // affecte seulement si $y est null ou non déf
 echo $y . PHP_EOL;              // → défaut
 ```
 
-L'affectation est elle-même une **expression** qui vaut la valeur affectée : `$a = $b = 3;` est valide. L'affectation de tableaux se fait **par valeur** (copie), celle des objets par **poignée** (section 14.10).
+L'affectation est elle-même une **expression** qui vaut la valeur affectée : `$a = $b = 3;` est valide. L'affectation de tableaux se fait **par valeur** (copie), celle des objets par **poignée** (voir *Objets : copie et comparaison*).
 
-### 3.3 Opérateurs de comparaison
+## Opérateurs de comparaison
 
 | Opérateur | Signification |
 | --- | --- |
@@ -547,9 +534,9 @@ var_dump('b' <=> 'a');    // → int(1)
 
 **Règle PHP 8 :** pour comparer un nombre à une chaîne, PHP convertit le nombre en chaîne **si la chaîne n'est pas numérique**. D'où `0 == 'a'` → `false`. Mais `==` reste source de surprises : **utilisez `===` par défaut**, et réservez `==` aux cas où vous voulez explicitement la conversion.
 
-L'opérateur `<=>` est précieux pour les tris personnalisés (section 6.6) : `usort($t, fn($a, $b) => $a['age'] <=> $b['age'])`.
+L'opérateur `<=>` est précieux pour les tris personnalisés (voir *Trier*) : `usort($t, fn($a, $b) => $a['age'] <=> $b['age'])`.
 
-### 3.4 Opérateurs logiques
+## Opérateurs logiques
 
 | Opérateur | Rôle |
 | --- | --- |
@@ -569,7 +556,7 @@ if ($utilisateur !== null && $utilisateur->estAdmin()) { /* jamais d'erreur ici 
 
 > **Piège :** `$ok = true and false;` affecte `true` à `$ok`, car `=` est prioritaire sur `and`. Utilisez toujours `&&` et `||`.
 
-### 3.5 Concaténation, incrément et opérateurs de tableaux
+## Concaténation, incrément et opérateurs de tableaux
 
 ```php
 <?php
@@ -588,7 +575,7 @@ var_dump([0 => 'a', 1 => 'b'] === [1 => 'b', 0 => 'a']);   // → false : ordre 
 
 Il ne faut pas confondre `+` entre tableaux (union par clés) avec `array_merge()` (qui renumérote les clés numériques).
 
-### 3.6 Opérateurs sur les bits
+## Opérateurs sur les bits
 
 Ils travaillent sur la représentation binaire des entiers : `&` (ET), `|` (OU), `^` (OU exclusif), `~` (NON), `<<` et `>>` (décalages). Usage typique : les **drapeaux** (*flags*) combinés avec `|`, comme `FILE_APPEND | LOCK_EX` ou `ENT_QUOTES | ENT_SUBSTITUTE`.
 
@@ -604,7 +591,7 @@ $droits &= ~ECRIRE;                       // retirer un drapeau
 var_dump(($droits & ECRIRE) !== 0);       // → false
 ```
 
-### 3.7 Opérateurs modernes
+## Opérateurs modernes
 
 **Fusion null `??`** : renvoie l'opérande de gauche s'il existe et n'est pas `null`, sinon celui de droite. Il ne produit **aucun avertissement** si la variable ou la clé n'existe pas.
 
@@ -674,7 +661,7 @@ echo $slug . PHP_EOL;                        // → bonjour-le-monde
 
 Autres opérateurs : `instanceof` (test d'appartenance à une classe), `new`, `clone`, `@` (suppression d'erreur, **à proscrire**), les opérateurs d'exécution (backticks, dangereux : jamais avec une saisie utilisateur).
 
-### 3.8 Priorité et associativité
+## Priorité et associativité
 
 Quand plusieurs opérateurs apparaissent, la **priorité** détermine l'ordre d'évaluation. Du plus prioritaire au moins prioritaire (extrait) :
 
@@ -688,19 +675,15 @@ echo 'Somme : ' . 1 + 2 . PHP_EOL;     // PHP 8 : (1 + 2) évalué d'abord → S
 echo -3 ** 2 . PHP_EOL;                 // → -9 : ** prioritaire sur le signe moins
 ```
 
-### Synthèse du chapitre 3
-
-`===` par défaut ; `==` fait des conversions surprenantes. `&&` / `||` plutôt que `and` / `or`. `??` pour les valeurs par défaut, `?->` pour les chaînes pouvant contenir `null`. `match` est plus sûr et plus expressif que `switch`. Parenthèses dès qu'un doute existe sur la priorité.
-
 ---
 
-## 4. Structures de contrôle
+# Structures de contrôle
 
-**Objectifs d'apprentissage.** À la fin de ce chapitre, vous saurez : orienter l'exécution avec des conditions (`if`, `switch`, `match`) ; répéter des traitements avec les boucles (`for`, `while`, `do…while`, `foreach`) ; maîtriser `break`, `continue`, les générateurs et l'inclusion de fichiers.
+**Objectifs d'apprentissage.** À la fin de cette section, vous saurez : orienter l'exécution avec des conditions (`if`, `switch`, `match`) ; répéter des traitements avec les boucles (`for`, `while`, `do…while`, `foreach`) ; maîtriser `break`, `continue`, les générateurs et l'inclusion de fichiers.
 
-### 4.1 Les conditions
+## Les conditions
 
-Une **structure de contrôle** modifie l'ordre d'exécution linéaire d'un script. Une **condition** s'évalue en booléen : PHP convertit toute expression selon la règle *falsy/truthy* (section 2.6).
+Une **structure de contrôle** modifie l'ordre d'exécution linéaire d'un script. Une **condition** s'évalue en booléen : PHP convertit toute expression selon la règle *falsy/truthy* (voir *Types de données*).
 
 ```php
 <?php
@@ -734,7 +717,7 @@ function remise(?array $client): float
 }
 ```
 
-### 4.2 `switch` (comparaison souple)
+## `switch` (comparaison souple)
 
 ```php
 <?php
@@ -753,7 +736,7 @@ echo PHP_EOL;                      // → Week-end
 
 `switch` compare en **souple** (`==`), ce qui peut surprendre (`switch ('1e1')` correspond à `case 10`). L'oubli de `break` est une erreur classique. **Préférez `match`** : comparaison stricte, pas de `break`, valeur retournée, `UnhandledMatchError` si aucun cas n'est prévu (ce qui révèle les oublis).
 
-### 4.3 Syntaxe alternative pour les gabarits HTML
+## Syntaxe alternative pour les gabarits HTML
 
 Dans les fichiers mêlant HTML et PHP, la syntaxe à deux-points (`if: … endif;`, `foreach: … endforeach;`) évite les accolades difficiles à repérer au milieu du HTML :
 
@@ -775,7 +758,7 @@ $articles = [['titre' => 'Premier article'], ['titre' => 'Deuxième article']];
 
 Existent aussi `endfor;`, `endwhile;`, `endswitch;`. Les moteurs de gabarits (Twig, Blade) offrent des syntaxes encore plus lisibles.
 
-### 4.4 Les boucles
+## Les boucles
 
 Une **boucle** répète un bloc tant qu'une condition est remplie ou pour chaque élément d'une collection.
 
@@ -819,7 +802,7 @@ Alternative plus sûre : `array_map()` ou `foreach ($t as $k => $v) { $t[$k] = $
 
 **Boucles infinies.** `while (true) { … }` est volontaire pour les services de longue durée, accompagnée d'un `break`. Une boucle infinie accidentelle (condition jamais modifiée) est arrêtée par `max_execution_time` en contexte web.
 
-### 4.5 `break` et `continue`
+## `break` et `continue`
 
 - **`break`** quitte immédiatement la boucle (ou le `switch`).
 - **`continue`** passe directement à l'itération suivante.
@@ -846,7 +829,7 @@ foreach ($lignes as $numero => $ligne) {
 }
 ```
 
-### 4.6 Les générateurs
+## Les générateurs
 
 Un **générateur** est une fonction qui contient `yield`. Au lieu de calculer et retourner toute une collection d'un coup, elle **produit les valeurs une à une, à la demande**, en gardant son état entre deux valeurs. Résultat : une consommation mémoire quasi constante, même pour des millions d'éléments.
 
@@ -872,7 +855,7 @@ unlink($chemin);
 
 Fonctionnalités complémentaires : `yield $cle => $valeur` (clé explicite), `yield from autreGenerateur()` (déléguer), et `$generateur->send($valeur)` (communication bidirectionnelle). Un générateur ne peut être **parcouru qu'une seule fois**.
 
-### 4.7 Inclusion de fichiers
+## Inclusion de fichiers
 
 Pour découper un programme en fichiers, PHP propose quatre instructions :
 
@@ -902,19 +885,15 @@ unlink($dossier . '/outils.php');
 
 - Construisez les chemins avec `__DIR__` (indépendant du dossier courant).
 - **Ne passez jamais une saisie utilisateur à `include`/`require`** : cela permet d'exécuter du code arbitraire (*inclusion de fichier locale ou distante*).
-- Dans les projets modernes, on n'écrit presque plus de `require` : l'**autoloader de Composer** charge les classes automatiquement (section 14.12 et chapitre 17).
-
-### Synthèse du chapitre 4
-
-`match` plutôt que `switch` ; accolades toujours ; clauses de garde. `foreach` par référence : `unset()` de la variable ensuite. Les générateurs économisent la mémoire sur les gros volumes. `require_once` pour les dépendances indispensables ; jamais de chemin issu de l'utilisateur.
+- Dans les projets modernes, on n'écrit presque plus de `require` : l'**autoloader de Composer** charge les classes automatiquement (voir *Espaces de noms et chargement automatique* et *Composer et gestion des dépendances*).
 
 ---
 
-## 5. Fonctions
+# Fonctions
 
-**Objectifs d'apprentissage.** À la fin de ce chapitre, vous saurez : définir, appeler et typer des fonctions ; maîtriser paramètres (par défaut, nommés, variadiques, par référence) et valeurs de retour ; comprendre la portée, les fonctions anonymes, fléchées et les *callables* de première classe ; écrire des fonctions récursives et propres.
+**Objectifs d'apprentissage.** À la fin de cette section, vous saurez : définir, appeler et typer des fonctions ; maîtriser paramètres (par défaut, nommés, variadiques, par référence) et valeurs de retour ; comprendre la portée, les fonctions anonymes, fléchées et les *callables* de première classe ; écrire des fonctions récursives et propres.
 
-### 5.1 Définir et appeler
+## Définir et appeler
 
 Une **fonction** est un bloc de code nommé, réutilisable, qui reçoit des **paramètres** (variables déclarées dans sa définition) et peut renvoyer une **valeur**. Les valeurs fournies à l'appel sont des **arguments**. Intérêts : éviter la duplication (principe **DRY**), nommer les intentions, tester isolément.
 
@@ -930,7 +909,7 @@ echo saluer('Alice') . PHP_EOL;       // → Bonjour Alice !
 
 Une fonction peut être appelée **avant** sa définition si elle est définie au niveau racine du fichier (PHP les « remonte » à la compilation). Une fonction définie conditionnellement ou dans une autre fonction n'existe qu'après l'exécution de ce code.
 
-### 5.2 Les paramètres
+## Les paramètres
 
 **Valeurs par défaut.** Un paramètre avec défaut devient facultatif. Convention : les paramètres facultatifs viennent **en dernier**.
 
@@ -961,11 +940,11 @@ ajouter($liste, 3);
 echo implode(', ', $liste) . PHP_EOL;   // → 1, 2, 3
 ```
 
-**Valeur ou référence ?** Par défaut, les arguments sont passés **par valeur** : la fonction travaille sur une copie. Pour les **objets**, on copie la *poignée* (identifiant) : la fonction peut modifier l'objet partagé (section 14.10). Privilégiez le retour de valeurs plutôt que la modification par référence, qui rend le flux de données opaque.
+**Valeur ou référence ?** Par défaut, les arguments sont passés **par valeur** : la fonction travaille sur une copie. Pour les **objets**, on copie la *poignée* (identifiant) : la fonction peut modifier l'objet partagé (voir *Objets : copie et comparaison*). Privilégiez le retour de valeurs plutôt que la modification par référence, qui rend le flux de données opaque.
 
 **Paramètres nullables et implicites.** `?string $x = null` déclare explicitement un type nullable ; l'écriture `string $x = null` (nullable implicite) est dépréciée depuis 8.4.
 
-### 5.3 Valeurs de retour
+## Valeurs de retour
 
 `return` termine la fonction et renvoie une valeur. Sans `return`, la fonction renvoie `null` (ou doit déclarer `void`). Pour renvoyer plusieurs valeurs, retournez un **tableau** (avec destructuration) ou, mieux, un **objet** dédié.
 
@@ -980,7 +959,7 @@ function nePasRetourner(): void { echo 'rien' . PHP_EOL; }   // void : aucun ret
 function arreter(): never { exit('Fin' . PHP_EOL); }          // never (8.1) : ne rend jamais la main
 ```
 
-### 5.4 Les déclarations de types
+## Les déclarations de types
 
 Typer une fonction documente son contrat et déclenche des erreurs précoces (avec `strict_types`).
 
@@ -1010,7 +989,7 @@ var_dump(trouver(['a' => 1, 5 => 'cinq'], 5));     // → string(4) 'cinq'
 var_dump(trouver(['a' => 1], 'z'));                 // → NULL
 ```
 
-### 5.5 La portée des variables
+## La portée des variables
 
 À l'intérieur d'une fonction, **seules** les variables locales (paramètres compris) sont visibles. Pour accéder à une variable globale : mot-clé `global` ou tableau `$GLOBALS` — **à éviter**, car cela crée des dépendances cachées. Pour mémoriser une valeur entre les appels : variable **`static`**.
 
@@ -1034,7 +1013,7 @@ echo compteur() . compteur() . compteur() . PHP_EOL;     // → 123
 
 > **Bonne pratique :** passez les valeurs nécessaires **en paramètres**. Une fonction qui dépend uniquement de ses arguments (fonction « pure ») est prévisible et facile à tester.
 
-### 5.6 Fonctions anonymes, fléchées, *callables*
+## Fonctions anonymes, fléchées, *callables*
 
 Une **fonction anonyme** (ou *closure*, de classe `Closure`) n'a pas de nom ; on la stocke dans une variable, on la passe en argument ou on la renvoie.
 
@@ -1081,7 +1060,7 @@ $statique = Outils::fabrique(...);          // méthode statique
 echo $statique() . PHP_EOL;                 // → fabriqué
 ```
 
-### 5.7 Récursivité
+## Récursivité
 
 Une fonction **récursive** s'appelle elle-même. Elle exige un **cas de base** (arrêt) et un appel qui se rapproche de ce cas.
 
@@ -1097,11 +1076,11 @@ echo factorielle(5) . PHP_EOL;        // → 120
 
 PHP n'optimise pas la récursion terminale et limite la profondeur par la mémoire : pour de très grandes profondeurs, préférez une **boucle**. La récursivité est naturelle pour les structures arborescentes (dossiers, menus imbriqués).
 
-### 5.8 Fonctions utiles et introspection
+## Fonctions utiles et introspection
 
 `function_exists('nom')`, `is_callable($v)`, `func_get_args()` (arguments reçus), `get_defined_functions()`. Les **fonctions natives** (plus de mille) couvrent chaînes, tableaux, maths, dates, fichiers ; consultez le manuel officiel avant de réécrire un outil.
 
-### 5.9 Bonnes pratiques
+## Bonnes pratiques
 
 - Fonctions **courtes**, à **responsabilité unique**, nommées par un **verbe** (`calculerTotal`, `envoyerEmail`).
 - **Typez** paramètres et retours ; activez `strict_types`.
@@ -1109,17 +1088,13 @@ PHP n'optimise pas la récursion terminale et limite la profondeur par la mémoi
 - Évitez les effets de bord, les globales et les paramètres booléens ambigus (préférez les arguments nommés).
 - Limitez le nombre de paramètres (au-delà de 3 ou 4, regroupez-les dans un objet).
 
-### Synthèse du chapitre 5
-
-Une fonction = un contrat typé ; l'entrée passe par les paramètres, la sortie par `return`. Arguments nommés, variadiques, valeurs par défaut rendent les API lisibles. Closures : `use` (explicite) ou `fn` (capture automatique). `static` conserve un état entre appels ; `global` est à proscrire.
-
 ---
 
-## 6. Tableaux
+# Tableaux
 
-**Objectifs d'apprentissage.** À la fin de ce chapitre, vous saurez : comprendre la nature du tableau PHP (liste, dictionnaire, pile, file) ; créer, lire, modifier, parcourir et supprimer des éléments ; utiliser les fonctions natives essentielles, les fonctions d'ordre supérieur et les tris ; comprendre la copie, les références et les structures SPL.
+**Objectifs d'apprentissage.** À la fin de cette section, vous saurez : comprendre la nature du tableau PHP (liste, dictionnaire, pile, file) ; créer, lire, modifier, parcourir et supprimer des éléments ; utiliser les fonctions natives essentielles, les fonctions d'ordre supérieur et les tris ; comprendre la copie, les références et les structures SPL.
 
-### 6.1 Qu'est-ce qu'un tableau PHP ?
+## Qu'est-ce qu'un tableau PHP ?
 
 Un **tableau** (*array*) est une structure de données qui associe des **clés** à des **valeurs**, en conservant l'**ordre d'insertion**. En interne, c'est une table de hachage ordonnée : un seul type sert donc de **liste**, de **dictionnaire**, de **pile**, de **file** et d'**ensemble**.
 
@@ -1147,7 +1122,7 @@ echo $utilisateurs[1]['nom'] . PHP_EOL;       // → Bob
 
 Utilisez la syntaxe courte `[]` plutôt que l'ancienne `array()`. Accéder à une clé absente produit un avertissement : on la protège avec `??` ou `isset()`.
 
-### 6.2 Ajouter, modifier, supprimer
+## Ajouter, modifier, supprimer
 
 ```php
 <?php
@@ -1169,7 +1144,7 @@ echo array_shift($fruits) . PHP_EOL; // retire et renvoie le premier → début
 
 `array_push/array_pop` (fin) et `array_unshift/array_shift` (début) transforment un tableau en **pile** (LIFO) ou en **file** (FIFO). Attention : `array_shift`/`array_unshift` renumérotent toutes les clés ; sur de gros volumes, préférez `SplQueue`.
 
-### 6.3 Parcourir
+## Parcourir
 
 ```php
 <?php
@@ -1187,7 +1162,7 @@ echo "$nom a $age ans" . PHP_EOL;
 foreach ($utilisateurs as ['nom' => $n, 'age' => $a]) { echo "$n ($a)" . PHP_EOL; }
 ```
 
-### 6.4 Fonctions essentielles
+## Fonctions essentielles
 
 | Besoin | Fonctions |
 | --- | --- |
@@ -1226,7 +1201,7 @@ var_dump(array_is_list([1, 2, 3]));                  // → true
 
 **`array_merge` ou `+` ?** `array_merge` renumérote les clés entières et, pour les clés chaînes, la valeur de droite écrase celle de gauche. L'opérateur `+` conserve les clés de gauche et ignore celles de droite déjà présentes.
 
-### 6.5 Fonctions d'ordre supérieur
+## Fonctions d'ordre supérieur
 
 Une fonction d'**ordre supérieur** reçoit une autre fonction en argument. Elles permettent un style **fonctionnel**, déclaratif.
 
@@ -1251,7 +1226,7 @@ echo json_encode($nombres) . PHP_EOL;                                        // 
 
 `array_filter` peut aussi filtrer sur la clé (`ARRAY_FILTER_USE_KEY`) ou sur clé et valeur (`ARRAY_FILTER_USE_BOTH`). Sans callback, il retire toutes les valeurs *falsy*. `array_map` accepte plusieurs tableaux en parallèle.
 
-### 6.6 Trier
+## Trier
 
 | Fonction | Tri |
 | --- | --- |
@@ -1281,7 +1256,7 @@ echo implode(', ', array_column($utilisateurs, 'nom')) . PHP_EOL;       // → B
 
 La fonction de comparaison doit renvoyer un entier négatif, nul ou positif : `<=>` est l'outil idéal. Ne renvoyez jamais un booléen.
 
-### 6.7 Copie et références
+## Copie et références
 
 Les tableaux sont copiés **par valeur**, avec une optimisation (*copy-on-write*) : la copie réelle n'a lieu qu'à la première modification. À l'inverse, les **objets** sont manipulés par poignée.
 
@@ -1294,7 +1269,7 @@ echo implode(', ', $a) . PHP_EOL;   // → 1, 2
 echo implode(', ', $b) . PHP_EOL;   // → 1, 2, 3
 ```
 
-### 6.8 Tableaux multidimensionnels
+## Tableaux multidimensionnels
 
 ```php
 <?php
@@ -1310,21 +1285,17 @@ foreach ($utilisateurs as $u) { $parAge[$u['age']][] = $u['nom']; }
 print_r($parAge);                       // [30 => ['Alice'], 25 => ['Bob']]
 ```
 
-### 6.9 Interfaces et structures SPL
+## Interfaces et structures SPL
 
 Pour qu'un objet se comporte comme un tableau, il implémente `ArrayAccess` (`$o['k']`), `Countable` (`count($o)`) et `IteratorAggregate`/`Iterator` (`foreach`). La **SPL** (*Standard PHP Library*) fournit des structures prêtes à l'emploi : `ArrayObject`, `SplStack`, `SplQueue`, `SplObjectStorage` (ensemble d'objets), `SplPriorityQueue`, `SplFixedArray` (tableau de taille fixe, plus économe). Les frameworks ajoutent des **collections** riches (`Illuminate\Support\Collection`).
 
-### Synthèse du chapitre 6
-
-Un seul type pour listes, dictionnaires, piles et files ; ordre d'insertion conservé. `isset`/`??` pour les clés absentes ; `in_array(..., true)` en strict. `array_filter` conserve les clés (ajoutez `array_values` si besoin) ; les tris modifient en place et sont stables. Copie par valeur pour les tableaux, par poignée pour les objets.
-
 ---
 
-## 7. Chaînes de caractères
+# Chaînes de caractères
 
-**Objectifs d'apprentissage.** À la fin de ce chapitre, vous saurez : créer des chaînes avec les quatre syntaxes (simple, double, heredoc, nowdoc) ; distinguer octets et caractères, et manipuler l'Unicode correctement ; utiliser les fonctions courantes de recherche, extraction, remplacement et formatage ; échapper une chaîne selon son contexte de sortie (HTML, URL, JSON, SQL).
+**Objectifs d'apprentissage.** À la fin de cette section, vous saurez : créer des chaînes avec les quatre syntaxes (simple, double, heredoc, nowdoc) ; distinguer octets et caractères, et manipuler l'Unicode correctement ; utiliser les fonctions courantes de recherche, extraction, remplacement et formatage ; échapper une chaîne selon son contexte de sortie (HTML, URL, JSON, SQL).
 
-### 7.1 Créer des chaînes
+## Créer des chaînes
 
 En PHP, une **chaîne** est une suite d'**octets** (pas de caractères). PHP ne connaît pas l'encodage : c'est à vous de travailler en UTF-8 de bout en bout.
 
@@ -1356,7 +1327,7 @@ echo $heredoc . PHP_EOL . $nowdoc . PHP_EOL;
 
 **Concaténation :** `.` et `.=`. **Accès à un caractère :** `$s[0]` (octet), `$s[-1]` (dernier octet). Pour de l'UTF-8, utilisez `mb_substr($s, $i, 1)`.
 
-### 7.2 Octets, caractères et Unicode
+## Octets, caractères et Unicode
 
 Un caractère accentué ou un emoji occupe **plusieurs octets** en UTF-8 : `strlen('é')` vaut **2**. Les fonctions classiques (`strlen`, `substr`, `strtoupper`, `strrev`, `str_pad`…) travaillent sur les octets et **cassent** les caractères multi-octets. Utilisez les équivalents de l'extension **mbstring** préfixés `mb_` :
 
@@ -1381,7 +1352,7 @@ echo strtoupper('élève') . PHP_EOL;                                           
 print_r(mb_str_split('été'));                                                // ['é', 't', 'é']
 ```
 
-### 7.3 Fonctions courantes
+## Fonctions courantes
 
 | Besoin | Fonctions |
 | --- | --- |
@@ -1418,7 +1389,7 @@ echo wordwrap('Un long texte à couper', 10, PHP_EOL, true) . PHP_EOL;
 
 **Heredoc indenté (7.3).** L'indentation de la ligne de fermeture est retirée de toutes les lignes du bloc. La fermeture doit être suivie d'un caractère non alphanumérique (`;`, `,`, `)`…).
 
-### 7.4 Traiter la saisie utilisateur
+## Traiter la saisie utilisateur
 
 ```php
 <?php
@@ -1433,7 +1404,7 @@ echo '[' . $nom . ']' . PHP_EOL;                // → [Alice Dupont]
 echo implode('|', $mots) . PHP_EOL;             // → un|deux|trois
 ```
 
-### 7.5 Échapper pour la sortie
+## Échapper pour la sortie
 
 Le **principe cardinal** de la sécurité des chaînes : *échapper au moment de la sortie, en fonction du contexte de destination.* Un même texte s'échappe différemment pour HTML, URL, JSON, SQL ou shell.
 
@@ -1459,9 +1430,9 @@ function e(string $s): string      // raccourci utilisé dans les gabarits
 }
 ```
 
-`htmlspecialchars` convertit `&`, `<`, `>`, `"` et (avec `ENT_QUOTES`) `'` en entités HTML ; elle neutralise ainsi les attaques **XSS** (chapitre 16). `strip_tags()` n'est **pas** une protection suffisante.
+`htmlspecialchars` convertit `&`, `<`, `>`, `"` et (avec `ENT_QUOTES`) `'` en entités HTML ; elle neutralise ainsi les attaques **XSS** (voir *Sécurité*). `strip_tags()` n'est **pas** une protection suffisante.
 
-### 7.6 Comparer des chaînes
+## Comparer des chaînes
 
 ```php
 <?php
@@ -1477,21 +1448,17 @@ var_dump(hash_equals($connu, $saisi));       // comparaison à TEMPS CONSTANT
 
 **`hash_equals()`** doit être utilisée pour comparer des secrets (jetons, signatures) : une comparaison ordinaire s'arrête au premier caractère différent, ce qui peut révéler des informations par mesure du temps de réponse (*attaque par canal temporel*).
 
-### 7.7 Encodage
+## Encodage
 
 Enregistrez vos fichiers en **UTF-8 sans BOM**, déclarez `Content-Type: text/html; charset=UTF-8` et `<meta charset='UTF-8'>`, configurez `default_charset = 'UTF-8'`, et utilisez `utf8mb4` pour MySQL. Pour convertir : `mb_convert_encoding($s, 'UTF-8', 'ISO-8859-1')` ; pour vérifier : `mb_check_encoding($s, 'UTF-8')`. La translittération (`é` → `e`) s'obtient avec `Transliterator` (intl) pour fabriquer des *slugs*.
 
-### Synthèse du chapitre 7
-
-Chaîne = octets ; avec l'UTF-8, utilisez `mb_*`. `strpos(...) !== false`, ou mieux `str_contains`. Validez à l'entrée, **échappez à la sortie selon le contexte**. `hash_equals` pour comparer des secrets.
-
 ---
 
-## 8. Dates, heures et expressions régulières
+# Dates, heures et expressions régulières
 
-**Objectifs d'apprentissage.** À la fin de ce chapitre, vous saurez : manipuler dates, durées et fuseaux horaires sans erreur ; formater une date localisée ; écrire et utiliser des expressions régulières (PCRE).
+**Objectifs d'apprentissage.** À la fin de cette section, vous saurez : manipuler dates, durées et fuseaux horaires sans erreur ; formater une date localisée ; écrire et utiliser des expressions régulières (PCRE).
 
-### 8.1 Les bons réflexes sur les dates
+## Les bons réflexes sur les dates
 
 Les dates sont une source majeure de bugs (fuseaux, heure d'été, années bissextiles). Règles d'or :
 
@@ -1547,7 +1514,7 @@ echo $fmt->format($maintenant) . PHP_EOL;      // → dimanche 11 octobre 2026 �
 
 La bibliothèque **Carbon** (surcouche très utilisée) ajoute une API fluide et la localisation. Pour mesurer une durée d'exécution précisément, utilisez `hrtime(true)` ou `microtime(true)`.
 
-### 8.2 Expressions régulières (PCRE)
+## Expressions régulières (PCRE)
 
 Une **expression régulière** (*regex*) est un motif décrivant un ensemble de chaînes. PHP utilise la bibliothèque **PCRE** via les fonctions `preg_*`. Le motif est écrit entre **délimiteurs** (ici `/`), suivis éventuellement de **modificateurs**.
 
@@ -1598,17 +1565,13 @@ echo preg_quote('a.b*c', '/') . PHP_EOL;                         // → a\.b\*c 
 
 **Bonnes pratiques :** ajoutez `u` pour l'UTF-8 ; ne validez pas un e-mail ou une URL à la regex (utilisez `filter_var`) ; méfiez-vous des motifs à **retour arrière catastrophique** (*ReDoS*), qui peuvent bloquer le serveur sur des entrées hostiles ; commentez les motifs complexes avec le modificateur `x`.
 
-### Synthèse du chapitre 8
-
-`DateTimeImmutable` + fuseaux explicites + stockage en UTC. Attention aux additions de mois en fin de mois. `preg_*` avec le modificateur `u` ; `preg_quote` sur toute saisie insérée dans un motif.
-
 ---
 
-## 9. Formulaires et saisies utilisateur
+# Formulaires et saisies utilisateur
 
-**Objectifs d'apprentissage.** À la fin de ce chapitre, vous saurez : construire un formulaire HTML et traiter sa soumission côté serveur ; choisir entre GET et POST ; valider rigoureusement les données, afficher les erreurs et pré-remplir les champs ; appliquer le motif Post/Redirect/Get et connaître la protection CSRF.
+**Objectifs d'apprentissage.** À la fin de cette section, vous saurez : construire un formulaire HTML et traiter sa soumission côté serveur ; choisir entre GET et POST ; valider rigoureusement les données, afficher les erreurs et pré-remplir les champs ; appliquer le motif Post/Redirect/Get et connaître la protection CSRF.
 
-### 9.1 Le principe : requête, formulaire, traitement
+## Le principe : requête, formulaire, traitement
 
 Un **formulaire HTML** (`<form>`) regroupe des champs (`<input>`, `<select>`, `<textarea>`) et les envoie au serveur lors du clic sur le bouton d'envoi. Deux attributs de `<form>` sont essentiels :
 
@@ -1639,7 +1602,7 @@ echo 'Bonjour ' . htmlspecialchars($nom, ENT_QUOTES, 'UTF-8');
 
 **Cas particuliers de champs :** cases à cocher non cochées et boutons radio non choisis **ne sont pas envoyés** (testez avec `isset`) ; un nom de champ de la forme `options[]` produit un **tableau** côté PHP ; `<select multiple name='choix[]'>` aussi.
 
-### 9.2 `$_GET` ou `$_POST` ?
+## `$_GET` ou `$_POST` ?
 
 |  | `$_GET` | `$_POST` |
 | --- | --- | --- |
@@ -1653,7 +1616,7 @@ Une requête **idempotente** produit le même effet qu'on la répète une ou plu
 
 `$_REQUEST` mélange GET, POST et cookies : **évitez-le**, on ne sait plus d'où vient une donnée.
 
-### 9.3 Valider les données
+## Valider les données
 
 **Règle absolue :** toute donnée reçue est **suspecte** (tout client peut forger une requête). Validez le **type**, la **longueur**, le **format** et le **domaine de valeurs** (liste autorisée). Rassemblez les erreurs champ par champ plutôt que de s'arrêter à la première.
 
@@ -1691,11 +1654,11 @@ if (!$erreurs) {
 
 > **Obsolète :** `FILTER_SANITIZE_STRING` est **déprécié depuis PHP 8.1** : ne l'utilisez plus. Le principe actuel est : **valider à l'entrée, échapper à la sortie** (`htmlspecialchars` pour HTML, requêtes préparées pour SQL).
 
-### 9.4 Validation côté client et côté serveur
+## Validation côté client et côté serveur
 
 Les attributs HTML5 (`required`, `type='email'`, `pattern`, `min`, `max`, `maxlength`) et JavaScript améliorent l'**expérience** (retour immédiat) mais **ne protègent rien** : un attaquant peut envoyer une requête sans passer par votre page (avec `curl`, par exemple). **La validation serveur est obligatoire.**
 
-### 9.5 Le motif Post/Redirect/Get (PRG)
+## Le motif Post/Redirect/Get (PRG)
 
 Si une page répond directement à un `POST`, recharger la page (F5) **renvoie le formulaire** et peut dupliquer une commande. Le motif **PRG** l'évite : après un traitement réussi, le serveur répond par une **redirection `303`** vers une page `GET` ; un message de confirmation temporaire (*message flash*) est conservé en session.
 
@@ -1733,7 +1696,7 @@ http_response_code(422);                              // 422 : entité non trait
 foreach ($erreurs as $champ => $message) { echo $champ . ' : ' . $message . PHP_EOL; }
 ```
 
-### 9.6 Pré-remplir après une erreur
+## Pré-remplir après une erreur
 
 Quand la validation échoue, **réaffichez le formulaire avec les valeurs saisies** (échappées) et les messages d'erreur, pour que l'utilisateur ne ressaisisse pas tout. Ne pré-remplissez jamais un champ mot de passe.
 
@@ -1748,21 +1711,17 @@ $erreurs = ['nom' => 'Le nom est obligatoire.'];
 <?php endif; ?>
 ```
 
-### 9.7 Protection CSRF
+## Protection CSRF
 
-Tout formulaire qui **modifie des données** doit contenir un **jeton secret** lié à la session (section 16.3), sans quoi un site tiers pourrait déclencher l'action à l'insu d'un utilisateur connecté.
-
-### Synthèse du chapitre 9
-
-`name` obligatoire ; cases non cochées absentes de `$_POST`. GET = lecture, POST = modification ; jamais de secret dans l'URL. Validation **serveur** systématique ; collecte de toutes les erreurs ; liste blanche pour les choix. PRG après un POST réussi ; jeton CSRF sur les formulaires d'action.
+Tout formulaire qui **modifie des données** doit contenir un **jeton secret** lié à la session (voir *CSRF : falsification de requête inter-sites*), sans quoi un site tiers pourrait déclencher l'action à l'insu d'un utilisateur connecté.
 
 ---
 
-## 10. Système de fichiers
+# Système de fichiers
 
-**Objectifs d'apprentissage.** À la fin de ce chapitre, vous saurez : lire et écrire des fichiers de manière sûre et économe en mémoire ; manipuler chemins, dossiers, CSV et JSON ; implémenter un téléversement sécurisé ; se prémunir contre la traversée de répertoires.
+**Objectifs d'apprentissage.** À la fin de cette section, vous saurez : lire et écrire des fichiers de manière sûre et économe en mémoire ; manipuler chemins, dossiers, CSV et JSON ; implémenter un téléversement sécurisé ; se prémunir contre la traversée de répertoires.
 
-### 10.1 Lecture et écriture rapides
+## Lecture et écriture rapides
 
 ```php
 <?php
@@ -1780,9 +1739,9 @@ print_r($lignes);
 unlink($fichier);
 ```
 
-`file_get_contents` et `file()` **chargent tout en mémoire** : adaptés aux petits fichiers. Pour les gros fichiers, lisez progressivement (10.2). Le drapeau **`LOCK_EX`** demande un **verrou exclusif** pour éviter que deux requêtes simultanées écrivent en même temps et corrompent le fichier.
+`file_get_contents` et `file()` **chargent tout en mémoire** : adaptés aux petits fichiers. Pour les gros fichiers, lisez progressivement (voir *Ouverture avec `fopen`*). Le drapeau **`LOCK_EX`** demande un **verrou exclusif** pour éviter que deux requêtes simultanées écrivent en même temps et corrompent le fichier.
 
-### 10.2 Ouverture avec `fopen`
+## Ouverture avec `fopen`
 
 `fopen` renvoie une **ressource** (un *flux*) ; il faut tester l'échec, lire/écrire, puis `fclose`.
 
@@ -1812,7 +1771,7 @@ unlink($chemin);
 
 Fonctions de flux : `fgets` (une ligne), `fread($f, $n)` (n octets), `fwrite`, `feof`, `fseek`/`ftell`/`rewind` (position), `flock($f, LOCK_EX)` (verrou), `fflush`. Les **flux spéciaux** : `php://stdin`, `php://stdout`, `php://stderr` (constantes `STDIN`, `STDOUT`, `STDERR`), `php://input` (corps brut d'une requête), `php://memory`, `php://temp`.
 
-### 10.3 Fonctions utiles
+## Fonctions utiles
 
 | Fonction | Rôle |
 | --- | --- |
@@ -1836,7 +1795,7 @@ print_r(pathinfo('/var/www/photo.jpg'));
 
 **Droits Unix :** `0644` (fichiers : lecture/écriture propriétaire, lecture autres), `0755` (dossiers : traversée autorisée). **N'utilisez jamais `0777`**, qui donne tous les droits à tout le monde.
 
-### 10.4 CSV et JSON
+## CSV et JSON
 
 ```php
 <?php
@@ -1877,7 +1836,7 @@ CSV : `fputcsv`/`fgetcsv` gèrent correctement guillemets, séparateurs et sauts
 
 **Autres formats :** INI (`parse_ini_file`), XML (`SimpleXMLElement`, `DOMDocument`), YAML (bibliothèque `symfony/yaml`), Excel (PhpSpreadsheet).
 
-### 10.5 Classes SPL pour les fichiers
+## Classes SPL pour les fichiers
 
 ```php
 <?php
@@ -1894,7 +1853,7 @@ unlink($chemin);
 
 `SplFileObject` offre une interface objet, itérable ligne par ligne. `DirectoryIterator` et `RecursiveDirectoryIterator` parcourent les dossiers ; `Symfony\Component\Finder` et `League\Flysystem` abstraient le stockage (disque local, S3…).
 
-### 10.6 Téléversement sécurisé de fichiers
+## Téléversement sécurisé de fichiers
 
 Le formulaire doit utiliser **`method='post'`** et **`enctype='multipart/form-data'`**. PHP place alors le fichier dans un dossier temporaire et décrit chaque envoi dans `$_FILES['champ']` : `name` (nom d'origine, **falsifiable**), `type` (type MIME déclaré, **falsifiable**), `tmp_name`, `error` (code `UPLOAD_ERR_*`), `size`.
 
@@ -1944,7 +1903,7 @@ echo 'Fichier enregistré : ' . $nom;
 
 **Réglages `php.ini` :** `file_uploads`, `upload_max_filesize`, `post_max_size` (doit être supérieur ou égal à la taille du fichier), `max_file_uploads`. Pour les images, vous pouvez en plus les **ré-encoder** avec GD ou Imagick, ce qui détruit d'éventuelles charges cachées.
 
-### 10.7 Précautions
+## Précautions
 
 **Traversée de répertoires (*path traversal*).** Si un script construit un chemin à partir d'une saisie (`?fichier=../../etc/passwd`), l'attaquant peut lire des fichiers hors du dossier prévu. Défenses : `basename()` pour ne garder que le nom, **liste blanche** de noms autorisés, et vérification que `realpath()` reste dans le dossier racine.
 
@@ -1973,17 +1932,13 @@ rmdir($racine);
 
 Autres précautions : n'**exécutez jamais** un fichier téléversé et interdisez l'exécution de PHP dans le dossier d'envoi ; utilisez `LOCK_EX` pour les écritures concurrentes ; vérifiez les droits du système ; ne servez pas directement des fichiers privés (passez par un script PHP qui contrôle l'autorisation).
 
-### Synthèse du chapitre 10
-
-Petits fichiers : `file_get_contents` ; gros fichiers : `fopen` + `fgets` ou générateurs. CSV via `fgetcsv`/`fputcsv` ; JSON avec `JSON_THROW_ON_ERROR`. Téléversement : taille, type réel (`finfo`), nom aléatoire, dossier hors web. Jamais de chemin construit à partir d'une saisie brute.
-
 ---
 
-## 11. Sessions et cookies
+# Sessions et cookies
 
-**Objectifs d'apprentissage.** À la fin de ce chapitre, vous saurez : expliquer l'absence d'état de HTTP et le rôle des cookies et sessions ; utiliser `$_SESSION` et `setcookie()` correctement ; sécuriser les sessions contre la fixation, le vol et le CSRF.
+**Objectifs d'apprentissage.** À la fin de cette section, vous saurez : expliquer l'absence d'état de HTTP et le rôle des cookies et sessions ; utiliser `$_SESSION` et `setcookie()` correctement ; sécuriser les sessions contre la fixation, le vol et le CSRF.
 
-### 11.1 Le problème : HTTP est sans état
+## Le problème : HTTP est sans état
 
 Chaque requête HTTP est **indépendante** : le serveur n'a aucun souvenir de la précédente. Pour reconnaître un visiteur (connexion, panier), on utilise :
 
@@ -1998,7 +1953,7 @@ Chaque requête HTTP est **indépendante** : le serveur n'a aucun souvenir de la
 | Durée | Par défaut jusqu'à la fermeture du navigateur ; expiration serveur | Choisie (`expires`) |
 | Usage | Connexion, panier, messages flash, jeton CSRF | Préférences (thème, langue), « se souvenir de moi » (jeton aléatoire) |
 
-### 11.2 Utiliser les sessions
+## Utiliser les sessions
 
 ```php
 <?php
@@ -2027,7 +1982,7 @@ if (ini_get('session.use_cookies')) {
 session_destroy();
 ```
 
-### 11.3 Les cookies
+## Les cookies
 
 ```php
 <?php
@@ -2054,7 +2009,7 @@ echo 'Cookie envoyé : rechargez la page.' . PHP_EOL;
 
 **RGPD / ePrivacy :** les cookies non strictement nécessaires (statistiques, publicité) exigent le **consentement** de l'utilisateur dans l'Union européenne.
 
-### 11.4 Sécuriser les sessions
+## Sécuriser les sessions
 
 ```php
 <?php
@@ -2079,7 +2034,7 @@ if (time() - ($_SESSION['derniere_activite'] ?? time()) > 1800) {
 
 - **Fixation de session** : l'attaquant impose un identifiant connu à la victime, puis le réutilise après sa connexion. Parade : `session_regenerate_id(true)` à la connexion et à toute élévation de droits, plus `use_strict_mode`.
 - **Vol de session** (XSS, réseau) : `HttpOnly`, HTTPS + `Secure`, durée de vie limitée.
-- **CSRF** : `SameSite` + jeton (section 16.3).
+- **CSRF** : `SameSite` + jeton (voir *CSRF : falsification de requête inter-sites*).
 
 | Bonne pratique | Pourquoi |
 | --- | --- |
@@ -2091,21 +2046,17 @@ if (time() - ($_SESSION['derniere_activite'] ?? time()) > 1800) {
 | Expiration et déconnexion explicite | Limite les sessions volées |
 | Stocker l'**identifiant** de l'utilisateur, jamais son mot de passe | Minimiser la donnée sensible |
 
-### 11.5 Aller plus loin
+## Aller plus loin
 
-Pour des API, on remplace la session serveur par des **jetons** (JWT, OAuth) : section 20.5. Pour un « se souvenir de moi », stockez en base un **jeton aléatoire haché** associé à l'utilisateur et envoyez-le dans un cookie `HttpOnly` et `Secure`, avec rotation à chaque usage.
-
-### Synthèse du chapitre 11
-
-Session = données côté serveur, cookie = identifiant côté client. `session_start()` avant toute sortie ; `session_regenerate_id(true)` à la connexion. Cookies : `Secure`, `HttpOnly`, `SameSite` ; rien de sensible dedans.
+Pour des API, on remplace la session serveur par des **jetons** (JWT, OAuth) : voir *Authentification et sécurité d'une API*. Pour un « se souvenir de moi », stockez en base un **jeton aléatoire haché** associé à l'utilisateur et envoyez-le dans un cookie `HttpOnly` et `Secure`, avec rotation à chaque usage.
 
 ---
 
-## 12. Bases de données avec PDO
+# Bases de données avec PDO
 
-**Objectifs d'apprentissage.** À la fin de ce chapitre, vous saurez : comprendre le rôle d'une base de données relationnelle et du SQL dans une application PHP ; se connecter avec PDO de façon sûre ; écrire des requêtes préparées (protection contre l'injection SQL) et réaliser des opérations CRUD ; utiliser les transactions et appliquer les bonnes pratiques.
+**Objectifs d'apprentissage.** À la fin de cette section, vous saurez : comprendre le rôle d'une base de données relationnelle et du SQL dans une application PHP ; se connecter avec PDO de façon sûre ; écrire des requêtes préparées (protection contre l'injection SQL) et réaliser des opérations CRUD ; utiliser les transactions et appliquer les bonnes pratiques.
 
-### 12.1 Notions de base
+## Notions de base
 
 Une **base de données relationnelle** (MySQL/MariaDB, PostgreSQL, SQLite…) stocke des données dans des **tables** (lignes = enregistrements, colonnes = champs) reliées par des **clés** (clé primaire, clé étrangère). On l'interroge en **SQL** (`SELECT`, `INSERT`, `UPDATE`, `DELETE`). PHP dialogue avec elle par une **extension** : PDO ou MySQLi.
 
@@ -2118,7 +2069,7 @@ Une **base de données relationnelle** (MySQL/MariaDB, PostgreSQL, SQLite…) st
 
 > Les anciennes fonctions `mysql_*` ont été **supprimées en PHP 7** : ne les utilisez jamais.
 
-### 12.2 Connexion avec PDO
+## Connexion avec PDO
 
 La connexion s'établit avec un **DSN** (*Data Source Name* : type de base, hôte, nom, encodage), un utilisateur, un mot de passe et des **options**.
 
@@ -2149,7 +2100,7 @@ try {
 
 Une connexion est généralement créée **une fois par requête** et partagée (injection de dépendances).
 
-### 12.3 Requêtes préparées et injection SQL
+## Requêtes préparées et injection SQL
 
 **L'injection SQL** consiste à glisser du SQL dans une saisie qui est concaténée à une requête : l'attaquant modifie la logique, lit ou détruit des données. C'est l'une des vulnérabilités les plus graves et les plus répandues.
 
@@ -2219,7 +2170,7 @@ foreach ($pdo->query("SELECT * FROM produits ORDER BY $tri") as $produit) { echo
 
 **`LIKE` :** le motif (`%`) fait partie de la **valeur** : `$stmt->execute(['%' . $terme . '%'])`. Échappez `%` et `_` dans `$terme` si nécessaire.
 
-### 12.4 Opérations CRUD
+## Opérations CRUD
 
 **CRUD** = *Create, Read, Update, Delete* (créer, lire, modifier, supprimer).
 
@@ -2258,7 +2209,7 @@ echo $stmt->rowCount() . ' ligne(s) supprimée(s)' . PHP_EOL;    // → 1
 
 **`UPSERT`** (insérer ou mettre à jour) : `INSERT … ON DUPLICATE KEY UPDATE` (MySQL) ou `ON CONFLICT … DO UPDATE` (PostgreSQL, SQLite).
 
-### 12.5 Transactions
+## Transactions
 
 Une **transaction** regroupe plusieurs opérations en un bloc **atomique** : toutes réussissent (`commit`) ou toutes sont annulées (`rollBack`). C'est la garantie **ACID** : Atomicité, Cohérence, Isolation, Durabilité. Exemple classique : un virement bancaire (débit + crédit).
 
@@ -2291,7 +2242,7 @@ try {
 
 **Verrous et concurrence :** `SELECT … FOR UPDATE` verrouille les lignes lues jusqu'à la fin de la transaction ; les **niveaux d'isolation** (`READ COMMITTED`, `REPEATABLE READ`, `SERIALIZABLE`) arbitrent entre cohérence et performance. Sous MySQL, les instructions DDL (`CREATE TABLE`…) valident implicitement la transaction.
 
-### 12.6 Concevoir le schéma
+## Concevoir le schéma
 
 - **Normalisation** : éviter la duplication (1FN, 2FN, 3FN) ; relations 1-N (clé étrangère) et N-N (table d'association).
 - **Types adaptés** : `INT`, `DECIMAL(10,2)` pour l'argent (jamais `FLOAT`), `DATETIME`/`TIMESTAMP`, `VARCHAR`, `TEXT`, `JSON`.
@@ -2299,7 +2250,7 @@ try {
 - **Index** : accélèrent les recherches sur les colonnes filtrées/triées/jointes, mais ralentissent légèrement les écritures. `EXPLAIN` montre le plan d'exécution.
 - **Le problème N+1** : exécuter 1 requête pour la liste puis 1 requête **par ligne** pour des données liées ; remplacez par une **jointure** (`JOIN`) ou un chargement groupé (`WHERE id IN (…)`).
 
-### 12.7 MySQLi (rappel)
+## MySQLi (rappel)
 
 ```php
 <?php
@@ -2321,7 +2272,7 @@ try {
 }
 ```
 
-### 12.8 Bonnes pratiques
+## Bonnes pratiques
 
 - **Requêtes préparées partout**, sans exception.
 - Encodage **`utf8mb4`** (Unicode complet, emojis compris).
@@ -2332,17 +2283,13 @@ try {
 - Pour réduire le code répétitif : constructeur de requêtes ou **ORM** (Eloquent, Doctrine) — qui appliquent eux aussi les requêtes préparées.
 - Sauvegardez régulièrement et **testez la restauration**.
 
-### Synthèse du chapitre 12
-
-PDO + `ERRMODE_EXCEPTION` + `EMULATE_PREPARES => false`. Requêtes préparées pour les **valeurs** ; liste blanche pour les **identifiants**. Transactions pour les opérations multiples ; index, pagination, migrations.
-
 ---
 
-## 13. Gestion des erreurs et exceptions
+# Gestion des erreurs et exceptions
 
-**Objectifs d'apprentissage.** À la fin de ce chapitre, vous saurez : distinguer erreurs, avertissements et exceptions ; connaître la hiérarchie `Throwable` ; utiliser `try / catch / finally`, lancer et créer ses propres exceptions ; configurer l'affichage et la journalisation selon l'environnement ; mettre en place des gestionnaires globaux.
+**Objectifs d'apprentissage.** À la fin de cette section, vous saurez : distinguer erreurs, avertissements et exceptions ; connaître la hiérarchie `Throwable` ; utiliser `try / catch / finally`, lancer et créer ses propres exceptions ; configurer l'affichage et la journalisation selon l'environnement ; mettre en place des gestionnaires globaux.
 
-### 13.1 Niveaux d'erreurs
+## Niveaux d'erreurs
 
 Un programme rencontre des situations anormales de gravités diverses. PHP les classe par **niveau** :
 
@@ -2358,7 +2305,7 @@ Un programme rencontre des situations anormales de gravités diverses. PHP les c
 
 Depuis PHP 7, la plupart des erreurs graves ne sont plus des « erreurs fatales » opaques mais des **exceptions de type `Error`**, que l'on peut attraper. De nombreux avertissements de PHP 7 sont devenus des exceptions (`TypeError`, `ValueError`, `DivisionByZeroError`) en PHP 8.
 
-### 13.2 La hiérarchie `Throwable`
+## La hiérarchie `Throwable`
 
 Tout ce qui peut être « lancé » (`throw`) implémente l'interface **`Throwable`**. Deux branches :
 
@@ -2379,7 +2326,7 @@ Throwable
 
 Convention : `LogicException` = erreur du **programmeur** (appel invalide, à corriger) ; `RuntimeException` = problème qui ne se détecte qu'à l'**exécution** (fichier absent, réseau en panne).
 
-### 13.3 `try` / `catch` / `finally`
+## `try` / `catch` / `finally`
 
 ```php
 <?php
@@ -2401,7 +2348,7 @@ try {
 - **`finally`** s'exécute **toujours**, qu'il y ait eu exception ou non (même après un `return`) : idéal pour fermer un fichier, libérer un verrou.
 - Depuis PHP 8, on peut omettre la variable : `catch (JsonException)`.
 
-### 13.4 Lancer et créer des exceptions
+## Lancer et créer des exceptions
 
 ```php
 <?php
@@ -2467,7 +2414,7 @@ try {
 
 **Codes de retour ou exceptions ?** Préférez les exceptions : un code de retour peut être ignoré silencieusement, une exception ne peut pas l'être.
 
-### 13.5 Configuration et journalisation
+## Configuration et journalisation
 
 La règle d'or : **en développement, on affiche tout ; en production, on n'affiche rien à l'utilisateur et on journalise tout.** Afficher une erreur à un visiteur révèle des chemins, des requêtes et des versions exploitables par un attaquant.
 
@@ -2490,7 +2437,7 @@ unlink($journal);
 
 Dans `php.ini` : `error_reporting = E_ALL`, `display_errors = Off` (production), `log_errors = On`.
 
-### 13.6 Gestionnaires globaux
+## Gestionnaires globaux
 
 `set_error_handler()` intercepte les erreurs « classiques » (avis, avertissements) ; un usage courant les **convertit en exceptions** pour un traitement uniforme. `set_exception_handler()` reçoit toute exception non attrapée ; `register_shutdown_function()` s'exécute à la fin du script (utile pour intercepter une erreur fatale).
 
@@ -2511,7 +2458,7 @@ echo $variableInconnue;                             // avertissement → ErrorEx
 
 Pour une journalisation professionnelle : **Monolog** (compatible **PSR-3**, avec niveaux `debug`, `info`, `warning`, `error`, `critical`) et un service de suivi d'erreurs (**Sentry**, **Bugsnag**…) qui regroupe les erreurs et alerte l'équipe.
 
-### 13.7 Déboguer
+## Déboguer
 
 - `var_dump()`, `print_r()`, `error_log()` pour l'exploration rapide.
 - **Xdebug** : points d'arrêt, pas-à-pas, inspection des variables dans l'IDE.
@@ -2519,7 +2466,7 @@ Pour une journalisation professionnelle : **Monolog** (compatible **PSR-3**, ave
 - Frameworks : Symfony Profiler, Laravel Telescope/Debugbar, pages d'erreur détaillées (uniquement en développement).
 - **`assert()`** : vérifie des hypothèses en développement (désactivé en production avec `zend.assertions = -1`).
 
-### 13.8 Bonnes pratiques
+## Bonnes pratiques
 
 - Attrapez une exception **là où vous savez réellement la traiter** ; sinon laissez-la remonter.
 - Ne **taisez** jamais une erreur : pas d'opérateur `@`, pas de `catch` vide.
@@ -2529,19 +2476,13 @@ Pour une journalisation professionnelle : **Monolog** (compatible **PSR-3**, ave
 - Chaînez la cause d'origine (`$previous`) en relançant une exception.
 - Pour l'utilisateur, distinguez les erreurs **attendues** (validation : message clair) des erreurs **internes** (page d'erreur générique, code 500).
 
-### Synthèse du chapitre 13
-
-`Throwable` → `Error` (moteur) et `Exception` (applicatif). `catch` du plus spécifique au plus général ; `finally` pour le nettoyage. Production : `display_errors=Off`, `log_errors=On`. Convertissez les avertissements en exceptions pour un code plus sûr.
-
 ---
 
-# Partie II — PHP avancé
+# Programmation orientée objet
 
-## 14. Programmation orientée objet
+**Objectifs d'apprentissage.** À la fin de cette section, vous saurez : comprendre les concepts fondamentaux : classe, objet, encapsulation, héritage, polymorphisme, abstraction ; écrire des classes modernes (promotion de propriétés, `readonly`, énumérations, hooks) ; utiliser interfaces, traits, classes abstraites, méthodes magiques, attributs ; organiser le code avec espaces de noms et autochargement PSR-4.
 
-**Objectifs d'apprentissage.** À la fin de ce chapitre, vous saurez : comprendre les concepts fondamentaux : classe, objet, encapsulation, héritage, polymorphisme, abstraction ; écrire des classes modernes (promotion de propriétés, `readonly`, énumérations, hooks) ; utiliser interfaces, traits, classes abstraites, méthodes magiques, attributs ; organiser le code avec espaces de noms et autochargement PSR-4.
-
-### 14.1 Pourquoi la programmation orientée objet ?
+## Pourquoi la programmation orientée objet ?
 
 La **programmation orientée objet** (POO) organise un programme en **objets** qui combinent des **données** (propriétés) et des **comportements** (méthodes). Elle répond à un problème de taille : au-delà de quelques centaines de lignes, un code fait de fonctions et de variables globales devient difficile à comprendre, à tester et à faire évoluer.
 
@@ -2556,7 +2497,7 @@ La **programmation orientée objet** (POO) organise un programme en **objets** q
 - **Polymorphisme** : des objets de classes différentes répondent au même message (même méthode) de façon propre à chacun.
 - **Abstraction** : on programme contre un contrat (interface) plutôt qu'une implémentation.
 
-### 14.2 Classes et objets
+## Classes et objets
 
 ```php
 <?php
@@ -2595,7 +2536,7 @@ echo $v->marque . ' : ' . $v->getKilometrage() . ' km' . PHP_EOL;     // → Ren
 - L'état `kilometrage` est **privé** : seul le code de la classe peut le modifier, ce qui permet de garantir ses règles (ici, jamais de distance négative). C'est l'**encapsulation**.
 - Une classe par fichier, nom en `PascalCase`, nom de fichier = nom de classe.
 
-### 14.3 Promotion de propriétés du constructeur (8.0) et `readonly` (8.1, 8.2)
+## Promotion de propriétés du constructeur (8.0) et `readonly` (8.1, 8.2)
 
 Écrire propriétés, paramètres et affectations est répétitif. La **promotion** les fusionne : un paramètre précédé d'un modificateur de visibilité **devient** une propriété.
 
@@ -2629,7 +2570,7 @@ echo $p->x . ',' . $p->y . PHP_EOL;          // → 1,2
 
 Une propriété **`readonly`** doit être typée et ne peut être initialisée qu'**une fois**, depuis l'intérieur de la classe. Elle sert à construire des **objets de valeur immuables** (*value objects*) : plus prévisibles, sans effets de bord.
 
-### 14.4 Visibilité
+## Visibilité
 
 | Mot-clé | Accessible depuis |
 | --- | --- |
@@ -2659,7 +2600,7 @@ try {
 }
 ```
 
-### 14.5 Hooks de propriétés (8.4)
+## Hooks de propriétés (8.4)
 
 Un **hook** attache du code au **moment où une propriété est lue (`get`) ou écrite (`set`)**, ce qui remplace la plupart des getters/setters écrits à la main tout en gardant l'écriture `$objet->propriete`.
 
@@ -2691,7 +2632,7 @@ echo $p->email . PHP_EOL;                     // → alice@exemple.com
 
 Les hooks fonctionnent aussi dans les **interfaces** (on peut exiger une propriété lisible) et sont compatibles avec la promotion de propriétés.
 
-### 14.6 Héritage
+## Héritage
 
 Le mot-clé **`extends`** crée une classe **fille** qui hérite des propriétés et méthodes **non privées** de la classe **mère**. La fille peut **redéfinir** (*override*) une méthode et appeler celle du parent avec `parent::`.
 
@@ -2719,7 +2660,7 @@ echo $rex->presenter() . PHP_EOL;     // → ... (parent)
 - La **substitution de Liskov** : une classe fille doit pouvoir remplacer sa mère sans casser le programme (mêmes types acceptés, retours compatibles).
 - **Composition plutôt qu'héritage** : l'héritage crée un couplage fort. Souvent, il vaut mieux qu'un objet **contienne** d'autres objets (`Voiture` *a un* `Moteur`) plutôt qu'il en **hérite** (*est un*).
 
-### 14.7 Membres statiques, constantes et liaison statique tardive
+## Membres statiques, constantes et liaison statique tardive
 
 Un membre **`static`** appartient à la **classe**, pas à une instance. Une **constante de classe** (`const`) est une valeur fixe associée à la classe.
 
@@ -2746,7 +2687,7 @@ echo get_class(Article::creer()) . PHP_EOL;        // → Article (avec self, on
 
 Dans le code de la classe : `self::` (cette classe), `static::` (classe appelée, liaison tardive), `parent::` (classe mère). Les membres statiques créent un état global caché : à utiliser avec parcimonie (constantes, fabriques).
 
-### 14.8 Classes abstraites, interfaces et traits
+## Classes abstraites, interfaces et traits
 
 - **Classe abstraite** (`abstract`) : non instanciable, impose des méthodes abstraites que les filles doivent implémenter, et peut fournir du code commun.
 - **Interface** (`interface`) : un **contrat** (signatures de méthodes publiques). Une classe peut en implémenter **plusieurs** (`implements`). Elle garantit à l'appelant ce que l'objet sait faire, indépendamment de son implémentation.
@@ -2798,9 +2739,9 @@ try {
 | Propriétés | Oui | Non (constantes ; hooks depuis 8.4) | Oui |
 | Rôle | Base commune | **Contrat** | **Réutilisation** de code |
 
-**Polymorphisme en pratique :** une fonction typée `Exportable $x` accepte n'importe quel objet respectant le contrat. C'est le fondement de l'injection de dépendances (14.14).
+**Polymorphisme en pratique :** une fonction typée `Exportable $x` accepte n'importe quel objet respectant le contrat. C'est le fondement de l'injection de dépendances (voir *Concevoir proprement*).
 
-### 14.9 Énumérations (8.1)
+## Énumérations (8.1)
 
 Une **énumération** (`enum`) définit un type dont les valeurs possibles sont **un ensemble fini et nommé** (statut, rôle, jour…). Elle remplace avantageusement les constantes éparpillées et les « chaînes magiques ».
 
@@ -2828,7 +2769,7 @@ echo count(Statut::cases()) . ' cas' . PHP_EOL;                    // → 2 cas
 
 Les cas sont des **objets uniques** comparables avec `===`. Une enum peut avoir des méthodes, des constantes et implémenter des interfaces, mais pas de propriétés d'état ni d'héritage. Une enum non adossée (`enum Couleur { case Rouge; … }`) n'a pas de `value`. Les enums s'utilisent directement comme types de paramètres et de propriétés, et les ORM les convertissent.
 
-### 14.10 Méthodes magiques
+## Méthodes magiques
 
 Ce sont des méthodes dont le nom commence par `__`, appelées automatiquement par PHP dans des situations précises.
 
@@ -2855,7 +2796,7 @@ echo new Prix(12.5) . PHP_EOL;       // → 12,50 €
 
 Usez de `__get`/`__set`/`__call` avec modération : ils masquent l'API réelle et gênent les outils d'analyse. Les **propriétés dynamiques** (créer `$obj->nouvelle` sans la déclarer) sont dépréciées depuis 8.2.
 
-### 14.11 Objets : copie et comparaison
+## Objets : copie et comparaison
 
 Une variable d'objet contient une **poignée** (identifiant) vers l'objet, pas l'objet lui-même. Affecter ou passer un objet **copie la poignée** : les deux variables désignent le **même** objet.
 
@@ -2887,7 +2828,7 @@ $decale = (new Coordonnees(0, 0))->avecX(5);
 echo $decale->x . ',' . $decale->y . PHP_EOL;     // → 5,0
 ```
 
-### 14.12 Attributs (8.0)
+## Attributs (8.0)
 
 Les **attributs** `#[…]` attachent des **métadonnées structurées** à des classes, méthodes, propriétés ou paramètres. Ils sont lus par **réflexion** et servent aux frameworks (routes, validation, mapping ORM, sécurité).
 
@@ -2915,7 +2856,7 @@ foreach ($methode->getAttributes(Route::class) as $attribut) {
 
 Attributs natifs utiles : `#[\Override]` (8.3), `#[\Deprecated]` (8.4), `#[\SensitiveParameter]` (8.2, masque un paramètre dans les traces d'erreur), `#[\NoDiscard]` (8.5, avertit si le retour est ignoré), `#[\AllowDynamicProperties]`.
 
-### 14.13 Espaces de noms et chargement automatique
+## Espaces de noms et chargement automatique
 
 Un **espace de noms** (*namespace*) regroupe des classes sous un préfixe pour **éviter les collisions de noms** entre votre code et les bibliothèques (`App\Model\Utilisateur` ≠ `Lib\Utilisateur`). `use` importe un nom pour l'écrire court ; les classes globales natives (`DateTime`, `Exception`) s'écrivent avec un `\` initial ou s'importent.
 
@@ -2951,7 +2892,7 @@ namespace {
 }
 ```
 
-(En pratique, on écrit **un `namespace` par fichier**.) **PSR-4** est la norme de correspondance : le nom complet de la classe détermine le chemin du fichier (`App\Service\UtilisateurService` → `src/Service/UtilisateurService.php`). **Composer** génère l'**autoloader** qui charge un fichier au moment où une classe est utilisée pour la première fois (chapitre 17). Mécanisme sous-jacent :
+(En pratique, on écrit **un `namespace` par fichier**.) **PSR-4** est la norme de correspondance : le nom complet de la classe détermine le chemin du fichier (`App\Service\UtilisateurService` → `src/Service/UtilisateurService.php`). **Composer** génère l'**autoloader** qui charge un fichier au moment où une classe est utilisée pour la première fois (voir *Composer et gestion des dépendances*). Mécanisme sous-jacent :
 
 ```php
 <?php
@@ -2978,7 +2919,7 @@ spl_autoload_register(function (string $classe) use ($racine): void {
 echo (new App\Service\Mailer())->envoyer('Alice') . PHP_EOL;     // → Message pour Alice
 ```
 
-### 14.14 Concevoir proprement
+## Concevoir proprement
 
 - **Injection de dépendances** : une classe reçoit ses collaborateurs (via le constructeur) au lieu de les créer elle-même. Le code devient testable (on injecte un faux) et modulable.
 
@@ -2999,24 +2940,20 @@ final class Inscription
 - Autres nouveautés : `new` dans les initialiseurs (8.1, `private Logger $log = new NullLogger()`), instanciation sans parenthèses englobantes (8.4, `new Voiture('A')->rouler(10)`), **objets paresseux** (8.4, initialisation différée pour les ORM), fermetures liées (`Closure::bind`, `Closure::fromCallable`).
 - **Itération d'objets** : implémentez `IteratorAggregate` (avec un générateur) pour rendre un objet parcourable par `foreach`.
 
-### 14.15 Pièges fréquents
+## Pièges fréquents
 
 - Croire qu'affecter un objet le copie (il faut `clone`).
 - Hériter par commodité de réutilisation (préférez composition ou trait).
 - Tout rendre `public` (casse l'encapsulation).
 - Classes « fourre-tout » (`Utils`, `Helper`) qui cumulent des responsabilités.
 
-### Synthèse du chapitre 14
-
-Encapsulez : état privé, interface publique réduite ; objets immuables dès que possible. Interfaces pour découpler, traits pour réutiliser, `final` par défaut. Énumérations pour les ensembles finis ; hooks (8.4) pour valider/calculer des propriétés. Namespaces + PSR-4 + Composer ; injection de dépendances.
-
 ---
 
-## 15. PHP et le web
+# PHP et le web
 
-**Objectifs d'apprentissage.** À la fin de ce chapitre, vous saurez : maîtriser les en-têtes HTTP, codes de statut, redirections et téléchargements ; envoyer des e-mails correctement ; appeler des services externes avec cURL ou un client HTTP ; manipuler les URL.
+**Objectifs d'apprentissage.** À la fin de cette section, vous saurez : maîtriser les en-têtes HTTP, codes de statut, redirections et téléchargements ; envoyer des e-mails correctement ; appeler des services externes avec cURL ou un client HTTP ; manipuler les URL.
 
-### 15.1 Rappels sur HTTP
+## Rappels sur HTTP
 
 Une **requête** HTTP comprend : une **méthode** (`GET`, `POST`, `PUT`, `PATCH`, `DELETE`, `OPTIONS`, `HEAD`), une **URL**, des **en-têtes** et éventuellement un **corps**. Une **réponse** comprend un **code de statut**, des **en-têtes** et un **corps**.
 
@@ -3028,7 +2965,7 @@ Une **requête** HTTP comprend : une **méthode** (`GET`, `POST`, `PUT`, `PATCH`
 | `4xx` | Erreur du **client** | `400` requête invalide, `401` non authentifié, `403` interdit, `404` introuvable, `405` méthode non autorisée, `409` conflit, `413` trop volumineux, `415` type non supporté, `422` non traitable, `429` trop de requêtes |
 | `5xx` | Erreur du **serveur** | `500` erreur interne, `502`/`503`/`504` passerelle ou service indisponible |
 
-### 15.2 Envoyer des en-têtes
+## Envoyer des en-têtes
 
 ```php
 <?php
@@ -3063,7 +3000,7 @@ Les en-têtes `HTTP_*` de `$_SERVER` sont **fournis par le client** : n'en faite
 
 **Négociation de contenu et cache HTTP :** `Accept`/`Content-Type` (format), `ETag` + `If-None-Match` ou `Last-Modified` + `If-Modified-Since` (réponse `304` sans corps si la ressource est inchangée), `Cache-Control: public, max-age=3600`.
 
-### 15.3 Redirections
+## Redirections
 
 ```php
 <?php
@@ -3077,11 +3014,11 @@ Sans `exit`, le reste du script **continue de s'exécuter** (et peut afficher ou
 | --- | --- |
 | `301` | Redirection **permanente** (SEO : déplacement d'une URL) |
 | `302` / `307` | Temporaire (`307` conserve la méthode et le corps) |
-| `303` | « Voir ailleurs » : après un POST (motif PRG, section 9.5) |
+| `303` | « Voir ailleurs » : après un POST (motif PRG, voir *Le motif Post/Redirect/Get (PRG)*) |
 
 > **Sécurité : *open redirect*.** Ne redirigez jamais vers une URL fournie directement par l'utilisateur (`?retour=http://site-pirate`) : cela sert au hameçonnage. N'acceptez que des chemins internes ou une **liste blanche**.
 
-### 15.4 Télécharger un fichier
+## Télécharger un fichier
 
 ```php
 <?php
@@ -3109,7 +3046,7 @@ exit;
 
 `Content-Disposition: attachment` force le téléchargement (au lieu de l'affichage). Pour de gros fichiers ou un fort trafic, déléguez l'envoi au serveur web : `X-Accel-Redirect` (Nginx) ou `X-Sendfile` (Apache), après avoir vérifié l'autorisation en PHP.
 
-### 15.5 Envoyer des e-mails
+## Envoyer des e-mails
 
 **La fonction `mail()`** transmet le message au programme de messagerie local (sendmail, msmtp…), qui doit être configuré.
 
@@ -3164,7 +3101,7 @@ try {
 
 **Délivrabilité :** configurez pour votre domaine **SPF** (serveurs autorisés), **DKIM** (signature) et **DMARC** (politique), ou utilisez un service transactionnel (Mailgun, Postmark, Amazon SES, Brevo…). Envoyez les e-mails via une **file d'attente** afin de ne pas ralentir la requête de l'utilisateur. Ne mettez jamais de secrets (mots de passe, jetons réutilisables) en clair dans un e-mail : préférez des liens à **usage unique et durée limitée**.
 
-### 15.6 Requêtes HTTP sortantes
+## Requêtes HTTP sortantes
 
 Votre serveur PHP peut lui-même **appeler** d'autres API : cURL (extension) ou un client HTTP moderne.
 
@@ -3192,7 +3129,7 @@ curl_close($ch);
 
 Plus confortables : **Guzzle** (`composer require guzzlehttp/guzzle`), **Symfony HttpClient** (interface **PSR-18**). Bonnes pratiques : délai d'attente, **nouvelles tentatives** avec attente croissante, vérification du **certificat TLS** (jamais `CURLOPT_SSL_VERIFYPEER => false`), traitement des codes `4xx`/`5xx`, et **protection SSRF** (*Server-Side Request Forgery*) : si l'URL appelée vient d'un utilisateur, validez le domaine, refusez les adresses internes (`127.0.0.1`, `169.254.169.254`, réseaux privés).
 
-### 15.7 Manipuler les URL
+## Manipuler les URL
 
 ```php
 <?php
@@ -3211,7 +3148,7 @@ echo rawurlencode($texte) . PHP_EOL;   // → a%20b%26c  (RFC 3986 : chemins et 
 
 *(8.5)* L'extension **URI** (`Uri\Rfc3986\Uri`, `Uri\WhatWg\Url`) analyse les URL selon les standards, avec plus de rigueur que `parse_url()`.
 
-### 15.8 Bonnes pratiques
+## Bonnes pratiques
 
 - En-têtes **avant** toute sortie ; `exit` après chaque redirection.
 - Toujours préciser `Content-Type` et l'encodage.
@@ -3219,17 +3156,13 @@ echo rawurlencode($texte) . PHP_EOL;   // → a%20b%26c  (RFC 3986 : chemins et 
 - E-mails : SMTP authentifié, SPF/DKIM/DMARC, file d'attente.
 - Appels sortants : délai d'attente, gestion d'erreurs, vérification TLS.
 
-### Synthèse du chapitre 15
-
-`header()` avant toute sortie ; `Location` + `exit`. Un code de statut précis communique le résultat (`201`, `404`, `422`, `429`…). `mail()` est limité : PHPMailer ou Symfony Mailer. Un appel HTTP sortant exige délai, vérification TLS et prudence (SSRF).
-
 ---
 
-## 16. Sécurité
+# Sécurité
 
-**Objectifs d'apprentissage.** À la fin de ce chapitre, vous saurez : adopter l'état d'esprit « ne jamais faire confiance à l'utilisateur » ; connaître et contrer les principales vulnérabilités web : injection SQL, XSS, CSRF, session, fichiers, injections de commandes, désérialisation… ; gérer correctement mots de passe, aléatoire, HTTPS, configuration et secrets.
+**Objectifs d'apprentissage.** À la fin de cette section, vous saurez : adopter l'état d'esprit « ne jamais faire confiance à l'utilisateur » ; connaître et contrer les principales vulnérabilités web : injection SQL, XSS, CSRF, session, fichiers, injections de commandes, désérialisation… ; gérer correctement mots de passe, aléatoire, HTTPS, configuration et secrets.
 
-### 16.1 Principe général
+## Principe général
 
 > **Ne faites jamais confiance aux données venant de l'extérieur** : formulaires, URL, cookies, en-têtes, fichiers téléversés, réponses d'API tierces, contenu de la base. **Validez à l'entrée, échappez à la sortie.**
 
@@ -3250,7 +3183,7 @@ La sécurité est une **défense en profondeur** : plusieurs couches, de sorte q
 | **SSRF** | Valider / filtrer les URL appelées côté serveur |
 | **Contrôle d'accès défaillant** | Vérifier l'autorisation **à chaque requête**, côté serveur |
 
-### 16.2 Validation, échappement et XSS
+## Validation, échappement et XSS
 
 **XSS** (*Cross-Site Scripting*) : un attaquant fait afficher du JavaScript par le navigateur d'autres utilisateurs (commentaire contenant `<script>`), pour voler des sessions, usurper des actions ou défigurer la page. Trois types : **stocké** (enregistré en base), **réfléchi** (renvoyé depuis l'URL), **DOM** (côté JavaScript).
 
@@ -3283,7 +3216,7 @@ header("Content-Security-Policy: default-src 'self'; script-src 'self'; object-s
 echo 'Page protégée par une politique CSP';
 ```
 
-### 16.3 CSRF : falsification de requête inter-sites
+## CSRF : falsification de requête inter-sites
 
 **CSRF** (*Cross-Site Request Forgery*) : un site malveillant incite le navigateur d'un utilisateur **connecté** à envoyer une requête à votre site (virement, suppression), le navigateur joignant automatiquement ses cookies. Défense : un **jeton aléatoire** secret, placé dans la session et dans un champ caché de chaque formulaire, vérifié à la réception.
 
@@ -3314,7 +3247,7 @@ echo 'Suppression effectuée';
 
 Complément : cookies **`SameSite=Lax/Strict`**, contrôle de l'en-tête `Origin`/`Referer`, et **méthodes HTTP appropriées** (jamais d'action destructive sur `GET`). Les frameworks intègrent cette protection : ne la désactivez pas.
 
-### 16.4 Mots de passe
+## Mots de passe
 
 Ne stockez **jamais** un mot de passe en clair, ni haché par `md5()`/`sha1()`/`hash('sha256')` seuls (calculés trop vite : des milliards d'essais par seconde), ni avec un sel « maison ». Utilisez une fonction de hachage **lente et salée** conçue pour cela : `password_hash()`.
 
@@ -3342,7 +3275,7 @@ if (!password_verify('mauvais mot de passe', $hash)) {
 - Message de connexion **identique** que l'e-mail ou le mot de passe soit faux (évite l'**énumération de comptes**) ; le temps de réponse doit être comparable.
 - Réinitialisation : jeton aléatoire **à usage unique**, durée courte, stocké **haché** en base.
 
-### 16.5 Aléatoire et jetons
+## Aléatoire et jetons
 
 ```php
 <?php
@@ -3354,7 +3287,7 @@ echo random_int(100000, 999999) . PHP_EOL;                 // entier sûr (codes
 
 **Chiffrement :** pour chiffrer des données, utilisez **libsodium** (`sodium_crypto_secretbox`, intégrée à PHP) plutôt que d'inventer un schéma avec `openssl_*` ; ne créez jamais votre propre algorithme de chiffrement.
 
-### 16.6 Autres vulnérabilités
+## Autres vulnérabilités
 
 - **Injection de commandes** : évitez `exec`, `shell_exec`, `system`, `passthru`, `proc_open` avec des données externes ; sinon `escapeshellarg()` et une liste blanche d'options. Préférez les bibliothèques PHP aux commandes externes.
 - **Désérialisation non fiable** : `unserialize()` sur une donnée contrôlée par l'utilisateur permet d'instancier des objets arbitraires (*injection d'objets*) et d'exécuter du code. Utilisez **JSON** ; si indispensable, `unserialize($d, ['allowed_classes' => false])`.
@@ -3365,11 +3298,11 @@ echo random_int(100000, 999999) . PHP_EOL;                 // entier sûr (codes
 - **Divulgation d'informations** : messages d'erreur détaillés, `phpinfo()` accessible, fichiers `.git`, `.env`, sauvegardes (`.sql`, `.bak`) sous la racine web.
 - **Race conditions** : des requêtes simultanées contournent une vérification (solde, stock) : transactions et verrous.
 
-### 16.7 Téléversements (rappel)
+## Téléversements (rappel)
 
-Taille limitée · type **réel** (`finfo`) · nom **aléatoire** · dossier **hors racine web** ou exécution PHP interdite · aucune confiance dans l'extension ni dans le type MIME envoyés par le navigateur (section 10.6).
+Taille limitée · type **réel** (`finfo`) · nom **aléatoire** · dossier **hors racine web** ou exécution PHP interdite · aucune confiance dans l'extension ni dans le type MIME envoyés par le navigateur (voir *Téléversement sécurisé de fichiers*).
 
-### 16.8 HTTPS et en-têtes de sécurité
+## HTTPS et en-têtes de sécurité
 
 HTTPS chiffre les échanges et authentifie le serveur (certificats gratuits via **Let's Encrypt**). Redirigez tout le trafic HTTP vers HTTPS **au niveau du serveur web**, et ajoutez des en-têtes :
 
@@ -3391,7 +3324,7 @@ header('Permissions-Policy: camera=(), microphone=(), geolocation=()');
 
 > `$_SERVER['HTTP_HOST']` provient du client : n'en dépendez pas pour construire des URL ; utilisez un **nom de domaine fixe** issu de la configuration.
 
-### 16.9 Configuration et déploiement sûrs
+## Configuration et déploiement sûrs
 
 | Réglage | Valeur recommandée en production |
 | --- | --- |
@@ -3408,7 +3341,7 @@ header('Permissions-Policy: camera=(), microphone=(), geolocation=()');
 - **Journalisez** les événements de sécurité (échecs de connexion, accès refusés) ; **sauvegardez** et testez la restauration ; sécurisez l'accès administrateur (2FA, IP limitées).
 - **Dépendances** : n'installez que des paquets maintenus ; verrouillez les versions (`composer.lock`).
 
-### 16.10 Liste de contrôle
+## Liste de contrôle
 
 - [ ] Requêtes préparées partout
 - [ ] Sortie HTML échappée (ou moteur de gabarits à échappement automatique)
@@ -3423,19 +3356,13 @@ header('Permissions-Policy: camera=(), microphone=(), geolocation=()');
 
 Référence : **OWASP Top 10** (owasp.org/www-project-top-ten) et les *Cheat Sheets* OWASP.
 
-### Synthèse du chapitre 16
-
-Valider en entrée, échapper en sortie selon le contexte, requêtes préparées, jeton CSRF. `password_hash`, `random_bytes`, HTTPS, cookies durcis. Moindre privilège, défense en profondeur, mises à jour, secrets hors du code.
-
 ---
 
-# Partie III — Écosystème
+# Composer et gestion des dépendances
 
-## 17. Composer et gestion des dépendances
+**Objectifs d'apprentissage.** À la fin de cette section, vous saurez : comprendre le rôle d'un gestionnaire de dépendances et de l'autochargement ; maîtriser `composer.json`, `composer.lock`, les contraintes de version et les commandes courantes ; créer et publier son propre paquet.
 
-**Objectifs d'apprentissage.** À la fin de ce chapitre, vous saurez : comprendre le rôle d'un gestionnaire de dépendances et de l'autochargement ; maîtriser `composer.json`, `composer.lock`, les contraintes de version et les commandes courantes ; créer et publier son propre paquet.
-
-### 17.1 Qu'est-ce que Composer ?
+## Qu'est-ce que Composer ?
 
 Une **dépendance** est une bibliothèque externe dont votre projet a besoin (envoi d'e-mails, journalisation, client HTTP…). **Composer** est le **gestionnaire de dépendances** de PHP : il lit la liste des bibliothèques requises dans **`composer.json`**, télécharge celles-ci **et leurs propres dépendances** (résolution récursive des versions compatibles), les place dans **`vendor/`** et génère un **autoloader**. Les paquets sont référencés sur **Packagist** (packagist.org), le dépôt public principal.
 
@@ -3446,7 +3373,7 @@ winget install Composer.Composer   # Windows
 composer --version
 ```
 
-### 17.2 Le fichier `composer.json`
+## Le fichier `composer.json`
 
 ```json
 {
@@ -3481,7 +3408,7 @@ composer --version
 - **`scripts`** : raccourcis de commandes (`composer test`).
 - **`composer.lock`** : fichier **généré** qui fige les versions **exactes** installées (et leurs empreintes) pour que chaque machine obtienne les mêmes versions.
 
-### 17.3 Commandes courantes
+## Commandes courantes
 
 ```bash
 composer init                                # créer composer.json interactivement
@@ -3503,7 +3430,7 @@ composer install --no-dev --optimize-autoloader    # production
 
 **`install` ou `update` ?** `install` lit le lock (version exacte, **à utiliser en déploiement et en CI**) ; `update` recalcule les versions autorisées par les contraintes et **réécrit** le lock (à faire consciemment, puis tester).
 
-### 17.4 Contraintes de version (SemVer)
+## Contraintes de version (SemVer)
 
 Le **versionnement sémantique** (*SemVer*) : `MAJEUR.MINEUR.CORRECTIF`. Un **correctif** corrige des bugs sans changer l'API ; une version **mineure** ajoute des fonctionnalités de façon rétrocompatible ; une version **majeure** peut casser la compatibilité.
 
@@ -3518,7 +3445,7 @@ Le **versionnement sémantique** (*SemVer*) : `MAJEUR.MINEUR.CORRECTIF`. Un **co
 
 > **Bonne pratique :** **versionnez `composer.lock`** pour les **applications** (reproductibilité) ; pour une **bibliothèque** destinée à être installée par d'autres, ne le versionnez pas toujours (ses utilisateurs ont leur propre lock). **Ne versionnez jamais `vendor/`.**
 
-### 17.5 Chargement automatique
+## Chargement automatique
 
 Sans autoloader, chaque classe exigerait un `require`. Composer génère `vendor/autoload.php` ; une seule inclusion suffit.
 
@@ -3535,7 +3462,7 @@ echo $mailer::class . PHP_EOL;                  // → App\Service\Mailer
 
 Après avoir modifié la section `autoload` : `composer dump-autoload` (avec `-o` pour produire une **carte de classes** optimisée en production). Autres types : `classmap` (analyse de dossiers), `files` (fichiers de fonctions toujours chargés).
 
-### 17.6 Créer et publier son propre paquet
+## Créer et publier son propre paquet
 
 1. Structure : `src/`, `tests/`, `composer.json`, `README.md`, `LICENSE`.
 2. `composer.json` : `"name": "vendeur/paquet"`, `"autoload"` PSR-4, `"require": {"php": "^8.2"}`, licence.
@@ -3549,28 +3476,24 @@ Travailler sur un paquet local sans le publier :
 "repositories": [{ "type": "path", "url": "../mon-paquet" }]
 ```
 
-### 17.7 Sécurité de la chaîne d'approvisionnement
+## Sécurité de la chaîne d'approvisionnement
 
 Chaque dépendance est du code exécuté chez vous : une faille ou un paquet malveillant se propage (*supply chain*). Mesures : lancer `composer audit` régulièrement (et en intégration continue), préférer des paquets **maintenus** et largement utilisés, relire les mises à jour importantes, verrouiller via `composer.lock`, limiter les dépendances, et vérifier l'orthographe d'un nom de paquet (attaques par **typosquatting**).
 
-### 17.8 Bonnes pratiques
+## Bonnes pratiques
 
 - Exiger une **version de PHP** (`"php": "^8.3"`) dans `require`.
 - Respecter les **PSR** (normes du PHP-FIG) : **PSR-1/PSR-12** (style de code), **PSR-3** (journaux), **PSR-4** (autochargement), **PSR-7/PSR-17/PSR-18** (HTTP), **PSR-11** (conteneur d'injection), **PSR-6/PSR-16** (cache).
 - Séparer `require` et `require-dev` ; en production, `--no-dev`.
 - Mettre à jour souvent, par petits pas.
 
-### Synthèse du chapitre 17
-
-`composer.json` = intention ; `composer.lock` = versions exactes ; `vendor/` jamais versionné. `^` autorise tout sauf la prochaine majeure ; `install` en production et CI. `composer audit` : une habitude de sécurité.
-
 ---
 
-## 18. Frameworks PHP
+# Frameworks PHP
 
-**Objectifs d'apprentissage.** À la fin de ce chapitre, vous saurez : expliquer pourquoi et quand utiliser un framework ; comprendre l'architecture MVC et le cycle requête-réponse d'un framework ; connaître les principaux frameworks et choisir le bon.
+**Objectifs d'apprentissage.** À la fin de cette section, vous saurez : expliquer pourquoi et quand utiliser un framework ; comprendre l'architecture MVC et le cycle requête-réponse d'un framework ; connaître les principaux frameworks et choisir le bon.
 
-### 18.1 Pourquoi un framework ?
+## Pourquoi un framework ?
 
 Un **framework** est un ensemble structuré de composants et de conventions qui résout les problèmes communs : routage, accès aux données, gabarits, sécurité (CSRF, XSS, authentification), validation, mail, files d'attente, tests, ligne de commande. Il impose une **architecture** et inverse le contrôle : c'est le framework qui appelle votre code (*principe d'Hollywood*).
 
@@ -3589,7 +3512,7 @@ Un **framework** est un ensemble structuré de composants et de conventions qui 
 
 Cycle d'une requête : le serveur envoie tout à un **point d'entrée unique** (`public/index.php`) → le **routeur** associe l'URL à un contrôleur → des **middlewares** (authentification, CSRF…) filtrent → le contrôleur utilise des **services** (injectés par le **conteneur d'injection de dépendances**) → une **réponse** est renvoyée.
 
-### 18.2 Laravel
+## Laravel
 
 Le framework **le plus populaire** : syntaxe expressive, écosystème complet, très bonne documentation.
 
@@ -3636,7 +3559,7 @@ class ArticleController extends Controller
 | **Performance** | Octane (FrankenPHP / Swoole / RoadRunner) |
 | **Outils** | Sail (Docker), Pint (style), Forge / Cloud (déploiement) |
 
-### 18.3 Symfony
+## Symfony
 
 Framework **modulaire** de niveau entreprise ; ses **composants** indépendants (HttpFoundation, Console, Routing, Mailer…) sont utilisés par Laravel, Drupal et bien d'autres.
 
@@ -3653,7 +3576,7 @@ composer create-project symfony/skeleton:'7.*' mon-app    # ou la dernière vers
 | **Messenger, Mailer, HttpClient, Security, Console, Validator** | Composants indépendants |
 | **Versions LTS** | Support long terme, adapté aux grands projets |
 
-### 18.4 CodeIgniter 4
+## CodeIgniter 4
 
 Framework **léger** et rapide à prendre en main, à faible empreinte ; adapté aux petits projets et aux hébergements simples.
 
@@ -3662,7 +3585,7 @@ composer create-project codeigniter4/appstarter mon-app
 php spark serve
 ```
 
-### 18.5 Slim (micro-framework)
+## Slim (micro-framework)
 
 Idéal pour des **API** et services : routage, middlewares PSR-7/PSR-15, rien de plus.
 
@@ -3683,7 +3606,7 @@ $app->get('/bonjour/{nom}', function ($request, $response, array $args) {
 $app->run();
 ```
 
-### 18.6 Comparaison et choix
+## Comparaison et choix
 
 | Framework | Idéal pour | Courbe d'apprentissage | Points forts |
 | --- | --- | --- | --- |
@@ -3697,25 +3620,19 @@ Autres : **CakePHP**, **Yii**, **Laminas** ; CMS : **WordPress**, **Drupal**.
 
 **Comment choisir ?** Selon la taille et la durée de vie du projet, les compétences de l'équipe, l'écosystème (paquets, hébergement, communauté), le besoin de support long terme et les performances attendues. Vérifiez toujours la **version actuelle** et la **version minimale de PHP** requise sur le site officiel avant de démarrer.
 
-### Synthèse du chapitre 18
-
-Un framework apporte structure, sécurité et productivité ; il se paie en apprentissage. MVC, point d'entrée unique, routeur, middlewares, conteneur d'injection de dépendances. Laravel (productivité), Symfony (modularité, LTS), Slim (API légères).
-
 ---
 
-# Partie IV — Tests et qualité
+# Tests et qualité du code
 
-## 19. Tests et qualité du code
+**Objectifs d'apprentissage.** À la fin de cette section, vous saurez : comprendre pourquoi tester et la pyramide des tests ; écrire des tests unitaires avec PHPUnit, utiliser fournisseurs de données et doublures ; pratiquer le TDD ; connaître les outils d'analyse statique, de style et d'intégration continue.
 
-**Objectifs d'apprentissage.** À la fin de ce chapitre, vous saurez : comprendre pourquoi tester et la pyramide des tests ; écrire des tests unitaires avec PHPUnit, utiliser fournisseurs de données et doublures ; pratiquer le TDD ; connaître les outils d'analyse statique, de style et d'intégration continue.
-
-### 19.1 Pourquoi tester ?
+## Pourquoi tester ?
 
 Un **test automatisé** est un programme qui vérifie qu'un autre programme se comporte comme prévu. Il détecte les **régressions** (un changement casse une fonctionnalité existante), documente le comportement attendu et permet de **refactoriser** sans peur.
 
 **Pyramide des tests :** beaucoup de **tests unitaires** (une classe/fonction isolée, rapides), moins de tests d'**intégration** (plusieurs composants, base de données), très peu de tests **de bout en bout** (navigateur, lents et fragiles).
 
-### 19.2 Tests unitaires avec PHPUnit
+## Tests unitaires avec PHPUnit
 
 ```bash
 composer require --dev phpunit/phpunit
@@ -3799,7 +3716,7 @@ Les méthodes de test commencent par `test` (ou portent l'attribut `#[Test]`). D
 
 **Assertions courantes :** `assertSame` (strict `===`, à préférer), `assertEquals` (souple), `assertTrue`, `assertFalse`, `assertNull`, `assertCount`, `assertContains`, `assertInstanceOf`, `assertStringContainsString`, `expectException`. Cycle de vie : `setUp()` avant chaque test, `tearDown()` après.
 
-### 19.3 Doublures de test (*mocks*)
+## Doublures de test (*mocks*)
 
 Pour **isoler** la classe testée de ses dépendances (réseau, base, e-mail), on les remplace par des **doublures**. Cela suppose un code qui dépend d'**interfaces** et reçoit ses dépendances par **injection**.
 
@@ -3848,7 +3765,7 @@ final class InscriptionServiceTest extends TestCase
 
 Outils : **Mockery**, **Prophecy**. Ne sur-spécifiez pas : un test lié aux détails internes se casse à chaque refactorisation.
 
-### 19.4 TDD (*Test-Driven Development*)
+## TDD (*Test-Driven Development*)
 
 1. **Rouge** : écrire un test qui échoue (il exprime le comportement voulu).
 2. **Vert** : écrire le code **minimal** qui le fait passer.
@@ -3856,7 +3773,7 @@ Outils : **Mockery**, **Prophecy**. Ne sur-spécifiez pas : un test lié aux dé
 
 Avantages : conception pilotée par l'usage, couverture naturelle, confiance.
 
-### 19.5 Autres outils de qualité
+## Autres outils de qualité
 
 | Besoin | Outils |
 | --- | --- |
@@ -3886,7 +3803,7 @@ jobs:
       - run: vendor/bin/phpunit
 ```
 
-### 19.6 Bonnes pratiques
+## Bonnes pratiques
 
 - Un test = **un comportement**, au nom explicite, **indépendant** des autres (aucun ordre imposé).
 - Schéma **Arrange – Act – Assert** (préparer, agir, vérifier).
@@ -3895,19 +3812,13 @@ jobs:
 - Lancer les tests **automatiquement** (CI) à chaque modification.
 - Une couverture élevée n'est pas un objectif en soi : visez les **comportements critiques**.
 
-### Synthèse du chapitre 19
-
-Beaucoup de tests unitaires rapides, peu de tests de bout en bout. `assertSame`, fournisseurs de données, `expectException`, doublures pour isoler. TDD : rouge → vert → refactoriser ; PHPStan, Pint/CS-Fixer et CI complètent la chaîne qualité.
-
 ---
 
-# Partie V — Essentiels
+# Créer des API avec PHP
 
-## 20. Créer des API avec PHP
+**Objectifs d'apprentissage.** À la fin de cette section, vous saurez : comprendre les principes REST et concevoir des URL, verbes et codes de statut cohérents ; manipuler JSON en entrée et en sortie ; construire une API en PHP pur puis avec un framework ; sécuriser, documenter et tester une API.
 
-**Objectifs d'apprentissage.** À la fin de ce chapitre, vous saurez : comprendre les principes REST et concevoir des URL, verbes et codes de statut cohérents ; manipuler JSON en entrée et en sortie ; construire une API en PHP pur puis avec un framework ; sécuriser, documenter et tester une API.
-
-### 20.1 Qu'est-ce qu'une API ?
+## Qu'est-ce qu'une API ?
 
 Une **API** (*Application Programming Interface*) est une interface par laquelle des programmes dialoguent. Une **API web** expose des **ressources** via HTTP ; l'échange se fait le plus souvent en **JSON**. Elle sert aux applications mobiles, aux front-ends JavaScript (React, Vue…), aux partenaires et aux services entre eux. **REST** (*Representational State Transfer*) est un style d'architecture, non un protocole.
 
@@ -3931,7 +3842,7 @@ Une **API** (*Application Programming Interface*) est une interface par laquelle
 
 **Propriétés des méthodes :** `GET` est **sûr** (ne modifie rien) et **idempotent** ; `PUT` et `DELETE` sont idempotents (répéter l'appel produit le même état) ; `POST` ne l'est pas. Sous-ressources : `/api/utilisateurs/42/commandes`.
 
-### 20.2 JSON en PHP
+## JSON en PHP
 
 ```php
 <?php
@@ -3965,7 +3876,7 @@ var_dump(json_validate('{invalide'));                               // → false
 
 **Points d'attention :** `$_POST` est **vide** pour un corps JSON (lisez `php://input`) ; `json_encode` renvoie `false` en cas d'échec (ex. UTF-8 invalide) : utilisez `JSON_THROW_ON_ERROR` ; un tableau vide `[]` est encodé `[]` et non `{}` (utilisez `new stdClass()` pour un objet vide) ; les grands entiers et flottants peuvent perdre en précision côté JavaScript (transmettez-les en chaîne) ; le format de date recommandé est **ISO 8601** (`2026-10-11T14:30:00Z`).
 
-### 20.3 Un mini-routeur d'API en PHP pur
+## Un mini-routeur d'API en PHP pur
 
 ```php
 <?php
@@ -4024,7 +3935,7 @@ try {
 
 Ce code illustre l'ossature de toute API : **routage** (méthode + chemin), **lecture** et **validation** du corps, **accès aux données**, **réponse JSON** avec code adapté, **gestion centralisée des erreurs**. Au-delà de quelques routes, utilisez un framework.
 
-### 20.4 API avec un framework
+## API avec un framework
 
 **Laravel :**
 
@@ -4081,7 +3992,7 @@ $app->run();
 
 **Symfony / API Platform :** décrivez vos entités avec l'attribut `#[ApiResource]` : l'API REST (ou GraphQL), la **documentation OpenAPI**, la pagination et les filtres sont générés.
 
-### 20.5 Authentification et sécurité d'une API
+## Authentification et sécurité d'une API
 
 | Mécanisme | Usage |
 | --- | --- |
@@ -4117,7 +4028,7 @@ echo json_encode(['message' => 'Réponse normale']);
 
 Le navigateur applique la **politique de même origine** ; CORS est l'autorisation explicite par le **serveur** d'appels venus d'une autre origine. Ce n'est **pas** une protection côté serveur (un client non navigateur l'ignore).
 
-### 20.6 Tester une API
+## Tester une API
 
 ```bash
 curl -X POST http://localhost:8000/api/utilisateurs \
@@ -4127,17 +4038,13 @@ curl -X POST http://localhost:8000/api/utilisateurs \
 
 Outils : **Postman**, **Bruno**, **Insomnia**, extension **REST Client** de VS Code ; tests automatisés avec PHPUnit/Pest et le client HTTP du framework (`$this->postJson('/api/articles', [...])->assertCreated()`). Testez les **cas d'erreur** (401, 403, 404, 422) autant que les succès.
 
-### Synthèse du chapitre 20
-
-Ressources au pluriel, verbes HTTP, codes de statut précis, JSON cohérent. Valider, authentifier **et** autoriser à chaque requête ; limiter le débit ; configurer CORS. `JSON_THROW_ON_ERROR`, pagination, versionnement et documentation OpenAPI.
-
 ---
 
-## 21. Sujets avancés
+# Sujets avancés
 
-**Objectifs d'apprentissage.** À la fin de ce chapitre, vous saurez : écrire des scripts en ligne de commande ; mesurer et améliorer les performances (OPcache, serveurs persistants, requêtes, cache) ; utiliser Redis, comprendre temps réel, asynchrone et fibers ; connaître les chantiers complémentaires d'un projet réel.
+**Objectifs d'apprentissage.** À la fin de cette section, vous saurez : écrire des scripts en ligne de commande ; mesurer et améliorer les performances (OPcache, serveurs persistants, requêtes, cache) ; utiliser Redis, comprendre temps réel, asynchrone et fibers ; connaître les chantiers complémentaires d'un projet réel.
 
-### 21.1 Scripts en ligne de commande (CLI)
+## Scripts en ligne de commande (CLI)
 
 PHP sert aussi à écrire des **outils en terminal** : migrations, imports, tâches planifiées, traitements de fond. En CLI, il n'y a ni navigateur, ni `$_GET`/`$_POST`, ni session ; on dispose de `$argv`/`$argc`, de `STDIN`, `STDOUT`, `STDERR` et d'un **code de sortie**.
 
@@ -4165,7 +4072,7 @@ chmod +x script.php && ./script.php
 
 Pour des commandes riches : **Symfony Console** (arguments, options, tableaux, barres de progression), **Laravel Artisan**, **Laravel Prompts**. **Planification :** `cron` (`* * * * * php /chemin/script.php`) ; veillez à éviter les exécutions qui se chevauchent (verrou de fichier ou de base). Utilisez des codes de sortie cohérents pour que l'orchestrateur détecte les échecs.
 
-### 21.2 Performance
+## Performance
 
 > **Règle d'or :** **mesurez avant d'optimiser**. Le goulot d'étranglement est presque toujours la **base de données** ou les **appels externes**, rarement le PHP lui-même.
 
@@ -4193,7 +4100,7 @@ printf("%.3f s, %.1f Mo\n", microtime(true) - $debut, memory_get_peak_usage(true
 
 Autres leviers : compression (gzip/Brotli) et en-têtes de cache HTTP, **CDN** pour les fichiers statiques, files d'attente pour les tâches lentes (e-mails, traitements d'images), HTTP/2 ou HTTP/3, base de données bien dimensionnée.
 
-### 21.3 Stratégies de cache
+## Stratégies de cache
 
 Un **cache** mémorise le résultat d'un calcul coûteux pour le resservir rapidement. Il introduit toujours un compromis : fraîcheur contre vitesse.
 
@@ -4235,7 +4142,7 @@ echo lireAvecCache('reponse', 60, $calcul) . PHP_EOL;     // 42, servi depuis le
 - Protégez-vous de l'**effet de ruée** (*cache stampede*) : plusieurs requêtes recalculent en même temps une valeur expirée → verrous, TTL avec variation aléatoire, rafraîchissement anticipé.
 - Ne mettez pas en cache de données propres à un utilisateur dans un cache partagé sans clé qui l'identifie.
 
-### 21.4 Redis et Memcached
+## Redis et Memcached
 
 **Redis** est un serveur de structures de données en mémoire (clé/valeur, listes, ensembles, hachages, flux), avec persistance optionnelle ; **Memcached** est plus simple (clé/valeur seulement, sans persistance).
 
@@ -4273,7 +4180,7 @@ try {
 
 Une clé se nomme par convention `domaine:identifiant:champ`. Les valeurs sont des chaînes : sérialisez en JSON.
 
-### 21.5 WebSockets et temps réel
+## WebSockets et temps réel
 
 PHP traite une requête puis s'arrête : pour des **connexions persistantes** (chat, notifications, tableaux de bord en direct) il faut un **processus long** à l'écoute.
 
@@ -4319,7 +4226,7 @@ IoServer::factory(new HttpServer(new WsServer(new Chat())), 8080)->run();
 
 Dans la majorité des cas, les **SSE** (flux unidirectionnel serveur → client, simple) ou l'**interrogation périodique** (*polling*) suffisent. Un processus long exige une supervision (**Supervisor**, systemd), la surveillance de la mémoire et des redémarrages contrôlés.
 
-### 21.6 Programmation asynchrone et *fibers* (8.1)
+## Programmation asynchrone et *fibers* (8.1)
 
 Par défaut, PHP est **synchrone** : chaque appel attend sa fin. Les **Fibers** permettent de **suspendre** puis **reprendre** l'exécution d'une portion de code ; elles servent de socle à des bibliothèques asynchrones (**Revolt**, **AMPHP**, **ReactPHP**) qui exécutent plusieurs entrées/sorties en parallèle (appels HTTP, requêtes) dans un seul processus.
 
@@ -4335,7 +4242,7 @@ $fibre->resume('hello');                        // → Reprise avec hello
 
 Pour le **parallélisme** (plusieurs cœurs), on utilise plusieurs **processus** (`proc_open`, workers de file d'attente, `pcntl_fork`) ; PHP n'a pas de fils d'exécution partageant la mémoire dans une installation standard.
 
-### 21.7 Autres chantiers utiles
+## Autres chantiers utiles
 
 - **Files d'attente et tâches de fond** (Laravel Queues, Symfony Messenger, RabbitMQ, Amazon SQS).
 - **Internationalisation** (i18n) : extension `intl`, `gettext`, fichiers de traduction des frameworks, formats de dates et nombres localisés.
@@ -4346,15 +4253,11 @@ Pour le **parallélisme** (plusieurs cœurs), on utilise plusieurs **processus**
 - **Déploiement** : Docker, Nginx + PHP-FPM, FrankenPHP, plateformes (Forge, Fly.io, PaaS) ; intégration et déploiement continus, déploiements sans interruption.
 - **`php.ini`** : `memory_limit`, `max_execution_time`, `upload_max_filesize`, `date.timezone`, `opcache.*`.
 
-### Synthèse du chapitre 21
-
-CLI : `$argv`, `getopt`, `STDERR`, codes de sortie ; Symfony Console pour du sérieux. Mesurer → optimiser : OPcache, bonnes requêtes SQL, cache avec TTL et invalidation. Redis pour cache, sessions, files et verrous ; processus longs pour le temps réel.
-
 ---
 
-## 22. Nouveautés par version et aide-mémoire
+# Nouveautés par version et aide-mémoire
 
-### 22.1 Chronologie des fonctionnalités
+## Chronologie des fonctionnalités
 
 Cette table sert de repère pour savoir **à partir de quelle version** une fonctionnalité existe — et donc quelle version minimale de PHP exiger.
 
@@ -4372,7 +4275,7 @@ Cette table sert de repère pour savoir **à partir de quelle version** une fonc
 
 Pour les détails exacts de chaque version : **php.net → Migration guides** (php.net/manual/fr/appendices.php). Lors d'une montée de version, lisez les **incompatibilités** et **dépréciations**, activez `E_ALL` et `E_DEPRECATED` en développement, lancez la suite de tests et utilisez **Rector** pour automatiser une partie de la migration.
 
-### 22.2 Fonctions et pratiques dépréciées ou supprimées
+## Fonctions et pratiques dépréciées ou supprimées
 
 | À ne plus utiliser | Remplacement |
 | --- | --- |
@@ -4389,7 +4292,7 @@ Pour les détails exacts de chaque version : **php.net → Migration guides** (p
 | Propriétés dynamiques (dépréciées en 8.2) | Déclarer les propriétés / `#[\AllowDynamicProperties]` |
 | Paramètre implicitement nullable `Type $x = null` (déprécié en 8.4) | `?Type $x = null` |
 
-### 22.3 Récapitulatif par besoin
+## Récapitulatif par besoin
 
 | Besoin | Outil |
 | --- | --- |
@@ -4407,7 +4310,7 @@ Pour les détails exacts de chaque version : **php.net → Migration guides** (p
 | Appels HTTP sortants | Guzzle / Symfony HttpClient |
 | E-mail | PHPMailer / Symfony Mailer |
 
-### 22.4 Aide-mémoire des réflexes à acquérir
+## Aide-mémoire des réflexes à acquérir
 
 1. `declare(strict_types=1);` dans chaque fichier ; typez tout.
 2. `===` plutôt que `==` ; `match` plutôt que `switch`.
@@ -4418,15 +4321,15 @@ Pour les détails exacts de chaque version : **php.net → Migration guides** (p
 7. Tests automatisés + analyse statique + intégration continue.
 8. Mesurer avant d'optimiser ; mettre à jour PHP et les dépendances.
 
-### 22.5 Parcours d'apprentissage et ressources
+## Parcours d'apprentissage et ressources
 
 **Parcours conseillé** :
 
-1. **Fondations** (chapitres 1 à 8) : langage, types, fonctions, tableaux, chaînes, dates.
-2. **Web dynamique** (9 à 13) : formulaires, fichiers, sessions, base de données, erreurs.
-3. **Conception** (14, 17) : objet, Composer, espaces de noms.
-4. **Production** (15, 16, 19) : web, sécurité, tests.
-5. **Écosystème** (18, 20, 21) : frameworks, API, performance.
+1. **Fondations** : langage, types, fonctions, tableaux, chaînes, dates.
+2. **Web dynamique** : formulaires, fichiers, sessions, base de données, erreurs.
+3. **Conception** : objet, Composer, espaces de noms.
+4. **Production** : web, sécurité, tests.
+5. **Écosystème** : frameworks, API, performance.
 
 **Ressources** :
 
@@ -4437,10 +4340,6 @@ Pour les détails exacts de chaque version : **php.net → Migration guides** (p
 - **Packagist** : packagist.org
 - **3v4l.org** : exécuter un code sur toutes les versions de PHP
 - Documentation officielle de Laravel (laravel.com/docs) et de Symfony (symfony.com/doc)
-
-### Synthèse du chapitre 22
-
-Le PHP actuel, c'est : **typage strict** (`declare(strict_types=1);`), **`===` et `match`**, **requêtes préparées** et **`password_hash`**, **exceptions** plutôt que codes d'erreur, **Composer**, **PSR-4** et **injection de dépendances**, le tout couvert par des **tests automatisés**, une **analyse statique** et l'**intégration continue**. Validez à l'entrée, échappez à la sortie, mesurez avant d'optimiser, et **restez à jour** version après version.
 
 ---
 

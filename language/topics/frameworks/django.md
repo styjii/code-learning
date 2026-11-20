@@ -1,14 +1,12 @@
-# Django — Cours complet
+# Avant de commencer : mode d'emploi du cours
 
 *Module d'apprentissage détaillé, rédigé section par section à partir du plan fourni (Django 6.1, octobre 2026)*
-
-## Avant de commencer : mode d'emploi du cours
 
 **À qui s'adresse ce cours ?** À toute personne qui connaît les bases de Python (variables, fonctions, classes, modules, exceptions, compréhensions de listes, annotations de types) et qui veut apprendre à construire, tester et déployer des applications web professionnelles avec Django.
 
 **Fil rouge.** Tous les exemples s'appuient sur un même projet en français : un **blog** (articles, catégories, commentaires) et une **boutique** (produits, commandes). Vous retrouverez donc toujours les mêmes noms : `Article`, `Categorie`, `Commentaire`, `Produit`, `Commande`, `Utilisateur`.
 
-**Structure de chaque section.** Chaque chapitre suit le même schéma : *objectifs d'apprentissage* → *concepts et définitions* → *exemples commentés* → *pièges et bonnes pratiques* → *à retenir*.
+**Structure de chaque section.** Chaque section suit le même schéma : *objectifs d'apprentissage* → *concepts et définitions* → *exemples commentés* → *pièges et bonnes pratiques* → *à retenir*.
 
 **Légende.** *(ajout)* = notion absente du guide d'origine ; *(à jour)* = pratique moderne qui remplace une ancienne ; *(5.x / 6.x)* = version de Django qui introduit la fonctionnalité.
 
@@ -16,13 +14,13 @@
 
 ---
 
-## 1. Introduction à Django
+# Introduction à Django
 
-### Objectifs d'apprentissage
+## Objectifs d'apprentissage
 
 À la fin de cette section, vous saurez : définir ce qu'est un framework web et situer Django parmi les autres ; décrire le cycle d'une requête HTTP dans Django ; expliquer le motif MTV et les principes de conception du framework ; choisir une version de Django adaptée à votre projet ; décider, argument à l'appui, si Django est le bon outil.
 
-### 1.1 Rappels indispensables : le web et HTTP
+## Rappels indispensables : le web et HTTP
 
 Un site web repose sur un dialogue **client–serveur** :
 
@@ -40,11 +38,11 @@ Une requête HTTP comprend : une **méthode** (*verbe*), une **URL**, des **en-t
 | `PATCH` | Modifier partiellement | Pas nécessairement idempotente |
 | `DELETE` | Supprimer | Idempotente |
 
-> **Définition — idempotence.** Une opération est idempotente quand l'appliquer une fois ou dix fois produit le même état final. Cette notion reviendra pour les tâches en arrière-plan (section 23) et les webhooks (section 21).
+> **Définition — idempotence.** Une opération est idempotente quand l'appliquer une fois ou dix fois produit le même état final. Cette notion reviendra pour les tâches en arrière-plan (section « Tâches en arrière-plan ») et les webhooks (section « Django Ninja, GraphQL et API externes »).
 
-La réponse comporte un **code de statut** : `2xx` succès (`200 OK`, `201 Created`, `204 No Content`), `3xx` redirection (`301`, `302`), `4xx` erreur du client (`400`, `401`, `403`, `404`), `5xx` erreur du serveur (`500`, `503`). HTTP est **sans état** (*stateless*) : le serveur ne « se souvient » pas de la requête précédente ; c'est pourquoi on a inventé les **cookies** et les **sessions** (section 12 et 13).
+La réponse comporte un **code de statut** : `2xx` succès (`200 OK`, `201 Created`, `204 No Content`), `3xx` redirection (`301`, `302`), `4xx` erreur du client (`400`, `401`, `403`, `404`), `5xx` erreur du serveur (`500`, `503`). HTTP est **sans état** (*stateless*) : le serveur ne « se souvient » pas de la requête précédente ; c'est pourquoi on a inventé les **cookies** et les **sessions** (section « Authentification et autorisation » et « Messages, sessions et cache »).
 
-### 1.2 Qu'est-ce qu'un framework ?
+## Qu'est-ce qu'un framework ?
 
 Une **bibliothèque** est un ensemble de fonctions que *vous* appelez. Un **framework** impose une **structure** et c'est *lui* qui appelle votre code (principe d'**inversion de contrôle**, dit « principe d'Hollywood » : *ne nous appelez pas, nous vous appellerons*). Avec Django, vous ne démarrez pas le serveur à la main : vous écrivez des vues, des modèles, des routes, et Django les appelle au bon moment.
 
@@ -65,7 +63,7 @@ Une **bibliothèque** est un ensemble de fonctions que *vous* appelez. Un **fram
 
 > **Définition — ORM.** Couche logicielle qui fait correspondre des **classes** à des **tables**, des **instances** à des **lignes**, des **attributs** à des **colonnes**. Vous écrivez `Article.objects.filter(statut="publie")` ; Django produit le `SELECT … WHERE statut = 'publie'` adapté à votre base (PostgreSQL, MySQL, SQLite…).
 
-### 1.3 Histoire
+## Histoire
 
 | Année | Événement |
 | --- | --- |
@@ -80,7 +78,7 @@ Une **bibliothèque** est un ensemble de fonctions que *vous* appelez. Un **fram
 
 Cette origine explique la philosophie : le framework est né d'un besoin **éditorial** (contenu, administration par des non-développeurs, délais courts). D'où l'admin intégrée et l'importance de l'ORM.
 
-### 1.4 Versions, cycle de publication et support *(à jour)*
+## Versions, cycle de publication et support *(à jour)*
 
 Django publie une version « feature » **environ tous les 8 mois** (numérotées `A.B`, ex. 6.1) ; des correctifs (`A.B.C`) paraissent régulièrement entre deux. Certaines versions sont **LTS** (*Long Term Support*) : support de **sécurité** d'au moins trois ans.
 
@@ -92,7 +90,7 @@ Django publie une version « feature » **environ tous les 8 mois** (numérotée
 | **6.1** | **5 août 2026** | Standard | fin 2027 | 3.12 – 3.14 |
 | **6.2** | avril 2027 (prévue) | **LTS** | ≥ 3 ans après sa sortie | 3.12 – 3.14 |
 
-**Politique de dépréciation.** Une fonctionnalité n'est pas supprimée brutalement : elle est d'abord **dépréciée** (avertissement `DeprecationWarning`) pendant au moins deux versions, puis retirée. Conséquence pratique : si votre projet ne produit **aucun avertissement** sur la version N, il fonctionnera sur N+1. D'où l'intérêt de lancer les tests avec `-W error::DeprecationWarning` (voir section 30).
+**Politique de dépréciation.** Une fonctionnalité n'est pas supprimée brutalement : elle est d'abord **dépréciée** (avertissement `DeprecationWarning`) pendant au moins deux versions, puis retirée. Conséquence pratique : si votre projet ne produit **aucun avertissement** sur la version N, il fonctionnera sur N+1. D'où l'intérêt de lancer les tests avec `-W error::DeprecationWarning` (voir section « Nouveautés par version, bonnes pratiques et ressources »).
 
 **Que choisir ?**
 
@@ -100,7 +98,7 @@ Django publie une version « feature » **environ tous les 8 mois** (numérotée
 - **Production à très long terme, équipe réduite** : la **LTS** (5.2, puis 6.2 quand elle sortira).
 - **Dans tous les cas** : appliquer *sans délai* les versions de correctifs de sécurité (ex. 6.1.2 du 6 octobre 2026 citée dans le plan).
 
-### 1.5 Le motif MTV
+## Le motif MTV
 
 Django suit le motif **MTV** (**M**odèle – **T**emplate – **V**ue), variante du célèbre MVC.
 
@@ -132,7 +130,7 @@ Middleware ──> URLconf (urls.py) ──> Vue (views.py) ──> Modèle (ORM
 5. Le template est **rendu** en HTML ; la vue renvoie un **`HttpResponse`**.
 6. La réponse remonte la pile de middlewares « en remontant », puis est envoyée au client.
 
-### 1.6 Principes de conception
+## Principes de conception
 
 - **DRY** (*Don't Repeat Yourself*) : chaque connaissance a une représentation unique. Exemple : le modèle décrit une fois les champs ; formulaire, admin et migration en dérivent.
 - **Couplage faible** : les composants ne dépendent pas fortement les uns des autres (le template ne connaît pas la base, l'ORM ne connaît pas HTTP).
@@ -141,7 +139,7 @@ Middleware ──> URLconf (urls.py) ──> Vue (views.py) ──> Modèle (ORM
 - **Sécurité par défaut** : l'échappement HTML, le CSRF, les requêtes paramétrées sont actifs sans effort.
 - **Applications réutilisables** : un **projet** est une collection d'**applications** (*apps*) faiblement couplées.
 
-### 1.7 Django face aux autres frameworks
+## Django face aux autres frameworks
 
 |  | **Django** | **Flask** | **FastAPI** | **Laravel** (PHP) | **Rails** (Ruby) |
 | --- | --- | --- | --- | --- | --- |
@@ -154,7 +152,7 @@ Middleware ──> URLconf (urls.py) ──> Vue (views.py) ──> Modèle (ORM
 
 **Quand hésiter ?** Un micro-service minuscule sans base de données (Flask ou FastAPI suffisent) ; une API purement asynchrone à très haute concurrence (FastAPI est plus naturel, même si Django Ninja et l'async de Django réduisent l'écart) ; un besoin de très grande liberté d'architecture où l'on refuse les conventions.
 
-### 1.8 Premier contact : « Bonjour » en trois fichiers
+## Premier contact : « Bonjour » en trois fichiers
 
 ```python
 # blog/views.py
@@ -181,7 +179,7 @@ urlpatterns = [path("blog/", include("blog.urls"))]
 
 En visitant `/blog/bonjour/`, le middleware laisse passer, l'URLconf racine délègue à `blog.urls`, la vue renvoie le texte : vous venez de parcourir tout le cycle décrit en 1.5.
 
-### À retenir
+## À retenir
 
 - Django est un framework **tout inclus**, structuré en **MTV**, qui privilégie **DRY**, la **convention** et la **sécurité par défaut**.
 - Une requête traverse : serveur → middlewares → URLconf → vue → (modèle, template) → réponse.
@@ -189,19 +187,19 @@ En visitant `/blog/bonjour/`, le middleware laisse passer, l'URLconf racine dél
 
 ---
 
-## 2. Environnement de développement et outillage des éditeurs
+# Environnement de développement et outillage des éditeurs
 
-### Objectifs d'apprentissage
+## Objectifs d'apprentissage
 
 Mettre en place un environnement isolé et reproductible ; installer Django ; créer un projet et une application ; maîtriser les commandes `manage.py` ; configurer l'éditeur (VS Code, PyCharm, Vim/Neovim) avec **stubs de types**, **linter** et **formateur** ; utiliser les outils de débogage.
 
-### 2.1 Prérequis
+## Prérequis
 
-- **Python** compatible avec votre version de Django (3.12 ou plus pour Django 6.x ; voir le tableau de la section 1.4). Vérifiez : `python --version`.
+- **Python** compatible avec votre version de Django (3.12 ou plus pour Django 6.x ; voir le tableau de la section « Versions, cycle de publication et support »). Vérifiez : `python --version`.
 - **PostgreSQL** pour la production (SQLite, livré avec Python, suffit pour apprendre).
 - **Git** (gestion de versions) et un éditeur de code.
 
-### 2.2 Environnement virtuel et installation *(à jour)*
+## Environnement virtuel et installation *(à jour)*
 
 > **Définition — environnement virtuel.** Dossier contenant un interpréteur Python et un jeu de paquets **propres à un projet**. Il évite que deux projets s'écrasent mutuellement leurs dépendances (le projet A veut Django 5.2, le projet B veut 6.1) et rend l'installation **reproductible**.
 
@@ -230,7 +228,7 @@ django-admin --version
 
 **Bonnes pratiques** : épinglez vos dépendances (fichier de verrouillage `uv.lock`, `poetry.lock` ou `requirements.txt` généré) ; **ne versionnez jamais** `.venv/` (ajoutez-le à `.gitignore`) ; documentez la commande d'installation dans le `README`.
 
-### 2.3 Créer un projet et une application
+## Créer un projet et une application
 
 ```bash
 django-admin startproject config .            # le « . » crée le projet dans le dossier courant
@@ -258,7 +256,7 @@ python manage.py createsuperuser              # compte administrateur
 python manage.py check                        # vérifie la configuration
 ```
 
-### Commandes `manage.py` essentielles
+## Commandes `manage.py` essentielles
 
 | Commande | Rôle |
 | --- | --- |
@@ -271,10 +269,10 @@ python manage.py check                        # vérifie la configuration
 | `test` | Lancer les tests |
 | `check [--deploy]` | Contrôles système (et contrôles spécifiques au déploiement) |
 | `dumpdata` / `loaddata` | Exporter / importer des **fixtures** (données sérialisées) |
-| `makemessages` / `compilemessages` | Traductions (section 17) |
+| `makemessages` / `compilemessages` | Traductions (section « Internationalisation et localisation ») |
 | `dbshell`, `sqlmigrate`, `showmigrations`, `inspectdb`, `flush` | Base de données |
 
-### 2.4 Outillage des éditeurs : stubs de types et analyse *(ajout)*
+## Outillage des éditeurs : stubs de types et analyse *(ajout)*
 
 **Le problème.** Django repose beaucoup sur la **métaprogrammation** : les champs de modèle deviennent des attributs d'instance, `objects` est ajouté dynamiquement, les relations inverses (`article.commentaires`) sont créées à l'exécution, `request.user` est ajouté par un middleware. Sans aide, les éditeurs et les vérificateurs de types **ne comprennent pas** `Article.objects.filter(...)`, `article.auteur` ou `request.user` : pas de complétion, faux positifs.
 
@@ -350,7 +348,7 @@ def accueil(request: HttpRequest) -> HttpResponse:
 
 Avec **`django-types`** installé, Pyright/Pylance comprend l'ORM sans plugin.
 
-#### Vim / Neovim *(ajout)*
+### Vim / Neovim *(ajout)*
 
 Vim ne « comprend » pas Django seul : il faut un **client LSP** (*Language Server Protocol* : protocole qui permet à un éditeur de dialoguer avec un « serveur de langage » fournissant complétion, diagnostics, navigation) et des serveurs installés **dans votre environnement**.
 
@@ -381,7 +379,7 @@ autocmd BufRead,BufNewFile */templates/*.html set filetype=htmldjango
 
 > **Trois pièges fréquents.** (1) L'éditeur doit utiliser l'**interpréteur du venv** du projet, sinon les stubs sont introuvables. (2) `DJANGO_SETTINGS_MODULE` doit être renseigné (pour `djlsp`, `django-stubs`, `pytest-django`). (3) Lancez le serveur LSP **depuis la racine du projet** (là où se trouvent `manage.py` et `pyproject.toml`).
 
-#### VS Code et PyCharm
+### VS Code et PyCharm
 
 - **VS Code** : extensions *Python*, *Pylance*, *Ruff*, une extension *Django* pour la coloration des templates, *djLint*. Réglages utiles :
 
@@ -394,7 +392,7 @@ autocmd BufRead,BufNewFile */templates/*.html set filetype=htmldjango
 
 - **PyCharm Professional** : support Django intégré (templates, ORM, console, débogueur, `manage.py`). L'édition Community nécessite les stubs.
 
-#### Configuration de Ruff
+### Configuration de Ruff
 
 ```toml
 # pyproject.toml
@@ -410,7 +408,7 @@ ignore = ["S101"]                                             # assert autorisé
 
 - `E`/`F` : erreurs de style et erreurs logiques ; `I` : tri des imports ; `B` : pièges courants ; `UP` : modernisation de la syntaxe ; `DJ` : règles Django ; `S` : sécurité ; `C4`, `SIM` : simplifications.
 
-#### Hooks `pre-commit`
+### Hooks `pre-commit`
 
 ```yaml
 # .pre-commit-config.yaml
@@ -426,9 +424,9 @@ repos:
     hooks: [{ id: djlint-django }]
 ```
 
-**`django-upgrade`** réécrit automatiquement votre code vers les API récentes de Django (utile à chaque montée de version, section 30).
+**`django-upgrade`** réécrit automatiquement votre code vers les API récentes de Django (utile à chaque montée de version, section « Nouveautés par version, bonnes pratiques et ressources »).
 
-### 2.5 Outils de débogage
+## Outils de débogage
 
 ```python
 # config/urls.py (à la suite de urlpatterns)
@@ -451,7 +449,7 @@ python -m pdb manage.py runserver --noreload     # débogueur ; ou breakpoint() 
 - `breakpoint()` ouvre le débogueur `pdb` à l'endroit voulu (commandes : `n` suivant, `s` entrer, `c` continuer, `p expr` afficher, `q` quitter).
 - `--noreload` évite que le rechargeur automatique ne lance deux processus pendant le débogage.
 
-### 2.6 Modèles de projet
+## Modèles de projet
 
 | Outil | Apport |
 | --- | --- |
@@ -459,7 +457,7 @@ python -m pdb manage.py runserver --noreload     # débogueur ; ou breakpoint() 
 | `django-admin startproject --template` | Votre propre gabarit |
 | **`copier`**, **`django-startproject`** | Gabarits pouvant être mis à jour de façon incrémentale |
 
-### À retenir
+## À retenir
 
 - **Un environnement virtuel par projet**, dépendances **verrouillées**, `.venv/` jamais versionné.
 - `manage.py` est votre porte d'entrée quotidienne ; apprenez `makemigrations`, `migrate`, `shell`, `test`, `check --deploy`.
@@ -467,13 +465,13 @@ python -m pdb manage.py runserver --noreload     # débogueur ; ou breakpoint() 
 
 ---
 
-## 3. Structure d'un projet et d'applications
+# Structure d'un projet et d'applications
 
-### Objectifs d'apprentissage
+## Objectifs d'apprentissage
 
 Distinguer **projet** et **application** ; lire l'arborescence générée par Django et connaître le rôle de chaque fichier ; configurer une classe `AppConfig` ; organiser un projet réel (réglages multiples, dossier `apps/`, services) ; comprendre pourquoi il faut un **modèle utilisateur personnalisé** dès le départ.
 
-### 3.1 Projet ≠ application
+## Projet ≠ application
 
 |  | **Projet** | **Application** (*app*) |
 | --- | --- | --- |
@@ -485,7 +483,7 @@ Distinguer **projet** et **application** ; lire l'arborescence générée par Dj
 
 Un **critère simple pour découper** : si vous pouvez décrire l'app en une phrase sans utiliser le mot « et », elle est bien dimensionnée (« gère les articles et les commentaires » : acceptable ; « gère les articles, les paiements et les e-mails » : à découper).
 
-### 3.2 Arborescence générée
+## Arborescence générée
 
 ```text
 mon-site/
@@ -513,7 +511,7 @@ mon-site/
 
 Le nom `config` pour le paquet du projet (au lieu du nom du site) évite la confusion classique « dossier `mon-site/mon-site/` » et se répète d'un projet à l'autre.
 
-### 3.3 Rôle des fichiers du projet
+## Rôle des fichiers du projet
 
 | Fichier | Rôle |
 | --- | --- |
@@ -522,11 +520,11 @@ Le nom `config` pour le paquet du projet (au lieu du nom du site) évite la conf
 | `urls.py` | Routage racine (`urlpatterns`) |
 | `wsgi.py` | Interface **WSGI** (Gunicorn, uWSGI) : expose l'objet `application` |
 | `asgi.py` | Interface **ASGI** (Uvicorn, Daphne, Hypercorn) : expose `application` |
-| `__init__.py` | Marque un dossier comme **paquet** Python ; sert aussi à initialiser (ex. Celery, section 23) |
+| `__init__.py` | Marque un dossier comme **paquet** Python ; sert aussi à initialiser (ex. Celery, section « Tâches en arrière-plan ») |
 
-> **Définition — WSGI / ASGI.** Interfaces standard entre un serveur d'application et un framework Python. **WSGI** est synchrone (une requête occupe un thread/processus) ; **ASGI** est asynchrone et gère aussi WebSockets et SSE (section 22).
+> **Définition — WSGI / ASGI.** Interfaces standard entre un serveur d'application et un framework Python. **WSGI** est synchrone (une requête occupe un thread/processus) ; **ASGI** est asynchrone et gère aussi WebSockets et SSE (section « Programmation asynchrone, ASGI et WebSockets »).
 
-### 3.4 La classe `AppConfig`
+## La classe `AppConfig`
 
 Chaque application possède une classe de configuration, utilisée au démarrage.
 
@@ -540,14 +538,14 @@ class BlogConfig(AppConfig):
     verbose_name = "Blog"                                   # nom lisible (admin)
 
     def ready(self) -> None:                                # exécuté UNE fois au démarrage, apps toutes chargées
-        from . import signals  # noqa: F401  (section 16)
+        from . import signals  # noqa: F401  (section « Signaux »)
 ```
 
 - **`name`** doit être le chemin Python complet (`"apps.blog"` si l'app vit dans `apps/`).
 - **`ready()`** sert à brancher les **signaux** et à enregistrer des vérifications. Ne faites **ni requête de base de données ni travail lourd** dans `ready()` : il s'exécute aussi pour `migrate`, `collectstatic`, etc.
 - Depuis Django **6.0**, `BigAutoField` est le type **par défaut** des clés automatiques (aucune configuration nécessaire pour les nouveaux projets).
 
-### 3.5 Organisation recommandée pour un projet réel *(à jour)*
+## Organisation recommandée pour un projet réel *(à jour)*
 
 ```text
 mon-site/
@@ -578,7 +576,7 @@ mon-site/
 - **Une app = une responsabilité** ; noms **courts**, au pluriel ou métier (`comptes`, `commandes`).
 - Enregistrez-les avec `"apps.blog"` et mettez `name = "apps.blog"` dans `AppConfig`.
 - **Réglages scindés** : `base.py` contient l'essentiel ; `dev.py`, `prod.py`, `test.py` font `from .base import *` puis surchargent. On choisit via `DJANGO_SETTINGS_MODULE=config.settings.prod`.
-- Mettez la **logique métier** dans des **services** (`services.py`) ou dans les modèles/gestionnaires, **pas dans les vues** : les vues restent minces et testables (voir sections 6 et 8).
+- Mettez la **logique métier** dans des **services** (`services.py`) ou dans les modèles/gestionnaires, **pas dans les vues** : les vues restent minces et testables (voir sections « Vues » et « Modèles »).
 - Templates **globaux** (page de base, erreurs) dans `templates/` ; templates **propres à une app** dans `apps/<app>/templates/<app>/` (l'espace de noms évite les collisions de noms entre apps).
 
 ```python
@@ -588,11 +586,11 @@ from .models import Article
 
 @transaction.atomic
 def publier_article(article: Article) -> Article:
-    article.publier()                    # méthode du modèle (section 8.7)
+    article.publier()                    # méthode du modèle (section « Méthodes, propriétés et gestionnaires »)
     return article
 ```
 
-### 3.6 Un modèle utilisateur personnalisé dès le départ
+## Un modèle utilisateur personnalisé dès le départ
 
 > **Règle d'or : faites-le avant la **première** migration.** Remplacer le modèle utilisateur en cours de projet oblige à réécrire les clés étrangères, les migrations et les données : c'est très pénible. Créer un modèle *vide* au début ne coûte presque rien.
 
@@ -607,9 +605,9 @@ class Utilisateur(AbstractUser):
 AUTH_USER_MODEL = "comptes.Utilisateur"
 ```
 
-Les détails (connexion par e-mail, profil, bonnes pratiques) sont dans la section 12.
+Les détails (connexion par e-mail, profil, bonnes pratiques) sont dans la section « Authentification et autorisation ».
 
-### 3.7 Pièges fréquents
+## Pièges fréquents
 
 | Piège | Conséquence | Remède |
 | --- | --- | --- |
@@ -619,7 +617,7 @@ Les détails (connexion par e-mail, profil, bonnes pratiques) sont dans la secti
 | Travail dans `ready()` | Démarrage lent, erreurs en `migrate` | Limiter à l'enregistrement de signaux |
 | `.env` versionné | Fuite de secrets | `.gitignore` + `.env.example` |
 
-### À retenir
+## À retenir
 
 - **Projet** = configuration ; **app** = fonctionnalité réutilisable. Une app, une responsabilité.
 - Scindez les réglages (`base`/`dev`/`prod`/`test`) et gardez les vues minces.
@@ -627,13 +625,13 @@ Les détails (connexion par e-mail, profil, bonnes pratiques) sont dans la secti
 
 ---
 
-## 4. Configuration (`settings.py`)
+# Configuration (`settings.py`)
 
-### Objectifs d'apprentissage
+## Objectifs d'apprentissage
 
 Comprendre ce qu'est un *réglage* et comment Django le charge ; maîtriser les réglages essentiels (sécurité, base de données, templates, statiques, cache, e-mail, journalisation) ; externaliser les secrets dans des **variables d'environnement** ; définir ses propres réglages.
 
-### 4.1 Principe
+## Principe
 
 La configuration est un **module Python** (`config/settings.py`) dont les noms **en MAJUSCULES** sont lus par Django. Le module à utiliser est indiqué par la variable d'environnement **`DJANGO_SETTINGS_MODULE`** (renseignée par `manage.py`). On y accède dans le code via `django.conf.settings`, jamais par import direct du module.
 
@@ -669,9 +667,9 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 | `ROOT_URLCONF` | Module des routes racine |
 | `USE_TZ` | Datetimes **aware** (avec fuseau) ; recommandé et `True` par défaut depuis Django 5.0 |
 
-> **Définition — datetime « aware ».** Date-heure qui connaît son fuseau horaire, par opposition à *naive* (sans fuseau). Stockez en UTC, affichez dans le fuseau de l'utilisateur (section 17.6).
+> **Définition — datetime « aware ».** Date-heure qui connaît son fuseau horaire, par opposition à *naive* (sans fuseau). Stockez en UTC, affichez dans le fuseau de l'utilisateur (section « Fuseaux horaires »).
 
-### 4.2 Applications installées et middleware
+## Applications installées et middleware
 
 ```python
 INSTALLED_APPS = [
@@ -701,9 +699,9 @@ MIDDLEWARE = [
 ```
 
 - **`INSTALLED_APPS`** : l'ordre compte pour la résolution des templates et des fichiers statiques (la première app qui fournit un fichier gagne), et pour les surcharges (placez vos apps avant celles que vous souhaitez surcharger).
-- **`MIDDLEWARE`** : **l'ordre compte** (descente à la requête, remontée à la réponse ; section 15). `LoginRequiredMiddleware` (5.1), qui rend toutes les vues privées par défaut, n'est pas activé ici (section 12.4).
+- **`MIDDLEWARE`** : **l'ordre compte** (descente à la requête, remontée à la réponse ; section « Middleware »). `LoginRequiredMiddleware` (5.1), qui rend toutes les vues privées par défaut, n'est pas activé ici (section « Contrôle d'accès »).
 
-### 4.3 Base de données
+## Base de données
 
 ```python
 import dj_database_url
@@ -735,7 +733,7 @@ DATABASES = {
 - **`CONN_MAX_AGE`** : durée (secondes) pendant laquelle une connexion est réutilisée entre requêtes ; `0` = fermer après chaque requête (comportement historique). **Un pool** (`"pool": True`) gère les connexions de façon plus fine : ne cumulez pas les deux.
 - **PostgreSQL** est le choix de production : types riches (JSONB, tableaux), recherche plein texte, index avancés, `django.contrib.postgres`.
 
-### 4.4 Templates, fichiers statiques, médias, stockage
+## Templates, fichiers statiques, médias, stockage
 
 ```python
 TEMPLATES = [{
@@ -762,9 +760,9 @@ STORAGES = {                                       # (4.2+) remplace DEFAULT_FIL
 }
 ```
 
-Un **processeur de contexte** (*context processor*) est une fonction qui ajoute des variables à tous les templates (section 7.6). Le réglage `STORAGES` décrit où et comment sont stockés les fichiers : « default » pour les médias, « staticfiles » pour les statiques (section 14).
+Un **processeur de contexte** (*context processor*) est une fonction qui ajoute des variables à tous les templates (section « Processeurs de contexte »). Le réglage `STORAGES` décrit où et comment sont stockés les fichiers : « default » pour les médias, « staticfiles » pour les statiques (section « Fichiers statiques et médias »).
 
-### 4.5 Cache, e-mail, journalisation
+## Cache, e-mail, journalisation
 
 ```python
 CACHES = {
@@ -798,7 +796,7 @@ LOGGING = {
 
 La journalisation de Django repose sur le module standard `logging` : un **logger** émet des messages, un **handler** les envoie quelque part, un **formatter** les met en forme. En conteneur ou PaaS, journalisez **sur la sortie standard** : la plateforme les collecte.
 
-### 4.6 Sécurité (aperçu ; détails en section 26)
+## Sécurité (aperçu)
 
 ```python
 # config/settings/prod.py
@@ -819,7 +817,7 @@ SECURE_CONTENT_TYPE_NOSNIFF = True
 - **HSTS** (*HTTP Strict Transport Security*) indique au navigateur de ne contacter le site qu'en HTTPS pendant la durée donnée.
 - **`SECURE_PROXY_SSL_HEADER`** : à n'activer que si votre proxy **écrase** cet en-tête ; sinon un client pourrait le falsifier.
 
-### 4.7 Variables d'environnement et réglages multiples
+## Variables d'environnement et réglages multiples
 
 ```bash
 # .env  (jamais versionné ; fournir .env.example)
@@ -843,7 +841,7 @@ DJANGO_SETTINGS_MODULE=config.settings.prod python manage.py check --deploy
 
 `check --deploy` signale les réglages dangereux pour la production (HTTPS, cookies, HSTS, `DEBUG`…). Principe des *douze facteurs* : la configuration qui varie entre environnements vit **dans l'environnement**, pas dans le code.
 
-### 4.8 Réglages personnalisés
+## Réglages personnalisés
 
 ```python
 # settings.py
@@ -856,11 +854,11 @@ print(settings.ARTICLES_PAR_PAGE)        # 10 (valeur par défaut)
 
 Préfixez vos réglages par le nom de l'app si vous publiez un paquet réutilisable (`BLOG_ARTICLES_PAR_PAGE`) pour éviter les collisions.
 
-### 4.9 Réglages de bibliothèques tierces
+## Réglages de bibliothèques tierces
 
 Chaque bibliothèque a son dictionnaire ou son préfixe : `REST_FRAMEWORK`, `SIMPLE_JWT`, `CELERY_*`, `CORS_ALLOWED_ORIGINS`, `SPECTACULAR_SETTINGS`… Ils sont détaillés dans les sections concernées (19, 20, 23).
 
-### Pièges fréquents
+## Pièges fréquents
 
 | Piège | Remède |
 | --- | --- |
@@ -870,7 +868,7 @@ Chaque bibliothèque a son dictionnaire ou son préfixe : `REST_FRAMEWORK`, `SIM
 | Importer `settings.py` directement | Toujours `from django.conf import settings` |
 | Mélanger `CONN_MAX_AGE` et pool | Choisir l'un ou l'autre |
 
-### À retenir
+## À retenir
 
 - La configuration est du Python ; ce qui varie selon l'environnement vient de **variables d'environnement**.
 - `DEBUG`, `SECRET_KEY`, `ALLOWED_HOSTS`, HTTPS/cookies/HSTS sont les réglages à ne jamais négliger ; `check --deploy` les vérifie.
@@ -878,13 +876,13 @@ Chaque bibliothèque a son dictionnaire ou son préfixe : `REST_FRAMEWORK`, `SIM
 
 ---
 
-## 5. URLs et routage
+# URLs et routage
 
-### Objectifs d'apprentissage
+## Objectifs d'apprentissage
 
 Expliquer comment Django associe une URL à une vue ; écrire des `URLconf` modulaires avec `path()`, `include()` et espaces de noms ; utiliser les convertisseurs (intégrés et personnalisés) et `re_path` ; **nommer** et **inverser** les URL ; gérer redirections, pages d'erreur, fichiers médias en développement, URL internationalisées et routes d'API ; diagnostiquer un problème de routage.
 
-### 5.1 Principe
+## Principe
 
 Django associe chaque **URL** à une **vue** grâce à des **URLconfs** (fichiers `urls.py`). Il parcourt la liste `urlpatterns` **dans l'ordre** et retient la **première** correspondance ; si aucune ne convient, il renvoie une erreur 404. Seul le **chemin** compte : le nom de domaine, la chaîne de requête (`?a=1`) et la méthode HTTP ne participent pas à la recherche.
 
@@ -933,7 +931,7 @@ urlpatterns = [
 - **L'ordre compte** : placez les motifs **les plus spécifiques d'abord** (`nouveau/` avant `<slug:slug>/`, sinon `nouveau` serait pris pour un slug).
 - Une **vue basée sur une classe** se branche toujours avec `.as_view()`.
 
-### 5.2 Convertisseurs de chemin
+## Convertisseurs de chemin
 
 Les parties entre chevrons `<convertisseur:nom>` capturent un segment de l'URL et le transmettent à la vue **comme argument nommé**, déjà converti en type Python.
 
@@ -962,7 +960,7 @@ urlpatterns = [
 
 > `<int:pk>` ne reconnaît que les entiers positifs : `/articles/abc/` donne directement une 404 sans que votre vue ne s'exécute.
 
-#### Convertisseur personnalisé
+### Convertisseur personnalisé
 
 Un convertisseur est une classe avec un attribut `regex` et deux méthodes : `to_python` (URL → Python) et `to_url` (Python → URL, pour l'inversion).
 
@@ -991,7 +989,7 @@ urlpatterns = [
 ]
 ```
 
-#### Expressions régulières : `re_path`
+### Expressions régulières : `re_path`
 
 ```python
 from django.urls import re_path
@@ -1004,7 +1002,7 @@ urlpatterns = [
 
 Préférez `path()` : plus lisible, plus sûr. Réservez `re_path` aux motifs impossibles à exprimer autrement.
 
-### 5.3 Noms d'URL et inversion
+## Noms d'URL et inversion
 
 > **Règle : ne codez jamais une URL en dur.** Nommez la route (`name=`) et **inversez-la**. Si l'URL change, tout le site se met à jour sans modification.
 
@@ -1032,7 +1030,7 @@ class Article(models.Model):
 
 `get_absolute_url()` est une convention reconnue par l'admin (bouton « voir sur le site »), par `redirect(objet)` et par les sitemaps. Dans le code chargé à l'import (attributs de classe, `success_url`), utilisez **`reverse_lazy`** : l'inversion est alors différée jusqu'à l'utilisation.
 
-### 5.4 Redirections et raccourcis
+## Redirections et raccourcis
 
 ```python
 # apps/blog/views.py
@@ -1063,9 +1061,9 @@ urlpatterns = [
 ```
 
 - `permanent=True` envoie un **301** (les moteurs de recherche transfèrent le référencement) ; sinon **302** (temporaire).
-- Après un `POST` réussi, redirigez toujours (motif **Post/Redirect/Get**, section 6.2).
+- Après un `POST` réussi, redirigez toujours (motif **Post/Redirect/Get**, section « Vues basées sur des fonctions (FBV) »).
 
-### 5.5 Pages d'erreur personnalisées
+## Pages d'erreur personnalisées
 
 ```python
 # config/urls.py
@@ -1094,7 +1092,7 @@ def mauvaise_requete(request, exception):
 
 Plus simple : créez `templates/404.html` et `templates/500.html` ; Django les utilise automatiquement quand `DEBUG = False`. Attention : en `DEBUG = True`, Django affiche sa page technique à la place.
 
-### 5.6 Fichiers statiques et médias en développement
+## Fichiers statiques et médias en développement
 
 ```python
 # config/urls.py (à la suite de urlpatterns)
@@ -1105,9 +1103,9 @@ if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 ```
 
-Cet utilitaire ne fonctionne **qu'avec `DEBUG = True`** : en production, un serveur web frontal ou un stockage cloud sert les médias (section 14).
+Cet utilitaire ne fonctionne **qu'avec `DEBUG = True`** : en production, un serveur web frontal ou un stockage cloud sert les médias (section « Fichiers statiques et médias »).
 
-### 5.7 Internationalisation des URL
+## Internationalisation des URL
 
 ```python
 from django.conf.urls.i18n import i18n_patterns
@@ -1124,10 +1122,10 @@ urlpatterns += i18n_patterns(
 
 `i18n_patterns` ajoute un préfixe de langue (`/en/…`) et permet de traduire les segments eux-mêmes ; `prefix_default_language=False` laisse la langue par défaut sans préfixe.
 
-### 5.8 URL pour les API REST
+## URL pour les API REST
 
 ```python
-# apps/blog/urls_api.py (détails : section 19)
+# apps/blog/urls_api.py (détails : section « API REST avec Django REST Framework »)
 from rest_framework.routers import DefaultRouter
 from .views_api import ArticleViewSet
 
@@ -1141,7 +1139,7 @@ urlpatterns += [path("api/v1/", include("apps.blog.urls_api"))]
 
 **Conventions REST** : noms de ressources au **pluriel** (`/articles/`), **verbes HTTP** pour les actions (plutôt que `/supprimer-article/`), **versionnement** dans l'URL (`/api/v1/`).
 
-### 5.9 Diagnostiquer les problèmes de routage
+## Diagnostiquer les problèmes de routage
 
 | Symptôme | Piste |
 | --- | --- |
@@ -1154,7 +1152,7 @@ urlpatterns += [path("api/v1/", include("apps.blog.urls_api"))]
 python manage.py show_urls            # (django-extensions) liste toutes les routes
 ```
 
-### À retenir
+## À retenir
 
 - URLconf = liste ordonnée ; **première correspondance gagnante**.
 - `include` + `app_name` = routage modulaire ; **nommez** et **inversez** toujours (`reverse`, `{% url %}`, `get_absolute_url`).
@@ -1162,19 +1160,19 @@ python manage.py show_urls            # (django-extensions) liste toutes les rou
 
 ---
 
-## 6. Vues
+# Vues
 
-### Objectifs d'apprentissage
+## Objectifs d'apprentissage
 
 Définir ce qu'est une vue ; écrire des vues fonctions (FBV) et classes (CBV) ; gérer les méthodes HTTP, le motif Post/Redirect/Get et les erreurs ; maîtriser les vues génériques et les mixins ; choisir FBV ou CBV ; écrire une vue asynchrone ; organiser les vues d'une grosse application.
 
-### 6.1 Qu'est-ce qu'une vue ?
+## Qu'est-ce qu'une vue ?
 
 > **Définition.** Une **vue** est un *appelable* Python qui reçoit un objet **`HttpRequest`** (et les paramètres capturés dans l'URL) et renvoie un objet **`HttpResponse`** (HTML, JSON, redirection, fichier, erreur…) ou lève une exception HTTP.
 
 Django convertit les exceptions `Http404` et `PermissionDenied` en réponses 404 et 403 ; toute autre exception non gérée produit une 500.
 
-### 6.2 Vues basées sur des fonctions (FBV)
+## Vues basées sur des fonctions (FBV)
 
 ```python
 # apps/blog/views.py
@@ -1208,7 +1206,7 @@ def api_articles(request: HttpRequest) -> JsonResponse:
 - **`get_object_or_404`** évite le `try/except DoesNotExist` répétitif. Lui passer un **QuerySet filtré** (`Article.objects.publies()`) applique la règle métier : un brouillon donne 404.
 - Un `QuerySet` étant paresseux, rien ne s'exécute tant que le template ne l'itère pas.
 
-#### Gérer les méthodes HTTP : le motif Post/Redirect/Get
+### Gérer les méthodes HTTP : le motif Post/Redirect/Get
 
 ```python
 from django.shortcuts import redirect, render
@@ -1232,7 +1230,7 @@ def creer_article(request):
 
 **Post/Redirect/Get (PRG)** : après un `POST` valide, on **redirige** vers une page en `GET`. Ainsi, rafraîchir la page ne renvoie pas le formulaire (pas de double création) et le bouton « précédent » se comporte normalement.
 
-#### Objets `request` et réponses utiles
+### Objets `request` et réponses utiles
 
 | `request` | Contenu |
 | --- | --- |
@@ -1245,7 +1243,7 @@ def creer_article(request):
 
 Réponses : `HttpResponse`, `JsonResponse`, `HttpResponseRedirect`, `FileResponse`, `StreamingHttpResponse`, `HttpResponseNotFound`, `HttpResponseForbidden`, `HttpResponseNotAllowed`, et le raccourci `render()`.
 
-### 6.3 Décorateurs de vue
+## Décorateurs de vue
 
 ```python
 from django.contrib.auth.decorators import login_required, permission_required
@@ -1259,9 +1257,9 @@ def tableau_de_bord(request):
     return HttpResponse("Tableau de bord")
 ```
 
-Décorateurs usuels : `require_GET`, `require_POST`, `require_http_methods`, `login_required`, `permission_required`, `cache_page`, `never_cache`, `vary_on_headers`. `csrf_exempt` (désactivation de la protection CSRF) est **à éviter** : voir la section 26. Avec **`LoginRequiredMiddleware`** (5.1), toutes les vues exigent la connexion **par défaut** ; exemptez les vues publiques avec `@login_not_required`.
+Décorateurs usuels : `require_GET`, `require_POST`, `require_http_methods`, `login_required`, `permission_required`, `cache_page`, `never_cache`, `vary_on_headers`. `csrf_exempt` (désactivation de la protection CSRF) est **à éviter** : voir la section « Sécurité ». Avec **`LoginRequiredMiddleware`** (5.1), toutes les vues exigent la connexion **par défaut** ; exemptez les vues publiques avec `@login_not_required`.
 
-### 6.4 Vues basées sur des classes (CBV)
+## Vues basées sur des classes (CBV)
 
 Une CBV regroupe la logique **par méthode HTTP** (méthodes `get`, `post`…) et permet l'**héritage** et les **mixins**.
 
@@ -1298,7 +1296,7 @@ class ExportCsv(View):
 
 Manœuvre interne : `as_view()` crée une fonction qui **instancie la classe à chaque requête**, appelle `setup()` puis `dispatch()`, qui route vers la méthode correspondant au verbe HTTP (ou renvoie 405). **N'enregistrez donc pas d'état par requête dans des attributs de classe** : ils seraient partagés.
 
-### 6.5 Vues génériques
+## Vues génériques
 
 | Vue | Usage |
 | --- | --- |
@@ -1363,7 +1361,7 @@ class ModifierArticle(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 - **Mixins d'accès** (`LoginRequiredMixin`, `PermissionRequiredMixin`, `UserPassesTestMixin`) : **placez-les avant la vue générique** dans la liste d'héritage, car l'ordre de résolution des méthodes (MRO) fait que le mixin doit intercepter `dispatch()` en premier.
 - Référence indispensable : *Classy Class-Based Views* (ccbv.co.uk) montre toutes les méthodes et attributs de chaque vue générique.
 
-### FBV ou CBV ?
+## FBV ou CBV ?
 
 |  | **FBV** | **CBV** |
 | --- | --- | --- |
@@ -1374,7 +1372,7 @@ class ModifierArticle(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 
 > **Règle pratique** : **CBV génériques** pour le CRUD standard, **FBV** pour la logique atypique. Les deux se mélangent librement dans un même projet.
 
-### 6.6 Vues asynchrones *(ajout)*
+## Vues asynchrones *(ajout)*
 
 ```python
 # apps/blog/views.py
@@ -1387,9 +1385,9 @@ async def statut(request):
     return JsonResponse({"total": total, "titres": [a.titre for a in articles]})
 ```
 
-Une vue déclarée `async def` s'exécute dans la boucle d'événements (sous ASGI) et peut `await` des opérations d'E/S. Voir la section 22 pour les règles (ne jamais bloquer la boucle).
+Une vue déclarée `async def` s'exécute dans la boucle d'événements (sous ASGI) et peut `await` des opérations d'E/S. Voir la section « Programmation asynchrone, ASGI et WebSockets » pour les règles (ne jamais bloquer la boucle).
 
-### 6.7 Gestion des erreurs dans les vues
+## Gestion des erreurs dans les vues
 
 ```python
 from django.core.exceptions import PermissionDenied
@@ -1408,13 +1406,13 @@ def vue(request, pk):
 
 Codes de réponse à connaître : **400** requête invalide, **401** non authentifié, **403** interdit, **404** introuvable, **405** méthode non autorisée, **409** conflit, **422** données non traitables, **429** trop de requêtes, **500** erreur serveur.
 
-### 6.8 Organiser les vues
+## Organiser les vues
 
 - Une app avec beaucoup de vues : **un paquet** `views/` (`views/articles.py`, `views/commentaires.py`) dont `__init__.py` réexporte les noms utiles.
 - **Vues minces** : la **validation** va dans les **formulaires**, les **requêtes** dans les **gestionnaires / QuerySets**, la **logique métier** dans des **services**. Une vue ne devrait pas dépasser quelques dizaines de lignes.
-- Testez la logique métier comme de simples fonctions, et les vues via le client de test (section 25).
+- Testez la logique métier comme de simples fonctions, et les vues via le client de test (section « Tests »).
 
-### Pièges fréquents
+## Pièges fréquents
 
 | Piège | Remède |
 | --- | --- |
@@ -1424,7 +1422,7 @@ Codes de réponse à connaître : **400** requête invalide, **401** non authent
 | Mixin placé après la vue générique | Mixins d'abord |
 | Logique métier dans la vue | La déplacer dans un service ou le modèle |
 
-### À retenir
+## À retenir
 
 - Une vue transforme une `HttpRequest` en `HttpResponse` ; gardez-la **mince**.
 - **PRG** après chaque `POST` réussi ; `get_object_or_404` avec un QuerySet filtré.
@@ -1432,13 +1430,13 @@ Codes de réponse à connaître : **400** requête invalide, **401** non authent
 
 ---
 
-## 7. Templates
+# Templates
 
-### Objectifs d'apprentissage
+## Objectifs d'apprentissage
 
 Lire et écrire le langage de templates Django (variables, balises, filtres) ; structurer les pages par **héritage** et **inclusion** ; employer les balises et filtres intégrés, y compris `querystring` (5.1) et les **fragments** `partialdef` (6.0) ; créer ses propres balises, filtres et processeurs de contexte ; comprendre l'échappement automatique ; savoir quand envisager Jinja2 ; déboguer un template.
 
-### 7.1 Le langage de templates Django (DTL)
+## Le langage de templates Django (DTL)
 
 Un **template** est un fichier texte (le plus souvent HTML) contenant des **variables** `{{ }}`, des **balises** `{% %}` et des **filtres** `|`. Le moteur le **rend** en combinant le template et un **contexte** (dictionnaire de variables fourni par la vue).
 
@@ -1471,7 +1469,7 @@ Un **template** est un fichier texte (le plus souvent HTML) contenant des **vari
 
 > **Échappement automatique.** `{{ variable }}` convertit `<`, `>`, `&`, `'`, `"` en entités HTML : c'est la protection contre le **XSS** (*Cross-Site Scripting*, injection de script). N'utilisez `|safe`, `mark_safe` ou `{% autoescape off %}` que pour du contenu **de confiance** que *vous* avez produit ou assaini.
 
-### 7.2 Héritage de templates
+## Héritage de templates
 
 L'héritage applique le principe **DRY** à la présentation : un template **parent** définit le squelette et des **blocs** surchargeables ; les **enfants** ne remplissent que les blocs.
 
@@ -1511,7 +1509,7 @@ L'héritage applique le principe **DRY** à la présentation : un template **par
 - **Organisation** : `templates/` (global) et `app/templates/app/` (**espace de noms** : évite que `blog/liste.html` n'entre en collision avec `boutique/liste.html`).
 - Convention : préfixez par `_` les fragments destinés à `include` (`_carte.html`).
 
-### 7.3 Balises et filtres intégrés
+## Balises et filtres intégrés
 
 | Balises | Rôle |
 | --- | --- |
@@ -1540,7 +1538,7 @@ L'héritage applique le principe **DRY** à la présentation : un template **par
 - `{% querystring page=3 %}` reprend les paramètres actuels (`?q=django&statut=publie`) et ne remplace que `page` : fini les liens de pagination qui perdent les filtres.
 - `json_script` est la méthode **sûre** pour transmettre du JSON à JavaScript sans XSS, et elle est compatible avec une CSP stricte.
 
-### 7.4 Fragments de template : `partialdef` *(6.0, à jour)*
+## Fragments de template : `partialdef` *(6.0, à jour)*
 
 Définissez un **fragment nommé** dans un template et **rendez-le seul** : idéal avec **HTMX**, qui attend des réponses HTML partielles.
 
@@ -1570,7 +1568,7 @@ def liste(request):
 
 L'option `inline` fait que le fragment est rendu à sa place **et** reste appelable seul via la syntaxe `nom_du_template#nom_du_fragment`. Avant Django 6.0, le paquet `django-template-partials` offrait cette fonction.
 
-### 7.5 Balises et filtres personnalisés
+## Balises et filtres personnalisés
 
 ```python
 # apps/blog/templatetags/blog_extras.py
@@ -1608,7 +1606,7 @@ def derniers_articles(n: int = 5):
 
 > Ajoutez un fichier `__init__.py` dans `templatetags/` et **redémarrez** le serveur après la création du module (il n'est chargé qu'au démarrage).
 
-### 7.6 Processeurs de contexte
+## Processeurs de contexte
 
 Un **processeur de contexte** est une fonction qui reçoit la requête et renvoie un dictionnaire injecté dans **tous** les templates rendus avec `RequestContext`.
 
@@ -1624,7 +1622,7 @@ def site(request):
 
 Utilisez-les **avec parcimonie** : ils s'exécutent à **chaque** rendu. Pas de requête coûteuse ici sans cache. Exemples intégrés : `request`, `auth` (donne `user` et `perms`), `messages`, `csp` (6.0, donne `csp_nonce`).
 
-### 7.7 Fichiers statiques, formulaires, internationalisation
+## Fichiers statiques, formulaires, internationalisation
 
 ```django
 {% load static i18n %}
@@ -1635,17 +1633,17 @@ Utilisez-les **avec parcimonie** : ils s'exécutent à **chaque** rendu. Pas de 
 
 `{% load %}` doit être répété dans **chaque** template qui utilise une bibliothèque de balises (il n'est pas hérité du parent).
 
-### 7.8 Jinja2 et autres moteurs
+## Jinja2 et autres moteurs
 
 Django peut utiliser **Jinja2** (`django.template.backends.jinja2.Jinja2`) : plus rapide et plus expressif (appels de méthodes avec arguments, macros), mais **incompatible** avec les templates de l'admin et de nombreuses bibliothèques tierces, et il faut réécrire les balises. **Gardez le DTL** sauf besoin précis. Alternatives orientées **composants** : `django-cotton`, `django-components`, `django-slippers`.
 
-### 7.9 Déboguer les templates
+## Déboguer les templates
 
 - `TEMPLATES[0]["OPTIONS"]["debug"]` (déduit de `DEBUG`) : page d'erreur détaillée indiquant la ligne fautive.
 - Une `{{ variable }}` **absente** produit une **chaîne vide silencieuse** : utilisez `string_if_invalid` en développement ou `django-debug-toolbar` (onglets *Templates* et *Context*).
 - `{% debug %}` affiche tout le contexte ; le filtre `|pprint` formate un objet.
 
-### Pièges fréquents
+## Pièges fréquents
 
 | Piège | Remède |
 | --- | --- |
@@ -1655,7 +1653,7 @@ Django peut utiliser **Jinja2** (`django.template.backends.jinja2.Jinja2`) : plu
 | Oubli de `{% load static %}` | `TemplateSyntaxError` sur `{% static %}` |
 | Balise personnalisée introuvable | `__init__.py` manquant, serveur non redémarré, `{% load %}` oublié |
 
-### À retenir
+## À retenir
 
 - Le DTL **sépare** présentation et logique ; il **échappe** par défaut.
 - Héritage (`extends`/`block`) + inclusion (`include`) + fragments (`partialdef`) = pages DRY.
@@ -1663,17 +1661,13 @@ Django peut utiliser **Jinja2** (`django.template.backends.jinja2.Jinja2`) : plu
 
 ---
 
-# Données et interface
+# Modèles
 
----
-
-## 8. Modèles
-
-### Objectifs d'apprentissage
+## Objectifs d'apprentissage
 
 Définir des modèles et choisir les bons types de champs et options ; modéliser des relations (`ForeignKey`, `OneToOneField`, `ManyToManyField` avec table intermédiaire) et comprendre `on_delete` ; gérer le schéma par **migrations** (y compris migrations de données) ; valider, ajouter des méthodes et gestionnaires ; maîtriser l'héritage de modèles ; utiliser du SQL brut en sécurité.
 
-### 8.1 Définir un modèle
+## Définir un modèle
 
 > **Définition.** Un **modèle** est une classe Python héritant de `django.db.models.Model` qui décrit une **table** : chaque attribut de type `Field` devient une **colonne**, chaque instance une **ligne**. Le modèle est la **source unique de vérité** (principe DRY) : migrations, formulaires, admin et API en dérivent.
 
@@ -1742,7 +1736,7 @@ class Article(models.Model):
 - Depuis Django 5.1, `CheckConstraint` utilise le paramètre **`condition=`** (l'ancien `check=` est déprécié).
 - `__str__` définit la représentation textuelle (admin, shell, listes déroulantes) : **toujours le définir**.
 
-### 8.2 Types de champs
+## Types de champs
 
 | Catégorie | Champs |
 | --- | --- |
@@ -1758,7 +1752,7 @@ class Article(models.Model):
 
 **Pourquoi `DecimalField` pour l'argent ?** Les `float` sont binaires et inexacts (`0.1 + 0.2 != 0.3`) ; `Decimal` est exact. `auto_now_add` fixe la date à la création ; `auto_now` la met à jour à chaque `save()`.
 
-#### Options communes
+### Options communes
 
 | Option | Rôle |
 | --- | --- |
@@ -1790,7 +1784,7 @@ class Produit(models.Model):
     metadonnees = models.JSONField(default=dict, blank=True)
 ```
 
-### 8.3 Clés primaires
+## Clés primaires
 
 Par défaut, Django ajoute un champ `id` (**`BigAutoField`**). Autres choix :
 
@@ -1812,7 +1806,7 @@ class LigneCommande(models.Model):                                              
 - **UUID** : identifiants non devinables, pratiques pour les API publiques et la génération côté client ; légèrement plus coûteux qu'un entier.
 - **Clé composite** (`CompositePrimaryKey`, 5.2) : la clé est formée de plusieurs colonnes, utile pour les tables d'association ; certaines fonctions (admin, `ForeignKey` vers un tel modèle) ont des limites, consultez la documentation.
 
-### 8.4 Relations
+## Relations
 
 ```python
 # apps/blog/models.py
@@ -1869,7 +1863,7 @@ article.categories.add(categorie)                       # ManyToMany : add / rem
 print(Article.objects.filter(categories__slug="python"))
 ```
 
-### 8.5 Migrations
+## Migrations
 
 > **Définition.** Une **migration** est un fichier Python qui décrit une **évolution du schéma** (créer une table, ajouter une colonne…). L'ensemble forme l'**historique** versionné du schéma, applicable de façon reproductible sur toute base.
 
@@ -1907,16 +1901,16 @@ class Migration(migrations.Migration):
 - Le **modèle historique** (`apps.get_model`) reflète le schéma **à ce point de l'historique** ; l'importer directement casserait la migration dès que le modèle évolue.
 - Le second argument de `RunPython` (ici `noop`) est l'opération **inverse**, nécessaire pour pouvoir annuler la migration.
 
-> **Règles d'or** : **versionnez** les migrations dans Git ; **ne modifiez jamais** une migration déjà appliquée en production (créez-en une nouvelle) ; ajoutez une colonne `NOT NULL` en **plusieurs étapes** (nullable → remplissage → contrainte) pour ne pas verrouiller de grosses tables (voir section 28.6).
+> **Règles d'or** : **versionnez** les migrations dans Git ; **ne modifiez jamais** une migration déjà appliquée en production (créez-en une nouvelle) ; ajoutez une colonne `NOT NULL` en **plusieurs étapes** (nullable → remplissage → contrainte) pour ne pas verrouiller de grosses tables (voir section « Déploiements sans interruption »).
 
-### 8.6 Validation et nettoyage
+## Validation et nettoyage
 
 ```python
 # apps/blog/models.py : méthode à ajouter dans la classe Article
 from django.core.exceptions import ValidationError
 
 class Article(models.Model):
-    # ... champs de la section 8.1 ...
+    # ... champs de la section « Définir un modèle » ...
 
     def clean(self):        # validation globale (appelée par full_clean et les ModelForm)
         if self.statut == self.Statut.PUBLIE and len(self.contenu) < 100:
@@ -1925,11 +1919,11 @@ class Article(models.Model):
 
 > **Piège capital** : `save()` n'appelle **pas** `full_clean()` automatiquement. La validation s'exécute dans les **formulaires** (`ModelForm`) et l'admin, pas lors d'un `Article.objects.create(...)`. Les **contraintes de base** (`CheckConstraint`, `UniqueConstraint`) sont plus fiables que la seule validation Python, car elles protègent aussi contre les écritures directes et les accès concurrents.
 
-### 8.7 Méthodes, propriétés et gestionnaires
+## Méthodes, propriétés et gestionnaires
 
 ```python
 class Article(models.Model):
-    # ... champs de la section 8.1 ...
+    # ... champs de la section « Définir un modèle » ...
 
     @property
     def temps_de_lecture(self) -> int:
@@ -1947,10 +1941,10 @@ class ArticleManager(models.Manager):
         return super().get_queryset().select_related("auteur")
 ```
 
-- Un **gestionnaire** (*manager*, `objects`) est l'interface de requête d'un modèle ; on peut en définir de personnalisés. Pour des méthodes chaînables, préférez un **QuerySet personnalisé** converti en gestionnaire par `as_manager()` (section 9.10).
+- Un **gestionnaire** (*manager*, `objects`) est l'interface de requête d'un modèle ; on peut en définir de personnalisés. Pour des méthodes chaînables, préférez un **QuerySet personnalisé** converti en gestionnaire par `as_manager()` (section « Gestionnaires et QuerySets personnalisés »).
 - Modèle **« gras »** (*fat model*) : la logique propre à une entité vit dans le modèle ; la logique **transverse** (plusieurs modèles, services externes) dans des services.
 
-### 8.8 Héritage de modèles
+## Héritage de modèles
 
 | Type | Table(s) | Usage |
 | --- | --- | --- |
@@ -1972,11 +1966,11 @@ class Note(Horodate):                                           # hérite de cre
     texte = models.TextField()
 ```
 
-### 8.9 Performances (aperçu)
+## Performances (aperçu)
 
-`select_related` / `prefetch_related` (problème N+1), `only()` / `defer()`, index, `bulk_create` : voir la section 9.
+`select_related` / `prefetch_related` (problème N+1), `only()` / `defer()`, index, `bulk_create` : voir la section « ORM : requêtes et optimisation ».
 
-### 8.10 SQL brut
+## SQL brut
 
 ```python
 # python manage.py shell
@@ -1993,7 +1987,7 @@ with connection.cursor() as curseur:
 
 > **Ne construisez jamais du SQL avec des f-strings ou l'opérateur `%`** sur des données utilisateur : c'est l'**injection SQL**. Les paramètres liés (`%s` + liste) sont transmis séparément au pilote, qui les protège.
 
-### Pièges fréquents
+## Pièges fréquents
 
 | Piège | Remède |
 | --- | --- |
@@ -2003,7 +1997,7 @@ with connection.cursor() as curseur:
 | Modèle utilisateur importé directement | `settings.AUTH_USER_MODEL` |
 | Migration modifiée après déploiement | Nouvelle migration |
 
-### À retenir
+## À retenir
 
 - Le modèle est la **source de vérité** ; choisissez types, options, contraintes et index avec soin.
 - `ForeignKey` + `on_delete` réfléchi ; `through` pour les relations portant des données.
@@ -2011,13 +2005,13 @@ with connection.cursor() as curseur:
 
 ---
 
-## 9. ORM : requêtes et optimisation
+# ORM : requêtes et optimisation
 
-### Objectifs d'apprentissage
+## Objectifs d'apprentissage
 
 Effectuer toutes les opérations CRUD avec l'ORM ; comprendre la **paresse** et le **cache** des QuerySets ; composer des filtres avec lookups, `Q` et `F` ; agréger et annoter (expressions, sous-requêtes, fenêtrage) ; **éliminer le problème N+1** (`select_related`, `prefetch_related`, `fetch_mode`) ; optimiser ; gérer les transactions, l'asynchrone, plusieurs bases, les gestionnaires personnalisés et la recherche plein texte.
 
-### 9.1 Opérations de base
+## Opérations de base
 
 Un **QuerySet** est une requête *en cours de construction* ; un **gestionnaire** (`Article.objects`) en produit. Les exemples ci-dessous se tapent dans `python manage.py shell` (les modèles y sont importés automatiquement depuis Django 5.2).
 
@@ -2062,12 +2056,12 @@ print(Article.objects.filter(cree_le__lt=limite).delete())                   # (
 
 - `get()` renvoie **un seul** objet et lève `DoesNotExist` ou `MultipleObjectsReturned` ; `filter()` renvoie toujours un QuerySet (éventuellement vide).
 - `save(update_fields=[...])` n'écrit que les colonnes citées (plus rapide, évite d'écraser des modifications concurrentes).
-- `update()` et `delete()` sur un QuerySet s'exécutent en **une seule requête SQL** et **ne déclenchent ni `save()` ni les signaux `post_save`** (voir section 16).
+- `update()` et `delete()` sur un QuerySet s'exécutent en **une seule requête SQL** et **ne déclenchent ni `save()` ni les signaux `post_save`** (voir section « Signaux »).
 - `bulk_create` / `bulk_update` regroupent les écritures ; eux non plus n'appellent pas `save()`.
 
 > **Un QuerySet est paresseux.** Le SQL n'est exécuté qu'à l'**évaluation** : itération, `list()`, `len()`, découpage avec pas, `bool()`, `repr`. Une fois évalué, il est **mis en cache** (le deuxième parcours ne refait pas de requête). Chaîner `.filter().exclude().order_by()` ne crée que des objets de requête : une seule requête part, tout à la fin.
 
-### 9.2 Filtres et lookups
+## Filtres et lookups
 
 Un **lookup** s'écrit `champ__opérateur=valeur`.
 
@@ -2098,7 +2092,7 @@ Article.objects.filter(note__lt=5).update(note=F("note") + 1)                   
 - **`F()`** référence la valeur d'une colonne **dans la base** : l'opération est atomique et évite la « course » lecture-modification-écriture en Python.
 - Attention aux filtres sur des relations *plusieurs* : `filter(categories__slug="a", categories__nom="B")` dans **un seul** `filter` exige la même catégorie ; dans deux `filter` chaînés, des catégories potentiellement différentes.
 
-### 9.3 Tri, découpage, valeurs
+## Tri, découpage, valeurs
 
 ```python
 print(Article.objects.order_by("-publie_le", "titre"))
@@ -2112,7 +2106,7 @@ print(Article.objects.distinct(), Article.objects.reverse(), Article.objects.non
 
 Le découpage `[a:b]` se traduit par `LIMIT`/`OFFSET` ; il n'accepte pas d'indices négatifs. `values()` / `values_list()` évitent d'instancier des objets : plus léger pour de gros volumes.
 
-### 9.4 Agrégation et annotation
+## Agrégation et annotation
 
 - **`aggregate()`** calcule une valeur sur **tout** le QuerySet (résultat : un dictionnaire).
 - **`annotate()`** ajoute une valeur calculée **à chaque objet** (résultat : un QuerySet). Combiné à `values()`, il fait un `GROUP BY`.
@@ -2130,7 +2124,7 @@ for a in auteurs:
     print(a.username, a.nb_articles)
 ```
 
-#### Expressions et fonctions
+### Expressions et fonctions
 
 ```python
 from django.db.models import Case, CharField, Count, Exists, F, OuterRef, Subquery, Value, When, Window
@@ -2159,7 +2153,7 @@ print(Article.objects.annotate(mois=TruncMonth("publie_le")).values("mois").anno
 | `Window` + `RowNumber`, `Rank`, `Lag`… | Fonctions de **fenêtrage** (classements, cumuls par groupe) |
 | `TruncMonth`, `TruncDate`, `Coalesce`, `Lower`, `Concat`… | Fonctions de base de données |
 
-### 9.5 Relations et jointures : éviter le problème N+1
+## Relations et jointures : éviter le problème N+1
 
 > **Définition — N+1.** Anti-patron où l'on exécute **1** requête pour lister N objets, puis **N** requêtes supplémentaires (une par objet) pour charger une relation. Avec 100 articles : 101 requêtes au lieu de 1 ou 2. C'est la cause n°1 des sites Django lents.
 
@@ -2194,7 +2188,7 @@ for a in articles:
 
 Attention : dans la boucle ci-dessus, `a.commentaires.count()` refait une requête même après `prefetch_related` ; utilisez `len(a.commentaires.all())` pour exploiter le cache préchargé, ou une annotation `Count`.
 
-#### Modes de chargement des champs *(6.1, ajout)*
+### Modes de chargement des champs *(6.1, ajout)*
 
 Django 6.1 permet de **choisir le comportement** du chargement à la demande pour contrer le N+1 **sans** modifier chaque requête (détail exact de l'API : notes de version 6.1) :
 
@@ -2209,7 +2203,7 @@ for a in articles:
 #                                                         (détecter les N+1 dans les tests)
 ```
 
-### 9.6 Optimiser les requêtes
+## Optimiser les requêtes
 
 | Technique | Effet |
 | --- | --- |
@@ -2238,7 +2232,7 @@ print(len(ctx), "requête(s)")                            # 1 requête
 
 **Méthode** : *mesurez d'abord*, optimisez ensuite. Un index inutile ralentit les écritures ; un `select_related` excessif ramène trop de colonnes.
 
-### 9.7 Transactions
+## Transactions
 
 > **Définition.** Une **transaction** regroupe plusieurs opérations en un bloc **atomique** : tout réussit, ou rien n'est enregistré (propriétés ACID).
 
@@ -2248,7 +2242,7 @@ from django.db import transaction
 from django.db.models import F
 
 from .models import Commande, Produit
-from .tasks import envoyer_confirmation                   # tâche présentée en section 23
+from .tasks import envoyer_confirmation                   # tâche présentée en section « Tâches en arrière-plan »
 
 @transaction.atomic                                        # tout ou rien
 def passer_commande(lignes: list[tuple[int, int]]) -> Commande:
@@ -2264,7 +2258,7 @@ def passer_commande(lignes: list[tuple[int, int]]) -> Commande:
 - `transaction.on_commit(fonction)` diffère une action (envoi d'e-mail, mise en file d'une tâche) **après** la validation : sinon le worker pourrait chercher un objet pas encore enregistré.
 - `ATOMIC_REQUESTS = True` (dans `DATABASES`) enveloppe chaque requête HTTP dans une transaction.
 
-### 9.8 ORM asynchrone *(ajout)*
+## ORM asynchrone *(ajout)*
 
 Préfixe `a` pour les opérations **terminales** (`aget`, `acreate`, `acount`, `afirst`, `aexists`…), `async for` pour l'itération :
 
@@ -2284,9 +2278,9 @@ async def exemples():
 asyncio.run(exemples())      # dans un script ; dans une vue asynchrone, utilisez directement await
 ```
 
-Les opérations non encore natives peuvent être appelées avec `sync_to_async` (section 22). Le **traitement** de la requête reste exécuté dans un pool de threads côté pilote : l'async de l'ORM apporte surtout la *compatibilité* avec les vues asynchrones.
+Les opérations non encore natives peuvent être appelées avec `sync_to_async` (section « Programmation asynchrone, ASGI et WebSockets »). Le **traitement** de la requête reste exécuté dans un pool de threads côté pilote : l'async de l'ORM apporte surtout la *compatibilité* avec les vues asynchrones.
 
-### 9.9 Plusieurs bases de données
+## Plusieurs bases de données
 
 ```python
 # settings.py
@@ -2319,7 +2313,7 @@ print(Article.objects.using("lecture").all())            # forcer une base préc
 
 Un **routeur** décide quelle base utiliser pour chaque lecture/écriture/migration. Attention au **retard de réplication** : lire sur le réplica juste après une écriture peut renvoyer des données anciennes.
 
-### 9.10 Gestionnaires et QuerySets personnalisés
+## Gestionnaires et QuerySets personnalisés
 
 ```python
 # apps/blog/models.py (extrait)
@@ -2333,7 +2327,7 @@ class ArticleQuerySet(models.QuerySet):
         return self.filter(auteur=user)
 
 class Article(models.Model):
-    # ... champs de la section 8.1 ...
+    # ... champs de la section « Définir un modèle » ...
     objects = ArticleQuerySet.as_manager()
 ```
 
@@ -2344,7 +2338,7 @@ print(Article.objects.publies().de(user))                # chaînable
 
 `as_manager()` expose les méthodes du QuerySet sur le gestionnaire **et** sur les résultats chaînés : `Article.objects.publies().de(user)` fonctionne, ce que ne permet pas un gestionnaire classique. C'est le meilleur endroit pour les **requêtes réutilisables** (principe : vues minces).
 
-### 9.11 Recherche plein texte (PostgreSQL)
+## Recherche plein texte (PostgreSQL)
 
 ```python
 from django.contrib.postgres.search import SearchQuery, SearchRank, SearchVector
@@ -2359,7 +2353,7 @@ print([(a.titre, a.rang) for a in resultats])
 
 Le **plein texte** analyse la langue (radicalisation, mots vides) et classe par pertinence, contrairement à `icontains`. Les poids `A`/`B` donnent plus d'importance au titre. Pour de gros besoins : `django-haystack`, `django-elasticsearch-dsl`, **Meilisearch**, **Typesense**.
 
-### Pièges fréquents
+## Pièges fréquents
 
 | Piège | Remède |
 | --- | --- |
@@ -2370,7 +2364,7 @@ Le **plein texte** analyse la langue (radicalisation, mots vides) et classe par 
 | Lecture-modification-écriture en Python | `F()` ou `select_for_update()` |
 | Signal attendu après `update()` / `bulk_*` | Appeler explicitement |
 
-### À retenir
+## À retenir
 
 - **Paresse + cache** : le SQL part à l'évaluation ; enchaînez librement.
 - Attaquez le **N+1** avec `select_related` / `prefetch_related` (ou `fetch_mode`), mesurez avec `assertNumQueries` et la debug toolbar.
@@ -2378,13 +2372,13 @@ Le **plein texte** analyse la langue (radicalisation, mots vides) et classe par 
 
 ---
 
-## 10. Interface d'administration
+# Interface d'administration
 
-### Objectifs d'apprentissage
+## Objectifs d'apprentissage
 
 Activer l'admin et créer un superutilisateur ; enregistrer et personnaliser un modèle (`ModelAdmin`, `inlines`, filtres, recherche, actions, champs calculés) ; gérer permissions et groupes ; personnaliser l'apparence ; connaître les paquets d'extension ; sécuriser l'admin.
 
-### 10.1 Activer et utiliser l'admin
+## Activer et utiliser l'admin
 
 L'**admin** est un back-office **généré automatiquement** à partir des modèles : idéal pour la gestion de contenu et les outils internes. Il est conçu pour le **personnel de confiance**, pas pour les utilisateurs finaux.
 
@@ -2402,7 +2396,7 @@ urlpatterns = [
 python manage.py createsuperuser
 ```
 
-### 10.2 Enregistrer et personnaliser un modèle
+## Enregistrer et personnaliser un modèle
 
 ```python
 # apps/blog/admin.py
@@ -2484,11 +2478,11 @@ class UtilisateurAdmin(UserAdmin):
 
 **Points d'attention :** `list_select_related` et l'annotation dans `get_queryset` évitent le N+1 dans la liste ; `@admin.display` décrit une colonne calculée (libellé, tri possible via `ordering`) ; `@admin.action` définit une action groupée.
 
-### 10.3 Permissions et groupes
+## Permissions et groupes
 
 Chaque modèle reçoit **4 permissions** automatiques : `add`, `change`, `delete`, `view`. Créez des **groupes** (ex. « Rédacteurs ») et attribuez-leur des permissions dans l'admin ; limitez le nombre de **superutilisateurs** (qui ont tous les droits). Les surcharges `has_add_permission`, `has_change_permission`, `has_delete_permission`, `has_view_permission` permettent un contrôle par objet ou par utilisateur.
 
-### 10.4 Personnaliser l'apparence
+## Personnaliser l'apparence
 
 ```python
 from django.contrib import admin
@@ -2501,7 +2495,7 @@ admin.site.index_title = "Tableau de bord"
 - Surcharger les templates : `templates/admin/base_site.html` (`{% extends "admin/base.html" %}`).
 - Thèmes et interfaces modernes : voir ci-dessous.
 
-### 10.5 Paquets pour l'admin
+## Paquets pour l'admin
 
 | Paquet | Apport |
 | --- | --- |
@@ -2515,13 +2509,13 @@ admin.site.index_title = "Tableau de bord"
 | **`django-otp`** / `django-two-factor-auth` | **Double authentification** pour l'admin |
 | **`django-axes`** | Blocage des tentatives de connexion répétées |
 
-### 10.6 Sécurité de l'admin
+## Sécurité de l'admin
 
 - URL **non standard**, **HTTPS** obligatoire, **2FA**, accès restreint par IP / VPN si possible.
 - Comptes **nominatifs**, permissions minimales, journal d'activité (`LogEntry`) consulté régulièrement.
 - N'exposez pas l'admin à des utilisateurs non fiables : il est conçu pour le **personnel**.
 
-### À retenir
+## À retenir
 
 - Quelques lignes suffisent pour un back-office complet ; configurez `list_display`, `search_fields`, `list_filter`, `inlines`.
 - Soignez les requêtes (`list_select_related`, `get_queryset`) et les **permissions**.
@@ -2529,13 +2523,13 @@ admin.site.index_title = "Tableau de bord"
 
 ---
 
-## 11. Formulaires
+# Formulaires
 
-### Objectifs d'apprentissage
+## Objectifs d'apprentissage
 
 Comprendre le rôle d'un formulaire Django (génération, validation, nettoyage) ; écrire des `Form` et des `ModelForm` avec validation par champ et globale ; traiter un formulaire dans une vue ; rendre les formulaires dans les templates ; utiliser formsets et téléversements de fichiers ; maîtriser le CSRF et l'accessibilité.
 
-### 11.1 Formulaires simples
+## Formulaires simples
 
 > **Définition.** Un **formulaire Django** est une classe qui (1) **décrit** des champs, (2) **valide** les données reçues et les **convertit** en types Python (`cleaned_data`), (3) **génère** le HTML correspondant. Il remplace la validation à la main de `request.POST`, source classique de failles.
 
@@ -2566,7 +2560,7 @@ class ContactForm(forms.Form):
 
 **Cycle de validation** (`form.is_valid()`) : pour chaque champ, conversion (`to_python`) → validateurs → `clean_<champ>()` ; puis `clean()` global. Les erreurs sont collectées dans `form.errors` ; les données valides finissent dans `form.cleaned_data`. Un formulaire est **lié** (*bound*) s'il reçoit des données (`ContactForm(request.POST)`), **non lié** sinon.
 
-### 11.2 Traiter un formulaire dans une vue
+## Traiter un formulaire dans une vue
 
 ```python
 # apps/accueil/views.py
@@ -2592,7 +2586,7 @@ urlpatterns += [path("contact/", views.contact, name="contact")]
 
 Schéma standard : **GET** → formulaire vide ; **POST invalide** → réaffichage avec erreurs ; **POST valide** → traitement puis **redirection**.
 
-### 11.3 ModelForm
+## ModelForm
 
 Un **`ModelForm`** génère ses champs **à partir d'un modèle** (DRY) et sait enregistrer l'objet.
 
@@ -2637,11 +2631,11 @@ def modifier_article(request, pk):
 
 - `form.save()` crée ou met à jour l'instance et les relations `ManyToMany` ; `commit=False` renvoie l'objet **sans l'enregistrer** pour que vous le complétiez (ici l'auteur), d'où l'obligation d'appeler `save_m2m()` ensuite.
 - Le `ModelForm` exécute aussi `Model.clean()` et la validation d'unicité du modèle.
-- Le filtre `get_object_or_404(…, auteur=request.user)` impose la **propriété** (voir IDOR, section 26).
+- Le filtre `get_object_or_404(…, auteur=request.user)` impose la **propriété** (voir IDOR, section « Sécurité »).
 
 > **N'utilisez jamais `fields = "__all__"` ni `exclude` sur un formulaire public** : un utilisateur pourrait modifier des champs sensibles (`is_staff`, `auteur`…) en ajoutant des paramètres à la requête. C'est la faille de **mass assignment**. Listez explicitement les champs.
 
-### 11.4 Rendu dans les templates *(à jour)*
+## Rendu dans les templates *(à jour)*
 
 ```django
 <form method="post" enctype="multipart/form-data" novalidate>
@@ -2667,11 +2661,11 @@ Personnalisation : **`FORM_RENDERER`**, templates `django/forms/div.html`, attri
 | **`django-widget-tweaks`** | Ajouter classes et attributs **dans le template** : `{% render_field form.titre class="input" %}` |
 | **`django-formtools`** | Assistants multi-étapes (*wizard*) |
 
-### 11.5 Widgets et champs utiles
+## Widgets et champs utiles
 
 Widgets : `TextInput`, `Textarea`, `Select`, `SelectMultiple`, `CheckboxSelectMultiple`, `RadioSelect`, `DateInput` (`type="date"`), `FileInput`, `ClearableFileInput`, `HiddenInput`, `PasswordInput`. Champs : `ModelChoiceField`, `ModelMultipleChoiceField`, `DateField`, `DecimalField`, `FileField`, `ImageField`, `JSONField`, `SlugField`, `RegexField`. Un **widget** gère la **présentation HTML** ; le **champ** gère la **validation et la conversion**.
 
-### 11.6 Jeux de formulaires (*formsets*)
+## Jeux de formulaires (*formsets*)
 
 Un **formset** gère **plusieurs formulaires du même type** sur une page (lignes de commande, commentaires éditables).
 
@@ -2693,7 +2687,7 @@ def commentaires(request, pk):
 
 Le template doit afficher `{{ formset.management_form }}` (champs cachés qui comptent les formulaires ; sans eux, la validation échoue). `inlineformset_factory` lie les formulaires enfants à un objet parent.
 
-### 11.7 Téléversement de fichiers
+## Téléversement de fichiers
 
 ```python
 # apps/blog/forms.py
@@ -2715,9 +2709,9 @@ class DocumentForm(forms.ModelForm):
         return f
 ```
 
-> **`enctype="multipart/form-data"`** est **obligatoire** dans le `<form>`, et la vue doit passer `request.FILES`. Ne vous fiez ni à l'extension ni au `content_type` envoyé par le client (falsifiables) : validez le **contenu réel** (section 14.4 et 26).
+> **`enctype="multipart/form-data"`** est **obligatoire** dans le `<form>`, et la vue doit passer `request.FILES`. Ne vous fiez ni à l'extension ni au `content_type` envoyé par le client (falsifiables) : validez le **contenu réel** (section « Sécurité des fichiers téléversés » et « Sécurité »).
 
-### 11.8 CSRF
+## CSRF
 
 > **Définition — CSRF** (*Cross-Site Request Forgery*). Attaque où un site malveillant fait envoyer par le navigateur d'un utilisateur connecté une requête modifiante vers votre site (le navigateur joint automatiquement les cookies). Parade : un **jeton secret** que seul votre propre formulaire connaît.
 
@@ -2727,11 +2721,11 @@ class DocumentForm(forms.ModelForm):
 <body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>        <!-- HTMX -->
 ```
 
-### 11.9 Formulaires et accessibilité
+## Formulaires et accessibilité
 
 Chaque champ doit avoir un `<label>` ; les erreurs doivent être associées au champ (`aria-describedby`) ; testez la navigation **au clavier**. Django fournit déjà des étiquettes et des messages d'aide structurés ; ne les supprimez pas lors de la personnalisation.
 
-### À retenir
+## À retenir
 
 - Un formulaire **décrit, valide, nettoie et affiche** ; `ModelForm` dérive du modèle.
 - Validation : `clean_<champ>` (un champ) et `clean` (global). **Liste explicite** de champs.
@@ -2739,13 +2733,13 @@ Chaque champ doit avoir un `<label>` ; les erreurs doivent être associées au c
 
 ---
 
-## 12. Authentification et autorisation
+# Authentification et autorisation
 
-### Objectifs d'apprentissage
+## Objectifs d'apprentissage
 
 Distinguer **authentification** (qui êtes-vous ?) et **autorisation** (que pouvez-vous faire ?) ; créer un modèle utilisateur personnalisé ; utiliser les vues intégrées (connexion, mots de passe) et l'inscription ; protéger vues et templates (décorateurs, mixins, `LoginRequiredMiddleware`) ; gérer mots de passe, backends personnalisés, connexion sociale/2FA et sessions.
 
-### 12.1 Le système intégré
+## Le système intégré
 
 `django.contrib.auth` fournit : **utilisateurs**, **groupes**, **permissions**, **sessions**, vues de **connexion / déconnexion / mots de passe**, et un **hachage** sécurisé (PBKDF2 par défaut, **Argon2** recommandé).
 
@@ -2756,7 +2750,7 @@ Distinguer **authentification** (qui êtes-vous ?) et **autorisation** (que pouv
 | **Hachage** | Transformation à sens unique du mot de passe (jamais stocké en clair) |
 | **Session** | État serveur lié à un cookie, qui « mémorise » l'utilisateur connecté |
 
-### 12.2 Modèle utilisateur personnalisé
+## Modèle utilisateur personnalisé
 
 ```python
 # apps/comptes/models.py
@@ -2792,7 +2786,7 @@ auteur = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 
 > **`AbstractUser`** (modèle complet à étendre) suffit dans la grande majorité des cas ; **`AbstractBaseUser` + `PermissionsMixin`** donne un contrôle total (champs minimaux, gestionnaire personnalisé). Un **profil** séparé (`OneToOneField`) est une alternative pour des données volumineuses ou facultatives. Pour `USERNAME_FIELD = "email"`, un `UserManager` adapté est parfois nécessaire selon vos besoins.
 
-### 12.3 Vues d'authentification intégrées
+## Vues d'authentification intégrées
 
 ```python
 # config/urls.py
@@ -2814,7 +2808,7 @@ LOGOUT_REDIRECT_URL = "accueil"
 
 > Depuis Django 5.0, la déconnexion exige une requête **POST** (formulaire avec `{% csrf_token %}`), pas un simple lien : un lien `GET` pourrait déconnecter l'utilisateur à son insu (via une image piégée, par exemple).
 
-#### Inscription
+### Inscription
 
 ```python
 # apps/comptes/views.py
@@ -2837,7 +2831,7 @@ class Inscription(CreateView):
 
 `UserCreationForm` valide les mots de passe avec les validateurs configurés et hache le mot de passe. Django ne fournit pas de vue d'inscription prête à l'emploi (ni vérification d'e-mail) : voir `django-allauth` (12.7).
 
-### 12.4 Contrôle d'accès
+## Contrôle d'accès
 
 ```python
 from django.contrib.auth.decorators import login_required, permission_required
@@ -2873,7 +2867,7 @@ def verifier(request):
 
 `@permission_required(..., raise_exception=True)` renvoie un **403** au lieu de rediriger vers la connexion (utile quand l'utilisateur est déjà connecté mais non autorisé). Un **superutilisateur** passe tous les contrôles.
 
-#### Authentification obligatoire par défaut *(5.1, ajout)*
+### Authentification obligatoire par défaut *(5.1, ajout)*
 
 ```python
 # settings.py
@@ -2890,11 +2884,11 @@ def page_publique(request):
 
 C'est une approche « **fermé par défaut** » : on ne risque plus d'oublier de protéger une vue ; on **ouvre** explicitement les pages publiques.
 
-#### Permissions d'objet
+### Permissions d'objet
 
 Les permissions natives sont **par modèle** (« peut modifier les articles »). Pour des permissions **par objet** (« seul l'auteur peut modifier *cet* article ») : `UserPassesTestMixin`, un filtre sur le QuerySet (`auteur=request.user`), ou **`django-guardian`** / **`django-rules`**.
 
-### 12.5 Mots de passe
+## Mots de passe
 
 ```python
 PASSWORD_HASHERS = [
@@ -2911,7 +2905,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 Le premier hacheur de la liste sert aux **nouveaux** mots de passe ; les suivants permettent de vérifier les anciens, qui sont **mis à niveau** automatiquement à la prochaine connexion. Les validateurs refusent les mots de passe trop courts, trop communs, numériques ou proches des informations de l'utilisateur.
 
-### 12.6 Backends d'authentification personnalisés
+## Backends d'authentification personnalisés
 
 ```python
 # apps/comptes/backends.py
@@ -2938,7 +2932,7 @@ AUTHENTICATION_BACKENDS = ["apps.comptes.backends.EmailBackend", "django.contrib
 
 Django essaie les backends **dans l'ordre** ; le premier qui renvoie un utilisateur l'emporte. Utile pour une connexion par e-mail, LDAP, SSO.
 
-### 12.7 Connexion sociale, SSO et 2FA *(ajout)*
+## Connexion sociale, SSO et 2FA *(ajout)*
 
 | Besoin | Paquet |
 | --- | --- |
@@ -2960,7 +2954,7 @@ ACCOUNT_SIGNUP_FIELDS = ["email*", "password1*", "password2*"]
 ACCOUNT_EMAIL_VERIFICATION = "mandatory"
 ```
 
-### 12.8 Sessions
+## Sessions
 
 ```python
 SESSION_ENGINE = "django.contrib.sessions.backends.cached_db"   # db | cache | cached_db | file | signed_cookies
@@ -2993,14 +2987,14 @@ def vider_session(request):
 
 Cookie de session : **`HttpOnly`** (illisible par JavaScript), **`Secure`** (HTTPS uniquement), **`SameSite`** (limite l'envoi inter-sites, aide contre le CSRF). Django **régénère la clé de session à la connexion** (anti-fixation).
 
-### 12.9 Bonnes pratiques
+## Bonnes pratiques
 
 - **Modèle personnalisé dès le début**, **Argon2**, validateurs de mots de passe, **2FA** pour le personnel.
 - **Limitation des tentatives** (`django-axes`), messages d'erreur **identiques** (anti-énumération des comptes).
 - **Ne stockez pas** de mots de passe en clair, ne les journalisez jamais.
 - Testez les accès (`self.client.force_login(user)`), y compris les **cas refusés**.
 
-### Pièges fréquents
+## Pièges fréquents
 
 | Piège | Remède |
 | --- | --- |
@@ -3009,7 +3003,7 @@ Cookie de session : **`HttpOnly`** (illisible par JavaScript), **`Secure`** (HTT
 | Oublier le contrôle de propriété | Filtrer par `request.user` |
 | `User` importé directement | `get_user_model()` / `settings.AUTH_USER_MODEL` |
 
-### À retenir
+## À retenir
 
 - Authentification ≠ autorisation ; **modèle personnalisé** dès le départ ; **Argon2** et validateurs.
 - Décorateurs/mixins pour les vues ; `LoginRequiredMiddleware` pour « fermé par défaut » ; permissions d'objet à la main ou avec guardian/rules.
@@ -3017,13 +3011,13 @@ Cookie de session : **`HttpOnly`** (illisible par JavaScript), **`Secure`** (HTT
 
 ---
 
-## 13. Messages, sessions et cache
+# Messages, sessions et cache
 
-### Objectifs d'apprentissage
+## Objectifs d'apprentissage
 
 Utiliser le framework de **messages** (notifications éphémères) ; comprendre les **niveaux de cache** de Django (site, vue, fragment, bas niveau, en-têtes HTTP) ; configurer un backend (Redis) ; maîtriser l'invalidation et les clés de cache ; reconnaître les risques d'un cache mal conçu. (Les sessions sont détaillées en 12.8.)
 
-### 13.1 Framework de messages
+## Framework de messages
 
 > **Définition.** Le framework de **messages** stocke des notifications **à usage unique** (« Article enregistré ») pour les afficher à la **prochaine** page vue par l'utilisateur, typiquement après une redirection (PRG).
 
@@ -3061,7 +3055,7 @@ MESSAGE_TAGS = {niveaux_messages.ERROR: "danger"}                               
 - `message.tags` fournit une classe CSS (`success`, `error`, `warning`, `info`, plus vos `extra_tags`) ; `MESSAGE_TAGS` permet d'ajuster le vocabulaire (Bootstrap attend `danger`).
 - Dans une vue de classe : `SuccessMessageMixin` (`success_message = "Créé !"`). Avec **HTMX / AJAX** : renvoyez les messages dans un fragment ou via un en-tête `HX-Trigger`.
 
-### 13.2 Cache : vue d'ensemble
+## Cache : vue d'ensemble
 
 > **Définition.** Un **cache** mémorise le résultat d'un calcul coûteux pour le réutiliser. Il échange de la **fraîcheur** contre de la **vitesse**. La difficulté centrale : savoir **quand l'invalider**.
 
@@ -3108,7 +3102,7 @@ def accueil(request):
 - `get_or_set` évite le motif « lire, tester, calculer, écrire ».
 - Dans `{% cache %}`, les arguments suivants la durée et le nom forment la **clé de variation** (ici le numéro de page).
 
-### Backends
+## Backends
 
 | Backend | Usage |
 | --- | --- |
@@ -3120,7 +3114,7 @@ def accueil(request):
 
 > **Invalidation — règles pratiques.** Donnez toujours une **durée de vie** ; incluez dans la **clé** tout ce qui fait varier le contenu (utilisateur, langue, page) ; ne mettez pas en cache de données **personnelles** dans une clé partagée (fuite entre utilisateurs) ; invalidez explicitement (`cache.delete`) lors des modifications importantes, souvent via `transaction.on_commit`.
 
-### À retenir
+## À retenir
 
 - Messages = notifications à usage unique, affichées après redirection.
 - Cache : choisir le **niveau** adapté, **Redis** en production, clés **variantes**, durée de vie obligatoire.
@@ -3128,13 +3122,13 @@ def accueil(request):
 
 ---
 
-## 14. Fichiers statiques et médias
+# Fichiers statiques et médias
 
-### Objectifs d'apprentissage
+## Objectifs d'apprentissage
 
 Distinguer **statiques** et **médias** ; configurer `STATIC_*` / `MEDIA_*` ; servir les statiques en production (WhiteNoise, Nginx, CDN) ; gérer les médias (noms sûrs, stockage cloud avec `django-storages`) ; sécuriser les téléversements ; dépanner les problèmes courants.
 
-### 14.1 Deux notions distinctes
+## Deux notions distinctes
 
 |  | **Statiques** | **Médias** |
 | --- | --- | --- |
@@ -3143,7 +3137,7 @@ Distinguer **statiques** et **médias** ; configurer `STATIC_*` / `MEDIA_*` ; se
 | Réglages | `STATIC_URL`, `STATIC_ROOT`, `STATICFILES_DIRS` | `MEDIA_URL`, `MEDIA_ROOT` |
 | Sécurité | Publics | **À valider** (taille, type, noms) |
 
-### 14.2 Fichiers statiques
+## Fichiers statiques
 
 ```python
 STATIC_URL = "static/"
@@ -3163,7 +3157,7 @@ python manage.py collectstatic --noinput           # copie tous les statiques ve
 
 Les **finders** de `staticfiles` cherchent les fichiers dans `STATICFILES_DIRS` et dans le dossier `static/` de chaque app. `collectstatic` les **rassemble** (y compris ceux de l'admin et des paquets tiers) dans `STATIC_ROOT`, dossier que le serveur web publie. En **développement**, `runserver` sert les statiques automatiquement (si `DEBUG = True`). En **production**, **jamais** par Django lui-même.
 
-#### Servir les statiques en production
+### Servir les statiques en production
 
 | Solution | Quand |
 | --- | --- |
@@ -3178,7 +3172,7 @@ STORAGES = {"staticfiles": {"BACKEND": "whitenoise.storage.CompressedManifestSta
 
 Le stockage « **Manifest** » ajoute une **empreinte** au nom (`site.3f9a1c.css`) : on peut alors les mettre en cache « pour toujours » côté navigateur, car tout changement produit un nouveau nom (*cache busting*). WhiteNoise doit être placé **juste après** `SecurityMiddleware`.
 
-### 14.3 Fichiers médias
+## Fichiers médias
 
 ```python
 MEDIA_URL = "media/"
@@ -3210,7 +3204,7 @@ class Document(models.Model):
 - `fichier.url`, `fichier.path`, `fichier.size`, `fichier.name` : attributs d'un `FieldFile`.
 - Un `ImageField` stocke seulement le **chemin** ; le fichier vit dans le stockage (`default` de `STORAGES`).
 
-#### Stockage dans le cloud : `django-storages`
+### Stockage dans le cloud : `django-storages`
 
 ```python
 STORAGES = {
@@ -3222,14 +3216,14 @@ STORAGES = {
 
 Compatible **Amazon S3**, **Cloudflare R2**, **Google Cloud Storage**, **Azure**, **MinIO**… Servez les médias **privés** par **URL signées** (`querystring_auth`), à durée limitée. Avantage du cloud : pas de disque local à sauvegarder, plusieurs instances d'application partagent les mêmes fichiers.
 
-### 14.4 Sécurité des fichiers téléversés
+## Sécurité des fichiers téléversés
 
 - Limiter **taille** (`DATA_UPLOAD_MAX_MEMORY_SIZE`, `FILE_UPLOAD_MAX_MEMORY_SIZE`) et **type** (validation du **contenu réel** avec `python-magic` / Pillow, pas seulement l'extension).
 - **Renommer** les fichiers (pas de nom fourni par l'utilisateur : risque de traversée de chemin), stocker **hors** de la racine web ou sur un stockage dédié.
 - **Ne jamais exécuter** ni servir en `text/html` un fichier utilisateur (risque XSS) ; en-tête `X-Content-Type-Options: nosniff`.
 - Fichiers **privés** : vue protégée qui renvoie un `FileResponse` (ou `X-Accel-Redirect` avec Nginx).
 
-### 14.5 Dépanner
+## Dépanner
 
 | Symptôme | Cause |
 | --- | --- |
@@ -3238,20 +3232,20 @@ Compatible **Amazon S3**, **Cloudflare R2**, **Google Cloud Storage**, **Azure**
 | Médias en 404 en développement | `static(MEDIA_URL, …)` manquant dans `urls.py` |
 | Images non traitées | **Pillow** non installé |
 
-### À retenir
+## À retenir
 
 - **Statiques** = fichiers du site, collectés et servis par WhiteNoise/Nginx/CDN ; **médias** = fichiers utilisateurs, **à ne jamais faire confiance**.
 - Stockage cloud avec `django-storages` ; noms générés ; URL signées pour le privé.
 
 ---
 
-## 15. Middleware
+# Middleware
 
-### Objectifs d'apprentissage
+## Objectifs d'apprentissage
 
 Comprendre le modèle en « oignon » des middlewares ; connaître les middlewares intégrés ; écrire un middleware (classe, hooks, version sync/async) ; maîtriser l'ordre ; savoir quand **ne pas** en écrire.
 
-### 15.1 Principe
+## Principe
 
 > **Définition.** Un **middleware** est une couche qui **intercepte** chaque requête **avant** qu'elle atteigne la vue, et chaque réponse **après** la vue. Les middlewares sont empilés comme des couches d'oignon.
 
@@ -3262,7 +3256,7 @@ Réponse  ← SecurityMiddleware ← Session ← Auth ← … ←
 
 Chaque middleware peut : **modifier la requête**, **court-circuiter** (renvoyer directement une réponse sans appeler la suite), **modifier la réponse**, ou **capter une exception**.
 
-### 15.2 Middlewares intégrés importants
+## Middlewares intégrés importants
 
 | Middleware | Rôle |
 | --- | --- |
@@ -3278,7 +3272,7 @@ Chaque middleware peut : **modifier la requête**, **court-circuiter** (renvoyer
 | `GZipMiddleware` | Compression |
 | `ConditionalGetMiddleware` | ETag, réponses 304 |
 
-### 15.3 Écrire un middleware
+## Écrire un middleware
 
 ```python
 # apps/accueil/middleware.py
@@ -3316,7 +3310,7 @@ class ChronoMiddleware:
 - Hooks facultatifs : `process_view` (juste avant la vue), `process_exception`, `process_template_response`.
 - Ne conservez pas d'état par requête dans `self` : une seule instance sert toutes les requêtes (et plusieurs threads).
 
-#### Middleware compatible sync / async
+### Middleware compatible sync / async
 
 ```python
 from asgiref.sync import iscoroutinefunction, markcoroutinefunction
@@ -3341,27 +3335,27 @@ class MonMiddleware:
 
 Un middleware **synchrone** placé dans une pile asynchrone force des **conversions** thread ↔ boucle coûteuses : déclarez `sync_capable` et `async_capable` pour éviter ces passages.
 
-### 15.4 Ordre et bonnes pratiques
+## Ordre et bonnes pratiques
 
 - **Ordre** : sécurité / statiques en premier, puis sessions → auth → le reste. Un middleware qui dépend de `request.user` doit être **après** `AuthenticationMiddleware`.
 - Gardez les middlewares **rapides** : ils s'exécutent à **chaque** requête (y compris les statiques en développement).
 - **Pas de logique métier** : un middleware sert des **préoccupations transversales** (journaux, en-têtes, authentification, détection de locataire/*tenant*).
 - Déboguez avec `django-debug-toolbar` et en **commentant** progressivement les middlewares suspects.
 
-### À retenir
+## À retenir
 
 - Un middleware = fonction/classe qui enveloppe le traitement de **toutes** les requêtes ; **l'ordre compte**.
 - Si le besoin ne concerne qu'une vue, préférez un **décorateur** ou un mixin.
 
 ---
 
-## 16. Signaux
+# Signaux
 
-### Objectifs d'apprentissage
+## Objectifs d'apprentissage
 
 Comprendre le motif *observateur* et les signaux de Django ; brancher un récepteur correctement (`@receiver`, `ready()`) ; créer un signal personnalisé ; connaître les pièges (`bulk_*`, boucles, lenteur) et les alternatives (services explicites).
 
-### 16.1 Principe
+## Principe
 
 > **Définition.** Un **signal** est un mécanisme de notification découplé (motif **observateur**) : un **émetteur** (*sender*) annonce qu'un événement s'est produit ; des **récepteurs** (*receivers*) enregistrés réagissent, sans que l'émetteur les connaîsse.
 
@@ -3374,7 +3368,7 @@ Comprendre le motif *observateur* et les signaux de Django ; brancher un récept
 | `user_logged_in` / `user_logged_out` / `user_login_failed` | Authentification |
 | `post_migrate` | Après `migrate` |
 
-### 16.2 Utilisation
+## Utilisation
 
 ```python
 # apps/comptes/signals.py
@@ -3405,7 +3399,7 @@ class ComptesConfig(AppConfig):
 - Le récepteur n'est actif que si le module qui le contient est **importé** : d'où l'import dans `ready()` (cause n°1 du « mon signal ne se déclenche pas »).
 - `sender=` limite le récepteur à un modèle ; sans lui, il réagit à **tous** les modèles.
 
-#### Signal personnalisé
+### Signal personnalisé
 
 ```python
 # apps/boutique/signals.py
@@ -3426,19 +3420,19 @@ commande_payee.send(sender=Commande, commande=commande)     # affiche : Commande
 
 `Signal.send()` appelle les récepteurs **de façon synchrone, dans l'ordre**, et une exception d'un récepteur remonte à l'appelant ; `send_robust()` capture les exceptions. Il existe aussi `asend` pour les récepteurs asynchrones.
 
-### 16.3 Précautions et alternatives
+## Précautions et alternatives
 
 | Piège | Remède |
 | --- | --- |
 | Logique **cachée** (difficile à suivre) | Préférez un **appel explicite** (méthode du modèle, service) |
 | `bulk_create`, `update()` **ne déclenchent pas** `post_save` | Appeler explicitement |
 | Boucles infinies (un récepteur re-sauvegarde l'objet) | `update_fields`, gardes |
-| Travail lent dans le récepteur | **Tâche en arrière-plan** (section 23) avec `transaction.on_commit` |
+| Travail lent dans le récepteur | **Tâche en arrière-plan** (section « Tâches en arrière-plan ») avec `transaction.on_commit` |
 | Tests difficiles | Tester le récepteur comme une fonction |
 
 > **Règle** : utilisez les signaux pour **découpler des apps** (ex. : une app tierce réagit à la création d'un utilisateur) ; **sinon** préférez les **services explicites**, plus faciles à lire, à déboguer et à tester.
 
-### À retenir
+## À retenir
 
 - Signal = notification découplée ; récepteur branché dans `ready()`.
 - Les opérations en lot ne déclenchent pas `post_save`.
@@ -3446,13 +3440,13 @@ commande_payee.send(sender=Commande, commande=commande)     # affiche : Commande
 
 ---
 
-## 17. Internationalisation et localisation
+# Internationalisation et localisation
 
-### Objectifs d'apprentissage
+## Objectifs d'apprentissage
 
 Distinguer i18n, l10n et fuseaux horaires ; configurer langues et chemins de traduction ; marquer les textes (Python et templates, pluriels) ; extraire, traduire et compiler les messages ; internationaliser les URL ; traduire le contenu des modèles ; gérer correctement les fuseaux horaires.
 
-### 17.1 Principes
+## Principes
 
 | Terme | Signification |
 | --- | --- |
@@ -3470,7 +3464,7 @@ USE_I18N = True
 
 `LocaleMiddleware` choisit la langue de chaque requête selon, dans l'ordre : le préfixe d'URL, le cookie de langue, l'en-tête `Accept-Language` du navigateur, puis `LANGUAGE_CODE`.
 
-### 17.2 Marquer les textes
+## Marquer les textes
 
 ```python
 # apps/blog/models.py
@@ -3504,7 +3498,7 @@ print(ngettext("%(n)d article", "%(n)d articles", n) % {"n": n})     # pluriels 
 | `pgettext` | Traduction avec **contexte** (distinguer deux sens d'un même mot) |
 | `{% translate %}`, `{% blocktranslate %}` | Équivalents pour les templates |
 
-### 17.3 Extraire, traduire, compiler
+## Extraire, traduire, compiler
 
 ```bash
 python manage.py makemessages -l en -l fr --ignore=.venv      # crée locale/<langue>/LC_MESSAGES/django.po
@@ -3516,7 +3510,7 @@ python manage.py compilemessages                              # produit django.m
 
 Le fichier **`.po`** (*Portable Object*) liste les paires `msgid` (texte source) / `msgstr` (traduction) ; le **`.mo`** est sa version binaire compilée, celle qu'utilise Django. Relancez `makemessages` après chaque ajout de texte, puis `compilemessages`.
 
-### 17.4 URLs, sélecteur de langue, formats
+## URLs, sélecteur de langue, formats
 
 ```python
 # config/urls.py (à la suite de urlpatterns)
@@ -3529,7 +3523,7 @@ urlpatterns += [path("i18n/", include("django.conf.urls.i18n"))]      # vue set_
 
 La vue `set_language` reçoit un `POST` avec la langue choisie et enregistre la préférence dans un cookie. Formats localisés : `{{ valeur|date:"DATE_FORMAT" }}`, `{{ nombre|floatformat:2 }}` ; balises `localize` / `unlocalize`.
 
-### 17.5 Traduire le contenu des **modèles**
+## Traduire le contenu des **modèles**
 
 | Paquet | Approche |
 | --- | --- |
@@ -3539,7 +3533,7 @@ La vue `set_language` reçoit un `POST` avec la langue choisie et enregistre la 
 
 Django traduit l'**interface** (gettext) ; le **contenu** saisi en base (titres d'articles) n'est pas traduit automatiquement, d'où ces paquets.
 
-### 17.6 Fuseaux horaires
+## Fuseaux horaires
 
 ```python
 from django.utils import timezone
@@ -3553,20 +3547,20 @@ with timezone.override("Indian/Antananarivo"):
 
 **Règle** : stockez en **UTC** (`USE_TZ = True`) ; convertissez **à l'affichage** selon le fuseau de l'utilisateur. Utilisez `timezone.now()` plutôt que `datetime.now()` (qui est *naïf*).
 
-### À retenir
+## À retenir
 
 - **Marquez** (`gettext`/`_lazy`), **extrayez** (`makemessages`), **traduisez** (`.po`), **compilez** (`compilemessages`).
 - `gettext_lazy` pour tout ce qui est défini à l'import ; UTC en base, conversion à l'affichage.
 
 ---
 
-## 18. Commandes de gestion personnalisées
+# Commandes de gestion personnalisées
 
-### Objectifs d'apprentissage
+## Objectifs d'apprentissage
 
 Créer une commande `manage.py` (arguments, sorties colorées, erreurs) ; savoir quand en utiliser une ; la rendre **idempotente** et journalisée ; l'appeler depuis le code ; choisir entre commande, cron et file de tâches.
 
-### 18.1 Créer une commande
+## Créer une commande
 
 Une **commande de gestion** est un script exécutable via `python manage.py <nom>` avec **tout l'environnement Django chargé** (modèles, réglages).
 
@@ -3606,7 +3600,7 @@ python manage.py archiver_articles --jours 180 --dry-run
 - `handle()` contient la logique ; `CommandError` produit un message propre et un code de sortie non nul ; `self.stdout.write` et `self.style.SUCCESS/WARNING/ERROR` gèrent l'affichage coloré.
 - Le paramètre `--dry-run` (simulation) est une excellente habitude pour toute opération destructive.
 
-### 18.2 Usages
+## Usages
 
 | Usage | Exemple |
 | --- | --- |
@@ -3615,26 +3609,22 @@ python manage.py archiver_articles --jours 180 --dry-run
 | **Maintenance** | Réindexation, recalcul de champs |
 | **Démarrage** | Création de données initiales (`loaddata`, fixtures) |
 
-> Rendez les commandes **idempotentes** (rejouables sans dommage) et **journalisées** ; pour des traitements longs, répétés ou déclenchés par l'utilisateur, préférez une **file de tâches** (section 23). Appel depuis le code (tests, autres commandes) : `call_command("archiver_articles", jours=30)`.
+> Rendez les commandes **idempotentes** (rejouables sans dommage) et **journalisées** ; pour des traitements longs, répétés ou déclenchés par l'utilisateur, préférez une **file de tâches** (section « Tâches en arrière-plan »). Appel depuis le code (tests, autres commandes) : `call_command("archiver_articles", jours=30)`.
 
-### À retenir
+## À retenir
 
 - Un fichier `management/commands/<nom>.py` + une classe `Command` suffisent.
 - Prévoyez `--dry-run`, des messages clairs et l'idempotence.
 
 ---
 
-# API, asynchrone et frontend
+# API REST avec Django REST Framework
 
----
-
-## 19. API REST avec Django REST Framework
-
-### Objectifs d'apprentissage
+## Objectifs d'apprentissage
 
 Comprendre ce qu'est une API REST et le rôle de DRF ; écrire des **sérialiseurs** (validation, relations), des **vues et ViewSets**, des **routeurs** ; configurer **pagination, filtrage, tri, recherche, limitation de débit, versionnement** et gestion d'erreurs ; documenter avec **OpenAPI** ; tester une API ; appliquer les bonnes pratiques (N+1, sécurité).
 
-### 19.1 Pourquoi DRF ?
+## Pourquoi DRF ?
 
 > **Définition — API REST.** Une interface de programmation qui expose des **ressources** (articles, commandes) identifiées par des **URL**, manipulées avec les **verbes HTTP** (`GET`, `POST`, `PUT`, `PATCH`, `DELETE`) et échangées le plus souvent en **JSON**, de façon **sans état** (chaque requête porte tout ce qu'il faut, y compris l'authentification).
 
@@ -3662,7 +3652,7 @@ REST_FRAMEWORK = {
 
 Ce dictionnaire fixe les **réglages globaux** : qui peut appeler (`authentication`, `permission`), comment on pagine, quels filtres sont disponibles, combien de requêtes sont tolérées par minute, et comment générer le schéma OpenAPI. Chaque vue peut les surcharger.
 
-### 19.2 Sérialiseurs
+## Sérialiseurs
 
 Un **sérialiseur** convertit **objets ↔ JSON** et **valide** les entrées (rôle comparable à celui d'un formulaire pour une API).
 
@@ -3697,7 +3687,7 @@ class ArticleSerializer(serializers.ModelSerializer):
 - `read_only_fields` : acceptés en sortie, ignorés en entrée (protection contre le *mass assignment*).
 - `nb_commentaires` est calculé par **annotation** dans la vue : on évite une requête par objet.
 
-### 19.3 Vues et ViewSets
+## Vues et ViewSets
 
 ```python
 # apps/blog/views_api.py
@@ -3743,7 +3733,7 @@ class ArticleViewSet(viewsets.ModelViewSet):
 
 Un **ViewSet** regroupe les actions d'une ressource (`list`, `retrieve`, `create`, `update`, `partial_update`, `destroy`) en une classe ; un **routeur** en déduit les URL. `@action` ajoute des routes personnalisées. `perform_create` est le point d'extension pour compléter les données (ici l'auteur, qu'on **ne lit jamais** dans le corps de la requête). Les **permissions de niveau objet** (`has_object_permission`) ne s'appliquent que lorsque la vue appelle `get_object()`.
 
-### 19.4 Routeurs
+## Routeurs
 
 ```python
 # apps/blog/urls_api.py
@@ -3769,7 +3759,7 @@ urlpatterns += [
 
 Routes générées : `GET/POST /articles/`, `GET/PUT/PATCH/DELETE /articles/{id}/`, plus les `@action` (ex. `POST /articles/{id}/publier/`). `DefaultRouter` ajoute aussi une page racine listant les ressources.
 
-### 19.5 Pagination, filtrage, tri, recherche
+## Pagination, filtrage, tri, recherche
 
 ```python
 # apps/blog/pagination.py
@@ -3802,7 +3792,7 @@ Branchement dans `ArticleViewSet` : `filterset_class = ArticleFilter` (à la pla
 | `LimitOffsetPagination` | `?limit=20&offset=40` | Flexibilité ; lente sur de grands `offset` |
 | **`CursorPagination`** | Curseur opaque basé sur l'ordre | **Gros volumes**, flux, pas de saut de pages |
 
-### 19.6 Limitation de débit, versionnement, erreurs
+## Limitation de débit, versionnement, erreurs
 
 ```python
 # config/api.py
@@ -3823,7 +3813,7 @@ REST_FRAMEWORK["EXCEPTION_HANDLER"] = "config.api.gestionnaire_erreurs"
 
 Le **throttling** limite le nombre de requêtes par client (réponse `429`) ; réglages par vue : `throttle_classes`, `throttle_scope`. Le **versionnement** permet de faire évoluer l'API sans casser les clients existants. Format d'erreur standard recommandé : **RFC 9457** (*Problem Details*) ; l'important est la **cohérence** d'un format unique.
 
-### 19.7 Documentation OpenAPI
+## Documentation OpenAPI
 
 ```python
 # settings.py
@@ -3853,7 +3843,7 @@ python manage.py spectacular --file schema.yml     # export OpenAPI 3 ; généra
 
 **OpenAPI** est une description normalisée de l'API (points d'accès, paramètres, schémas). Elle alimente la documentation interactive (Swagger UI, ReDoc) et permet de **générer des clients** typés (TypeScript, Python…).
 
-### 19.8 Tests d'API
+## Tests d'API
 
 ```python
 # apps/blog/tests/test_api.py
@@ -3879,7 +3869,7 @@ class ArticleAPITests(APITestCase):
         self.assertEqual(self.client.post("/api/v1/articles/", {}).status_code, 401)
 ```
 
-### 19.9 Bonnes pratiques DRF
+## Bonnes pratiques DRF
 
 - **Optimisez** `get_queryset()` (`select_related`, `prefetch_related`, annotations) : le **N+1** est le piège n°1 (un sérialiseur qui accède à une relation l'exécute pour chaque objet).
 - Séparez les sérialiseurs de **lecture** et d'**écriture** si nécessaire (`get_serializer_class`).
@@ -3887,7 +3877,7 @@ class ArticleAPITests(APITestCase):
 - Ne divulguez pas d'**identifiants séquentiels** sensibles (UUID / slug) ni de champs internes ; vérifiez la **propriété** des objets (IDOR).
 - Documentez avec **drf-spectacular** et testez avec `APIClient`.
 
-### À retenir
+## À retenir
 
 - DRF = sérialiseurs (validation) + ViewSets (actions) + routeurs (URL) + réglages globaux.
 - Pagination, filtres, throttling et versionnement sont des **fondamentaux**, pas des options.
@@ -3895,15 +3885,15 @@ class ArticleAPITests(APITestCase):
 
 ---
 
-## 20. Authentification des API : JWT et alternatives
+# Authentification des API : JWT et alternatives
 
 *(Section ajoutée : JWT et jetons étaient absents du guide d'origine.)*
 
-### Objectifs d'apprentissage
+## Objectifs d'apprentissage
 
 Choisir une méthode d'authentification adaptée à l'application ; comprendre la structure et les limites d'un **JWT** ; configurer `djangorestframework-simplejwt` (jetons d'accès et de rafraîchissement, rotation, liste noire) ; stocker les jetons côté client de façon sûre ; configurer CORS et CSRF pour un front séparé.
 
-### 20.1 Quelle méthode choisir ?
+## Quelle méthode choisir ?
 
 | Méthode | Principe | Idéal pour | Remarques |
 | --- | --- | --- | --- |
@@ -3915,7 +3905,7 @@ Choisir une méthode d'authentification adaptée à l'application ; comprendre l
 
 > **Définition — JWT.** Un **JSON Web Token** est une chaîne `en-tête.charge_utile.signature`, chaque partie étant encodée en Base64URL. L'**en-tête** indique l'algorithme, la **charge utile** (*payload*) contient des **revendications** (*claims* : `sub` sujet, `exp` expiration, `iat` émission, vos champs), la **signature** garantit l'intégrité. Le serveur peut vérifier un jeton **sans consulter la base** (d'où « sans état »). **Il est encodé, pas chiffré** : tout le monde peut lire son contenu.
 
-### 20.2 JWT avec `djangorestframework-simplejwt`
+## JWT avec `djangorestframework-simplejwt`
 
 ```bash
 uv add djangorestframework-simplejwt
@@ -3968,7 +3958,7 @@ curl -X POST http://localhost:8000/api/auth/jeton/rafraichir/ -H "Content-Type: 
 
 **Flux complet :** (1) le client envoie identifiants → (2) reçoit **access** (court, 10 min) et **refresh** (long, 7 jours) → (3) envoie `Authorization: Bearer <access>` sur chaque appel → (4) quand l'access expire (`401`), il présente le **refresh** pour en obtenir un nouveau → (5) à la déconnexion, le refresh est mis sur **liste noire**. Pourquoi deux jetons ? Un access volé est dangereux peu de temps ; le refresh, plus précieux, circule rarement et peut être révoqué.
 
-#### Personnaliser le contenu du jeton
+### Personnaliser le contenu du jeton
 
 ```python
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
@@ -3988,7 +3978,7 @@ class MonJetonView(TokenObtainPairView):
 
 **Connexion par e-mail** : définissez `USERNAME_FIELD = "email"` sur le modèle utilisateur ; le sérialiseur l'utilise automatiquement.
 
-### 20.3 Où stocker les jetons côté client ?
+## Où stocker les jetons côté client ?
 
 | Stockage | Risque | Avis |
 | --- | --- | --- |
@@ -3999,7 +3989,7 @@ class MonJetonView(TokenObtainPairView):
 
 > `simplejwt` ne gère **pas** les cookies nativement : utilisez un paquet dédié (ex. **`dj-rest-auth`** avec `JWT_AUTH_COOKIE`, ou **`django-allauth` headless**) ou écrivez des vues qui posent le refresh en cookie `HttpOnly`.
 
-### 20.4 Bonnes pratiques JWT
+## Bonnes pratiques JWT
 
 - **Access court** (5–15 min) + **refresh** plus long, **rotation** et **liste noire**.
 - **HTTPS obligatoire** ; clé de signature **secrète et dédiée** (ou **RS256/ES256** pour des clients qui vérifient sans connaître le secret).
@@ -4007,7 +3997,7 @@ class MonJetonView(TokenObtainPairView):
 - Vérifiez **`exp`**, `iss`, `aud` ; prévoyez la **révocation** (changement de mot de passe, déconnexion).
 - Un JWT n'est **pas** toujours le bon choix : pour une application web classique ou une SPA du même domaine, les **sessions + cookies** sont plus simples et plus sûres.
 
-### 20.5 Alternatives et compléments
+## Alternatives et compléments
 
 | Paquet | Rôle |
 | --- | --- |
@@ -4019,7 +4009,7 @@ class MonJetonView(TokenObtainPairView):
 | **`django-ninja-jwt`** | JWT pour **Django Ninja** (port de simplejwt) |
 | **`PyJWT`** | Bibliothèque de bas niveau (encoder / décoder des JWT) |
 
-### 20.6 CORS et API consommées par un front séparé
+## CORS et API consommées par un front séparé
 
 > **Définition — CORS** (*Cross-Origin Resource Sharing*). Mécanisme du navigateur qui bloque, par défaut, les requêtes JavaScript vers une **autre origine** (schéma + domaine + port). Le serveur doit autoriser explicitement les origines de confiance par des en-têtes de réponse.
 
@@ -4037,7 +4027,7 @@ CSRF_TRUSTED_ORIGINS = ["https://app.exemple.fr"]
 
 > **N'utilisez jamais** `CORS_ALLOW_ALL_ORIGINS = True` en production, surtout avec `CORS_ALLOW_CREDENTIALS = True`. CORS **ne remplace pas** l'authentification : c'est une protection du **navigateur**, pas du serveur.
 
-### 20.7 Sessions + CSRF pour une SPA du même site
+## Sessions + CSRF pour une SPA du même site
 
 ```python
 SESSION_COOKIE_SAMESITE = "Lax"
@@ -4046,7 +4036,7 @@ CSRF_COOKIE_HTTPONLY = False          # le JS doit lire le cookie csrftoken pour
 
 Le client envoie `X-CSRFToken` sur les requêtes modifiantes ; DRF `SessionAuthentication` applique la vérification CSRF.
 
-### À retenir
+## À retenir
 
 - Application web / SPA même domaine : **sessions + CSRF**. Mobile ou multi-domaines : **JWT court + refresh** en rotation.
 - Un JWT est **lisible** par tous ; stockez le refresh dans un cookie `HttpOnly` ou le trousseau sécurisé.
@@ -4054,15 +4044,15 @@ Le client envoie `X-CSRFToken` sur les requêtes modifiantes ; DRF `SessionAuthe
 
 ---
 
-## 21. Django Ninja, GraphQL et API externes
+# Django Ninja, GraphQL et API externes
 
 *(Section ajoutée : frameworks et approches complémentaires.)*
 
-### Objectifs d'apprentissage
+## Objectifs d'apprentissage
 
 Écrire une API typée avec **Django Ninja** et la comparer à DRF ; comprendre les principes de **GraphQL** et le rôle de Strawberry ; **consommer des API externes** de façon robuste (délais, erreurs, cache, tests) ; recevoir des **webhooks** en sécurité.
 
-### 21.1 Django Ninja : API typées, façon FastAPI
+## Django Ninja : API typées, façon FastAPI
 
 **Django Ninja** utilise les **annotations de types** Python et **Pydantic** : peu de code, validation automatique, **OpenAPI** intégrée, support **async**. Le type d'un paramètre décrit à la fois sa **validation** et sa **documentation**.
 
@@ -4135,7 +4125,7 @@ urlpatterns += [path("api/", api.urls)]
 
 Authentification JWT : **`django-ninja-jwt`**.
 
-### 21.2 GraphQL avec Strawberry
+## GraphQL avec Strawberry
 
 > **Définition — GraphQL.** Langage de requête pour API où le **client décrit précisément les champs** voulus et reçoit exactement cela, en **un seul point d'entrée** (`/graphql/`). Il évite le *sur-chargement* (champs inutiles) et le *sous-chargement* (plusieurs appels REST) mais déplace la complexité vers le serveur.
 
@@ -4181,7 +4171,7 @@ urlpatterns += [path("graphql/", GraphQLView.as_view(schema=schema))]
 
 Alternatives : **Graphene-Django**, **Ariadne**. **Points d'attention :** GraphQL expose un langage de requête : **limitez la profondeur et la complexité** (une requête imbriquée peut coûter très cher), évitez le **N+1** (*DataLoaders*, optimiseurs de `strawberry-django`), gérez les permissions **par champ**, et désactivez l'**introspection** en production si nécessaire.
 
-### 21.3 Consommer des API externes
+## Consommer des API externes
 
 ```bash
 uv add httpx
@@ -4212,7 +4202,7 @@ async def meteo_async(ville: str) -> dict:                            # dans une
 | Bonne pratique | Détail |
 | --- | --- |
 | **Délai d'expiration** | Sans `timeout`, une API lente peut **bloquer tous vos workers** |
-| **Ne pas bloquer** une requête web sur une API lente | Déportez vers une **tâche en arrière-plan** (section 23) |
+| **Ne pas bloquer** une requête web sur une API lente | Déportez vers une **tâche en arrière-plan** (section « Tâches en arrière-plan ») |
 | **Cache** | Mettre en cache les réponses (`cache.get_or_set`) |
 | **Nouvelles tentatives** et limites | `tenacity`, transports `httpx` avec *retries* ; attention à l'idempotence |
 | **Erreurs** | Gérer `httpx.HTTPError`, délais, formats inattendus |
@@ -4220,7 +4210,7 @@ async def meteo_async(ville: str) -> dict:                            # dans une
 | **Tests** | `respx` (httpx), `responses` / `requests-mock` ; **jamais** de réseau réel dans les tests |
 | **SSRF** | Valider les URL fournies par l'utilisateur (liste blanche, interdire les IP privées) |
 
-### 21.4 Webhooks (recevoir des événements)
+## Webhooks (recevoir des événements)
 
 > **Définition — webhook.** Appel HTTP que **le service externe** (paiement, GitHub…) envoie **à votre serveur** quand un événement se produit : c'est un « rappel » inversé, qui évite d'interroger sans cesse l'API.
 
@@ -4234,7 +4224,7 @@ from django.http import HttpResponse, HttpResponseBadRequest
 from django.views.decorators.csrf import csrf_exempt          # justifié ici : requête serveur-à-serveur authentifiée par signature
 from django.views.decorators.http import require_POST
 
-from apps.blog.tasks import traiter_evenement                 # tâche présentée en section 23
+from apps.blog.tasks import traiter_evenement                 # tâche présentée en section « Tâches en arrière-plan »
 
 @csrf_exempt
 @require_POST
@@ -4251,20 +4241,20 @@ def webhook_paiement(request):
 - **Toujours vérifier la signature**, avec une **comparaison à temps constant** (`hmac.compare_digest`) pour éviter les attaques par chronométrie.
 - Rendre le traitement **idempotent** (l'émetteur peut renvoyer un événement : mémorisez son identifiant) et **répondre rapidement** (2xx) en déportant le travail.
 
-### À retenir
+## À retenir
 
 - **Ninja** = API rapides à écrire, typées, async ; **DRF** = écosystème le plus riche ; **GraphQL** = requêtes flexibles mais à encadrer.
 - Appels sortants : **timeout**, erreurs gérées, cache, tests sans réseau. Webhooks : **signature** + idempotence + réponse rapide.
 
 ---
 
-## 22. Programmation asynchrone, ASGI et WebSockets
+# Programmation asynchrone, ASGI et WebSockets
 
-### Objectifs d'apprentissage
+## Objectifs d'apprentissage
 
 Expliquer la différence WSGI/ASGI et synchrone/asynchrone ; écrire des vues asynchrones et **mélanger** sync/async correctement ; mettre en place des **WebSockets** avec Channels ; utiliser les **SSE** ; déployer en ASGI.
 
-### 22.1 WSGI et ASGI
+## WSGI et ASGI
 
 |  | **WSGI** | **ASGI** |
 | --- | --- | --- |
@@ -4277,7 +4267,7 @@ Expliquer la différence WSGI/ASGI et synchrone/asynchrone ; écrire des vues as
 
 Django s'exécute très bien en **WSGI** (Gunicorn). Passez en **ASGI** si vous avez besoin de **WebSockets**, de **SSE**, ou de nombreuses **E/S concurrentes** (appels d'API en parallèle).
 
-### 22.2 Vues asynchrones
+## Vues asynchrones
 
 ```python
 import asyncio
@@ -4297,7 +4287,7 @@ async def tableau_de_bord(request):
 
 `asyncio.gather` lance les deux appels **en même temps** : la durée totale est celle du plus lent, pas la somme.
 
-#### Mélanger synchrone et asynchrone
+### Mélanger synchrone et asynchrone
 
 ```python
 import asyncio
@@ -4320,9 +4310,9 @@ valeur = async_to_sync(fonction_async)(41)                   # l'inverse : appel
 print(valeur)                                                # 42
 ```
 
-> **Ne bloquez jamais la boucle d'événements** (appels `requests`, `time.sleep`, calculs lourds) : utilisez `httpx.AsyncClient`, `asyncio.sleep`, ou `sync_to_async` / une tâche en arrière-plan. Les **middlewares** synchrones forcent des conversions : préférez des middlewares **compatibles async** (section 15). Django interdit certaines opérations de base de données synchrones dans un contexte asynchrone (`SynchronousOnlyOperation`) pour vous protéger.
+> **Ne bloquez jamais la boucle d'événements** (appels `requests`, `time.sleep`, calculs lourds) : utilisez `httpx.AsyncClient`, `asyncio.sleep`, ou `sync_to_async` / une tâche en arrière-plan. Les **middlewares** synchrones forcent des conversions : préférez des middlewares **compatibles async** (section « Middleware »). Django interdit certaines opérations de base de données synchrones dans un contexte asynchrone (`SynchronousOnlyOperation`) pour vous protéger.
 
-### 22.3 Django Channels : WebSockets
+## Django Channels : WebSockets
 
 > **Définition — WebSocket.** Canal de communication **bidirectionnel et persistant** entre navigateur et serveur, idéal pour le temps réel (chat, notifications, tableaux de bord). Django seul ne les gère pas : on ajoute **Channels**.
 
@@ -4397,7 +4387,7 @@ websocket_urlpatterns = [path("ws/salon/<str:salon>/", SalonConsumer.as_asgi())]
 
 > **Sécurité :** authentifiez les WebSockets (cookie de session via `AuthMiddlewareStack`, ou jeton dans la chaîne de requête / premier message), validez l'**origine** (`AllowedHostsOriginValidator`) et limitez la taille et la fréquence des messages.
 
-### 22.4 Événements envoyés par le serveur (SSE)
+## Événements envoyés par le serveur (SSE)
 
 Plus simples que les WebSockets pour du **flux unidirectionnel** (notifications, progression d'une tâche) :
 
@@ -4416,7 +4406,7 @@ async def flux(request):
 
 Le navigateur consomme ce flux avec l'API `EventSource` ; la reconnexion automatique est intégrée. Fonctionne sur HTTP ordinaire (traverse mieux proxys et pare-feu qu'un WebSocket).
 
-### 22.5 Déployer en ASGI
+## Déployer en ASGI
 
 ```bash
 uvicorn config.asgi:application --host 0.0.0.0 --port 8000 --workers 4
@@ -4425,9 +4415,9 @@ gunicorn config.asgi:application -k uvicorn_worker.UvicornWorker -w 4 -b 0.0.0.0
 daphne -b 0.0.0.0 -p 8000 config.asgi:application
 ```
 
-Derrière Nginx, relayez les en-têtes `Upgrade` et `Connection` pour les WebSockets (section 28.4).
+Derrière Nginx, relayez les en-têtes `Upgrade` et `Connection` pour les WebSockets (section « Nginx (proxy inverse) »).
 
-### À retenir
+## À retenir
 
 - ASGI = HTTP + WebSockets + SSE, async natif ; **ne bloquez jamais la boucle**.
 - `sync_to_async` / `async_to_sync` assurent la passerelle ; `asyncio.gather` parallélise les E/S.
@@ -4435,13 +4425,13 @@ Derrière Nginx, relayez les en-têtes `Upgrade` et `Connection` pour les WebSoc
 
 ---
 
-## 23. Tâches en arrière-plan
+# Tâches en arrière-plan
 
-### Objectifs d'apprentissage
+## Objectifs d'apprentissage
 
 Comprendre pourquoi et quand déporter un traitement hors de la requête HTTP ; connaître l'architecture producteur / file / worker ; utiliser le **framework de tâches intégré** (Django 6.0) et **Celery** (tâches, nouvelles tentatives, planification, chaînes, supervision) ; appliquer les règles d'**idempotence** et de **transaction** ; choisir la bonne solution.
 
-### 23.1 Pourquoi déporter des traitements ?
+## Pourquoi déporter des traitements ?
 
 Une requête web doit répondre en **quelques centaines de millisecondes**. Les opérations **lentes ou fragiles** (envoi d'e-mails, génération de PDF, appels d'API tierces, traitement d'images, rapports, synchronisations) ne doivent **pas** s'exécuter dans la requête : elles ralentissent l'utilisateur, occupent un worker web et échouent avec la requête si le service externe tombe. On les **met en file d'attente** ; un **worker** (processus séparé) les exécute.
 
@@ -4461,7 +4451,7 @@ Vue ──enqueue──> File (Redis, RabbitMQ, base) ──> Worker ──> ex�
 
 **Garantie de livraison.** La plupart des systèmes offrent *« au moins une fois »* : une tâche peut s'exécuter **deux fois** (worker interrompu, nouvelle tentative). C'est pourquoi **toute tâche doit être idempotente**.
 
-### 23.2 Framework de tâches intégré *(Django 6.0, ajout)*
+## Framework de tâches intégré *(Django 6.0, ajout)*
 
 Django 6.0 introduit une **API standard** pour définir et mettre en file des tâches. Django fournit l'**interface** ; l'**exécution en production** est confiée à un **backend** (implémentation) externe.
 
@@ -4492,13 +4482,13 @@ def inscrire(utilisateur):
 **Ce qu'il faut comprendre :**
 
 - `@task` transforme la fonction en objet *tâche* ; **`.enqueue(...)`** la met en file et renvoie immédiatement un **résultat** (identifiant, état). Appeler la fonction directement l'exécute « normalement », sans file.
-- Les arguments doivent être **sérialisables** (nombres, textes, listes, dictionnaires) : passez un **identifiant**, pas un objet de modèle (voir 23.3).
+- Les arguments doivent être **sérialisables** (nombres, textes, listes, dictionnaires) : passez un **identifiant**, pas un objet de modèle (voir la section « Celery »).
 - Le **backend immédiat** exécute la tâche sur-le-champ, dans le même processus : parfait pour développer et tester, **inutilisé en production**.
 - Le framework définit aussi des réglages par tâche (file nommée, priorité, exécution différée) ; leur disponibilité dépend du **backend** choisi.
 
 > **Mise en garde.** Le framework intégré **ne fournit pas de worker de production** : vérifiez la documentation officielle (« Tasks ») et l'état des backends tiers avant de l'adopter ; **Celery** reste la solution la plus éprouvée.
 
-### 23.3 Celery
+## Celery
 
 **Celery** est le système de tâches distribuées de référence : files multiples, planification, nouvelles tentatives, chaînes, résultats, supervision.
 
@@ -4537,7 +4527,7 @@ CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler" # tâc
 - `autodiscover_tasks()` importe automatiquement le fichier `tasks.py` de chaque app installée.
 - Le `import` dans `config/__init__.py` garantit que l'application Celery est chargée au démarrage de Django (nécessaire pour `@shared_task`).
 
-#### Écrire et appeler des tâches
+### Écrire et appeler des tâches
 
 ```python
 # apps/blog/tasks.py
@@ -4594,7 +4584,7 @@ celery -A config beat -l info            # planificateur (tâches périodiques)
 celery -A config flower                  # supervision web (http://localhost:5555)
 ```
 
-#### Chaînes, groupes, accords (*canvas*)
+### Chaînes, groupes, accords (*canvas*)
 
 ```python
 from celery import chain, chord, group, shared_task
@@ -4629,7 +4619,7 @@ chord(group(redimensionner.s(i) for i in [1, 2, 3]))(callback.s())             #
 - **`chord`** : un groupe suivi d'un **rappel** quand **toutes** ont fini.
 - `.s()` crée une **signature** (appel différé d'une tâche avec ses arguments).
 
-#### Tâches périodiques
+### Tâches périodiques
 
 ```python
 # apps/blog/tasks.py
@@ -4656,14 +4646,14 @@ CELERY_BEAT_SCHEDULE = {
 
 Avec `django-celery-beat`, le planning vit **en base** et se modifie dans l'**admin** sans redéploiement. **Ne lancez qu'une seule instance de `beat`**, sinon les tâches se déclenchent en double.
 
-#### Bonnes pratiques Celery
+### Bonnes pratiques Celery
 
 - **Idempotentes**, **petites**, avec **délai maximal** (`time_limit`, `soft_time_limit`).
 - **Surveillez** (Flower, Sentry), configurez **nouvelles tentatives** avec *backoff* et **files dédiées** (`task_routes`) pour isoler les tâches lourdes des rapides.
 - Testez avec `CELERY_TASK_ALWAYS_EAGER = True` (exécution immédiate) ou en appelant directement la fonction.
 - Ne bloquez pas un worker sur une tâche qui attend le résultat d'une autre (risque d'interblocage) : utilisez des chaînes.
 
-### 23.4 Alternatives et choix
+## Alternatives et choix
 
 | Outil | Caractéristiques |
 | --- | --- |
@@ -4678,7 +4668,7 @@ Avec `django-celery-beat`, le planning vit **en base** et se modifie dans l'**ad
 
 > **Choix** : besoin simple → **Django Tasks / Huey / Procrastinate / cron** ; besoin riche (planification, flux, forte volumétrie) → **Celery**.
 
-### Pièges fréquents
+## Pièges fréquents
 
 | Piège | Remède |
 | --- | --- |
@@ -4688,7 +4678,7 @@ Avec `django-celery-beat`, le planning vit **en base** et se modifie dans l'**ad
 | Aucun délai maximal | `time_limit` |
 | Plusieurs `beat` | Une seule instance |
 
-### À retenir
+## À retenir
 
 - Tout ce qui est lent ou externe se déporte dans un **worker** ; la vue répond immédiatement.
 - Livraison *au moins une fois* → **idempotence** obligatoire ; **identifiants** en arguments ; **`on_commit`**.
@@ -4696,15 +4686,15 @@ Avec `django-celery-beat`, le planning vit **en base** et se modifie dans l'**ad
 
 ---
 
-## 24. Frontend moderne avec Django
+# Frontend moderne avec Django
 
 *(Section ajoutée : les approches actuelles pour construire l'interface.)*
 
-### Objectifs d'apprentissage
+## Objectifs d'apprentissage
 
 Choisir l'approche front adaptée à un projet ; construire une interface dynamique avec **HTMX** et des **fragments de template** ; intégrer Tailwind et Vite ; organiser une **SPA** consommant une API Django ; appliquer le principe « commencer simple ».
 
-### 24.1 Panorama des approches
+## Panorama des approches
 
 | Approche | Principe | Idéal pour |
 | --- | --- | --- |
@@ -4717,7 +4707,7 @@ Choisir l'approche front adaptée à un projet ; construire une interface dynami
 
 > **Définition — SPA** (*Single-Page Application*). Application dont le navigateur charge **une seule page**, puis gère la navigation et l'affichage en JavaScript, en échangeant des **données JSON** avec le serveur. **Rendu côté serveur (SSR)** : le serveur produit le HTML complet à chaque page (approche classique de Django). Le choix entre les deux conditionne l'architecture, l'équipe, le référencement et la complexité.
 
-### 24.2 HTMX avec `django-htmx`
+## HTMX avec `django-htmx`
 
 > **Définition — HTMX.** Petite bibliothèque JavaScript qui permet à **n'importe quel élément HTML** d'envoyer une requête (`hx-get`, `hx-post`…) et d'**insérer la réponse HTML** dans la page (`hx-target`, `hx-swap`), sans écrire de JavaScript. Le serveur reste la source de vérité et renvoie des **fragments**.
 
@@ -4758,13 +4748,13 @@ def liste(request):
 - `request.htmx` (fourni par `django-htmx`) permet à **la même vue** de servir la page complète (premier chargement, robots d'indexation) **ou** le seul fragment (requête HTMX).
 - Le **CSRF** passe par l'en-tête `X-CSRFToken` défini une fois sur `<body>`.
 
-> Avec les **partiels de template** (Django 6.0, section 7.4), une seule page sert à la fois la **page complète** et le **fragment** : fini les dizaines de petits fichiers `_fragment.html`.
+> Avec les **partiels de template** (Django 6.0, section « Fragments de template : `partialdef` »), une seule page sert à la fois la **page complète** et le **fragment** : fini les dizaines de petits fichiers `_fragment.html`.
 
 **Cas d'usage typiques :** recherche instantanée, pagination/« voir plus », validation de champ à la volée, édition « en ligne », suppression sans rechargement, onglets, notifications par `HX-Trigger`.
 
 **Alpine.js** complète HTMX pour les **petits comportements purement client** (menu déroulant, modale, onglet) : `<div x-data="{ ouvert: false }"><button @click="ouvert = !ouvert">Menu</button><nav x-show="ouvert">…</nav></div>`.
 
-### 24.3 Tailwind et ressources front
+## Tailwind et ressources front
 
 | Besoin | Outil |
 | --- | --- |
@@ -4777,21 +4767,21 @@ def liste(request):
 
 **Tailwind** est un framework CSS « utilitaire » : on compose l'apparence avec de petites classes (`px-4 py-2 rounded bg-blue-600 text-white`) au lieu d'écrire du CSS. **Vite** est un outil de compilation (*bundler*) rapide qui assemble JS/CSS et offre le **rechargement à chaud** ; `django-vite` fait le lien : en développement il pointe vers le serveur Vite, en production vers les fichiers compilés (avec empreintes) collectés par `collectstatic`.
 
-### 24.4 SPA + Django
+## SPA + Django
 
-- **API** : DRF ou Ninja ; **authentification** : sessions (même domaine) ou JWT (section 20) ; **CORS** configuré.
+- **API** : DRF ou Ninja ; **authentification** : sessions (même domaine) ou JWT (section « Authentification des API : JWT et alternatives ») ; **CORS** configuré.
 - **Servir le build** du front : par Nginx / CDN, ou via `TemplateView` + WhiteNoise pour une SPA simple.
 - **Types partagés** : générez des clients TypeScript depuis le schéma **OpenAPI** (`drf-spectacular` + `openapi-typescript` / `orval`) : les contrats d'API restent synchronisés.
 - En développement : Vite sur le port `5173` + Django sur `8000`, avec un **proxy** Vite vers Django ou CORS.
 - **Coût caché d'une SPA** : deux bases de code, deux déploiements, authentification et CORS à gérer, référencement (SEO) à traiter, état à synchroniser. À n'assumer que si le besoin le justifie.
 
-### 24.5 Ordre de conseil
+## Ordre de conseil
 
 1. **Commencez simple** : templates + **HTMX** couvrent l'immense majorité des besoins.
 2. Ajoutez **Alpine.js** pour de petits comportements côté client.
 3. Passez à une **SPA** seulement si l'interactivité (éditeur riche, tableaux complexes, mode hors-ligne) l'exige.
 
-### À retenir
+## À retenir
 
 - Le rendu **serveur** + **HTMX** est souvent le meilleur rapport simplicité / interactivité pour Django.
 - Une SPA ajoute une API, du CORS/JWT, du SEO à gérer : à choisir en connaissance de cause.
@@ -4799,17 +4789,13 @@ def liste(request):
 
 ---
 
-# Qualité et production
+# Tests
 
----
-
-## 25. Tests
-
-### Objectifs d'apprentissage
+## Objectifs d'apprentissage
 
 Situér les niveaux de tests et choisir l'outil adapté ; écrire des tests Django (`TestCase`, client HTTP, `assertNumQueries`) puis des tests `pytest-django` ; fabriquer des données avec `factory_boy` ; isoler le temps, le réseau et les tâches (mocks) ; accélérer la suite ; écrire des tests E2E ; mettre en place couverture et intégration continue.
 
-### 25.1 Pourquoi et quoi tester
+## Pourquoi et quoi tester
 
 > **Définition.** Un **test automatisé** est un programme qui exécute votre code dans des conditions contrôlées et **vérifie** un résultat attendu. Il documente le comportement, détecte les **régressions** (une modification qui casse l'existant) et rend les mises à jour de Django et le refactoring sûrs.
 
@@ -4822,7 +4808,7 @@ Situér les niveaux de tests et choisir l'outil adapté ; écrire des tests Djan
 
 La **pyramide des tests** recommande beaucoup de tests unitaires (rapides, précis), un nombre modéré de tests d'intégration, et peu de tests E2E (lents, fragiles mais proches de l'utilisateur).
 
-### 25.2 Tests Django (`unittest`)
+## Tests Django (`unittest`)
 
 ```python
 # apps/blog/tests/test_views.py
@@ -4886,7 +4872,7 @@ python manage.py test --parallel --keepdb          # en parallèle, en conservan
 
 Outils : `Client` (HTTP complet, cookies, session), `RequestFactory` (vue isolée, sans middlewares), `override_settings`, `mail.outbox`, `assertContains`, `assertRedirects`, `assertFormError`, `assertNumQueries`, `skipUnless`, `self.client.force_login(user)`.
 
-### 25.3 `pytest-django`
+## `pytest-django`
 
 ```bash
 uv add --dev pytest pytest-django pytest-cov pytest-xdist factory-boy faker pytest-factoryboy
@@ -4920,7 +4906,7 @@ def test_admin(admin_client):
 
 **Pourquoi pytest ?** Tests en **fonctions simples** avec `assert` (messages d'échec détaillés), **fixtures** composables, **paramétrage** (`@pytest.mark.parametrize`), écosystème de plugins. Le marqueur **`django_db`** (ou la fixture `db`) autorise l'accès à la base : sans lui, un test qui interroge la base échoue (protection contre des accès accidentels). Fixtures utiles : `client`, `admin_client`, `rf`, `db`, `transactional_db`, `settings`, `mailoutbox`, `django_assert_num_queries`, `live_server`.
 
-### 25.4 Données de test : `factory_boy`
+## Données de test : `factory_boy`
 
 ```python
 # apps/blog/tests/factories.py
@@ -4961,11 +4947,11 @@ register(ArticleFactory)
 - `Sequence` produit une valeur **unique** par objet ; `LazyAttribute` calcule une valeur **à partir des autres champs** ; `SubFactory` crée l'objet lié (l'auteur) ; `Faker` génère du contenu réaliste.
 - **Factories plutôt que fixtures JSON** : plus lisibles, plus faciles à maintenir quand le modèle change ; on ne spécifie que ce qui compte pour le test (`statut="publie"`). Alternative : **`model_bakery`**.
 
-### 25.5 Tester des API
+## Tester des API
 
 Voir 19.8 (`APIClient`). Authentification : `client.force_authenticate(user)` ou `client.credentials(HTTP_AUTHORIZATION=f"Bearer {token}")`. Testez les **codes** (201, 400, 401, 403, 404), le **format** des erreurs, la pagination et les **permissions par rôle**.
 
-### 25.6 Mocks, temps et services externes
+## Mocks, temps et services externes
 
 > **Définition — mock.** Objet de remplacement qui simule une dépendance (API externe, horloge, envoi d'e-mail) pour rendre le test **rapide, déterministe et sans effet de bord**.
 
@@ -5002,7 +4988,7 @@ def test_tache_appelee_directement():
 - `freeze_time` fige l'horloge : indispensable pour tester dates d'expiration, publications planifiées, périodes d'essai.
 - Outils : **`respx`** (httpx), **`responses`** / `requests-mock`, **`moto`** (AWS), `pytest-mock`. **Aucun appel réseau réel** dans les tests unitaires.
 
-### 25.7 Réglages de test rapides
+## Réglages de test rapides
 
 ```python
 # config/settings/test.py
@@ -5020,7 +5006,7 @@ CELERY_TASK_ALWAYS_EAGER = True
 
 Le hachage de mots de passe est volontairement lent (sécurité) : un hacheur rapide **dans les tests uniquement** accélère nettement une suite qui crée beaucoup d'utilisateurs. Autres accélérateurs : `--reuse-db` / `--keepdb`, `pytest -n auto` (parallèle), `setUpTestData`, SQLite en mémoire pour les tests simples (mais **testez sur PostgreSQL en CI** si vous utilisez ses fonctions spécifiques).
 
-### 25.8 Tests E2E avec Playwright
+## Tests E2E avec Playwright
 
 ```bash
 uv add --dev pytest-playwright && playwright install
@@ -5037,7 +5023,7 @@ def test_connexion(live_server, page):
 
 Un test E2E pilote un **vrai navigateur**. Repérez les éléments par **rôle, libellé ou texte** (`get_by_role`, `get_by_label`), comme un utilisateur (et comme un lecteur d'écran), plutôt que par classes CSS fragiles. Réservez-les aux **parcours critiques** (inscription, paiement). Avec `pytest-django`, utilisez `live_server` ; en mode `unittest`, `StaticLiveServerTestCase`.
 
-### 25.9 Couverture et intégration continue
+## Couverture et intégration continue
 
 ```bash
 pytest --cov=apps --cov-report=term-missing --cov-fail-under=80
@@ -5073,7 +5059,7 @@ jobs:
 
 La **couverture** (*coverage*) mesure la part du code exécutée par les tests ; c'est un **indicateur** (un code non couvert est forcément non testé), pas une garantie de qualité (un code couvert peut être mal vérifié). L'**intégration continue (CI)** exécute automatiquement lint, types, contrôle des migrations et tests à chaque `push`, sur une base **PostgreSQL réelle**.
 
-### 25.10 Bonnes pratiques
+## Bonnes pratiques
 
 - Un test = **un comportement**, nom explicite, **indépendant** des autres (méthode **Arrange – Act – Assert** : préparer, agir, vérifier).
 - Testez **cas nominaux, limites et refusés** (permissions !) ; un bogue corrigé appelle un test qui l'aurait attrapé.
@@ -5081,7 +5067,7 @@ La **couverture** (*coverage*) mesure la part du code exécutée par les tests ;
 - Vérifiez en CI : `makemigrations --check`, `manage.py check --deploy`, linting, types.
 - Ne testez pas Django lui-même : testez **votre** logique.
 
-### À retenir
+## À retenir
 
 - **Pyramide** : beaucoup d'unitaires, quelques intégrations, peu d'E2E.
 - `TestCase` / pytest-django + factories + mocks (réseau, temps) + `assertNumQueries`.
@@ -5089,13 +5075,13 @@ La **couverture** (*coverage*) mesure la part du code exécutée par les tests ;
 
 ---
 
-## 26. Sécurité
+# Sécurité
 
-### Objectifs d'apprentissage
+## Objectifs d'apprentissage
 
 Connaître les protections intégrées de Django et leurs limites ; appliquer la liste de contrôle de production ; configurer une **Content Security Policy** ; identifier et corriger les vulnérabilités courantes (OWASP) ; gérer secrets, dépendances, limitation de débit et sécurité d'infrastructure.
 
-### 26.1 Les protections intégrées
+## Les protections intégrées
 
 Django est **sûr par défaut** à condition de ne pas contourner ses mécanismes.
 
@@ -5113,7 +5099,7 @@ Django est **sûr par défaut** à condition de ne pas contourner ses mécanisme
 
 > **Définition — clickjacking.** Attaque qui charge votre site dans un `<iframe>` invisible sur une page piégée pour tromper l'utilisateur et lui faire cliquer sur vos boutons à son insu. `X-Frame-Options: DENY` interdit l'inclusion dans un cadre.
 
-### 26.2 Liste de contrôle de production
+## Liste de contrôle de production
 
 ```bash
 python manage.py check --deploy
@@ -5151,7 +5137,7 @@ DATA_UPLOAD_MAX_MEMORY_SIZE = 5 * 1024 * 1024
 | `SECURE_CROSS_ORIGIN_OPENER_POLICY` | Isole la fenêtre des autres origines |
 | `DATA_UPLOAD_MAX_MEMORY_SIZE` | Plafond de la taille d'un corps de requête |
 
-### 26.3 Content Security Policy *(Django 6.0, ajout)*
+## Content Security Policy *(Django 6.0, ajout)*
 
 > **Définition — CSP.** Politique, annoncée par un en-tête HTTP, qui dit au navigateur **de quelles sources** il peut charger scripts, styles, images, cadres, etc. Même si un attaquant réussit à injecter du HTML (XSS), le navigateur **refuse d'exécuter** un script non autorisé : l'impact est très réduit.
 
@@ -5185,7 +5171,7 @@ SECURE_CSP_REPORT_ONLY = {                               # 1) commencer en mode 
 - **Démarche** : d'abord `SECURE_CSP_REPORT_ONLY` (le navigateur **signale** les violations sans rien bloquer), corrigez ce qui est signalé, puis activez `SECURE_CSP`.
 - Évitez `'unsafe-inline'` et `'unsafe-eval'`, qui annulent l'intérêt de la CSP. `json_script` (7.3) est compatible avec une CSP stricte. Pour les versions antérieures : **`django-csp`**.
 
-### 26.4 Les vulnérabilités à connaître
+## Les vulnérabilités à connaître
 
 | Faille | Cause | Parade |
 | --- | --- | --- |
@@ -5230,14 +5216,14 @@ def connexion(request):
     return HttpResponse("Connexion")
 ```
 
-### 26.5 Secrets et configuration
+## Secrets et configuration
 
 - **Jamais** de secrets dans Git : `.env` ignoré, **variables d'environnement**, gestionnaires de secrets (Vault, AWS/GCP Secret Manager, SOPS).
 - Une **`SECRET_KEY` différente** par environnement ; **rotation** avec `SECRET_KEY_FALLBACKS` (les anciennes clés restent valides en lecture le temps de la transition).
 - Comptes de base de données aux **privilèges minimaux** (principe du moindre privilège) ; **TLS** vers la base.
 - Un secret **déjà commité** est **compromis** : il faut le **renouveler**, pas seulement le supprimer du dépôt (l'historique Git le conserve).
 
-### 26.6 Dépendances et mises à jour
+## Dépendances et mises à jour
 
 ```bash
 uv run pip-audit                           # vulnérabilités connues dans les dépendances
@@ -5247,7 +5233,7 @@ uv add --dev bandit && bandit -r apps      # analyse statique de sécurité (ou 
 - **Appliquez les correctifs de sécurité** Django rapidement : ils sont annoncés sur **django-announce** (et `security@djangoproject.com` pour signaler une faille). Suivez uniquement les versions **supportées** (5.2 LTS, 6.0, 6.1).
 - **Dependabot / Renovate** pour les mises à jour automatiques ; verrouillez les versions ; relisez les nouveaux paquets avant installation (risque de paquets malveillants).
 
-### 26.7 Limitation de débit et protection des comptes
+## Limitation de débit et protection des comptes
 
 ```python
 INSTALLED_APPS += ["axes"]
@@ -5268,7 +5254,7 @@ def connexion(request):
 
 Le **blocage par IP** est contournable (adresses multiples) et peut pénaliser des réseaux partagés : combinez-le avec un blocage **par compte**, la **2FA** et la détection d'anomalies.
 
-### 26.8 Sécurité de l'infrastructure
+## Sécurité de l'infrastructure
 
 - **HTTPS** (Let's Encrypt, Caddy), **HSTS**, TLS ≥ 1.2.
 - Conteneurs : **utilisateur non root**, images minimales, pas de secrets dans les images.
@@ -5276,7 +5262,7 @@ Le **blocage par IP** est contournable (adresses multiples) et peut pénaliser d
 - **Journaux** d'audit, alertes (Sentry), surveillance.
 - Références : **OWASP Top 10**, guide « Security in Django » de la documentation officielle.
 
-### À retenir
+## À retenir
 
 - Django protège par défaut : **ne contournez pas** l'échappement, le CSRF, l'ORM paramétré.
 - `check --deploy` + HTTPS/HSTS/cookies sécurisés + **CSP** (commencer en mode rapport).
@@ -5284,13 +5270,13 @@ Le **blocage par IP** est contournable (adresses multiples) et peut pénaliser d
 
 ---
 
-## 27. Performances
+# Performances
 
-### Objectifs d'apprentissage
+## Objectifs d'apprentissage
 
 Adopter une démarche **mesurer → corriger → re-mesurer** ; utiliser les bons outils de profilage (développement et production) ; appliquer par ordre d'impact les optimisations (base, cache, tâches, statiques, connexions, serveur) ; gérer pagination et gros volumes ; régler Gunicorn/ASGI ; optimiser côté réseau et navigateur.
 
-### 27.1 Mesurer d'abord
+## Mesurer d'abord
 
 > **Règle d'or.** *« L'optimisation prématurée est la racine de tous les maux »* (Knuth). On n'optimise **jamais sans mesure** : l'intuition se trompe presque toujours sur l'endroit où le temps est perdu. Un **profil** montre où va le temps ; une **mesure avant/après** prouve le gain.
 
@@ -5305,18 +5291,18 @@ Adopter une démarche **mesurer → corriger → re-mesurer** ; utiliser les bon
 
 Indicateurs à suivre : **latence** (médiane et surtout **p95 / p99**, car la moyenne cache les requêtes lentes), **débit** (requêtes par seconde), **taux d'erreur**, **nombre de requêtes SQL par page**, **utilisation mémoire / CPU**.
 
-### 27.2 Les gains les plus importants (par ordre d'impact)
+## Les gains les plus importants (par ordre d'impact)
 
-1. **Base de données** : supprimer le **N+1**, ajouter les **index** utiles, `only()` / `values()`, paginer, agréger en SQL (section 9). C'est presque toujours **là** que se trouve le goulot.
-2. **Cache** : fragments, vues, objets coûteux, Redis (section 13).
-3. **Tâches lentes en arrière-plan** (section 23).
+1. **Base de données** : supprimer le **N+1**, ajouter les **index** utiles, `only()` / `values()`, paginer, agréger en SQL (section « ORM : requêtes et optimisation »). C'est presque toujours **là** que se trouve le goulot.
+2. **Cache** : fragments, vues, objets coûteux, Redis (section « Messages, sessions et cache »).
+3. **Tâches lentes en arrière-plan** (section « Tâches en arrière-plan »).
 4. **Statiques via CDN / serveur web**, compression, cache HTTP.
 5. **Connexions** : pool psycopg (`"pool": True`) ou **PgBouncer** ; `CONN_MAX_AGE`.
 6. **Serveur d'application** : nombre de workers adapté, `gthread` / async si E/S.
 
 **Pourquoi les connexions comptent.** Établir une connexion PostgreSQL coûte plusieurs millisecondes (négociation, authentification). Sans réutilisation, chaque requête la paie. Un **pool** garde des connexions ouvertes et les prête ; **PgBouncer** joue ce rôle au niveau de l'infrastructure quand de nombreux processus se connectent à la même base (PostgreSQL gère mal des milliers de connexions simultanées).
 
-### 27.3 Pagination et gros volumes
+## Pagination et gros volumes
 
 ```python
 # python manage.py shell
@@ -5340,14 +5326,14 @@ Article.objects.bulk_create(objets, batch_size=1000)
 
 > **`OFFSET` élevé est lent** sur de très grandes tables (la base doit lire puis jeter toutes les lignes précédentes). Préférez la **pagination par curseur** (« donne-moi les 20 lignes après la clé d'ordre X ») : coût constant, résultats stables si des données arrivent pendant la navigation.
 
-### 27.4 Modèles et templates
+## Modèles et templates
 
 - `{% cache %}` pour les blocs coûteux ; le chargeur de templates **mis en cache** est activé automatiquement hors `DEBUG` (les fichiers ne sont pas relus à chaque requête).
 - Évitez les **requêtes dans les templates** (boucles sur des relations non préchargées) ; préparez les données dans la vue.
 - `django.contrib.humanize` et filtres lourds : à utiliser avec mesure.
 - Index de base : un index **composite** (`Meta.indexes`) qui correspond à vos filtres+tris les plus fréquents vaut mieux que plusieurs index isolés ; vérifiez avec `explain()` qu'il est utilisé.
 
-### 27.5 Serveur d'application
+## Serveur d'application
 
 ```bash
 gunicorn config.wsgi:application --workers 5 --threads 2 --worker-class gthread --timeout 30 --max-requests 1000 --max-requests-jitter 100 --bind 0.0.0.0:8000
@@ -5363,14 +5349,14 @@ gunicorn config.wsgi:application --workers 5 --threads 2 --worker-class gthread 
 
 Un **worker** est un processus Python indépendant : il consomme de la mémoire (donc `workers × mémoire par worker` doit tenir dans la machine) et utilise un cœur à la fois (à cause du GIL). Les **threads** permettent d'avancer sur d'autres requêtes pendant qu'une attend la base ou le réseau. Chaque worker ouvre ses connexions à la base : **dimensionnez le total des connexions** (`workers × threads`) par rapport aux limites de PostgreSQL.
 
-### 27.6 Performances côté réseau et navigateur
+## Performances côté réseau et navigateur
 
 - **GZip / Brotli** (au niveau Nginx / CDN), `ConditionalGetMiddleware`, en-têtes `Cache-Control` sur les statiques hachés.
 - Images optimisées (**WebP/AVIF**, tailles multiples avec `sorl-thumbnail` / `easy-thumbnails` / `django-imagekit`), chargement paresseux (`loading="lazy"`).
 - HTTP/2 ou 3, CDN pour statiques et médias.
 - Côté navigateur, souvent plus déterminant que le serveur : poids des images, JavaScript bloquant, polices. Mesurez avec Lighthouse / les **Core Web Vitals**.
 
-### Pièges fréquents
+## Pièges fréquents
 
 | Piège | Remède |
 | --- | --- |
@@ -5380,7 +5366,7 @@ Un **worker** est un processus Python indépendant : il consomme de la mémoire 
 | `OFFSET` immense | Pagination par curseur |
 | Tests de charge sur une base vide | Jeu de données réaliste |
 
-### À retenir
+## À retenir
 
 - **Mesurer d'abord** ; le gain principal vient presque toujours de la **base de données** (N+1, index, agrégats).
 - Puis cache, tâches déportées, statiques/CDN, pool de connexions et dimensionnement des workers.
@@ -5388,13 +5374,13 @@ Un **worker** est un processus Python indépendant : il consomme de la mémoire 
 
 ---
 
-## 28. Déploiement
+# Déploiement
 
-### Objectifs d'apprentissage
+## Objectifs d'apprentissage
 
 Schematiser une architecture de production ; appliquer la liste de contrôle de mise en ligne ; conteneuriser avec Docker (multi-étapes, `uv`) et orchestrer avec Compose ; configurer un proxy inverse (Nginx/Caddy) ; mettre en place santé et supervision ; réaliser des migrations **sans interruption** ; choisir une plateforme ; construire un pipeline CI/CD.
 
-### 28.1 Vue d'ensemble
+## Vue d'ensemble
 
 ```text
 Internet ─> Proxy / CDN (Nginx, Caddy, Cloudflare)
@@ -5411,10 +5397,10 @@ Internet ─> Proxy / CDN (Nginx, Caddy, Cloudflare)
 | **Redis** | Cache, sessions, courtier de tâches, couche Channels |
 | **Workers + planificateur** | Tâches en arrière-plan (une seule instance de `beat`) |
 
-### 28.2 Liste de contrôle
+## Liste de contrôle
 
 - [ ] `DEBUG = False`, `SECRET_KEY` et secrets en **variables d'environnement**
-- [ ] `ALLOWED_HOSTS`, `CSRF_TRUSTED_ORIGINS`, HTTPS, HSTS (voir section 26)
+- [ ] `ALLOWED_HOSTS`, `CSRF_TRUSTED_ORIGINS`, HTTPS, HSTS (voir section « Sécurité »)
 - [ ] **PostgreSQL** (pas SQLite), sauvegardes automatiques **testées**
 - [ ] `collectstatic` exécuté, statiques servis efficacement
 - [ ] **Migrations** appliquées (étape de déploiement dédiée)
@@ -5422,7 +5408,7 @@ Internet ─> Proxy / CDN (Nginx, Caddy, Cloudflare)
 - [ ] Serveur d'application (Gunicorn / Uvicorn), **proxy inverse**, **workers** et planificateur
 - [ ] **Surveillance** (santé, métriques, alertes), `check --deploy` au vert
 
-### 28.3 Docker et Compose
+## Docker et Compose
 
 > **Définition — conteneur.** Processus isolé embarquant l'application **et** ses dépendances : le même **image** tourne à l'identique sur votre poste, en CI et en production. Un **Dockerfile** décrit comment construire l'image ; **Docker Compose** orchestre plusieurs conteneurs (web, base, Redis, workers).
 
@@ -5488,7 +5474,7 @@ volumes:
 
 > Exécutez les **migrations** dans une **étape de déploiement** (`python manage.py migrate --noinput` en *release command* / *init container*), **pas** dans chaque instance au démarrage : sinon plusieurs instances lancent la même migration simultanément.
 
-### 28.4 Nginx (proxy inverse)
+## Nginx (proxy inverse)
 
 ```nginx
 server {
@@ -5517,7 +5503,7 @@ server {
 - `client_max_body_size` doit être cohérent avec vos limites de téléversement ; `expires 1y` + `immutable` conviennent aux statiques **hachés**.
 - **Caddy** (HTTPS automatique, configuration minimale) : `exemple.fr { reverse_proxy 127.0.0.1:8000 }`.
 
-### 28.5 Vue de santé et supervision
+## Vue de santé et supervision
 
 ```python
 # apps/accueil/views.py
@@ -5545,7 +5531,7 @@ sentry_sdk.init(dsn=env("SENTRY_DSN"), send_default_pii=False, traces_sample_rat
 
 `send_default_pii=False` évite d'envoyer des données personnelles à Sentry ; `traces_sample_rate=0.1` n'échantillonne que 10 % des requêtes pour limiter le coût. Les **trois piliers de l'observabilité** : **journaux** (ce qui s'est passé), **métriques** (chiffres agrégés dans le temps), **traces** (le parcours d'une requête).
 
-### 28.6 Déploiements sans interruption
+## Déploiements sans interruption
 
 Appliquez le motif **expand / contract** (« étendre puis contracter ») : (1) **ajouter** colonnes/tables de façon **rétrocompatible** ; (2) déployer le code qui gère les **deux** schémas ; (3) **nettoyer** ensuite (supprimer l'ancien). Pendant un déploiement progressif, l'**ancienne** et la **nouvelle** version du code tournent **en même temps** sur la **même base** : le schéma doit convenir aux deux.
 
@@ -5564,7 +5550,7 @@ class Migration(migrations.Migration):
 - **Renommer / supprimer une colonne** : ne jamais dans le même déploiement que le code qui cesse de l'utiliser ; supprimez **après** le déploiement du code qui l'ignore.
 - Évitez les migrations qui **réécrivent** ou **verrouillent** de grosses tables ; ajoutez les index avec `AddIndexConcurrently` ; utilisez des **déploiements progressifs** (*rolling*) et des **sondes de santé**.
 
-### 28.7 Plateformes d'hébergement
+## Plateformes d'hébergement
 
 | Type | Exemples |
 | --- | --- |
@@ -5592,15 +5578,15 @@ WantedBy=multi-user.target
 
 **Comment choisir ?** Une équipe petite ou un MVP : un **PaaS** (zéro administration système, mise à l'échelle simple, coût plus élevé à grande échelle). Un contrôle fin et un coût maîtrisé : un **VPS** + Docker Compose / Kamal (vous gérez mises à jour système, sauvegardes, sécurité). De fortes exigences de disponibilité et d'échelle : **cloud managé** ou **Kubernetes** (puissant, mais lourd à opérer).
 
-### 28.8 Intégration et livraison continues
+## Intégration et livraison continues
 
 Pipeline typique : **lint + types + tests** → **construction de l'image** → **analyse** (`pip-audit`, Trivy) → **déploiement** (migrations, `collectstatic`, redémarrage) → **vérification de santé** → **retour arrière** automatique en cas d'échec.
 
 - **CI** (*Continuous Integration*) : chaque modification est construite et testée automatiquement. **CD** (*Continuous Delivery / Deployment*) : la livraison en production est automatisée (ou déclenchée en un clic).
 - Une image **immuable** (identifiée par le hachage du commit) est promue telle quelle de test à production : on ne reconstruit pas « pour la prod ».
-- Prévoyez le **retour arrière** (redéployer l'image précédente) — et pour la base, des migrations **rétrocompatibles** (28.6).
+- Prévoyez le **retour arrière** (redéployer l'image précédente) — et pour la base, des migrations **rétrocompatibles** (section « Déploiements sans interruption »).
 
-### Pièges fréquents
+## Pièges fréquents
 
 | Piège | Remède |
 | --- | --- |
@@ -5611,7 +5597,7 @@ Pipeline typique : **lint + types + tests** → **construction de l'image** → 
 | Secrets dans l'image Docker | Variables d'environnement / gestionnaire de secrets |
 | Migration qui verrouille une grosse table | `AddIndexConcurrently`, découpage en étapes |
 
-### À retenir
+## À retenir
 
 - Architecture : **proxy → application → PostgreSQL/Redis + workers** ; **migrations en étape dédiée**.
 - **Docker multi-étapes**, utilisateur non root, secrets hors de l'image ; santé + Sentry + métriques.
@@ -5619,19 +5605,19 @@ Pipeline typique : **lint + types + tests** → **construction de l'image** → 
 
 ---
 
-## 29. Écosystème : paquets essentiels
+# Écosystème : paquets essentiels
 
 *(Section ajoutée : les paquets utiles avec Django, y compris ceux qui manquaient au guide d'origine.)*
 
-### Objectifs d'apprentissage
+## Objectifs d'apprentissage
 
 Savoir **quel paquet** répond à quel besoin ; composer un `pyproject.toml` de départ cohérent ; **évaluer** la qualité et le risque d'une dépendance avant de l'adopter ; reconnaître les cas où **ne pas** ajouter de paquet.
 
-### 29.1 Pourquoi un écosystème ?
+## Pourquoi un écosystème ?
 
 Django est « tout inclus » mais volontairement **extensible** : des milliers de paquets tiers (*apps réutilisables*) ajoutent des fonctions prêtes à l'emploi. Ils s'installent avec `uv add` / `pip install`, s'enregistrent dans `INSTALLED_APPS` (et parfois `MIDDLEWARE`, `urls.py`), et s'intègrent grâce à l'architecture MTV et aux signaux. Le répertoire de référence est **Django Packages** (djangopackages.org).
 
-### 29.2 Carte des paquets par besoin
+## Carte des paquets par besoin
 
 | Besoin | Paquets recommandés |
 | --- | --- |
@@ -5672,7 +5658,7 @@ Django est « tout inclus » mais volontairement **extensible** : des milliers d
 - **Embeddings / `pgvector`** : stocker des vecteurs (recherche sémantique, IA) directement dans PostgreSQL.
 - **CMS** : **Wagtail** est le CMS Django de référence (pages structurées, éditeur, workflows) ; à considérer avant de réinventer un système de contenu.
 
-### 29.3 Exemple de `pyproject.toml` de départ
+## Exemple de `pyproject.toml` de départ
 
 ```toml
 [project]
@@ -5710,10 +5696,10 @@ dev = [
 ```
 
 - `dependencies` : nécessaires **en production** ; `dev` : outils de développement et de test (non installés dans l'image de production avec `--no-dev`).
-- `"django>=6.1,<6.2"` : accepte les correctifs `6.1.x` mais **pas** la version suivante (montée de version volontaire, section 30.2).
+- `"django>=6.1,<6.2"` : accepte les correctifs `6.1.x` mais **pas** la version suivante (montée de version volontaire, section « Mettre à jour Django »).
 - Ne gardez que ce dont **vous avez besoin** : chaque paquet ajoute de la maintenance, de la surface d'attaque et des incompatibilités futures.
 
-### 29.4 Choisir un paquet tiers
+## Choisir un paquet tiers
 
 | Critère | À vérifier |
 | --- | --- |
@@ -5727,7 +5713,7 @@ dev = [
 
 **Hygiène de la chaîne d'approvisionnement** (*supply chain*) : vérifiez l'orthographe du nom (attaques par *typosquatting* : un paquet au nom proche d'un paquet connu), verrouillez les versions (`uv.lock`), relisez les nouvelles dépendances et les mises à jour majeures, auditez régulièrement (`pip-audit`, Dependabot/Renovate).
 
-### À retenir
+## À retenir
 
 - Un paquet répond à presque chaque besoin courant ; consultez **Django Packages** avant de coder.
 - Évaluez : compatibilité, maintenance, sécurité, besoin réel. Évitez les paquets abandonnés.
@@ -5735,13 +5721,13 @@ dev = [
 
 ---
 
-## 30. Nouveautés par version, bonnes pratiques et ressources
+# Nouveautés par version, bonnes pratiques et ressources
 
-### Objectifs d'apprentissage
+## Objectifs d'apprentissage
 
 Situer les apports de chaque version de Django (4.2 → 6.1) ; **mettre à jour** un projet méthodiquement ; synthétiser les bonnes pratiques et les erreurs classiques ; savoir où continuer à apprendre.
 
-### 30.1 Nouveautés notables (4.2 → 6.1)
+## Nouveautés notables (4.2 → 6.1)
 
 | Version | Points marquants |
 | --- | --- |
@@ -5757,16 +5743,16 @@ Situer les apports de chaque version de Django (4.2 → 6.1) ; **mettre à jour*
 
 | Thème | Où le retrouver |
 | --- | --- |
-| Stockage (`STORAGES`), `db_default`, `GeneratedField`, clés composites, `on_delete` en base | Sections 4.4, 8 |
-| `LoginRequiredMiddleware`, `fetch_mode` | Sections 12.4, 9.5 |
-| `{% querystring %}`, `partialdef`, rendu `div` / `as_field_group` | Sections 7, 11 |
-| Pool de connexions, UUID7 | Sections 4.3, 8.3, 27 |
-| Framework de tâches, CSP | Sections 23.2, 26.3 |
-| `MAILERS` | Section 4.5 |
+| Stockage (`STORAGES`), `db_default`, `GeneratedField`, clés composites, `on_delete` en base | Sections « Templates, fichiers statiques, médias, stockage », « Modèles » |
+| `LoginRequiredMiddleware`, `fetch_mode` | Sections « Contrôle d'accès », « Relations et jointures : éviter le problème N+1 » |
+| `{% querystring %}`, `partialdef`, rendu `div` / `as_field_group` | Sections « Templates », « Formulaires » |
+| Pool de connexions, UUID7 | Sections « Base de données », « Clés primaires », « Performances » |
+| Framework de tâches, CSP | Sections « Framework de tâches intégré », « Content Security Policy » |
+| `MAILERS` | Section « Cache, e-mail, journalisation » |
 
 > Pour le détail exact (et les suppressions de fonctionnalités dépréciées), lisez les **notes de version** : [docs.djangoproject.com/en/6.1/releases/](https://docs.djangoproject.com/en/6.1/releases/). Les fonctionnalités les plus récentes (6.0, 6.1) sont à vérifier particulièrement avant un usage en production.
 
-### 30.2 Mettre à jour Django *(ajout)*
+## Mettre à jour Django *(ajout)*
 
 1. **Passez de LTS en LTS** ou version par version (ne sautez pas plusieurs versions d'un coup).
 2. Lisez les **notes de version** et la section « *Features deprecated* ».
@@ -5780,11 +5766,11 @@ Situer les apports de chaque version de Django (4.2 → 6.1) ; **mettre à jour*
 5. Vérifiez la **compatibilité des paquets tiers** et la **version de Python**.
 6. Testez, déployez en **préproduction**, surveillez.
 
-**Pourquoi cette méthode ?** Grâce à la politique de dépréciation (section 1.4), un projet **sans avertissement** sur la version N passe sur N+1 : traiter les avertissements **au fil de l'eau** transforme les montées de version en opérations de routine. Le pire scénario est le projet figé sur une version en fin de support, qui doit sauter plusieurs versions d'un coup sous la pression d'une faille de sécurité.
+**Pourquoi cette méthode ?** Grâce à la politique de dépréciation (section « Versions, cycle de publication et support »), un projet **sans avertissement** sur la version N passe sur N+1 : traiter les avertissements **au fil de l'eau** transforme les montées de version en opérations de routine. Le pire scénario est le projet figé sur une version en fin de support, qui doit sauter plusieurs versions d'un coup sous la pression d'une faille de sécurité.
 
 Exemples de suppressions courantes lors des migrations récentes : `DEFAULT_FILE_STORAGE` / `STATICFILES_STORAGE` → `STORAGES` ; `USE_L10N` et **pytz** → `zoneinfo` ; `CheckConstraint(check=…)` → `condition=` ; `index_together` → `indexes` ; `EMAIL_*` → `MAILERS` (avant Django 7.0).
 
-### 30.3 Bonnes pratiques générales
+## Bonnes pratiques générales
 
 | Domaine | Pratique |
 | --- | --- |
@@ -5799,7 +5785,7 @@ Exemples de suppressions courantes lors des migrations récentes : `DEFAULT_FILE
 | **Déploiement** | Docker, Gunicorn/Uvicorn, PostgreSQL, Redis, WhiteNoise/CDN, Sentry, sauvegardes testées |
 | **Mises à jour** | Rester sur une version **supportée** ; migrer de LTS en LTS |
 
-### 30.4 Les erreurs classiques
+## Les erreurs classiques
 
 - `DEBUG = True` en production · secrets dans Git · `ALLOWED_HOSTS = ["*"]`.
 - **N+1** non détecté · absence d'index · `len(qs)` au lieu de `qs.count()`.
@@ -5808,7 +5794,7 @@ Exemples de suppressions courantes lors des migrations récentes : `DEFAULT_FILE
 - Tâche Celery lancée **avant** la validation de la transaction · objets passés aux tâches au lieu d'identifiants.
 - Bloquer la boucle asynchrone avec du code synchrone · CORS ouvert à tous.
 
-### 30.5 Ressources
+## Ressources
 
 - **Documentation officielle** : <https://docs.djangoproject.com/fr/>
 - **Tutoriel officiel** (sondages) : <https://docs.djangoproject.com/fr/6.1/intro/tutorial01/>
@@ -5819,7 +5805,7 @@ Exemples de suppressions courantes lors des migrations récentes : `DEFAULT_FILE
 - **Sécurité Django** : <https://docs.djangoproject.com/fr/6.1/topics/security/> · **OWASP** : <https://owasp.org>
 - *Two Scoops of Django* (Greenfeld & Roy), *Django for Professionals / APIs* (William S. Vincent), blog d'**Adam Johnson**, blog de **Simon Willison**, **Django News** (newsletter).
 
-### 30.6 Parcours d'apprentissage suggéré
+## Parcours d'apprentissage suggéré
 
 | Étape | Sections | Objectif |
 | --- | --- | --- |
@@ -5831,7 +5817,7 @@ Exemples de suppressions courantes lors des migrations récentes : `DEFAULT_FILE
 
 **Projet de synthèse proposé.** Construisez une mini-boutique : catalogue (modèles + admin), panier (sessions), commande atomique (transactions + `select_for_update`), paiement simulé (webhook signé), e-mails de confirmation (tâche), API de consultation (DRF + JWT), interface avec HTMX, tests et CI, conteneurisation et déploiement. C'est l'ensemble du cours mis en pratique.
 
-### Glossaire récapitulatif
+## Glossaire récapitulatif
 
 | Terme | Définition courte |
 | --- | --- |
@@ -5861,7 +5847,7 @@ Exemples de suppressions courantes lors des migrations récentes : `DEFAULT_FILE
 | **Worker** | Processus qui exécute des tâches en arrière-plan (ou des requêtes) |
 | **XSS** | Injection de script exécuté dans le navigateur de la victime |
 
-### À retenir
+## À retenir
 
 - Restez sur une version **supportée** ; traitez les dépréciations **au fil de l'eau** ; passez de LTS en LTS.
 - Les bonnes pratiques se résument en : **structure claire, base optimisée, sécurité par défaut, tests et CI, déploiement reproductible**.

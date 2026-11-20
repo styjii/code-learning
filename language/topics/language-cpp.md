@@ -1,10 +1,8 @@
-# Cours complet de langage C++
+# Avant de commencer
 
 *De la syntaxe élémentaire à la bibliothèque standard moderne — normes C++17, C++20, C++23 et C++26 — édition de novembre 2026*
 
-## Avant de commencer
-
-### Objectifs du cours
+**Objectifs du cours**
 
 À l'issue de ce cours, vous serez capable de :
 
@@ -14,33 +12,25 @@
 - exploiter la **bibliothèque standard** (conteneurs, algorithmes, chaînes, flux, pointeurs intelligents, concurrence) plutôt que de réinventer ces outils ;
 - reconnaître et éviter les **comportements indéfinis**, première source de bogues et de failles de sécurité en C++.
 
-### Prérequis et organisation
+**Prérequis et organisation**
 
-Aucune connaissance préalable du C++ n'est exigée ; avoir déjà programmé (dans n'importe quel langage) aide. Le cours suit trois niveaux :
+Aucune connaissance préalable du C++ n'est exigée ; avoir déjà programmé (dans n'importe quel langage) aide. Le cours progresse du plus simple au plus avancé, des bases du langage jusqu'à la bibliothèque standard et aux comportements indéfinis.
 
-- **Niveau débutant (chapitres 1 à 10)** : premier programme, types, opérateurs, entrées/sorties, structures de contrôle, fonctions, portée et durée de vie.
-- **Niveau intermédiaire (chapitres 11 à 21)** : tableaux, chaînes, pointeurs, mémoire dynamique, conteneurs, références, classes, énumérations, templates, lambdas et polymorphisme.
-- **Niveau avancé (chapitres 22 à 30)** : fichiers, ligne de commande, préprocesseur et modules, bits, récursivité, Unicode, compilation, comportements indéfinis, bibliothèque standard.
-
-### Conventions typographiques
+**Conventions typographiques**
 
 - *(C++11)*, *(C++14)*, *(C++17)*, *(C++20)*, *(C++23)*, *(C++26)* indiquent la norme qui a introduit une fonctionnalité. Compilez toujours avec une norme explicite (`-std=c++20` par exemple).
 - Les blocs de code sont complets et compilables, sauf mention contraire. Les commentaires `// ...` expliquent l'intention, pas seulement la mécanique.
-- **Définition** introduit un terme technique à retenir. **Piège** signale une erreur classique. **À retenir** résume l'essentiel en fin de chapitre.
+- **Définition** introduit un terme technique à retenir. **Piège** signale une erreur classique. **À retenir** résume l'essentiel en fin de section.
 
-### Méthode de travail conseillée
+**Méthode de travail conseillée**
 
-Lisez chaque chapitre dans l'ordre : les notions s'appuient les unes sur les autres. Chaque exemple de code est commenté et illustre une notion précise. Pour tester un exemple, compilez **toujours** avec `-Wall -Wextra` et corrigez chaque avertissement.
-
----
-
-# Niveau débutant
+Lisez chaque section dans l'ordre : les notions s'appuient les unes sur les autres. Chaque exemple de code est commenté et illustre une notion précise. Pour tester un exemple, compilez **toujours** avec `-Wall -Wextra` et corrigez chaque avertissement.
 
 ---
 
-## Chapitre 1 — Introduction au C++
+# Introduction au C++
 
-### 1.1 Qu'est-ce que le C++ ?
+## Qu'est-ce que le C++ ?
 
 Le **C++** est un langage de programmation **compilé**, **à typage statique** et **multi-paradigme**. Il a été conçu à partir de 1979 par **Bjarne Stroustrup** aux Laboratoires Bell (AT&T), d'abord sous le nom *C with Classes*, puis rebaptisé C++ en 1983 (l'opérateur `++` du C signifie « incrémenter » : C++ est littéralement « le C, en mieux »). Le but initial était de combiner l'efficacité et la proximité du matériel du C avec les mécanismes d'abstraction du langage Simula (les classes).
 
@@ -51,15 +41,15 @@ Chaque adjectif de cette définition a des conséquences concrètes :
 - **Multi-paradigme** : le C++ permet de programmer en style *procédural* (fonctions, comme en C), *orienté objet* (classes, héritage, polymorphisme), *générique* (templates et concepts) et partiellement *fonctionnel* (lambdas, algorithmes, ranges). Vous choisissez le paradigme adapté au problème, et vous pouvez les mélanger.
 - **Proche du matériel** : on peut manipuler directement la mémoire, les adresses, les bits ; on peut aussi s'en abstraire presque entièrement grâce à la bibliothèque standard.
 
-#### Le principe fondateur : les abstractions à coût nul
+### Le principe fondateur : les abstractions à coût nul
 
-Stroustrup énonce le principe du **coût nul** (*zero-overhead principle*) en deux phrases : (1) **ce que vous n'utilisez pas, vous ne le payez pas** ; (2) **ce que vous utilisez, vous ne pourriez pas le coder à la main plus efficacement**. Un `std::vector<int>` bien utilisé est aussi rapide qu'un tableau écrit à la main avec `malloc` ; une boucle sur un intervalle (`for (int x : v)`) est aussi rapide qu'une boucle à indices. Le C++ ne vous impose ni ramasse-miettes, ni vérification automatique des bornes : la contrepartie est que **vous êtes responsable** de ne pas violer les règles du langage (voir chapitre 29).
+Stroustrup énonce le principe du **coût nul** (*zero-overhead principle*) en deux phrases : (1) **ce que vous n'utilisez pas, vous ne le payez pas** ; (2) **ce que vous utilisez, vous ne pourriez pas le coder à la main plus efficacement**. Un `std::vector<int>` bien utilisé est aussi rapide qu'un tableau écrit à la main avec `malloc` ; une boucle sur un intervalle (`for (int x : v)`) est aussi rapide qu'une boucle à indices. Le C++ ne vous impose ni ramasse-miettes, ni vérification automatique des bornes : la contrepartie est que **vous êtes responsable** de ne pas violer les règles du langage (voir *Comportements indéfinis, erreurs et sûreté*).
 
-#### Gestion de la mémoire : le RAII
+### Gestion de la mémoire : le RAII
 
-Le C++ n'a pas de ramasse-miettes. Il offre à la place un mécanisme déterministe, le **RAII** (*Resource Acquisition Is Initialization*) : une ressource (mémoire, fichier, verrou, connexion réseau) est acquise dans le **constructeur** d'un objet et libérée dans son **destructeur**, appelé automatiquement à la fin de la portée de l'objet, quoi qu'il arrive (même en cas d'exception). Ce principe est étudié en détail aux chapitres 10 et 14 ; retenez dès maintenant qu'**on n'écrit presque jamais `delete` à la main en C++ moderne**.
+Le C++ n'a pas de ramasse-miettes. Il offre à la place un mécanisme déterministe, le **RAII** (*Resource Acquisition Is Initialization*) : une ressource (mémoire, fichier, verrou, connexion réseau) est acquise dans le **constructeur** d'un objet et libérée dans son **destructeur**, appelé automatiquement à la fin de la portée de l'objet, quoi qu'il arrive (même en cas d'exception). Ce principe est étudié en détail dans *Portée et durée de vie des variables* et dans *Allocation dynamique de mémoire* ; retenez dès maintenant qu'**on n'écrit presque jamais `delete` à la main en C++ moderne**.
 
-### 1.2 Pourquoi apprendre le C++ ?
+## Pourquoi apprendre le C++ ?
 
 - **Performance** : moteurs de jeu (Unreal Engine), finance haute fréquence, calcul scientifique, traitement d'images et de signaux, cœur des bibliothèques d'apprentissage automatique (TensorFlow, PyTorch).
 - **Logiciels de grande taille** : navigateurs web (Chrome, Firefox), bases de données (MySQL, MongoDB, ClickHouse), suites bureautiques, outils de CAO, compilateurs (LLVM/Clang).
@@ -69,7 +59,7 @@ Le C++ n'a pas de ramasse-miettes. Il offre à la place un mécanisme détermini
 
 **Piège — « le » C++ n'existe pas.** Le langage est vaste et porte plus de quarante ans d'histoire. On peut y écrire du « C avec des classes » (dangereux, plein de `char *` et de `malloc`) ou du **C++ moderne** (sûr, concis : `std::string`, `std::vector`, pointeurs intelligents, algorithmes). Ce cours enseigne exclusivement le second.
 
-### 1.3 Histoire et évolution des normes
+## Histoire et évolution des normes
 
 Le C++ est normalisé par l'ISO (norme **ISO/IEC 14882**), par le comité de travail **WG21**. Depuis 2011, une nouvelle révision paraît tous les trois ans.
 
@@ -84,7 +74,7 @@ Le C++ est normalisé par l'ISO (norme **ISO/IEC 14882**), par le comité de tra
 
 Le choix de la norme se fait à la compilation : `-std=c++17`, `-std=c++20`, `-std=c++23`, `-std=c++2c` (C++26). La norme par défaut dépend du compilateur et de sa version (GCC utilise `gnu++17` depuis GCC 11 ; MSVC, `/std:c++14`). **Indiquez toujours explicitement la norme.** Les compilateurs ne suivent pas tous au même rythme : consultez la page « Compiler support » de cppreference.com avant d'utiliser une fonctionnalité récente.
 
-### 1.4 De la source à l'exécutable : la chaîne de compilation
+## De la source à l'exécutable : la chaîne de compilation
 
 Un programme C++ passe par plusieurs étapes avant de s'exécuter :
 
@@ -101,9 +91,9 @@ hello.cpp --> préprocesseur --> compilateur --> assembleur --> éditeur de lien
 
 **Définition — unité de traduction.** C'est un fichier source `.cpp` **après** préprocessing. Chaque unité est compilée **séparément** ; c'est ce qui permet de ne recompiler que les fichiers modifiés dans un gros projet.
 
-Avec les **modules** (C++20), l'inclusion textuelle est remplacée par l'importation d'interfaces déjà compilées (chapitre 24).
+Avec les **modules** (C++20), l'inclusion textuelle est remplacée par l'importation d'interfaces déjà compilées (voir *Directives du préprocesseur et modules*).
 
-### 1.5 Installer un compilateur
+## Installer un compilateur
 
 - **Linux (Debian/Ubuntu)** : `sudo apt install build-essential` (installe `g++` et `make`) ; ajoutez `clang` et `cmake` si besoin.
 - **macOS** : `xcode-select --install` (installe Clang) ou `brew install gcc`.
@@ -116,7 +106,7 @@ g++ --version
 clang++ --version
 ```
 
-### 1.6 Premier programme : « Bonjour le monde »
+## Premier programme : « Bonjour le monde »
 
 ```cpp
 #include <iostream>                      // flux d'entrée/sortie
@@ -145,7 +135,7 @@ int main() {
 }
 ```
 
-### 1.7 Compiler et exécuter
+## Compiler et exécuter
 
 ```bash
 g++ -Wall -Wextra -std=c++20 hello.cpp -o hello   # compile et lie
@@ -157,7 +147,7 @@ hello.exe                                         # exécute (Windows)
 - `-std=c++20` choisit la norme ; `-o hello` nomme l'exécutable.
 - Le shell récupère le code de sortie avec `echo $?` (Linux/macOS) ou `echo %ERRORLEVEL%` (Windows).
 
-### 1.8 Erreurs fréquentes du débutant
+## Erreurs fréquentes du débutant
 
 - **Point-virgule oublié** après une instruction : le compilateur signale souvent l'erreur à la ligne **suivante**.
 - **Oubli de `std::`** : `cout << "Hi";` ne compile pas (sauf `using std::cout;`).
@@ -169,7 +159,7 @@ hello.exe                                         # exécute (Windows)
 - **Division entière** : `1 / 2` vaut `0`, pas `0.5` ; écrivez `1.0 / 2`.
 - **`using namespace std;` dans un en-tête** : pollue tous les fichiers qui l'incluent. À proscrire.
 
-### 1.9 Différences majeures avec le C
+## Différences majeures avec le C
 
 Le C++ n'est **pas** un sur-ensemble strict du C : du code C valide peut être refusé, voire changer de sens. Les principales différences :
 
@@ -184,18 +174,11 @@ Le C++ n'est **pas** un sur-ensemble strict du C : du code C valide peut être r
 - Un `goto` ne peut pas sauter par-dessus l'initialisation d'une variable.
 - Un littéral de chaîne est de type `const char[N]`.
 
-### À retenir (chapitre 1)
-
-- Le C++ est compilé, statiquement typé, multi-paradigme, sans ramasse-miettes ; son principe est le coût nul.
-- Une nouvelle norme paraît tous les trois ans ; précisez toujours `-std=`.
-- La chaîne de compilation : préprocesseur, compilateur, assembleur, éditeur de liens.
-- Compilez toujours avec `-Wall -Wextra`.
-
 ---
 
-## Chapitre 2 — Structure d'un programme C++
+# Structure d'un programme C++
 
-### 2.1 Vue d'ensemble
+## Vue d'ensemble
 
 Un fichier source C++ est une suite de **déclarations** organisées de manière assez libre. Voici un programme complet qui illustre tous les éléments classiques :
 
@@ -218,7 +201,7 @@ int carre(int x) {             // 5. définition
 }
 ```
 
-### 2.2 Les composants d'un programme
+## Les composants d'un programme
 
 - **Directives du préprocesseur** : lignes commençant par `#`, traitées avant la compilation.
 - **Déclarations globales** : variables et constantes hors de toute fonction. Elles sont visibles dans tout le fichier **après** leur déclaration. On les limite autant que possible.
@@ -231,13 +214,13 @@ int carre(int x) {             // 5. définition
 
 **Définition — déclaration et définition.** Une **déclaration** introduit un nom et son type (« cette fonction existe, voici sa signature »). Une **définition** fournit en plus le corps de la fonction ou réserve la mémoire de la variable. Une entité peut être déclarée plusieurs fois, mais définie **une seule fois** (*règle de la définition unique*, ODR).
 
-### 2.3 La fonction `main` en détail
+## La fonction `main` en détail
 
 La norme autorise exactement deux formes standards :
 
 ```cpp
 int main() { /* ... */ }                        // sans arguments
-int main(int argc, char *argv[]) { /* ... */ }  // avec les arguments de la ligne de commande (chapitre 23)
+int main(int argc, char *argv[]) { /* ... */ }  // avec les arguments de la ligne de commande
 ```
 
 - `int main()` équivaut à `int main(void)` : contrairement au C, il n'y a aucune ambiguïté.
@@ -260,7 +243,7 @@ int main() {
 }                              // f est fermé automatiquement (RAII)
 ```
 
-### 2.4 Commentaires
+## Commentaires
 
 ```cpp
 // Commentaire sur une ligne
@@ -274,7 +257,7 @@ int somme(int a, int b) { return a + b; }
 
 Un bon commentaire explique **pourquoi** (l'intention, la contrainte, le choix), pas **ce que** fait le code, qui se lit déjà. Un commentaire obsolète est pire que pas de commentaire.
 
-### 2.5 Variables et instructions
+## Variables et instructions
 
 ```cpp
 #include <iostream>
@@ -290,7 +273,7 @@ int main() {
 
 **Bonne pratique.** On déclare une variable **au plus près de son premier usage** (dans un bloc, dans l'en-tête d'un `for` ou d'un `if`) et on l'**initialise toujours** à la déclaration. Ceci contraste avec le vieux style C où toutes les variables étaient déclarées en tête de fonction.
 
-### 2.6 Espaces de noms
+## Espaces de noms
 
 Un **espace de noms** regroupe des identifiants sous un préfixe pour éviter les conflits entre bibliothèques. Toute la bibliothèque standard vit dans `std`.
 
@@ -320,7 +303,7 @@ int main() {
 
 L'opérateur `::` est l'**opérateur de résolution de portée** : `::x` désigne `x` dans l'espace global, `A::x` désigne `x` dans l'espace `A` ou la classe `A`.
 
-### 2.7 Programme sur plusieurs fichiers : aperçu
+## Programme sur plusieurs fichiers : aperçu
 
 Dès qu'un programme grossit, on sépare **interface** et **implémentation** :
 
@@ -328,20 +311,13 @@ Dès qu'un programme grossit, on sépare **interface** et **implémentation** :
 - un **fichier source** (`.cpp`) contient les **définitions** ;
 - chaque `.cpp` est compilé séparément, puis les fichiers objets sont liés.
 
-Cette organisation est détaillée au chapitre 9 (fonctions) et au chapitre 28 (compilation).
-
-### À retenir (chapitre 2)
-
-- Un programme = directives, déclarations, définitions, une seule fonction `main`.
-- Déclarer ≠ définir ; on peut déclarer plusieurs fois, définir une seule fois.
-- `std::` qualifie les noms de la bibliothèque standard ; pas de `using namespace` dans les en-têtes.
-- Initialiser toujours, déclarer au plus près de l'usage.
+Cette organisation est détaillée dans *Fonctions* et dans *Compilation, outils et construction de projets*.
 
 ---
 
-## Chapitre 3 — Syntaxe et mots-clés
+# Syntaxe et mots-clés
 
-### 3.1 Les briques du langage : les lexèmes
+## Les briques du langage : les lexèmes
 
 Le compilateur lit le texte source et le découpe en **lexèmes** (*tokens*), unités minimales ayant un sens. Il en existe cinq catégories :
 
@@ -353,14 +329,14 @@ Le compilateur lit le texte source et le découpe en **lexèmes** (*tokens*), un
 
 L'espace blanc (espaces, tabulations, sauts de ligne) sert uniquement à **séparer** des lexèmes ; la mise en page est donc libre. Exceptions : le contenu des littéraux de chaîne et les directives du préprocesseur, qui occupent chacune une ligne.
 
-### 3.2 Règles générales de syntaxe
+## Règles générales de syntaxe
 
 - Le C++ est **sensible à la casse** : `Valeur`, `valeur` et `VALEUR` sont trois identifiants différents.
 - Toute **instruction** se termine par un point-virgule ; une **instruction composée** (bloc) `{ ... }` regroupe plusieurs instructions et peut être utilisée partout où une instruction est attendue.
 - Les **trigraphes** (`??=`…) ont été supprimés en C++17.
 - Les **jetons alternatifs** `and`, `or`, `not`, `xor`, `bitand`, `bitor`, `compl`, `and_eq`, `or_eq`, `xor_eq`, `not_eq` sont des mots-clés équivalents aux opérateurs symboliques (`&&`, `||`, `!`…). Ils sont rares en pratique.
 
-### 3.3 Les identifiants
+## Les identifiants
 
 Un identifiant est formé de lettres, de chiffres et du caractère `_`, et **ne commence pas par un chiffre**. Il ne doit pas être un mot-clé. Sont **réservés à l'implémentation** (donc interdits à l'utilisateur) : tout identifiant contenant `__` (double tiret bas) et tout identifiant commençant par `_` suivi d'une majuscule ; les identifiants commençant par un seul `_` sont réservés dans l'espace global.
 
@@ -375,7 +351,7 @@ int nombreDePoints = 4;      // camelCase : autre convention répandue
 
 **Bonne pratique.** Choisissez une convention de nommage et tenez-la dans tout le projet : par exemple `snake_case` pour variables et fonctions, `PascalCase` pour les types, un suffixe `_` pour les membres privés. Un nom doit exprimer l'intention (`nb_eleves`, pas `n1`).
 
-### 3.4 Les mots-clés
+## Les mots-clés
 
 Un **mot-clé** a une signification fixe : on ne peut pas le réutiliser comme identifiant. Voici les familles principales *(norme C++23)* :
 
@@ -393,22 +369,22 @@ Un **mot-clé** a une signification fixe : on ne peut pas le réutiliser comme i
 
 Certains mots (`override`, `final`, `import`, `module`) sont **contextuels** : ils n'ont de sens spécial qu'à certains endroits (après une signature de fonction, au début d'une déclaration) et restent utilisables comme identifiants ailleurs. Le mot-clé `register` est inutilisé depuis C++17 (réservé).
 
-### 3.5 Ponctuation et délimiteurs
+## Ponctuation et délimiteurs
 
 - `;` termine une instruction. `{ }` délimitent un bloc, un corps de classe ou une liste d'initialisation.
 - `( )` servent aux appels de fonction, au regroupement d'expressions et aux conditions.
 - `[ ]` servent à l'indexation et à introduire une lambda ; `[[ ]]` introduit un attribut.
 - `< >` encadrent les arguments de template : `std::vector<int>`.
 - `::` résolution de portée ; `.` et `->` accès à un membre via un objet ou un pointeur ; `.*` et `->*` accès via un pointeur sur membre.
-- `,` sépare des éléments ; c'est aussi un opérateur (chapitre 6).
+- `,` sépare des éléments ; c'est aussi un opérateur (voir *Opérateurs et expressions*).
 - `:` introduit une étiquette, un héritage, une liste d'initialisation de membres, ou la boucle `for` sur intervalle.
 - `? :` opérateur conditionnel ; `...` paquet de paramètres (templates variadiques) et `catch (...)`.
 
-### 3.6 Les trois sortes d'éléments : déclaration, expression, instruction
+## Les trois sortes d'éléments : déclaration, expression, instruction
 
 Cette distinction organise toute la grammaire :
 
-- Une **expression** calcule une valeur (`a + b`, `f(3)`, `x = 5`). Elle a un **type** et une **catégorie de valeur** (lvalue ou rvalue, chapitre 15).
+- Une **expression** calcule une valeur (`a + b`, `f(3)`, `x = 5`). Elle a un **type** et une **catégorie de valeur** (lvalue ou rvalue, voir *Retourner des tableaux et des chaînes*).
 - Une **instruction** est une unité d'exécution : une expression suivie de `;` (*expression-statement*), un bloc, un `if`, une boucle, un `return`…
 - Une **déclaration** introduit un nom ; en C++, une déclaration de variable locale est une **instruction** et peut donc apparaître n'importe où dans un bloc.
 
@@ -424,7 +400,7 @@ int main() {
 
 **Piège — l'analyse la plus contrariante** (*most vexing parse*). Une ligne comme `Widget w();` ne crée **pas** un objet : elle déclare une **fonction** `w` retournant un `Widget`. Pour créer un objet par défaut, écrivez `Widget w;` ou `Widget w{};`. C'est une des raisons de préférer l'initialisation avec accolades.
 
-### 3.7 Attributs
+## Attributs
 
 Les **attributs** `[[...]]` donnent des indications au compilateur sans changer la sémantique du programme.
 
@@ -472,18 +448,11 @@ int main() {
 - `[[likely]]` / `[[unlikely]]` *(C++20)* : indication de probabilité de branche.
 - `[[no_unique_address]]` *(C++20)* : autorise un membre vide à ne consommer aucun espace.
 
-### À retenir (chapitre 3)
-
-- Le code est découpé en lexèmes ; la casse compte ; la mise en page est libre.
-- Les identifiants suivent des règles précises (pas de `__`, pas de `_Majuscule`) et une convention d'équipe.
-- Distinguez expression, instruction et déclaration.
-- Les attributs `[[ ]]` documentent l'intention au compilateur (`[[nodiscard]]` en priorité).
-
 ---
 
-## Chapitre 4 — Types de données et variables
+# Types de données et variables
 
-### 4.1 Qu'est-ce qu'un type ?
+## Qu'est-ce qu'un type ?
 
 En C++, **toute valeur et toute variable a un type**, connu à la compilation. Le type détermine :
 
@@ -494,7 +463,7 @@ En C++, **toute valeur et toute variable a un type**, connu à la compilation. L
 
 **Définition — objet.** Un *objet* est une zone de mémoire qui contient une valeur d'un certain type. Une *variable* est un objet (ou une référence) nommé. L'*adresse* d'un objet est l'emplacement de son premier octet.
 
-### 4.2 Les types fondamentaux
+## Les types fondamentaux
 
 Le C++ définit des types **natifs**, dits fondamentaux :
 
@@ -502,7 +471,7 @@ Le C++ définit des types **natifs**, dits fondamentaux :
 - `char` : un octet, utilisé pour les caractères et comme plus petit entier ; `signed char` et `unsigned char` en sont des variantes explicites ;
 - `short`, `int`, `long`, `long long` : entiers de tailles croissantes, chacun avec une version `unsigned` ;
 - `float`, `double`, `long double` : nombres à virgule flottante (simple, double, précision étendue) ;
-- `char8_t`, `char16_t`, `char32_t`, `wchar_t` : types de caractères larges et Unicode (chapitre 27) ;
+- `char8_t`, `char16_t`, `char32_t`, `wchar_t` : types de caractères larges et Unicode (voir *Unicode et encodages de caractères*) ;
 - `void` : « absence de type » (fonction qui ne retourne rien ; `void *`) ;
 - `std::nullptr_t` : type du littéral `nullptr`.
 
@@ -512,7 +481,7 @@ La norme ne fixe **pas** les tailles exactes, seulement des garanties minimales 
 - `char` ≥ 8 bits, `short` ≥ 16 bits, `int` ≥ 16 bits, `long` ≥ 32 bits, `long long` ≥ 64 bits ;
 - `sizeof(short) <= sizeof(int) <= sizeof(long) <= sizeof(long long)`.
 
-En pratique sur les plateformes 64 bits courantes : `int` = 4 octets, `long long` = 8 octets, `double` = 8 octets ; `long` vaut 8 octets sous Linux/macOS mais **4 sous Windows** — raison de plus pour préférer les types à taille fixe (§4.5).
+En pratique sur les plateformes 64 bits courantes : `int` = 4 octets, `long long` = 8 octets, `double` = 8 octets ; `long` vaut 8 octets sous Linux/macOS mais **4 sous Windows** — raison de plus pour préférer les types à taille fixe (voir *Entiers à taille fixe : `<cstdint>`*).
 
 ```cpp
 #include <iostream>
@@ -528,11 +497,11 @@ int main() {
 
 `std::numeric_limits<T>` (en-tête `<limits>`) est la façon C++ d'interroger les caractéristiques d'un type : `max()`, `min()`, `lowest()`, `epsilon()`, `digits`, `is_signed`… Les macros du C (`INT_MAX`, `DBL_EPSILON` dans `<climits>` et `<cfloat>`) restent valides.
 
-### 4.3 Entiers signés et non signés
+## Entiers signés et non signés
 
 Un entier **non signé** (`unsigned`) représente uniquement des valeurs ≥ 0 ; un entier **signé** représente des valeurs négatives et positives (en **complément à deux**, garanti depuis C++20). Sur 32 bits : `int` va d'environ −2,1 milliards à +2,1 milliards ; `unsigned int` de 0 à environ 4,29 milliards.
 
-#### Débordement : deux régimes très différents
+### Débordement : deux régimes très différents
 
 ```cpp
 #include <iostream>
@@ -552,7 +521,7 @@ int main() {
 - Le débordement **non signé** est **défini** : le résultat est calculé modulo 2ⁿ.
 - Le débordement **signé** est un **comportement indéfini** : le compilateur a le droit de supposer qu'il n'arrive jamais et d'optimiser en conséquence (par exemple supprimer un test de débordement qu'il juge inutile).
 
-#### Promotions et conversions arithmétiques
+### Promotions et conversions arithmétiques
 
 Les types plus petits que `int` (`char`, `short`, `bool`) sont **promus en `int`** dès qu'ils participent à une expression arithmétique. Quand deux opérandes ont des types différents, le compilateur applique les **conversions arithmétiques usuelles** : il convertit vers le type « le plus large » (en gros : `long double` > `double` > `float` > entiers par rang). **Piège** : si un opérande est signé et l'autre non signé de même rang, le signé est converti en non signé, et −1 devient un très grand nombre.
 
@@ -562,7 +531,7 @@ unsigned b = 1;
 std::cout << (a < b) << '\n';   // 0 ! a est converti en unsigned : 4294967295
 ```
 
-### 4.4 Nombres à virgule flottante
+## Nombres à virgule flottante
 
 Les types `float` (32 bits), `double` (64 bits) et `long double` suivent en général la norme **IEEE 754**. Ils représentent les nombres réels de façon **approchée** : un nombre comme 0,1 n'a pas de représentation binaire exacte.
 
@@ -583,7 +552,7 @@ int main() {
 
 Par défaut, un littéral réel (`3.14`) est un `double` ; suffixez `f` pour un `float` (`3.14f`) et `L` pour un `long double`.
 
-### 4.5 Entiers à taille fixe : `<cstdint>`
+## Entiers à taille fixe : `<cstdint>`
 
 Quand la taille compte (format de fichier, protocole réseau, masque de bits), utilisez les types de `<cstdint>` :
 
@@ -610,7 +579,7 @@ int main() {
 - `std::size_t` : type non signé retourné par `sizeof` et par `size()` ; type naturel d'un indice ou d'une taille.
 - **Piège** : `std::uint8_t` et `std::int8_t` sont en général des `char` ; `std::cout << b` affiche donc un **caractère**, pas un nombre. Convertissez avec `static_cast<int>`.
 
-### 4.6 Le type `bool`
+## Le type `bool`
 
 ```cpp
 #include <iostream>
@@ -627,7 +596,7 @@ int main() {
 
 Toute valeur numérique, pointeur ou objet convertible est utilisable comme **condition** : zéro et `nullptr` valent « faux », tout le reste « vrai ». Un `bool` s'affiche `0` ou `1` sauf avec le manipulateur `std::boolalpha`.
 
-### 4.7 Déclarer, initialiser, affecter
+## Déclarer, initialiser, affecter
 
 Distinguez bien l'**initialisation** (donner une première valeur à la création de l'objet) et l'**affectation** (remplacer la valeur d'un objet existant). Le C++ offre plusieurs syntaxes d'initialisation :
 
@@ -645,14 +614,14 @@ L'**initialisation par liste** `{}` (C++11) est recommandée car elle :
 
 1. **interdit les conversions avec perte** (*narrowing*) — `int f{3.7};` ne compile pas, `char c{300};` non plus ;
 2. s'écrit de la **même façon** pour tous les types (scalaires, tableaux, classes, conteneurs) ;
-3. évite l'*analyse la plus contrariante* (chapitre 3) ;
+3. évite l'*analyse la plus contrariante* (voir *Syntaxe et mots-clés*) ;
 4. avec `{}` vide, initialise à zéro les types fondamentaux.
 
 **Limite** : `std::vector<int> v{3, 4};` crée un vecteur de **deux éléments** (3 et 4), alors que `std::vector<int> v(3, 4);` crée **trois éléments égaux à 4**. Quand un constructeur accepte une liste d'initialisation (`std::initializer_list`), il est prioritaire avec les accolades.
 
 **Pourquoi initialiser ?** Lire une variable locale non initialisée est un comportement indéfini (devenu « comportement erroné » en C++26) : valeur aléatoire, plantage, ou comportement apparemment normal puis cassé après optimisation.
 
-### 4.8 Déduction de type : `auto` et `decltype`
+## Déduction de type : `auto` et `decltype`
 
 ```cpp
 #include <iostream>
@@ -681,12 +650,12 @@ int main() {
 - **Quand utiliser `auto` ?** Quand le type est évident à la lecture (`auto it = v.begin();`) ou long à écrire (types de template). Écrivez le type explicite quand il documente l'intention (`double ratio = ...`).
 - Les **liaisons structurées** (`auto [a, b] = ...`, C++17) décomposent une paire, un tuple, un tableau ou une structure en plusieurs variables nommées.
 
-### 4.9 Conversions de types
+## Conversions de types
 
 Une conversion est **implicite** (faite automatiquement par le compilateur) ou **explicite** (un *cast*). Les conversions implicites peuvent faire perdre de l'information (`int g = 3.7;`) ; en C++ on préfère les **casts nommés**, chacun ayant un rôle précis et facile à repérer :
 
 - `static_cast<T>(x)` : conversion **vérifiée à la compilation** (numérique, `void *`, hiérarchie de classes) ; c'est le cast par défaut.
-- `dynamic_cast<T>(x)` : conversion **vérifiée à l'exécution** dans une hiérarchie polymorphe (chapitre 21).
+- `dynamic_cast<T>(x)` : conversion **vérifiée à l'exécution** dans une hiérarchie polymorphe (voir *Pointeurs de fonctions, lambdas et polymorphisme*).
 - `const_cast<T>(x)` : ajoute ou retire `const` / `volatile` (rarement justifié).
 - `reinterpret_cast<T>(x)` : réinterprétation des bits, **dangereuse**, réservée au code de bas niveau.
 - `std::bit_cast<T>(x)` *(C++20)* : réinterprétation **sûre** d'un objet vers un autre type de même taille.
@@ -703,26 +672,19 @@ int main() {
 }
 ```
 
-### 4.10 Bonnes pratiques
+## Bonnes pratiques
 
 - **Initialisez** toujours, de préférence avec `{}`.
 - Utilisez `double` par défaut pour les réels, `int` pour les compteurs courants, `std::size_t` pour tailles et indices, `<cstdint>` quand la taille compte.
-- Évitez de mélanger signé et non signé dans une comparaison (utilisez `std::cmp_less`, chapitre 6).
+- Évitez de mélanger signé et non signé dans une comparaison (utilisez `std::cmp_less`, voir *Opérateurs et expressions*).
 - Préférez les casts nommés ; chaque cast est un signal d'alerte à relire.
-- Utilisez `const` et `constexpr` dès que possible (chapitre 5).
-
-### À retenir (chapitre 4)
-
-- Le type fixe taille, interprétation et opérations ; les tailles ne sont garanties que par des minimums.
-- Débordement non signé : défini (modulo) ; débordement signé : comportement indéfini.
-- Les flottants sont approchés : on ne les compare pas avec `==`.
-- `{}` empêche les pertes silencieuses ; `auto` déduit le type ; `static_cast` remplace le cast à la C.
+- Utilisez `const` et `constexpr` dès que possible (voir *Constantes et littéraux*).
 
 ---
 
-## Chapitre 5 — Constantes et littéraux
+# Constantes et littéraux
 
-### 5.1 Les littéraux
+## Les littéraux
 
 Un **littéral** est une valeur écrite directement dans le code. Son type découle de sa forme et de son suffixe :
 
@@ -752,11 +714,11 @@ int main() {
 }
 ```
 
-#### Séquences d'échappement
+### Séquences d'échappement
 
 Dans un littéral de caractère ou de chaîne, `\` introduit une séquence spéciale : `\n` (saut de ligne), `\t` (tabulation), `\r` (retour chariot), `\\` (la barre oblique elle-même), `\"` (guillemet), `\'` (apostrophe), `\0` (caractère nul), `\xHH` (valeur hexadécimale), `\uXXXX` et `\UXXXXXXXX` (caractères Unicode).
 
-#### Littéraux définis par l'utilisateur *(C++11)*
+### Littéraux définis par l'utilisateur *(C++11)*
 
 On peut créer ses propres suffixes pour des unités ou des types métier :
 
@@ -770,7 +732,7 @@ int main() {
 }
 ```
 
-### 5.2 Définir des constantes
+## Définir des constantes
 
 Une **constante** est une valeur qu'on s'interdit de modifier. Le C++ propose plusieurs mécanismes, à choisir avec soin :
 
@@ -778,7 +740,7 @@ Une **constante** est une valeur qu'on s'interdit de modifier. Le C++ propose pl
 - **`constexpr`** *(C++11)* : la valeur est calculable **à la compilation**. Appliqué à une fonction, il l'autorise à être évaluée à la compilation si ses arguments le sont.
 - **`consteval`** *(C++20)* : la fonction **doit** être évaluée à la compilation (erreur sinon).
 - **`constinit`** *(C++20)* : garantit l'initialisation **statique** d'une variable (donc sans « fiasco » d'ordre d'initialisation), qui reste modifiable.
-- **`enum` / `enum class`** : famille de constantes entières nommées (chapitre 19).
+- **`enum` / `enum class`** : famille de constantes entières nommées (voir *Énumérations (`enum`)*).
 - **`#define`** : macro textuelle, **à éviter** (aucun type, aucune portée).
 
 ```cpp
@@ -805,7 +767,7 @@ int main() {
 
 **`static_assert`** vérifie une condition **à la compilation** : `static_assert(sizeof(int) >= 4, "int trop petit");`. Combinée à `constexpr`, elle permet de tester du code pendant la compilation.
 
-### 5.3 `const` avec les pointeurs et les références
+## `const` avec les pointeurs et les références
 
 Avec un pointeur, `const` peut s'appliquer à l'objet pointé, au pointeur lui-même, ou aux deux. **Règle de lecture** : on lit la déclaration **de droite à gauche**.
 
@@ -835,7 +797,7 @@ int main() {
 - `const int *p` (ou `int const *p`) se lit « p est un pointeur vers un int constant ».
 - Une **référence constante** `const T &` peut se lier à un temporaire : c'est le mode standard de passage en lecture d'un gros objet.
 
-### 5.4 Constantes prédéfinies
+## Constantes prédéfinies
 
 - **`std::numeric_limits<T>`** (`<limits>`) : `max()`, `min()`, `lowest()`, `epsilon()`, `infinity()`. Attention : pour un type flottant, `min()` est le plus petit positif normalisé, `lowest()` le plus négatif.
 - **`std::numbers`** *(C++20, `<numbers>`)* : `std::numbers::pi`, `e`, `sqrt2`, `ln2`, `phi`… (`std::numbers::pi_v<float>` pour un autre type).
@@ -843,21 +805,15 @@ int main() {
 - **`EXIT_SUCCESS`, `EXIT_FAILURE`** (`<cstdlib>`) : codes de sortie.
 - **`__cplusplus`** : numéro de la norme (`201703L`, `202002L`, `202302L`…).
 
-### À retenir (chapitre 5)
-
-- Un littéral a un type qui dépend de sa forme et de son suffixe (`1` est `int`, `1u` `unsigned`, `1.0` `double`, `"a"` `const char[2]`).
-- Préférez `constexpr` (ou `const`) aux macros ; `consteval` impose le calcul à la compilation.
-- Pour les pointeurs, lisez `const` de droite à gauche.
-
 ---
 
-## Chapitre 6 — Opérateurs et expressions
+# Opérateurs et expressions
 
-### 6.1 Notions préalables
+## Notions préalables
 
 Une **expression** combine des opérandes et des opérateurs pour produire une valeur. Chaque opérateur a une **arité** (unaire, binaire, ternaire), une **priorité** (qui s'applique en premier) et une **associativité** (dans quel sens on regroupe à priorité égale). Chaque expression possède un **type** et une **catégorie de valeur** : une *lvalue* désigne un objet qui a une identité et une adresse (une variable), une *rvalue* est un résultat temporaire.
 
-### 6.2 Opérateurs arithmétiques
+## Opérateurs arithmétiques
 
 ```cpp
 #include <iostream>
@@ -874,13 +830,13 @@ int main() {
 - `%` (reste) ne s'applique qu'aux **entiers** ; pour les réels, utilisez `std::fmod`. `a / 0` et `a % 0` avec des entiers sont des comportements indéfinis ; en flottant, `x / 0.0` donne `inf` ou `NaN`.
 - Les opérateurs `+` et `-` unaires existent aussi (`-x`).
 
-### 6.3 Comparaison
+## Comparaison
 
 Opérateurs relationnels : `<`, `>`, `<=`, `>=` ; égalité : `==`, `!=`. Le résultat est un `bool`. **Piège** : `a < b < c` ne teste pas « b entre a et c » : il compare `(a < b)` (un booléen) à `c`.
 
-**Opérateur de comparaison à trois voies `<=>`** *(C++20, « vaisseau spatial »)* : retourne un objet `std::strong_ordering`, `weak_ordering` ou `partial_ordering` exprimant « inférieur », « égal » ou « supérieur » en une seule opération. Pour une classe, `auto operator<=>(const T &) const = default;` génère automatiquement `<`, `<=`, `>`, `>=` (chapitre 18).
+**Opérateur de comparaison à trois voies `<=>`** *(C++20, « vaisseau spatial »)* : retourne un objet `std::strong_ordering`, `weak_ordering` ou `partial_ordering` exprimant « inférieur », « égal » ou « supérieur » en une seule opération. Pour une classe, `auto operator<=>(const T &) const = default;` génère automatiquement `<`, `<=`, `>`, `>=` (voir *Structures, classes et unions*).
 
-### 6.4 Opérateurs logiques et évaluation paresseuse
+## Opérateurs logiques et évaluation paresseuse
 
 `&&` (ET), `||` (OU), `!` (NON). Les opérateurs `&&` et `||` utilisent l'**évaluation paresseuse** (*short-circuit*) : l'opérande de droite n'est évalué que si nécessaire. Cette propriété est garantie par la norme et sert à écrire des gardes :
 
@@ -905,11 +861,11 @@ int main() {
 
 Pour cette raison, on **ne surcharge pas** `&&`, `||` ni `,` pour des types utilisateur : la surcharge perdrait l'évaluation paresseuse et l'ordre garanti.
 
-### 6.5 Affectation et opérateurs composés
+## Affectation et opérateurs composés
 
 `=` copie une valeur dans un objet existant et **retourne** cet objet (d'où `a = b = 0;`). Les opérateurs composés combinent calcul et affectation : `+=`, `-=`, `*=`, `/=`, `%=`, `<<=`, `>>=`, `&=`, `|=`, `^=`. **Piège classique** : `if (x = 5)` est une affectation (toujours vraie), pas une comparaison ; `-Wall` le signale.
 
-### 6.6 Incrémentation et décrémentation
+## Incrémentation et décrémentation
 
 ```cpp
 #include <iostream>
@@ -924,7 +880,7 @@ int main() {
 
 La forme suffixe doit conserver l'ancienne valeur : pour un itérateur ou un objet, cela crée une copie temporaire inutile. **Utilisez `++i` par défaut.**
 
-### 6.7 Opérateur conditionnel (ternaire)
+## Opérateur conditionnel (ternaire)
 
 `condition ? valeur_si_vrai : valeur_si_faux` est une **expression** (contrairement à `if`, qui est une instruction). Les deux branches doivent avoir des types compatibles ; à utiliser pour les cas simples, jamais imbriqué sur plusieurs niveaux.
 
@@ -933,13 +889,13 @@ int max = (a > b) ? a : b;
 std::cout << (a % 2 == 0 ? "pair" : "impair") << '\n';
 ```
 
-### 6.8 `sizeof`, `alignof`, virgule
+## `sizeof`, `alignof`, virgule
 
 - `sizeof(T)` ou `sizeof expr` : taille **en octets** (évaluée à la compilation, de type `std::size_t`). Sur un tableau C, donne la taille totale ; sur un pointeur, la taille du pointeur. Pour compter les éléments, préférez `std::size(t)` *(C++17)*, qui refuse de compiler sur un pointeur.
-- `alignof(T)` : contrainte d'**alignement** du type en mémoire (chapitre 18).
+- `alignof(T)` : contrainte d'**alignement** du type en mémoire (voir *Structures, classes et unions*).
 - **Opérateur virgule** `a, b` : évalue `a`, l'ignore, puis évalue `b` et retourne sa valeur. On le rencontre surtout dans un `for` : `for (int i = 0, j = 10; i < j; ++i, --j)`.
 
-### 6.9 Priorité et associativité
+## Priorité et associativité
 
 Du plus prioritaire au moins prioritaire :
 
@@ -960,7 +916,7 @@ Du plus prioritaire au moins prioritaire :
 
 **Piège** : `std::cout << a & b` s'interprète `(std::cout << a) & b` ; écrivez `std::cout << (a & b)`. De même, `==` est plus prioritaire que `&` : `x & 1 == 0` signifie `x & (1 == 0)`. **Dans le doute, parenthésez.**
 
-### 6.9 bis Ordre d'évaluation
+## Ordre d'évaluation
 
 Priorité et ordre d'évaluation sont deux choses différentes. Dans `f() + g()`, la priorité dit que `+` est appliqué après ; elle ne dit **pas** laquelle de `f` ou `g` s'exécute en premier. Depuis C++17, l'ordre est défini pour `a << b`, `a >> b`, `a = b`, `a.f(b)` et `a[b]` (le membre de gauche est évalué d'abord), mais **pas** pour les arguments d'une fonction ni pour les opérandes de `+`, `*`, etc. Modifier deux fois la même variable dans une expression sans ordre défini est un comportement indéfini :
 
@@ -971,7 +927,7 @@ int x = 3;
 // int s = 1 << 40;  // comportement indéfini : décalage >= largeur du type
 ```
 
-### 6.10 Arithmétique sûre
+## Arithmétique sûre
 
 Le C++ standard n'a pas encore d'équivalent des fonctions `ckd_add` du C23, mais fournit des outils pour maîtriser les débordements et les comparaisons mixtes :
 
@@ -994,20 +950,13 @@ int main() {
 - `std::add_sat`, `sub_sat`, `mul_sat`, `div_sat` *(C++26)* : arithmétique **saturée** (le résultat est borné au lieu de déborder).
 - `__builtin_add_overflow` (extension GCC/Clang) et bibliothèques (Boost.SafeNumerics) pour détecter les débordements.
 
-### À retenir (chapitre 6)
-
-- Division entière tronquée vers zéro ; `%` réservé aux entiers.
-- `&&` et `||` sont paresseux ; ne mélangez pas `&` et `&&`.
-- Préférez `++i` ; parenthésez dès que la priorité n'est pas évidente.
-- Débordement signé, division par zéro entière, décalage invalide, modification multiple non ordonnée : comportements indéfinis.
-
 ---
 
-## Chapitre 7 — Entrées et sorties
+# Entrées et sorties
 
-### 7.1 Le modèle des flux
+## Le modèle des flux
 
-En C++, les entrées/sorties reposent sur la notion de **flux** (*stream*) : une suite d'octets ou de caractères qui circule d'une source vers une destination. Le même modèle vaut pour la console, les fichiers (chapitre 22) et les chaînes en mémoire. Un flux de sortie reçoit des données avec l'opérateur d'**insertion** `<<` ; un flux d'entrée en extrait avec l'opérateur d'**extraction** `>>`. Les deux opérateurs sont **typés** : le compilateur choisit la bonne conversion selon le type de la valeur, ce qui supprime les erreurs de spécificateur de format de `printf` / `scanf`.
+En C++, les entrées/sorties reposent sur la notion de **flux** (*stream*) : une suite d'octets ou de caractères qui circule d'une source vers une destination. Le même modèle vaut pour la console, les fichiers (voir *Gestion des fichiers*) et les chaînes en mémoire. Un flux de sortie reçoit des données avec l'opérateur d'**insertion** `<<` ; un flux d'entrée en extrait avec l'opérateur d'**extraction** `>>`. Les deux opérateurs sont **typés** : le compilateur choisit la bonne conversion selon le type de la valeur, ce qui supprime les erreurs de spécificateur de format de `printf` / `scanf`.
 
 Quatre flux standards sont fournis par `<iostream>` :
 
@@ -1025,7 +974,7 @@ Les redirections du shell exploitent cette séparation :
 ./prog < entree.txt                   # cin lit dans un fichier
 ```
 
-### 7.2 Affichage avec `std::cout`
+## Affichage avec `std::cout`
 
 ```cpp
 #include <iomanip>
@@ -1047,7 +996,7 @@ Les **manipulateurs** (`<iomanip>` et `<ios>`) modifient l'état du flux : `std:
 
 **`'\n'` ou `std::endl` ?** `std::endl` écrit `'\n'` **puis vide le tampon** : coûteux dans une boucle. Écrivez `'\n'` et laissez le système vider le tampon.
 
-### 7.3 Formatage moderne : `std::format` et `std::print`
+## Formatage moderne : `std::format` et `std::print`
 
 `std::format` *(C++20)* produit une `std::string` à partir d'une chaîne de format à la Python ; `std::print` / `std::println` *(C++23)* l'écrivent directement dans un flux. Le format est **vérifié à la compilation** (nombre et types d'arguments), contrairement à `printf`.
 
@@ -1075,7 +1024,7 @@ Syntaxe d'un champ : `{[position]:[remplissage][alignement][signe][#][0][largeur
 - `{:#x}` ajoute le préfixe `0x` ; `{:08d}` complète avec des zéros ; `{:+d}` impose le signe ; `{1} {0}` choisit les arguments par position ; `{{` et `}}` écrivent des accolades littérales.
 - La disponibilité dépend de la bibliothèque standard : `std::format` à partir de GCC 13 (et Clang/MSVC récents), `std::print` à partir de GCC 14.
 
-### 7.4 Lecture avec `std::cin`
+## Lecture avec `std::cin`
 
 ```cpp
 #include <cstdlib>
@@ -1100,7 +1049,7 @@ int main() {
 
 Fonctionnement de `>>` : il **saute les espaces** (espace, tabulation, saut de ligne), lit des caractères jusqu'au premier qui ne convient pas au type demandé, et **laisse le reste dans le tampon**, y compris le `'\n'` final. Si la lecture échoue (on tape `abc` pour un `int`), le flux passe en **état d'erreur** (`failbit`) : l'expression `std::cin >> x` se convertit alors en `false`, et **toutes les lectures suivantes échouent** tant que l'on n'a pas appelé `clear()`.
 
-### 7.5 Lire une ligne entière : `std::getline`
+## Lire une ligne entière : `std::getline`
 
 ```cpp
 #include <iostream>
@@ -1116,7 +1065,7 @@ int main() {
 
 La `std::string` s'agrandit automatiquement : aucun tampon à dimensionner, donc plus de risque de dépassement (contrairement à `gets` ou `scanf("%s")` du C).
 
-#### Lecture robuste d'un nombre
+### Lecture robuste d'un nombre
 
 Le schéma « lire la ligne, puis convertir » est le plus sûr. `std::from_chars` *(C++17)* convertit sans exception ni allocation et indique précisément où la conversion s'est arrêtée :
 
@@ -1145,7 +1094,7 @@ int main() {
 }
 ```
 
-#### Mélanger `>>` et `getline` : vider le tampon
+### Mélanger `>>` et `getline` : vider le tampon
 
 Après `std::cin >> n`, le `'\n'` tapé par l'utilisateur reste dans le tampon : un `getline` immédiat lit donc une **ligne vide**. On purge avec `ignore` :
 
@@ -1168,11 +1117,11 @@ int main() {
 }
 ```
 
-### 7.6 États d'un flux
+## États d'un flux
 
 Chaque flux mémorise son état : `good()` (tout va bien), `eof()` (fin de données **atteinte par une lecture**), `fail()` (échec de format ou d'opération), `bad()` (erreur irrécupérable). Un flux en état d'erreur ignore toutes les opérations jusqu'à `clear()`. Testez **le résultat de l'opération de lecture**, pas `eof()` avant elle : `while (std::cin >> x) { ... }` est correct, `while (!std::cin.eof())` ne l'est pas.
 
-### 7.7 Autres fonctions utiles
+## Autres fonctions utiles
 
 - `std::cout.put(c)`, `std::cout.write(p, n)` : écrire un caractère, `n` octets.
 - `std::cin.get()` lit un caractère (espaces compris) ; `std::cin.peek()` le consulte sans le consommer ; `std::cin >> std::ws` saute les espaces.
@@ -1180,19 +1129,13 @@ Chaque flux mémorise son état : `good()` (tout va bien), `eof()` (fin de donn�
 - `std::ios::sync_with_stdio(false);` découple les flux C++ de ceux du C : lectures et écritures nettement plus rapides, mais on ne doit plus mélanger `cout` et `printf`.
 - `printf` / `scanf` (`<cstdio>`) fonctionnent mais ne sont **pas typés** : `printf("%d", un_double)` est un comportement indéfini. Préférez flux ou `std::format`.
 
-### À retenir (chapitre 7)
-
-- Flux = abstraction commune console / fichiers / chaînes ; `<<` pour écrire, `>>` pour lire.
-- Lisez les lignes avec `std::getline`, puis convertissez et validez ; testez toujours le résultat d'une lecture.
-- `'\n'` plutôt que `std::endl` ; `std::format` / `std::println` pour un formatage sûr.
-
 ---
 
-## Chapitre 8 — Structures de contrôle
+# Structures de contrôle
 
 Les structures de contrôle modifient l'ordre d'exécution : elles permettent de **choisir** (conditions) et de **répéter** (boucles). Le C++ en ajoute une troisième famille : le traitement des erreurs par **exceptions**.
 
-### 8.1 Conditions : `if`, `else if`, `else`
+## Conditions : `if`, `else if`, `else`
 
 ```cpp
 #include <iostream>
@@ -1222,11 +1165,11 @@ int main() {
 
 - La condition est convertie en `bool`. Utilisez **toujours des accolades**, même pour une seule instruction : cela évite des bogues lors d'une modification ultérieure.
 - **`if` avec initialiseur** *(C++17)* : `if (init; condition)` limite la portée de la variable au `if` et à ses `else`.
-- **`if constexpr`** *(C++17)* : la condition est évaluée **à la compilation** ; la branche non retenue n'est pas compilée (indispensable dans les templates, chapitre 20).
+- **`if constexpr`** *(C++17)* : la condition est évaluée **à la compilation** ; la branche non retenue n'est pas compilée (indispensable dans les templates, voir *`using`, `typedef` et templates*).
 - `if consteval` *(C++23)* : distingue l'évaluation à la compilation de l'exécution.
 - **Piège du « else pendant »** : un `else` se rattache au `if` le plus proche ; les accolades lèvent toute ambiguïté.
 
-### 8.2 Sélection multiple : `switch`
+## Sélection multiple : `switch`
 
 ```cpp
 #include <iostream>
@@ -1257,7 +1200,7 @@ int main() {
 - On ne peut pas déclarer de variable avec initialisation directement dans un `case` sans la placer dans un bloc `{ }` (le saut vers un autre `case` passerait par-dessus l'initialisation).
 - Sur une `enum class`, **omettez `default`** : avec `-Wall`, le compilateur signale alors tout énumérateur oublié.
 
-### 8.3 Boucles
+## Boucles
 
 ```cpp
 #include <iostream>
@@ -1292,11 +1235,11 @@ int main() {
 - **`for` sur intervalle** (*range-based for*, C++11) : `for (T x : conteneur)` parcourt tous les éléments d'un tableau, d'un conteneur ou de tout objet disposant de `begin()` / `end()`. Choisissez la forme de `T` : `int x` (copie), `const int &x` (lecture sans copie, **forme par défaut pour les gros objets**), `int &x` (modification), `auto &&x` (générique). Depuis C++20, un initialiseur est permis : `for (auto v = f(); auto x : v)`.
 - **Vues et ranges** *(C++20)* : `std::views::iota`, `filter`, `transform`, `reverse`… se combinent avec `|` et s'évaluent paresseusement.
 
-### 8.4 `break`, `continue`, `goto`
+## `break`, `continue`, `goto`
 
 - `break` quitte immédiatement la boucle (ou le `switch`) la plus interne.
 - `continue` passe à l'itération suivante.
-- `goto étiquette;` saute vers une étiquette de la même fonction. Il **ne peut pas** sauter par-dessus l'initialisation d'une variable. En C++, le schéma C `goto nettoyage;` est inutile : le nettoyage est automatique grâce aux **destructeurs** (RAII, chapitre 10). Pour sortir de boucles imbriquées, placez-les dans une fonction et utilisez `return`.
+- `goto étiquette;` saute vers une étiquette de la même fonction. Il **ne peut pas** sauter par-dessus l'initialisation d'une variable. En C++, le schéma C `goto nettoyage;` est inutile : le nettoyage est automatique grâce aux **destructeurs** (RAII, voir *Portée et durée de vie des variables*). Pour sortir de boucles imbriquées, placez-les dans une fonction et utilisez `return`.
 
 ```cpp
 for (int i = 0; i < 10; ++i) {
@@ -1306,7 +1249,7 @@ for (int i = 0; i < 10; ++i) {
 }
 ```
 
-### 8.5 Pièges classiques
+## Pièges classiques
 
 ```cpp
 #include <iostream>
@@ -1332,7 +1275,7 @@ int main() {
 - **Copie involontaire** dans `for (auto x : v)` quand les éléments sont de gros objets : écrivez `const auto &x`.
 - **Condition mal formée** : `while (x = 0)` (affectation).
 
-### 8.6 Exceptions : `try`, `catch`, `throw`
+## Exceptions : `try`, `catch`, `throw`
 
 Une **exception** signale une erreur en interrompant le déroulement normal : le programme **remonte la pile d'appels**, en **détruisant les objets locaux** au passage (*stack unwinding*), jusqu'à trouver un `catch` compatible.
 
@@ -1361,24 +1304,17 @@ int main() {
 
 La hiérarchie standard (`<stdexcept>`) : `std::exception` (base, méthode `what()`) ; `std::logic_error` (`invalid_argument`, `out_of_range`, `domain_error`, `length_error`) ; `std::runtime_error` (`range_error`, `overflow_error`, `underflow_error`) ; `std::bad_alloc` (échec d'allocation) ; `std::bad_cast` (échec de `dynamic_cast` sur une référence).
 
-Règles : **lancer par valeur, capturer par référence constante** ; ordonner les `catch` du plus **spécifique** au plus **général** ; ne pas utiliser les exceptions pour le flux de contrôle ordinaire. La sûreté en cas d'exception (`noexcept`, garanties) est traitée au chapitre 29.
-
-### À retenir (chapitre 8)
-
-- Accolades toujours ; `if` et `switch` acceptent un initialiseur (C++17).
-- `for` sur intervalle avec `const auto &` est la boucle par défaut sur un conteneur.
-- `switch` : un `break` par cas, ou `[[fallthrough]]` explicite.
-- Exceptions : `throw` par valeur, `catch` par référence constante, du plus spécifique au plus général.
+Règles : **lancer par valeur, capturer par référence constante** ; ordonner les `catch` du plus **spécifique** au plus **général** ; ne pas utiliser les exceptions pour le flux de contrôle ordinaire. La sûreté en cas d'exception (`noexcept`, garanties) est traitée dans *Comportements indéfinis, erreurs et sûreté*.
 
 ---
 
-## Chapitre 9 — Fonctions
+# Fonctions
 
-### 9.1 Pourquoi des fonctions ?
+## Pourquoi des fonctions ?
 
 Une **fonction** est un bloc de code nommé, réutilisable, qui reçoit des **paramètres** et peut retourner une **valeur**. Elle permet de découper un problème, d'éviter la duplication, de tester isolément et de donner des noms à des idées. Règle d'or : **une fonction fait une seule chose**, porte un nom explicite et reste courte.
 
-### 9.2 Définir et appeler
+## Définir et appeler
 
 ```cpp
 #include <iostream>
@@ -1415,9 +1351,9 @@ int carre(int x) { return x * x; }   // définition
 
 - `return valeur;` termine la fonction et transmet la valeur. Une fonction non `void` dont un chemin d'exécution n'a pas de `return` provoque un comportement indéfini.
 
-### 9.3 Passage des arguments : valeur, référence, pointeur
+## Passage des arguments : valeur, référence, pointeur
 
-Par défaut, les arguments sont passés **par valeur** : la fonction travaille sur une **copie**. Pour modifier l'original ou éviter une copie coûteuse, on passe une **référence** (chapitre 17) ou un **pointeur** (chapitre 13).
+Par défaut, les arguments sont passés **par valeur** : la fonction travaille sur une **copie**. Pour modifier l'original ou éviter une copie coûteuse, on passe une **référence** (voir *Références et pointeurs doubles*) ou un **pointeur** (voir *Pointeurs*).
 
 ```cpp
 #include <iostream>
@@ -1446,7 +1382,7 @@ Guide de choix :
 - **Résultat** : de préférence la **valeur de retour** (un `struct`, un `std::pair`, un `std::tuple`, un `std::optional`) plutôt qu'un paramètre de sortie.
 - **Consommer ou stocker l'objet** (*sink*) : par valeur puis `std::move`, ou `T &&`.
 
-### 9.4 Retourner des valeurs
+## Retourner des valeurs
 
 On retourne **par valeur** : depuis C++17, retourner un temporaire n'effectue **aucune copie** (élision garantie), et retourner une variable locale nommée est optimisé (NRVO) ou **déplacé**. **Ne retournez jamais** une référence ou un pointeur vers une variable locale : elle est détruite à la sortie de la fonction.
 
@@ -1462,7 +1398,7 @@ std::string bonne() {
 }
 ```
 
-### 9.5 Surcharge et arguments par défaut
+## Surcharge et arguments par défaut
 
 Plusieurs fonctions peuvent porter le **même nom** si leurs **paramètres** diffèrent (nombre ou types) : c'est la **surcharge**. Le compilateur choisit la meilleure correspondance (correspondance exacte, puis promotions, puis conversions).
 
@@ -1489,7 +1425,7 @@ int main() {
 - Les arguments par défaut se placent **à la fin** de la liste et se déclarent **une seule fois** (dans le prototype).
 - Un appel **ambigu** (`absolu(3L)` avec les versions `int` et `double`) est une erreur de compilation ; levez l'ambiguïté par un cast.
 
-### 9.6 Fonctions variadiques
+## Fonctions variadiques
 
 L'ellipse `...` du C (`<cstdarg>`) n'est pas typée : **déconseillée**. Le C++ propose des alternatives sûres :
 
@@ -1519,7 +1455,7 @@ int main() {
 }
 ```
 
-### 9.7 `inline`, `constexpr`, `consteval`, `noexcept`
+## `inline`, `constexpr`, `consteval`, `noexcept`
 
 - **`inline`** : autorise plusieurs définitions identiques de la même fonction (une définition par unité de traduction), ce qui permet de la définir dans un en-tête. Le compilateur reste libre d'insérer (ou non) le corps à l'endroit de l'appel.
 - **`constexpr`** : la fonction peut être évaluée à la compilation si ses arguments le sont ; elle reste utilisable à l'exécution.
@@ -1533,13 +1469,13 @@ consteval int au_carre(int x) { return x * x; }
 int addition(int a, int b) noexcept { return a + b; }
 ```
 
-### 9.8 Organiser le code : en-têtes et sources
+## Organiser le code : en-têtes et sources
 
 Dès qu'un programme dépasse quelques dizaines de lignes, on sépare **interface** (déclarations dans un en-tête `.hpp`) et **implémentation** (définitions dans un `.cpp`) :
 
 ```cpp
 // maths.hpp
-#pragma once                                      // garde d'inclusion (chapitre 24)
+#pragma once                                      // garde d'inclusion
 namespace maths {
     int carre(int x);                             // déclaration : la définition est dans maths.cpp
     inline int cube(int x) { return x * x * x; } // inline : définition autorisée dans l'en-tête
@@ -1572,28 +1508,21 @@ Ce qu'on place dans un **en-tête** : déclarations, définitions de classes, **
 
 Pour appeler du C depuis du C++ (ou l'inverse), on désactive le décorage des noms avec `extern "C" { #include "bibliotheque_c.h" }`.
 
-### 9.9 Bonnes pratiques
+## Bonnes pratiques
 
 - Une fonction = une tâche ; nom explicite (verbe pour une action, adjectif ou question pour un test).
 - Gros objet en lecture : `const T &` ; petit type : valeur ; retour : valeur.
 - `[[nodiscard]]` sur les fonctions dont le résultat compte ; `noexcept` quand c'est vrai ; `constexpr` quand c'est possible.
 - Évitez les paramètres de sortie : retournez un `struct`, un `std::pair`/`std::tuple` ou un `std::optional`.
-- Documentez les **préconditions** (contrats en C++26, chapitre 29).
-
-### À retenir (chapitre 9)
-
-- Passage par valeur = copie ; référence = alias ; `const T &` pour lire les gros objets.
-- Ne retournez jamais une référence vers un local ; retournez par valeur.
-- Surcharge selon les paramètres ; arguments par défaut à la fin.
-- Déclarations dans les en-têtes, définitions dans les `.cpp` (sauf `inline`, `constexpr`, templates).
+- Documentez les **préconditions** (contrats en C++26, voir *Comportements indéfinis, erreurs et sûreté*).
 
 ---
 
-## Chapitre 10 — Portée et durée de vie des variables
+# Portée et durée de vie des variables
 
 Deux notions distinctes et souvent confondues : la **portée** (*où* un nom est visible dans le code) et la **durée de vie** (*quand* un objet existe en mémoire). Elles coïncident pour les variables locales ordinaires, mais pas toujours.
 
-### 10.1 Les portées
+## Les portées
 
 La **portée** d'un nom est la région du texte source où ce nom peut être utilisé.
 
@@ -1627,7 +1556,7 @@ int main() {
 - **Portée de template** : un paramètre de template n'est visible que dans sa déclaration.
 - **Ombrage** (*shadowing*) : un nom interne masque un nom externe identique. Source de bogues : activez `-Wshadow`.
 
-### 10.2 Durée de vie et classes de stockage
+## Durée de vie et classes de stockage
 
 La **durée de vie** d'un objet commence à la fin de son initialisation et se termine quand il est détruit. Le C++ distingue quatre **durées de stockage** :
 
@@ -1668,7 +1597,7 @@ int main() {
 
 **Piège — le fiasco de l'ordre d'initialisation statique** (*static initialization order fiasco*). L'ordre d'initialisation des variables globales de **fichiers différents** n'est pas défini : si l'une dépend d'une autre, le comportement est imprévisible. Évitez les globales interdépendantes ; une variable `static` locale à une fonction (initialisée au premier appel) règle le problème, tout comme `constinit`.
 
-### 10.3 Organisation de la mémoire d'un programme
+## Organisation de la mémoire d'un programme
 
 La mémoire d'un processus se découpe en quatre zones :
 
@@ -1679,7 +1608,7 @@ La mémoire d'un processus se découpe en quatre zones :
 
 Conséquence : évitez les gros tableaux locaux et les récursions très profondes (dépassement de pile), et allouez les gros volumes de données sur le tas, via `std::vector`.
 
-### 10.4 RAII : la durée de vie au service de la fiabilité
+## RAII : la durée de vie au service de la fiabilité
 
 En C++, un objet est **construit** à sa déclaration et **détruit automatiquement** à la fin de sa portée, dans l'**ordre inverse** de la construction. Ce mécanisme, nommé **RAII** (*Resource Acquisition Is Initialization*), lie la durée de vie d'une ressource (mémoire, fichier, verrou, connexion) à celle d'un objet.
 
@@ -1707,7 +1636,7 @@ int main() {
 
 La destruction a lieu **même si une exception est levée** : c'est le fondement de la gestion fiable des ressources en C++. Les exemples sont partout dans la bibliothèque standard : `std::vector` libère sa mémoire, `std::ifstream` ferme son fichier, `std::lock_guard` libère son verrou, `std::unique_ptr` détruit l'objet pointé.
 
-### 10.5 Bonnes pratiques
+## Bonnes pratiques
 
 - Déclarez les variables dans la **plus petite portée** possible et initialisez-les immédiatement.
 - Évitez les variables **globales** ; si indispensables, placez-les dans un `namespace` et rendez-les `const` / `constexpr`.
@@ -1715,21 +1644,11 @@ La destruction a lieu **même si une exception est levée** : c'est le fondement
 - Ne gérez jamais une ressource « à la main » : encapsulez-la dans un objet RAII.
 - Ne retournez jamais de référence ou de pointeur vers une variable automatique.
 
-### À retenir (chapitre 10)
-
-- Portée = visibilité du nom ; durée de vie = existence de l'objet. Pile = automatique, tas = dynamique, segment de données = statique.
-- RAII : le destructeur libère la ressource à la fin de la portée, exceptions comprises.
-- Évitez les globales ; attention à l'ordre d'initialisation statique.
-
 ---
 
-# Niveau intermédiaire
+# Tableaux
 
----
-
-## Chapitre 11 — Tableaux
-
-### 11.1 Trois sortes de tableaux
+## Trois sortes de tableaux
 
 Un **tableau** est une suite d'éléments de même type rangés **contigus** en mémoire. Le C++ en propose trois :
 
@@ -1759,7 +1678,7 @@ Points de comparaison : seul `std::vector` change de taille ; seul le tableau C 
 
 Les indices vont de **0 à taille − 1**. Accéder à `t[taille]` ou à un indice négatif est un **comportement indéfini** (pas d'exception, pas de message : silencieux ou plantage).
 
-### 11.2 Parcourir un tableau
+## Parcourir un tableau
 
 ```cpp
 #include <array>
@@ -1782,7 +1701,7 @@ int main() {
 }
 ```
 
-### 11.3 Tableaux multidimensionnels
+## Tableaux multidimensionnels
 
 ```cpp
 #include <array>
@@ -1805,7 +1724,7 @@ int main() {
 
 En mémoire, un tableau multidimensionnel C est stocké **ligne par ligne** (*row-major*) : `m[i][j]` est à l'offset `i * colonnes + j`. Un `vector<vector<T>>` fait une allocation par ligne ; pour une matrice dense performante, stockez les données dans **un seul** `std::vector` indexé par `i * colonnes + j`, ou utilisez `std::mdspan` *(C++23)*, qui offre une vue multidimensionnelle sur un tampon contigu.
 
-### 11.4 Tableaux de taille variable
+## Tableaux de taille variable
 
 Les **VLA** du C99 (`int t[n];` avec `n` connu seulement à l'exécution) **n'existent pas** en C++ standard (certains compilateurs les acceptent en extension, avec des risques de dépassement de pile). On utilise `std::vector` :
 
@@ -1816,7 +1735,7 @@ for (int i = 0; i < n; ++i) t[i] = i * i;
 // mémoire libérée automatiquement à la fin de la portée
 ```
 
-### 11.5 Tableaux et fonctions
+## Tableaux et fonctions
 
 Un tableau C passé à une fonction **se réduit à un pointeur** (*array-to-pointer decay*) : sa taille est perdue. `void f(int t[])` et `void f(int *t)` sont **strictement identiques**, et `sizeof(t)` y donne la taille d'un pointeur. La solution moderne est `std::span` *(C++20)* : une **vue** (pointeur + taille) sur une suite contiguë, qui accepte tableau C, `std::array` et `std::vector`.
 
@@ -1844,7 +1763,7 @@ int main() {
 }
 ```
 
-### 11.6 Algorithmes sur les tableaux
+## Algorithmes sur les tableaux
 
 La bibliothèque `<algorithm>` (et `<numeric>`) fournit des algorithmes génériques, qui travaillent sur des **intervalles d'itérateurs** `[début, fin)` ; la version `std::ranges::` *(C++20)* prend directement le conteneur.
 
@@ -1873,7 +1792,7 @@ int main() {
 
 Principaux outils : tri (`sort`, `stable_sort`), recherche (`find`, `find_if`, et `binary_search` / `lower_bound` sur un intervalle **trié**), comptage et tests (`count`, `count_if`, `any_of`, `all_of`, `none_of`), copie et remplissage (`copy`, `fill`, `iota`, `generate`), réduction (`accumulate`, `reduce`, `transform_reduce`), extrema (`min_element`, `max_element`, `minmax_element`), suppression (`v.erase(std::remove(...), v.end())` ou, plus simplement, `std::erase(v, x)` / `std::erase_if(v, pred)` *(C++20)*).
 
-### 11.7 Erreurs courantes
+## Erreurs courantes
 
 - `t[n]` avec `n == taille` : accès hors bornes (comportement indéfini) ; testez avec `at()` en développement.
 - Calculer la taille avec `sizeof` sur un paramètre de fonction : donne la taille d'un pointeur.
@@ -1882,18 +1801,11 @@ Principaux outils : tri (`sort`, `stable_sort`), recherche (`find`, `find_if`, e
 - `std::vector<bool>` utilisé comme un vrai conteneur de `bool` : c'est une spécialisation à base de bits dont les éléments sont des *proxies* (pas de `bool &`). Préférez `std::vector<char>` ou `std::bitset`.
 - Boucle `for (std::size_t i = n - 1; i >= 0; --i)` : infinie (non signé).
 
-### À retenir (chapitre 11)
-
-- `std::array` (taille fixe) et `std::vector` (taille variable) remplacent les tableaux C.
-- Un tableau C passé à une fonction perd sa taille ; utilisez `std::span`.
-- Indices valides : 0 à taille−1 ; `at()` vérifie, `[]` ne vérifie pas.
-- Utilisez les algorithmes standard plutôt que des boucles écrites à la main.
-
 ---
 
-## Chapitre 12 — Chaînes de caractères
+# Chaînes de caractères
 
-### 12.1 `std::string` contre chaîne C
+## `std::string` contre chaîne C
 
 En C++, on utilise la classe **`std::string`** (en-tête `<string>`) : elle gère sa mémoire, connaît sa taille, grandit toute seule et se comporte comme une valeur ordinaire (copie, comparaison, concaténation avec les opérateurs). La chaîne « à la C » — tableau de `char` terminé par `'\0'` — reste utile pour l'interopérabilité avec les API C.
 
@@ -1914,7 +1826,7 @@ int main() {
 
 Contre `char *`, `std::string` offre : la taille en temps constant (`size()`, au lieu de `strlen`), une mémoire gérée automatiquement, une concaténation sûre (`+`, `+=`, `append`, au lieu de `strcat` qui peut déborder), des comparaisons directes (`==`, `<`, au lieu de `strcmp`), et la copie par `=` (au lieu de `strcpy`).
 
-### 12.2 Les opérations de base
+## Les opérations de base
 
 ```cpp
 #include <iostream>
@@ -1949,7 +1861,7 @@ int main() {
 - **Interopérabilité** : `c_str()` et `data()` donnent un pointeur vers les caractères terminés par `'\0'` ; il n'est valable que tant que la chaîne n'est ni modifiée ni détruite.
 - **Capacité** : `reserve`, `capacity`, `shrink_to_fit`.
 
-### 12.3 Concaténer et copier
+## Concaténer et copier
 
 ```cpp
 #include <format>
@@ -1979,7 +1891,7 @@ int main() {
 
 **`std::string_view`** *(C++17)* est une **vue** non propriétaire : pointeur + taille vers des caractères qui appartiennent à quelqu'un d'autre. Idéal comme **paramètre** de fonction acceptant un littéral, une `std::string` ou une sous-chaîne sans copie. **Danger** : il devient invalide si la chaîne d'origine est détruite ou modifiée ; ne le stockez pas à long terme.
 
-### 12.4 Parcourir et découper
+## Parcourir et découper
 
 ```cpp
 #include <iostream>
@@ -2009,9 +1921,9 @@ int main() {
 }
 ```
 
-La lecture d'une ligne au clavier ou dans un fichier avec `std::getline` est présentée aux chapitres 7 et 22.
+La lecture d'une ligne au clavier ou dans un fichier avec `std::getline` est présentée dans *Entrées et sorties* et dans *Gestion des fichiers*.
 
-### 12.5 Caractères : `<cctype>`
+## Caractères : `<cctype>`
 
 Les fonctions de `<cctype>` testent ou convertissent un caractère : `std::isalpha`, `isdigit`, `isalnum`, `isspace`, `isupper`, `islower`, `ispunct`, `toupper`, `tolower`.
 
@@ -2030,9 +1942,9 @@ int main() {
 }
 ```
 
-**Piège** : passez-leur un **`unsigned char`** : une valeur négative (caractère accentué sur un `char` signé) provoque un comportement indéfini. Elles ne gèrent que l'**ASCII** ; pour Unicode, voir le chapitre 27.
+**Piège** : passez-leur un **`unsigned char`** : une valeur négative (caractère accentué sur un `char` signé) provoque un comportement indéfini. Elles ne gèrent que l'**ASCII** ; pour Unicode, voir *Unicode et encodages de caractères*.
 
-### 12.6 Conversions chaîne ↔ nombre
+## Conversions chaîne ↔ nombre
 
 ```cpp
 #include <charconv>
@@ -2064,7 +1976,7 @@ int main() {
 - `std::from_chars` / `std::to_chars` *(C++17)* : conversions **rapides**, sans exception ni allocation, indépendantes de la locale.
 - `std::format("{}", x)` *(C++20)* : nombre → chaîne avec options de format.
 
-### 12.7 Tableaux de chaînes et fonctions C
+## Tableaux de chaînes et fonctions C
 
 ```cpp
 std::vector<std::string> noms{"Zoé", "Ana", "Marc"};
@@ -2074,24 +1986,18 @@ std::sort(noms.begin(), noms.end());     // tri lexicographique : Ana Luc Marc Z
 
 Les fonctions C de `<cstring>` (`strlen`, `strcpy`, `strcat`, `strcmp`, `strchr`, `strstr`, `memcpy`, `memset`) fonctionnent encore, mais chacune a un équivalent plus sûr : `size()`, `=`, `+=`, `==` ou `compare`, `find`, `std::copy`, `std::fill` (les deux derniers pour les types triviaux seulement). Pour appeler une fonction C qui attend un `const char *`, passez `s.c_str()`.
 
-### 12.8 Bonnes pratiques
+## Bonnes pratiques
 
 - Utilisez `std::string` partout ; `std::string_view` pour les paramètres en lecture seule.
 - Ne mélangez jamais `+` entre deux littéraux ; démarrez avec un `std::string` ou le suffixe `s`.
 - Vérifiez `find(...) != std::string::npos` avant d'utiliser la position.
 - Validez toute conversion de saisie utilisateur (`try`/`catch` ou `from_chars`).
 
-### À retenir (chapitre 12)
-
-- `std::string` possède ses caractères ; `std::string_view` les observe seulement.
-- `size()` compte des **octets**, pas des caractères visibles (voir le chapitre 27).
-- `find` retourne `npos` en cas d'échec ; `c_str()` est éphémère.
-
 ---
 
-## Chapitre 13 — Pointeurs
+# Pointeurs
 
-### 13.1 Qu'est-ce qu'un pointeur ?
+## Qu'est-ce qu'un pointeur ?
 
 Chaque objet occupe un emplacement en mémoire, repéré par une **adresse**. Un **pointeur** est une variable dont la valeur est l'adresse d'un autre objet. Son type indique **ce qui est pointé** : `int *` est « pointeur vers un `int` ».
 
@@ -2112,7 +2018,7 @@ int main() {
 
 Trois opérateurs sont à connaître : **`&x`** (opérateur d'adresse : donne l'adresse de `x`), **`*p`** (opérateur de **déréférencement** : désigne l'objet pointé) et **`p->m`** (accès au membre `m` de l'objet pointé, équivalent à `(*p).m`). Le symbole `*` a deux sens selon le contexte : dans une **déclaration** il construit un type pointeur (`int *p`), dans une **expression** il déréférence.
 
-### 13.2 Le pointeur nul : `nullptr`
+## Le pointeur nul : `nullptr`
 
 Un pointeur qui ne désigne aucun objet vaut `nullptr` *(C++11)*. Déréférencer un pointeur nul est un comportement indéfini (en pratique, un plantage). `nullptr` a son propre type (`std::nullptr_t`) et remplace `NULL` et `0`, qui sont des entiers et provoquent des ambiguïtés de surcharge.
 
@@ -2133,7 +2039,7 @@ int main() {
 
 **Règle** : initialisez tout pointeur (`= nullptr` à défaut d'une adresse) et testez-le avant de le déréférencer s'il peut être nul.
 
-### 13.3 Arithmétique des pointeurs
+## Arithmétique des pointeurs
 
 On peut additionner un entier à un pointeur, ou soustraire deux pointeurs. **`p + n` avance de `n` éléments** (donc de `n * sizeof(*p)` octets), pas de `n` octets.
 
@@ -2155,7 +2061,7 @@ int main() {
 
 L'arithmétique n'est valide qu'**à l'intérieur d'un même tableau**, ou un cran après le dernier élément (sans déréférencement). Hors de ces bornes, le résultat est un comportement indéfini, même sans déréférencer. Comparer deux pointeurs d'objets distincts avec `<` est non spécifié (utilisez `std::less`).
 
-### 13.4 Tableaux et pointeurs
+## Tableaux et pointeurs
 
 Un tableau **n'est pas** un pointeur, mais il **se convertit implicitement** en pointeur vers son premier élément (*decay*). `t[i]` est défini comme `*(t + i)`.
 
@@ -2168,7 +2074,7 @@ std::cout << (t[2] == *(t + 2)) << '\n';                // 1
 
 Différences : `sizeof` d'un tableau donne sa taille totale, celui d'un pointeur la taille du pointeur ; un tableau ne peut pas être réaffecté, un pointeur si.
 
-### 13.5 Pointeurs et fonctions
+## Pointeurs et fonctions
 
 Passer un pointeur permet à une fonction de modifier l'objet de l'appelant (style C). En C++, on préfère les **références** quand l'argument est obligatoire, et on réserve le pointeur aux arguments **optionnels** (`nullptr` possible).
 
@@ -2177,11 +2083,11 @@ void echange(int *a, int *b) { int t = *a; *a = *b; *b = t; }       // style C
 void echange_ref(int &a, int &b) { int t = a; a = b; b = t; }        // style C++
 ```
 
-### 13.6 `const` et pointeurs (rappel)
+## `const` et pointeurs (rappel)
 
-`const T *p` : l'objet pointé est constant ; `T *const p` : le pointeur est constant ; `const T *const p` : les deux. Lisez de droite à gauche (chapitre 5).
+`const T *p` : l'objet pointé est constant ; `T *const p` : le pointeur est constant ; `const T *const p` : les deux. Lisez de droite à gauche (voir *Constantes et littéraux*).
 
-### 13.7 `void *` et ses alternatives
+## `void *` et ses alternatives
 
 Un `void *` est un pointeur sans type : il peut contenir l'adresse de n'importe quel objet, mais on ne peut ni le déréférencer, ni lui appliquer l'arithmétique. Contrairement au C, la conversion de `void *` vers `T *` exige un **cast explicite** (`static_cast`).
 
@@ -2193,7 +2099,7 @@ int *q = static_cast<int *>(v);      // retour : cast obligatoire
 
 En C++ moderne, `void *` est presque toujours remplacé par un outil typé : **templates** (fonction générique), `std::variant` (« l'un parmi N »), `std::any` (valeur de type quelconque), **classe de base polymorphe** (objets de types liés), `std::bit_cast` / `std::memcpy` (réinterpréter des octets).
 
-### 13.8 Pointeur vers un objet, `this`
+## Pointeur vers un objet, `this`
 
 ```cpp
 struct Point { int x, y; };
@@ -2204,13 +2110,13 @@ pp->x = 5;            // équivaut à (*pp).x = 5
 (*pp).y = 6;
 ```
 
-Dans une fonction membre, **`this`** est un pointeur vers l'objet courant (chapitre 18).
+Dans une fonction membre, **`this`** est un pointeur vers l'objet courant (voir *Structures, classes et unions*).
 
-### 13.9 Aliasing strict
+## Aliasing strict
 
 Le compilateur suppose que des pointeurs de **types différents** (sauf `char`, `unsigned char`, `std::byte`) ne désignent pas le même objet : c'est la règle d'**alias strict**. La violer (lire un `float` via un `int *`) est un comportement indéfini. Pour réinterpréter des bits, utilisez `std::bit_cast` (C++20) ou `std::memcpy`. Le mot-clé `restrict` du C n'existe pas en C++ standard (extension `__restrict`).
 
-### 13.10 Erreurs classiques
+## Erreurs classiques
 
 - **Pointeur non initialisé** : contient une adresse aléatoire (comportement indéfini). Parade : `= nullptr`.
 - **Déréférencer `nullptr`** : plantage. Testez avant.
@@ -2219,24 +2125,17 @@ Le compilateur suppose que des pointeurs de **types différents** (sauf `char`, 
 - **`delete` d'un pointeur non alloué par `new`**, ou double `delete`. Parade : pointeurs intelligents.
 - **Retourner l'adresse d'une variable locale.**
 
-**À retenir pour la suite** : le C++ moderne réduit fortement l'usage des pointeurs bruts. Un pointeur brut devient un simple **observateur non propriétaire** ; les références, les conteneurs, `std::span`, `std::optional` et les **pointeurs intelligents** (chapitre 14) couvrent presque tous les besoins.
-
-### À retenir (chapitre 13)
-
-- Pointeur = adresse typée ; `&` donne l'adresse, `*` déréférence, `->` accède à un membre.
-- Utilisez `nullptr`, jamais `NULL` ni `0`.
-- Arithmétique en nombre d'éléments, uniquement dans un même tableau.
-- Un tableau n'est pas un pointeur, mais se convertit en pointeur.
+**À retenir pour la suite** : le C++ moderne réduit fortement l'usage des pointeurs bruts. Un pointeur brut devient un simple **observateur non propriétaire** ; les références, les conteneurs, `std::span`, `std::optional` et les **pointeurs intelligents** (voir *Allocation dynamique de mémoire*) couvrent presque tous les besoins.
 
 ---
 
-## Chapitre 14 — Allocation dynamique de mémoire
+# Allocation dynamique de mémoire
 
-### 14.1 Pourquoi allouer dynamiquement ?
+## Pourquoi allouer dynamiquement ?
 
 La pile est de taille limitée, et ses variables disparaissent à la fin du bloc. L'**allocation dynamique** (sur le **tas**) sert quand : la taille n'est connue qu'à l'exécution, la durée de vie dépasse celle de la fonction, ou les objets sont volumineux. Mais en C++ moderne, c'est le travail des **conteneurs** (`std::vector`, `std::string`) et des **pointeurs intelligents** ; on n'écrit presque jamais `new` et `delete` soi-même. Il faut néanmoins les comprendre.
 
-### 14.2 `new` et `delete`
+## `new` et `delete`
 
 ```cpp
 #include <iostream>
@@ -2260,7 +2159,7 @@ int main() {
 - **`new T[n]`** alloue un tableau ; il se libère **obligatoirement** avec **`delete[]`**.
 - **Ne mélangez jamais** les familles : `new` ↔ `delete`, `new[]` ↔ `delete[]`, `malloc` ↔ `free`. Mélanger est un comportement indéfini.
 
-### 14.3 Initialisation et échec d'allocation
+## Initialisation et échec d'allocation
 
 ```cpp
 #include <iostream>
@@ -2289,7 +2188,7 @@ int main() {
 
 Contrairement à `malloc`, `new` ne retourne jamais `nullptr` : il **lève `std::bad_alloc`**. La variante `new (std::nothrow)` retourne `nullptr` à la place.
 
-### 14.4 Le tableau dynamique moderne : `std::vector`
+## Le tableau dynamique moderne : `std::vector`
 
 `std::vector` remplace `malloc` + `realloc` : il gère la mémoire, l'agrandissement et la libération.
 
@@ -2302,7 +2201,7 @@ v.shrink_to_fit();                      // demande de réduire la capacité à l
 // libération automatique à la fin de la portée
 ```
 
-### 14.5 Pointeurs intelligents `<memory>` *(C++11)*
+## Pointeurs intelligents `<memory>` *(C++11)*
 
 Un **pointeur intelligent** est un objet RAII qui **possède** une ressource et la libère automatiquement. Trois types sont à connaître :
 
@@ -2348,7 +2247,7 @@ int main() {
 
 Créez-les avec **`std::make_unique`** et **`std::make_shared`** (plus sûr en cas d'exception, et plus efficace pour `shared_ptr`). Un `unique_ptr` passé **en paramètre par valeur** signale un **transfert de propriété**.
 
-### 14.6 Erreurs classiques et remèdes
+## Erreurs classiques et remèdes
 
 - **Fuite mémoire** (oubli de `delete`) → `unique_ptr`, conteneurs.
 - **Double libération** (`delete` deux fois) : corruption du tas → pointeurs intelligents.
@@ -2371,7 +2270,7 @@ void sur() {
 }
 ```
 
-### 14.7 Outils de détection
+## Outils de détection
 
 ```bash
 g++ -g -fsanitize=address,undefined -std=c++20 prog.cpp -o prog   # AddressSanitizer + UBSan
@@ -2379,24 +2278,18 @@ g++ -g -fsanitize=address,undefined -std=c++20 prog.cpp -o prog   # AddressSanit
 valgrind --leak-check=full ./prog                                 # fuites et accès invalides
 ```
 
-### 14.8 Règles de propriété
+## Règles de propriété
 
 - Un pointeur brut ou une référence **ne possède pas** : il observe.
 - Une ressource a **un seul propriétaire** : un objet, un conteneur ou un `unique_ptr`.
 - La propriété **partagée** est l'exception, à justifier.
 - Documentez qui possède quoi dans les interfaces : `std::unique_ptr<T>` en paramètre = transfert de propriété ; `T *` ou `T &` = simple usage.
 
-### À retenir (chapitre 14)
-
-- `new` / `delete` appellent constructeurs / destructeurs ; `new[]` ↔ `delete[]` ; on ne les écrit presque plus.
-- `std::vector` pour les tableaux dynamiques, `std::unique_ptr` pour les objets alloués, `std::shared_ptr` si le partage est nécessaire.
-- Utilisez ASan / UBSan / Valgrind pour traquer fuites et accès invalides.
-
 ---
 
-## Chapitre 15 — Retourner des tableaux et des chaînes
+# Retourner des tableaux et des chaînes
 
-### 15.1 Le problème
+## Le problème
 
 Une variable locale est détruite à la sortie de la fonction ; on ne peut donc pas en retourner l'adresse :
 
@@ -2409,7 +2302,7 @@ Une variable locale est détruite à la sortie de la fonction ; on ne peut donc 
 
 Le C contournait le problème avec `malloc` ou des tampons `static`. Le C++ moderne dispose de solutions beaucoup plus simples et sûres.
 
-### 15.2 Les solutions
+## Les solutions
 
 ```cpp
 #include <algorithm>
@@ -2478,7 +2371,7 @@ Guide de choix :
 - **`std::unique_ptr<T>`** : transférer la propriété d'un objet alloué (polymorphisme, grosse ressource).
 - **Variable `static` locale** : à éviter (partagée entre appels, non réentrante, non thread-safe en pratique).
 
-### 15.3 Ce qu'il ne faut jamais faire
+## Ce qu'il ne faut jamais faire
 
 ```cpp
 std::string fabrique() { return "temporaire"; }
@@ -2494,7 +2387,7 @@ void pieges() {
 
 Une **référence constante** liée directement à un temporaire en **prolonge** la durée de vie ; un `string_view` ou un `c_str()` obtenu depuis un temporaire, non. Ne retournez jamais de référence, de pointeur ou de vue vers un objet local ou temporaire.
 
-### 15.4 Sémantique de déplacement *(C++11)*
+## Sémantique de déplacement *(C++11)*
 
 Pourquoi le retour par valeur est-il efficace ? Grâce à l'**élision de copie** et à la **sémantique de déplacement**.
 
@@ -2522,19 +2415,13 @@ int main() {
 - **`std::move(x)` ne déplace rien** : il convertit `x` en rvalue, ce qui *autorise* le déplacement.
 - Après un déplacement, l'objet source reste **valide** mais son contenu est **indéterminé** : on peut seulement le détruire ou lui réaffecter une valeur.
 - **N'écrivez pas** `return std::move(local);` : cela empêche l'élision de copie ; `return local;` suffit.
-- La conception d'un constructeur de déplacement est étudiée au chapitre 18.
-
-### À retenir (chapitre 15)
-
-- Retournez par valeur : le compilateur s'occupe de l'efficacité (élision, NRVO, déplacement).
-- `std::optional`, `std::expected`, `struct` plutôt que valeurs magiques ou paramètres de sortie.
-- Jamais de référence, pointeur ou vue vers un local ou un temporaire.
+- La conception d'un constructeur de déplacement est étudiée dans *Structures, classes et unions*.
 
 ---
 
-## Chapitre 16 — Structures de données dynamiques
+# Structures de données dynamiques
 
-### 16.1 Liste simplement chaînée
+## Liste simplement chaînée
 
 Écrire sa propre liste permet de bien comprendre la propriété des objets. Avec des `std::unique_ptr`, **chaque nœud possède le suivant** : aucune fuite possible.
 
@@ -2587,7 +2474,7 @@ Points d'attention : le destructeur libère les nœuds **en boucle** (un destruc
 
 En pratique, on utilise les listes standard : `std::list` (doublement chaînée) et `std::forward_list` (simplement chaînée, plus économe).
 
-### 16.2 Les conteneurs de la bibliothèque standard
+## Les conteneurs de la bibliothèque standard
 
 - **`std::array<T, N>`** : tableau de taille fixe ; accès O(1).
 - **`std::vector<T>`** : tableau dynamique contigu ; accès O(1), ajout en fin O(1) amorti, insertion au milieu O(n).
@@ -2600,7 +2487,7 @@ En pratique, on utilise les listes standard : `std::list` (doublement chaînée)
 - **`std::flat_map`**, **`std::flat_set`** *(C++23)* : associatifs sur tableaux triés — parcours rapide, insertion plus lente.
 - **`std::inplace_vector<T, N>`** *(C++26)* : vecteur de capacité fixe sans allocation dynamique, pour l'embarqué et le temps réel.
 
-### 16.3 Le tableau dynamique extensible : `std::vector`
+## Le tableau dynamique extensible : `std::vector`
 
 ```cpp
 #include <iostream>
@@ -2626,7 +2513,7 @@ int main() {
 
 Principales fonctions : `push_back`, `emplace_back` (construit sur place), `insert`, `erase`, `pop_back`, `clear`, `size`, `capacity`, `empty`, `reserve`, `resize`, `shrink_to_fit`, `data()` (pointeur vers le tampon, pour les API C), `front`, `back`, `at`, `[]`.
 
-### 16.4 Matrices dynamiques
+## Matrices dynamiques
 
 ```cpp
 #include <iostream>
@@ -2655,7 +2542,7 @@ int main() {
 
 Le stockage à plat est favorable au cache du processeur ; en C++23, `std::mdspan` permet d'indexer un tel tampon avec plusieurs dimensions.
 
-### 16.5 Conteneurs associatifs
+## Conteneurs associatifs
 
 ```cpp
 #include <iostream>
@@ -2688,7 +2575,7 @@ int main() {
 
 **Piège** : `m[cle]` **insère** une entrée par défaut si la clé est absente. Pour consulter sans modifier, utilisez `find`, `contains` ou `at` (qui lève `std::out_of_range`). Une clé de `std::map` doit être comparable avec `<` ; une clé de `std::unordered_map` doit disposer d'une fonction de hachage (`std::hash`).
 
-### 16.6 Itérateurs et algorithmes
+## Itérateurs et algorithmes
 
 Un **itérateur** est un objet qui se comporte comme un pointeur : `*it` donne l'élément, `++it` avance. Chaque conteneur fournit `begin()` et `end()` (un cran **après** le dernier élément) ; les algorithmes travaillent sur des intervalles `[début, fin)`.
 
@@ -2712,7 +2599,7 @@ int main() {
 
 Catégories d'itérateurs, de la plus faible à la plus puissante : **entrée / sortie** (un seul passage), **avant** (`forward_list`), **bidirectionnel** (`list`, `map`, `set`), **à accès aléatoire** (`it + n`, `it[n]` : `vector`, `deque`, `array`), **contigu** *(C++20)* (éléments adjacents en mémoire : `vector`, `array`, `string`). Un algorithme exige une catégorie minimale ; par exemple `std::sort` demande l'accès aléatoire, donc ne fonctionne pas sur une `std::list` (utilisez `list::sort`).
 
-### 16.7 Adaptateurs : pile, file, file de priorité
+## Adaptateurs : pile, file, file de priorité
 
 ```cpp
 std::stack<int> pile;  pile.push(1); pile.push(2);       // LIFO
@@ -2727,7 +2614,7 @@ std::cout << pq.top() << '\n';                           // 8
 std::priority_queue<int, std::vector<int>, std::greater<>> min_pq;   // le plus petit en tête
 ```
 
-### 16.8 Choisir un conteneur
+## Choisir un conteneur
 
 - Suite d'éléments, cas général : **`std::vector`** (par défaut — quasi toujours le plus rapide en pratique grâce à la localité du cache).
 - Taille connue à la compilation : `std::array`.
@@ -2736,17 +2623,11 @@ std::priority_queue<int, std::vector<int>, std::greater<>> min_pq;   // le plus 
 - Insertions fréquentes au milieu avec itérateurs stables : `std::list`.
 - LIFO, FIFO, priorité : `stack`, `queue`, `priority_queue`.
 
-### À retenir (chapitre 16)
-
-- Dans 90 % des cas, `std::vector` est le bon choix ; écrivez vos propres structures seulement pour apprendre ou pour un besoin spécifique.
-- Une propriété claire (`unique_ptr` entre nœuds) supprime les fuites ; un destructeur itératif évite la récursion.
-- Itérateurs invalidés par les réallocations et suppressions ; `m[k]` insère.
-
 ---
 
-## Chapitre 17 — Références et pointeurs doubles
+# Références et pointeurs doubles
 
-### 17.1 Les références
+## Les références
 
 Une **référence** est un **alias** : un second nom pour un objet existant. Elle doit être **initialisée à sa déclaration** et ne peut plus désigner un autre objet ensuite. Elle n'occupe pas (conceptuellement) de mémoire propre et ne peut pas être nulle.
 
@@ -2782,12 +2663,12 @@ Les familles de références :
 
 - **`T &`** : référence **lvalue** (modifiable) ;
 - **`const T &`** : lecture seule ; accepte aussi les temporaires ;
-- **`T &&`** : référence **rvalue** (déplacement, chapitre 15) ; dans un template, `T &&` est une **référence universelle** (*forwarding reference*) qui se lie aussi bien à une lvalue qu'à une rvalue ;
+- **`T &&`** : référence **rvalue** (déplacement, voir *Retourner des tableaux et des chaînes*) ; dans un template, `T &&` est une **référence universelle** (*forwarding reference*) qui se lie aussi bien à une lvalue qu'à une rvalue ;
 - **`std::reference_wrapper<T>`** / `std::ref(x)` : référence **copiable et réaffectable**, utilisable dans un conteneur.
 
 **Piège** : on ne peut pas former de tableau de références ni de `std::vector<T &>`. Utilisez `std::vector<std::reference_wrapper<T>>` ou des pointeurs.
 
-### 17.2 Pointeurs doubles
+## Pointeurs doubles
 
 Un **pointeur double** (`T **`) est un pointeur vers un pointeur : il contient l'adresse d'une variable qui est elle-même un pointeur.
 
@@ -2799,7 +2680,7 @@ int **pp = &p;                    // pp contient l'adresse de p
 std::cout << x << ' ' << *p << ' ' << **pp << '\n';    // 10 10 10
 ```
 
-### 17.3 Usages principaux
+## Usages principaux
 
 **Modifier un pointeur depuis une fonction.** Pour qu'une fonction change *vers quoi* pointe le pointeur de l'appelant, il faut lui passer **l'adresse du pointeur** (`T **`) en C, ou une **référence vers le pointeur** (`T *&`) en C++.
 
@@ -2832,9 +2713,9 @@ for (int i = 0; i < lignes; ++i) delete[] m[i];                 // libérer les 
 delete[] m;                                                     // puis le tableau de pointeurs
 ```
 
-Même schéma pour un tableau de chaînes (`char **`) ou le « pointeur vers le lien » d'une liste chaînée (chapitre 16). Le paramètre `char **argv` du `main` (chapitre 23) en est un autre exemple.
+Même schéma pour un tableau de chaînes (`char **`) ou le « pointeur vers le lien » d'une liste chaînée (voir *Structures de données dynamiques*). Le paramètre `char **argv` du `main` (voir *Arguments de la ligne de commande*) en est un autre exemple.
 
-### 17.4 Libération et alternatives
+## Libération et alternatives
 
 Avec des pointeurs doubles bruts, il faut libérer **dans l'ordre inverse** de l'allocation, et chaque `new` doit avoir son `delete`. La solution moderne n'a aucune libération manuelle :
 
@@ -2843,7 +2724,7 @@ std::vector<std::vector<int>> m(3, std::vector<int>(4));      // matrice sans ne
 std::vector<std::string> mots{"un", "deux", "trois"};         // remplace char **
 ```
 
-### 17.5 Référence, pointeur ou pointeur double ?
+## Référence, pointeur ou pointeur double ?
 
 - Paramètre obligatoire à modifier : `T &`.
 - Paramètre en lecture seule, gros objet : `const T &`.
@@ -2852,17 +2733,11 @@ std::vector<std::string> mots{"un", "deux", "trois"};         // remplace char *
 - Interface C (`char **argv`, `int **out`) : `T **`.
 - Collection d'objets : un conteneur.
 
-### À retenir (chapitre 17)
-
-- Une référence est un alias non nul et non réaffectable ; `const T &` est le passage par défaut en lecture.
-- `T **` sert aux API C ; en C++ préférez `T *&` ou le retour de pointeur intelligent.
-- Aucune structure à base de `T **` ne devrait subsister dans du code neuf.
-
 ---
 
-## Chapitre 18 — Structures, classes et unions
+# Structures, classes et unions
 
-### 18.1 Les structures
+## Les structures
 
 En C++, une **`struct`** est un **type** à part entière : elle peut avoir des valeurs par défaut, des **fonctions membres**, des constructeurs et de l'héritage. La seule différence avec une `class` est l'**accès par défaut** : `public` pour `struct`, `private` pour `class`. Par convention : `struct` pour regrouper des données passives, `class` pour un type à invariants.
 
@@ -2901,7 +2776,7 @@ int main() {
 
 Un **agrégat** (struct simple, sans constructeur utilisateur ni membre privé) s'initialise avec `{ }` membre par membre.
 
-### 18.2 Alignement et rembourrage (*padding*)
+## Alignement et rembourrage (*padding*)
 
 Pour que les accès soient rapides, chaque type doit être placé à une adresse multiple de son **alignement** (`alignof`). Le compilateur insère donc des octets de remplissage entre les membres :
 
@@ -2914,7 +2789,7 @@ std::cout << sizeof(A) << ' ' << sizeof(B) << ' ' << sizeof(C) << ' ' << alignof
 
 Ordonner les membres du plus grand au plus petit réduit le rembourrage. **Ne comptez jamais** sur `sizeof(struct)` = somme des membres, et ne sérialisez pas une structure par copie brute (`memcpy`, `write`) : le format dépend de la plateforme.
 
-### 18.3 Champs de bits
+## Champs de bits
 
 ```cpp
 struct Drapeaux {
@@ -2924,9 +2799,9 @@ struct Drapeaux {
 };
 ```
 
-La disposition des champs de bits dépend du compilateur ; pour des drapeaux **portables**, préférez `std::bitset` ou un `enum class` avec opérateurs bit à bit (chapitres 19 et 25).
+La disposition des champs de bits dépend du compilateur ; pour des drapeaux **portables**, préférez `std::bitset` ou un `enum class` avec opérateurs bit à bit (voir *Énumérations (`enum`)* et *Opérateurs bit à bit*).
 
-### 18.4 Tableau dans une structure
+## Tableau dans une structure
 
 Le **membre de tableau flexible** du C99 (`int donnees[];`) n'existe pas en C++ standard. On place un `std::array` (taille fixe, copié avec la structure) ou un `std::vector` (taille variable) comme membre :
 
@@ -2938,7 +2813,7 @@ struct Etudiant {
 };
 ```
 
-### 18.5 Unions et `std::variant`
+## Unions et `std::variant`
 
 Une **union** regroupe plusieurs membres **à la même adresse** : un seul est « actif » à la fois, et sa taille est celle du plus grand membre. En C++, lire un membre autre que le dernier écrit est un **comportement indéfini** (contrairement au C). L'outil moderne est `std::variant`, une **union étiquetée** sûre *(C++17)* :
 
@@ -2962,7 +2837,7 @@ Compagnons : `std::optional<T>` (« une valeur ou rien »), `std::any` (n'import
 
 **Choisir** : `struct` pour des données sans invariant ; `class` pour garantir des invariants ; `std::variant` pour un type somme ; `union` brute seulement pour le bas niveau ; `std::bit_cast` / `std::memcpy` pour réinterpréter des octets.
 
-### 18.6 Classes et encapsulation
+## Classes et encapsulation
 
 Une **classe** regroupe des **données** (membres) et les **fonctions** (méthodes) qui les manipulent, en **cachant** l'implémentation derrière une **interface** publique. Le but est de garantir des **invariants** : des propriétés toujours vraies, comme « le solde n'est jamais négatif ». Si les données étaient publiques, n'importe qui pourrait casser l'invariant ; avec l'encapsulation, seul le code de la classe le maintient.
 
@@ -3006,7 +2881,7 @@ int main() {
 
 Niveaux d'accès : **`public`** (visible de tous), **`protected`** (la classe et ses dérivées), **`private`** (la classe et ses `friend`). Une **méthode `const`** (`double solde() const`) promet de ne pas modifier l'objet et peut être appelée sur un objet `const`.
 
-### 18.7 Constructeurs et destructeur
+## Constructeurs et destructeur
 
 Un **constructeur** a le nom de la classe, pas de type de retour, et initialise l'objet. Le **destructeur** (`~Classe()`) libère ses ressources. Les membres sont construits dans l'**ordre de leur déclaration** (et non de l'ordre de la liste d'initialisation), puis détruits dans l'ordre inverse.
 
@@ -3032,7 +2907,7 @@ Rectangle c{4.0};          // carré 4 x 4
 - **`explicit`** : interdit la conversion implicite par un constructeur à un argument ; à mettre sur ces constructeurs par défaut.
 - **`= default`** demande la version générée ; **`= delete`** interdit l'opération (`Classe(const Classe &) = delete;` rend la classe non copiable).
 
-### 18.8 Copie, déplacement et règle des cinq
+## Copie, déplacement et règle des cinq
 
 Quand une classe **possède une ressource** (mémoire, fichier…), la copie membre à membre par défaut est fausse : deux objets finiraient par libérer la même ressource. Deux règles :
 
@@ -3093,7 +2968,7 @@ int main() {
 
 Remplacez `int *` + taille par un `std::vector<int>` : la classe n'a plus besoin d'aucune des cinq fonctions (règle du zéro). Marquez `noexcept` les déplacements : les conteneurs ne les utilisent que s'ils ne peuvent pas lever d'exception.
 
-### 18.9 Membres statiques, `mutable`, `friend`
+## Membres statiques, `mutable`, `friend`
 
 ```cpp
 #include <iostream>
@@ -3123,7 +2998,7 @@ int main() {
 - **`mutable`** autorise la modification d'un membre dans une méthode `const` (cache, compteur, `std::mutex`).
 - **`friend`** accorde l'accès au privé à une fonction ou classe extérieure ; à utiliser avec parcimonie (typiquement `operator<<`).
 
-### 18.10 Surcharge d'opérateurs
+## Surcharge d'opérateurs
 
 ```cpp
 #include <iostream>
@@ -3152,7 +3027,7 @@ int main() {
 
 Règles : conservez la **sémantique attendue** (`+` ne modifie pas ses opérandes) ; les opérateurs `::`, `.`, `.*`, `?:`, `sizeof`, `typeid` ne sont **pas** surchargeables ; ne surchargez pas `&&`, `||`, `,` ni le `&` unaire ; `auto operator<=>(const T &) const = default;` génère `<`, `<=`, `>`, `>=` *(C++20)* ; `operator[]`, `operator()` (objets-fonctions) et `operator->` (pointeurs intelligents) sont d'usage courant ; `explicit operator bool() const` permet de tester un objet dans un `if`.
 
-### 18.11 Héritage
+## Héritage
 
 L'**héritage public** modélise une relation « **est un** » : la classe dérivée réutilise et étend la classe de base.
 
@@ -3188,9 +3063,9 @@ int main() {
 - **Formes** : `class D : public B` (« D est un B », cas courant) ; `protected` / `private` (implémentation seulement, rare : préférez la **composition**) ; **héritage multiple** `class D : public B1, public B2` (possible ; en cas de base commune — le « diamant » — utilisez l'héritage `virtual`) ; `class D final : public B` (interdit toute dérivation).
 - **Ordre d'exécution** : constructeur de la base, puis des membres, puis corps du constructeur de la dérivée ; destruction dans l'ordre inverse.
 - **Slicing** : copier un objet dérivé dans une variable du type de la base en perd la partie dérivée ; passez les objets polymorphes par référence ou pointeur.
-- Le **polymorphisme** (fonctions virtuelles) est étudié au chapitre 21.
+- Le **polymorphisme** (fonctions virtuelles) est étudié dans *Pointeurs de fonctions, lambdas et polymorphisme*.
 
-### 18.12 Bonnes pratiques
+## Bonnes pratiques
 
 - `struct` pour de simples données, `class` pour des invariants.
 - Données **privées** ; exposez le minimum d'interface.
@@ -3199,18 +3074,11 @@ int main() {
 - **Règle du zéro**, sinon règle des cinq ; **destructeur virtuel** pour toute base polymorphe.
 - Préférez la **composition** à l'héritage.
 
-### À retenir (chapitre 18)
-
-- Une classe garantit des invariants par l'encapsulation ; constructeurs et destructeur gèrent la vie de l'objet.
-- Règle du zéro d'abord ; règle des cinq si l'on possède une ressource brute.
-- `static` partagé, `mutable` pour le cache, `friend` avec parcimonie.
-- `std::variant` plutôt qu'`union`.
-
 ---
 
-## Chapitre 19 — Énumérations (`enum`)
+# Énumérations (`enum`)
 
-### 19.1 Définition
+## Définition
 
 Une **énumération** définit un ensemble de constantes entières nommées. Le C++ propose deux formes : l'**`enum`** héritée du C et l'**`enum class`** *(C++11)*, plus sûre.
 
@@ -3233,7 +3101,7 @@ int main() {
 - **`enum` classique** : les noms sont injectés dans la portée englobante (collisions possibles : deux `enum` ne peuvent pas avoir un énumérateur `ROUGE` chacun) ; conversion **implicite** en entier ; comparaison possible avec d'autres `enum` (dangereux).
 - **`enum class`** : les noms ont leur **propre portée** (`Jour::Lundi`) ; **aucune conversion implicite** (cast explicite) ; type sous-jacent `int` par défaut, modifiable (`: std::uint8_t`) ; comparaison avec un autre `enum` interdite.
 
-### 19.2 Avec `switch` et `using enum`
+## Avec `switch` et `using enum`
 
 ```cpp
 #include <iostream>
@@ -3264,7 +3132,7 @@ int main() { agir(Feu::Orange); std::cout << nom(Feu::Vert) << '\n'; }
 
 **Bonne pratique** : ne mettez **pas** de `default` dans un `switch` sur une énumération : avec `-Wall`, le compilateur signale alors tout énumérateur oublié (`-Wswitch`).
 
-### 19.3 Particularités
+## Particularités
 
 ```cpp
 #include <iostream>
@@ -3292,24 +3160,18 @@ int main() {
 - `std::to_underlying` *(C++23)* convertit un énumérateur vers son type sous-jacent.
 - Pour des **drapeaux** combinables, utilisez `std::bitset` ou l'idiome ci-dessus (opérateurs bit à bit surchargés).
 
-### 19.4 Bonnes pratiques
+## Bonnes pratiques
 
 - `enum class` par défaut ; l'`enum` classique uniquement pour l'interopérabilité avec du code C.
 - Précisez le **type sous-jacent** pour les formats de fichier ou de réseau.
 - Nommez le type au singulier (`Couleur`) et les valeurs en `PascalCase` ou `MAJUSCULES` selon votre convention.
 - Pour une valeur « parmi plusieurs types », utilisez `std::variant` plutôt qu'un `enum` + `union`.
 
-### À retenir (chapitre 19)
-
-- `enum class` : noms scopés, pas de conversion implicite, type sous-jacent choisi.
-- `switch` sur une énumération sans `default` pour que le compilateur signale les oublis.
-- Drapeaux : opérateurs bit à bit sur un `enum class` ou `std::bitset`.
-
 ---
 
-## Chapitre 20 — `using`, `typedef` et templates
+# `using`, `typedef` et templates
 
-### 20.1 Alias de types : `using` et `typedef`
+## Alias de types : `using` et `typedef`
 
 Un **alias** donne un nouveau nom à un type existant. Il ne crée pas un nouveau type : le compilateur voit exactement le même type.
 
@@ -3334,7 +3196,7 @@ La syntaxe `using Nom = type;` se lit de gauche à droite et, **contrairement à
 
 Usages courants de `using` : type métier (`using Id = std::uint32_t;`), raccourci d'un type complexe, types publics d'une classe (`using value_type = T;`, convention des conteneurs), importation d'un membre de la base (`using Base::f;` ou `using Base::Base;`), importation des énumérateurs (`using enum Couleur;`, C++20), importation d'un nom d'espace de noms (`using std::string;`).
 
-### 20.2 Templates de fonctions
+## Templates de fonctions
 
 Un **template** est un patron de code paramétré par un ou plusieurs **types** (ou valeurs). Le compilateur **instancie** une version concrète pour chaque combinaison d'arguments utilisée. C'est le mécanisme du **polymorphisme statique** (résolu à la compilation, sans surcoût d'exécution) et la base de la bibliothèque standard.
 
@@ -3363,9 +3225,9 @@ int main() {
 - La **déduction** des arguments de template se fait à partir des types des arguments de l'appel ; si elle est ambiguë, on précise explicitement (`maximum<double>`).
 - Un paramètre de template peut être un **type** (`typename T` ou `class T`) ou une **valeur** (`std::size_t N`).
 - Le code d'un template doit être **visible là où il est instancié** : on le **définit dans l'en-tête**.
-- Un type qui ne supporte pas les opérations utilisées (ici `>`) provoque des erreurs longues et peu lisibles ; les **concepts** (§20.5) y remédient.
+- Un type qui ne supporte pas les opérations utilisées (ici `>`) provoque des erreurs longues et peu lisibles ; les **concepts** (voir *Concepts*) y remédient.
 
-### 20.3 Templates de classes
+## Templates de classes
 
 ```cpp
 #include <iostream>
@@ -3408,7 +3270,7 @@ int main() {
 
 `Pile<int>` et `Pile<std::string>` sont deux **types distincts**, générés à la compilation. Depuis C++17, la **déduction des arguments de template de classe** (CTAD) permet d'écrire `std::vector v{1, 2, 3};` sans préciser `<int>`.
 
-### 20.4 Spécialisation, `if constexpr`, templates variadiques
+## Spécialisation, `if constexpr`, templates variadiques
 
 On peut fournir une version **spécialisée** d'un template pour un type particulier, ou choisir une branche **à la compilation** avec `if constexpr`.
 
@@ -3458,7 +3320,7 @@ decltype(auto) appeler(F &&f, Args &&...args) {
 }
 ```
 
-### 20.5 Concepts *(C++20)*
+## Concepts *(C++20)*
 
 Un **concept** exprime les **contraintes** qu'un type doit satisfaire. Il rend les templates plus lisibles et les messages d'erreur beaucoup plus clairs.
 
@@ -3495,7 +3357,7 @@ int main() {
 
 Concepts standard (`<concepts>`) : `std::integral`, `std::floating_point`, `std::same_as<T, U>`, `std::convertible_to<From, To>`, `std::totally_ordered`, `std::equality_comparable`, `std::copyable`, `std::movable`, `std::default_initializable`, `std::invocable<F, Args...>`, `std::predicate`, `std::ranges::range`, `std::input_iterator`. Trois syntaxes : `template <Concept T>`, clause `requires`, et `Concept auto` pour les paramètres abrégés.
 
-### 20.6 Bonnes pratiques
+## Bonnes pratiques
 
 - Préférez `using` à `typedef`.
 - Utilisez des alias pour **nommer l'intention** (`using Seconds = double;`), pas seulement pour raccourcir.
@@ -3503,20 +3365,13 @@ Concepts standard (`<concepts>`) : `std::integral`, `std::floating_point`, `std:
 - Gardez les templates courts ; déléguez aux algorithmes standard.
 - Jamais de `using namespace` dans un en-tête.
 
-### À retenir (chapitre 20)
-
-- `using` = alias moderne (et seul capable d'alias paramétrés).
-- Template = patron instancié à la compilation ; définir dans l'en-tête.
-- `if constexpr`, traits de types, templates variadiques, transmission parfaite : les outils du code générique.
-- Concepts : contraintes lisibles, erreurs claires.
-
 ---
 
-## Chapitre 21 — Pointeurs de fonctions, lambdas et polymorphisme
+# Pointeurs de fonctions, lambdas et polymorphisme
 
-Ce chapitre traite d'un même besoin sous trois formes : **faire varier un comportement** (quelle fonction appeler) à l'exécution ou à la compilation.
+Cette section traite d'un même besoin sous trois formes : **faire varier un comportement** (quelle fonction appeler) à l'exécution ou à la compilation.
 
-### 21.1 Pointeurs de fonctions
+## Pointeurs de fonctions
 
 Un **pointeur de fonction** contient l'adresse d'une fonction ; on peut l'appeler, le passer en paramètre ou le stocker.
 
@@ -3536,7 +3391,7 @@ int main() {
 
 Attention à la syntaxe : `int (*f)(int, int)` est un **pointeur de fonction**, mais `int *f(int, int)` déclare une **fonction** qui retourne un `int *`. On simplifie avec un alias : `using Op = int (*)(int, int);`. L'appel s'écrit `f(a, b)` ou `(*f)(a, b)`.
 
-### 21.2 Callbacks et tables de fonctions
+## Callbacks et tables de fonctions
 
 Un **callback** est une fonction passée à une autre pour qu'elle l'appelle au bon moment (comparateur de tri, gestionnaire d'événement).
 
@@ -3572,7 +3427,7 @@ int main() {
 
 `qsort` et `bsearch` du C fonctionnent en C++ mais utilisent `void *` : préférez `std::sort`, `std::ranges::sort` et `std::lower_bound`, typés et souvent plus rapides (le compilateur peut intégrer le comparateur).
 
-### 21.3 Lambdas et `std::function` *(C++11)*
+## Lambdas et `std::function` *(C++11)*
 
 Une **lambda** est une fonction anonyme définie sur place, capable de **capturer** des variables de son contexte. Elle crée un objet (un *closure*) dont le type est unique et connu du seul compilateur.
 
@@ -3621,7 +3476,7 @@ Quel type d'objet appelable choisir ?
 
 **Piège** : une lambda qui capture une variable **par référence** ne doit pas survivre à cette variable (rappel asynchrone, thread, valeur de retour) : la référence deviendrait pendante.
 
-### 21.4 Polymorphisme et fonctions virtuelles
+## Polymorphisme et fonctions virtuelles
 
 Dans le C, on simule des « méthodes » avec des pointeurs de fonctions dans une structure. Le C++ intègre ce mécanisme au langage : les **fonctions virtuelles**. Le compilateur construit pour chaque classe une **table virtuelle** (*vtable*) de pointeurs de fonctions, et choisit la bonne **à l'exécution** selon le **type réel** de l'objet (liaison dynamique).
 
@@ -3680,7 +3535,7 @@ int main() {
 
 **Piège** : le polymorphisme ne fonctionne qu'avec des **pointeurs ou références** vers la base. Une copie par valeur (`Forme f = cercle;`) provoque le *slicing*. Chaque appel virtuel coûte une indirection ; quand les types sont connus à la compilation, les **templates** et `std::variant` sont des alternatives sans surcoût.
 
-### 21.5 Sélection générique : surcharge, templates, `std::visit`
+## Sélection générique : surcharge, templates, `std::visit`
 
 Le `_Generic` du C est remplacé en C++ par la **surcharge**, les **templates** et `if constexpr` (choix à la compilation), et par `std::visit` (choix à l'exécution selon l'alternative active d'un `std::variant`).
 
@@ -3701,21 +3556,11 @@ int main() {
 }
 ```
 
-### À retenir (chapitre 21)
-
-- Pointeur de fonction : callback simple ; lambda : fonction anonyme capturant son contexte ; `std::function` : stockage polymorphe.
-- Fonctions virtuelles + pointeurs/références + destructeur virtuel = polymorphisme d'exécution ; toujours `override`.
-- Polymorphisme statique (templates, `variant`) quand les types sont connus à la compilation.
-
 ---
 
-# Niveau avancé
+# Gestion des fichiers
 
----
-
-## Chapitre 22 — Gestion des fichiers
-
-### 22.1 Les flux de fichiers
+## Les flux de fichiers
 
 La bibliothèque `<fstream>` fournit les flux de fichiers, qui s'utilisent **exactement comme** `std::cin` et `std::cout` : mêmes opérateurs `<<` et `>>`, mêmes états d'erreur, mêmes manipulateurs.
 
@@ -3725,7 +3570,7 @@ La bibliothèque `<fstream>` fournit les flux de fichiers, qui s'utilisent **exa
 
 Modes d'ouverture (`std::ios::`) : `in` (lecture), `out` (écriture), `app` (écrit toujours à la fin : ajout), `trunc` (vide le fichier à l'ouverture, défaut de `ofstream`), `ate` (se place à la fin à l'ouverture), `binary` (aucune traduction de fins de ligne). Ils se combinent avec `|`.
 
-### 22.2 Ouvrir et fermer : RAII
+## Ouvrir et fermer : RAII
 
 Le fichier est **ouvert par le constructeur** (ou `open`) et **fermé automatiquement par le destructeur** : `close()` explicite est rarement nécessaire. Limitez la portée du flux pour que le fichier soit fermé au plus tôt.
 
@@ -3746,7 +3591,7 @@ int main() {
 
 **Vérifiez toujours l'ouverture** : un flux dont l'ouverture a échoué est en état d'erreur et toutes les opérations suivantes sont silencieusement ignorées.
 
-### 22.3 Écrire du texte
+## Écrire du texte
 
 ```cpp
 #include <cstdlib>
@@ -3768,7 +3613,7 @@ int main() {
 }
 ```
 
-### 22.4 Lire du texte
+## Lire du texte
 
 ```cpp
 #include <fstream>
@@ -3804,7 +3649,7 @@ int main() {
 
 **Piège** : n'écrivez jamais `while (!in.eof()) { ... }`. Le drapeau de fin de fichier n'est positionné qu'**après** une lecture ratée ; la dernière itération traiterait donc des données invalides. Testez le résultat de la lecture : `while (std::getline(in, ligne))`.
 
-### 22.5 Fichiers binaires
+## Fichiers binaires
 
 En mode binaire, on lit et on écrit des **octets bruts** avec `read` et `write`.
 
@@ -3839,7 +3684,7 @@ int main() {
 
 Texte : lisible, plus volumineux, portable (attention à l'encodage). Binaire : compact et rapide, mais **fragile** : le rembourrage (*padding*), l'ordre des octets (*endianness*) et la taille des types varient selon la plateforme. Pour un format d'échange, **sérialisez champ par champ** avec des types à taille fixe (`<cstdint>`), ou utilisez un format standard (JSON, Protocol Buffers…).
 
-### 22.6 Se positionner dans un fichier
+## Se positionner dans un fichier
 
 `seekg(pos, origine)` / `seekp(pos, origine)` déplacent la position de lecture (*get*) / d'écriture (*put*) ; `tellg()` / `tellp()` la donnent. Origines : `std::ios::beg` (début), `cur` (position courante), `end` (fin).
 
@@ -3850,7 +3695,7 @@ std::streamoff taille = in.tellg();        // la position vaut la taille en octe
 in.seekg(0, std::ios::beg);                // revient au début
 ```
 
-### 22.7 Fichiers et dossiers : `<filesystem>` *(C++17)*
+## Fichiers et dossiers : `<filesystem>` *(C++17)*
 
 ```cpp
 #include <filesystem>
@@ -3879,7 +3724,7 @@ int main() {
 
 Les fonctions de `<filesystem>` lèvent `std::filesystem::filesystem_error` en cas d'échec, sauf si on leur passe un paramètre `std::error_code &` (version sans exception). Elles remplacent `remove` et `rename` du C et les appels propres à chaque système. `fs::path` gère les séparateurs (`/` ou `\`) et les extensions de façon portable ; utilisez `recursive_directory_iterator` pour parcourir une arborescence.
 
-### 22.8 Flux en mémoire
+## Flux en mémoire
 
 `std::istringstream`, `std::ostringstream` et `std::stringstream` (`<sstream>`) appliquent l'interface des flux à une `std::string` : pratiques pour analyser du texte ou construire une chaîne.
 
@@ -3893,7 +3738,7 @@ sortie << "n=" << n << ", d=" << d;          // construction d'une chaîne
 std::cout << sortie.str() << ' ' << s << '\n';
 ```
 
-### 22.9 États du flux et erreurs
+## États du flux et erreurs
 
 - `good()` : tout va bien ; `eof()` : fin atteinte **par une lecture** ; `fail()` : échec logique (format invalide) ou erreur ; `bad()` : erreur grave (disque, flux corrompu) ; `clear()` : remet l'état à « bon ».
 - On peut demander aux flux de **lever des exceptions** :
@@ -3908,7 +3753,7 @@ try {
 }
 ```
 
-### 22.10 Bonnes pratiques
+## Bonnes pratiques
 
 - Vérifiez **toujours** l'ouverture et le résultat des lectures / écritures.
 - Laissez le destructeur fermer le fichier ; limitez la portée du flux.
@@ -3916,17 +3761,11 @@ try {
 - Pour un format binaire, fixez la taille des types et l'ordre des octets.
 - Écrivez dans un fichier temporaire puis `rename` pour éviter les fichiers à moitié écrits.
 
-### À retenir (chapitre 22)
-
-- Les fichiers sont des flux ; ouverture = construction, fermeture = destruction (RAII).
-- Lisez avec `while (getline(...))` ou `while (in >> x)`, jamais `while (!eof())`.
-- Binaire : `read` / `write` avec des types à taille fixe ; `<filesystem>` pour les chemins.
-
 ---
 
-## Chapitre 23 — Arguments de la ligne de commande
+# Arguments de la ligne de commande
 
-### 23.1 `argc` et `argv`
+## `argc` et `argv`
 
 Un programme peut recevoir des paramètres au lancement (`./prog fichier.txt -v`). Ils sont transmis à `main` sous la forme de deux paramètres :
 
@@ -3975,7 +3814,7 @@ int main(int argc, char *argv[]) {
 
 Les `std::string_view` ne copient rien et restent valides pendant toute l'exécution de `main` (les chaînes de `argv` vivent jusqu'à la fin du programme).
 
-### 23.2 Conversion et validation
+## Conversion et validation
 
 Les arguments sont **toujours des chaînes** : il faut les convertir, puis **valider** le résultat (format, plage, caractères en trop).
 
@@ -4007,7 +3846,7 @@ int main(int argc, char *argv[]) {
 
 `std::stod("12abc")` réussit en lisant `12` : c'est pourquoi on compare le nombre de caractères convertis à la longueur totale.
 
-### 23.3 Options (`-h`, `--fichier`)
+## Options (`-h`, `--fichier`)
 
 Par convention Unix, une **option** commence par `-` (forme courte) ou `--` (forme longue) ; certaines attendent une **valeur** (`-o fichier`).
 
@@ -4042,7 +3881,7 @@ int main(int argc, char *argv[]) {
 
 Pour des interfaces riches (sous-commandes, aide générée, validations), utilisez une bibliothèque : **CLI11**, **cxxopts**, **Boost.Program\_options**, ou `getopt` / `getopt_long` (POSIX).
 
-### 23.4 Variables d'environnement
+## Variables d'environnement
 
 ```cpp
 #include <cstdlib>
@@ -4057,25 +3896,19 @@ int main() {
 
 `std::getenv` lit une variable d'environnement. Le pointeur retourné ne doit pas être modifié ni conservé après un changement de l'environnement.
 
-### 23.5 Bonnes pratiques
+## Bonnes pratiques
 
 - Vérifiez `argc` **avant** d'accéder à `argv[i]`.
 - Affichez un message d'usage clair et retournez `EXIT_FAILURE` en cas d'erreur.
 - Convertissez et **validez** chaque valeur ; ne faites jamais confiance à l'utilisateur.
 - Ne modifiez pas les chaînes de `argv` ; copiez-les au besoin.
-- Sous Windows avec des noms non ASCII, utilisez `wmain` ou l'API du système (chapitre 27).
-
-### À retenir (chapitre 23)
-
-- `argc` compte le nom du programme ; `argv[argc]` est `nullptr`.
-- Convertissez vite `argv` en `std::vector<std::string_view>`.
-- Toute valeur reçue est une chaîne à convertir et valider.
+- Sous Windows avec des noms non ASCII, utilisez `wmain` ou l'API du système (voir *Unicode et encodages de caractères*).
 
 ---
 
-## Chapitre 24 — Directives du préprocesseur et modules
+# Directives du préprocesseur et modules
 
-### 24.1 Rôle du préprocesseur
+## Rôle du préprocesseur
 
 Le **préprocesseur** transforme le **texte** du programme **avant** la compilation. Il ne connaît ni types, ni portées, ni syntaxe C++ : il manipule des lignes et des jetons. Ses directives commencent par `#` et occupent une ligne.
 
@@ -4088,7 +3921,7 @@ Le **préprocesseur** transforme le **texte** du programme **avant** la compilat
 - `#embed` *(C++26)* : intègre le contenu binaire d'un fichier.
 - `import` / `export module` *(C++20)* : modules (traités par le compilateur, pas par le préprocesseur).
 
-### 24.2 `#include`
+## `#include`
 
 ```cpp
 #include <iostream>        // en-tête de la bibliothèque standard : recherché dans les dossiers système
@@ -4098,7 +3931,7 @@ Le **préprocesseur** transforme le **texte** du programme **avant** la compilat
 
 **Bonne pratique** : incluez dans l'ordre l'en-tête correspondant au fichier, puis ceux du projet, puis les bibliothèques tierces, puis la bibliothèque standard. Cela détecte les en-têtes non autonomes. N'incluez que ce que vous utilisez, et **jamais** un `.cpp`.
 
-### 24.3 Macros avec `#define`
+## Macros avec `#define`
 
 Une **macro** est un remplacement textuel effectué avant la compilation.
 
@@ -4136,7 +3969,7 @@ int CONCAT(valeur, 1) = 5;         // déclare « valeur1 »
 
 **Les macros ignorent types, portées et espaces de noms** et provoquent des erreurs obscures. Alternatives : `constexpr` pour les constantes ; fonctions `inline` / `constexpr` / templates pour le calcul ; `enum class` pour les familles de constantes ; `std::source_location` pour le diagnostic. Réservez les macros à l'inclusion conditionnelle, à la détection de plateforme et aux rares cas qu'aucune autre fonctionnalité ne couvre.
 
-### 24.4 Compilation conditionnelle
+## Compilation conditionnelle
 
 ```cpp
 #include <iostream>
@@ -4171,7 +4004,7 @@ int main() {
 
 Macros prédéfinies utiles : `__cplusplus` (version de la norme : `201703L`, `202002L`, `202302L`…) ; macros de **test de fonctionnalité** `__cpp_*` et `__cpp_lib_*` (en-tête `<version>`) ; `_WIN32`, `__linux__`, `__APPLE__` (systèmes) ; `__GNUC__`, `__clang__`, `_MSC_VER` (compilateurs) ; `NDEBUG` (désactive `assert`, mode release). `__FILE__`, `__LINE__` et la variable `__func__` renseignent le contexte.
 
-### 24.5 Gardes d'inclusion
+## Gardes d'inclusion
 
 Un en-tête inclus deux fois (directement ou par ricochet) provoque des redéfinitions. On le protège :
 
@@ -4189,7 +4022,7 @@ struct Point { double x, y; };
 struct Point { double x, y; };
 ```
 
-### 24.6 Autres directives et diagnostic
+## Autres directives et diagnostic
 
 ```cpp
 #if __cplusplus < 201703L
@@ -4217,7 +4050,7 @@ void journal(std::string_view message, std::source_location loc = std::source_lo
 }
 ```
 
-### 24.7 `static_assert` et `assert`
+## `static_assert` et `assert`
 
 - `static_assert(cond, "message")` vérifie une condition **à la compilation** (le message est facultatif depuis C++17).
 - `assert(cond)` (`<cassert>`) vérifie **à l'exécution** et arrête le programme si elle est fausse ; elle **disparaît** avec `-DNDEBUG`. Ne mettez jamais d'effet de bord dans un `assert`.
@@ -4233,7 +4066,7 @@ int main() {
 }
 ```
 
-### 24.8 Modules *(C++20)*
+## Modules *(C++20)*
 
 Les **modules** remplacent l'inclusion textuelle d'en-têtes : une unité est compilée **une seule fois**, puis **importée**. Gains : compilation plus rapide, aucune macro qui « fuit » d'un fichier à l'autre, plus de gardes d'inclusion, ordre des `import` sans importance.
 
@@ -4262,17 +4095,11 @@ int main() {
 
 Comparaison : un en-tête est du **texte recopié** dans chaque fichier, ses macros se propagent et il exige des gardes ; un module est une **interface compilée**, ses macros sont **isolées**. En contrepartie, le support dépend du compilateur **et** du système de build (CMake 3.28+ avec Ninja, par exemple). Pour un projet destiné à être très portable, les en-têtes restent le choix par défaut ; vérifiez la prise en charge de votre chaîne d'outils avant de migrer.
 
-### À retenir (chapitre 24)
-
-- Le préprocesseur manipule du texte : préférez `constexpr`, `inline` et les templates aux macros.
-- Gardes d'inclusion (`#pragma once`) pour tout en-tête ; `__has_include` et macros `__cpp_*` pour la portabilité.
-- `static_assert` (compilation), `assert` (exécution) ; modules : `import` à la place de `#include`.
-
 ---
 
-## Chapitre 25 — Opérateurs bit à bit
+# Opérateurs bit à bit
 
-### 25.1 Les opérateurs
+## Les opérateurs
 
 Un entier est stocké comme une suite de **bits**. Les opérateurs bit à bit agissent sur chaque bit individuellement :
 
@@ -4300,7 +4127,7 @@ int main() {
 
 **Ne confondez pas** `&` (ET bit à bit) et `&&` (ET logique), ni `|` et `||`.
 
-### 25.2 Masques et drapeaux
+## Masques et drapeaux
 
 Un **drapeau** (*flag*) est un bit représentant un état ; un **masque** est une valeur dont les bits sélectionnent des drapeaux.
 
@@ -4324,13 +4151,13 @@ int main() {
 
 Les quatre opérations à connaître : **mettre à 1** `x |= masque` ; **mettre à 0** `x &= ~masque` ; **inverser** `x ^= masque` ; **tester** `(x & masque) != 0`.
 
-### 25.3 Décalages
+## Décalages
 
 `x << n` multiplie par 2ⁿ ; `x >> n` divise par 2ⁿ (pour les entiers non signés ou positifs). Depuis C++20, le décalage à droite d'un entier signé négatif est un **décalage arithmétique** (le bit de signe est propagé) : `-8 >> 1` vaut `-4`.
 
 **Piège** : décaler d'un nombre de bits **négatif ou supérieur ou égal à la largeur du type** est un comportement indéfini (`1 << 40` sur un `int` de 32 bits). Avant C++20, certains décalages d'entiers signés étaient dépendants de l'implémentation.
 
-### 25.4 Afficher en binaire
+## Afficher en binaire
 
 ```cpp
 unsigned x = 37;
@@ -4338,7 +4165,7 @@ std::cout << std::bitset<8>(x) << '\n';                          // 00100101
 std::cout << std::format("{:08b} {:#x} {:o}", x, x, x) << '\n';   // 00100101 0x25 45
 ```
 
-### 25.5 Applications courantes
+## Applications courantes
 
 ```cpp
 #include <bit>
@@ -4360,7 +4187,7 @@ int main() {
 
 Autres usages : permissions et options combinables, champs d'un protocole ou d'un format, ensembles d'entiers compacts, compression, cryptographie, hachage, graphiques (composition de couleurs).
 
-### 25.6 L'en-tête `<bit>` *(C++20)*
+## L'en-tête `<bit>` *(C++20)*
 
 ```cpp
 #include <bit>
@@ -4386,7 +4213,7 @@ int main() {
 
 `std::endian` indique l'**ordre des octets** de la machine : *little endian* (octet de poids faible en premier, x86 et ARM courants) ou *big endian* (réseau). Cela compte dès qu'on lit ou écrit des entiers multioctets dans un fichier ou un protocole.
 
-### 25.7 `std::bitset`
+## `std::bitset`
 
 ```cpp
 std::bitset<8> b("00101100");
@@ -4398,7 +4225,7 @@ std::cout << b << ' ' << b.count() << ' ' << b.test(3) << ' ' << b.to_ulong() <<
 
 `std::bitset<N>` est un tableau de `N` bits de taille fixe, avec `set`, `reset`, `flip`, `test`, `count`, `all`, `any`, `none`, les opérateurs bit à bit, et des conversions vers entier ou chaîne.
 
-### 25.8 Précautions
+## Précautions
 
 - Travaillez sur des types **non signés** à taille fixe (`std::uint8_t`, `std::uint32_t`).
 - Les petits types sont **promus en `int`** dans les expressions : `~b` sur un `uint8_t` donne un `int` négatif ; castez le résultat.
@@ -4406,17 +4233,11 @@ std::cout << b << ' ' << b.count() << ' ' << b.test(3) << ' ' << b.to_ulong() <<
 - Ne décalez jamais de plus que la largeur du type.
 - Préférez `std::bitset` et `<bit>` aux manipulations « maison ».
 
-### À retenir (chapitre 25)
-
-- Quatre gestes : activer (`|=`), désactiver (`&= ~`), inverser (`^=`), tester (`&`).
-- Décalages : valides jusqu'à la largeur du type ; types non signés de préférence.
-- `<bit>` et `std::bitset` rendent le code lisible et portable.
-
 ---
 
-## Chapitre 26 — Récursivité
+# Récursivité
 
-### 26.1 Principe
+## Principe
 
 Une fonction est **récursive** quand elle s'appelle elle-même. Toute fonction récursive correcte comporte :
 
@@ -4436,7 +4257,7 @@ int main() { std::cout << factorielle(5) << '\n'; }      // 120
 
 Pour raisonner, on fait un **acte de foi** : on suppose que l'appel récursif résout correctement le sous-problème, et l'on vérifie que (a) le cas de base est juste et (b) l'étape combine correctement le résultat. C'est une démonstration par récurrence.
 
-### 26.2 Exemples classiques
+## Exemples classiques
 
 ```cpp
 #include <iostream>
@@ -4466,7 +4287,7 @@ int main() {
 
 La récursivité excelle pour les structures **elles-mêmes récursives** : arbres, parcours de graphes, expressions, fichiers imbriqués, ainsi que les algorithmes « **diviser pour régner** » (tri fusion, tri rapide, recherche dichotomique).
 
-### 26.3 Pile d'appels et profondeur
+## Pile d'appels et profondeur
 
 Chaque appel consomme un **cadre de pile** (paramètres, variables locales, adresse de retour). Une récursion trop profonde, ou sans cas de base atteignable, provoque un **dépassement de pile** (*stack overflow*) et un plantage.
 
@@ -4484,7 +4305,7 @@ long long factorielle_iter(int n) {
 }
 ```
 
-### 26.4 Récursivité et évaluation à la compilation
+## Récursivité et évaluation à la compilation
 
 ```cpp
 constexpr long long fact(int n) { return n <= 1 ? 1 : n * fact(n - 1); }
@@ -4492,7 +4313,7 @@ static_assert(fact(10) == 3628800);                  // calculé et vérifié pa
 constexpr long long f20 = fact(20);                  // 2432902008176640000, sans calcul à l'exécution
 ```
 
-### 26.5 Mémoïsation
+## Mémoïsation
 
 Fibonacci naïf recalcule les mêmes sous-problèmes un nombre exponentiel de fois. La **mémoïsation** mémorise les résultats déjà calculés :
 
@@ -4516,7 +4337,7 @@ int main() {
 }
 ```
 
-### 26.6 Lambdas récursives *(C++23)*
+## Lambdas récursives *(C++23)*
 
 Avec *deducing this*, une lambda peut s'appeler elle-même :
 
@@ -4529,7 +4350,7 @@ std::cout << fib(15) << '\n';        // 610
 
 Avant C++23, on utilise `std::function` (avec un surcoût) ou une fonction ordinaire.
 
-### 26.7 Récursivité ou itération ?
+## Récursivité ou itération ?
 
 - **Lisibilité** : récursivité excellente pour arbres et diviser pour régner ; itération pour les répétitions simples.
 - **Mémoire** : récursivité = une trame de pile par appel ; itération = mémoire constante.
@@ -4538,17 +4359,11 @@ Avant C++23, on utilise `std::function` (avec un surcoût) ou une fonction ordin
 
 Erreurs fréquentes : oubli du cas de base ; appel récursif qui ne progresse pas vers lui ; débordement de l'entier du résultat (`factorielle(25)` dépasse `long long`) ; recalculs inutiles (mémoïsation).
 
-### À retenir (chapitre 26)
-
-- Cas de base + appel sur un problème plus petit ; vérifiez la terminaison.
-- La pile est limitée : récursion profonde → boucle ; récursion terminale non garantie.
-- `constexpr` + récursion = calculs à la compilation ; mémoïsation contre l'explosion exponentielle.
-
 ---
 
-## Chapitre 27 — Unicode et encodages de caractères
+# Unicode et encodages de caractères
 
-### 27.1 Le problème
+## Le problème
 
 Un ordinateur ne stocke que des nombres : afficher un texte suppose une convention qui associe des nombres à des caractères. Le C++ a longtemps ignoré le sujet : `char` désigne un **octet**, pas un « caractère ». Un texte moderne (accents, alphabets non latins, idéogrammes, emojis) exige de distinguer plusieurs notions.
 
@@ -4557,7 +4372,7 @@ Un ordinateur ne stocke que des nombres : afficher un texte suppose une conventi
 - **ASCII** : jeu historique de 128 caractères (7 bits), identique aux 128 premiers points de code d'Unicode.
 - **Pages de code** (Latin-1/ISO 8859-1, Windows-1252, CP437…) : anciens encodages sur un octet, incompatibles entre eux.
 
-### 27.2 Les encodages Unicode
+## Les encodages Unicode
 
 - **UTF-8** : encodage à **longueur variable**, de **1 à 4 octets** par point de code. Les caractères ASCII tiennent sur 1 octet (compatibilité totale), `é` sur 2 (`C3 A9`), `€` sur 3 (`E2 82 AC`), un emoji sur 4. Aucun problème d'ordre des octets, sûr dans les chaînes C (aucun octet nul au milieu). **C'est l'encodage à privilégier** : standard du Web, des fichiers, des API Linux et macOS.
 - **UTF-16** : unités de **16 bits** ; un point de code occupe 1 unité (plan de base) ou 2 (**paire de substitution**) pour les caractères supplémentaires. Utilisé en interne par Windows, Java, JavaScript, Qt.
@@ -4565,7 +4380,7 @@ Un ordinateur ne stocke que des nombres : afficher un texte suppose une conventi
 
 **Boutisme et BOM** : UTF-16 et UTF-32 dépendent de l'ordre des octets (*endianness*) ; une marque d'ordre d'octets (BOM, `U+FEFF`) peut ouvrir un fichier pour l'indiquer. Un BOM UTF-8 est inutile et souvent gênant.
 
-### 27.3 Les types de caractères du C++
+## Les types de caractères du C++
 
 - **`char`** : un octet (au moins 8 bits). Contient un caractère ASCII, ou **un octet d'une séquence UTF-8**. Signé ou non selon la plateforme.
 - **`char8_t`** *(C++20)* : unité UTF-8 ; littéraux `u8"…"` ; chaîne `std::u8string`.
@@ -4590,7 +4405,7 @@ int main() {
 
 Point essentiel : **`size()` d'une `std::string` compte des octets, pas des caractères.** `"é"` fait 2 octets, `"😀"` en fait 4. Avec `std::u16string`, un emoji compte pour 2 unités.
 
-### 27.4 Ce qu'est un « caractère »
+## Ce qu'est un « caractère »
 
 Au-dessus du point de code se cache une difficulté : ce que l'utilisateur perçoit comme **un** caractère (un **graphème**) peut comporter **plusieurs** points de code.
 
@@ -4600,7 +4415,7 @@ Au-dessus du point de code se cache une difficulté : ce que l'utilisateur perç
 
 Trois « longueurs » différentes pour un même texte : le nombre d'**octets** (`size()` d'une `std::string`), de **points de code** (à compter en décodant l'UTF-8) et de **graphèmes** (ce que voit l'utilisateur).
 
-### 27.5 Parcourir et décoder de l'UTF-8
+## Parcourir et décoder de l'UTF-8
 
 La bibliothèque standard n'offre pas (encore) de décodage Unicode complet, mais l'UTF-8 se prête à un parcours simple : les octets de continuation ont la forme `10xxxxxx`.
 
@@ -4625,7 +4440,7 @@ int main() {
 
 Pour un traitement sérieux (graphèmes, normalisation, casse, collation, conversion, validation), utilisez une bibliothèque : **ICU**, **Boost.Text**, **utf8cpp**, **libunistring** ou la bibliothèque du framework (Qt, Poco). **N'écrivez pas** vos propres tables Unicode.
 
-### 27.6 Entrées, sorties et encodages
+## Entrées, sorties et encodages
 
 - Le texte qu'affiche ou lit un programme passe par le **terminal** ou le **fichier**, dont l'encodage doit correspondre à celui du programme. Un décalage donne le fameux « mojibake » (`Ã©` au lieu de `é`).
 - **Linux et macOS** : terminal et API en UTF-8 par défaut ; tout est simple.
@@ -4651,7 +4466,7 @@ int main() {
 
 Options de compilation liées à l'encodage : **GCC/Clang** `-finput-charset=UTF-8 -fexec-charset=UTF-8` (valeurs par défaut sur les systèmes UTF-8) ; **MSVC** `/utf-8` (ou `/source-charset:utf-8 /execution-charset:utf-8`). Pour qu'un source reste indépendant de l'éditeur, on peut écrire les caractères non ASCII en **échappements** : `\u00e9` (4 chiffres hexadécimaux), `\U0001F600` (8 chiffres), `\x..` (octet).
 
-### 27.7 Conversions entre encodages
+## Conversions entre encodages
 
 Les facettes de `<codecvt>` et `std::wstring_convert` sont **dépréciées depuis C++17** : ne les utilisez plus. Options :
 
@@ -4660,7 +4475,7 @@ Les facettes de `<codecvt>` et `std::wstring_convert` sont **dépréciées depui
 - **`std::text_encoding`** *(C++26)* identifie l'encodage d'exécution ou de la locale (`std::text_encoding::environment()`) ;
 - `std::format` et `std::print` *(C++20/23)* acceptent l'Unicode : `std::format("{}", u8_chaine)` n'est cependant **pas** défini pour `char8_t` — convertissez d'abord vers `char` si nécessaire.
 
-### 27.8 Pièges fréquents
+## Pièges fréquents
 
 - Croire que `s.size()` ou `s[i]` désignent des **caractères** : ils désignent des **octets**. Découper une `std::string` UTF-8 au milieu d'un caractère produit une séquence invalide.
 - `std::toupper(c)` / `std::isalpha(c)` : ASCII seulement.
@@ -4669,7 +4484,7 @@ Les facettes de `<codecvt>` et `std::wstring_convert` sont **dépréciées depui
 - Mélanger les encodages dans un même flux ; oublier de déclarer l'encodage d'un fichier.
 - `std::cout << u8"…"` (C++20 : `char8_t` n'est pas affichable directement) : convertissez en `char`.
 
-### 27.9 Recommandations
+## Recommandations
 
 - Utilisez **UTF-8 partout** à l'intérieur du programme et dans les fichiers ; convertissez **aux frontières** (API Windows, bibliothèques UTF-16).
 - Stockez dans `std::string` (UTF-8), passez en `std::string_view`.
@@ -4677,17 +4492,11 @@ Les facettes de `<codecvt>` et `std::wstring_convert` sont **dépréciées depui
 - Traitez le texte **sémantique** (casse, tri, longueur visible) avec ICU ou équivalent.
 - Écrivez vos sources en UTF-8 sans BOM et compilez avec l'option d'encodage explicite.
 
-### À retenir (chapitre 27)
-
-- Octets ≠ points de code ≠ graphèmes ; `std::string::size()` compte des octets.
-- UTF-8 partout, conversion aux frontières ; `wchar_t` n'est pas portable.
-- Les fonctions `<cctype>` et les comparaisons octet à octet sont insuffisantes pour Unicode ; utilisez ICU.
-
 ---
 
-## Chapitre 28 — Compilation, outils et construction de projets
+# Compilation, outils et construction de projets
 
-### 28.1 Les compilateurs
+## Les compilateurs
 
 Trois grandes familles :
 
@@ -4697,7 +4506,7 @@ Trois grandes familles :
 
 Ils diffèrent par leurs options mais pas par le langage standard. Testez votre code avec **au moins deux** compilateurs : cela révèle du code non portable ou des comportements indéfinis.
 
-### 28.2 Compiler en une ou plusieurs étapes
+## Compiler en une ou plusieurs étapes
 
 ```bash
 # En une seule commande
@@ -4711,7 +4520,7 @@ g++ main.o maths.o -o prog                             # édition de liens
 
 La compilation séparée accélère les reconstructions : seuls les fichiers modifiés (et ceux qui incluent un en-tête modifié) sont recompilés. Les erreurs se répartissent en deux familles : erreurs de **compilation** (syntaxe, types, noms inconnus) et erreurs d'**édition de liens** (`undefined reference to …` : définition manquante ; `multiple definition of …` : définition présente plusieurs fois, ODR violée).
 
-### 28.3 Options essentielles (GCC / Clang)
+## Options essentielles (GCC / Clang)
 
 - **Norme** : `-std=c++17`, `-std=c++20`, `-std=c++23`, `-std=c++2c` (C++26).
 - **Avertissements** : `-Wall -Wextra -Wpedantic` (toujours) ; `-Wshadow -Wconversion -Wold-style-cast -Wnon-virtual-dtor -Woverloaded-virtual` (très utiles) ; `-Werror` (transforme les avertissements en erreurs, pour l'intégration continue).
@@ -4733,7 +4542,7 @@ g++ -std=c++20 -g -O0 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -fsanitize=
 g++ -std=c++20 -O2 -DNDEBUG -Wall -Wextra main.cpp -o prog
 ```
 
-### 28.4 Bibliothèques : statiques et dynamiques
+## Bibliothèques : statiques et dynamiques
 
 Une **bibliothèque** regroupe du code compilé réutilisable.
 
@@ -4749,7 +4558,7 @@ g++ main.cpp -L. -lmaths -o prog                       # lie avec libmaths
 
 L'**interface binaire** (ABI) du C++ n'est pas standardisée : mélanger des bibliothèques compilées par des compilateurs ou versions différents, ou avec des options incompatibles (`_GLIBCXX_USE_CXX11_ABI`), mène à des erreurs de liaison ou à des plantages. Une interface `extern "C"` offre une ABI stable.
 
-### 28.5 `make` et CMake
+## `make` et CMake
 
 À partir de quelques fichiers, on automatise la construction. **`make`** lit un `Makefile` qui décrit des cibles, leurs dépendances et les commandes :
 
@@ -4803,7 +4612,7 @@ ctest --test-dir build                                # lance les tests
 
 Principe moderne : tout passe par des **cibles** (`target_*`) avec leurs visibilités `PUBLIC` / `PRIVATE` / `INTERFACE`, plutôt que par des variables globales.
 
-### 28.6 Organisation d'un projet
+## Organisation d'un projet
 
 ```text
 projet/
@@ -4817,7 +4626,7 @@ projet/
 
 Règles d'or pour les en-têtes : gardes d'inclusion (`#pragma once`) ; **autonomes** (compilables seuls, avec leurs propres `#include`) ; **déclarations anticipées** (`class Foo;`) plutôt que `#include` quand une référence ou un pointeur suffit ; aucun `using namespace` ; pas de définition de fonction ordinaire (sauf `inline` / `constexpr` / template). **Pimpl** (*pointer to implementation*) cache les détails d'une classe dans le `.cpp` pour réduire les dépendances de compilation.
 
-### 28.7 Gestion des dépendances
+## Gestion des dépendances
 
 C++ n'a pas de gestionnaire de paquets officiel ; les principaux sont :
 
@@ -4827,7 +4636,7 @@ C++ n'a pas de gestionnaire de paquets officiel ; les principaux sont :
 
 Bibliothèques incontournables : **Boost** (utilitaires et bases de nombreuses fonctionnalités du standard), **fmt** (ancêtre de `std::format`), **Eigen** (algèbre linéaire), **nlohmann/json**, **spdlog** (journalisation), **Catch2** / **GoogleTest** (tests), **Qt** (interfaces graphiques), **Asio** (réseau), **Abseil**, **Poco**.
 
-### 28.8 Tests, analyse, formatage, débogage
+## Tests, analyse, formatage, débogage
 
 - **Tests unitaires** : GoogleTest, Catch2, doctest. Un test = un comportement attendu, automatisé, relancé à chaque modification.
 
@@ -4851,7 +4660,7 @@ TEST_CASE("carre") {
 - **Couverture de code** : `--coverage` (GCC) puis `gcov` / `lcov`.
 - **Intégration continue** : compilez et testez à chaque commit, sur plusieurs compilateurs et plateformes, en modes Debug et Release, avec sanitizers.
 
-### 28.9 Lire les erreurs du compilateur
+## Lire les erreurs du compilateur
 
 Les messages C++ (surtout avec des templates) sont longs. Méthode :
 
@@ -4861,17 +4670,11 @@ Les messages C++ (surtout avec des templates) sont longs. Méthode :
 4. Isolez le problème dans un petit exemple minimal.
 5. Essayez un **autre compilateur** (Clang est souvent plus clair) ou un outil comme Compiler Explorer (godbolt.org) pour voir l'assembleur et comparer les compilateurs.
 
-### À retenir (chapitre 28)
-
-- Compilez toujours avec `-std=…`, `-Wall -Wextra`, et des sanitizers en développement.
-- Compilation séparée + édition de liens ; CMake pour construire proprement ; bibliothèques statiques ou dynamiques.
-- Tests automatisés, `clang-tidy`, `clang-format`, intégration continue.
-
 ---
 
-## Chapitre 29 — Comportements indéfinis, erreurs et sûreté
+# Comportements indéfinis, erreurs et sûreté
 
-### 29.1 Les catégories de comportement
+## Les catégories de comportement
 
 La norme C++ décrit ce que fait un programme **correct**. Pour un programme qui enfreint les règles, elle distingue :
 
@@ -4883,7 +4686,7 @@ La norme C++ décrit ce que fait un programme **correct**. Pour un programme qui
 
 Depuis **C++26**, la lecture d'une variable locale non initialisée n'est plus un UB mais un **comportement erroné** (*erroneous behavior*) : le compilateur initialise la valeur avec un motif prédéfini et peut signaler l'erreur ; l'attribut `[[indeterminate]]` permet de demander l'ancien comportement pour des raisons de performance.
 
-### 29.2 Pourquoi l'UB existe, et pourquoi il est dangereux
+## Pourquoi l'UB existe, et pourquoi il est dangereux
 
 L'UB permet au compilateur de **supposer qu'il n'arrive jamais**, et de produire du code rapide sans tests superflus. Conséquence : un compilateur peut **supprimer** un test, réorganiser du code ou rendre « atteignable » du code qui ne devrait pas l'être.
 
@@ -4896,7 +4699,7 @@ int f(int x) {
 
 Ce n'est pas une erreur du compilateur : le programmeur a rompu le contrat. L'UB est aussi la **première source de failles de sécurité** (dépassements de tampon, utilisation après libération).
 
-### 29.3 Catalogue des comportements indéfinis courants
+## Catalogue des comportements indéfinis courants
 
 **Mémoire et durée de vie**
 
@@ -4947,7 +4750,7 @@ int main() {
 }
 ```
 
-### 29.4 Détecter l'UB
+## Détecter l'UB
 
 - **Avertissements** du compilateur : `-Wall -Wextra -Wconversion -Wshadow -Wnull-dereference -Wuninitialized`.
 - **Sanitizers** (à l'exécution) : `-fsanitize=address` (accès invalides, fuites), `-fsanitize=undefined` (débordement signé, décalages, nul, alignement), `-fsanitize=thread` (courses), `-fsanitize=memory` (lecture de mémoire non initialisée, Clang).
@@ -4956,7 +4759,7 @@ int main() {
 - **Tests aléatoires** (*fuzzing*) : libFuzzer, AFL++ alimentent le programme d'entrées générées pour en dévoiler les failles.
 - **Mode durci** de la bibliothèque : GCC `-D_GLIBCXX_ASSERTIONS`, LLVM `-D_LIBCPP_HARDENING_MODE=_LIBCPP_HARDENING_MODE_FAST` (ou `_EXTENSIVE`, `_DEBUG`) ; MSVC `_ITERATOR_DEBUG_LEVEL`. Avec **C++26**, la bibliothèque standard dispose d'un **mode durci** normalisé : les préconditions de `operator[]`, `front()`, `back()`, `span`, `optional`, etc. sont **vérifiées** et le programme s'arrête de façon contrôlée au lieu d'avoir un UB.
 
-### 29.5 Écrire du C++ sûr
+## Écrire du C++ sûr
 
 - **Pas de `new` / `delete` ni de `malloc` / `free`** à la main : conteneurs et pointeurs intelligents (RAII).
 - **Pas de tableaux C ni de pointeurs + taille** : `std::array`, `std::vector`, `std::span`, `std::string`, `std::string_view`.
@@ -4970,7 +4773,7 @@ int main() {
 - **Ranges et algorithmes** plutôt que boucles à indices.
 - Suivez les **C++ Core Guidelines** (Stroustrup et Sutter) et leur analyseur (`clang-tidy -checks='cppcoreguidelines-*'`) ; la bibliothèque de support **GSL** (`gsl::span`, `gsl::not_null`, `gsl::owner`) les complète.
 
-### 29.6 Gestion des erreurs : quel mécanisme ?
+## Gestion des erreurs : quel mécanisme ?
 
 - **Bogue du programmeur** (précondition violée, invariant cassé) : **ne se récupère pas** ; on l'arrête vite avec `assert` / `contract_assert` / contrats. Ce n'est pas le rôle d'une exception.
 - **Erreur exceptionnelle et rare** (fichier corrompu, mémoire épuisée) : **exceptions**.
@@ -5005,7 +4808,7 @@ int main() {
 
 `std::expected` offre aussi des opérations **monadiques** : `transform`, `and_then`, `or_else`, `value_or`.
 
-### 29.7 Les exceptions en profondeur
+## Les exceptions en profondeur
 
 - **Dérouler la pile** : quand une exception est levée, les destructeurs des objets locaux sont appelés en remontant jusqu'au `catch` ; un destructeur ne doit **jamais** laisser s'échapper une exception (il est `noexcept` par défaut), sinon `std::terminate`.
 - **`noexcept`** : spécificateur qui promet qu'aucune exception ne sort ; `noexcept(expr)` est aussi un opérateur d'interrogation. Marquez `noexcept` les destructeurs, les opérations de déplacement et `swap`.
@@ -5046,7 +4849,7 @@ int main() {
 
 La **RAII** rend les deux premières presque automatiques : si chaque ressource est détenue par un objet, la remontée de pile la libère. Coût : la levée d'une exception est lente (microsecondes) ; l'absence d'exception est quasi gratuite. Certains projets désactivent les exceptions (`-fno-exceptions`) : embarqué, jeux, temps réel.
 
-### 29.8 Contrats *(C++26)*
+## Contrats *(C++26)*
 
 Les **contrats** permettent d'écrire dans le code, de façon vérifiable, les **préconditions** (ce que l'appelant garantit), les **postconditions** (ce que la fonction garantit) et les **assertions** internes.
 
@@ -5064,28 +4867,21 @@ int racine_entiere(int n)
 
 Chaque contrat est évalué selon une **sémantique** choisie à la compilation, sans changer le code : **ignorer** (aucune vérification), **observer** (vérifier, appeler le gestionnaire de violation, puis continuer), **appliquer** (vérifier puis arrêter), **appliquer rapidement** (arrêt immédiat sans gestionnaire). Le support par les compilateurs est récent : consultez la documentation de votre version. Avant C++26, on utilise `assert`, la bibliothèque GSL (`Expects`, `Ensures`) ou des macros maison.
 
-### 29.9 Concurrence et sûreté
+## Concurrence et sûreté
 
-Une **course aux données** est un UB. Les remèdes : ne **rien partager** (données propres à chaque fil), partager des données **immuables**, ou **synchroniser** (mutex, atomiques, passage de messages) — voir le chapitre 30. Vérifiez avec `-fsanitize=thread`.
+Une **course aux données** est un UB. Les remèdes : ne **rien partager** (données propres à chaque fil), partager des données **immuables**, ou **synchroniser** (mutex, atomiques, passage de messages) — voir *La bibliothèque standard : panorama*. Vérifiez avec `-fsanitize=thread`.
 
-### 29.10 Le futur de la sûreté en C++
+## Le futur de la sûreté en C++
 
 Le comité C++ et la communauté renforcent la sûreté : **bibliothèque durcie**, **contrats**, **comportement erroné** pour l'initialisation (C++26), profils de sûreté (en discussion), options de compilation (`-fbounds-safety`, `-ftrivial-auto-var-init`). Le principe reste : **écrire un sous-ensemble sûr du langage**, vérifié par des outils, et isoler le code bas niveau.
 
-### À retenir (chapitre 29)
-
-- L'UB n'est pas « une erreur qui plante » : c'est l'absence de toute garantie, qui autorise les optimisations les plus agressives.
-- Sources d'UB à connaître : mémoire, arithmétique signée, alias strict, courses aux données, itérateurs invalidés, ODR.
-- Outils : `-Wall -Wextra`, ASan, UBSan, TSan, analyseurs statiques, fuzzing, bibliothèque durcie.
-- Contrats / `assert` pour les bogues, `optional` / `expected` pour les échecs attendus, exceptions pour l'exceptionnel.
-
 ---
 
-## Chapitre 30 — La bibliothèque standard : panorama
+# La bibliothèque standard : panorama
 
 La **bibliothèque standard** (STL au sens large) est l'un des grands atouts du C++. Elle est **générique** (templates), **efficace** (aucun surcoût) et **composable** (les algorithmes opèrent sur tous les conteneurs par l'intermédiaire des itérateurs). La règle est simple : **avant d'écrire une fonction, cherchez si la bibliothèque standard l'offre déjà** (référence : cppreference.com).
 
-### 30.1 Organisation
+## Organisation
 
 - **Utilitaires** : `<utility>`, `<tuple>`, `<optional>`, `<variant>`, `<any>`, `<expected>`, `<functional>`, `<memory>`, `<bit>`, `<limits>`, `<type_traits>`, `<concepts>`, `<source_location>`, `<version>`.
 - **Conteneurs** : `<array>`, `<vector>`, `<deque>`, `<list>`, `<forward_list>`, `<set>`, `<map>`, `<unordered_set>`, `<unordered_map>`, `<stack>`, `<queue>`, `<flat_map>`, `<flat_set>`, `<span>`, `<mdspan>`, `<inplace_vector>`.
@@ -5098,7 +4894,7 @@ La **bibliothèque standard** (STL au sens large) est l'un des grands atouts du 
 - **Coroutines et générateurs** : `<coroutine>`, `<generator>`.
 - **Erreurs** : `<exception>`, `<stdexcept>`, `<system_error>`, `<cassert>`, `<stacktrace>`.
 
-### 30.2 Algorithmes et ranges
+## Algorithmes et ranges
 
 Les algorithmes se regroupent en familles ; chacun existe en version itérateurs (`std::`) et ranges (`std::ranges::`, C++20).
 
@@ -5148,7 +4944,7 @@ int main() {
 
 **Parallélisme** *(C++17)* : un premier argument de **politique d'exécution** (`<execution>`) active la version parallèle : `std::sort(std::execution::par, v.begin(), v.end());` — politiques `seq`, `par`, `par_unseq`, `unseq`.
 
-### 30.3 Utilitaires de valeurs
+## Utilitaires de valeurs
 
 ```cpp
 #include <any>
@@ -5183,7 +4979,7 @@ int main() {
 - `std::move`, `std::forward`, `std::swap`, `std::exchange`, `std::to_underlying`, `std::unreachable` (C++23).
 - `std::function`, `std::bind_front`, `std::invoke`, `std::reference_wrapper`, `std::hash`, `std::less<>`, `std::plus<>`… dans `<functional>`.
 
-### 30.4 Texte : expressions régulières
+## Texte : expressions régulières
 
 ```cpp
 #include <iostream>
@@ -5203,9 +4999,9 @@ int main() {
 }
 ```
 
-`std::regex` est **lent** et d'implémentation inégale : pour des analyses critiques, préférez des bibliothèques spécialisées (RE2, CTRE, PCRE2) ou un analyseur écrit à la main. Le formatage (`std::format`, `std::print`) a été vu au chapitre 7, les conversions numériques (`from_chars`, `to_chars`) au chapitre 12.
+`std::regex` est **lent** et d'implémentation inégale : pour des analyses critiques, préférez des bibliothèques spécialisées (RE2, CTRE, PCRE2) ou un analyseur écrit à la main. Le formatage (`std::format`, `std::print`) a été vu dans *Entrées et sorties*, les conversions numériques (`from_chars`, `to_chars`) dans *Chaînes de caractères*.
 
-### 30.5 Mathématiques, nombres aléatoires, temps
+## Mathématiques, nombres aléatoires, temps
 
 ```cpp
 #include <chrono>
@@ -5252,7 +5048,7 @@ int main() {
 - **Temps** : une **durée** (`std::chrono::seconds`, `milliseconds`), un **instant** (`time_point`) et une **horloge** (`steady_clock` pour mesurer, `system_clock` pour la date civile). Les unités sont vérifiées à la compilation : on ne confond pas secondes et millisecondes. C++20 ajoute le calendrier (`year_month_day`, `weekday`), les fuseaux horaires (`zoned_time`) et le formatage.
 - **Calcul numérique** : `<cmath>` (fonctions mathématiques, `std::isnan`, `std::fma`), `<complex>`, `<numbers>`, `<valarray>`, `<ratio>` (rationnels à la compilation) ; pour l'algèbre linéaire sérieuse, **Eigen**, BLAS / LAPACK ; `std::mdspan` (C++23) pour les tableaux multidimensionnels ; `<simd>` (C++26) pour le calcul vectoriel portable.
 
-### 30.6 Programmation concurrente
+## Programmation concurrente
 
 La concurrence introduit des **fils d'exécution** (*threads*) qui partagent la mémoire. Compilez avec `-pthread`.
 
@@ -5317,7 +5113,7 @@ Boîte à outils :
 
 **Règles d'or** : ne partagez rien quand c'est possible ; si vous partagez, protégez **toute** donnée modifiée (mutex ou atomique) ; verrouillez toujours dans le **même ordre** (ou utilisez `scoped_lock`) pour éviter l'interblocage ; gardez les sections critiques courtes ; testez avec ThreadSanitizer.
 
-### 30.7 Autres modules à connaître
+## Autres modules à connaître
 
 - **`<span>`, `<mdspan>`** : vues sur des suites contiguës ou multidimensionnelles.
 - **`<stacktrace>`** *(C++23)* : trace d'appels pour le diagnostic.
@@ -5327,38 +5123,9 @@ Boîte à outils :
 - **`<new>`** : `std::nothrow`, `std::launder`, allocation alignée.
 - **Réflexion statique** *(C++26)* : interroger à la compilation la structure d'un type (membres, énumérateurs) et générer du code — par exemple convertir automatiquement une `enum` en chaîne ou sérialiser une `struct` ; c'est l'ajout majeur de C++26 en métaprogrammation.
 
-### 30.8 Comment progresser
+## Comment progresser
 
 1. **Lire la référence** : cppreference.com ; **explorer** avec Compiler Explorer (godbolt.org).
 2. **Lire du bon code** : bibliothèque standard, Boost, projets open source modernes.
 3. **Ouvrages de référence** : *A Tour of C++* (Stroustrup) ; *Effective Modern C++* (Meyers) ; *C++ Primer* (Lippman) ; *C++ Core Guidelines* (en ligne) ; *C++ Templates: The Complete Guide* (Vandevoorde, Josuttis, Gregor) ; *C++ Concurrency in Action* (Williams).
 4. **Suivre l'évolution** : comité WG21, conférences CppCon, C++ on Sea, Meeting C++, ACCU.
-
-### À retenir (chapitre 30)
-
-- La bibliothèque standard est le premier réflexe : conteneurs, algorithmes, ranges, utilitaires, chaînes, temps, hasard, concurrence.
-- Algorithmes et vues se composent sans boucle manuelle ; les types riches (`optional`, `variant`, `expected`) expriment l'intention.
-- Concurrence : `jthread`, `scoped_lock`, atomiques ; vérifier avec TSan.
-
----
-
-## Conclusion et récapitulatif
-
-Le cours suit une progression volontaire : **types et valeurs** (chapitres 4 à 6), **flux de contrôle** (7, 8), **abstraction** par les fonctions et les classes (9, 18 à 21), **gestion rigoureuse de la mémoire et de la durée de vie** (10, 13 à 17), **généricité** (20), puis les sujets de **robustesse** et d'**écosystème** (22 à 30). Trois idées traversent l'ensemble :
-
-1. **Le type est un contrat vérifié à la compilation.** Plus vos types sont précis (`enum class`, `std::chrono`, `std::span`, `std::optional`), plus le compilateur détecte d'erreurs à votre place.
-2. **Chaque objet a un propriétaire et une durée de vie.** RAII, conteneurs et pointeurs intelligents rendent la gestion des ressources automatique ; les pointeurs bruts ne servent qu'à observer.
-3. **Les comportements indéfinis sont l'ennemi.** Compilez avec les avertissements et les sanitizers, préférez les abstractions sûres de la bibliothèque standard, et isolez le code à risque dans de petites zones identifiées.
-
-### Check-list d'un code C++ moderne
-
-- norme explicite (`-std=c++20` ou plus), `-Wall -Wextra -Wpedantic`, sanitizers en développement ;
-- `std::vector`, `std::string`, `std::array`, `std::span`, `std::string_view` ; aucun `new` / `delete` nu ;
-- `const`, `constexpr`, `[[nodiscard]]`, `override`, `explicit`, `noexcept` ;
-- `enum class`, `using`, `auto` quand le type est évident ;
-- algorithmes et ranges plutôt que boucles à indices ;
-- règle du zéro ; destructeur virtuel pour les bases polymorphes ;
-- exceptions pour l'exceptionnel, `optional` / `expected` pour l'attendu, contrats pour les bogues ;
-- tests automatisés, formatage et analyse statique en intégration continue.
-
-Bon apprentissage, et bonne programmation en C++ !

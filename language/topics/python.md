@@ -1,12 +1,10 @@
-# Python — Cours complet
+# Avant de commencer : comment utiliser ce cours
 
 *Du premier `print()` à la programmation orientée objet moderne — rédigé pour Python 3.14 / 3.15 (octobre 2026)*
 
-## Avant de commencer : comment utiliser ce cours
+Ce cours couvre Python de bout en bout, des premiers programmes jusqu'aux pratiques professionnelles.
 
-Ce cours développe, chapitre par chapitre, l'intégralité du plan en **20 chapitres**, regroupés en six parties : **Les bases du langage** (1 à 6), **Structures de données** (7 à 10), **Fonctions, itérateurs et générateurs** (11 et 12), **Robustesse, fichiers et organisation du code** (13 à 15), **Programmation professionnelle** (16 à 19) et **La suite du parcours** (20).
-
-Chaque chapitre suit la même trame : *objectifs d'apprentissage → notions et définitions → exemples de code commentés → pièges fréquents → synthèse*.
+Les sections du cours suivent la même trame : *objectifs d'apprentissage → notions et définitions → exemples de code commentés → pièges fréquents → synthèse*.
 
 **Conventions de lecture**
 
@@ -15,27 +13,25 @@ Chaque chapitre suit la même trame : *objectifs d'apprentissage → notions et 
 - Les exemples sont courts : tapez-les vous-même dans un terminal ou un éditeur plutôt que de les lire passivement, et modifiez-les pour observer ce qui change.
 - Aucun prérequis n'est nécessaire.
 
-**Parcours conseillé** : lisez les chapitres 1 à 6 dans l'ordre (ils se construisent les uns sur les autres), puis les chapitres 7 à 10 (structures de données) et 11 et 12 (fonctions, itérateurs, générateurs). Choisissez ensuite librement dans les parties suivantes — 13 à 15 (robustesse, fichiers, organisation du code), 16 à 19 (programmation professionnelle) et 20 (la suite du parcours) — selon vos besoins.
+**Parcours conseillé** : commencez par les bases du langage, dans l'ordre (elles se construisent les unes sur les autres), puis abordez les structures de données, les fonctions, les itérateurs et les générateurs. Choisissez ensuite librement parmi les sections suivantes — robustesse, fichiers et organisation du code, programmation professionnelle et suite du parcours — selon vos besoins.
 
 ---
 
-# Partie I — Les bases du langage
-
-## 1. Introduction
+# Introduction
 
 **Objectifs d'apprentissage.** Comprendre ce qu'est Python et comment il fonctionne, connaître son histoire et ses usages, installer un environnement de travail, exécuter un premier programme et savoir chercher de l'aide.
 
-### 1.1 Qu'est-ce que Python ?
+## Qu'est-ce que Python ?
 
 Python est un langage de programmation **de haut niveau**, **interprété**, **polyvalent** et **multi-paradigme**, créé par Guido van Rossum. Chacun de ces termes mérite une définition précise.
 
 - **Langage de programmation** : ensemble de règles d'écriture (la *syntaxe*) et de règles de signification (la *sémantique*) qui permettent de décrire à un ordinateur une suite d'opérations à effectuer sur des données. Un programme est la traduction d'un *algorithme*, c'est-à-dire d'une méthode de résolution décrite pas à pas.
 - **Haut niveau** : le langage masque les détails du matériel (registres du processeur, adresses mémoire, allocation manuelle). On exprime *ce que l'on veut faire* plutôt que *comment la machine doit le faire*. Le contraire est un langage de bas niveau, comme l'assembleur, ou, à un degré moindre, le C.
-- **Interprété** : le code n'est pas transformé à l'avance en un exécutable propre à une machine ; un programme appelé *interpréteur* le lit et l'exécute. La réalité est plus fine (voir 1.8) : le code est d'abord compilé en *bytecode*, que l'interpréteur exécute ensuite.
+- **Interprété** : le code n'est pas transformé à l'avance en un exécutable propre à une machine ; un programme appelé *interpréteur* le lit et l'exécute. La réalité est plus fine (voir *L'interpréteur Python*) : le code est d'abord compilé en *bytecode*, que l'interpréteur exécute ensuite.
 - **Polyvalent** (généraliste) : Python n'est pas limité à un domaine. On l'emploie pour le web, les données, l'intelligence artificielle, l'automatisation, les scripts système, l'enseignement, etc.
 - **Multi-paradigme** : un *paradigme* est une façon d'organiser un programme. Python permet la programmation **impérative / procédurale** (suites d'instructions et de fonctions), **orientée objet** (classes et objets) et **fonctionnelle** (fonctions comme valeurs, `lambda`, `map`, `filter`, compréhensions).
 
-#### Typage dynamique et typage fort
+### Typage dynamique et typage fort
 
 Ces deux notions sont souvent confondues. Elles décrivent deux choses différentes.
 
@@ -59,9 +55,9 @@ except TypeError as erreur:
     print(erreur)     # → can only concatenate str (not 'int') to str
 ```
 
-Depuis Python 3.5, on peut **annoter** les types (`x: int = 10`) ; ces annotations ne changent rien à l'exécution mais sont exploitées par des outils de vérification (chapitre 17). On parle de **typage graduel**.
+Depuis Python 3.5, on peut **annoter** les types (`x: int = 10`) ; ces annotations ne changent rien à l'exécution mais sont exploitées par des outils de vérification (voir *Typage statique*). On parle de **typage graduel**.
 
-#### Tout est objet
+### Tout est objet
 
 En Python, **toute valeur est un objet** : les nombres, les chaînes, les fonctions, les classes, les modules. Chaque objet possède une **identité** (son adresse, donnée par `id()`), un **type** (donné par `type()`) et une **valeur**. Cette uniformité explique la cohérence du langage : on peut passer une fonction en argument, stocker une classe dans une liste ou appeler une méthode sur un entier littéral.
 
@@ -71,29 +67,29 @@ print(type(print))          # → <class 'builtin_function_or_method'>
 print(type(int))            # → <class 'type'>
 ```
 
-#### Gestion automatique de la mémoire
+### Gestion automatique de la mémoire
 
 Le programmeur n'alloue ni ne libère la mémoire. CPython utilise le **comptage de références** (un objet est détruit quand plus aucun nom ne le référence) complété par un **ramasse-miettes** (*garbage collector*) qui détecte et supprime les cycles de références.
 
-#### Le Zen de Python
+### Le Zen de Python
 
 La PEP 20 résume la philosophie du langage en aphorismes ; on les affiche avec `import this`. Retenez-en l'esprit : le beau vaut mieux que le laid, l'explicite vaut mieux que l'implicite, le simple vaut mieux que le complexe, la lisibilité compte, et il devrait exister une manière évidente (et de préférence unique) de faire une chose. Un code est dit **pythonique** lorsqu'il respecte ces principes et utilise les idiomes du langage.
 
-#### Pourquoi les débutants l'apprécient
+### Pourquoi les débutants l'apprécient
 
 - Une syntaxe proche de l'anglais, sans point-virgule ni accolades, sans déclaration de types obligatoire.
 - Un mode interactif qui permet d'essayer une idée en quelques secondes.
 - Des messages d'erreur de plus en plus explicites.
 - Une communauté vaste et une documentation abondante, y compris en français.
 
-#### Pourquoi les professionnels l'utilisent
+### Pourquoi les professionnels l'utilisent
 
 - Un écosystème immense (NumPy, Pandas, Django, FastAPI, PyTorch…).
 - Un langage adapté au prototypage rapide comme à la production.
 - Une intégration facile avec d'autres langages (C, C++, Rust, Java) et d'autres outils.
 - Un faible coût de maintenance grâce à la lisibilité du code.
 
-### 1.2 Domaines d'utilisation
+## Domaines d'utilisation
 
 | Domaine | Description et outils courants |
 | --- | --- |
@@ -110,20 +106,20 @@ La PEP 20 résume la philosophie du langage en aphorismes ; on les affiche avec 
 
 Python est souvent surnommé *langage de colle* (*glue language*) : il relie des composants écrits dans d'autres langages. Les bibliothèques de calcul comme NumPy ou PyTorch sont écrites en C, C++ ou Rust et pilotées depuis Python.
 
-### 1.3 Histoire de Python
+## Histoire de Python
 
-#### Création
+### Création
 
 Guido van Rossum, programmeur néerlandais, commence à développer Python à la fin des années 1980 au **CWI** (*Centrum Wiskunde & Informatica*, Pays-Bas), pendant les vacances de Noël 1989. La première publication publique, la version **0.9.0**, date de **février 1991**. Le nom ne vient pas du serpent mais du groupe d'humour britannique **Monty Python**, dont Guido était fan : cet esprit ludique se retrouve dans la documentation (les exemples utilisent souvent `spam` et `eggs`).
 
-#### Objectifs de conception
+### Objectifs de conception
 
 - Privilégier la **lisibilité** du code ;
 - exprimer des idées en **moins de lignes** que dans d'autres langages ;
 - combler l'écart entre le **C** (puissant mais lourd) et les **scripts shell** (rapides à écrire mais limités) ;
 - offrir une alternative à **ABC**, langage d'enseignement développé au CWI dont Python s'inspire.
 
-#### Les grandes versions
+### Les grandes versions
 
 | Version | Date | Points marquants |
 | --- | --- | --- |
@@ -141,7 +137,7 @@ Guido van Rossum, programmeur néerlandais, commence à développer Python à la
 
 **Cycle de publication.** Depuis la PEP 602, une version majeure paraît chaque année en octobre. Chaque version bénéficie d'environ **cinq ans de support** : deux ans de correctifs de bogues, puis trois ans de correctifs de sécurité uniquement. Conséquence pratique : une version dont la fin de vie est atteinte ne reçoit plus de correctif de sécurité et ne doit plus être utilisée en production.
 
-#### Gouvernance et communauté
+### Gouvernance et communauté
 
 - Guido van Rossum fut le **BDFL** (*Benevolent Dictator For Life*, « dictateur bienveillant à vie ») jusqu'à sa démission en juillet **2018**.
 - Le langage est depuis gouverné par un **Conseil de pilotage** (*Steering Council*) de cinq membres, élu par les développeurs du cœur de Python.
@@ -149,7 +145,7 @@ Guido van Rossum, programmeur néerlandais, commence à développer Python à la
 - Les évolutions du langage passent par les **PEP** (*Python Enhancement Proposals*) : un document public décrit la proposition, ses motivations et ses alternatives, puis la communauté la discute avant décision.
 - Python figure régulièrement parmi les trois langages les plus utilisés au monde et sert chez Google, Netflix, Dropbox, Instagram, Reddit, etc.
 
-#### Chronologie
+### Chronologie
 
 | Année | Événement |
 | --- | --- |
@@ -164,11 +160,11 @@ Guido van Rossum, programmeur néerlandais, commence à développer Python à la
 | 2024 | Python 3.13 : premiers builds sans GIL (expérimentaux) |
 | 2025 | Python 3.14 : *free-threading* officiellement supporté |
 
-### 1.4 Caractéristiques de Python
+## Caractéristiques de Python
 
-**1. Langage interprété.** L'interpréteur traduit le code en bytecode puis l'exécute. Le cycle écriture → test est très court, et le débogage est confortable. Le prix à payer est une vitesse d'exécution généralement inférieure à celle des langages compilés.
+**Langage interprété.** L'interpréteur traduit le code en bytecode puis l'exécute. Le cycle écriture → test est très court, et le débogage est confortable. Le prix à payer est une vitesse d'exécution généralement inférieure à celle des langages compilés.
 
-**2. Syntaxe lisible fondée sur l'indentation.** Les blocs de code sont délimités par le décalage des lignes, non par des accolades. Le code qui s'écrit est donc aussi celui qui est structuré visuellement.
+**Syntaxe lisible fondée sur l'indentation.** Les blocs de code sont délimités par le décalage des lignes, non par des accolades. Le code qui s'écrit est donc aussi celui qui est structuré visuellement.
 
 ```python
 age = 20
@@ -178,11 +174,11 @@ else:
     print('Vous êtes encore trop jeune.')
 ```
 
-**3. Typage dynamique et graduel** (voir 1.1).
+**Typage dynamique et graduel** (voir *Qu'est-ce que Python ?*).
 
-**4. Portabilité.** Un même script s'exécute sur Windows, macOS et Linux, presque sans modification, car le bytecode est indépendant de la plateforme et la bibliothèque standard abstrait les différences (par exemple `pathlib` pour les chemins).
+**Portabilité.** Un même script s'exécute sur Windows, macOS et Linux, presque sans modification, car le bytecode est indépendant de la plateforme et la bibliothèque standard abstrait les différences (par exemple `pathlib` pour les chemins).
 
-**5. Bibliothèque standard riche (« batteries incluses »).** Python est livré avec des modules couvrant la plupart des besoins courants.
+**Bibliothèque standard riche (« batteries incluses »).** Python est livré avec des modules couvrant la plupart des besoins courants.
 
 | Besoin | Modules |
 | --- | --- |
@@ -200,9 +196,9 @@ import math
 print(math.sqrt(25))   # → 5.0
 ```
 
-**6. Libre et gratuit.** Le code source est ouvert (licence de la PSF) ; l'usage est gratuit, y compris commercial.
+**Libre et gratuit.** Le code source est ouvert (licence de la PSF) ; l'usage est gratuit, y compris commercial.
 
-**7. Multi-paradigme.** Un même programme peut mêler fonctions, classes et style fonctionnel.
+**Multi-paradigme.** Un même programme peut mêler fonctions, classes et style fonctionnel.
 
 ```python
 class Chien:
@@ -215,15 +211,15 @@ class Chien:
 Chien('Rex').aboyer()   # → Rex fait ouaf !
 ```
 
-**8. Extensible et embarquable.** On peut écrire les parties critiques en C, C++ ou Rust (extensions natives, `ctypes`, Cython, PyO3) et les appeler depuis Python ; à l'inverse, Python peut être embarqué dans une application comme langage de script.
+**Extensible et embarquable.** On peut écrire les parties critiques en C, C++ ou Rust (extensions natives, `ctypes`, Cython, PyO3) et les appeler depuis Python ; à l'inverse, Python peut être embarqué dans une application comme langage de script.
 
-**9. Gestion automatique de la mémoire** (voir 1.1).
+**Gestion automatique de la mémoire** (voir *Qu'est-ce que Python ?*).
 
-**10. Mode interactif (REPL).** *Read-Eval-Print Loop* : l'interpréteur lit une expression, l'évalue, affiche le résultat et recommence. Depuis Python 3.13, le REPL propose coloration syntaxique, édition multiligne, historique et collage de blocs.
+**Mode interactif (REPL).** *Read-Eval-Print Loop* : l'interpréteur lit une expression, l'évalue, affiche le résultat et recommence. Depuis Python 3.13, le REPL propose coloration syntaxique, édition multiligne, historique et collage de blocs.
 
-**11. Communauté active.** Forum officiel (discuss.python.org), Stack Overflow, Reddit, Discord, conférences.
+**Communauté active.** Forum officiel (discuss.python.org), Stack Overflow, Reddit, Discord, conférences.
 
-**12. Écosystème de bibliothèques.** PyPI, l'index des paquets, en recense des centaines de milliers.
+**Écosystème de bibliothèques.** PyPI, l'index des paquets, en recense des centaines de milliers.
 
 | Domaine | Bibliothèques / frameworks |
 | --- | --- |
@@ -235,13 +231,13 @@ Chien('Rex').aboyer()   # → Rex fait ouaf !
 | Automatisation | Selenium, Playwright, PyAutoGUI |
 | Réseau | Requests, httpx, Paramiko |
 
-**Limites à connaître.** Python est plus lent que les langages compilés pour les calculs purs ; le **GIL** (voir 1.8 et chapitre 18) limite le parallélisme des threads ; la consommation mémoire est plus élevée ; le typage dynamique reporte des erreurs à l'exécution. Ces limites se contournent (NumPy, extensions natives, multiprocessing, typage statique) et pèsent peu pour la plupart des usages.
+**Limites à connaître.** Python est plus lent que les langages compilés pour les calculs purs ; le **GIL** (voir *L'interpréteur Python* et *Programmation asynchrone et concurrence*) limite le parallélisme des threads ; la consommation mémoire est plus élevée ; le typage dynamique reporte des erreurs à l'exécution. Ces limites se contournent (NumPy, extensions natives, multiprocessing, typage statique) et pèsent peu pour la plupart des usages.
 
-### 1.5 Installer Python
+## Installer Python
 
 Le site officiel est **python.org/downloads**. Choisissez toujours la dernière version stable de Python 3 (3.14 ou plus récente). N'utilisez plus Python 2.
 
-#### Windows
+### Windows
 
 1. Téléchargez l'installateur sur python.org (ou le *Python install manager* proposé par le site).
 2. Cochez **« Add python.exe to PATH »** avant de cliquer sur *Install Now*. Le `PATH` est la liste des dossiers où le système cherche les commandes : sans cette case, la commande `python` n'est pas reconnue.
@@ -249,7 +245,7 @@ Le site officiel est **python.org/downloads**. Choisissez toujours la dernière 
 
 Alternatives : `winget install Python.Python.3.14` ou `choco install python`. Si `python` n'est pas reconnu après installation, ajoutez manuellement au `PATH` le dossier d'installation **et** son sous-dossier `Scripts`, via *Paramètres système → Variables d'environnement*.
 
-#### macOS
+### macOS
 
 Utilisez l'installateur `.pkg` officiel ou, de préférence, **Homebrew** :
 
@@ -258,7 +254,7 @@ brew install python
 python3 --version
 ```
 
-#### Linux
+### Linux
 
 La plupart des distributions incluent déjà Python, mais souvent une version ancienne ; ne désinstallez jamais le Python du système, car des outils de la distribution en dépendent.
 
@@ -273,7 +269,7 @@ sudo pacman -S python
 
 Pour une version plus récente, utilisez le PPA **deadsnakes** (Ubuntu) ou, mieux, **uv**.
 
-#### Gestionnaires multiplateformes
+### Gestionnaires multiplateformes
 
 | Outil | Usage |
 | --- | --- |
@@ -286,7 +282,7 @@ curl -LsSf https://astral.sh/uv/install.sh | sh
 uv python install 3.14
 ```
 
-#### pip et vérification
+### pip et vérification
 
 `pip` est l'installateur de paquets, fourni avec Python. En cas de problème :
 
@@ -298,7 +294,7 @@ python3 --version
 
 On écrit `python -m pip` plutôt que `pip` seul afin d'être certain d'utiliser `pip` associé à l'interpréteur voulu.
 
-### 1.6 Choisir un éditeur ou un IDE
+## Choisir un éditeur ou un IDE
 
 Un **éditeur de code** est un outil léger (coloration syntaxique, complétion simple). Un **IDE** (*Integrated Development Environment*, environnement de développement intégré) réunit éditeur, débogueur, gestion de projet, terminal et contrôle de version.
 
@@ -321,11 +317,11 @@ Atom a été archivé par GitHub en 2022 : ne l'utilisez plus. Dans VS Code, ins
 | Web | PyCharm Pro ou VS Code |
 | Science des données | JupyterLab ou VS Code + Jupyter |
 
-### 1.7 Exécuter son premier programme
+## Exécuter son premier programme
 
 Python s'exécute de deux manières : en **mode interactif** (REPL) ou en **mode script** (fichier `.py`).
 
-#### Mode interactif
+### Mode interactif
 
 ```bash
 $ python3
@@ -337,7 +333,7 @@ Bonjour le monde !
 
 L'invite `>>>` attend une instruction ; `...` signale qu'un bloc continue. Une expression est évaluée et son résultat affiché sans `print`. Pour quitter : `exit()`, `Ctrl+D` (macOS/Linux) ou `Ctrl+Z` puis Entrée (Windows).
 
-#### Mode script
+### Mode script
 
 ```python
 # bonjour.py
@@ -357,7 +353,7 @@ python bonjour.py
 
 Utilisez le REPL pour tester une expression ou explorer une fonction (`type()`, `help()`, `dir()`), et un script pour tout ce que vous voulez conserver ou réutiliser.
 
-#### Autres façons de lancer Python
+### Autres façons de lancer Python
 
 ```bash
 python -c "print('Une ligne')"   # exécute une commande
@@ -365,15 +361,15 @@ python -m http.server             # exécute un module comme script
 python -i script.py               # reste en mode interactif après le script
 ```
 
-#### Le *shebang* (Unix)
+### Le *shebang* (Unix)
 
 La première ligne `#!/usr/bin/env python3` indique au système quel interpréteur utiliser. Après `chmod +x script.py`, le fichier s'exécute avec `./script.py`.
 
-#### Erreurs courantes
+### Erreurs courantes
 
-Si le fichier est introuvable, vérifiez le dossier courant et déplacez-vous avec `cd`. Si la commande `python` n'est pas reconnue, Python n'est pas dans le `PATH` (voir 1.5). Dans VS Code, choisissez l'interpréteur avec `Ctrl+Shift+P` → *Python: Select Interpreter* ; dans IDLE, enregistrez le fichier puis appuyez sur F5.
+Si le fichier est introuvable, vérifiez le dossier courant et déplacez-vous avec `cd`. Si la commande `python` n'est pas reconnue, Python n'est pas dans le `PATH` (voir *Installer Python*). Dans VS Code, choisissez l'interpréteur avec `Ctrl+Shift+P` → *Python: Select Interpreter* ; dans IDLE, enregistrez le fichier puis appuyez sur F5.
 
-### 1.8 L'interpréteur Python
+## L'interpréteur Python
 
 L'interpréteur lit le code source, le **compile en bytecode**, puis le fait exécuter par la **machine virtuelle Python (PVM)**.
 
@@ -386,7 +382,7 @@ Code source (.py) → compilateur intégré → bytecode (.pyc) → machine virt
 
 Python est donc à la fois **compilé** (vers du bytecode) et **interprété** (par la PVM). Comparé à un langage compilé en code machine, il est plus lent mais plus souple à déboguer et plus portable.
 
-#### Les implémentations
+### Les implémentations
 
 | Implémentation | Description |
 | --- | --- |
@@ -397,13 +393,13 @@ Python est donc à la fois **compilé** (vers du bytecode) et **interprété** (
 | **MicroPython** | Pour microcontrôleurs |
 | **GraalPy** | Python sur GraalVM |
 
-Depuis Python 3.13, CPython propose, à titre expérimental, un compilateur JIT et une version sans GIL. Le **GIL** (*Global Interpreter Lock*) est un verrou qui empêche plusieurs threads d'exécuter du bytecode Python en même temps (voir chapitre 18).
+Depuis Python 3.13, CPython propose, à titre expérimental, un compilateur JIT et une version sans GIL. Le **GIL** (*Global Interpreter Lock*) est un verrou qui empêche plusieurs threads d'exécuter du bytecode Python en même temps (voir *Programmation asynchrone et concurrence*).
 
-#### Peut-on exécuter Python sans interpréteur ?
+### Peut-on exécuter Python sans interpréteur ?
 
 Pas directement. On peut toutefois utiliser un interpréteur en ligne (Replit, Google Colab) ou empaqueter une application avec un interpréteur intégré grâce à **PyInstaller**, **cx\_Freeze** ou **Nuitka**.
 
-#### Options utiles de l'interpréteur
+### Options utiles de l'interpréteur
 
 | Option | Effet |
 | --- | --- |
@@ -414,7 +410,7 @@ Pas directement. On peut toutefois utiliser un interpréteur en ligne (Replit, G
 | `-B` | N'écrit pas de fichiers `.pyc` |
 | `-X dev` | Mode développement (vérifications supplémentaires) |
 
-### 1.9 « Hello, World ! »
+## « Hello, World ! »
 
 ```python
 print('Bonjour le monde !')
@@ -422,7 +418,7 @@ print('Bonjour le monde !')
 
 `print` est une **fonction intégrée** (*built-in*) qui affiche du texte. Le texte, ou **chaîne de caractères**, s'écrit entre guillemets simples ou doubles. Depuis Python 3, `print` est une fonction : `print('x')` et non `print 'x'`.
 
-#### La fonction `print()` en détail
+### La fonction `print()` en détail
 
 ```python
 import sys
@@ -442,9 +438,9 @@ print('Direct', flush=True)        # vide le tampon immédiatement
 | `file` | Destination | `sys.stdout` |
 | `flush` | Vider le tampon | `False` |
 
-#### Commentaires
+### Commentaires
 
-Un commentaire est ignoré par l'interpréteur ; il s'adresse au lecteur humain. Il commence par `#` et s'étend jusqu'à la fin de la ligne. Une chaîne multiligne entre triples guillemets, non affectée à une variable, est parfois utilisée comme commentaire ; c'est en réalité une chaîne littérale évaluée puis ignorée, sauf à l'emplacement d'une **docstring** (voir chapitre 11).
+Un commentaire est ignoré par l'interpréteur ; il s'adresse au lecteur humain. Il commence par `#` et s'étend jusqu'à la fin de la ligne. Une chaîne multiligne entre triples guillemets, non affectée à une variable, est parfois utilisée comme commentaire ; c'est en réalité une chaîne littérale évaluée puis ignorée, sauf à l'emplacement d'une **docstring** (voir *Docstrings*).
 
 ```python
 x = 5   # commentaire en fin de ligne
@@ -452,7 +448,7 @@ x = 5   # commentaire en fin de ligne
 
 **Bonnes pratiques** : expliquez le *pourquoi* plutôt que le *quoi* ; mettez-les à jour avec le code ; évitez l'évidence (`x = 1  # x vaut 1`).
 
-#### Extensions de fichiers
+### Extensions de fichiers
 
 | Extension | Signification |
 | --- | --- |
@@ -465,13 +461,13 @@ x = 5   # commentaire en fin de ligne
 | `.ipynb` | Notebook Jupyter |
 | `.toml` | Configuration (`pyproject.toml`) |
 
-#### Étapes d'exécution
+### Étapes d'exécution
 
 1. **Analyse lexicale et syntaxique** du fichier source ; une erreur de syntaxe est signalée ici, avant toute exécution.
 2. **Compilation** en bytecode.
 3. **Exécution** par la PVM, instruction par instruction.
 
-#### PEP essentielles
+### PEP essentielles
 
 | PEP | Sujet |
 | --- | --- |
@@ -486,7 +482,7 @@ x = 5   # commentaire en fin de ligne
 
 Toutes sont consultables sur peps.python.org.
 
-#### Obtenir de l'aide
+### Obtenir de l'aide
 
 ```python
 x = 42
@@ -498,17 +494,13 @@ print(len.__doc__)    # docstring brute
 
 En ligne de commande : `python -m pydoc len`. Ressources : docs.python.org, Real Python, discuss.python.org, Stack Overflow.
 
-### Synthèse du chapitre 1
-
-Python est un langage **de haut niveau, polyvalent et multi-paradigme**, au typage **dynamique et fort**, où **tout est objet**. Le code source est compilé en *bytecode* puis exécuté par la machine virtuelle ; **CPython** est l'implémentation de référence. Une version majeure paraît chaque octobre : utilisez toujours une version de Python 3 encore supportée. Le **REPL** sert à explorer, les scripts `.py` à conserver ; `print()`, `help()`, `dir()` et `type()` sont vos premiers outils d'investigation.
-
 ---
 
-## 2. Syntaxe et indentation
+# Syntaxe et indentation
 
 **Objectifs d'apprentissage.** Comprendre comment Python lit un fichier source, maîtriser l'indentation qui structure le code, distinguer expressions et instructions, et adopter dès le début les conventions de la PEP 8.
 
-### 2.1 Introduction à la syntaxe
+## Introduction à la syntaxe
 
 La **syntaxe** d'un langage est l'ensemble des règles qui définissent ce qu'est un programme valide ; la **sémantique** décrit ce que ce programme signifie et fait. Un programme syntaxiquement correct peut être sémantiquement faux (il s'exécute mais ne fait pas ce qu'on veut) : c'est la différence entre une erreur de syntaxe et un bogue.
 
@@ -528,7 +520,7 @@ if nom:
     print(f'Bonjour {nom}')   # → Bonjour Alice
 ```
 
-### 2.2 Le rôle de l'indentation
+## Le rôle de l'indentation
 
 Dans la plupart des langages, l'indentation est une aide de lecture facultative. En Python, elle **fait partie de la syntaxe** : c'est elle qui définit les blocs (fonctions, boucles, conditions, classes). Deux lignes consecutives au même niveau appartiennent au même bloc ; un niveau d'indentation de plus ouvre un bloc, un niveau de moins le ferme.
 
@@ -541,7 +533,7 @@ def saluer(nom):
     print('Fin')                   # dans la fonction, après le if/else
 ```
 
-#### Règles
+### Règles
 
 | Règle | Détail |
 | --- | --- |
@@ -560,7 +552,7 @@ except IndentationError as erreur:
 
 L'avantage de ce choix est que la structure visible est exactement la structure exécutée ; son inconvénient est qu'une mauvaise indentation change le sens du programme ou le rend invalide.
 
-### 2.3 Blocs de code
+## Blocs de code
 
 Un **bloc** commence après une ligne d'en-tête qui se termine par `:` (le deux-points) et regroupe les lignes indentées qui suivent. Les blocs peuvent s'imbriquer.
 
@@ -578,7 +570,7 @@ def a_ecrire_plus_tard():
     pass
 ```
 
-### 2.4 Instructions simples
+## Instructions simples
 
 Une **instruction** (*statement*) est une commande exécutable. La norme est **une instruction par ligne**. On peut en séparer plusieurs par un point-virgule, mais la PEP 8 le déconseille.
 
@@ -589,7 +581,7 @@ print(x + y)     # → 15
 a = 1; b = 2     # valide mais déconseillé
 ```
 
-#### Instructions sur plusieurs lignes
+### Instructions sur plusieurs lignes
 
 Une instruction trop longue peut être répartie sur plusieurs lignes de deux façons.
 
@@ -608,7 +600,7 @@ liste = [
 ]                # la virgule finale est autorisée et facilite les modifications
 ```
 
-### 2.5 Sensibilité à la casse et mots-clés
+## Sensibilité à la casse et mots-clés
 
 Python **distingue majuscules et minuscules** : `nom`, `Nom` et `NOM` sont trois identifiants différents. Les mots-clés doivent être écrits exactement comme prévu (`True`, `False` et `None` prennent une majuscule).
 
@@ -621,7 +613,7 @@ print(keyword.softkwlist)         # mots-clés « souples » : _, case, match, t
 
 Les mots-clés *durs* (`if`, `class`, `for`, `None`…) ne peuvent jamais servir de noms. Les mots-clés *souples* (`match`, `case`, `type`, `_`) n'ont un sens spécial que dans certains contextes. Ne confondez pas mots-clés et **fonctions intégrées** (`print`, `len`, `list`…) : ces dernières peuvent techniquement être « masquées » par une affectation (`list = 3` détruit l'accès à `list`), ce qu'il faut absolument éviter.
 
-### 2.6 Expressions et instructions
+## Expressions et instructions
 
 - Une **expression** est un fragment de code qui **produit une valeur** : `3 + 4`, `len('abc')`, `x > 5`.
 - Une **instruction** **effectue une action** : `x = 5`, `if`, `for`, `import`, `return`.
@@ -640,7 +632,7 @@ if (n := len('Python')) > 5:
     print(f'Chaîne longue ({n} caractères)')   # → Chaîne longue (6 caractères)
 ```
 
-### 2.7 Lignes vides et espaces
+## Lignes vides et espaces
 
 La PEP 8 fixe des conventions de présentation :
 
@@ -654,11 +646,11 @@ resultat = calculer(a, b)    # conforme
 resultat=calculer( a,b )     # valide mais non conforme
 ```
 
-### 2.8 Le deux-points `:`
+## Le deux-points `:`
 
 Le caractère `:` introduit un bloc (`if`, `elif`, `else`, `for`, `while`, `def`, `class`, `try`, `with`, `match`, `case`…) mais il a aussi d'autres rôles : séparer les bornes d'une **tranche** (`liste[1:3]`), associer **clé et valeur** dans un dictionnaire (`{'a': 1}`), et introduire une **annotation** de type (`x: int`). Le contexte permet de les distinguer.
 
-### 2.9 Erreurs de syntaxe et d'indentation
+## Erreurs de syntaxe et d'indentation
 
 | Erreur | Cause | Exemple |
 | --- | --- | --- |
@@ -668,7 +660,7 @@ Le caractère `:` introduit un bloc (`if`, `elif`, `else`, `for`, `while`, `def`
 
 Une erreur de syntaxe est détectée **avant toute exécution** : aucune ligne du fichier ne s'exécute. Depuis Python 3.10, les messages sont très explicites (par exemple l'indication qu'une parenthèse n'a jamais été fermée, ou une suggestion de nom proche en cas de faute de frappe). Apprenez à **lire la trace d'erreur de bas en haut** : la dernière ligne donne le type et le message, les lignes au-dessus indiquent où cela s'est produit.
 
-### 2.10 Écrire du code propre (PEP 8)
+## Écrire du code propre (PEP 8)
 
 La **PEP 8** est le guide de style officiel. Un code lisible se relit plus souvent qu'il ne s'écrit.
 
@@ -699,19 +691,15 @@ print(resultat)   # → [2, 4, 6]
 
 Outils modernes : **Ruff** (lint et formatage), **Black** (formatage), **mypy** et **pyright** (vérification de types). Ils appliquent automatiquement ces conventions.
 
-### Synthèse du chapitre 2
-
-L'**indentation** (4 espaces) délimite les blocs : ne mélangez jamais tabulations et espaces. Un bloc s'ouvre après `:` et ne peut pas être vide (`pass`). Python est **sensible à la casse** et ses mots-clés sont réservés. Une **expression** produit une valeur, une **instruction** réalise une action ; `:=` affecte au sein d'une expression. Suivez la **PEP 8** et laissez Ruff ou Black formater le code.
-
 ---
 
-## 3. Variables et types de données
+# Variables et types de données
 
 **Objectifs d'apprentissage.** Comprendre ce qu'est réellement une variable en Python, connaître tous les types de base et leurs particularités, maîtriser conversions, mutabilité et portée.
 
-### 3.1 Les variables
+## Les variables
 
-En Python, une **variable** n'est pas une boîte qui contient une valeur : c'est un **nom** qui **référence** un objet en mémoire. L'instruction `x = 5` crée (ou récupère) l'objet entier `5` puis **lie** le nom `x` à cet objet. On parle de **liaison** (*binding*). Plusieurs noms peuvent référencer le même objet ; un nom peut être relié à un autre objet à tout moment. Cette vision explique de nombreux comportements « surprenants » (voir 3.9).
+En Python, une **variable** n'est pas une boîte qui contient une valeur : c'est un **nom** qui **référence** un objet en mémoire. L'instruction `x = 5` crée (ou récupère) l'objet entier `5` puis **lie** le nom `x` à cet objet. On parle de **liaison** (*binding*). Plusieurs noms peuvent référencer le même objet ; un nom peut être relié à un autre objet à tout moment. Cette vision explique de nombreux comportements « surprenants » (voir *Types mutables et immuables*).
 
 ```python
 age = 25
@@ -721,7 +709,7 @@ est_majeur = True
 print(age, nom, taille, est_majeur)   # → 25 Alice 1.68 True
 ```
 
-#### Règles de nommage
+### Règles de nommage
 
 - Un identifiant contient des lettres, des chiffres et le caractère `_`, et ne **commence pas par un chiffre** ;
 - il est sensible à la casse ;
@@ -744,7 +732,7 @@ valeur2 = 2                 # valide
 | `__x` | Dans une classe, nom transformé (*name mangling*) |
 | `__x__` | Méthodes spéciales (« dunder ») réservées au langage |
 
-#### Affectation
+### Affectation
 
 ```python
 x = 5                           # simple
@@ -758,7 +746,7 @@ print(premier, reste)           # → 1 [2, 3, 4]
 
 La suppression d'un nom se fait avec `del x`. Utiliser un nom non défini provoque une `NameError`.
 
-### 3.2 Vue d'ensemble des types de base
+## Vue d'ensemble des types de base
 
 | Catégorie | Types |
 | --- | --- |
@@ -771,11 +759,11 @@ La suppression d'un nom se fait avec `del x`. Utiliser un nom non défini provoq
 | Associations | `dict` |
 | Binaires | `bytes`, `bytearray`, `memoryview` |
 
-Un **type** définit l'ensemble des valeurs possibles et les opérations permises. Les chapitres 7 à 10 détaillent les collections.
+Un **type** définit l'ensemble des valeurs possibles et les opérations permises. Les sections consacrées aux dictionnaires, aux listes, aux ensembles et aux tuples détaillent les collections.
 
-### 3.3 Types numériques
+## Types numériques
 
-#### Entiers (`int`)
+### Entiers (`int`)
 
 Les entiers ont une **taille illimitée** : seuls la mémoire disponible et le temps de calcul les limitent. Il n'y a donc pas de dépassement d'entier comme en C ou en Java.
 
@@ -786,7 +774,7 @@ print(1_000_000)                # → 1000000 (séparateurs de lisibilité)
 print(0b1010, 0o17, 0xFF)       # → 10 15 255 (binaire, octal, hexadécimal)
 ```
 
-#### Flottants (`float`)
+### Flottants (`float`)
 
 Les `float` suivent la norme **IEEE 754** en double précision (64 bits) : environ 15 à 17 chiffres significatifs. Beaucoup de décimaux (comme 0,1) n'ont pas de représentation binaire exacte, d'où des écarts minuscules.
 
@@ -808,18 +796,18 @@ print(Fraction(1, 3) + Fraction(1, 6))   # → 1/2
 
 Valeurs spéciales : `float('inf')`, `float('-inf')` et `float('nan')` (*not a number*, qui n'est jamais égal à lui-même ; testez-le avec `math.isnan`).
 
-#### Complexes (`complex`)
+### Complexes (`complex`)
 
 ```python
 z = 2 + 3j
 print(z.real, z.imag, abs(3 + 4j))   # → 2.0 3.0 5.0
 ```
 
-#### Fonctions utiles
+### Fonctions utiles
 
 `abs()`, `round()` (arrondit au pair le plus proche en cas d'égalité : `round(2.5)` donne `2`), `pow()`, `divmod()`, `math.floor()`, `math.ceil()`, `math.sqrt()`, `math.isclose()`.
 
-### 3.4 Chaînes de caractères (`str`)
+## Chaînes de caractères (`str`)
 
 Une chaîne est une **séquence immuable de caractères Unicode**. On l'écrit entre guillemets simples ou doubles (équivalents), ou entre triples guillemets pour plusieurs lignes.
 
@@ -832,7 +820,7 @@ brut = r'C:\nouveau\dossier'   # chaîne brute : l'antislash n'échappe rien
 print(brut)                     # → C:\nouveau\dossier
 ```
 
-#### Séquences d'échappement
+### Séquences d'échappement
 
 | Séquence | Sens |
 | --- | --- |
@@ -842,7 +830,7 @@ print(brut)                     # → C:\nouveau\dossier
 | `\\'` et `\\"` | guillemets |
 | `\\u00e9` | caractère Unicode (ici é) |
 
-#### Indexation et tranches
+### Indexation et tranches
 
 ```python
 s = 'Python'
@@ -858,7 +846,7 @@ except TypeError as erreur:
 
 L'**immuabilité** signifie qu'une chaîne ne se modifie jamais : toute opération crée une nouvelle chaîne. Pour construire un long texte, on assemble avec `''.join(morceaux)` plutôt que de concaténer dans une boucle.
 
-#### Méthodes principales
+### Méthodes principales
 
 | Méthode | Rôle |
 | --- | --- |
@@ -872,9 +860,9 @@ L'**immuabilité** signifie qu'une chaîne ne se modifie jamais : toute opérati
 | `isdigit()`, `isalpha()`, `isalnum()` | Tester le contenu |
 | `zfill()`, `center()`, `ljust()`, `rjust()` | Remplissage et alignement |
 
-#### F-strings
+### F-strings
 
-Les **chaînes formatées** (`f'...'`) évaluent des expressions entre accolades et acceptent un spécificateur de format après `:` (voir chapitre 5).
+Les **chaînes formatées** (`f'...'`) évaluent des expressions entre accolades et acceptent un spécificateur de format après `:` (voir *Entrées et sorties*).
 
 ```python
 nom, age = 'Alice', 30
@@ -883,7 +871,7 @@ print(f'{3.14159:.2f}')       # → 3.14
 print(f'{nom=}')              # → nom='Alice' (utile au débogage)
 ```
 
-#### Unicode et encodage
+### Unicode et encodage
 
 Une `str` contient des **points de code Unicode** ; elle devient une suite d'octets (`bytes`) par **encodage** (presque toujours UTF-8), et inversement par **décodage**.
 
@@ -894,7 +882,7 @@ print(octets.decode('utf-8'))    # → café
 print(len('café'), len(octets))   # → 4 5
 ```
 
-### 3.5 Booléens
+## Booléens
 
 Le type `bool` n'a que deux valeurs : `True` et `False`. C'est une **sous-classe de `int`** : `True` vaut 1 et `False` vaut 0.
 
@@ -904,7 +892,7 @@ print(isinstance(True, int))  # → True
 print(True + True)            # → 2
 ```
 
-#### Valeurs « vraies » et « fausses »
+### Valeurs « vraies » et « fausses »
 
 Dans une condition, toute valeur est évaluée comme un booléen. Sont **fausses** (*falsy*) : `False`, `None`, `0`, `0.0`, `0j`, `''`, `[]`, `()`, `{}`, `set()`, `range(0)`. **Tout le reste est vrai** (*truthy*). Une classe personnalisée est vraie sauf si elle définit `__bool__` ou `__len__`.
 
@@ -914,7 +902,7 @@ if not liste:
     print('La liste est vide')   # → La liste est vide
 ```
 
-### 3.6 La valeur `None`
+## La valeur `None`
 
 `None` représente l'**absence de valeur**. C'est l'unique instance du type `NoneType` (un *singleton*). On le teste avec `is None`, jamais avec `== None`. Une fonction sans `return` renvoie `None`.
 
@@ -924,7 +912,7 @@ if resultat is None:
     print('Pas encore de résultat')   # → Pas encore de résultat
 ```
 
-### 3.7 Conversion de types (*casting*)
+## Conversion de types (*casting*)
 
 Convertir signifie créer un objet d'un autre type à partir d'une valeur.
 
@@ -948,7 +936,7 @@ except ValueError as erreur:
 
 Python effectue des conversions **implicites** entre nombres (`1 + 2.0` donne `3.0`) mais **jamais** entre nombre et chaîne : `'1' + 2` lève une `TypeError`. Le typage fort impose de convertir explicitement.
 
-### 3.8 Vérifier le type
+## Vérifier le type
 
 ```python
 x = 42
@@ -959,7 +947,7 @@ print(isinstance(x, (int, float)))   # → True : plusieurs types acceptés
 
 Préférez `isinstance()` à `type(x) == int` : il tient compte de l'héritage (un `bool` est un `int`).
 
-### 3.9 Types mutables et immuables
+## Types mutables et immuables
 
 Un objet est **immuable** si son contenu ne peut pas changer après sa création ; il est **mutable** dans le cas contraire.
 
@@ -994,7 +982,7 @@ print(n, m)        # → 5 6
 
 N'utilisez `is` que pour `None`, `True` et `False`. Python réutilise parfois le même objet pour de petits entiers ou des chaînes courtes (optimisation interne) : ne vous y fiez jamais.
 
-### 3.10 Constantes
+## Constantes
 
 Python n'a pas de vraie constante : on utilise la **convention** des noms en majuscules. Pour les outils de vérification, `typing.Final` déclare l'intention.
 
@@ -1006,9 +994,9 @@ MAX_ESSAIS: Final[int] = 3
 print(PI, MAX_ESSAIS)   # → 3.14159 3
 ```
 
-Pour des ensembles de constantes liées, on emploie `enum.Enum` (chapitre 16).
+Pour des ensembles de constantes liées, on emploie `enum.Enum` (voir *Énumérations*).
 
-### 3.11 Portée des variables (règle LEGB)
+## Portée des variables (règle LEGB)
 
 La **portée** (*scope*) est la région du programme où un nom est visible. Python recherche un nom dans cet ordre : **L**ocal (la fonction courante) → **E**nglobant (les fonctions qui l'entourent) → **G**lobal (le module) → **B**uilt-in (les noms prédéfinis comme `len`).
 
@@ -1023,7 +1011,7 @@ f()                 # → local
 print(x)            # → global
 ```
 
-Une affectation à l'intérieur d'une fonction crée par défaut une variable **locale**. Pour modifier une variable globale, on la déclare avec `global` ; pour une variable d'une fonction englobante, avec `nonlocal` (chapitre 11).
+Une affectation à l'intérieur d'une fonction crée par défaut une variable **locale**. Pour modifier une variable globale, on la déclare avec `global` ; pour une variable d'une fonction englobante, avec `nonlocal` (voir *Portée et durée de vie*).
 
 ```python
 compteur = 0
@@ -1039,7 +1027,7 @@ print(compteur)   # → 2
 
 Les variables locales disparaissent à la fin de l'appel de la fonction. Les variables globales rendent le code difficile à tester : évitez-les.
 
-### 3.12 Bonnes pratiques
+## Bonnes pratiques
 
 ```python
 d = 86400                      # peu clair
@@ -1050,21 +1038,17 @@ print(SECONDES_PAR_JOUR * 2)   # → 172800
 - Choisissez des noms **descriptifs** ; ne changez pas inutilement le type d'une variable.
 - Évitez les valeurs « magiques » : nommez-les.
 - Ne masquez jamais une fonction intégrée (`list`, `str`, `sum`, `max`…).
-- Utilisez `None` comme valeur par défaut pour les paramètres mutables (chapitre 11).
-
-### Synthèse du chapitre 3
-
-Une **variable** est un nom lié à un objet : les affectations ne copient pas, elles référencent. `int` est illimité, `float` est approché (IEEE 754), `Decimal` est exact en base 10 ; une `str` est une séquence Unicode **immuable**, `bytes` représente des octets. `bool` est un `int`, les valeurs vides ou nulles sont « fausses » et `None` se teste avec `is`. Savoir si un objet est **mutable ou immuable** détermine ce qu'une copie ou un alias provoque ; `is` compare l'identité, `==` la valeur. Les noms sont résolus selon la règle **LEGB**.
+- Utilisez `None` comme valeur par défaut pour les paramètres mutables (voir *Paramètres et arguments*).
 
 ---
 
-## 4. Opérateurs et expressions
+# Opérateurs et expressions
 
 **Objectifs d'apprentissage.** Connaître tous les opérateurs du langage, comprendre leur priorité et leur associativité, évaluer correctement une expression et éviter les pièges classiques.
 
 Un **opérateur** est un symbole ou un mot-clé qui combine des **opérandes** pour produire une valeur. Un opérateur est **unaire** (un opérande : `-x`, `not x`), **binaire** (deux : `a + b`) ou, pour le conditionnel, **ternaire** (`a if c else b`).
 
-### 4.1 Opérateurs arithmétiques
+## Opérateurs arithmétiques
 
 | Opérateur | Nom | Exemple | Résultat |
 | --- | --- | --- | --- |
@@ -1090,7 +1074,7 @@ print(7.5 // 2)               # → 3.0
 
 Les opérateurs `+` et `*` s'appliquent aussi aux séquences : concaténation et répétition (`'ab' * 3` donne `'ababab'`, `[1] + [2]` donne `[1, 2]`).
 
-### 4.2 Opérateurs d'affectation
+## Opérateurs d'affectation
 
 L'**affectation augmentée** combine une opération et une affectation : `x += 2` équivaut à `x = x + 2`.
 
@@ -1118,7 +1102,7 @@ b = b + [3]       # crée une nouvelle liste
 print(a, b)       # → [1, 2] [1, 2, 3]
 ```
 
-### 4.3 Opérateurs de comparaison
+## Opérateurs de comparaison
 
 `==` (égal), `!=` (différent), `>`, `<`, `>=`, `<=`. Le résultat est un booléen. Les comparaisons peuvent être **chaînées**, comme en mathématiques, et chaque opérande n'est évalué qu'une fois :
 
@@ -1134,7 +1118,7 @@ except TypeError as erreur:
     print(erreur)          # → '<' not supported between instances of 'int' and 'str'
 ```
 
-### 4.4 Opérateurs logiques
+## Opérateurs logiques
 
 | Opérateur | Rôle |
 | --- | --- |
@@ -1155,7 +1139,7 @@ print(not 0, not 'a')             # → True False
 print(any([0, '', 3]), all([1, 2, 0]))   # → True False
 ```
 
-### 4.5 Opérateurs bit à bit
+## Opérateurs bit à bit
 
 Ils agissent sur la représentation binaire des entiers.
 
@@ -1178,7 +1162,7 @@ print(bool(droits & ECRITURE))      # → True : test d'un bit
 
 Un décalage à gauche de `n` bits multiplie par `2**n`, un décalage à droite divise par `2**n` (division entière). Usages : masques, indicateurs, protocoles binaires.
 
-### 4.6 Opérateurs d'identité et d'appartenance
+## Opérateurs d'identité et d'appartenance
 
 ```python
 a = [1, 2]
@@ -1201,7 +1185,7 @@ print(5 not in {1, 2})          # → True
 
 `in` est très rapide sur un `set` ou un `dict` (temps constant, O(1)) mais lent sur une `list` (parcours, O(n)).
 
-### 4.7 Priorité et associativité
+## Priorité et associativité
 
 La **priorité** indique quel opérateur est appliqué en premier ; l'**associativité** règle les cas d'égalité (la plupart des opérateurs s'associent de gauche à droite, `**` de droite à gauche). De la plus haute à la plus basse priorité :
 
@@ -1229,7 +1213,7 @@ print(True or False and False)   # → True : and avant or
 
 En cas de doute, **ajoutez des parenthèses** : elles coûtent peu et levènt toute ambiguïté.
 
-### 4.8 Expressions et évaluation
+## Expressions et évaluation
 
 Une expression s'évalue de l'intérieur vers l'extérieur, selon la priorité et l'associativité, de gauche à droite pour les arguments d'un appel.
 
@@ -1241,7 +1225,7 @@ print(resultat)   # → 2
 
 Sont aussi des expressions : appels de fonction, compréhensions, expressions conditionnelles, expressions `lambda`.
 
-### 4.9 Surcharge d'opérateurs (introduction)
+## Surcharge d'opérateurs (introduction)
 
 Chaque opérateur correspond à une **méthode spéciale** (« dunder »). En les définissant dans une classe, on rend ses objets compatibles avec les opérateurs :
 
@@ -1271,19 +1255,19 @@ print(Vecteur(1, 2) == Vecteur(1, 2))       # → True
 | `x[i]` | `__getitem__` |
 | `in` | `__contains__` |
 
-Quand l'opérande de gauche ne sait pas gérer l'opération, Python essaie la version **inversée** de l'opérande de droite (`__radd__`, `__rmul__`…). Voir le chapitre 16.
+Quand l'opérande de gauche ne sait pas gérer l'opération, Python essaie la version **inversée** de l'opérande de droite (`__radd__`, `__rmul__`…). Voir *Méthodes spéciales (« dunder »)*.
 
-### 4.10 Pièges fréquents
+## Pièges fréquents
 
 1. **Imprécision des flottants** : `0.1 + 0.2 == 0.3` est faux ; comparez avec `math.isclose`.
 2. **`is` contre `==`** : `==` pour les valeurs ; `is` uniquement pour `None`, `True`, `False`.
 3. **Priorité de `not`** : `not 1 == 2` signifie `not (1 == 2)`.
 4. **`and` / `or` retournent des opérandes**, ce qui surprend quand on attend un booléen.
 5. **Division** : `/` donne toujours un `float` ; utilisez `//` pour un résultat entier.
-6. **`+=` sur liste** modifie l'objet en place (voir 4.2).
-7. **Valeur par défaut mutable** dans une fonction (chapitre 11).
+6. **`+=` sur liste** modifie l'objet en place (voir *Opérateurs d'affectation*).
+7. **Valeur par défaut mutable** dans une fonction (voir *Paramètres et arguments*).
 
-### 4.11 Bonnes pratiques
+## Bonnes pratiques
 
 ```python
 a, b, c, d, e = 'A', False, 'C', True, 'E'
@@ -1303,17 +1287,13 @@ print(r)                        # → C
 - Préférez `is None` / `is not None` à `== None`.
 - Évitez d'enchaîner plusieurs conditionnels (ternaires).
 
-### Synthèse du chapitre 4
-
-`/` renvoie un `float`, `//` arrondit vers le bas, `%` suit le signe du diviseur et `**` est associatif à droite. `and` et `or` sont **paresseux** et renvoient un opérande. `==` compare les valeurs, `is` les identités, `in` teste l'appartenance. En cas de doute sur la **priorité**, utilisez des parenthèses.
-
 ---
 
-## 5. Entrées et sorties
+# Entrées et sorties
 
 **Objectifs d'apprentissage.** Lire des données fournies par l'utilisateur ou par la ligne de commande, afficher des résultats proprement, maîtriser le formatage de texte, de nombres et de dates.
 
-### 5.1 Introduction
+## Introduction
 
 Les **entrées/sorties** (E/S, *I/O*) permettent à un programme d'échanger des informations avec l'extérieur. Python manipule trois **flux standard** : l'entrée standard `sys.stdin` (le clavier, par défaut), la sortie standard `sys.stdout` (l'écran) et la sortie d'erreur `sys.stderr`. Séparer sortie normale et erreurs permet de rediriger l'une sans l'autre (`python prog.py > resultat.txt` laisse les erreurs à l'écran).
 
@@ -1321,10 +1301,10 @@ Les **entrées/sorties** (E/S, *I/O*) permettent à un programme d'échanger des
 | --- | --- |
 | Clavier / écran | `input()`, `print()` |
 | Arguments de ligne de commande | `sys.argv`, `argparse` |
-| Fichiers | `open()`, `pathlib` (chapitre 14) |
+| Fichiers | `open()`, `pathlib` (voir *Gestion des fichiers*) |
 | Réseau | `socket`, `requests`, `httpx` |
 
-### 5.2 Lire une saisie utilisateur
+## Lire une saisie utilisateur
 
 `input(invite)` affiche l'invite, attend que l'utilisateur appuie sur Entrée et **renvoie toujours une chaîne**, même si l'utilisateur tape un nombre : il faut la convertir.
 
@@ -1335,7 +1315,7 @@ print(f'{nom}, dans 10 ans vous aurez {age + 10} ans')
 # → Alice, dans 10 ans vous aurez 40 ans
 ```
 
-#### Saisie robuste
+### Saisie robuste
 
 L'utilisateur peut taper n'importe quoi : on valide la saisie dans une boucle.
 
@@ -1349,14 +1329,14 @@ while True:
 print(f'Âge retenu : {age}')           # → Âge retenu : 25
 ```
 
-#### Plusieurs valeurs sur une ligne
+### Plusieurs valeurs sur une ligne
 
 ```python
 a, b = map(int, input('Deux entiers : ').split())   # saisie : 3 4
 print(a + b)                                        # → 7
 ```
 
-#### Mot de passe, flux et arguments
+### Mot de passe, flux et arguments
 
 ```python
 from getpass import getpass
@@ -1381,7 +1361,7 @@ args = parseur.parse_args(['Alice', '--fois', '2'])   # équivaut à : python pr
 print(args.nom, args.fois)                             # → Alice 2
 ```
 
-### 5.3 Afficher dans la console
+## Afficher dans la console
 
 ```python
 import sys
@@ -1393,9 +1373,9 @@ print('Erreur !', file=sys.stderr)            # écrit sur stderr
 
 `print()` convertit chaque argument avec `str()`. Pour déboguer, `repr()` (ou le suffixe `!r` dans une f-string) affiche la représentation « non ambiguë » : `print(repr('a\nb'))` montre les caractères d'échappement. Pour les structures imbriquées, le module `pprint` met en forme : `pprint.pprint(donnees)`.
 
-### 5.4 Formater les sorties
+## Formater les sorties
 
-#### F-strings (méthode recommandée)
+### F-strings (méthode recommandée)
 
 Une f-string évalue des expressions placées entre accolades. Après `:` on indique un **spécificateur de format** de la forme `[remplissage][alignement][signe][#][0][largeur][séparateur][.précision][type]`.
 
@@ -1422,7 +1402,7 @@ print(f'{2 + 3 = }')                # → 2 + 3 = 5
 
 La largeur et la précision peuvent être dynamiques : `f'{valeur:{largeur}.{precision}f}'`.
 
-#### Autres méthodes (à connaître pour lire du code existant)
+### Autres méthodes (à connaître pour lire du code existant)
 
 ```python
 print('{} a {} ans'.format('Alice', 30))     # → Alice a 30 ans   (str.format)
@@ -1430,7 +1410,7 @@ print('{nom} a {age} ans'.format(nom='Bob', age=25))
 print('%s a %d ans' % ('Alice', 30))         # → Alice a 30 ans   (ancien style %)
 ```
 
-#### Template strings (t-strings, Python 3.14+)
+### Template strings (t-strings, Python 3.14+)
 
 Une **t-string** (PEP 750) s'écrit comme une f-string avec le préfixe `t`, mais **n'est pas évaluée en chaîne** : elle produit un objet `Template` qui conserve séparément les morceaux de texte fixe et les valeurs interpolées. Le code qui reçoit le gabarit peut alors traiter chaque valeur de manière adaptée (échappement HTML, paramètres SQL, journalisation structurée), ce qui réduit les risques d'injection.
 
@@ -1453,7 +1433,7 @@ print(html_sur(t'<p>{saisie}</p>'))   # → <p>&lt;script&gt;</p>
 
 Une f-string, elle, donne directement la chaîne finale : une f-string ne doit donc jamais servir à construire une requête SQL ou du HTML à partir de données non fiables.
 
-### 5.5 Formater les dates et heures
+## Formater les dates et heures
 
 Le module `datetime` fournit `date`, `time`, `datetime` et `timedelta` (durée). `strftime` convertit une date en texte ; `strptime` fait l'inverse ; `isoformat()` produit le format normalisé ISO 8601.
 
@@ -1478,25 +1458,21 @@ print(maintenant + timedelta(days=30))             # → 2026-11-10 14:30:00
 
 Pour les **fuseaux horaires**, utilisez `zoneinfo.ZoneInfo('Europe/Paris')` et manipulez de préférence des dates *conscientes* du fuseau (`datetime.now(tz)`), avec stockage en UTC.
 
-### 5.6 Bonnes pratiques
+## Bonnes pratiques
 
 - Validez et **convertissez** toujours les saisies ; ne faites jamais confiance à l'utilisateur.
 - Utilisez les **f-strings** pour la lisibilité (et les t-strings pour les contextes sensibles).
-- Envoyez les erreurs sur `stderr` ou utilisez le module `logging` (chapitre 13).
+- Envoyez les erreurs sur `stderr` ou utilisez le module `logging` (voir *Journalisation des erreurs*).
 - Pour les programmes non interactifs, privilégiez les arguments en ligne de commande plutôt que `input()`.
 - Ne présumez pas l'encodage de la console ; en cas de caractères accentués mal affichés, vérifiez `sys.stdout.encoding`.
 
-### Synthèse du chapitre 5
-
-`input()` renvoie **toujours** un `str` : convertissez et validez. `print()` accepte `sep`, `end`, `file` et `flush`. Les **f-strings** et leur mini-langage de format couvrent presque tous les besoins ; les **t-strings** (3.14) servent à traiter les valeurs interpolées en sécurité. Pour les dates, `datetime` avec `strftime` / `strptime` ; pour les fuseaux, `zoneinfo`.
-
 ---
 
-## 6. Structures de contrôle
+# Structures de contrôle
 
 **Objectifs d'apprentissage.** Maîtriser les conditions, le filtrage par motifs et les boucles, et savoir choisir la bonne structure pour chaque situation.
 
-### 6.1 Introduction
+## Introduction
 
 Par défaut, un programme s'exécute ligne par ligne, de haut en bas. Les **structures de contrôle** modifient cet ordre.
 
@@ -1507,7 +1483,7 @@ Par défaut, un programme s'exécute ligne par ligne, de haut en bas. Les **stru
 | **Itération** (répétition) | `for`, `while` |
 | **Contrôle de boucle** | `break`, `continue`, `else` de boucle, `pass` |
 
-### 6.2 Conditions : `if`, `elif`, `else`
+## Conditions : `if`, `elif`, `else`
 
 L'instruction `if` exécute son bloc si la condition est vraie. Les clauses `elif` (« sinon si ») sont testées dans l'ordre ; la première condition vraie l'emporte et les suivantes ne sont pas évaluées. `else` est facultatif et capte tous les autres cas.
 
@@ -1524,7 +1500,7 @@ else:
     print('Insuffisant')
 ```
 
-Une condition peut être n'importe quelle expression : elle est évaluée comme un booléen (valeurs *truthy* et *falsy*, chapitre 3). On combine les tests avec `and`, `or`, `not` et on utilise les comparaisons chaînées (`10 <= note <= 20`). Les conditions peuvent s'imbriquer, mais une imbrication profonde nuit à la lisibilité (voir 6.11).
+Une condition peut être n'importe quelle expression : elle est évaluée comme un booléen (valeurs *truthy* et *falsy*, voir *Valeurs « vraies » et « fausses »*). On combine les tests avec `and`, `or`, `not` et on utilise les comparaisons chaînées (`10 <= note <= 20`). Les conditions peuvent s'imbriquer, mais une imbrication profonde nuit à la lisibilité (voir *Bonnes pratiques*, plus bas).
 
 ```python
 liste = []
@@ -1534,7 +1510,7 @@ else:
     print('vide')        # → vide
 ```
 
-### 6.3 Opérateur ternaire
+## Opérateur ternaire
 
 L'**expression conditionnelle** `valeur_si_vrai if condition else valeur_si_faux` est une expression (elle produit une valeur), contrairement au bloc `if`.
 
@@ -1546,7 +1522,7 @@ print(statut)   # → majeur
 
 Réservez-la aux cas simples ; ne l'imbriquez pas.
 
-### 6.4 Filtrage par motifs : `match` / `case` *(Python 3.10+)*
+## Filtrage par motifs : `match` / `case` *(Python 3.10+)*
 
 L'instruction `match` compare une valeur à une suite de **motifs** (*patterns*) et exécute le premier `case` qui correspond. C'est bien plus qu'un `switch` : elle peut **décomposer** des structures et **lier des variables** au passage.
 
@@ -1590,7 +1566,7 @@ print(decrire(42))                  # → Autre
 
 **Attention** : un nom simple dans un `case` est une *capture*, pas une comparaison avec une variable existante. Pour comparer à une constante nommée, utilisez un nom pointé (`case Couleur.ROUGE:`).
 
-### 6.5 L'instruction `pass`
+## L'instruction `pass`
 
 `pass` ne fait rien ; elle occupe la place d'un bloc syntaxiquement obligatoire (corps de fonction ou de classe à écrire plus tard, `except` volontairement vide). On peut aussi employer `...` (`Ellipsis`) comme corps provisoire.
 
@@ -1604,7 +1580,7 @@ class Vide:
 print(a_implementer())   # → None
 ```
 
-### 6.6 Boucles : vue d'ensemble
+## Boucles : vue d'ensemble
 
 | Boucle | Usage |
 | --- | --- |
@@ -1613,7 +1589,7 @@ print(a_implementer())   # → None
 
 Une **itération** est un passage dans le corps de la boucle.
 
-### 6.7 La boucle `while`
+## La boucle `while`
 
 Elle teste la condition **avant** chaque tour.
 
@@ -1626,7 +1602,7 @@ while compteur < 3:
 
 Veillez à ce que la condition finisse par devenir fausse, sinon la boucle est **infinie** (interrompez-la avec `Ctrl+C`). Une boucle infinie volontaire s'écrit `while True:` avec un `break`.
 
-### 6.8 La boucle `for`
+## La boucle `for`
 
 Elle parcourt les éléments d'un **itérable** (liste, chaîne, dictionnaire, fichier, `range`, générateur…). `range(début, fin, pas)` produit une suite d'entiers, **fin exclue**, sans la stocker en mémoire.
 
@@ -1644,7 +1620,7 @@ for lettre in 'abc':          # une chaîne est itérable
     print(lettre)
 ```
 
-#### Outils de parcours
+### Outils de parcours
 
 ```python
 noms = ['Alice', 'Bob']
@@ -1672,7 +1648,7 @@ except ValueError as erreur:
     print(erreur)   # → zip() argument 2 is shorter than argument 1
 ```
 
-### 6.9 `break`, `continue` et `else` de boucle
+## `break`, `continue` et `else` de boucle
 
 - `break` **quitte** immédiatement la boucle ;
 - `continue` **passe** à l'itération suivante ;
@@ -1696,7 +1672,7 @@ else:
 
 Le `else` de boucle est utile pour les recherches : il traite le cas « non trouvé » sans variable indicatrice.
 
-### 6.10 Boucles imbriquées et motifs
+## Boucles imbriquées et motifs
 
 On peut placer une boucle dans une autre ; le corps interne s'exécute entièrement à chaque tour de la boucle externe. Le `break` ne quitte que la boucle la plus interne.
 
@@ -1716,7 +1692,7 @@ for i in range(1, 4):
 # 3   6   9
 ```
 
-### 6.11 Bonnes pratiques
+## Bonnes pratiques
 
 ```python
 # Imbrication excessive
@@ -1740,24 +1716,18 @@ print(g(3), g(-1))   # → positif None
 - Ne modifiez pas une liste pendant que vous la parcourez ; parcourez une copie ou construisez une nouvelle liste.
 - Remplacez les cascades de `elif` portant sur une même valeur par `match` ou par un dictionnaire.
 
-### Synthèse du chapitre 6
-
-`if` / `elif` / `else` pour choisir, l'opérateur ternaire pour les cas simples, `match` pour décomposer des structures. `for` parcourt un itérable, `while` répète tant qu'une condition est vraie ; `break`, `continue` et le `else` de boucle contrôlent l'exécution. `enumerate`, `zip`, `reversed` et `sorted` rendent les parcours expressifs.
-
 ---
 
-# Partie II — Structures de données
-
-## 7. Dictionnaires
+# Dictionnaires
 
 **Objectifs d'apprentissage.** Comprendre le fonctionnement d'un dictionnaire, maîtriser création, accès, modification, parcours, fusion et compréhension, connaître les structures spécialisées du module `collections`.
 
-### 7.1 Introduction
+## Introduction
 
 Un **dictionnaire** (`dict`) est une collection de paires **clé → valeur** : on retrouve une valeur à partir de sa clé, non de sa position. Caractéristiques :
 
 - **mutable** et dynamique ;
-- les clés sont **uniques** et doivent être **hachables** (voir 7.11) ;
+- les clés sont **uniques** et doivent être **hachables** (voir *Clés hachables*) ;
 - **ordonné par insertion** (garanti depuis Python 3.7) ;
 - accès, ajout et suppression en temps **constant en moyenne** (O(1)), grâce à une **table de hachage**.
 
@@ -1768,7 +1738,7 @@ print(personne)   # → {'nom': 'Alice', 'age': 25, 'ville': 'Paris'}
 
 Le principe de la **table de hachage** : Python calcule une empreinte numérique de la clé (`hash(cle)`) et s'en sert pour savoir directement où la paire est stockée, sans parcourir toutes les entrées.
 
-### 7.2 Créer un dictionnaire
+## Créer un dictionnaire
 
 ```python
 vide = {}
@@ -1782,7 +1752,7 @@ d6 = {n: n ** 2 for n in range(4)}       # compréhension
 print(d6)   # → {0: 0, 1: 1, 2: 4, 3: 9}
 ```
 
-### 7.3 Accéder aux éléments
+## Accéder aux éléments
 
 ```python
 p = {'nom': 'Alice', 'age': 25}
@@ -1794,7 +1764,7 @@ print(p.get('ville', 'N/A'))    # → N/A
 
 Utilisez `get()` quand la clé peut manquer, et `[]` quand son absence est une erreur de programmation.
 
-### 7.4 Ajouter, modifier, supprimer
+## Ajouter, modifier, supprimer
 
 ```python
 p = {'nom': 'Alice', 'age': 25}
@@ -1812,7 +1782,7 @@ print(p.popitem())                  # → ('langue', 'fr') : dernière paire ajo
 p.clear()                           # vide le dictionnaire
 ```
 
-### 7.5 Méthodes principales
+## Méthodes principales
 
 | Méthode | Rôle |
 | --- | --- |
@@ -1828,7 +1798,7 @@ p.clear()                           # vide le dictionnaire
 
 Les **vues** (`keys`, `values`, `items`) sont dynamiques : elles reflètent les modifications ultérieures du dictionnaire. `keys()` et `items()` se comportent comme des ensembles (`d1.keys() & d2.keys()`).
 
-### 7.6 Parcourir un dictionnaire
+## Parcourir un dictionnaire
 
 ```python
 p = {'nom': 'Alice', 'age': 25, 'ville': 'Paris'}
@@ -1855,7 +1825,7 @@ for cle in list(p):   # parcours d'une copie des clés : sans danger
     p[cle + '_copie'] = p[cle]
 ```
 
-### 7.7 Compréhensions de dictionnaires
+## Compréhensions de dictionnaires
 
 ```python
 carres = {n: n ** 2 for n in range(5)}
@@ -1866,7 +1836,7 @@ print(pairs)     # → {0: 0, 2: 4, 4: 16}
 print(inverse)   # → {0: 0, 1: 1, 4: 2, 9: 3, 16: 4}
 ```
 
-### 7.8 Test d'appartenance
+## Test d'appartenance
 
 ```python
 p = {'nom': 'Alice', 'age': 25}
@@ -1874,7 +1844,7 @@ print('nom' in p)             # → True : teste les clés, en O(1)
 print('Alice' in p.values())  # → True : teste les valeurs, en O(n)
 ```
 
-### 7.9 Dictionnaires imbriqués
+## Dictionnaires imbriqués
 
 Les valeurs peuvent être n'importe quel objet, y compris des listes et d'autres dictionnaires : c'est la structure de base des données JSON.
 
@@ -1888,7 +1858,7 @@ users['bob']['ville'] = 'Lyon'
 print(users['bob'])   # → {'age': 30, 'langues': ['fr'], 'ville': 'Lyon'}
 ```
 
-### 7.10 Fusionner des dictionnaires
+## Fusionner des dictionnaires
 
 ```python
 a = {'x': 1, 'y': 2}
@@ -1900,7 +1870,7 @@ a |= b              # fusion en place
 
 En cas de clé commune, **la dernière valeur l'emporte**.
 
-### 7.11 Clés hachables
+## Clés hachables
 
 Un objet est **hachable** s'il possède une empreinte (`__hash__`) qui ne change jamais pendant sa vie et s'il est comparable (`__eq__`) : deux objets égaux ont la même empreinte. Cela impose en pratique des objets **immuables** : `str`, `int`, `float`, `bool`, `tuple` (de valeurs hachables), `frozenset`.
 
@@ -1915,7 +1885,7 @@ except TypeError as erreur:
 
 Attention : `1`, `1.0` et `True` sont égaux et de même empreinte, donc ils désignent la **même clé**.
 
-### 7.12 Le module `collections`
+## Le module `collections`
 
 ```python
 from collections import defaultdict, Counter, ChainMap
@@ -1934,7 +1904,7 @@ print(reglages['langue'], reglages['theme'])   # → fr sombre (recherche en cas
 
 `OrderedDict` n'est plus nécessaire pour conserver l'ordre (le `dict` natif le fait) mais reste utile pour `move_to_end()` et pour une comparaison sensible à l'ordre.
 
-### 7.13 Dictionnaires et JSON
+## Dictionnaires et JSON
 
 ```python
 import json
@@ -1944,9 +1914,9 @@ donnees = json.loads(texte)
 print(donnees)   # → {'nom': 'Alice', 'age': 25}
 ```
 
-`dumps` convertit un objet Python en texte JSON, `loads` fait l'inverse ; `dump` et `load` travaillent avec des fichiers (chapitre 14). Les clés JSON sont toujours des chaînes.
+`dumps` convertit un objet Python en texte JSON, `loads` fait l'inverse ; `dump` et `load` travaillent avec des fichiers (voir *Gestion des fichiers*). Les clés JSON sont toujours des chaînes.
 
-### 7.14 Performances
+## Performances
 
 | Opération | Complexité moyenne |
 | --- | --- |
@@ -1955,7 +1925,7 @@ print(donnees)   # → {'nom': 'Alice', 'age': 25}
 | Parcours complet | O(n) |
 | `v in d.values()` | O(n) |
 
-### 7.15 Idiomes utiles
+## Idiomes utiles
 
 ```python
 scores = {'alice': 12, 'bob': 17, 'chloé': 9}
@@ -1971,19 +1941,15 @@ for ch in 'banane':
 print(freq)   # → {'b': 1, 'a': 2, 'n': 2, 'e': 1}
 ```
 
-Pour des données structurées à clés fixes, préférez un `dataclass` ou un `TypedDict` (chapitres 16 et 17).
-
-### Synthèse du chapitre 7
-
-Un `dict` associe des **clés hachables uniques** à des valeurs et conserve l'ordre d'insertion. `d[k]` lève `KeyError`, `d.get(k, défaut)` non. `keys`, `values` et `items` donnent des **vues** : ne changez pas la taille du dictionnaire pendant un parcours. L'opérateur `|` fusionne, les compréhensions transforment, `defaultdict` et `Counter` simplifient regroupements et comptages.
+Pour des données structurées à clés fixes, préférez un `dataclass` ou un `TypedDict` (voir *Programmation orientée objet* et *Typage statique*).
 
 ---
 
-## 8. Listes
+# Listes
 
 **Objectifs d'apprentissage.** Maîtriser la structure de données la plus utilisée de Python : création, indexation, tranches, modification, tri, compréhensions, copies et pièges liés à la mutabilité.
 
-### 8.1 Introduction
+## Introduction
 
 Une **liste** (`list`) est une collection **ordonnée** et **mutable**. Elle peut contenir des éléments de types différents, des doublons, et d'autres listes. Chaque élément possède un **indice** (sa position), à partir de 0. En interne, c'est un tableau dynamique de références : l'accès par indice est en O(1), l'ajout en fin est en O(1) amorti, l'insertion ou la suppression au début est en O(n).
 
@@ -1993,7 +1959,7 @@ melange = [1, 'deux', 3.0, [4, 5]]
 print(melange)   # → [1, 'deux', 3.0, [4, 5]]
 ```
 
-### 8.2 Créer des listes
+## Créer des listes
 
 ```python
 vide = []
@@ -2003,7 +1969,7 @@ c = [0] * 3                       # → [0, 0, 0]
 d = [x ** 2 for x in range(5)]    # compréhension → [0, 1, 4, 9, 16]
 ```
 
-### 8.3 Accéder aux éléments
+## Accéder aux éléments
 
 ```python
 l = [10, 20, 30, 40, 50]
@@ -2015,7 +1981,7 @@ print(l[::-1])        # → [50, 40, 30, 20, 10]
 
 La syntaxe d'une **tranche** (*slice*) est `liste[début:fin:pas]` : début inclus, fin **exclue**, chaque borne facultative. Une tranche renvoie toujours une **nouvelle** liste et ne lève jamais d'`IndexError` ; un indice simple hors limites, lui, en lève une.
 
-### 8.4 Modifier une liste
+## Modifier une liste
 
 ```python
 l = [10, 20, 30, 40, 50]
@@ -2024,7 +1990,7 @@ l[1:3] = [21, 31, 35]     # remplace une tranche (la taille peut changer)
 print(l)                  # → [11, 21, 31, 35, 40, 50]
 ```
 
-### 8.5 Ajouter des éléments
+## Ajouter des éléments
 
 ```python
 l = [1, 2]
@@ -2038,7 +2004,7 @@ x = [0]; x.append([1, 2]); print(x)   # → [0, [1, 2]]  (une sous-liste)
 y = [0]; y.extend([1, 2]); print(y)   # → [0, 1, 2]    (deux éléments)
 ```
 
-### 8.6 Supprimer des éléments
+## Supprimer des éléments
 
 ```python
 l = [10, 20, 30, 40, 50, 60]
@@ -2055,7 +2021,7 @@ except ValueError as erreur:
     print(erreur)      # → list.remove(x): x not in list
 ```
 
-### 8.7 Rechercher
+## Rechercher
 
 ```python
 l = [3, 1, 4, 1, 5]
@@ -2066,7 +2032,7 @@ print(l.count(1))      # → 2
 
 Pour des recherches fréquentes, utilisez un `set` ou un `dict`, ou le module `bisect` sur une liste **triée**.
 
-### 8.8 Trier et inverser
+## Trier et inverser
 
 ```python
 l = ['pomme', 'kiwi', 'banane', 'fig']
@@ -2086,7 +2052,7 @@ personnes.sort(key=lambda p: (-p[1], p[0]))   # âge décroissant, puis nom
 print(personnes)   # → [('Alice', 30), ('Chloé', 30), ('Bob', 25)]
 ```
 
-### 8.9 Fonctions et méthodes utiles
+## Fonctions et méthodes utiles
 
 | Fonction | Rôle |
 | --- | --- |
@@ -2098,7 +2064,7 @@ print(personnes)   # → [('Alice', 30), ('Chloé', 30), ('Bob', 25)]
 
 Méthodes de `list` : `append`, `extend`, `insert`, `remove`, `pop`, `clear`, `index`, `count`, `sort`, `reverse`, `copy`.
 
-### 8.10 Compréhensions de listes
+## Compréhensions de listes
 
 Une **compréhension** construit une liste à partir d'un itérable en une expression : `[expression for variable in itérable if condition]`.
 
@@ -2113,7 +2079,7 @@ print(aplatie)   # → [1, 2, 3, 4]
 
 La variable de boucle est **locale** à la compréhension. Si l'expression devient trop longue ou nécessite plusieurs instructions, utilisez une boucle classique.
 
-### 8.11 Copier une liste
+## Copier une liste
 
 Affecter une liste à un autre nom ne copie rien (alias). Une **copie superficielle** duplique la liste mais pas les objets qu'elle contient ; une **copie profonde** duplique tout.
 
@@ -2131,7 +2097,7 @@ print(d)                # → [1, 2, [3, 4]]
 print(b is a)           # → True
 ```
 
-### 8.12 Listes imbriquées
+## Listes imbriquées
 
 ```python
 matrice = [[1, 2, 3], [4, 5, 6]]
@@ -2148,7 +2114,7 @@ print(mauvaise)                      # → [[1, 0, 0], [1, 0, 0], [1, 0, 0]]
 
 Pour le calcul numérique sur matrices, utilisez **NumPy**.
 
-### 8.13 Déballage de listes
+## Déballage de listes
 
 ```python
 a, b, c = [1, 2, 3]
@@ -2160,7 +2126,7 @@ def somme(x, y, z):
 print(somme(*[1, 2, 3]))          # → 6 (déballage dans un appel)
 ```
 
-### 8.14 Outils fonctionnels
+## Outils fonctionnels
 
 ```python
 from functools import reduce
@@ -2173,7 +2139,7 @@ print(reduce(lambda a, b: a * b, nombres))        # → 24
 
 Les compréhensions sont généralement plus lisibles que `map` et `filter`.
 
-### 8.15 Listes et chaînes
+## Listes et chaînes
 
 ```python
 mots = 'un deux trois'.split()     # → ['un', 'deux', 'trois']
@@ -2181,7 +2147,7 @@ print(' '.join(mots))             # → un deux trois
 print(list('abc'))                # → ['a', 'b', 'c']
 ```
 
-### 8.16 Comparaison des collections
+## Comparaison des collections
 
 | Critère | `list` | `tuple` | `set` | `dict` |
 | --- | --- | --- | --- | --- |
@@ -2193,17 +2159,13 @@ print(list('abc'))                # → ['a', 'b', 'c']
 
 Pour une **file** (ajouts et retraits aux deux extrémités), utilisez `collections.deque` : `append()` et `popleft()` y sont en O(1), alors que `list.pop(0)` est en O(n).
 
-### Synthèse du chapitre 8
-
-Une **liste** est ordonnée et mutable ; les tranches s'écrivent `[début:fin:pas]` avec la fin exclue. `append` ajoute un élément, `extend` plusieurs ; `sort` modifie la liste, `sorted` renvoie une copie. Copiez avec `.copy()` (superficielle) ou `deepcopy` (profonde) et méfiez-vous des alias et de `[[0] * 3] * 3`. Les **compréhensions** sont l'outil privilégié de transformation et de filtrage.
-
 ---
 
-## 9. Ensembles
+# Ensembles
 
 **Objectifs d'apprentissage.** Utiliser les ensembles pour éliminer des doublons, tester l'appartenance rapidement et appliquer les opérations mathématiques (union, intersection, différence).
 
-### 9.1 Introduction
+## Introduction
 
 Un **ensemble** (`set`) est une collection **non ordonnée** d'éléments **uniques** et **hachables**. Il est **mutable**. Comme les dictionnaires, il repose sur une table de hachage : test d'appartenance, ajout et suppression en O(1) en moyenne.
 
@@ -2212,7 +2174,7 @@ fruits = {'pomme', 'banane', 'pomme'}
 print(fruits)   # → {'pomme', 'banane'} (doublon supprimé ; l'ordre d'affichage peut varier)
 ```
 
-### 9.2 Créer des ensembles
+## Créer des ensembles
 
 ```python
 s = {1, 2, 3}
@@ -2223,7 +2185,7 @@ c = {x ** 2 for x in range(5)}       # compréhension d'ensemble
 print(type({}), type(vide))          # → <class 'dict'> <class 'set'>
 ```
 
-### 9.3 Accéder aux éléments
+## Accéder aux éléments
 
 Il n'y a pas d'indice : `s[0]` lève une `TypeError`. On parcourt l'ensemble avec `for` ou on teste l'appartenance avec `in`. L'ordre de parcours n'est pas garanti.
 
@@ -2236,7 +2198,7 @@ except TypeError as erreur:
     print(erreur)   # → 'set' object is not subscriptable
 ```
 
-### 9.4 Ajouter et supprimer
+## Ajouter et supprimer
 
 ```python
 s = {1, 2, 3}
@@ -2248,7 +2210,7 @@ x = s.pop()               # retire un élément arbitraire
 s.clear()
 ```
 
-### 9.5 Opérations ensemblistes
+## Opérations ensemblistes
 
 | Opération | Opérateur | Méthode |
 | --- | --- | --- |
@@ -2268,7 +2230,7 @@ print(a ^ b)   # → {1, 2, 4}
 
 Les versions « en place » sont `|=`, `&=`, `-=`, `^=` (ou `update`, `intersection_update`, etc.). Les méthodes acceptent n'importe quel itérable, pas seulement des ensembles.
 
-### 9.6 Comparaisons et sous-ensembles
+## Comparaisons et sous-ensembles
 
 ```python
 print({1, 2} <= {1, 2, 3})         # → True  : sous-ensemble (issubset)
@@ -2277,7 +2239,7 @@ print({1, 2, 3} >= {1, 2})         # → True  : sur-ensemble (issuperset)
 print({1, 2}.isdisjoint({3, 4}))   # → True  : aucun élément commun
 ```
 
-### 9.7 Ensembles figés (`frozenset`)
+## Ensembles figés (`frozenset`)
 
 Un `frozenset` est la version **immuable** et **hachable** d'un ensemble : on peut l'utiliser comme clé de dictionnaire ou comme élément d'un autre ensemble.
 
@@ -2289,7 +2251,7 @@ except AttributeError as erreur:
     print(erreur)   # → 'frozenset' object has no attribute 'add'
 ```
 
-### 9.8 Cas d'usage
+## Cas d'usage
 
 ```python
 liste = [3, 1, 3, 2, 1]
@@ -2303,28 +2265,24 @@ if 'admin' in interdits:               # recherche rapide
     print('Nom interdit')
 ```
 
-### 9.9 Pièges et bonnes pratiques
+## Pièges et bonnes pratiques
 
 - `{}` crée un **dictionnaire** ; utilisez `set()` pour un ensemble vide.
 - Les éléments doivent être **hachables** : `{[1, 2]}` lève une `TypeError` ; utilisez des tuples ou des `frozenset`.
 - **Ne comptez jamais sur l'ordre** d'un ensemble.
 - Employez les ensembles pour les tests d'appartenance fréquents et les comparaisons de collections.
 
-### Synthèse du chapitre 9
-
-Un `set` contient des éléments **uniques**, hachables et sans ordre ; `set()` crée un ensemble vide. Les opérateurs `|`, `&`, `-` et `^` donnent union, intersection, différence et différence symétrique. `frozenset` est la variante **immuable et hachable**.
-
 ---
 
-## 10. Tuples
+# Tuples
 
 **Objectifs d'apprentissage.** Comprendre le rôle des séquences immuables, maîtriser le déballage, et savoir quand choisir un tuple plutôt qu'une liste.
 
-### 10.1 Introduction
+## Introduction
 
 Un **tuple** est une séquence **ordonnée** et **immuable**. Il regroupe typiquement un nombre fixe de valeurs liées, de types éventuellement différents (coordonnées, enregistrement).
 
-### 10.2 Créer des tuples
+## Créer des tuples
 
 Ce sont les **virgules** qui créent un tuple, pas les parenthèses.
 
@@ -2338,7 +2296,7 @@ depuis_liste = tuple([1, 2, 3])
 print(type(singleton), type(pas_un_tuple))   # → <class 'tuple'> <class 'int'>
 ```
 
-### 10.3 Accès et tranches
+## Accès et tranches
 
 ```python
 t = ('a', 'b', 'c', 'd')
@@ -2346,7 +2304,7 @@ print(t[0], t[-1])   # → a d
 print(t[1:3])        # → ('b', 'c')
 ```
 
-### 10.4 Opérations et méthodes
+## Opérations et méthodes
 
 ```python
 print((1, 2) + (3,))    # → (1, 2, 3)
@@ -2358,7 +2316,7 @@ print(t.count(2), t.index(3))   # → 2 3
 
 Un tuple n'a que **deux méthodes** : `count()` et `index()`. Les tuples se comparent lexicographiquement et se trient (`sorted`), ce qui les rend pratiques comme clés de tri.
 
-### 10.5 Déballage (*unpacking*)
+## Déballage (*unpacking*)
 
 Le **déballage** affecte les éléments d'une séquence à plusieurs variables en une instruction. Il fonctionne avec toute séquence ou itérable, pas seulement les tuples.
 
@@ -2379,7 +2337,7 @@ print(mini, maxi)          # → 1 4
 
 Le `*` capture le « reste » sous forme de liste ; il ne peut apparaître qu'une fois par déballage. `_` sert par convention à ignorer une valeur.
 
-### 10.6 Immuabilité
+## Immuabilité
 
 On ne peut ni ajouter, ni retirer, ni remplacer un élément d'un tuple. Mais l'immuabilité est **superficielle** : un objet mutable contenu dans un tuple reste modifiable.
 
@@ -2393,7 +2351,7 @@ except TypeError as erreur:
     print(erreur)    # → 'tuple' object does not support item assignment
 ```
 
-### 10.7 Tuples comme clés de dictionnaire
+## Tuples comme clés de dictionnaire
 
 Un tuple est **hachable** si tous ses éléments le sont, ce qui permet des clés composées.
 
@@ -2402,7 +2360,7 @@ distances = {(48.85, 2.35): 'Paris', (45.76, 4.84): 'Lyon'}
 print(distances[(48.85, 2.35)])   # → Paris
 ```
 
-### 10.8 Tuples ou listes ?
+## Tuples ou listes ?
 
 | Critère | Tuple | Liste |
 | --- | --- | --- |
@@ -2411,7 +2369,7 @@ print(distances[(48.85, 2.35)])   # → Paris
 | Mémoire / vitesse | Plus léger, plus rapide | Plus lourde |
 | Usage typique | Données hétérogènes de taille fixe (enregistrement) | Collection homogène de taille variable |
 
-### 10.9 Cas d'usage
+## Cas d'usage
 
 - Retourner **plusieurs valeurs** depuis une fonction ;
 - constantes (jours, couleurs RVB) et paramètres fixes ;
@@ -2419,7 +2377,7 @@ print(distances[(48.85, 2.35)])   # → Paris
 - `enumerate()` et `zip()` produisent des tuples ;
 - clés composites de dictionnaires, éléments d'ensembles.
 
-### 10.10 Tuples nommés
+## Tuples nommés
 
 Un **tuple nommé** permet d'accéder aux éléments par un nom en plus de l'indice, tout en restant un tuple immuable.
 
@@ -2438,7 +2396,7 @@ class Coordonnee(NamedTuple):      # version typée (recommandée)
 print(Coordonnee(3))               # → Coordonnee(x=3, y=0.0)
 ```
 
-### 10.11 Pièges fréquents
+## Pièges fréquents
 
 | Erreur | Cause | Solution |
 | --- | --- | --- |
@@ -2448,19 +2406,13 @@ print(Coordonnee(3))               # → Coordonnee(x=3, y=0.0)
 | Clé de dict non hachable | Tuple contenant une liste | Convertir en sous-tuples |
 | `IndexError` | Indice hors limites | Vérifier `len(t)` ou utiliser une tranche |
 
-### Synthèse du chapitre 10
-
-Un **tuple** est une séquence immuable : la virgule le crée, `(5,)` pour un seul élément. Le **déballage** (`a, b = t`, `a, *reste = t`) est un idiome central. Un tuple est hachable si son contenu l'est, donc utilisable comme clé. `NamedTuple` ajoute des noms de champs et des types.
-
 ---
 
-# Partie III — Fonctions, itérateurs et générateurs
-
-## 11. Fonctions
+# Fonctions
 
 **Objectifs d'apprentissage.** Définir et appeler des fonctions, maîtriser tous les types de paramètres, comprendre portée, fermetures, décorateurs, récursivité, annotations et docstrings.
 
-### 11.1 Introduction
+## Introduction
 
 Une **fonction** est un bloc de code nommé et réutilisable qui réalise une tâche précise. Elle évite la répétition (principe DRY), structure le programme et facilite les tests. On distingue la **définition** (avec `def`, qui crée l'objet fonction) de l'**appel** (qui l'exécute).
 
@@ -2474,7 +2426,7 @@ saluer('Alice')   # → Bonjour Alice !
 
 Syntaxe générale : `def nom(paramètres): docstring, corps, return`. Un **paramètre** est le nom déclaré dans la définition ; un **argument** est la valeur fournie à l'appel. Convention : nom en `snake_case`, commençant par un verbe (`calculer_total`, `est_valide`).
 
-### 11.2 Paramètres et arguments
+## Paramètres et arguments
 
 ```python
 def presenter(nom, age=18, *hobbies, ville='Paris', **autres):
@@ -2492,7 +2444,7 @@ presenter('Alice', 30, 'lecture', 'vélo', ville='Lyon', pays='FR')
 | **`*args`** | `def f(*args)` | Arguments positionnels supplémentaires, collectés dans un tuple |
 | **`**kwargs`** | `def f(**kwargs)` | Arguments nommés supplémentaires, collectés dans un dict |
 
-#### Paramètres positionnels seuls et nommés seuls
+### Paramètres positionnels seuls et nommés seuls
 
 ```python
 def combiner(a, b, /, c, d, *, e, f):
@@ -2506,7 +2458,7 @@ print(combiner(1, 2, 3, d=4, e=5, f=6))   # → (1, 2, 3, 4, 5, 6)
 
 Ordre des paramètres : `positionnels seuls, /, normaux, valeurs par défaut, *args, nommés seuls, **kwargs`.
 
-#### Piège : valeur par défaut mutable
+### Piège : valeur par défaut mutable
 
 Une valeur par défaut est évaluée **une seule fois**, à la définition de la fonction. Un objet mutable est donc partagé entre tous les appels.
 
@@ -2527,7 +2479,7 @@ def ajouter_ok(x, liste=None):     # correct
 print(ajouter_ok(1), ajouter_ok(2))   # → [1] [2]
 ```
 
-#### Déballage à l'appel
+### Déballage à l'appel
 
 ```python
 def somme(a, b, c):
@@ -2549,7 +2501,7 @@ modifier(maliste)
 print(maliste)        # → [1, 99]
 ```
 
-### 11.3 Valeurs de retour
+## Valeurs de retour
 
 `return` termine la fonction et renvoie une valeur. Plusieurs valeurs renvoyées forment un **tuple**. Sans `return` (ou avec `return` seul), la fonction renvoie `None`.
 
@@ -2566,7 +2518,7 @@ mini, maxi = min_max([3, 1, 4])
 print(division(6, 3), division(1, 0), mini, maxi)   # → 2.0 None 1 4
 ```
 
-### 11.4 Portée et durée de vie
+## Portée et durée de vie
 
 ```python
 x = 10                    # globale
@@ -2590,7 +2542,7 @@ print(externe())          # → 1
 
 Les variables locales sont créées à chaque appel et **disparaissent à sa fin**. Lire une variable globale est possible sans déclaration ; l'**affecter** exige `global`. Un nom affecté quelque part dans une fonction est local dans *toute* la fonction : le lire avant l'affectation provoque une `UnboundLocalError`.
 
-### 11.5 Fonctions anonymes (`lambda`)
+## Fonctions anonymes (`lambda`)
 
 Une **lambda** est une fonction sans nom, limitée à **une seule expression** dont le résultat est renvoyé.
 
@@ -2605,7 +2557,7 @@ print(personnes[0]['nom'])   # → Bob
 
 Utilisez-les pour de petites fonctions jetables (clés de tri, rappels) ; pour toute logique non triviale, écrivez un `def`.
 
-### 11.6 Fonctions d'ordre supérieur et fermetures
+## Fonctions d'ordre supérieur et fermetures
 
 Les fonctions sont des **objets de première classe** : on peut les affecter, les passer en argument, les retourner, les stocker dans des structures. Une fonction qui prend ou renvoie une fonction est dite **d'ordre supérieur**.
 
@@ -2626,7 +2578,7 @@ print(triple(5))          # → 15
 
 Une **fermeture** est une fonction interne qui conserve l'accès aux variables de la fonction englobante, même après la fin de celle-ci.
 
-#### Le module `functools`
+### Le module `functools`
 
 ```python
 from functools import partial, cache
@@ -2641,7 +2593,7 @@ def fib(n):
 print(fib(30))               # → 832040
 ```
 
-### 11.7 Décorateurs
+## Décorateurs
 
 Un **décorateur** est une fonction qui prend une fonction et renvoie une version modifiée. La notation `@decorateur` au-dessus d'un `def` est équivalente à `f = decorateur(f)`.
 
@@ -2665,7 +2617,7 @@ def calcul():
 print(calcul())   # affiche la durée (variable), puis 499999500000
 ```
 
-#### Décorateur avec paramètres
+### Décorateur avec paramètres
 
 Il faut un niveau d'imbrication supplémentaire : une fonction qui renvoie le décorateur.
 
@@ -2690,7 +2642,7 @@ dire_salut()   # affiche Salut trois fois
 
 Décorateurs intégrés à connaître : `@staticmethod`, `@classmethod`, `@property`, `@functools.cache`, `@dataclass`, `@abstractmethod`.
 
-### 11.8 Récursivité
+## Récursivité
 
 Une fonction **récursive** s'appelle elle-même. Elle doit comporter un **cas de base** (qui arrête la récursion) et un **cas récursif** qui se rapproche du cas de base.
 
@@ -2707,7 +2659,7 @@ print(factorielle(5))         # → 120
 - Python n'optimise pas la récursion terminale : pour de grandes profondeurs, utilisez une **boucle**.
 - `@cache` évite les recalculs (Fibonacci).
 
-### 11.9 Annotations et typage
+## Annotations et typage
 
 ```python
 def saluer(nom: str, fois: int = 1) -> str:
@@ -2716,9 +2668,9 @@ def saluer(nom: str, fois: int = 1) -> str:
 print(saluer('Alice', 2))   # → Bonjour Alice ! Bonjour Alice !
 ```
 
-Les annotations sont **informatives** : Python ne les applique pas à l'exécution, mais des outils (mypy, pyright) les vérifient (chapitre 17).
+Les annotations sont **informatives** : Python ne les applique pas à l'exécution, mais des outils (mypy, pyright) les vérifient (voir *Typage statique*).
 
-### 11.10 Docstrings
+## Docstrings
 
 Une **docstring** est la chaîne de documentation placée immédiatement après la ligne `def` (PEP 257). Elle est accessible par `help(fonction)` et `fonction.__doc__`.
 
@@ -2743,7 +2695,7 @@ def aire_rectangle(largeur: float, hauteur: float) -> float:
 print(aire_rectangle(3, 4))   # → 12
 ```
 
-### 11.11 Fonctions intégrées essentielles
+## Fonctions intégrées essentielles
 
 | Catégorie | Fonctions |
 | --- | --- |
@@ -2756,7 +2708,7 @@ print(aire_rectangle(3, 4))   # → 12
 | Fonctionnel | `map`, `filter`, `iter`, `next` |
 | Caractères | `chr`, `ord`, `repr`, `format`, `ascii` |
 
-### 11.12 Bonnes pratiques
+## Bonnes pratiques
 
 - Une fonction = **une responsabilité**, courte, nommée explicitement.
 - Peu de paramètres (idéalement quatre au plus) ; sinon regroupez-les dans un objet.
@@ -2764,17 +2716,13 @@ print(aire_rectangle(3, 4))   # → 12
 - Documentez et **typez** les fonctions publiques.
 - Ne renvoyez pas des types différents selon les cas sans l'annoncer dans la signature.
 
-### Synthèse du chapitre 11
-
-Les paramètres peuvent être positionnels, nommés, par défaut, `*args`, `**kwargs`, ou contraints par `/` et `*`. N'utilisez **jamais** de valeur par défaut mutable : préférez `None`. Les fonctions sont des **objets** : fermetures, décorateurs et `functools` en découlent. La récursivité repose sur un **cas de base** et un **cas récursif**, en gardant à l'esprit la limite de profondeur.
-
 ---
 
-## 12. Itérateurs et générateurs
+# Itérateurs et générateurs
 
 **Objectifs d'apprentissage.** Comprendre le protocole d'itération sur lequel repose `for`, écrire des générateurs pour traiter des données à la demande et utiliser `itertools`.
 
-### 12.1 Itérables et itérateurs
+## Itérables et itérateurs
 
 - Un **itérable** est un objet qu'on peut parcourir avec `for` (liste, chaîne, dictionnaire, fichier…). Il définit `__iter__()`, qui renvoie un itérateur.
 - Un **itérateur** produit ses valeurs une à une via `__next__()` et lève `StopIteration` quand il n'y en a plus. Un itérateur est à usage unique : il s'épuise.
@@ -2792,7 +2740,7 @@ except StopIteration:
 print(next(iter([]), 'vide'))   # → vide (valeur par défaut de next)
 ```
 
-### 12.2 Générateurs
+## Générateurs
 
 Une fonction contenant `yield` est une **fonction génératrice** : l'appeler renvoie un **générateur** (un itérateur). Le code ne s'exécute qu'au fil des demandes ; à chaque `yield`, la fonction **se suspend** en conservant son état local, puis reprend là où elle s'était arrêtée. Les valeurs sont produites à la demande (**évaluation paresseuse**) : on ne stocke pas toute la séquence en mémoire.
 
@@ -2810,7 +2758,7 @@ print(next(g), next(g))  # → 2 1
 print(list(g))           # → [] : le générateur est épuisé
 ```
 
-#### Expressions génératrices
+### Expressions génératrices
 
 Syntaxe des compréhensions avec des parenthèses : elles produisent un générateur, pas une liste.
 
@@ -2819,7 +2767,7 @@ somme = sum(x ** 2 for x in range(1_000_000))   # aucune liste en mémoire
 print(somme)   # → 333332833333500000
 ```
 
-#### `yield from`
+### `yield from`
 
 `yield from itérable` délègue la production des valeurs à un autre itérable.
 
@@ -2831,7 +2779,7 @@ def aplatir(listes):
 print(list(aplatir([[1, 2], [3], [4, 5]])))   # → [1, 2, 3, 4, 5]
 ```
 
-#### Lecture paresseuse d'un gros fichier
+### Lecture paresseuse d'un gros fichier
 
 ```python
 def lignes_non_vides(chemin):
@@ -2843,11 +2791,11 @@ def lignes_non_vides(chemin):
 
 Ce générateur traite un fichier de plusieurs gigaoctets en consommant une quantité de mémoire constante.
 
-#### Générateurs infinis et communication
+### Générateurs infinis et communication
 
-Un générateur peut être infini (`while True: yield ...`) ; on en consomme une partie avec `itertools.islice`. Les méthodes `send()`, `throw()` et `close()` permettent de communiquer avec un générateur (`valeur = yield`), mais cet usage avancé a largement été remplacé par `async` / `await` (chapitre 18).
+Un générateur peut être infini (`while True: yield ...`) ; on en consomme une partie avec `itertools.islice`. Les méthodes `send()`, `throw()` et `close()` permettent de communiquer avec un générateur (`valeur = yield`), mais cet usage avancé a largement été remplacé par `async` / `await` (voir *Programmation asynchrone et concurrence*).
 
-### 12.3 Le module `itertools`
+## Le module `itertools`
 
 Il fournit des briques efficaces et paresseuses pour combiner des itérables.
 
@@ -2871,7 +2819,7 @@ print(list(batched(range(7), 3)))        # → [(0, 1, 2), (3, 4, 5), (6,)]  (3.
 | `groupby` | Regroupe des éléments consécutifs de même clé (trier d'abord) |
 | `batched` | Découpe en lots de taille fixe (3.12+) |
 
-### 12.4 Créer son propre itérateur
+## Créer son propre itérateur
 
 ```python
 class Compteur:
@@ -2893,7 +2841,7 @@ print(list(Compteur(3)))   # → [1, 2, 3]
 
 Dans la plupart des cas, un **générateur** est plus simple et plus court qu'une classe itérateur.
 
-### 12.5 Quand utiliser un générateur ?
+## Quand utiliser un générateur ?
 
 - Données volumineuses ou flux continus (fichiers, réseau) ;
 - chaînes de traitement (pipelines) où chaque étape consomme la précédente ;
@@ -2901,19 +2849,13 @@ Dans la plupart des cas, un **générateur** est plus simple et plus court qu'un
 
 Attention : on ne peut parcourir un générateur qu'**une seule fois**, et on ne peut ni connaître sa longueur (`len`) ni l'indexer.
 
-### Synthèse du chapitre 12
-
-`for` repose sur `iter()` et `next()` ; un **itérateur s'épuise**. `yield` transforme une fonction en **générateur** : valeurs produites à la demande, état conservé entre deux appels. `itertools` offre des outils combinatoires et de découpage économes en mémoire.
-
 ---
 
-# Partie IV — Robustesse, fichiers et organisation du code
-
-## 13. Gestion des erreurs
+# Gestion des erreurs
 
 **Objectifs d'apprentissage.** Distinguer erreurs de syntaxe et exceptions, savoir les capturer, les lever, les chaîner et en créer de nouvelles ; utiliser `finally`, `with`, `assert` et `logging` ; adopter une stratégie de gestion d'erreurs robuste.
 
-### 13.1 Introduction
+## Introduction
 
 | Type | Description | Exemple |
 | --- | --- | --- |
@@ -2923,7 +2865,7 @@ Attention : on ne peut parcourir un générateur qu'**une seule fois**, et on ne
 
 Une **exception** est un objet qui signale une situation anormale. Lorsqu'elle est levée, l'exécution normale s'interrompt et l'exception **remonte** la pile des appels jusqu'à trouver un gestionnaire `except` ; sans gestionnaire, le programme s'arrête en affichant la **trace d'appels** (*traceback*).
 
-### 13.2 `try` / `except`
+## `try` / `except`
 
 Le code susceptible d'échouer est placé dans `try` ; chaque `except` traite un type d'exception. Les clauses sont examinées dans l'ordre et la première qui correspond est exécutée.
 
@@ -2946,7 +2888,7 @@ inverser('0')          # → Division par zéro impossible.
 
 **Ne jamais écrire `except:` nu** (il attrape aussi `KeyboardInterrupt` et `SystemExit`) ni `except Exception: pass` sans raison sérieuse : vous masqueriez des bogues.
 
-### 13.3 `else` et `finally`
+## `else` et `finally`
 
 - `else` s'exécute si **aucune exception** n'a été levée dans `try` ;
 - `finally` s'exécute **toujours** (exception ou non, même en cas de `return`) : il sert au nettoyage.
@@ -2964,7 +2906,7 @@ finally:
 # sans donnees.txt : Fichier introuvable, puis Toujours exécuté
 ```
 
-### 13.4 Exploiter l'objet exception
+## Exploiter l'objet exception
 
 ```python
 try:
@@ -2977,7 +2919,7 @@ except ValueError as e:
 
 Le nom après `as` n'existe que dans le bloc `except`.
 
-### 13.5 Lever des exceptions
+## Lever des exceptions
 
 L'instruction `raise` déclenche volontairement une exception, typiquement pour signaler un argument invalide ou un état impossible.
 
@@ -2993,7 +2935,7 @@ except ValueError as erreur:
     print(erreur)   # → x doit être positif
 ```
 
-### 13.6 Exceptions personnalisées
+## Exceptions personnalisées
 
 ```python
 class ErreurMetier(Exception):
@@ -3013,7 +2955,7 @@ except ErreurMetier as erreur:          # la classe de base attrape aussi la sou
 
 Dérivez toujours de `Exception` (jamais directement de `BaseException`), terminez le nom par `Error` pour une erreur, et créez une classe de base commune pour permettre de tout capturer d'un coup.
 
-### 13.7 Chaînage et relance
+## Chaînage et relance
 
 `raise ... from e` conserve la **cause** d'origine (`__cause__`) ; un `raise` seul, dans un `except`, **relance** l'exception en cours sans perdre sa trace.
 
@@ -3037,7 +2979,7 @@ except ZeroDivisionError as erreur:
     print('Relancée :', erreur)  # → Relancée : division by zero
 ```
 
-### 13.8 Hiérarchie des exceptions
+## Hiérarchie des exceptions
 
 ```text
 BaseException
@@ -3055,9 +2997,9 @@ BaseException
 
 Un `except` attrape l'exception **et ses sous-classes** : placez les plus spécifiques en premier, sinon elles ne seront jamais atteintes.
 
-### 13.9 Groupes d'exceptions et `except*` *(Python 3.11+)*
+## Groupes d'exceptions et `except*` *(Python 3.11+)*
 
-Quand plusieurs tâches échouent simultanément (concurrence, chapitre 18), on les regroupe dans un `ExceptionGroup`. `except*` traite séparément chaque type contenu dans le groupe.
+Quand plusieurs tâches échouent simultanément (concurrence, voir *Programmation asynchrone et concurrence*), on les regroupe dans un `ExceptionGroup`. `except*` traite séparément chaque type contenu dans le groupe.
 
 ```python
 try:
@@ -3070,7 +3012,7 @@ except* TypeError as eg:
 
 Python 3.11 permet aussi d'enrichir une exception avec `e.add_note('détail utile')` ; les notes s'affichent dans la trace et sont lisibles dans `e.__notes__`.
 
-### 13.10 Assertions
+## Assertions
 
 `assert condition, message` lève une `AssertionError` si la condition est fausse. Elle vérifie des **hypothèses de développement**, jamais des entrées utilisateur : les assertions sont **désactivées** avec `python -O`.
 
@@ -3082,7 +3024,7 @@ def moyenne(notes):
 print(moyenne([10, 14]))   # → 12.0
 ```
 
-### 13.11 Journalisation des erreurs
+## Journalisation des erreurs
 
 Le module `logging` remplace avantageusement `print` pour tracer l'exécution : niveaux de gravité, horodatage, destinations multiples.
 
@@ -3103,7 +3045,7 @@ except ZeroDivisionError:
 
 Niveaux, du moins au plus grave : `DEBUG`, `INFO`, `WARNING`, `ERROR`, `CRITICAL`. Dans un module réutilisable, on obtient un journal nommé par `logging.getLogger(__name__)`.
 
-### 13.12 Gestionnaires de contexte et nettoyage
+## Gestionnaires de contexte et nettoyage
 
 L'instruction `with` garantit la libération d'une ressource (fichier, verrou, connexion), même en cas d'exception : elle appelle `__enter__` à l'entrée et `__exit__` à la sortie.
 
@@ -3114,7 +3056,7 @@ with open('fichier.txt', 'w', encoding='utf-8') as f:
 print(f.closed)   # → True
 ```
 
-On crée un gestionnaire avec `contextlib.contextmanager` (un générateur avec un seul `yield`) ou avec une classe (chapitre 16). `contextlib.suppress` ignore proprement une erreur précise.
+On crée un gestionnaire avec `contextlib.contextmanager` (un générateur avec un seul `yield`) ou avec une classe (voir *Programmation orientée objet*). `contextlib.suppress` ignore proprement une erreur précise.
 
 ```python
 import time
@@ -3136,9 +3078,9 @@ with suppress(FileNotFoundError):
     os.remove('temp.txt')        # aucune erreur si le fichier n'existe pas
 ```
 
-### 13.13 Cas pratiques
+## Cas pratiques
 
-#### Requêtes web
+### Requêtes web
 
 ```python
 import requests    # pip install requests
@@ -3157,7 +3099,7 @@ except requests.exceptions.RequestException as e:
 
 Définissez toujours un `timeout`, sans quoi un appel réseau peut bloquer indéfiniment.
 
-#### Saisie utilisateur validée
+### Saisie utilisateur validée
 
 ```python
 while True:
@@ -3170,7 +3112,7 @@ while True:
         print(f'Entrée invalide : {e}')
 ```
 
-### 13.14 Bonnes pratiques
+## Bonnes pratiques
 
 - Attrapez des exceptions **précises**, au niveau où vous savez quoi en faire.
 - Gardez le bloc `try` **le plus court possible**.
@@ -3188,17 +3130,13 @@ except KeyError:
 print(valeur)   # → None
 ```
 
-### Synthèse du chapitre 13
-
-Utilisez `try` / `except` / `else` / `finally` avec des **exceptions précises** et jamais de `except:` nu. `raise` lève une exception, `raise ... from e` la chaîne, `raise` seul la relance. `with` et `finally` garantissent le **nettoyage** ; `logging` trace les erreurs ; `assert` vérifie les hypothèses de développement.
-
 ---
 
-## 14. Gestion des fichiers
+# Gestion des fichiers
 
 **Objectifs d'apprentissage.** Lire et écrire des fichiers texte et binaires, manipuler chemins et dossiers avec `pathlib`, traiter CSV, JSON et TOML, et connaître les risques de `pickle`.
 
-### 14.1 Introduction
+## Introduction
 
 Un fichier permet de **conserver** des données au-delà de l'exécution du programme.
 
@@ -3209,7 +3147,7 @@ Un fichier permet de **conserver** des données au-delà de l'exécution du prog
 
 En mode texte, Python décode les octets en `str` (encodage) et traduit les fins de ligne ; en mode binaire, il manipule des `bytes` sans transformation.
 
-### 14.2 Ouvrir et fermer un fichier
+## Ouvrir et fermer un fichier
 
 `open(chemin, mode, encoding=...)` renvoie un **objet fichier**. La méthode recommandée est le gestionnaire de contexte `with`, qui ferme le fichier automatiquement.
 
@@ -3233,7 +3171,7 @@ print(f.closed)   # → True
 
 **Précisez toujours `encoding='utf-8'`** en mode texte : sinon l'encodage dépend du système. (Python 3.15 adopte UTF-8 comme encodage par défaut, mais l'expliciter reste une bonne pratique.)
 
-### 14.3 Lire un fichier
+## Lire un fichier
 
 ```python
 with open('notes.txt', encoding='utf-8') as f:
@@ -3253,7 +3191,7 @@ with open('notes.txt', encoding='utf-8') as f:
 
 L'objet fichier est lui-même un itérateur de lignes : pour un gros fichier, **parcourez-le** plutôt que d'appeler `read()` ou `readlines()` qui chargent tout en mémoire.
 
-### 14.4 Écrire dans un fichier
+## Écrire dans un fichier
 
 ```python
 with open('sortie.txt', 'w', encoding='utf-8') as f:
@@ -3267,7 +3205,7 @@ with open('sortie.txt', 'a', encoding='utf-8') as f:    # ajout
 
 `write()` n'ajoute **pas** de retour à la ligne automatiquement ; `print(..., file=f)` en ajoute un.
 
-### 14.5 Chemins avec `pathlib`
+## Chemins avec `pathlib`
 
 Le module **`pathlib`** représente les chemins comme des objets, indépendamment du système d'exploitation ; il est préférable à `os.path` et à la manipulation de chaînes.
 
@@ -3286,7 +3224,7 @@ print(p.resolve())                # chemin absolu
 print(Path.home(), Path.cwd())    # dossier personnel, dossier courant
 ```
 
-### 14.6 Opérations sur fichiers et dossiers
+## Opérations sur fichiers et dossiers
 
 ```python
 from pathlib import Path
@@ -3311,7 +3249,7 @@ shutil.move('dst.txt', 'dossier/dst.txt')
 
 Équivalents du module `os` : `os.listdir()`, `os.remove()`, `os.mkdir()`, `os.path.join()`, `os.walk()`.
 
-### 14.7 Fichiers binaires
+## Fichiers binaires
 
 ```python
 with open('image.png', 'rb') as f:
@@ -3325,7 +3263,7 @@ with open('gros.bin', 'rb') as f:
         print(f'Bloc de {len(bloc)} octets')
 ```
 
-### 14.8 Position dans le fichier
+## Position dans le fichier
 
 Un fichier ouvert possède un **curseur** : `tell()` donne sa position, `seek(position, origine)` le déplace (origine 0 : début, 1 : position courante, 2 : fin).
 
@@ -3341,7 +3279,7 @@ with open('octets.bin', 'rb') as f:
     print(f.tell())      # → 16
 ```
 
-### 14.9 Fichiers CSV
+## Fichiers CSV
 
 Le format **CSV** (*Comma-Separated Values*) représente un tableau en texte. Ouvrez toujours avec `newline=''` pour que le module `csv` gère les fins de ligne.
 
@@ -3363,7 +3301,7 @@ with open('sortie.csv', 'w', newline='', encoding='utf-8') as f:
 
 Toutes les valeurs lues sont des chaînes ; convertissez-les. Pour de gros volumes, utilisez **pandas** ou **polars**.
 
-### 14.10 Fichiers JSON
+## Fichiers JSON
 
 ```python
 import json
@@ -3379,7 +3317,7 @@ print(lu)   # → {'nom': 'Alice', 'langues': ['fr', 'en']}
 
 JSON ne gère que `dict`, `list`, `str`, nombres, `True`/`False` et `None` (`null`) ; les autres objets (dates, ensembles) doivent être convertis.
 
-### 14.11 Fichiers de configuration TOML *(3.11+)*
+## Fichiers de configuration TOML *(3.11+)*
 
 ```python
 import tomllib
@@ -3391,7 +3329,7 @@ print(config)   # → {'project': {'name': 'demo', 'version': '0.1.0'}}
 
 `tomllib` ne sait que **lire** ; pour écrire du TOML, utilisez une bibliothèque tierce.
 
-### 14.12 Sérialisation avec `pickle`
+## Sérialisation avec `pickle`
 
 `pickle` sérialise presque n'importe quel objet Python en octets.
 
@@ -3407,7 +3345,7 @@ print(obj)   # → {'a': [1, 2, 3]}
 
 **Sécurité** : ne chargez **jamais** un fichier pickle d'origine non fiable, car il peut exécuter du code arbitraire. Pour échanger des données, préférez JSON.
 
-### 14.13 Compression et archives
+## Compression et archives
 
 ```python
 import zipfile, gzip, shutil
@@ -3426,7 +3364,7 @@ shutil.make_archive('sauvegarde', 'zip', 'dossier')   # archive d'un dossier ent
 
 Autres formats : `tarfile`, `bz2`, `lzma`, et `compression.zstd` (Zstandard, Python 3.14+). Avec `extractall`, vérifiez la provenance de l'archive (risque de chemins malveillants).
 
-### 14.14 Permissions et métadonnées
+## Permissions et métadonnées
 
 ```python
 import os, stat
@@ -3438,7 +3376,7 @@ os.chmod('script.sh', stat.S_IRWXU)   # rwx pour le propriétaire (Unix)
 print(os.access('a.txt', os.R_OK))    # → True si lisible
 ```
 
-### 14.15 Exceptions courantes
+## Exceptions courantes
 
 | Exception | Cause |
 | --- | --- |
@@ -3448,24 +3386,20 @@ print(os.access('a.txt', os.R_OK))    # → True si lisible
 | `FileExistsError` | Le fichier existe déjà (mode `'x'`, `mkdir`) |
 | `UnicodeDecodeError` | Mauvais encodage |
 
-### 14.16 Sujets avancés
+## Sujets avancés
 
 - **Tampon** (*buffer*) : `open(..., buffering=...)` ; `f.flush()` force l'écriture sur le disque.
 - **Fichiers temporaires** : `tempfile.NamedTemporaryFile()`, `tempfile.TemporaryDirectory()`.
 - **Fichiers mappés en mémoire** : module `mmap`.
 - **Écriture atomique** : écrire dans un fichier temporaire puis `os.replace()`, pour ne jamais laisser un fichier à moitié écrit.
 
-### Synthèse du chapitre 14
-
-Ouvrez toujours les fichiers avec `with open(..., encoding='utf-8')` ; les modes sont `r`, `w` (écrase), `a`, `x` et `b`. Parcourez les gros fichiers ligne par ligne ou par blocs. Utilisez `pathlib` pour les chemins, `shutil` pour copier et supprimer, `csv` / `json` / `tomllib` pour les formats. Ne désérialisez **jamais** un `pickle` non fiable.
-
 ---
 
-## 15. Modules, paquets et environnements virtuels
+# Modules, paquets et environnements virtuels
 
 **Objectifs d'apprentissage.** Organiser son code en modules et paquets, installer des bibliothèques tierces, isoler les dépendances de chaque projet et connaître les outils modernes de gestion de projet.
 
-### 15.1 Modules
+## Modules
 
 Un **module** est un fichier `.py` réutilisable : son nom (sans l'extension) est le nom du module. Il regroupe fonctions, classes et constantes liées. Un module a son propre **espace de noms** : deux modules peuvent définir une fonction du même nom sans conflit.
 
@@ -3491,7 +3425,7 @@ print(m.sqrt(16))                   # → 4.0
 
 Le module est exécuté **une seule fois**, au premier import, puis mis en cache dans `sys.modules`. Évitez `from module import *` : il pollue l'espace de noms et masque l'origine des noms.
 
-#### Le point d'entrée `__main__`
+### Le point d'entrée `__main__`
 
 Quand un fichier est exécuté directement, sa variable `__name__` vaut `'__main__'` ; quand il est importé, elle vaut le nom du module. Ce test permet de séparer du code réutilisable et du code de lancement.
 
@@ -3503,7 +3437,7 @@ if __name__ == '__main__':   # vrai seulement si le fichier est lancé directeme
     main()
 ```
 
-### 15.2 Paquets
+## Paquets
 
 Un **paquet** (*package*) est un dossier de modules. Un paquet peut contenir des sous-paquets. Depuis Python 3.3, le fichier `__init__.py` est facultatif (paquets d'espaces de noms) mais reste recommandé : il s'exécute à l'import du paquet et peut définir ce qu'il expose.
 
@@ -3530,7 +3464,7 @@ from monpaquet.outils import fonction
 
 Préférez les **imports absolus** ; réservez les imports relatifs aux liens internes d'un paquet. Le fichier `__all__ = [...]` d'un module liste les noms exportés par `import *`.
 
-### 15.3 Recherche des modules
+## Recherche des modules
 
 Pour `import x`, Python cherche dans l'ordre : le cache `sys.modules`, les modules intégrés, puis les dossiers listés dans `sys.path` (dossier du script, `PYTHONPATH`, bibliothèque standard, `site-packages`).
 
@@ -3541,7 +3475,7 @@ print(sys.path)   # liste des dossiers de recherche
 
 Astuce : ne nommez jamais un de vos fichiers comme un module standard (`random.py`, `json.py`), car il masquerait le vrai module.
 
-### 15.4 `pip` : installer des paquets
+## `pip` : installer des paquets
 
 `pip` télécharge des paquets depuis **PyPI** (*Python Package Index*, pypi.org).
 
@@ -3554,7 +3488,7 @@ python -m pip freeze > requirements.txt       # fige les versions installées
 python -m pip uninstall requests
 ```
 
-### 15.5 Environnements virtuels
+## Environnements virtuels
 
 Un **environnement virtuel** est un dossier contenant un interpréteur et ses propres paquets, isolés du reste du système. Il évite les conflits de versions entre projets et ne touche pas au Python du système. **Utilisez-en un pour chaque projet.**
 
@@ -3569,7 +3503,7 @@ deactivate                           # désactivation
 
 Ajoutez `.venv/` à votre `.gitignore` : on partage la liste des dépendances, pas l'environnement.
 
-### 15.6 Outils modernes de gestion de projet
+## Outils modernes de gestion de projet
 
 | Outil | Rôle |
 | --- | --- |
@@ -3586,7 +3520,7 @@ uv run python main.py
 
 Un **fichier de verrouillage** (*lock file*) enregistre les versions exactes de toutes les dépendances, pour des installations reproductibles.
 
-### 15.7 `pyproject.toml`
+## `pyproject.toml`
 
 Fichier standard de configuration d'un projet (PEP 517, 518, 621) : métadonnées, dépendances, système de construction et réglages des outils.
 
@@ -3607,7 +3541,7 @@ line-length = 88
 testpaths = ["tests"]
 ```
 
-### 15.8 Bibliothèque standard : modules incontournables
+## Bibliothèque standard : modules incontournables
 
 | Module | Utilité |
 | --- | --- |
@@ -3624,19 +3558,13 @@ testpaths = ["tests"]
 
 Un exemple d'usage de `re` : `re.findall(r'[0-9]+', 'a12b345')` renvoie `['12', '345']`.
 
-### Synthèse du chapitre 15
-
-Un **module** est un fichier `.py`, un **paquet** un dossier de modules ; `if __name__ == '__main__':` sépare l'import de l'exécution. `python -m pip install` installe depuis PyPI et `python -m venv .venv` isole un projet. `pyproject.toml` est le fichier de référence, et `uv` simplifie l'ensemble du flux de travail.
-
 ---
 
-# Partie V — Programmation professionnelle
-
-## 16. Programmation orientée objet
+# Programmation orientée objet
 
 **Objectifs d'apprentissage.** Maîtriser classes, objets, attributs et méthodes, les quatre piliers de la POO, les méthodes spéciales, les `dataclass`, les classes abstraites et les protocoles, et connaître les mécanismes avancés (descripteurs, métaclasses).
 
-### 16.1 Concepts fondamentaux
+## Concepts fondamentaux
 
 La **programmation orientée objet** (POO) organise un programme autour d'**objets** qui regroupent des données (attributs) et des comportements (méthodes).
 
@@ -3651,7 +3579,7 @@ La **programmation orientée objet** (POO) organise un programme autour d'**obje
 | **Polymorphisme** | Des objets de classes différentes répondent à une même interface |
 | **Abstraction** | Exposer l'essentiel, masquer les détails |
 
-#### Définir une classe
+### Définir une classe
 
 ```python
 class Chien:
@@ -3683,7 +3611,7 @@ print(Chien.espece)        # → Canis familiaris
 
 Une **classe** est elle-même un objet (instance de `type`). Les attributs de classe sont partagés ; si on affecte `rex.espece = 'x'`, on crée un attribut d'instance qui *masque* l'attribut de classe sans le modifier.
 
-### 16.2 Encapsulation et propriétés
+## Encapsulation et propriétés
 
 Python n'impose pas de visibilité stricte : il repose sur des **conventions** (« nous sommes entre adultes consentants »).
 
@@ -3717,7 +3645,7 @@ print(c.solde)   # → 150
 
 Commencez par de simples attributs publics ; ne passez à une propriété que lorsqu'un contrôle devient nécessaire : l'interface ne change pas pour les utilisateurs de la classe.
 
-### 16.3 Méthodes de classe et statiques
+## Méthodes de classe et statiques
 
 | Type | Décorateur | Premier paramètre | Usage |
 | --- | --- | --- | --- |
@@ -3744,7 +3672,7 @@ print(d.j, d.m, d.a)               # → 11 10 2026
 print(Date.est_bissextile(2100))   # → False
 ```
 
-### 16.4 Héritage
+## Héritage
 
 L'**héritage** permet à une **classe fille** (sous-classe) de reprendre les attributs et méthodes d'une **classe mère** (superclasse), de les **redéfinir** (*override*) et d'en ajouter. `super()` donne accès à la classe mère. Toute classe hérite implicitement de `object`.
 
@@ -3770,7 +3698,7 @@ print(issubclass(Chat, Animal))   # → True
 print(mimi.parler())              # → Miaou
 ```
 
-#### Héritage multiple et MRO
+### Héritage multiple et MRO
 
 Une classe peut avoir plusieurs parents. L'**ordre de résolution des méthodes** (MRO, *Method Resolution Order*), calculé par l'algorithme **C3**, détermine dans quel ordre Python cherche un attribut ; `super()` suit cet ordre.
 
@@ -3785,7 +3713,7 @@ print([k.__name__ for k in D.__mro__])   # → ['D', 'B', 'C', 'A', 'object']
 
 Préférez la **composition** (relation « a un » : un objet contient un autre objet) à l'héritage (relation « est un ») quand la seconde n'est pas évidente : elle est plus souple.
 
-#### Mixins
+### Mixins
 
 Un **mixin** est une petite classe qui apporte une fonctionnalité précise et n'est pas destinée à être instanciée seule.
 
@@ -3803,7 +3731,7 @@ class Utilisateur(JsonMixin):
 print(Utilisateur('Alice').en_json())   # → {"nom": "Alice"}
 ```
 
-### 16.5 Polymorphisme et *duck typing*
+## Polymorphisme et *duck typing*
 
 Le **polymorphisme** permet de traiter de la même manière des objets de classes différentes qui offrent la même interface. Python pratique le **duck typing** (« typage canard ») : ce qui compte n'est pas la classe de l'objet mais les méthodes qu'il possède. S'il cancane comme un canard, on le traite comme un canard.
 
@@ -3820,7 +3748,7 @@ for etre in (Chien(), Robot()):
     print(etre.parler())    # → Ouaf, puis Bip : aucune parenté nécessaire
 ```
 
-### 16.6 Méthodes spéciales (« dunder »)
+## Méthodes spéciales (« dunder »)
 
 Les **méthodes spéciales**, dont le nom est entouré de doubles tirets bas, sont appelées implicitement par le langage : en les définissant, vos objets s'intègrent aux opérateurs et fonctions intégrées (le *modèle de données* de Python).
 
@@ -3858,7 +3786,7 @@ print(list(panier))                # → ['pomme', 'poire']
 print('poire' in panier)           # → True
 ```
 
-#### Gestionnaire de contexte personnalisé
+### Gestionnaire de contexte personnalisé
 
 ```python
 class Connexion:
@@ -3875,7 +3803,7 @@ with Connexion():
 # → Ouverture, Travail en cours, Fermeture
 ```
 
-### 16.7 Classes de données : `dataclass`
+## Classes de données : `dataclass`
 
 Le décorateur `@dataclass` génère automatiquement `__init__`, `__repr__` et `__eq__` à partir des attributs annotés.
 
@@ -3906,7 +3834,7 @@ print(Produit('A', 1.0) < Produit('B', 1.0))  # → True (grâce à order=True)
 
 Alternatives : `NamedTuple`, et les bibliothèques **Pydantic** et **attrs** (validation des données).
 
-### 16.8 Énumérations
+## Énumérations
 
 Une **énumération** (`enum.Enum`) définit un ensemble fini de constantes nommées. Chaque membre possède un `name` et une `value`, est unique et se compare par identité. C'est préférable à des chaînes ou des entiers « magiques » : les fautes de frappe deviennent des erreurs.
 
@@ -3928,7 +3856,7 @@ print([c.name for c in Couleur])                 # → ['ROUGE', 'VERT']
 
 Variantes : `IntEnum` (comparable à des entiers), `Flag` (combinaisons de bits).
 
-### 16.9 Classes abstraites et protocoles
+## Classes abstraites et protocoles
 
 Une **classe abstraite** (module `abc`) définit une interface que les sous-classes doivent implémenter ; on ne peut pas l'instancier tant que des méthodes abstraites subsistent.
 
@@ -3971,7 +3899,7 @@ class Fichier:                      # aucun héritage nécessaire
 fermer(Fichier())                   # → Fichier fermé
 ```
 
-### 16.10 `__slots__` et gestion de la mémoire
+## `__slots__` et gestion de la mémoire
 
 Par défaut, les attributs d'une instance sont stockés dans un dictionnaire (`__dict__`). `__slots__` remplace ce dictionnaire par une structure fixe : moins de mémoire, accès plus rapide, mais pas d'attribut non déclaré.
 
@@ -3988,7 +3916,7 @@ except AttributeError as erreur:
     print(erreur)   # → 'Point' object has no attribute 'z' and no __dict__ for setting new attributes
 ```
 
-### 16.11 Descripteurs
+## Descripteurs
 
 Un **descripteur** est un objet qui définit `__get__`, `__set__` ou `__delete__` et qui, placé comme attribut de classe, intercepte l'accès à cet attribut. C'est le mécanisme sous-jacent de `property`, des méthodes, de `classmethod` et de `staticmethod`.
 
@@ -4018,7 +3946,7 @@ except ValueError as erreur:
 
 L'intérêt par rapport à une propriété : la logique de validation est réutilisable pour plusieurs attributs et plusieurs classes.
 
-### 16.12 Métaclasses et réflexion (avancé)
+## Métaclasses et réflexion (avancé)
 
 Une **métaclasse** est « la classe d'une classe » : puisqu'une classe est un objet, elle est l'instance d'une métaclasse. La métaclasse par défaut est `type`, qui permet aussi de créer des classes dynamiquement.
 
@@ -4051,7 +3979,7 @@ print([c.__name__ for c in Plugin.registre])   # → ['PluginA', 'PluginB']
 
 Les métaclasses sont rarement nécessaires ; utilisez-les avec parcimonie.
 
-#### Introspection (réflexion)
+### Introspection (réflexion)
 
 ```python
 import inspect
@@ -4070,7 +3998,7 @@ print(obj.__dict__)                   # → {'x': 1, 'y': 2}
 print([n for n, _ in inspect.getmembers(obj) if not n.startswith('__')])   # → ['x', 'y']
 ```
 
-### 16.13 Principes et bonnes pratiques
+## Principes et bonnes pratiques
 
 | Principe | Idée |
 | --- | --- |
@@ -4086,7 +4014,7 @@ print([n for n, _ in inspect.getmembers(obj) if not n.startswith('__')])   # →
 - Pas d'attributs publics modifiables sans validation : utilisez des propriétés.
 - Principe de **substitution de Liskov** : une sous-classe doit pouvoir remplacer sa classe mère sans surprise.
 
-### 16.14 Patrons de conception appliqués
+## Patrons de conception appliqués
 
 **Singleton.** En Python, un **module** est déjà un singleton : une instance créée au niveau du module est partagée par tous les imports.
 
@@ -4134,7 +4062,7 @@ evenement.abonner(lambda message: print('Reçu :', message))
 evenement.emettre('alerte')   # → Reçu : alerte
 ```
 
-### 16.15 Exemple complet
+## Exemple complet
 
 ```python
 from dataclasses import dataclass, field
@@ -4172,17 +4100,13 @@ except SoldeInsuffisant as erreur:
 
 Cet exemple combine classe de données, exception personnalisée, validation et annotations.
 
-### Synthèse du chapitre 16
-
-Une **classe** est un plan, un **objet** en est une instance ; `__init__` initialise et `self` désigne l'instance. L'encapsulation se fait par convention (`_x`) et par **propriétés** ; `@classmethod` sert aux constructeurs alternatifs. L'**héritage** s'appuie sur `super()` et le MRO, mais préférez la **composition** quand c'est possible. Le *duck typing* et les protocoles font primer l'interface sur la classe. `@dataclass` supprime le code répétitif, `Enum` modélise les constantes et `ABC` définit des interfaces.
-
 ---
 
-## 17. Typage statique
+# Typage statique
 
 **Objectifs d'apprentissage.** Annoter le code avec des types, utiliser la syntaxe moderne, comprendre génériques et alias, connaître l'évaluation différée des annotations de Python 3.14 et vérifier ses types avec un outil.
 
-### 17.1 Annotations de types
+## Annotations de types
 
 Une **annotation** indique le type attendu d'une variable, d'un paramètre ou d'une valeur de retour. Elle documente le code et permet à des outils d'**analyse statique** de détecter des erreurs *sans exécuter* le programme.
 
@@ -4201,7 +4125,7 @@ print(additionner('a', 'b'))         # → ab : aucune erreur à l'exécution
 
 Python **n'applique pas** ces annotations à l'exécution : elles servent aux **vérificateurs de types** (**mypy**, **pyright**, **ty**, **pyrefly**) et aux éditeurs (complétion, détection d'erreurs). On parle de **typage graduel** : on type autant ou aussi peu qu'on veut, et on peut commencer par les fonctions publiques. Le mot-clé `Any` désactive la vérification pour une valeur.
 
-### 17.2 Syntaxe moderne (Python 3.9 / 3.10+)
+## Syntaxe moderne (Python 3.9 / 3.10+)
 
 Les anciens alias `List`, `Dict`, `Tuple`, `Optional`, `Union` du module `typing` sont **dépréciés** au profit de la syntaxe native :
 
@@ -4223,7 +4147,7 @@ print(trouver('z', ['a', 'b']))   # → None
 
 Un type `X | None` oblige le vérificateur à exiger un test `is None` avant d'utiliser la valeur : c'est la protection contre les erreurs sur `None`. Les tuples de longueur variable s'écrivent `tuple[int, ...]`.
 
-### 17.3 Types courants
+## Types courants
 
 ```python
 from typing import Any, Callable, Iterable, Literal, TypedDict, Final
@@ -4251,11 +4175,11 @@ u: Utilisateur = {'nom': 'Alice', 'age': 30}
 | `TypedDict` | Dictionnaire à clés et types connus |
 | `Final` | Constante à ne pas réaffecter |
 | `Self` | Type de l'instance courante (méthodes renvoyant `self`) |
-| `Protocol` | Interface structurelle (chapitre 16) |
+| `Protocol` | Interface structurelle (voir *Classes abstraites et protocoles*) |
 
 Regle pratique : acceptez des types généraux en paramètre (`Iterable`), renvoyez des types précis (`list`).
 
-### 17.4 Génériques et paramètres de type *(Python 3.12+)*
+## Génériques et paramètres de type *(Python 3.12+)*
 
 Un **type générique** est paramétré par un autre type : `list[int]` est une liste *de* `int`. Depuis Python 3.12 (PEP 695), on déclare ses propres génériques avec une syntaxe compacte, et on crée des alias avec l'instruction `type`.
 
@@ -4278,7 +4202,7 @@ pile.empiler(1)
 
 Le vérificateur déduit que `premier([3, 4])` renvoie un `int` et que `premier(['a'])` renvoie un `str` : `T` relie le type d'entrée au type de sortie. Avant 3.12, on utilisait `TypeVar('T')` et `Generic[T]`.
 
-### 17.5 Évaluation différée des annotations *(Python 3.14)*
+## Évaluation différée des annotations *(Python 3.14)*
 
 Historiquement, une annotation était évaluée immédiatement, ce qui interdisait de nommer une classe avant sa définition sans guillemets ou sans `from __future__ import annotations`. Depuis Python 3.14 (PEP 649 et 749), les annotations sont **évaluées à la demande** : les références en avant fonctionnent naturellement.
 
@@ -4295,7 +4219,7 @@ print(get_annotations(Noeud.suivant))     # → {'return': __main__.Noeud | None
 
 Le module `annotationlib` permet d'inspecter les annotations (par exemple sous forme de chaînes ou de références non résolues).
 
-### 17.6 Vérifier les types
+## Vérifier les types
 
 ```bash
 pip install mypy
@@ -4304,17 +4228,13 @@ mypy mon_script.py
 
 Le vérificateur signale par exemple l'appel `additionner('a', 'b')` du 17.1 sans exécuter le code. Intégrez-le à l'éditeur (Pylance, pyright) et à l'intégration continue. Pour les bibliothèques sans annotations, des fichiers de **stubs** (`.pyi`) fournissent les types.
 
-### Synthèse du chapitre 17
-
-Les **annotations de types** n'ont aucun effet à l'exécution : elles servent aux outils (mypy, pyright) et à la documentation. La syntaxe moderne s'écrit `list[int]`, `dict[str, int]`, `str | None`. Depuis Python 3.12, `def f[T](...)`, `class C[T]` et `type Alias = ...` expriment les génériques ; depuis la 3.14, les annotations sont évaluées à la demande.
-
 ---
 
-## 18. Programmation asynchrone et concurrence
+# Programmation asynchrone et concurrence
 
 **Objectifs d'apprentissage.** Distinguer concurrence et parallélisme, choisir entre `asyncio`, threads et processus, écrire du code asynchrone avec `async` / `await`, et comprendre le rôle du GIL et ses évolutions récentes.
 
-### 18.1 Choisir le bon modèle
+## Choisir le bon modèle
 
 La **concurrence** consiste à gérer plusieurs tâches dont les exécutions se chevauchent dans le temps ; le **parallélisme** consiste à les exécuter réellement en même temps sur plusieurs cœurs. Le bon choix dépend de la nature du goulot d'étranglement :
 
@@ -4327,7 +4247,7 @@ La **concurrence** consiste à gérer plusieurs tâches dont les exécutions se 
 | **Threads** | E/S bloquantes, bibliothèques non asynchrones | `threading`, `ThreadPoolExecutor` |
 | **Processus** | Calcul intensif sur plusieurs cœurs | `multiprocessing`, `ProcessPoolExecutor` |
 
-### 18.2 `asyncio`
+## `asyncio`
 
 `asyncio` exécute de nombreuses tâches dans **un seul thread** grâce à une **boucle d'événements** (*event loop*) : quand une tâche attend, elle rend la main et la boucle fait avancer une autre tâche. C'est de la **concurrence coopérative** : les points de bascule sont les `await`.
 
@@ -4352,9 +4272,9 @@ asyncio.run(main())                    # dure environ 2 s au lieu de 3 s
 
 **Erreur classique** : appeler une fonction bloquante (`time.sleep`, `requests.get`) dans une coroutine gèle toute la boucle. Utilisez les équivalents asynchrones (`asyncio.sleep`, `httpx.AsyncClient`) ou déportez l'appel avec `await asyncio.to_thread(fonction)`.
 
-#### `TaskGroup` *(3.11+)*
+### `TaskGroup` *(3.11+)*
 
-Un `TaskGroup` lance des tâches et garantit qu'elles sont toutes terminées (ou annulées) à la sortie du bloc ; si l'une échoue, les autres sont annulées et les erreurs sont regroupées dans un `ExceptionGroup` (voir `except*`, chapitre 13). C'est la forme de **concurrence structurée** recommandée.
+Un `TaskGroup` lance des tâches et garantit qu'elles sont toutes terminées (ou annulées) à la sortie du bloc ; si l'une échoue, les autres sont annulées et les erreurs sont regroupées dans un `ExceptionGroup` (voir `except*` dans *Gestion des erreurs*). C'est la forme de **concurrence structurée** recommandée.
 
 ```python
 import asyncio
@@ -4374,7 +4294,7 @@ asyncio.run(main())
 
 Autres outils : `asyncio.timeout(secondes)` (délai maximal, 3.11+), `asyncio.Semaphore` (limiter le nombre d'opérations simultanées), `asyncio.Queue` (communication entre tâches), `async for` et `async with` (itération et contextes asynchrones).
 
-### 18.3 Threads et processus
+## Threads et processus
 
 Un **thread** (fil d'exécution) partage la mémoire du processus ; un **processus** possède sa propre mémoire. Le module `concurrent.futures` offre une interface commune : un *pool* d'exécutants et des méthodes `map` / `submit`.
 
@@ -4417,7 +4337,7 @@ for f in fils: f.join()
 print(compteur)   # → 400000
 ```
 
-### 18.4 Le GIL et Python sans GIL
+## Le GIL et Python sans GIL
 
 Le **GIL** (*Global Interpreter Lock*) est un verrou de CPython qui n'autorise qu'**un seul thread** à la fois à exécuter du bytecode Python. Il simplifie la gestion mémoire, mais empêche plusieurs threads d'utiliser plusieurs cœurs pour du calcul Python pur : pour le CPU-bound, on utilisait donc les processus. Le GIL est relâché pendant les attentes d'E/S, ce qui explique que les threads restent utiles pour les tâches réseau.
 
@@ -4427,21 +4347,17 @@ Le **GIL** (*Global Interpreter Lock*) est un verrou de CPython qui n'autorise q
 
 En mode sans GIL, les threads peuvent s'exécuter vraiment en parallèle : les verrous et la prudence sur les données partagées deviennent plus importants, et les extensions natives doivent être compatibles.
 
-### Synthèse du chapitre 18
-
-Pour de nombreuses E/S, utilisez `asyncio` ; pour des E/S bloquantes, des **threads** ; pour du calcul intensif, des **processus** (ou le mode sans GIL). Une **coroutine** se déclare avec `async def` et s'attend avec `await` ; `TaskGroup` structure la concurrence. Ne bloquez jamais la boucle d'événements et protégez les données partagées entre threads. Le **GIL** limite le parallélisme des threads ; Python 3.13 et 3.14 ouvrent la voie du **sans-GIL** et des sous-interpréteurs.
-
 ---
 
-## 19. Tests et qualité du code
+# Tests et qualité du code
 
 **Objectifs d'apprentissage.** Écrire des tests automatisés avec `pytest`, connaître `unittest` et `doctest`, mesurer la couverture, mettre en place des outils de qualité et déboguer efficacement.
 
-### 19.1 Pourquoi tester ?
+## Pourquoi tester ?
 
 Un **test automatisé** vérifie par du code qu'un autre code fait ce qu'on attend. Il détecte les régressions (une modification qui casse l'existant), documente le comportement et autorise le remaniement (*refactoring*) sans crainte. On distingue les **tests unitaires** (une fonction ou classe isolée), les **tests d'intégration** (plusieurs composants) et les **tests de bout en bout**. Le **développement dirigé par les tests** (TDD) consiste à écrire le test avant le code.
 
-### 19.2 Tests avec `pytest`
+## Tests avec `pytest`
 
 `pytest` découvre automatiquement les fichiers `test_*.py` et les fonctions `test_*`, et utilise l'instruction `assert` ordinaire, avec des messages d'échec détaillés.
 
@@ -4502,7 +4418,7 @@ def test_taille(panier):
     assert len(panier) == 2
 ```
 
-### 19.3 `unittest` et `doctest`
+## `unittest` et `doctest`
 
 Le module `unittest` (style xUnit, classes dérivées de `TestCase`) et `doctest` (exemples exécutables dans les docstrings) font partie de la bibliothèque standard.
 
@@ -4532,14 +4448,14 @@ def doubler(x):
 # python -m doctest -v fichier.py
 ```
 
-### 19.4 Bien tester : principes
+## Bien tester : principes
 
 - Un test doit être **rapide**, **indépendant** des autres et **déterministe** (pas de hasard ni d'horloge non maîtrisés).
 - Structure *Arrange / Act / Assert* : préparer, agir, vérifier.
 - Testez les cas limites (liste vide, zéro, valeurs négatives) et les cas d'erreur, pas seulement le cas nominal.
 - Un test qui échoue doit dire clairement quoi corriger.
 
-### 19.5 Qualité du code
+## Qualité du code
 
 | Outil | Rôle |
 | --- | --- |
@@ -4557,7 +4473,7 @@ pytest --cov=src     # tests + couverture
 
 La **couverture** mesure la proportion de lignes exécutées par les tests ; c'est un indicateur utile pour repérer le code non testé, pas une garantie de qualité. L'**intégration continue** (CI) exécute ces contrôles à chaque modification du dépôt.
 
-### 19.6 Déboguer
+## Déboguer
 
 Déboguer consiste à trouver pourquoi un programme se comporte mal. Dans l'ordre : lisez la trace d'erreur, reproduisez le problème avec un exemple minimal, puis observez l'état du programme.
 
@@ -4567,45 +4483,24 @@ breakpoint()   # lance le débogueur pdb à cet endroit ; tapez c pour continuer
 
 Commandes `pdb` : `n` (ligne suivante), `s` (entrer dans l'appel), `c` (continuer), `p variable` (afficher), `l` (afficher le code), `q` (quitter). Les éditeurs (VS Code, PyCharm) proposent un débogueur graphique avec points d'arrêt. Le module `logging` et `print(f'{x=}')` restent des alliés simples ; `python -X dev` active des vérifications supplémentaires.
 
-### Synthèse du chapitre 19
-
-Testez avec **`pytest`** : fichiers `test_*.py`, `assert`, `parametrize`, fixtures, `pytest.raises`. Automatisez le lint, le formatage, les types et les tests (Ruff, mypy, pre-commit, CI). Pour **déboguer** : lisez la trace d'erreur, réduisez à un exemple minimal, puis utilisez `breakpoint()` ou le débogueur de l'éditeur.
-
 ---
 
-# Partie VI — La suite du parcours
-
-## 20. Aller plus loin
+# Aller plus loin
 
 **Objectifs d'apprentissage.** Situer ses acquis, choisir une spécialisation, suivre l'évolution du langage et savoir où chercher de l'aide.
 
-### 20.1 Parcours d'apprentissage suggéré
+## Parcours d'apprentissage suggéré
 
-1. Maîtriser les **bases** (chapitres 1 à 6) : syntaxe, types, opérateurs, entrées/sorties, structures de contrôle.
-2. Manipuler les **structures de données** (7 à 10) : dictionnaires, listes, ensembles, tuples.
-3. Écrire des **fonctions** propres et utiliser les **générateurs** (11 et 12).
-4. Gérer **erreurs**, **fichiers** et **modules** (13 à 15).
-5. Appliquer la **POO**, le **typage**, la **concurrence** et les **tests** (16 à 19).
+1. Maîtriser les **bases** : syntaxe, types, opérateurs, entrées/sorties, structures de contrôle.
+2. Manipuler les **structures de données** : dictionnaires, listes, ensembles, tuples.
+3. Écrire des **fonctions** propres et utiliser les **générateurs**.
+4. Gérer **erreurs**, **fichiers** et **modules**.
+5. Appliquer la **POO**, le **typage**, la **concurrence** et les **tests**.
 6. Choisir une **spécialisation** : web (Django, FastAPI), données (Pandas, NumPy, Polars), IA (PyTorch), automatisation (Selenium, Playwright), systèmes et DevOps.
 
 **Projets pour progresser** : un gestionnaire de tâches en ligne de commande (fichiers, JSON, `argparse`) ; un analyseur de fichiers CSV avec statistiques ; un petit serveur d'API (FastAPI) testé avec `pytest` ; un robot de collecte de données asynchrone ; un jeu simple (Pygame). Chaque projet doit avoir un environnement virtuel, des tests, des annotations de types et un `README`.
 
-### 20.2 Résumé des nouveautés récentes de Python
-
-| Version | À retenir |
-| --- | --- |
-| 3.8 | Opérateur `:=`, `/` dans les paramètres, `f'{x=}'` |
-| 3.9 | Opérateur `\|` sur les `dict`, `list[int]`, `removeprefix` |
-| 3.10 | `match` / `case`, `X \| Y`, messages d'erreur améliorés |
-| 3.11 | `except*`, `tomllib`, interpréteur plus rapide |
-| 3.12 | Syntaxe générique `def f[T]()`, instruction `type`, `itertools.batched` |
-| 3.13 | Nouveau REPL, mode sans GIL (expérimental), JIT (expérimental) |
-| 3.14 | t-strings, annotations différées, *free-threading* supporté, `compression.zstd` |
-| 3.15 | Voir *Quoi de neuf dans Python 3.15* sur docs.python.org |
-
-Pour suivre l'actualité du langage : les notes de version (*What's New*), les PEP et le forum discuss.python.org.
-
-### 20.3 Ressources
+## Ressources
 
 - Documentation : docs.python.org/fr/3/
 - Tutoriel officiel : docs.python.org/fr/3/tutorial/
@@ -4613,10 +4508,6 @@ Pour suivre l'actualité du langage : les notes de version (*What's New*), les P
 - Forum officiel : discuss.python.org
 - Index des paquets : pypi.org
 - Glossaire en français : docstring.fr/glossaire
-
-### Synthèse du chapitre 20
-
-Python récompense la régularité : lire du code d'autres personnes, écrire de petits programmes chaque semaine, tester, typer et refactoriser. Les concepts de ce cours (objets, mutabilité, itérateurs, exceptions, modules) se retrouvent dans tout l'écosystème ; une fois maîtrisés, chaque nouvelle bibliothèque devient une simple application de principes connus. Bon code !
 
 ---
 
